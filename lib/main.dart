@@ -1,5 +1,7 @@
-import 'package:convertouch/search_bar/search_bar.dart';
 import 'package:flutter/material.dart';
+
+import 'search_bar/search_bar.dart';
+import 'items_view/unit_groups.dart';
 
 class ConvertouchApp extends StatelessWidget {
   const ConvertouchApp({super.key});
@@ -9,10 +11,11 @@ class ConvertouchApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         title: 'Convertouch',
         debugShowCheckedModeBanner: false,
-        home: SafeArea(
+        theme: ThemeData(fontFamily: 'Quicksand'),
+        home: const SafeArea(
           child: ConvertouchScaffold(),
         ));
   }
@@ -29,9 +32,10 @@ class ConvertouchScaffold extends StatelessWidget {
           ConvertouchAppBar(),
           ConvertouchSearchBar(),
           Expanded(
-            child: Center(
-              child: Text('Hello, world!'),
-            ),
+            // child: Center(
+            //   child: Text('Hello, world!'),
+            // ),
+            child: UnitGroupsPage()
           ),
         ],
       ),
@@ -46,8 +50,9 @@ class ConvertouchAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 55,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: const BoxDecoration(color: Color(0xFFDEE9FF)),
+      decoration: const BoxDecoration(
+        color: Color(0xFFDEE9FF),
+      ),
       child: Row(
         children: [
           Container(
@@ -69,7 +74,7 @@ class ConvertouchAppBar extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF426F99),
                   fontSize: 20,
-                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600
                 ),
               ),
             ),
@@ -80,7 +85,10 @@ class ConvertouchAppBar extends StatelessWidget {
             child: const Visibility(
               visible: false,
               child: IconButton(
-                icon: Icon(Icons.search),
+                icon: Icon(
+                  Icons.search,
+                  color: Color(0xFF426F99),
+                ),
                 onPressed: null,
               ),
             ),

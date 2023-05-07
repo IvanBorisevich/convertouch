@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ConvertouchItemsCollectionView extends StatefulWidget {
-  const ConvertouchItemsCollectionView({super.key});
+class ConvertouchItemsView extends StatefulWidget {
+  const ConvertouchItemsView({super.key});
 
   @override
-  State createState() => _ConvertouchItemCollectionViewState();
+  State createState() => _ConvertouchItemsViewState();
 }
 
-class _ConvertouchItemCollectionViewState
-    extends State<ConvertouchItemsCollectionView> {
+class _ConvertouchItemsViewState extends State<ConvertouchItemsView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(

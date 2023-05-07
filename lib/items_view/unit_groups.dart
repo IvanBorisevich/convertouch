@@ -1,5 +1,4 @@
-import 'package:convertouch/items_collection_view.dart';
-import 'package:convertouch/search_bar/search_bar.dart';
+import 'package:convertouch/items_view/items_view.dart';
 import 'package:flutter/material.dart';
 
 class UnitGroupsPage extends StatefulWidget {
@@ -26,24 +25,13 @@ class _UnitGroupsPageState extends State<UnitGroupsPage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                  color: const Color(0xFFDEE9FF),
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: 50,
                   child: const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 5),
-                    child: ConvertouchSearchBar(),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                    child: ConvertouchItemsView(),
                   ),
                 ),
-                SingleChildScrollView(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                      child: ConvertouchItemsCollectionView(),
-                    ),
-                  ),
-                )
               ],
             ),
           ),
