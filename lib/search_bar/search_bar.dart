@@ -1,7 +1,6 @@
+import 'package:convertouch/search_bar/items_view_mode_button.dart';
+import 'package:convertouch/search_bar/search_bar_text_field.dart';
 import 'package:flutter/material.dart';
-
-import 'items_view_mode_button.dart';
-import 'search_bar_text_field.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
   const ConvertouchSearchBar({super.key});
