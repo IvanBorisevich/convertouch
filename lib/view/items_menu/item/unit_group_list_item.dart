@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ConvertouchUnitGroupListItem extends StatelessWidget {
   const ConvertouchUnitGroupListItem(this.unitGroupName,
-      {this.unitGroupIcon = Icons.account_tree_outlined, super.key});
+      {this.unitGroupIconName = "unit-group.png", super.key});
 
   final String unitGroupName;
-  final IconData unitGroupIcon;
+  final String unitGroupIconName;
+
+  static const String iconPathPrefix = "assets/icons";
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,8 @@ class ConvertouchUnitGroupListItem extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {},
-              icon: Icon(
-                unitGroupIcon,
+              icon: ImageIcon(
+                AssetImage("$iconPathPrefix/$unitGroupIconName"),
                 color: const Color(0xFF366C9F),
                 size: 25,
               ),

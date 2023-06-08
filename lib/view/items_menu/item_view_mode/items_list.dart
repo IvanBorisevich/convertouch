@@ -1,6 +1,5 @@
+import 'package:convertouch/view/items_menu/item/unit_group_list_item.dart';
 import 'package:flutter/material.dart';
-
-import 'package:convertouch/items_menu/item/unit_group_list_item.dart';
 
 
 class ConvertouchItemsList extends StatelessWidget {

@@ -1,15 +1,13 @@
+import 'package:convertouch/model/util/assets_util.dart';
+import 'package:convertouch/model/util/grid_item_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchUnitGroupGridItem extends StatelessWidget {
   const ConvertouchUnitGroupGridItem(this.unitGroupName,
-      {this.unitGroupIconName = "unit-group.png", super.key});
+      {this.unitGroupIconName = unitGroupDefaultIconName, super.key});
 
   final String unitGroupName;
   final String unitGroupIconName;
-
-  static const String iconPathPrefix = "assets/icons";
-  static const int minWordLengthToWrap = 10;
-  static final RegExp endOfWord = RegExp(r'\s+|$');
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +45,14 @@ class ConvertouchUnitGroupGridItem extends StatelessWidget {
                   child: Text(
                     unitGroupName,
                     style: const TextStyle(
-                      fontFamily: 'Quicksand',
+                      fontFamily: quicksandFontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF366C9F),
                     ),
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    maxLines:
-                        unitGroupName.indexOf(endOfWord) > minWordLengthToWrap
-                            ? 1
-                            : 2,
+                    maxLines: getLinesNumForItemNameWrapping(unitGroupName),
                   ),
                 )),
           )
