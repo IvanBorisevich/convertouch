@@ -26,7 +26,7 @@ class _ConvertouchSearchBarTextFieldState
                 borderSide: BorderSide.none),
             filled: true,
             fillColor: Color(0xFFF6F9FF),
-            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 14.0),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
           ),
           style: const TextStyle(
             color: Color(0xFF426F99),

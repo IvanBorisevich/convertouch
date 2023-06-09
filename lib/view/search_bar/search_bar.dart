@@ -1,14 +1,15 @@
+import 'package:convertouch/model/constant/constant.dart';
 import 'package:convertouch/view/search_bar/search_bar_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
   const ConvertouchSearchBar(
       {super.key,
-      this.listViewModeEnabled = true,
+      this.itemViewMode = ItemViewMode.list,
       required this.onViewModeChanged});
 
-  final bool listViewModeEnabled;
-  final ValueChanged<bool> onViewModeChanged;
+  final ItemViewMode itemViewMode;
+  final ValueChanged<ItemViewMode> onViewModeChanged;
 
   @override
   State createState() => _ConvertouchSearchBarState();
@@ -20,7 +21,15 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
   static const double elementsHeight = containerHeight - elementsSpacing;
 
   void _handleViewModeButtonTap() {
-    widget.onViewModeChanged(!widget.listViewModeEnabled);
+    widget.onViewModeChanged(widget.itemViewMode.nextValue());
+  }
+
+  IconButton buildViewModeIconButton(IconData iconData) {
+    return IconButton(
+      onPressed: _handleViewModeButtonTap,
+      icon: Icon(iconData),
+      color: const Color(0xFF426F99),
+    );
   }
 
   @override
@@ -47,15 +56,16 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                     color: const Color(0xFFF6F9FF),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: IconButton(
-                    onPressed: _handleViewModeButtonTap,
-                    icon: Icon(
-                      widget.listViewModeEnabled
-                          ? Icons.grid_view
-                          : Icons.list_outlined,
-                      color: const Color(0xFF426F99),
-                    ),
-                  ),
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    switch (widget.itemViewMode) {
+                      case ItemViewMode.grid:
+                        return buildViewModeIconButton(Icons.list_outlined);
+                      case ItemViewMode.list:
+                      default:
+                        return buildViewModeIconButton(
+                            Icons.grid_view_outlined);
+                    }
+                  }),
                 ),
               ),
             ],

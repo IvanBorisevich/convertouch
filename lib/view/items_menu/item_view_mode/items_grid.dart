@@ -1,10 +1,13 @@
-import 'package:convertouch/view/items_menu/item/unit_group_grid_item.dart';
+import 'package:convertouch/model/constant/constant.dart';
+import 'package:convertouch/model/entity/id_name_model.dart';
+import 'package:convertouch/view/items_menu/item/grid_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(this.itemsNames, {super.key});
+  const ConvertouchItemsGrid(this.items, this.itemType, {super.key});
 
-  final List<String> itemsNames;
+  final List<IdNameModel> items;
+  final ItemModelType itemType;
 
   static const double listItemsSpacingSize = 5.0;
   static const int numberOfItemsInRow = 4;
@@ -18,9 +21,9 @@ class ConvertouchItemsGrid extends StatelessWidget {
         crossAxisSpacing: listItemsSpacingSize,
       ),
       padding: const EdgeInsets.all(listItemsSpacingSize),
-      itemCount: itemsNames.length,
+      itemCount: items.length,
       itemBuilder: (context, index) {
-        return ConvertouchUnitGroupGridItem(itemsNames[index]);
+        return ConvertouchGridItem(items[index], itemType);
       },
     );
   }
