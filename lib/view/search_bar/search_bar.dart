@@ -1,4 +1,4 @@
-import 'package:convertouch/model/constant/constant.dart';
+import 'package:convertouch/view/items_menu/item_view_mode/item_view_mode.dart';
 import 'package:convertouch/view/search_bar/search_bar_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +24,19 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
     widget.onViewModeChanged(widget.itemViewMode.nextValue());
   }
 
-  IconButton buildViewModeIconButton(IconData iconData) {
+  IconButton buildViewModeButton() {
     return IconButton(
+      icon: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(
+                scale: animation,
+                child: FadeTransition(opacity: animation, child: child)
+            );
+          },
+          child: Icon(widget.itemViewMode.nextModeIcon,
+              key: widget.itemViewMode.modeKey)),
       onPressed: _handleViewModeButtonTap,
-      icon: Icon(iconData),
       color: const Color(0xFF426F99),
     );
   }
@@ -56,16 +65,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                     color: const Color(0xFFF6F9FF),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    switch (widget.itemViewMode) {
-                      case ItemViewMode.grid:
-                        return buildViewModeIconButton(Icons.list_outlined);
-                      case ItemViewMode.list:
-                      default:
-                        return buildViewModeIconButton(
-                            Icons.grid_view_outlined);
-                    }
-                  }),
+                  child: buildViewModeButton(),
                 ),
               ),
             ],

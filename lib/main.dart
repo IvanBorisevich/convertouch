@@ -4,6 +4,7 @@ import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/util/assets_util.dart';
 import 'package:convertouch/view/app_bar/app_bar.dart';
+import 'package:convertouch/view/items_menu/item_view_mode/item_view_mode.dart';
 import 'package:convertouch/view/items_menu/items_menu.dart';
 import 'package:convertouch/view/search_bar/search_bar.dart';
 import 'package:flutter/material.dart';
