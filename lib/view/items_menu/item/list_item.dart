@@ -1,14 +1,13 @@
-import 'package:convertouch/model/entity/id_name_model.dart';
-import 'package:convertouch/model/constant/constant.dart';
-import 'package:convertouch/model/util/assets_util.dart';
-import 'package:convertouch/model/util/items_util.dart';
+import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/item_type.dart';
+import 'package:convertouch/presenter/util/items_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchListItem extends StatelessWidget {
-  const ConvertouchListItem(this.item, this.itemType, {super.key});
+  const ConvertouchListItem(this.item, {super.key});
 
-  final IdNameModel item;
-  final ItemModelType itemType;
+  final ItemModel item;
 
   static const double itemContainerHeight = 50;
   static const double itemAbbrContainerWidth = 65;
@@ -58,7 +57,7 @@ class ConvertouchListItem extends StatelessWidget {
                 color: Color(0x00FFFFFF),
               ),
               child: LayoutBuilder(builder: (context, constraints) {
-                if (itemType == ItemModelType.unitGroup) {
+                if (item.itemType == ItemType.unitGroup) {
                   return buildUnitGroupIconButton(toUnitGroup(item).iconName);
                 } else {
                   return buildUnitItemAbbreviation(toUnit(item).abbreviation);

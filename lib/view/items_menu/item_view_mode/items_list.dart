@@ -1,31 +1,64 @@
-import 'package:convertouch/model/entity/id_name_model.dart';
-import 'package:convertouch/model/constant/constant.dart';
+import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/view/items_menu/item/list_item.dart';
 import 'package:flutter/material.dart';
 
+class ConvertouchItemsList extends StatefulWidget {
+  const ConvertouchItemsList(this.items, {super.key});
 
-class ConvertouchItemsList extends StatelessWidget {
-  const ConvertouchItemsList(this.items, this.itemType, {super.key});
+  final List<ItemModel> items;
 
-  final List<IdNameModel> items;
-  final ItemModelType itemType;
+  @override
+  State<ConvertouchItemsList> createState() => _ConvertouchItemsListState();
+}
 
-  static const double listItemsSpacingSize = 5;
+class _ConvertouchItemsListState extends State<ConvertouchItemsList> {
+  static const double _listItemsSpacingSize = 5;
+  static const int _durationMillis = 110;
+
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+
+  final List<ItemModel> _listItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItems();
+  }
+
+  void _loadItems() {
+    var future = Future(() {});
+    future = future.then((_) {
+      return Future.sync(() {
+        for (var i = 0; i < widget.items.length; i++) {
+          _listItems.add(widget.items[i]);
+          _listKey.currentState?.insertItem(_listItems.length - 1,
+              duration: const Duration(milliseconds: _durationMillis));
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(listItemsSpacingSize),
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ConvertouchListItem(items[index], itemType);
+    return AnimatedList(
+      key: _listKey,
+      initialItemCount: _listItems.length,
+      itemBuilder: (context, index, animation) {
+        return ScaleTransition(
+          scale: animation,
+          child: FadeTransition(
+            opacity: animation,
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(
+                  _listItemsSpacingSize,
+                  _listItemsSpacingSize,
+                  _listItemsSpacingSize,
+                  index == widget.items.length - 1 ? _listItemsSpacingSize : 0),
+              child: ConvertouchListItem(_listItems[index]),
+            ),
+          ),
+        );
       },
-      separatorBuilder: (BuildContext context, int index) => Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(
-              listItemsSpacingSize,
-              listItemsSpacingSize,
-              listItemsSpacingSize,
-              index == items.length - 1 ? listItemsSpacingSize : 0)),
     );
   }
 }

@@ -1,11 +1,17 @@
-import 'package:convertouch/model/entity/id_name_model.dart';
-import 'package:convertouch/model/util/assets_util.dart';
+import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/item_type.dart';
 
-class UnitGroupModel extends IdNameModel {
-  UnitGroupModel(int id, String name,
-      {String iconName = unitGroupDefaultIconName})
-      : _iconName = iconName,
-        super(id, name);
+
+class UnitGroupModel extends ItemModel {
+  UnitGroupModel(
+      int id,
+      String name,
+      {
+        String iconName = unitGroupDefaultIconName
+      }) :
+        _iconName = iconName,
+        super(id, name, ItemType.unitGroup);
 
   final String _iconName;
 

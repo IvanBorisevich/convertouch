@@ -1,29 +1,32 @@
-import 'package:convertouch/model/constant/constant.dart';
-import 'package:convertouch/model/entity/id_name_model.dart';
+import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/view/items_menu/item/grid_item.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(this.items, this.itemType, {super.key});
+class ConvertouchItemsGrid extends StatefulWidget {
+  const ConvertouchItemsGrid(this.items, {super.key});
 
-  final List<IdNameModel> items;
-  final ItemModelType itemType;
+  final List<ItemModel> items;
 
-  static const double listItemsSpacingSize = 5.0;
-  static const int numberOfItemsInRow = 4;
+  @override
+  State<ConvertouchItemsGrid> createState() => _ConvertouchItemsGridState();
+}
+
+class _ConvertouchItemsGridState extends State<ConvertouchItemsGrid> {
+  static const double _listItemsSpacingSize = 5.0;
+  static const int _numberOfItemsInRow = 4;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: numberOfItemsInRow,
-        mainAxisSpacing: listItemsSpacingSize,
-        crossAxisSpacing: listItemsSpacingSize,
+        crossAxisCount: _numberOfItemsInRow,
+        mainAxisSpacing: _listItemsSpacingSize,
+        crossAxisSpacing: _listItemsSpacingSize,
       ),
-      padding: const EdgeInsets.all(listItemsSpacingSize),
-      itemCount: items.length,
+      padding: const EdgeInsets.all(_listItemsSpacingSize),
+      itemCount: widget.items.length,
       itemBuilder: (context, index) {
-        return ConvertouchGridItem(items[index], itemType);
+        return ConvertouchGridItem(widget.items[index]);
       },
     );
   }

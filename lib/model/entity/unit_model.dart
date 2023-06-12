@@ -1,7 +1,14 @@
-import 'package:convertouch/model/entity/id_name_model.dart';
+import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/item_type.dart';
 
-class UnitModel extends IdNameModel {
-  UnitModel(super.id, super.name, this._abbreviation);
+class UnitModel extends ItemModel {
+  UnitModel(
+      int id,
+      String name,
+      String abbreviation
+      ) :
+        _abbreviation = abbreviation,
+        super(id, name, ItemType.unit);
 
   final String _abbreviation;
 

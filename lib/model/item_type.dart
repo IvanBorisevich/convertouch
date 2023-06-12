@@ -1,4 +1,4 @@
-enum ItemModelType {
+enum ItemType {
   unit,
   unitGroup,
 }

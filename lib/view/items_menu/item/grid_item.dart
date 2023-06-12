@@ -1,14 +1,13 @@
-import 'package:convertouch/model/constant/constant.dart';
-import 'package:convertouch/model/entity/id_name_model.dart';
-import 'package:convertouch/model/util/assets_util.dart';
-import 'package:convertouch/model/util/items_util.dart';
+import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/item_type.dart';
+import 'package:convertouch/presenter/util/items_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchGridItem extends StatelessWidget {
-  const ConvertouchGridItem(this.item, this.itemType, {super.key});
+  const ConvertouchGridItem(this.item, {super.key});
 
-  final IdNameModel item;
-  final ItemModelType itemType;
+  final ItemModel item;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class ConvertouchGridItem extends StatelessWidget {
               height: MediaQuery.of(context).size.height,
               padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
               child: LayoutBuilder(builder: (context, constraints) {
-                if (itemType == ItemModelType.unitGroup) {
+                if (item.itemType == ItemType.unitGroup) {
                   return IconButton(
                     onPressed: () {},
                     icon: ImageIcon(

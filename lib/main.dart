@@ -1,10 +1,9 @@
-import 'package:convertouch/model/constant/constant.dart';
-import 'package:convertouch/model/entity/id_name_model.dart';
+import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
-import 'package:convertouch/model/util/assets_util.dart';
 import 'package:convertouch/view/app_bar/app_bar.dart';
-import 'package:convertouch/view/items_menu/item_view_mode/item_view_mode.dart';
+import 'package:convertouch/model/item_view_mode.dart';
 import 'package:convertouch/view/items_menu/items_menu.dart';
 import 'package:convertouch/view/search_bar/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +29,7 @@ class ConvertouchApp extends StatelessWidget {
 class ConvertouchScaffold extends StatefulWidget {
   ConvertouchScaffold({super.key});
 
-  ItemViewMode itemViewMode = ItemViewMode.list;
-
-  final List<IdNameModel> unitGroupItems = [
+  final List<ItemModel> unitGroupItems = [
     UnitGroupModel(1, 'Length'),
     UnitGroupModel(2, 'Area'),
     UnitGroupModel(3, 'Volume'),
@@ -56,7 +53,7 @@ class ConvertouchScaffold extends StatefulWidget {
     UnitGroupModel(21, 'Length'),
   ];
 
-  final List<IdNameModel> unitItems = [
+  final List<ItemModel> unitItems = [
     UnitModel(1, 'Centimeter', 'cm'),
     UnitModel(2, 'Centimeter Square', 'cm2'),
     UnitModel(3, 'Centimeter Square', 'mm2'),
@@ -85,9 +82,11 @@ class ConvertouchScaffold extends StatefulWidget {
 }
 
 class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
+  ItemViewMode _itemViewMode = ItemViewMode.list;
+
   void _handleViewModeChanged(ItemViewMode newValue) {
     setState(() {
-      widget.itemViewMode = newValue;
+      _itemViewMode = newValue;
     });
   }
 
@@ -98,13 +97,12 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           children: [
             const ConvertouchAppBar(),
             ConvertouchSearchBar(
-                itemViewMode: widget.itemViewMode,
+                itemViewMode: _itemViewMode,
                 onViewModeChanged: _handleViewModeChanged),
             Expanded(
                 child: ConvertouchItemsMenuPage(
                     widget.unitItems,
-                    itemType: ItemModelType.unit,
-                    itemViewMode: widget.itemViewMode
+                    itemViewMode: _itemViewMode
                 )
             ),
           ],
