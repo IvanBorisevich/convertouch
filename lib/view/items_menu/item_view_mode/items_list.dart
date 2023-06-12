@@ -15,8 +15,7 @@ class _ConvertouchItemsListState extends State<ConvertouchItemsList> {
   static const double _listItemsSpacingSize = 5;
   static const int _durationMillis = 110;
 
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<ItemModel> _listItems = [];
 
   @override
