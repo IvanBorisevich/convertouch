@@ -2,10 +2,12 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
-import 'package:convertouch/view/app_bar/app_bar.dart';
+import 'package:convertouch/model/entity/unit_value_model.dart';
+import 'package:convertouch/view/app_bar.dart';
 import 'package:convertouch/model/item_view_mode.dart';
-import 'package:convertouch/view/items_menu/items_menu.dart';
-import 'package:convertouch/view/search_bar/search_bar.dart';
+import 'package:convertouch/view/converted_units/converted_units_page.dart';
+import 'package:convertouch/view/items_menu/items_menu_page.dart';
+import 'package:convertouch/view/search_bar.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchApp extends StatelessWidget {
@@ -29,7 +31,7 @@ class ConvertouchApp extends StatelessWidget {
 class ConvertouchScaffold extends StatefulWidget {
   ConvertouchScaffold({super.key});
 
-  final List<ItemModel> unitGroupItems = [
+  final List<UnitGroupModel> unitGroupItems = [
     UnitGroupModel(1, 'Length'),
     UnitGroupModel(2, 'Area'),
     UnitGroupModel(3, 'Volume'),
@@ -53,7 +55,7 @@ class ConvertouchScaffold extends StatefulWidget {
     UnitGroupModel(21, 'Length'),
   ];
 
-  final List<ItemModel> unitItems = [
+  final List<UnitModel> unitItems = [
     UnitModel(1, 'Centimeter', 'cm'),
     UnitModel(2, 'Centimeter Square', 'cm2'),
     UnitModel(3, 'Centimeter Square', 'mm2'),
@@ -64,7 +66,7 @@ class ConvertouchScaffold extends StatefulWidget {
     UnitModel(2, 'Centimeter Square', 'mm4'),
     UnitModel(3, 'Centimeter Square', 'cm2'),
     UnitModel(1, 'Centimeter', 'cm'),
-    UnitModel(2, 'Centimeter Square guygtyfty tyf tyf ygf tyfyt t', 'km/h'),
+    UnitModel(2, 'Centimeter Square2 g uygtyfty tyf tyf ygf tyfyt t', 'km/h'),
     UnitModel(3, 'Centimeter Square hhhh hhhhhhhh', 'cm2'),
     UnitModel(1, 'Centimeter', 'cm'),
     UnitModel(2, 'Centimeter Square', 'cm2'),
@@ -83,10 +85,36 @@ class ConvertouchScaffold extends StatefulWidget {
 
 class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   ItemViewMode _itemViewMode = ItemViewMode.list;
+  bool _isSearchBarVisible = false;
+  bool _isFloatingButtonVisible = true;
+
+  final List<UnitValueModel> _convertedItems = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    for (var i = 0; i < widget.unitItems.length; i++) {
+      _convertedItems.add(UnitValueModel(widget.unitItems[i], '1'));
+    }
+  }
 
   void _handleViewModeChanged(ItemViewMode newValue) {
     setState(() {
       _itemViewMode = newValue;
+    });
+  }
+
+  void _handleSearchBarVisibility(bool newValue) {
+    setState(() {
+      _isSearchBarVisible = newValue;
+    });
+  }
+
+  void _handleFloatingButtonVisibility(bool newValue) {
+    setState(() {
+      _isFloatingButtonVisible = newValue;
     });
   }
 
@@ -96,19 +124,20 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         body: Column(
           children: [
             const ConvertouchAppBar(),
-            ConvertouchSearchBar(
-                itemViewMode: _itemViewMode,
-                onViewModeChanged: _handleViewModeChanged),
+            Visibility(
+                visible: _isSearchBarVisible,
+                child: ConvertouchSearchBar(
+                    itemViewMode: _itemViewMode,
+                    onViewModeChanged: _handleViewModeChanged)),
             Expanded(
-                child: ConvertouchItemsMenuPage(
-                    widget.unitItems,
-                    itemViewMode: _itemViewMode
-                )
+                // child: ConvertouchItemsMenuPage(widget.unitItems,
+                //     itemViewMode: _itemViewMode)
+              child: ConvertouchConvertedUnitsPage(_convertedItems),
             ),
           ],
         ),
         floatingActionButton: Visibility(
-          visible: true,
+          visible: _isFloatingButtonVisible,
           child: FloatingActionButton(
             onPressed: () {},
             child: const Icon(Icons.add),

@@ -1,5 +1,4 @@
 import 'package:convertouch/model/item_view_mode.dart';
-import 'package:convertouch/view/search_bar/search_bar_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
@@ -20,6 +19,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
   static const double _elementsSpacing = 5;
   static const double _elementsHeight = _containerHeight - _elementsSpacing;
   static const int _durationMillis = 110;
+  static const double searchTextFieldFontSize = 16;
   static const Map<ItemViewMode, IconData> itemViewModeIconMap = {
     ItemViewMode.list: Icons.list_outlined,
     ItemViewMode.grid: Icons.grid_view_outlined
@@ -48,9 +48,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-        visible: true,
-        child: Container(
+    return Container(
           height: _containerHeight,
           padding: const EdgeInsets.fromLTRB(
               _elementsSpacing, 0, _elementsSpacing, _elementsSpacing),
@@ -60,7 +58,31 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ConvertouchSearchBarTextField(),
+              Expanded(
+                child: TextFormField(
+                  autofocus: false,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.search, color: Color(0xFF7BA2D3)),
+                    hintText: 'Search unit groups...',
+                    hintStyle: TextStyle(
+                        color: Color(0xFF7BA2D3),
+                        fontSize: searchTextFieldFontSize),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Color(0xFFF6F9FF),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                  ),
+                  style: const TextStyle(
+                    color: Color(0xFF426F99),
+                    fontSize: searchTextFieldFontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ),
               const SizedBox(width: _elementsSpacing),
               SizedBox(
                 width: _elementsHeight,
@@ -75,6 +97,6 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
               ),
             ],
           ),
-        ));
+        );
   }
 }
