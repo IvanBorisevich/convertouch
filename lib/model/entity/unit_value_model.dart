@@ -6,11 +6,7 @@ class UnitValueModel {
   final UnitModel _unit;
   final String _value;
 
-  UnitModel get unit {
-    return _unit;
-  }
+  UnitModel get unit => _unit;
 
-  String get value {
-    return _value;
-  }
+  String get value => _value;
 }

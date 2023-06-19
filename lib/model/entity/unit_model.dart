@@ -2,7 +2,7 @@ import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/item_type.dart';
 
 class UnitModel extends ItemModel {
-  UnitModel(
+  const UnitModel(
       int id,
       String name,
       String abbreviation
@@ -12,7 +12,5 @@ class UnitModel extends ItemModel {
 
   final String _abbreviation;
 
-  String get abbreviation {
-    return _abbreviation;
-  }
+  String get abbreviation => _abbreviation;
 }

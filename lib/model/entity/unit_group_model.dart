@@ -4,7 +4,7 @@ import 'package:convertouch/model/item_type.dart';
 
 
 class UnitGroupModel extends ItemModel {
-  UnitGroupModel(
+  const UnitGroupModel(
       int id,
       String name,
       {
@@ -15,7 +15,5 @@ class UnitGroupModel extends ItemModel {
 
   final String _iconName;
 
-  String get iconName {
-    return _iconName;
-  }
+  String get iconName => _iconName;
 }

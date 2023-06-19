@@ -1,38 +1,38 @@
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/item_type.dart';
-import 'package:convertouch/presenter/util/items_util.dart';
+import 'package:convertouch/model/util/menu_items_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchListItem extends StatelessWidget {
+  static const double itemContainerHeight = 50;
+  static const double itemAbbrContainerWidth = 65;
+
   const ConvertouchListItem(this.item, {super.key});
 
   final ItemModel item;
 
-  static const double itemContainerHeight = 50;
-  static const double itemAbbrContainerWidth = 65;
+  Widget buildUnitGroupIconButton() {
+    return IconButton(
+      onPressed: () {},
+      icon: ImageIcon(
+        AssetImage(getIconPath(item)),
+        color: const Color(0xFF366C9F),
+        size: 25,
+      ),
+    );
+  }
 
-  Widget buildUnitItemAbbreviation(String abbreviation) {
+  Widget buildUnitItemAbbreviation() {
     return Center(
       child: Text(
-        abbreviation,
+        toUnit(item).abbreviation,
         style: const TextStyle(
           fontFamily: quicksandFontFamily,
           fontWeight: FontWeight.w700,
           color: Color(0xFF366C9F),
           fontSize: 16,
         ),
-      ),
-    );
-  }
-
-  Widget buildUnitGroupIconButton(String iconName) {
-    return IconButton(
-      onPressed: () {},
-      icon: ImageIcon(
-        AssetImage("$iconPathPrefix/$iconName"),
-        color: const Color(0xFF366C9F),
-        size: 25,
       ),
     );
   }
@@ -52,15 +52,17 @@ class ConvertouchListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-              width: itemAbbrContainerWidth,
+              width: item.itemType == ItemType.unitGroup
+                  ? itemContainerHeight
+                  : itemAbbrContainerWidth,
               decoration: const BoxDecoration(
                 color: Color(0x00FFFFFF),
               ),
               child: LayoutBuilder(builder: (context, constraints) {
                 if (item.itemType == ItemType.unitGroup) {
-                  return buildUnitGroupIconButton(toUnitGroup(item).iconName);
+                  return buildUnitGroupIconButton();
                 } else {
-                  return buildUnitItemAbbreviation(toUnit(item).abbreviation);
+                  return buildUnitItemAbbreviation();
                 }
               })),
           const VerticalDivider(

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ConvertouchConvertedUnitItem extends StatefulWidget {
-  const ConvertouchConvertedUnitItem(this.item, {super.key});
+  const ConvertouchConvertedUnitItem(this.item,
+      {super.key, this.spacingBetweenTextAndButton = 5});
 
   final UnitValueModel item;
+  final double spacingBetweenTextAndButton;
 
   @override
   State<ConvertouchConvertedUnitItem> createState() =>
@@ -73,7 +75,7 @@ class _ConvertouchConvertedUnitItemState
               textAlign: TextAlign.start,
             ),
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: widget.spacingBetweenTextAndButton),
           SizedBox(
             width: _unitButtonWidth,
             height: _unitButtonHeight,
