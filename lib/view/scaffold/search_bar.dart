@@ -1,7 +1,8 @@
-import 'package:convertouch/model/items_menu_view.dart';
+import 'package:convertouch/model/items_menu_view_mode.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
 import 'package:convertouch/presenter/states/items_menu_view_state.dart';
+import 'package:convertouch/view/animation/items_menu_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,11 +12,10 @@ class ConvertouchSearchBar extends StatelessWidget {
   static const double _containerHeight = 53;
   static const double _elementsSpacing = 5;
   static const double _elementsHeight = _containerHeight - _elementsSpacing;
-  static const int _durationMillis = 150;
   static const double searchTextFieldFontSize = 16;
-  static const Map<ItemsMenuView, IconData> itemViewModeIconMap = {
-    ItemsMenuView.list: Icons.list_outlined,
-    ItemsMenuView.grid: Icons.grid_view_outlined
+  static const Map<ItemsMenuViewMode, IconData> itemViewModeIconMap = {
+    ItemsMenuViewMode.list: Icons.list_outlined,
+    ItemsMenuViewMode.grid: Icons.grid_view_outlined
   };
 
   final String searchBarPlaceholder;
@@ -79,20 +79,15 @@ class ConvertouchSearchBar extends StatelessWidget {
         child: BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
             builder: (_, itemsMenuViewState) {
           return IconButton(
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: _durationMillis),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(
-                    scale: animation,
-                    child: FadeTransition(opacity: animation, child: child));
-              },
-              child: Icon(itemViewModeIconMap[itemsMenuViewState.itemsMenuView],
-                  key: ValueKey(itemsMenuViewState.itemsMenuView.modeKey)),
+            icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(
+                Icon(
+                  itemViewModeIconMap[itemsMenuViewState.itemsMenuView],
+                  key: ValueKey(itemsMenuViewState.itemsMenuView.modeKey)
+                )
             ),
             onPressed: () {
               BlocProvider.of<ItemsMenuViewBloc>(context).add(
-                  ItemsMenuViewEvent(
-                      itemsMenuView: itemsMenuViewState.itemsMenuView));
+                  ChangeViewMode(viewMode: itemsMenuViewState.itemsMenuView));
             },
             color: const Color(0xFF426F99),
           );

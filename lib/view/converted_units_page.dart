@@ -1,7 +1,7 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
-import 'package:convertouch/presenter/bloc/converted_items_bloc.dart';
+import 'package:convertouch/presenter/bloc/converted_units_bloc.dart';
 import 'package:convertouch/presenter/states/converted_items_state.dart';
-import 'package:convertouch/view/converted_items_page/converted_unit.dart';
+import 'package:convertouch/view/items_model/converted_unit_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +22,7 @@ class _ConvertouchConvertedUnitsPageState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConvertedItemsBloc, ConvertedItemsState>(
+    return BlocBuilder<ConvertedUnitsBloc, ConvertedItemsState>(
         builder: (_, convertedItemsState) {
       List<UnitValueModel> convertedItems = convertedItemsState.convertedItems;
 

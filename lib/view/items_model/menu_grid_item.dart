@@ -6,8 +6,8 @@ import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchGridItem extends StatelessWidget {
-  const ConvertouchGridItem(this.item, {super.key});
+class ConvertouchMenuGridItem extends StatelessWidget {
+  const ConvertouchMenuGridItem(this.item, {super.key});
 
   final ItemModel item;
 
@@ -41,7 +41,7 @@ class ConvertouchGridItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (item.itemType == ItemType.unitGroup) {
-          BlocProvider.of<UnitsMenuFetchBloc>(context)
+          BlocProvider.of<UnitsMenuBloc>(context)
               .add(const FetchUnits(unitGroupId: 1));
         }
       },

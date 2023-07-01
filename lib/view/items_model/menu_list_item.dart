@@ -1,13 +1,13 @@
-import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/util/menu_util.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchListItem extends StatelessWidget {
+class ConvertouchMenuListItem extends StatelessWidget {
   static const double itemContainerHeight = 50;
   static const double itemAbbrContainerWidth = 65;
 
-  const ConvertouchListItem(this.item, {super.key});
+  const ConvertouchMenuListItem(this.item, {super.key});
 
   final ItemModel item;
 

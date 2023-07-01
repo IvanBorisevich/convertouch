@@ -3,15 +3,15 @@ import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/presenter/states/unit_groups_menu_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitGroupsMenuFetchBloc
-    extends Bloc<FetchUnitGroups, UnitGroupsFetched> {
-  UnitGroupsMenuFetchBloc() : super(const UnitGroupsFetched(unitGroups: []));
+class UnitGroupsMenuBloc
+    extends Bloc<UnitGroupsMenuEvent, UnitGroupsMenuState> {
+  UnitGroupsMenuBloc() : super(const UnitGroupsFetched(unitGroups: []));
 
   @override
-  Stream<UnitGroupsFetched> mapEventToState(
-      FetchUnitGroups event) async* {
-    yield UnitGroupsFetched(
-          unitGroups: allUnitGroups, firstTime: event.firstTime);
+  Stream<UnitGroupsMenuState> mapEventToState(UnitGroupsMenuEvent event) async* {
+    if (event is FetchUnitGroups) {
+      yield UnitGroupsFetched(unitGroups: allUnitGroups);
+    }
   }
 }
 

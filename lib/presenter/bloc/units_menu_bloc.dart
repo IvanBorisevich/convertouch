@@ -3,22 +3,17 @@ import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/units_menu_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitsMenuFetchBloc extends Bloc<FetchUnits, UnitsMenuState> {
-  UnitsMenuFetchBloc() : super(const UnitsFetched(units: []));
+class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
+  UnitsMenuBloc() : super(const UnitsFetched(units: []));
 
   @override
-  Stream<UnitsMenuState> mapEventToState(FetchUnits event) async* {
-    yield const UnitsFetching();
-    yield const UnitsFetched(units: allUnits);
-  }
-}
-
-class UnitsMenuSelectBloc extends Bloc<SelectUnits, UnitsSelected> {
-  UnitsMenuSelectBloc() : super(const UnitsSelected(selectedUnits: []));
-
-  @override
-  Stream<UnitsSelected> mapEventToState(SelectUnits event) async* {
-    yield UnitsSelected(selectedUnits: getSelectedUnits(event.unitIds));
+  Stream<UnitsMenuState> mapEventToState(UnitsMenuEvent event) async* {
+    if (event is FetchUnits) {
+      yield const UnitsFetching();
+      yield const UnitsFetched(units: allUnits);
+    } else if (event is SelectUnits) {
+      yield UnitsSelected(selectedUnits: getSelectedUnits(event.unitIds));
+    }
   }
 
   List<UnitModel> getSelectedUnits(List<int> selectedUnitIds) {

@@ -5,19 +5,10 @@ abstract class UnitGroupsMenuEvent extends ConvertouchEvent {
 }
 
 class FetchUnitGroups extends UnitGroupsMenuEvent {
-  const FetchUnitGroups({
-    this.firstTime = false
-  });
-
-  final bool firstTime;
-
-  @override
-  List<Object> get props => [
-    firstTime
-  ];
+  const FetchUnitGroups();
 
   @override
   String toString() {
-    return 'FetchUnitGroups{firstTime: $firstTime}';
+    return 'FetchUnitGroups{}';
   }
 }

@@ -7,18 +7,16 @@ abstract class UnitGroupsMenuState extends BlocState {
 
 class UnitGroupsFetched extends UnitGroupsMenuState {
   const UnitGroupsFetched({
-    required this.unitGroups,
-    this.firstTime = false
+    required this.unitGroups
   });
 
   final List<UnitGroupModel> unitGroups;
-  final bool firstTime;
 
   @override
-  List<Object> get props => [unitGroups, firstTime];
+  List<Object> get props => [unitGroups];
 
   @override
   String toString() {
-    return 'UnitGroupsFetched{unitsGroups: $unitGroups, firstTime: $firstTime}';
+    return 'UnitGroupsFetched{unitsGroups: $unitGroups}';
   }
 }

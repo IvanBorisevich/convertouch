@@ -1,4 +1,4 @@
-import 'package:convertouch/model/items_menu_view.dart';
+import 'package:convertouch/model/items_menu_view_mode.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 class ItemsMenuViewState extends BlocState {
@@ -6,7 +6,7 @@ class ItemsMenuViewState extends BlocState {
     required this.itemsMenuView,
   });
 
-  final ItemsMenuView itemsMenuView;
+  final ItemsMenuViewMode itemsMenuView;
 
   @override
   List<Object> get props => [
