@@ -5,7 +5,7 @@ import 'package:convertouch/presenter/events/converted_items_fetch_event.dart';
 import 'package:convertouch/presenter/states/converted_items_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertedItemsBloc extends Bloc<BlocEvent, ConvertedItemsState> {
+class ConvertedItemsBloc extends Bloc<ConvertouchEvent, ConvertedItemsState> {
   ConvertedItemsBloc() : super(const ConvertedItemsState(convertedItems: []));
 
   List<UnitValueModel> _convertedItems = [];
@@ -13,7 +13,7 @@ class ConvertedItemsBloc extends Bloc<BlocEvent, ConvertedItemsState> {
   List<UnitValueModel> get convertedItems => _convertedItems;
 
   @override
-  Stream<ConvertedItemsState> mapEventToState(BlocEvent event) async* {
+  Stream<ConvertedItemsState> mapEventToState(ConvertouchEvent event) async* {
     if (event is ConvertedItemsFetchEvent) {
       _convertedItems = _convertItems(event.valueToConvert, event.units);
       yield ConvertedItemsState(

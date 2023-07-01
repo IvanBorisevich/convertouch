@@ -1,5 +1,5 @@
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/view/menu_items/item/list_item.dart';
+import 'package:convertouch/view/items_menu_page/menu_item/list_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchItemsList extends StatefulWidget {

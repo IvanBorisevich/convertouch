@@ -1,7 +1,7 @@
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
-class ConvertedItemsFetchEvent extends BlocEvent {
+class ConvertedItemsFetchEvent extends ConvertouchEvent {
   const ConvertedItemsFetchEvent(this.valueToConvert, this.units);
 
   final String valueToConvert;

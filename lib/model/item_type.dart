@@ -1,4 +1,0 @@
-enum ItemType {
-  unit,
-  unitGroup,
-}

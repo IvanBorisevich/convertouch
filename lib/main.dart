@@ -1,94 +1,84 @@
 import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/model/item_type.dart';
-import 'package:convertouch/presenter/bloc/app_bar_buttons_bloc.dart';
 import 'package:convertouch/presenter/bloc/converted_items_bloc.dart';
-import 'package:convertouch/presenter/bloc/menu_view_bloc.dart';
-import 'package:convertouch/presenter/bloc/menu_items_bloc.dart';
-import 'package:convertouch/presenter/bloc/app_bloc.dart';
+import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
+import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
 import 'package:convertouch/presenter/bloc_observer.dart';
-import 'package:convertouch/presenter/events/menu_items_fetch_event.dart';
-import 'package:convertouch/presenter/states/app_state.dart';
-import 'package:convertouch/view/app_bar.dart';
-import 'package:convertouch/view/converted_items/converted_items_page.dart';
-import 'package:convertouch/view/menu_items/menu_items_page.dart';
-import 'package:convertouch/view/search_bar.dart';
+import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
+import 'package:convertouch/view/home_page.dart';
+import 'package:convertouch/view/items_menu_page/unit_groups_menu_page.dart';
+import 'package:convertouch/view/items_menu_page/units_menu_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+void main() {
+  Bloc.observer = ConvertouchBlocObserver();
+  runApp(const ConvertouchApp());
+}
 
 class ConvertouchApp extends StatelessWidget {
   const ConvertouchApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: quicksandFontFamily),
-        home: const SafeArea(
-          child: ConvertouchScaffold(),
-        ));
-  }
-}
-
-class ConvertouchScaffold extends StatelessWidget {
-  const ConvertouchScaffold({super.key});
+  static final Map<String, Widget> routes = {
+    homePageId: const ConvertouchHomePage(),
+    unitGroupsPageId: const ConvertouchUnitGroupsMenuPage(),
+    unitsPageId: const ConvertouchUnitsMenuPage(),
+  };
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AppBloc()),
-        BlocProvider(create: (context) => AppBarButtonsBloc()),
-        BlocProvider(create: (context) => MenuViewBloc()),
-        BlocProvider(
-            create: (context) => MenuItemsBloc()
-              ..add(const MenuItemsFetchEvent(ItemType.unitGroup))),
         BlocProvider(create: (context) => ConvertedItemsBloc()),
+        BlocProvider(create: (context) => ItemsMenuViewBloc()),
+        BlocProvider(
+            create: (context) =>
+                UnitGroupsMenuFetchBloc()..add(const FetchUnitGroups(firstTime: true))),
+        BlocProvider(create: (context) => UnitsMenuFetchBloc()),
+        BlocProvider(create: (context) => UnitsMenuSelectBloc()),
       ],
-      child: Scaffold(
-        body: Column(
-          children: [
-            const ConvertouchAppBar(),
-            const ConvertouchSearchBar(),
-            _buildPageContent()
-          ],
-        ),
-        floatingActionButton: _buildFloatingButton(),
+      child: MaterialApp(
+        title: appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: quicksandFontFamily),
+        initialRoute: homePageId,
+        onGenerateRoute: (settings) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (_, __, ___) => _getRoute(settings.name),
+            transitionDuration: const Duration(milliseconds: 200),
+            reverseTransitionDuration: const Duration(milliseconds: 150),
+            transitionsBuilder: (context, anim, secondaryAnim, child) =>
+                SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1, 0),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(
+                  parent: anim,
+                  curve: Curves.easeOutCirc,
+                ),
+              ),
+              child: FadeTransition(
+                opacity: Tween<double>(
+                  begin: 0.0,
+                  end: 1.0,
+                ).animate(
+                  CurvedAnimation(
+                    parent: anim,
+                    curve: Curves.linear,
+                  ),
+                ),
+                child: child,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildFloatingButton() {
-    return BlocBuilder<AppBloc, AppState>(builder: (_, scaffoldChangedState) {
-      return Visibility(
-        visible: scaffoldChangedState.isFloatingButtonVisible,
-        child: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
-      );
-    });
+  Widget _getRoute(String? routeName) {
+    return routes[routeName] ?? routes[homePageId]!;
   }
-
-  Widget _buildPageContent() {
-    return Expanded(
-      child: BlocBuilder<AppBloc, AppState>(builder: (_, appState) {
-        return LayoutBuilder(builder: (context, constraints) {
-          switch (appState.pageId) {
-            case convertedItemsPageId:
-              return const ConvertouchConvertedUnitsPage();
-            case unitGroupItemsPageId:
-            case unitItemsPageId:
-            default:
-              return const ConvertouchItemsMenuPage();
-          }
-        });
-      }),
-    );
-  }
-}
-
-void main() {
-  Bloc.observer = ConvertouchBlocObserver();
-  runApp(const ConvertouchApp());
 }

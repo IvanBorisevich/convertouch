@@ -1,4 +1,4 @@
-import 'package:convertouch/model/item_type.dart';
+import 'package:convertouch/model/constant.dart';
 
 abstract class ItemModel {
   const ItemModel(this._id, this._name, this._itemType);

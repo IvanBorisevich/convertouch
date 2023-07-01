@@ -1,15 +1,8 @@
-import 'package:convertouch/model/app_bar_action.dart';
-import 'package:convertouch/model/app_bar_button_side.dart';
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/model/item_type.dart';
-import 'package:convertouch/model/util/menu_items_util.dart';
-import 'package:convertouch/presenter/bloc/app_bar_buttons_bloc.dart';
-import 'package:convertouch/presenter/bloc/app_bloc.dart';
-import 'package:convertouch/presenter/bloc/menu_items_bloc.dart';
-import 'package:convertouch/presenter/events/app_bar_button_event.dart';
-import 'package:convertouch/presenter/events/app_event.dart';
-import 'package:convertouch/presenter/events/menu_items_fetch_event.dart';
+import 'package:convertouch/model/util/menu_util.dart';
+import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,17 +41,8 @@ class ConvertouchGridItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (item.itemType == ItemType.unitGroup) {
-          BlocProvider.of<AppBloc>(context).add(const AppEvent(
-              isSearchBarVisible: true,
-              isFloatingButtonVisible: true,
-              nextPageId: unitItemsPageId));
-          BlocProvider.of<AppBarButtonsBloc>(context).add(
-              const AppBarButtonEvent(
-                  buttonAction: ConvertouchAction.back,
-                  buttonSide: AppBarButtonSide.left,
-                  isButtonEnabled: true));
-          BlocProvider.of<MenuItemsBloc>(context)
-              .add(const MenuItemsFetchEvent(ItemType.unit));
+          BlocProvider.of<UnitsMenuFetchBloc>(context)
+              .add(const FetchUnits(unitGroupId: 1));
         }
       },
       child: Container(

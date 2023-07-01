@@ -4,21 +4,43 @@ const String iconPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
 
+const String homePageId = '/';
 const String convertedItemsPageId = "convertedItemsPage";
-const String unitGroupItemsPageId = "unitGroupItemsPage";
-const String unitItemsPageId = "unitItemsPage";
-const String createUnitItemPageId = "createUnitItemPage";
-const String createUnitGroupItemPageId = "createUnitGroupItemPage";
+const String unitGroupsPageId = "unitGroupsPage";
+const String unitsPageId = "unitsPage";
+const String unitCreationPageId = "createUnitPage";
+const String unitGroupCreationPageId = "createUnitGroupPage";
 
 const Map<String, String> pageTitles = {
   convertedItemsPageId: "Converted Items",
-  unitGroupItemsPageId: "Unit Groups",
-  unitItemsPageId: "Units",
-  createUnitItemPageId: "New Unit",
-  createUnitGroupItemPageId: "New Unit Group",
+  unitGroupsPageId: "Unit Groups",
+  unitsPageId: "Units",
+  unitCreationPageId: "New Unit",
+  unitGroupCreationPageId: "New Unit Group",
 };
 
 const Map<String, String> searchBarPlaceholders = {
-  unitGroupItemsPageId: "Search unit groups...",
-  unitItemsPageId: "Search units...",
+  unitGroupsPageId: "Search unit groups...",
+  unitsPageId: "Search units...",
 };
+
+
+enum ItemType {
+  unit,
+  unitGroup,
+}
+
+enum ConvertouchAction {
+  back,
+  menu,
+  select,
+  apply,
+  remove,
+  none
+}
+
+enum NavigationAction {
+  push,
+  pop,
+  none
+}
