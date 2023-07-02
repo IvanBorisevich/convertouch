@@ -12,3 +12,14 @@ class FetchUnitGroups extends UnitGroupsMenuEvent {
     return 'FetchUnitGroups{}';
   }
 }
+
+class AddUnitGroup extends UnitGroupsMenuEvent {
+  const AddUnitGroup({required this.unitGroupName});
+
+  final String unitGroupName;
+
+  @override
+  String toString() {
+    return 'AddUnitGroup{unitGroupName: $unitGroupName}';
+  }
+}

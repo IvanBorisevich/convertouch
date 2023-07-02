@@ -7,6 +7,7 @@ import 'package:convertouch/presenter/bloc_observer.dart';
 import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/view/animation/navigation_animation.dart';
 import 'package:convertouch/view/home_page.dart';
+import 'package:convertouch/view/unit_group_creation_page.dart';
 import 'package:convertouch/view/unit_groups_menu_page.dart';
 import 'package:convertouch/view/units_menu_page.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ConvertouchApp extends StatelessWidget {
     homePageId: const ConvertouchHomePage(),
     unitGroupsPageId: const ConvertouchUnitGroupsMenuPage(),
     unitsPageId: const ConvertouchUnitsMenuPage(),
+    unitGroupCreationPageId: const ConvertouchUnitGroupCreationPage()
   };
 
   @override

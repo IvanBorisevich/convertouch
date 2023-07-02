@@ -8,8 +8,8 @@ const String homePageId = '/';
 const String convertedItemsPageId = "convertedItemsPage";
 const String unitGroupsPageId = "unitGroupsPage";
 const String unitsPageId = "unitsPage";
-const String unitCreationPageId = "createUnitPage";
-const String unitGroupCreationPageId = "createUnitGroupPage";
+const String unitCreationPageId = "unitCreationPage";
+const String unitGroupCreationPageId = "unitGroupCreationPage";
 
 const Map<String, String> pageTitles = {
   convertedItemsPageId: "Converted Items",

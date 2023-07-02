@@ -13,4 +13,9 @@ class UnitModel extends ItemModel {
   final String _abbreviation;
 
   String get abbreviation => _abbreviation;
+
+  @override
+  String toString() {
+    return 'UnitModel{id: $id, name: $name, _abbreviation: $_abbreviation}';
+  }
 }

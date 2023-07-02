@@ -15,4 +15,9 @@ class UnitGroupModel extends ItemModel {
   final String _iconName;
 
   String get iconName => _iconName;
+
+  @override
+  String toString() {
+    return 'UnitGroupModel{id: $id, name: $name, _iconName: $_iconName}';
+  }
 }

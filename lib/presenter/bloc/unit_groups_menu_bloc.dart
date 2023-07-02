@@ -8,14 +8,30 @@ class UnitGroupsMenuBloc
   UnitGroupsMenuBloc() : super(const UnitGroupsFetched(unitGroups: []));
 
   @override
-  Stream<UnitGroupsMenuState> mapEventToState(UnitGroupsMenuEvent event) async* {
+  Stream<UnitGroupsMenuState> mapEventToState(
+      UnitGroupsMenuEvent event) async* {
     if (event is FetchUnitGroups) {
+      yield const UnitGroupsFetching();
       yield UnitGroupsFetched(unitGroups: allUnitGroups);
+    } else if (event is AddUnitGroup) {
+      yield const UnitGroupAdding();
+
+      bool unitGroupExists = allUnitGroups
+          .any((unitGroup) => event.unitGroupName == unitGroup.name);
+
+      if (!unitGroupExists) {
+        UnitGroupModel newUnitGroup =
+            UnitGroupModel(allUnitGroups.length + 1, event.unitGroupName);
+        allUnitGroups.add(newUnitGroup);
+        yield UnitGroupAdded(unitGroup: newUnitGroup);
+      } else {
+        yield UnitGroupExists(unitGroupName: event.unitGroupName);
+      }
     }
   }
 }
 
-const List<UnitGroupModel> allUnitGroups = [
+final List<UnitGroupModel> allUnitGroups = [
   UnitGroupModel(1, 'Length'),
   UnitGroupModel(2, 'Area'),
   UnitGroupModel(3, 'Volume'),
@@ -24,17 +40,4 @@ const List<UnitGroupModel> allUnitGroups = [
   UnitGroupModel(6, 'Currency'),
   UnitGroupModel(7, 'Temperature'),
   UnitGroupModel(8, 'Numeral System'),
-  UnitGroupModel(9, 'Length1 ehuefuhe uehfuehufhe fheufh'),
-  UnitGroupModel(10, 'Length1dsdsdsdsddsddsdsdsssd'),
-  UnitGroupModel(11, 'Len dd dd'),
-  UnitGroupModel(12, 'Length11'),
-  UnitGroupModel(13, 'Length'),
-  UnitGroupModel(14, 'Length'),
-  UnitGroupModel(15, 'Length'),
-  UnitGroupModel(16, 'Length'),
-  UnitGroupModel(17, 'Length'),
-  UnitGroupModel(18, 'Length'),
-  UnitGroupModel(19, 'Length'),
-  UnitGroupModel(20, 'Length'),
-  UnitGroupModel(21, 'Length'),
 ];
