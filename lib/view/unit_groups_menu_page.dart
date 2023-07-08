@@ -18,8 +18,10 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UnitsMenuBloc, UnitsMenuState>(
         listener: (_, unitsMenuState) {
-          if (unitsMenuState is UnitsFetched) {
-            Navigator.of(context).pushNamed(unitsPageId);
+          if (unitsMenuState is UnitsFetched &&
+              unitsMenuState.triggeredBy == unitGroupsPageId) {
+            Navigator.of(context)
+                .pushNamed(unitsPageId, arguments: unitsMenuState.unitGroup);
           }
         },
         child: SafeArea(
@@ -57,8 +59,7 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
             body: Column(
               children: [
                 const ConvertouchSearchBar(
-                    searchBarPlaceholder: "Search unit groups..."
-                ),
+                    searchBarPlaceholder: "Search unit groups..."),
                 Expanded(
                     child: BlocBuilder<UnitGroupsMenuBloc, UnitGroupsMenuState>(
                         buildWhen: (prev, next) {
@@ -71,8 +72,7 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
                   return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
                       builder: (_, itemsMenuViewState) {
                     return ConvertouchItemsMenuView(
-                        unitGroups, itemsMenuViewState.itemsMenuView
-                    );
+                        unitGroups, itemsMenuViewState.itemsMenuView);
                   });
                 })),
               ],

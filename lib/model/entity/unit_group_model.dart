@@ -1,23 +1,28 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 
 
 class UnitGroupModel extends ItemModel {
-  const UnitGroupModel(
+  UnitGroupModel(
       int id,
       String name,
       {
-        String iconName = unitGroupDefaultIconName
+        this.iconName = unitGroupDefaultIconName,
+        this.ciUnitId
       }) :
-        _iconName = iconName,
         super(id, name, ItemType.unitGroup);
 
-  final String _iconName;
-
-  String get iconName => _iconName;
+  final String iconName;
+  int? ciUnitId;
+  UnitModel? ciUnit;
 
   @override
   String toString() {
-    return 'UnitGroupModel{id: $id, name: $name, _iconName: $_iconName}';
+    return 'UnitGroupModel{'
+        'id: $id, '
+        'name: $name, '
+        'iconName: $iconName, '
+        'ciUnit: $ciUnit}';
   }
 }

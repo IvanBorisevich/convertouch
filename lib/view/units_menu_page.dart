@@ -1,3 +1,5 @@
+import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
@@ -15,6 +17,9 @@ class ConvertouchUnitsMenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UnitGroupModel unitGroup =
+        ModalRoute.of(context)!.settings.arguments as UnitGroupModel;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -28,9 +33,9 @@ class ConvertouchUnitsMenuPage extends StatelessWidget {
             },
           ),
           centerTitle: true,
-          title: const Text(
-            "Units",
-            style: TextStyle(
+          title: Text(
+            unitGroup.name,
+            style: const TextStyle(
                 color: Color(0xFF426F99),
                 fontSize: 20,
                 fontWeight: FontWeight.w600),
@@ -73,7 +78,10 @@ class ConvertouchUnitsMenuPage extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .pushNamed(unitCreationPageId, arguments: unitGroup);
+          },
           child: const Icon(Icons.add),
         ),
       ),

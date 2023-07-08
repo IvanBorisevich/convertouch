@@ -30,8 +30,7 @@ class _ConvertouchConvertedUnitsPageState
           padding: const EdgeInsetsDirectional.fromSTEB(_listSpacingLeftRight,
               _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
           itemBuilder: (context, index) {
-            return ConvertouchConvertedUnitItem(convertedItems[index],
-                spacingBetweenTextAndButton: _listSpacingLeftRight);
+            return ConvertouchConvertedUnitItem(convertedItems[index]);
           },
           separatorBuilder: (context, index) => Padding(
               padding: EdgeInsetsDirectional.fromSTEB(

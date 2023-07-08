@@ -31,7 +31,7 @@ class _ConvertouchUnitGroupCreationPageState
             builder: (BuildContext context) {
               return AlertDialog(
                 content: Text(
-                    "Unit group ${unitGroupsMenuState.unitGroupName} "
+                    "Unit group '${unitGroupsMenuState.unitGroupName}' "
                         "already exist"),
                 actions: <Widget>[
                   TextButton(

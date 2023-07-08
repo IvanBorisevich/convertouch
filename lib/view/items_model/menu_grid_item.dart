@@ -41,8 +41,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (item.itemType == ItemType.unitGroup) {
-          BlocProvider.of<UnitsMenuBloc>(context)
-              .add(const FetchUnits(unitGroupId: 1));
+          BlocProvider.of<UnitsMenuBloc>(context).add(
+              const FetchUnits(unitGroupId: 1, triggeredBy: unitGroupsPageId));
         }
       },
       child: Container(

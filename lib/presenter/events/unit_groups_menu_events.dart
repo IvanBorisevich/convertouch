@@ -19,6 +19,9 @@ class AddUnitGroup extends UnitGroupsMenuEvent {
   final String unitGroupName;
 
   @override
+  List<Object> get props => [unitGroupName];
+
+  @override
   String toString() {
     return 'AddUnitGroup{unitGroupName: $unitGroupName}';
   }

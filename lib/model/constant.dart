@@ -11,6 +11,8 @@ const String unitsPageId = "unitsPage";
 const String unitCreationPageId = "unitCreationPage";
 const String unitGroupCreationPageId = "unitGroupCreationPage";
 
+const int unitAbbreviationMaxLength = 4;
+
 const Map<String, String> pageTitles = {
   convertedItemsPageId: "Converted Items",
   unitGroupsPageId: "Unit Groups",

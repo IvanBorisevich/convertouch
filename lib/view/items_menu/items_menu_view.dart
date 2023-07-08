@@ -5,7 +5,8 @@ import 'package:convertouch/view/items_model/menu_list_item.dart';
 import 'package:flutter/cupertino.dart';
 
 class ConvertouchItemsMenuView extends StatelessWidget {
-  const ConvertouchItemsMenuView(this.items, this.itemsMenuViewMode, {super.key});
+  const ConvertouchItemsMenuView(this.items, this.itemsMenuViewMode,
+      {super.key});
 
   final List<ItemModel> items;
   final ItemsMenuViewMode itemsMenuViewMode;
@@ -13,6 +14,9 @@ class ConvertouchItemsMenuView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      if (items.isEmpty) {
+        return const ConvertouchItemsEmptyView();
+      }
       switch (itemsMenuViewMode) {
         case ItemsMenuViewMode.grid:
           return ConvertouchItemsGrid(items);
@@ -22,7 +26,6 @@ class ConvertouchItemsMenuView extends StatelessWidget {
     });
   }
 }
-
 
 class ConvertouchItemsGrid extends StatelessWidget {
   const ConvertouchItemsGrid(this.items, {super.key});
@@ -48,7 +51,6 @@ class ConvertouchItemsGrid extends StatelessWidget {
     );
   }
 }
-
 
 class ConvertouchItemsList extends StatelessWidget {
   const ConvertouchItemsList(this.items, {super.key});
@@ -76,4 +78,17 @@ class ConvertouchItemsList extends StatelessWidget {
   }
 }
 
+class ConvertouchItemsEmptyView extends StatelessWidget {
+  const ConvertouchItemsEmptyView({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      child: Center(
+          child: Text(
+        "No Items",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      )),
+    );
+  }
+}

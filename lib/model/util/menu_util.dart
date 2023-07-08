@@ -29,3 +29,9 @@ int getGridItemNameLinesNumToWrap(String gridItemName) {
 String getIconPath(ItemModel itemModel) {
   return "$iconPathPrefix/${toUnitGroup(itemModel).iconName}";
 }
+
+String getInitialUnitAbbreviationFromName(String unitName) {
+  return unitName.length > unitAbbreviationMaxLength
+      ? unitName.substring(0, unitAbbreviationMaxLength)
+      : unitName;
+}

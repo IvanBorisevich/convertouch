@@ -1,15 +1,9 @@
 import 'package:convertouch/model/constant.dart';
 
 abstract class ItemModel {
-  const ItemModel(this._id, this._name, this._itemType);
+  const ItemModel(this.id, this.name, this.itemType);
 
-  final int _id;
-  final String _name;
-  final ItemType _itemType;
-
-  int get id => _id;
-
-  String get name => _name;
-
-  ItemType get itemType => _itemType;
+  final int id;
+  final String name;
+  final ItemType itemType;
 }

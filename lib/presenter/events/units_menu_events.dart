@@ -4,39 +4,56 @@ abstract class UnitsMenuEvent extends ConvertouchEvent {
   const UnitsMenuEvent();
 }
 
-
 class FetchUnits extends UnitsMenuEvent {
   const FetchUnits({
-    required this.unitGroupId
+    required this.unitGroupId,
+    this.triggeredBy,
   });
 
   final int unitGroupId;
+  final String? triggeredBy;
 
   @override
-  List<Object> get props => [
-    unitGroupId
-  ];
+  List<Object> get props => [unitGroupId];
 
   @override
   String toString() {
-    return 'FetchUnits{unitGroupId: $unitGroupId}';
+    return 'FetchUnits{unitGroupId: $unitGroupId, triggeredBy: $triggeredBy}';
   }
 }
 
 class SelectUnits extends UnitsMenuEvent {
-  const SelectUnits({
-    required this.unitIds
-  });
+  const SelectUnits({required this.unitIds});
 
   final List<int> unitIds;
 
   @override
-  List<Object> get props => [
-    unitIds
-  ];
+  List<Object> get props => [unitIds];
 
   @override
   String toString() {
     return 'SelectUnits{unitIds: $unitIds}';
+  }
+}
+
+class AddUnit extends UnitsMenuEvent {
+  const AddUnit(
+      {required this.unitName,
+      required this.unitAbbreviation,
+      required this.unitGroupId});
+
+  final String unitName;
+  final String unitAbbreviation;
+  final int unitGroupId;
+
+  @override
+  List<Object> get props => [unitName, unitAbbreviation, unitGroupId];
+
+  @override
+  String toString() {
+    return 'AddUnit{'
+        'unitName: $unitName, '
+        'unitAbbreviation: $unitAbbreviation, '
+        'unitGroupId: $unitGroupId}';
   }
 }

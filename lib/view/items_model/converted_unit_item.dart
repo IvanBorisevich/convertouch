@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class ConvertouchConvertedUnitItem extends StatefulWidget {
   const ConvertouchConvertedUnitItem(this.item,
-      {super.key, this.spacingBetweenTextAndButton = 5});
+      {super.key, this.spacingBetweenTextAndButton = 7});
 
   final UnitValueModel item;
   final double spacingBetweenTextAndButton;
@@ -16,7 +16,7 @@ class ConvertouchConvertedUnitItem extends StatefulWidget {
 
 class _ConvertouchConvertedUnitItemState
     extends State<ConvertouchConvertedUnitItem> {
-  static const double _unitButtonWidth = 55;
+  static const double _unitButtonWidth = 70;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;
   static const double _convertedValueTextFontSize = 17;
@@ -94,6 +94,7 @@ class _ConvertouchConvertedUnitItemState
                 style: const TextStyle(
                   color: Color(0xFF426F99),
                 ),
+                maxLines: 1,
               ),
               onPressed: () {},
             ),
