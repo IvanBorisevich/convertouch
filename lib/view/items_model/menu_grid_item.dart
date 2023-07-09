@@ -11,38 +11,13 @@ class ConvertouchMenuGridItem extends StatelessWidget {
 
   final ItemModel item;
 
-  Widget buildUnitGroupIconButton() {
-    return IconButton(
-      onPressed: null,
-      icon: ImageIcon(
-        AssetImage(getIconPath(item)),
-        color: const Color(0xFF366C9F),
-        size: 35,
-      ),
-    );
-  }
-
-  Widget buildUnitItemAbbreviation() {
-    return Center(
-      child: Text(
-        toUnit(item).abbreviation,
-        style: const TextStyle(
-          fontFamily: quicksandFontFamily,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF366C9F),
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (item.itemType == ItemType.unitGroup) {
           BlocProvider.of<UnitsMenuBloc>(context).add(
-              const FetchUnits(unitGroupId: 1, triggeredBy: unitGroupsPageId));
+              FetchUnits(unitGroupId: item.id, triggeredBy: unitGroupsPageId));
         }
       },
       child: Container(
@@ -89,6 +64,31 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildUnitGroupIconButton() {
+    return IconButton(
+      onPressed: null,
+      icon: ImageIcon(
+        AssetImage(getIconPath(item)),
+        color: const Color(0xFF366C9F),
+        size: 35,
+      ),
+    );
+  }
+
+  Widget buildUnitItemAbbreviation() {
+    return Center(
+      child: Text(
+        toUnit(item).abbreviation,
+        style: const TextStyle(
+          fontFamily: quicksandFontFamily,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFF366C9F),
+          fontSize: 16,
         ),
       ),
     );

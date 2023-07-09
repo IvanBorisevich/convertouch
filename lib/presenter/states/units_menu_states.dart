@@ -2,7 +2,7 @@ import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-abstract class UnitsMenuState extends BlocState {
+abstract class UnitsMenuState extends ConvertouchBlocState {
   const UnitsMenuState();
 }
 
@@ -44,22 +44,6 @@ class UnitsFetched extends UnitsMenuState {
   }
 }
 
-
-class UnitsSelected extends UnitsMenuState {
-  const UnitsSelected({
-    required this.selectedUnits
-  });
-
-  final List<UnitModel> selectedUnits;
-
-  @override
-  List<Object> get props => [selectedUnits];
-
-  @override
-  String toString() {
-    return 'UnitsSelected{selectedUnits: $selectedUnits}';
-  }
-}
 
 class UnitChecking extends UnitsMenuState {
   const UnitChecking();

@@ -32,9 +32,9 @@ class UnitGroupsMenuBloc
 }
 
 final List<UnitGroupModel> allUnitGroups = [
-  // UnitGroupModel(1, 'Length', ciUnitId: 1),
-  // UnitGroupModel(2, 'Area'),
-  // UnitGroupModel(3, 'Volume'),
+  UnitGroupModel(1, 'Length', ciUnitId: 1),
+  UnitGroupModel(2, 'Area'),
+  UnitGroupModel(3, 'Volume'),
   // UnitGroupModel(4, 'Speed'),
   // UnitGroupModel(5, 'Mass'),
   // UnitGroupModel(6, 'Currency'),

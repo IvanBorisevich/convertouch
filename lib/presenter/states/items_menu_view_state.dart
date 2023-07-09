@@ -1,7 +1,7 @@
 import 'package:convertouch/model/items_menu_view_mode.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-class ItemsMenuViewState extends BlocState {
+class ItemsMenuViewState extends ConvertouchBlocState {
   const ItemsMenuViewState({
     required this.itemsMenuView,
   });

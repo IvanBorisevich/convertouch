@@ -1,7 +1,7 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-abstract class UnitGroupsMenuState extends BlocState {
+abstract class UnitGroupsMenuState extends ConvertouchBlocState {
   const UnitGroupsMenuState();
 }
 

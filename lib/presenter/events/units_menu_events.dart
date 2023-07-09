@@ -22,20 +22,6 @@ class FetchUnits extends UnitsMenuEvent {
   }
 }
 
-class SelectUnits extends UnitsMenuEvent {
-  const SelectUnits({required this.unitIds});
-
-  final List<int> unitIds;
-
-  @override
-  List<Object> get props => [unitIds];
-
-  @override
-  String toString() {
-    return 'SelectUnits{unitIds: $unitIds}';
-  }
-}
-
 class AddUnit extends UnitsMenuEvent {
   const AddUnit(
       {required this.unitName,

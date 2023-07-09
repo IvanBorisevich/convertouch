@@ -18,8 +18,6 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
           units: allUnits,
           unitGroup: unitGroup,
           triggeredBy: event.triggeredBy);
-    } else if (event is SelectUnits) {
-      yield UnitsSelected(selectedUnits: getSelectedUnits(event.unitIds));
     } else if (event is AddUnit) {
       yield const UnitChecking();
       bool unitExists = allUnits.any((unit) => unit.name == event.unitName);
@@ -34,35 +32,35 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
       }
     }
   }
+}
 
-  List<UnitModel> getSelectedUnits(List<int> selectedUnitIds) {
-    if (selectedUnitIds.isNotEmpty) {
-      return allUnits
-          .where((unit) => selectedUnitIds.contains(unit.id))
-          .toList();
-    }
-    return [];
+List<UnitModel> getUnits(List<int> selectedUnitIds) {
+  if (selectedUnitIds.isNotEmpty) {
+    return allUnits
+        .where((unit) => selectedUnitIds.contains(unit.id))
+        .toList();
   }
+  return [];
+}
 
-  UnitModel? getUnit(int? unitId) {
-    return unitId != null
-        ? allUnits.firstWhere((unit) => unit.id == unitId)
-        : null;
-  }
+UnitModel? getUnit(int? unitId) {
+  return unitId != null
+      ? allUnits.firstWhere((unit) => unit.id == unitId)
+      : null;
+}
 
-  UnitGroupModel getUnitGroup(int unitGroupId) {
-    return allUnitGroups.firstWhere((unitGroup) => unitGroup.id == unitGroupId);
-  }
+UnitGroupModel getUnitGroup(int unitGroupId) {
+  return allUnitGroups.firstWhere((unitGroup) => unitGroup.id == unitGroupId);
 }
 
 final List<UnitModel> allUnits = [
   UnitModel(1, 'Centimeter', 'cm'),
   UnitModel(2, 'Centimeter Square', 'cm2'),
   UnitModel(3, 'Centimeter Square', 'mm2'),
-  // UnitModel(4, 'Meter', 'm'),
-  // UnitModel(5, 'Centimeter Square', 'mm3'),
-  // UnitModel(6, 'Centimeter Square', 'cm2'),
-  // UnitModel(7, 'Centimeter', 'cm'),
+  UnitModel(4, 'Meter', 'm'),
+  UnitModel(5, 'Centimeter Square', 'mm3'),
+  UnitModel(6, 'Centimeter Square', 'cm2'),
+  UnitModel(7, 'Centimeter', 'cm'),
   // UnitModel(8, 'Centimeter Square', 'mm4'),
   // UnitModel(9, 'Centimeter Square', 'cm2'),
   // UnitModel(10, 'Centimeter', 'cm'),

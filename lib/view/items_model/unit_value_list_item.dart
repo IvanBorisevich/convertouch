@@ -2,20 +2,20 @@ import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ConvertouchConvertedUnitItem extends StatefulWidget {
-  const ConvertouchConvertedUnitItem(this.item,
+class ConvertouchUnitValueListItem extends StatefulWidget {
+  const ConvertouchUnitValueListItem(this.item,
       {super.key, this.spacingBetweenTextAndButton = 7});
 
   final UnitValueModel item;
   final double spacingBetweenTextAndButton;
 
   @override
-  State<ConvertouchConvertedUnitItem> createState() =>
-      _ConvertouchConvertedUnitItemState();
+  State<ConvertouchUnitValueListItem> createState() =>
+      _ConvertouchUnitValueListItemState();
 }
 
-class _ConvertouchConvertedUnitItemState
-    extends State<ConvertouchConvertedUnitItem> {
+class _ConvertouchUnitValueListItemState
+    extends State<ConvertouchUnitValueListItem> {
   static const double _unitButtonWidth = 70;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;

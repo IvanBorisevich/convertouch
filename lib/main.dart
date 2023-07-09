@@ -1,5 +1,5 @@
 import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/presenter/bloc/converted_units_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
@@ -34,11 +34,10 @@ class ConvertouchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ConvertedUnitsBloc()),
+        BlocProvider(create: (context) => UnitsConversionBloc()),
         BlocProvider(create: (context) => ItemsMenuViewBloc()),
-        BlocProvider(
-            create: (context) =>
-                UnitGroupsMenuBloc()..add(const FetchUnitGroups())),
+        BlocProvider(create: (context) => UnitGroupsMenuBloc()
+          ..add(const FetchUnitGroups())),
         BlocProvider(create: (context) => UnitsMenuBloc()),
       ],
       child: MaterialApp(

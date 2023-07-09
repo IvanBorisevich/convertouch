@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSearchBar extends StatelessWidget {
-  const ConvertouchSearchBar({required this.searchBarPlaceholder, super.key});
+  const ConvertouchSearchBar({required this.placeholder, super.key});
 
   static const double _containerHeight = 53;
   static const double _elementsSpacing = 5;
@@ -18,7 +18,7 @@ class ConvertouchSearchBar extends StatelessWidget {
     ItemsMenuViewMode.grid: Icons.grid_view_outlined
   };
 
-  final String searchBarPlaceholder;
+  final String placeholder;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class ConvertouchSearchBar extends StatelessWidget {
         obscureText: false,
         decoration: InputDecoration(
           suffixIcon: const Icon(Icons.search, color: Color(0xFF7BA2D3)),
-          hintText: searchBarPlaceholder,
+          hintText: placeholder,
           hintStyle: const TextStyle(
               color: Color(0xFF7BA2D3), fontSize: searchTextFieldFontSize),
           border: const OutlineInputBorder(

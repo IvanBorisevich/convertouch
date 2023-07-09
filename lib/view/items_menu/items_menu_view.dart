@@ -1,29 +1,33 @@
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/items_menu_view_mode.dart';
+import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
+import 'package:convertouch/presenter/states/items_menu_view_state.dart';
 import 'package:convertouch/view/items_model/menu_grid_item.dart';
 import 'package:convertouch/view/items_model/menu_list_item.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchItemsMenuView extends StatelessWidget {
-  const ConvertouchItemsMenuView(this.items, this.itemsMenuViewMode,
-      {super.key});
+  const ConvertouchItemsMenuView(this.items, {super.key});
 
   final List<ItemModel> items;
-  final ItemsMenuViewMode itemsMenuViewMode;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (items.isEmpty) {
-        return const ConvertouchItemsEmptyView();
-      }
-      switch (itemsMenuViewMode) {
-        case ItemsMenuViewMode.grid:
-          return ConvertouchItemsGrid(items);
-        case ItemsMenuViewMode.list:
-          return ConvertouchItemsList(items);
-      }
-    });
+    return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
+        builder: (_, itemsMenuViewState) {
+          return LayoutBuilder(builder: (context, constraints) {
+            if (items.isEmpty) {
+              return const ConvertouchItemsEmptyView();
+            }
+            switch (itemsMenuViewState.itemsMenuView) {
+              case ItemsMenuViewMode.grid:
+                return ConvertouchItemsGrid(items);
+              case ItemsMenuViewMode.list:
+                return ConvertouchItemsList(items);
+            }
+          });
+        });
   }
 }
 
