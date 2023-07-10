@@ -1,25 +1,18 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/util/menu_util.dart';
-import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
-import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchMenuGridItem extends StatelessWidget {
-  const ConvertouchMenuGridItem(this.item, {super.key});
+  const ConvertouchMenuGridItem(this.item, {super.key, this.onPressed});
 
   final ItemModel item;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (item.itemType == ItemType.unitGroup) {
-          BlocProvider.of<UnitsMenuBloc>(context).add(
-              FetchUnits(unitGroupId: item.id));
-        }
-      },
+      onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF2F5FF),

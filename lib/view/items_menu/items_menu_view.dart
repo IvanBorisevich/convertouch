@@ -1,6 +1,9 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/items_menu_view_mode.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/items_menu_view_state.dart';
 import 'package:convertouch/view/items_model/menu_grid_item.dart';
 import 'package:convertouch/view/items_model/menu_list_item.dart';
@@ -50,7 +53,13 @@ class ConvertouchItemsGrid extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemBuilder: (context, index) {
-        return ConvertouchMenuGridItem(items[index]);
+        return ConvertouchMenuGridItem(items[index], onPressed: () {
+          ItemModel item = items[index];
+          if (item.itemType == ItemType.unitGroup) {
+            BlocProvider.of<UnitsMenuBloc>(context).add(
+                FetchUnits(unitGroupId: item.id));
+          }
+        });
       },
     );
   }
@@ -69,7 +78,13 @@ class ConvertouchItemsList extends StatelessWidget {
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return ConvertouchMenuListItem(items[index]);
+        return ConvertouchMenuListItem(items[index], onPressed: () {
+          ItemModel item = items[index];
+          if (item.itemType == ItemType.unitGroup) {
+            BlocProvider.of<UnitsMenuBloc>(context).add(
+                FetchUnits(unitGroupId: item.id));
+          }
+        });
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(
