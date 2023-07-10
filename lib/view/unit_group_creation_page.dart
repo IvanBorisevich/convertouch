@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
 import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/presenter/states/unit_groups_menu_states.dart';
@@ -24,10 +25,12 @@ class _ConvertouchUnitGroupCreationPageState
   Widget build(BuildContext context) {
     return BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
       listener: (_, unitGroupsMenuState) {
-        if (unitGroupsMenuState is UnitGroupAdded) {
+        if (unitGroupsMenuState is UnitGroupsFetched &&
+            unitGroupsMenuState.navigationAction == NavigationAction.pop) {
           Navigator.of(context).pop();
         } else if (unitGroupsMenuState is UnitGroupExists) {
-          showAlertDialog(context,
+          showAlertDialog(
+              context,
               "Unit group '${unitGroupsMenuState.unitGroupName}' "
               "already exist");
         }
@@ -39,8 +42,8 @@ class _ConvertouchUnitGroupCreationPageState
           checkIcon(context, _isApplyButtonEnabled, () {
             BlocProvider.of<UnitGroupsMenuBloc>(context)
                 .add(AddUnitGroup(unitGroupName: _controller.text));
-            BlocProvider.of<UnitGroupsMenuBloc>(context)
-                .add(const FetchUnitGroups());
+            BlocProvider.of<UnitGroupsMenuBloc>(context).add(
+                const FetchUnitGroups(navigationAction: NavigationAction.pop));
           }),
         ],
         body: Column(

@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
@@ -16,10 +17,12 @@ class UnitGroupsFetching extends UnitGroupsMenuState {
 
 class UnitGroupsFetched extends UnitGroupsMenuState {
   const UnitGroupsFetched({
-    required this.unitGroups
+    required this.unitGroups,
+    this.navigationAction
   });
 
   final List<UnitGroupModel> unitGroups;
+  final NavigationAction? navigationAction;
 
   @override
   List<Object> get props => [unitGroups];

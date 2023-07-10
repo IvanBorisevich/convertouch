@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitsMenuEvent extends ConvertouchEvent {
@@ -7,20 +8,19 @@ abstract class UnitsMenuEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsMenuEvent {
   const FetchUnits({
     required this.unitGroupId,
-    this.isBackNavigation = false,
+    this.navigationAction,
   });
 
   final int unitGroupId;
-  final bool isBackNavigation;
+  final NavigationAction? navigationAction;
 
   @override
-  List<Object> get props => [unitGroupId, isBackNavigation];
+  List<Object> get props => [unitGroupId];
 
   @override
   String toString() {
     return 'FetchUnits{'
-        'unitGroupId: $unitGroupId, '
-        'isBackNavigation: $isBackNavigation}';
+        'unitGroupId: $unitGroupId}';
   }
 }
 

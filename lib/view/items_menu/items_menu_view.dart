@@ -19,18 +19,18 @@ class ConvertouchItemsMenuView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
         builder: (_, itemsMenuViewState) {
-          return LayoutBuilder(builder: (context, constraints) {
-            if (items.isEmpty) {
-              return const ConvertouchItemsEmptyView();
-            }
-            switch (itemsMenuViewState.itemsMenuView) {
-              case ItemsMenuViewMode.grid:
-                return ConvertouchItemsGrid(items);
-              case ItemsMenuViewMode.list:
-                return ConvertouchItemsList(items);
-            }
-          });
-        });
+      return LayoutBuilder(builder: (context, constraints) {
+        if (items.isEmpty) {
+          return const ConvertouchItemsEmptyView();
+        }
+        switch (itemsMenuViewState.itemsMenuView) {
+          case ItemsMenuViewMode.grid:
+            return ConvertouchItemsGrid(items);
+          case ItemsMenuViewMode.list:
+            return ConvertouchItemsList(items);
+        }
+      });
+    });
   }
 }
 
@@ -56,8 +56,8 @@ class ConvertouchItemsGrid extends StatelessWidget {
         return ConvertouchMenuGridItem(items[index], onPressed: () {
           ItemModel item = items[index];
           if (item.itemType == ItemType.unitGroup) {
-            BlocProvider.of<UnitsMenuBloc>(context).add(
-                FetchUnits(unitGroupId: item.id));
+            BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
+                unitGroupId: item.id, navigationAction: NavigationAction.push));
           }
         });
       },
@@ -81,8 +81,8 @@ class ConvertouchItemsList extends StatelessWidget {
         return ConvertouchMenuListItem(items[index], onPressed: () {
           ItemModel item = items[index];
           if (item.itemType == ItemType.unitGroup) {
-            BlocProvider.of<UnitsMenuBloc>(context).add(
-                FetchUnits(unitGroupId: item.id));
+            BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
+                unitGroupId: item.id, navigationAction: NavigationAction.push));
           }
         });
       },

@@ -20,7 +20,7 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
     return BlocListener<UnitsMenuBloc, UnitsMenuState>(
       listener: (_, unitsMenuState) {
         if (unitsMenuState is UnitsFetched &&
-            !unitsMenuState.isBackNavigation) {
+            unitsMenuState.navigationAction == NavigationAction.push) {
           Navigator.of(context).pushNamed(unitsPageId);
         }
       },

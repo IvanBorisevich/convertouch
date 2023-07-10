@@ -17,3 +17,8 @@ enum ItemType {
   unit,
   unitGroup,
 }
+
+enum NavigationAction {
+  pop,
+  push
+}

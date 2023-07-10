@@ -12,7 +12,10 @@ class UnitGroupsMenuBloc
       UnitGroupsMenuEvent event) async* {
     if (event is FetchUnitGroups) {
       yield const UnitGroupsFetching();
-      yield UnitGroupsFetched(unitGroups: allUnitGroups);
+      yield UnitGroupsFetched(
+          unitGroups: allUnitGroups,
+          navigationAction: event.navigationAction
+      );
     } else if (event is AddUnitGroup) {
       yield const UnitGroupAdding();
 

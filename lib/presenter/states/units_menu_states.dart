@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
@@ -28,22 +29,21 @@ class UnitsFetched extends UnitsMenuState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.isBackNavigation = false,
+    this.navigationAction,
   });
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
-  final bool isBackNavigation;
+  final NavigationAction? navigationAction;
 
   @override
-  List<Object> get props => [units, unitGroup, isBackNavigation];
+  List<Object> get props => [units, unitGroup];
 
   @override
   String toString() {
     return 'UnitsFetched{'
         'units: $units, '
-        'unitGroup: $unitGroup, '
-        'isNavigationBack: $isBackNavigation}';
+        'unitGroup: $unitGroup}';
   }
 }
 
