@@ -20,7 +20,7 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
     return BlocListener<UnitsMenuBloc, UnitsMenuState>(
       listener: (_, unitsMenuState) {
         if (unitsMenuState is UnitsFetched &&
-            unitsMenuState.triggeredBy == unitGroupsPageId) {
+            !unitsMenuState.isBackNavigation) {
           Navigator.of(context).pushNamed(unitsPageId);
         }
       },
@@ -41,13 +41,12 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
   Widget _appBarLeftIcon(BuildContext context) {
     return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
         buildWhen: (prev, next) {
-          return prev != next && next is UnitsConverted;
-        },
-        builder: (_, convertedUnitsState) {
-          bool isBackButtonActive = convertedUnitsState is UnitsConverted &&
-              convertedUnitsState.convertedUnitValues.isNotEmpty;
-          return isBackButtonActive ? backIcon(context) : menuIcon(context);
-        });
+      return prev != next && next is UnitsConverted;
+    }, builder: (_, convertedUnitsState) {
+      bool isBackButtonActive = convertedUnitsState is UnitsConverted &&
+          convertedUnitsState.convertedUnitValues.isNotEmpty;
+      return isBackButtonActive ? backIcon(context) : menuIcon(context);
+    });
   }
 
   Widget _body(BuildContext context) {
@@ -57,17 +56,14 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
         Expanded(
             child: BlocBuilder<UnitGroupsMenuBloc, UnitGroupsMenuState>(
                 buildWhen: (prev, next) {
-                  return prev != next && next is UnitGroupsFetched;
-                },
-                builder: (_, unitGroupsMenuState) {
-                  List<UnitGroupModel> unitGroups =
-                      unitGroupsMenuState is UnitGroupsFetched
-                          ? unitGroupsMenuState.unitGroups
-                          : [];
-                  return ConvertouchItemsMenuView(unitGroups);
-
-                })
-        ),
+          return prev != next && next is UnitGroupsFetched;
+        }, builder: (_, unitGroupsMenuState) {
+          List<UnitGroupModel> unitGroups =
+              unitGroupsMenuState is UnitGroupsFetched
+                  ? unitGroupsMenuState.unitGroups
+                  : [];
+          return ConvertouchItemsMenuView(unitGroups);
+        })),
       ],
     );
   }

@@ -7,18 +7,20 @@ abstract class UnitsMenuEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsMenuEvent {
   const FetchUnits({
     required this.unitGroupId,
-    this.triggeredBy,
+    this.isBackNavigation = false,
   });
 
   final int unitGroupId;
-  final String? triggeredBy;
+  final bool isBackNavigation;
 
   @override
-  List<Object> get props => [unitGroupId];
+  List<Object> get props => [unitGroupId, isBackNavigation];
 
   @override
   String toString() {
-    return 'FetchUnits{unitGroupId: $unitGroupId, triggeredBy: $triggeredBy}';
+    return 'FetchUnits{'
+        'unitGroupId: $unitGroupId, '
+        'isBackNavigation: $isBackNavigation}';
   }
 }
 

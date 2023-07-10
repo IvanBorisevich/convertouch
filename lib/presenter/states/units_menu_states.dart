@@ -28,19 +28,22 @@ class UnitsFetched extends UnitsMenuState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.triggeredBy,
+    this.isBackNavigation = false,
   });
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
-  final String? triggeredBy;
+  final bool isBackNavigation;
 
   @override
-  List<Object> get props => [units, unitGroup];
+  List<Object> get props => [units, unitGroup, isBackNavigation];
 
   @override
   String toString() {
-    return 'UnitsFetched{units: $units, unitGroup: $unitGroup}';
+    return 'UnitsFetched{'
+        'units: $units, '
+        'unitGroup: $unitGroup, '
+        'isNavigationBack: $isBackNavigation}';
   }
 }
 

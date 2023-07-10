@@ -17,7 +17,8 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
       yield UnitsFetched(
           units: allUnits,
           unitGroup: unitGroup,
-          triggeredBy: event.triggeredBy);
+          isBackNavigation: event.isBackNavigation
+      );
     } else if (event is AddUnit) {
       yield const UnitChecking();
       bool unitExists = allUnits.any((unit) => unit.name == event.unitName);

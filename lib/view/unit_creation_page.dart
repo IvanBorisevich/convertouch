@@ -37,7 +37,7 @@ class _ConvertouchUnitCreationPageState
 
     return BlocListener<UnitsMenuBloc, UnitsMenuState>(
       listener: (_, unitsMenuState) {
-        if (unitsMenuState is UnitAdded) {
+        if (unitsMenuState is UnitsFetched && unitsMenuState.isBackNavigation) {
           Navigator.of(context).pop();
         } else if (unitsMenuState is UnitExists) {
           showAlertDialog(
@@ -55,8 +55,8 @@ class _ConvertouchUnitCreationPageState
                 unitAbbreviation:
                     _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
                 unitGroupId: unitGroup.id));
-            BlocProvider.of<UnitsMenuBloc>(context)
-                .add(FetchUnits(unitGroupId: unitGroup.id));
+            BlocProvider.of<UnitsMenuBloc>(context).add(
+                FetchUnits(unitGroupId: unitGroup.id, isBackNavigation: true));
           }),
         ],
         body: SingleChildScrollView(
