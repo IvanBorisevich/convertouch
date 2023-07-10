@@ -1,4 +1,4 @@
-import 'package:convertouch/model/items_menu_view_mode.dart';
+import 'package:convertouch/model/util/menu_util.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
 import 'package:convertouch/presenter/states/items_menu_view_state.dart';

@@ -1,4 +1,4 @@
-import 'package:convertouch/model/items_menu_view_mode.dart';
+import 'package:convertouch/model/util/menu_util.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 class ItemsMenuViewState extends ConvertouchBlocState {

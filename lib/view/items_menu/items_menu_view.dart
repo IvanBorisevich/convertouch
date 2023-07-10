@@ -1,6 +1,6 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/model/items_menu_view_mode.dart';
+import 'package:convertouch/model/util/menu_util.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
 import 'package:convertouch/presenter/events/units_menu_events.dart';
@@ -20,15 +20,15 @@ class ConvertouchItemsMenuView extends StatelessWidget {
     return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
         builder: (_, itemsMenuViewState) {
       return LayoutBuilder(builder: (context, constraints) {
-        if (items.isEmpty) {
-          return const ConvertouchItemsEmptyView();
+        if (items.isNotEmpty) {
+          switch (itemsMenuViewState.itemsMenuView) {
+            case ItemsMenuViewMode.grid:
+              return ConvertouchItemsGrid(items);
+            case ItemsMenuViewMode.list:
+              return ConvertouchItemsList(items);
+          }
         }
-        switch (itemsMenuViewState.itemsMenuView) {
-          case ItemsMenuViewMode.grid:
-            return ConvertouchItemsGrid(items);
-          case ItemsMenuViewMode.list:
-            return ConvertouchItemsList(items);
-        }
+        return const ConvertouchItemsEmptyView();
       });
     });
   }
