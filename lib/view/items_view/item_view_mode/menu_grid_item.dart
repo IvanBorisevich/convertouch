@@ -1,13 +1,19 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/model/util/menu_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuGridItem extends StatelessWidget {
-  const ConvertouchMenuGridItem(this.item, {super.key, this.onPressed});
+  const ConvertouchMenuGridItem(this.item, {
+    super.key,
+    required this.logo,
+    this.onPressed,
+    this.itemNameMaxLines,
+  });
 
-  final ItemModel item;
+  final ItemModelWithIdName item;
+  final Widget logo;
   final void Function()? onPressed;
+  final int? itemNameMaxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +35,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  if (item.itemType == ItemType.unitGroup) {
-                    return buildUnitGroupIconButton();
-                  } else {
-                    return buildUnitItemAbbreviation();
-                  }
-                }),
+                child: logo,
               ),
             ),
             Flexible(
@@ -52,36 +52,11 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  maxLines: getGridItemNameLinesNumToWrap(item.name),
+                  maxLines: itemNameMaxLines,
                 ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildUnitGroupIconButton() {
-    return IconButton(
-      onPressed: null,
-      icon: ImageIcon(
-        AssetImage(getIconPath(item)),
-        color: const Color(0xFF366C9F),
-        size: 35,
-      ),
-    );
-  }
-
-  Widget buildUnitItemAbbreviation() {
-    return Center(
-      child: Text(
-        toUnit(item).abbreviation,
-        style: const TextStyle(
-          fontFamily: quicksandFontFamily,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF366C9F),
-          fontSize: 16,
         ),
       ),
     );

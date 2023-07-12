@@ -11,11 +11,10 @@ const String unitsPageId = "unitsPage";
 const String unitCreationPageId = "unitCreationPage";
 const String unitGroupCreationPageId = "unitGroupCreationPage";
 
-const int unitAbbreviationMaxLength = 4;
-
 enum ItemType {
   unit,
   unitGroup,
+  unitValue,
 }
 
 enum NavigationAction {

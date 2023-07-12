@@ -2,15 +2,15 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
-import 'package:convertouch/model/util/menu_util.dart';
+import 'package:convertouch/model/util/unit_creation_page_util.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
 import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/unit_groups_menu_states.dart';
 import 'package:convertouch/presenter/states/units_menu_states.dart';
-import 'package:convertouch/view/items_model/unit_value_list_item.dart';
-import 'package:convertouch/view/items_model/menu_list_item.dart';
+import 'package:convertouch/view/items_view/item/unit_group_item.dart';
+import 'package:convertouch/view/items_view/item_view_mode/unit_value_list_item.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,10 +78,10 @@ class _ConvertouchUnitCreationPageState
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
               child: Column(children: [
-                ConvertouchMenuListItem(unitGroup, onPressed: () {
+                ConvertouchUnitGroupItem(unitGroup, onPressed: () {
                   BlocProvider.of<UnitGroupsMenuBloc>(context)
                       .add(const FetchUnitGroups());
-                }),
+                }).buildForList(context),
                 const SizedBox(height: 20),
                 _buildTextField('Unit Name', _unitNameFieldController,
                     (String value) async {

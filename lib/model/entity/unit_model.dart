@@ -1,7 +1,7 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 
-class UnitModel extends ItemModel {
+class UnitModel extends ItemModelWithIdName {
   const UnitModel(int id, String name, this.abbreviation) :
       super(id, name, ItemType.unit);
 

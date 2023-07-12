@@ -1,4 +1,4 @@
-import 'package:convertouch/model/util/menu_util.dart';
+import 'package:convertouch/model/util/menu_page_util.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class ItemsMenuViewEvent extends ConvertouchEvent {

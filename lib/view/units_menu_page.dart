@@ -6,7 +6,7 @@ import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:convertouch/presenter/states/units_menu_states.dart';
-import 'package:convertouch/view/items_menu/items_menu_view.dart';
+import 'package:convertouch/view/items_view/menu_items_view.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +55,7 @@ class ConvertouchUnitsMenuPage extends StatelessWidget {
               children: [
                 const ConvertouchSearchBar(placeholder: "Search units..."),
                 Expanded(
-                  child: ConvertouchItemsMenuView(units),
+                  child: ConvertouchMenuItemsView(units),
                 ),
               ],
             ),

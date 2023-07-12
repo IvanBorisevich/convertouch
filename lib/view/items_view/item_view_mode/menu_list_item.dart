@@ -1,15 +1,15 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/model/util/menu_util.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem extends StatelessWidget {
   static const double itemContainerHeight = 50;
   static const double itemAbbrContainerWidth = 65;
 
-  const ConvertouchMenuListItem(this.item, {super.key, this.onPressed});
+  const ConvertouchMenuListItem(this.item, {super.key, required this.logo, this.onPressed});
 
-  final ItemModel item;
+  final ItemModelWithIdName item;
+  final Widget logo;
   final void Function()? onPressed;
 
   @override
@@ -28,20 +28,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-                width: item.itemType == ItemType.unitGroup
-                    ? itemContainerHeight
-                    : itemAbbrContainerWidth,
-                decoration: const BoxDecoration(
-                  color: Color(0x00FFFFFF),
-                ),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  if (item.itemType == ItemType.unitGroup) {
-                    return buildUnitGroupIconButton();
-                  } else {
-                    return buildUnitItemAbbreviation();
-                  }
-                })),
+            logo,
             const VerticalDivider(
               width: 1,
               thickness: 1,
@@ -68,31 +55,6 @@ class ConvertouchMenuListItem extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildUnitGroupIconButton() {
-    return IconButton(
-      onPressed: () {},
-      icon: ImageIcon(
-        AssetImage(getIconPath(item)),
-        color: const Color(0xFF366C9F),
-        size: 25,
-      ),
-    );
-  }
-
-  Widget buildUnitItemAbbreviation() {
-    return Center(
-      child: Text(
-        toUnit(item).abbreviation,
-        style: const TextStyle(
-          fontFamily: quicksandFontFamily,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF366C9F),
-          fontSize: 16,
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 
 
-class UnitGroupModel extends ItemModel {
+class UnitGroupModel extends ItemModelWithIdName {
   UnitGroupModel(
       int id,
       String name,
