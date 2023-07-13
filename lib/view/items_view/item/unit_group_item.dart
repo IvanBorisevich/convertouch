@@ -13,8 +13,9 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
   static const double itemLogoWidth = 50;
 
   const ConvertouchUnitGroupItem(this.unitGroup, {
-    void Function()? onPressed
-  }) : super(onPressed: onPressed);
+    void Function()? onPressed,
+    bool isSelected = false,
+  }) : super(onPressed: onPressed, isSelected: isSelected);
 
   final UnitGroupModel unitGroup;
 
@@ -24,7 +25,6 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       unitGroup,
       logo: _buildUnitGroupIconButton(),
       onPressed: onPressedFunc(context),
-      itemNameMaxLines: getGridItemNameLinesNumToWrap(unitGroup.name),
     );
   }
 
@@ -38,9 +38,11 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
   }
 
   @override
-  void onClickByDefault(BuildContext context) {
-    BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-        unitGroupId: unitGroup.id, navigationAction: NavigationAction.push));
+  void Function()? onPressedFunc(BuildContext context) {
+    return () {
+      BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
+          unitGroupId: unitGroup.id, navigationAction: NavigationAction.push));
+    };
   }
 
   Widget _buildUnitGroupIconButton() {

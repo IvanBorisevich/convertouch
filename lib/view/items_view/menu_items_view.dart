@@ -1,42 +1,50 @@
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/util/menu_page_util.dart';
-import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
-import 'package:convertouch/presenter/states/items_menu_view_state.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchMenuItemsView extends StatelessWidget {
-  const ConvertouchMenuItemsView(this.items, {super.key});
+class ConvertouchMenuItemsView extends StatefulWidget {
+  const ConvertouchMenuItemsView(this.items,
+      {this.selectedItemIds = const [],
+      this.viewMode = ItemsMenuViewMode.grid,
+      super.key});
 
-  final List<ItemModel> items;
+  final List<ItemModelWithIdName> items;
+  final List<int> selectedItemIds;
+  final ItemsMenuViewMode viewMode;
 
   @override
+  State createState() => _ConvertouchMenuItemsViewState();
+}
+
+class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
-        builder: (_, itemsMenuViewState) {
-      return LayoutBuilder(builder: (context, constraints) {
-        if (items.isNotEmpty) {
-          switch (itemsMenuViewState.itemsMenuView) {
-            case ItemsMenuViewMode.grid:
-              return ConvertouchItemsGrid(items);
-            case ItemsMenuViewMode.list:
-              return ConvertouchItemsList(items);
-          }
+    return LayoutBuilder(builder: (context, constraints) {
+      if (widget.items.isNotEmpty) {
+        switch (widget.viewMode) {
+          case ItemsMenuViewMode.grid:
+            return ConvertouchItemsGrid(widget.items,
+                selectedItemIds: widget.selectedItemIds);
+          case ItemsMenuViewMode.list:
+            return ConvertouchItemsList(widget.items,
+                selectedItemIds: widget.selectedItemIds);
         }
-        return const ConvertouchItemsEmptyView();
-      });
+      }
+      return const ConvertouchItemsEmptyView();
     });
   }
 }
 
 class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(this.items, {super.key});
+  const ConvertouchItemsGrid(this.items,
+      {this.selectedItemIds = const [], super.key});
 
   static const double _listItemsSpacingSize = 5.0;
   static const int _numberOfItemsInRow = 4;
 
-  final List<ItemModel> items;
+  final List<ItemModelWithIdName> items;
+  final List<int> selectedItemIds;
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +57,23 @@ class ConvertouchItemsGrid extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemBuilder: (context, index) {
-        return ConvertouchItem.createItem(items[index]).buildForGrid(context);
+        ItemModelWithIdName item = items[index];
+        bool isSelected = selectedItemIds.contains(item.id);
+        return ConvertouchItem.createItem(item, isSelected: isSelected)
+            .buildForGrid(context);
       },
     );
   }
 }
 
 class ConvertouchItemsList extends StatelessWidget {
-  const ConvertouchItemsList(this.items, {super.key});
+  const ConvertouchItemsList(this.items,
+      {this.selectedItemIds = const [], super.key});
 
   static const double _listItemsSpacingSize = 5;
 
-  final List<ItemModel> items;
+  final List<ItemModelWithIdName> items;
+  final List<int> selectedItemIds;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +81,10 @@ class ConvertouchItemsList extends StatelessWidget {
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return ConvertouchItem.createItem(items[index]).buildForList(context);
+        ItemModelWithIdName item = items[index];
+        bool isSelected = selectedItemIds.contains(item.id);
+        return ConvertouchItem.createItem(item, isSelected: isSelected)
+            .buildForList(context);
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(

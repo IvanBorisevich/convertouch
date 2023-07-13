@@ -1,30 +1,57 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/model/util/menu_page_util.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuGridItem extends StatelessWidget {
-  const ConvertouchMenuGridItem(this.item, {
+class ConvertouchMenuGridItem extends StatefulWidget {
+  const ConvertouchMenuGridItem(
+    this.item, {
     super.key,
     required this.logo,
     this.onPressed,
-    this.itemNameMaxLines,
+    this.isSelected = false,
+    this.changeItemStateOnPress = false,
   });
 
   final ItemModelWithIdName item;
   final Widget logo;
   final void Function()? onPressed;
-  final int? itemNameMaxLines;
+  final bool isSelected;
+  final bool changeItemStateOnPress;
+
+  @override
+  State createState() => _ConvertouchMenuGridItemState();
+}
+
+class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
+  late bool _isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSelected = widget.isSelected;
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        if (widget.changeItemStateOnPress) {
+          setState(() {
+            _isSelected = !_isSelected;
+          });
+        }
+        widget.onPressed?.call();
+      },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFF2F5FF),
-          borderRadius: BorderRadius.circular(8),
+          color:
+              _isSelected ? const Color(0xFFDEE6FF) : const Color(0xFFF2F5FF),
+          borderRadius: BorderRadius.circular(7),
           border: Border.all(
-            color: const Color(0xFFC9D5EA),
+            color:
+                _isSelected ? const Color(0xFF366C9F) : const Color(0xFFC9D5EA),
+            width: 1,
           ),
         ),
         child: Column(
@@ -35,7 +62,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                child: logo,
+                child: widget.logo,
               ),
             ),
             Flexible(
@@ -43,7 +70,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
                 child: Text(
-                  item.name,
+                  widget.item.name,
                   style: const TextStyle(
                     fontFamily: quicksandFontFamily,
                     fontSize: 11,
@@ -52,7 +79,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  maxLines: itemNameMaxLines,
+                  maxLines: getGridItemNameLinesNumToWrap(widget.item.name),
                 ),
               ),
             ),

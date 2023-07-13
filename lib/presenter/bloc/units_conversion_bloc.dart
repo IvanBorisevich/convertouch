@@ -7,14 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsConversionBloc
     extends Bloc<UnitsConversionEvent, UnitsConversionState> {
-  UnitsConversionBloc(): super(const UnitsConversionEmptyState());
+  UnitsConversionBloc() : super(const UnitsConversionEmptyState());
 
   @override
   Stream<UnitsConversionState> mapEventToState(
       UnitsConversionEvent event) async* {
     if (event is ConvertUnitValue) {
       yield const UnitsConverting();
-      int inputUnitId = event.inputUnitId != 0 ? event.inputUnitId : event.targetUnitIds[0];
+      int inputUnitId =
+          event.inputUnitId != 0 ? event.inputUnitId : event.targetUnitIds[0];
       UnitModel? inputUnit = getUnit(inputUnitId);
       String inputValue = event.inputValue.isNotEmpty ? event.inputValue : "1";
       List<UnitValueModel> convertedUnitValues = [];

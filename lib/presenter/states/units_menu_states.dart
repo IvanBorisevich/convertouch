@@ -97,3 +97,28 @@ class UnitExists extends UnitsMenuState {
     return 'UnitExists{unitName: $unitName}';
   }
 }
+
+class UnitSelecting extends UnitsMenuState {
+  const UnitSelecting();
+
+  @override
+  String toString() {
+    return 'UnitSelecting{}';
+  }
+}
+
+class UnitSelected extends UnitsMenuState {
+  const UnitSelected({
+    required this.unitId
+  });
+
+  final int unitId;
+
+  @override
+  List<Object> get props => [unitId];
+
+  @override
+  String toString() {
+    return 'UnitSelected{unitId: $unitId}';
+  }
+}

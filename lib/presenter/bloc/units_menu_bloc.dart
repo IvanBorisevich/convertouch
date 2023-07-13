@@ -31,6 +31,9 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
         allUnits.add(newUnit);
         yield UnitAdded(addedUnit: newUnit);
       }
+    } else if (event is SelectUnit) {
+      yield const UnitSelecting();
+      yield UnitSelected(unitId: event.unitId);
     }
   }
 }

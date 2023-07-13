@@ -78,14 +78,14 @@ class ConvertouchSearchBar extends StatelessWidget {
         ),
         child: BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
             builder: (_, itemsMenuViewState) {
-              ItemsMenuViewMode nextViewModeForIcon = itemsMenuViewState.itemsMenuView.nextValue();
+              ItemsMenuViewMode nextViewModeForIcon = itemsMenuViewState.viewMode.nextValue();
           return IconButton(
             icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(Icon(
                 itemViewModeIconMap[nextViewModeForIcon],
-                key: ValueKey(itemsMenuViewState.itemsMenuView.modeKey))),
+                key: ValueKey(itemsMenuViewState.viewMode.modeKey))),
             onPressed: () {
               BlocProvider.of<ItemsMenuViewBloc>(context).add(
-                  ChangeViewMode(viewMode: itemsMenuViewState.itemsMenuView));
+                  ChangeViewMode(viewMode: itemsMenuViewState.viewMode));
             },
             color: const Color(0xFF426F99),
           );

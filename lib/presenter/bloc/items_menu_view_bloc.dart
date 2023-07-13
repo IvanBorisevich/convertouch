@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ItemsMenuViewBloc extends Bloc<ItemsMenuViewEvent, ItemsMenuViewState> {
   ItemsMenuViewBloc()
-      : super(const ItemsMenuViewState(itemsMenuView: ItemsMenuViewMode.grid));
+      : super(const ItemsMenuViewState(viewMode: ItemsMenuViewMode.grid));
 
   @override
   Stream<ItemsMenuViewState> mapEventToState(ItemsMenuViewEvent event) async* {
     if (event is ChangeViewMode) {
-      yield ItemsMenuViewState(itemsMenuView: event.viewMode.nextValue());
+      yield ItemsMenuViewState(viewMode: event.viewMode.nextValue());
     }
   }
 }

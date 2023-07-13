@@ -1,8 +1,10 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/states/items_menu_view_state.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:convertouch/presenter/states/unit_groups_menu_states.dart';
 import 'package:convertouch/presenter/states/units_menu_states.dart';
@@ -62,7 +64,13 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
               unitGroupsMenuState is UnitGroupsFetched
                   ? unitGroupsMenuState.unitGroups
                   : [];
-          return ConvertouchMenuItemsView(unitGroups);
+          return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
+              builder: (_, itemsMenuViewState) {
+            return ConvertouchMenuItemsView(
+                unitGroups,
+                viewMode: itemsMenuViewState.viewMode
+            );
+          });
         })),
       ],
     );

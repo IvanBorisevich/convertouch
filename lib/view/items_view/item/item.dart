@@ -10,19 +10,25 @@ import 'package:flutter/material.dart';
 
 abstract class ConvertouchItem {
   const ConvertouchItem({
-    this.onPressed
+    this.onPressed,
+    this.isSelected = false,
   });
 
   final void Function()? onPressed;
+  final bool isSelected;
 
-  factory ConvertouchItem.createItem(ItemModel item) {
+  factory ConvertouchItem.createItem(ItemModel item,
+      {void Function()? onPressed, bool isSelected = false}) {
     switch (item.itemType) {
       case ItemType.unitGroup:
-        return ConvertouchUnitGroupItem(item as UnitGroupModel);
+        return ConvertouchUnitGroupItem(item as UnitGroupModel,
+            onPressed: onPressed, isSelected: isSelected);
       case ItemType.unit:
-        return ConvertouchUnitItem(item as UnitModel);
+        return ConvertouchUnitItem(item as UnitModel,
+            onPressed: onPressed, isSelected: isSelected);
       case ItemType.unitValue:
-        return ConvertouchUnitValueItem(item as UnitValueModel);
+        return ConvertouchUnitValueItem(item as UnitValueModel,
+            onPressed: onPressed, isSelected: isSelected);
     }
   }
 
@@ -30,12 +36,8 @@ abstract class ConvertouchItem {
 
   Widget buildForGrid(BuildContext context);
 
-  void onClickByDefault(BuildContext context);
-
   void Function()? onPressedFunc(BuildContext context) {
-    return onPressed ?? () {
-      onClickByDefault(context);
-    };
+    return onPressed;
   }
 
   Widget wrapLogo(Widget logo, double wrapWidth) {
@@ -47,13 +49,4 @@ abstract class ConvertouchItem {
       child: logo,
     );
   }
-}
-
-final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
-const int _minGridItemWordSizeToWrap = 10;
-
-int getGridItemNameLinesNumToWrap(String gridItemName) {
-  return gridItemName.indexOf(_spaceOrEndOfWord) > _minGridItemWordSizeToWrap
-      ? 1
-      : 2;
 }

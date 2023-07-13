@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class ConvertouchUnitValueItem extends ConvertouchItem {
   const ConvertouchUnitValueItem(this.unitValue, {
-    void Function()? onPressed
-  }) : super(onPressed: onPressed);
+    void Function()? onPressed,
+    bool isSelected = false,
+  }) : super(onPressed: onPressed, isSelected: isSelected);
 
   final UnitValueModel unitValue;
 
@@ -19,10 +20,4 @@ class ConvertouchUnitValueItem extends ConvertouchItem {
   Widget buildForList(BuildContext context) {
     return ConvertouchUnitValueListItem(unitValue);
   }
-
-  @override
-  void onClickByDefault(BuildContext context) {
-  }
-
-
 }

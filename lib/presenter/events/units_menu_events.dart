@@ -45,3 +45,19 @@ class AddUnit extends UnitsMenuEvent {
         'unitGroupId: $unitGroupId}';
   }
 }
+
+class SelectUnit extends UnitsMenuEvent {
+  const SelectUnit({
+    required this.unitId
+  });
+
+  final int unitId;
+
+  @override
+  List<Object> get props => [unitId];
+
+  @override
+  String toString() {
+    return 'SelectUnit{unitId: $unitId}';
+  }
+}

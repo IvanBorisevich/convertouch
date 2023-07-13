@@ -3,18 +3,18 @@ import 'package:convertouch/presenter/states/base_state.dart';
 
 class ItemsMenuViewState extends ConvertouchBlocState {
   const ItemsMenuViewState({
-    required this.itemsMenuView,
+    required this.viewMode,
   });
 
-  final ItemsMenuViewMode itemsMenuView;
+  final ItemsMenuViewMode viewMode;
 
   @override
   List<Object> get props => [
-    itemsMenuView
+    viewMode
   ];
 
   @override
   String toString() {
-    return 'ItemsMenuViewState{itemsMenuView: $itemsMenuView}';
+    return 'ItemsMenuViewState{viewMode: $viewMode}';
   }
 }
