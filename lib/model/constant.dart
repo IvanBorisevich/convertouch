@@ -21,3 +21,8 @@ enum NavigationAction {
   pop,
   push
 }
+
+enum ItemsMenuViewMode {
+  list,
+  grid,
+}

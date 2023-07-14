@@ -1,4 +1,4 @@
-import 'package:convertouch/model/util/menu_page_util.dart';
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class ItemsMenuViewEvent extends ConvertouchEvent {
@@ -7,18 +7,18 @@ abstract class ItemsMenuViewEvent extends ConvertouchEvent {
 
 class ChangeViewMode extends ItemsMenuViewEvent {
   const ChangeViewMode({
-    required this.viewMode
+    required this.currentViewMode
   });
 
-  final ItemsMenuViewMode viewMode;
+  final ItemsMenuViewMode currentViewMode;
 
   @override
   List<Object> get props => [
-    viewMode
+    currentViewMode
   ];
 
   @override
   String toString() {
-    return 'ChangeViewMode{viewMode: $viewMode}';
+    return 'ChangeViewMode{currentViewMode: $currentViewMode}';
   }
 }

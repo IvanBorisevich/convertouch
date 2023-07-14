@@ -73,7 +73,7 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
                       return ConvertouchMenuItemsView(
                         unitsFetched.units,
                         selectedItemIds: _selectedUnitIds,
-                        viewMode: itemsMenuViewState.viewMode
+                        viewMode: itemsMenuViewState.pageViewMode
                       );
                     }),
                 ),

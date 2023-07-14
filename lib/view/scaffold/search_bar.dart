@@ -1,4 +1,4 @@
-import 'package:convertouch/model/util/menu_page_util.dart';
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
 import 'package:convertouch/presenter/states/items_menu_view_state.dart';
@@ -78,14 +78,13 @@ class ConvertouchSearchBar extends StatelessWidget {
         ),
         child: BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
             builder: (_, itemsMenuViewState) {
-              ItemsMenuViewMode nextViewModeForIcon = itemsMenuViewState.viewMode.nextValue();
           return IconButton(
             icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(Icon(
-                itemViewModeIconMap[nextViewModeForIcon],
-                key: ValueKey(itemsMenuViewState.viewMode.modeKey))),
+                itemViewModeIconMap[itemsMenuViewState.iconViewMode],
+                key: ValueKey(itemsMenuViewState.pageViewMode))),
             onPressed: () {
-              BlocProvider.of<ItemsMenuViewBloc>(context).add(
-                  ChangeViewMode(viewMode: itemsMenuViewState.viewMode));
+              BlocProvider.of<ItemsMenuViewBloc>(context)
+                  .add(ChangeViewMode(currentViewMode: itemsMenuViewState.pageViewMode));
             },
             color: const Color(0xFF426F99),
           );

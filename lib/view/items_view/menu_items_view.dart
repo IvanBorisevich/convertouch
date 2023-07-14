@@ -1,5 +1,5 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/model/util/menu_page_util.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 

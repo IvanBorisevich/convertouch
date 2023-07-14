@@ -68,7 +68,7 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
               builder: (_, itemsMenuViewState) {
             return ConvertouchMenuItemsView(
                 unitGroups,
-                viewMode: itemsMenuViewState.viewMode
+                viewMode: itemsMenuViewState.pageViewMode
             );
           });
         })),
