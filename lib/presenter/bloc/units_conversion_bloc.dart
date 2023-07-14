@@ -12,8 +12,8 @@ class UnitsConversionBloc
   @override
   Stream<UnitsConversionState> mapEventToState(
       UnitsConversionEvent event) async* {
-    if (event is ConvertUnitValue) {
-      yield const UnitsConverting();
+    if (event is InitializeConversion) {
+      yield const ConversionInitializing();
       int inputUnitId =
           event.inputUnitId != 0 ? event.inputUnitId : event.targetUnitIds[0];
       UnitModel? inputUnit = getUnit(inputUnitId);
@@ -21,14 +21,29 @@ class UnitsConversionBloc
       List<UnitValueModel> convertedUnitValues = [];
       if (inputUnit != null) {
         List<UnitModel> targetUnits = getUnits(event.targetUnitIds);
-        convertedUnitValues = _convertItems(UnitValueModel(inputUnit, inputValue), targetUnits);
+        convertedUnitValues =
+            _convertItems(UnitValueModel(inputUnit, inputValue), targetUnits);
       }
-      yield UnitsConverted(
+      yield ConversionInitialized(
         convertedUnitValues: convertedUnitValues,
         sourceUnitId: inputUnitId,
         sourceUnitValue: inputValue,
         unitGroup: event.unitGroup,
       );
+    } else if (event is ConvertUnitValue) {
+      List<int> targetUnitIds = event.targetUnitIds;
+      List<UnitModel> targetUnits = getUnits(targetUnitIds);
+
+      for (UnitModel targetUnit in targetUnits) {
+        if (targetUnit.id != event.inputUnitId) {
+          yield const UnitConverting();
+          String targetValue =
+              event.inputValue.isNotEmpty ? "1${event.inputValue}" : "";
+          yield UnitConverted(
+              unitValue: UnitValueModel(targetUnit, targetValue)
+          );
+        }
+      }
     }
   }
 

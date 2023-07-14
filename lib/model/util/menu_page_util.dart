@@ -23,7 +23,7 @@ void updateSelectedUnitIds(final selectedUnitIds,
     }
   }
 
-  List<int> conversionUnits = unitsConverted is UnitsConverted
+  List<int> conversionUnits = unitsConverted is ConversionInitialized
       ? unitsConverted.convertedUnitValues.map((e) => e.unit.id).toList()
       : [];
   List<int> allSelectedUnitIds =

@@ -15,17 +15,17 @@ class UnitsConversionEmptyState extends UnitsConversionState {
   }
 }
 
-class UnitsConverting extends UnitsConversionState {
-  const UnitsConverting();
+class ConversionInitializing extends UnitsConversionState {
+  const ConversionInitializing();
 
   @override
   String toString() {
-    return 'UnitsConverting{}';
+    return 'ConversionInitializing{}';
   }
 }
 
-class UnitsConverted extends UnitsConversionState {
-  const UnitsConverted({
+class ConversionInitialized extends UnitsConversionState {
+  const ConversionInitialized({
     required this.sourceUnitValue,
     required this.sourceUnitId,
     required this.convertedUnitValues,
@@ -47,10 +47,38 @@ class UnitsConverted extends UnitsConversionState {
 
   @override
   String toString() {
-    return 'UnitsConverted{'
+    return 'ConversionInitialized{'
         'sourceUnitValue: $sourceUnitValue, '
         'sourceUnitId: $sourceUnitId, '
         'convertedUnitValues: $convertedUnitValues, '
         'unitGroup: $unitGroup}';
+  }
+}
+
+class UnitConverting extends UnitsConversionState {
+  const UnitConverting();
+
+  @override
+  String toString() {
+    return 'UnitConverting{}';
+  }
+}
+
+class UnitConverted extends UnitsConversionState {
+  const UnitConverted({
+    required this.unitValue
+  });
+
+  final UnitValueModel unitValue;
+
+  @override
+  List<Object> get props => [
+    unitValue
+  ];
+
+  @override
+  String toString() {
+    return 'UnitConverted{'
+        'unitValue: $unitValue}';
   }
 }

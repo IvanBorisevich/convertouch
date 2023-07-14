@@ -11,9 +11,9 @@ class ConvertouchHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(buildWhen: (prev, next) {
-      return prev != next && next is UnitsConverted;
+      return prev != next && next is ConversionInitialized;
     }, builder: (_, convertedUnitsState) {
-      if (convertedUnitsState is UnitsConverted &&
+      if (convertedUnitsState is ConversionInitialized &&
           convertedUnitsState.convertedUnitValues.isNotEmpty) {
         return const ConvertouchUnitsConversionPage();
       } else {

@@ -1,12 +1,18 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
+import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
+import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitValueListItem extends StatefulWidget {
   const ConvertouchUnitValueListItem(this.item,
-      {super.key, this.spacingBetweenTextAndButton = 7});
+      {this.conversionUnitIds = const [],
+      this.spacingBetweenTextAndButton = 7,
+      super.key});
 
   final UnitValueModel item;
+  final List<int> conversionUnitIds;
   final double spacingBetweenTextAndButton;
 
   @override
@@ -42,6 +48,13 @@ class _ConvertouchUnitValueListItemState
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
               ],
+              onChanged: (String value) {
+                BlocProvider.of<UnitsConversionBloc>(context).add(
+                    ConvertUnitValue(
+                        inputValue: value,
+                        inputUnitId: widget.item.unit.id,
+                        targetUnitIds: widget.conversionUnitIds));
+              },
               decoration: InputDecoration(
                 enabledBorder: const OutlineInputBorder(
                     borderRadius: _elementsBorderRadius,
@@ -49,7 +62,6 @@ class _ConvertouchUnitValueListItemState
                 focusedBorder: const OutlineInputBorder(
                     borderRadius: _elementsBorderRadius,
                     borderSide: BorderSide(color: Color(0xFF426F99))),
-                //labelText: widget.item.unit.name,
                 label: Container(
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width / 2),
@@ -60,6 +72,7 @@ class _ConvertouchUnitValueListItemState
                     softWrap: false,
                   ),
                 ),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelStyle: const TextStyle(
                   // overflow: TextOverflow.ellipsis,
                   color: Color(0xFF426F99),

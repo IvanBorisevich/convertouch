@@ -43,9 +43,9 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
   Widget _appBarLeftIcon(BuildContext context) {
     return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
         buildWhen: (prev, next) {
-      return prev != next && next is UnitsConverted;
+      return prev != next && next is ConversionInitialized;
     }, builder: (_, convertedUnitsState) {
-      bool isBackButtonActive = convertedUnitsState is UnitsConverted &&
+      bool isBackButtonActive = convertedUnitsState is ConversionInitialized &&
           convertedUnitsState.convertedUnitValues.isNotEmpty;
       return isBackButtonActive ? backIcon(context) : menuIcon(context);
     });

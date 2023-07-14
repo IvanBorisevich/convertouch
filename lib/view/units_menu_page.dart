@@ -29,7 +29,7 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
   Widget build(BuildContext context) {
     return BlocListener<UnitsConversionBloc, UnitsConversionState>(
       listener: (_, convertedUnitsState) {
-        if (convertedUnitsState is UnitsConverted) {
+        if (convertedUnitsState is ConversionInitialized) {
           Navigator.of(context).pop();
         }
       },
@@ -44,20 +44,20 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
             appBarRightWidgets: [
               BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
                   buildWhen: (prev, next) {
-                return prev != next && next is UnitsConverted;
-              }, builder: (_, unitsConverted) {
+                return prev != next && next is ConversionInitialized;
+              }, builder: (_, conversionInitialized) {
                 return BlocBuilder<UnitsMenuBloc, UnitsMenuState>(
                     buildWhen: (prev, next) {
                   return prev != next && next is UnitSelected;
                 }, builder: (_, unitSelected) {
                   updateSelectedUnitIds(
-                      _selectedUnitIds, unitSelected, unitsConverted);
+                      _selectedUnitIds, unitSelected, conversionInitialized);
                   bool isButtonEnabled =
                       _selectedUnitIds.length >= _minNumOfUnitsToSelect;
 
                   return checkIcon(context, isButtonEnabled, () {
                     BlocProvider.of<UnitsConversionBloc>(context).add(
-                        ConvertUnitValue(
+                        InitializeConversion(
                             targetUnitIds: _selectedUnitIds,
                             unitGroup: unitsFetched.unitGroup));
                   });

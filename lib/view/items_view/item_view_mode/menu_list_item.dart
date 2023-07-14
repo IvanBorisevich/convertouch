@@ -7,7 +7,7 @@ class ConvertouchMenuListItem extends StatefulWidget {
       {super.key,
       required this.logo,
       this.onPressed,
-        this.isSelected = false,
+      this.isSelected = false,
       this.changeItemStateOnPress = false});
 
   final ItemModelWithIdName item;
