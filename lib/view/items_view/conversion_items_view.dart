@@ -1,6 +1,9 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:convertouch/view/items_view/item_view_mode/unit_value_list_item.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +56,12 @@ class _ConvertouchConversionItemsViewState
           }, builder: (_, unitConverted) {
             return ConvertouchUnitValueListItem(
                 unitConverted is UnitConverted ? unitConverted.unitValue : item,
-                conversionUnitIds: _conversionUnitIds
+                conversionUnitIds: _conversionUnitIds,
+              onTap: () {
+                BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
+                    unitGroupId: widget.unitGroup.id,
+                    navigationAction: NavigationAction.push));
+              },
             );
           });
         },

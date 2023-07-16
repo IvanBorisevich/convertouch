@@ -6,14 +6,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitValueListItem extends StatefulWidget {
-  const ConvertouchUnitValueListItem(this.item,
-      {this.conversionUnitIds = const [],
-      this.spacingBetweenTextAndButton = 7,
-      super.key});
+  const ConvertouchUnitValueListItem(
+      this.item, {
+        this.conversionUnitIds = const [],
+        this.onTap,
+        this.onLongPress,
+        this.isMarkedToRemove = false,
+        super.key
+      });
 
   final UnitValueModel item;
   final List<int> conversionUnitIds;
-  final double spacingBetweenTextAndButton;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
+  final bool isMarkedToRemove;
 
   @override
   State<ConvertouchUnitValueListItem> createState() =>
@@ -88,30 +94,34 @@ class _ConvertouchUnitValueListItemState
               textAlign: TextAlign.start,
             ),
           ),
-          SizedBox(width: widget.spacingBetweenTextAndButton),
-          SizedBox(
-            width: _unitButtonWidth,
-            height: _unitButtonHeight,
-            child: TextButton(
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(const Color(0xffe2eef8)),
-                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: Color(0xFF426F99),
-                        width: 1,
-                      ),
-                      borderRadius: _elementsBorderRadius))),
-              child: Text(
-                widget.item.unit.abbreviation,
-                style: const TextStyle(
-                  color: Color(0xFF426F99),
+          const SizedBox(width: 7),
+          GestureDetector(
+            onTap: widget.onTap,
+            onLongPress: widget.onLongPress,
+            child: SizedBox(
+              width: _unitButtonWidth,
+              height: _unitButtonHeight,
+              child: TextButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(const Color(0xffe2eef8)),
+                    shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Color(0xFF426F99),
+                          width: 1,
+                        ),
+                        borderRadius: _elementsBorderRadius))),
+                onPressed: null,
+                child: Text(
+                  widget.item.unit.abbreviation,
+                  style: const TextStyle(
+                    color: Color(0xFF426F99),
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 1,
               ),
-              onPressed: () {},
             ),
-          )
+          ),
         ],
       ),
     );

@@ -10,25 +10,27 @@ import 'package:flutter/material.dart';
 
 abstract class ConvertouchItem {
   const ConvertouchItem({
-    this.onPressed,
-    this.isSelected = false,
+    this.onTap,
+    this.onLongPress,
+    this.isMarkedToSelect = false,
   });
 
-  final void Function()? onPressed;
-  final bool isSelected;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
+  final bool isMarkedToSelect;
 
   factory ConvertouchItem.createItem(ItemModel item,
-      {void Function()? onPressed, bool isSelected = false}) {
+      {void Function()? onTap, bool isSelected = false}) {
     switch (item.itemType) {
       case ItemType.unitGroup:
         return ConvertouchUnitGroupItem(item as UnitGroupModel,
-            onPressed: onPressed, isSelected: isSelected);
+            onTap: onTap, isSelected: isSelected);
       case ItemType.unit:
         return ConvertouchUnitItem(item as UnitModel,
-            onPressed: onPressed, isSelected: isSelected);
+            onTap: onTap, isSelected: isSelected);
       case ItemType.unitValue:
         return ConvertouchUnitValueItem(item as UnitValueModel,
-            onPressed: onPressed, isSelected: isSelected);
+            onTap: onTap, isSelected: isSelected);
     }
   }
 
@@ -36,8 +38,12 @@ abstract class ConvertouchItem {
 
   Widget buildForGrid(BuildContext context);
 
-  void Function()? onPressedFunc(BuildContext context) {
-    return onPressed;
+  void Function()? onTapFunc(BuildContext context) {
+    return onTap;
+  }
+
+  void Function()? onLongPressFunc(BuildContext context) {
+    return onLongPress;
   }
 
   Widget wrapLogo(Widget logo, double wrapWidth) {

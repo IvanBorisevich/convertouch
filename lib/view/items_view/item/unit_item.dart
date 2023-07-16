@@ -12,9 +12,9 @@ class ConvertouchUnitItem extends ConvertouchItem {
   static const double itemLogoWidth = 65;
 
   ConvertouchUnitItem(this.unit, {
-    void Function()? onPressed,
+    void Function()? onTap,
     bool isSelected = false,
-  }) : super(onPressed: onPressed, isSelected: isSelected);
+  }) : super(onTap: onTap, isMarkedToSelect: isSelected);
 
   final UnitModel unit;
 
@@ -23,9 +23,9 @@ class ConvertouchUnitItem extends ConvertouchItem {
     return ConvertouchMenuGridItem(
       unit,
       logo: _buildUnitItemAbbreviation(),
-      onPressed: onPressedFunc(context),
-      changeItemStateOnPress: true,
-      isSelected: super.isSelected,
+      onTap: onTapFunc(context),
+      isItemStateChangedOnTap: true,
+      isMarkedToSelect: super.isMarkedToSelect,
     );
   }
 
@@ -34,14 +34,14 @@ class ConvertouchUnitItem extends ConvertouchItem {
     return ConvertouchMenuListItem(
       unit,
       logo: wrapLogo(_buildUnitItemAbbreviation(), itemLogoWidth),
-      onPressed: onPressedFunc(context),
-      changeItemStateOnPress: true,
-      isSelected: super.isSelected,
+      onTap: onTapFunc(context),
+      isItemStateChangedOnTap: true,
+      isMarkedToSelect: super.isMarkedToSelect,
     );
   }
 
   @override
-  void Function()? onPressedFunc(BuildContext context) {
+  void Function()? onTapFunc(BuildContext context) {
     return () {
       BlocProvider.of<UnitsMenuBloc>(context).add(SelectUnit(unitId: unit.id));
     };

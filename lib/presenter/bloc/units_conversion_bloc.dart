@@ -21,8 +21,10 @@ class UnitsConversionBloc
       List<UnitValueModel> convertedUnitValues = [];
       if (inputUnit != null) {
         List<UnitModel> targetUnits = getUnits(event.targetUnitIds);
-        convertedUnitValues =
-            _convertItems(UnitValueModel(inputUnit, inputValue), targetUnits);
+        convertedUnitValues = _convertItems(UnitValueModel(
+            unit: inputUnit,
+            value: inputValue
+        ), targetUnits);
       }
       yield ConversionInitialized(
         convertedUnitValues: convertedUnitValues,
@@ -40,7 +42,7 @@ class UnitsConversionBloc
           String targetValue =
               event.inputValue.isNotEmpty ? "1${event.inputValue}" : "";
           yield UnitConverted(
-              unitValue: UnitValueModel(targetUnit, targetValue)
+              unitValue: UnitValueModel(unit: targetUnit, value: targetValue)
           );
         }
       }
@@ -54,7 +56,7 @@ class UnitsConversionBloc
     }
     List<UnitValueModel> convertedItems = [];
     for (var i = 0; i < targetUnits.length; i++) {
-      convertedItems.add(UnitValueModel(targetUnits[i], '1'));
+      convertedItems.add(UnitValueModel(unit: targetUnits[i], value: '1'));
     }
     return convertedItems;
   }

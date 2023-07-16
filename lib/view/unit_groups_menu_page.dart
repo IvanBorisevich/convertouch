@@ -28,8 +28,36 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
       },
       child: ConvertouchScaffold(
         pageTitle: "Unit Groups",
-        appBarLeftWidget: _appBarLeftIcon(context),
-        body: _body(context),
+        appBarLeftWidget:
+            BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
+                buildWhen: (prev, next) {
+          return prev != next && next is ConversionInitialized;
+        }, builder: (_, convertedUnitsState) {
+          bool isBackButtonActive =
+              convertedUnitsState is ConversionInitialized &&
+                  convertedUnitsState.convertedUnitValues.isNotEmpty;
+          return isBackButtonActive ? backIcon(context) : menuIcon(context);
+        }),
+        body: Column(
+          children: [
+            const ConvertouchSearchBar(placeholder: "Search unit groups..."),
+            Expanded(
+                child: BlocBuilder<UnitGroupsMenuBloc, UnitGroupsMenuState>(
+                    buildWhen: (prev, next) {
+              return prev != next && next is UnitGroupsFetched;
+            }, builder: (_, unitGroupsMenuState) {
+              List<UnitGroupModel> unitGroups =
+                  unitGroupsMenuState is UnitGroupsFetched
+                      ? unitGroupsMenuState.unitGroups
+                      : [];
+              return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
+                  builder: (_, itemsMenuViewState) {
+                return ConvertouchMenuItemsView(unitGroups,
+                    viewMode: itemsMenuViewState.pageViewMode);
+              });
+            })),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).pushNamed(unitGroupCreationPageId);
@@ -37,42 +65,6 @@ class ConvertouchUnitGroupsMenuPage extends StatelessWidget {
           child: const Icon(Icons.add),
         ),
       ),
-    );
-  }
-
-  Widget _appBarLeftIcon(BuildContext context) {
-    return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
-        buildWhen: (prev, next) {
-      return prev != next && next is ConversionInitialized;
-    }, builder: (_, convertedUnitsState) {
-      bool isBackButtonActive = convertedUnitsState is ConversionInitialized &&
-          convertedUnitsState.convertedUnitValues.isNotEmpty;
-      return isBackButtonActive ? backIcon(context) : menuIcon(context);
-    });
-  }
-
-  Widget _body(BuildContext context) {
-    return Column(
-      children: [
-        const ConvertouchSearchBar(placeholder: "Search unit groups..."),
-        Expanded(
-            child: BlocBuilder<UnitGroupsMenuBloc, UnitGroupsMenuState>(
-                buildWhen: (prev, next) {
-          return prev != next && next is UnitGroupsFetched;
-        }, builder: (_, unitGroupsMenuState) {
-          List<UnitGroupModel> unitGroups =
-              unitGroupsMenuState is UnitGroupsFetched
-                  ? unitGroupsMenuState.unitGroups
-                  : [];
-          return BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
-              builder: (_, itemsMenuViewState) {
-            return ConvertouchMenuItemsView(
-                unitGroups,
-                viewMode: itemsMenuViewState.pageViewMode
-            );
-          });
-        })),
-      ],
     );
   }
 }

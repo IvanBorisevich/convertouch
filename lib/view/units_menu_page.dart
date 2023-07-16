@@ -14,7 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsMenuPage extends StatefulWidget {
-  const ConvertouchUnitsMenuPage({super.key});
+  const ConvertouchUnitsMenuPage({
+    this.unitsAddingEnabled = true,
+    this.removalModeEnabled = false,
+    super.key
+  });
+
+  final bool unitsAddingEnabled;
+  final bool removalModeEnabled;
 
   @override
   State createState() => _ConvertouchUnitsMenuPageState();
@@ -72,20 +79,22 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
                     builder: (_, itemsMenuViewState) {
                       return ConvertouchMenuItemsView(
                         unitsFetched.units,
-                        selectedItemIds: _selectedUnitIds,
+                        conversionUnitIds: _selectedUnitIds,
                         viewMode: itemsMenuViewState.pageViewMode
                       );
                     }),
                 ),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(unitCreationPageId,
-                    arguments: unitsFetched.unitGroup);
-              },
-              child: const Icon(Icons.add),
-            ),
+            floatingActionButton: Visibility(
+              visible: widget.unitsAddingEnabled,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(unitCreationPageId);
+                },
+                child: const Icon(Icons.add),
+              ),
+            )
           );
         } else {
           return const SizedBox();

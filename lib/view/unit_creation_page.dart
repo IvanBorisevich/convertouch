@@ -1,5 +1,4 @@
 import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/model/util/unit_creation_page_util.dart';
@@ -24,7 +23,6 @@ class ConvertouchUnitCreationPage extends StatefulWidget {
 
 class _ConvertouchUnitCreationPageState
     extends State<ConvertouchUnitCreationPage> {
-  static const BorderRadius _fieldRadius = BorderRadius.all(Radius.circular(8));
 
   final _unitNameFieldController = TextEditingController();
   final _unitAbbrFieldController = TextEditingController();
@@ -35,111 +33,112 @@ class _ConvertouchUnitCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    UnitGroupModel unitGroup =
-        ModalRoute.of(context)!.settings.arguments as UnitGroupModel;
-
     return MultiBlocListener(
-        listeners: [
-          BlocListener<UnitsMenuBloc, UnitsMenuState>(
-              listener: (_, unitsMenuState) {
-            if (unitsMenuState is UnitsFetched &&
-                unitsMenuState.navigationAction == NavigationAction.pop) {
-              Navigator.of(context).pop();
-            } else if (unitsMenuState is UnitExists) {
-              showAlertDialog(
-                  context, "Unit '${unitsMenuState.unitName}' already exist");
+      listeners: [
+        BlocListener<UnitsMenuBloc, UnitsMenuState>(
+            listener: (_, unitsMenuState) {
+          if (unitsMenuState is UnitsFetched &&
+              unitsMenuState.navigationAction == NavigationAction.pop) {
+            Navigator.of(context).pop();
+          } else if (unitsMenuState is UnitExists) {
+            showAlertDialog(
+                context, "Unit '${unitsMenuState.unitName}' already exist");
+          }
+        }),
+        BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
+          listener: (_, unitGroupsMenuState) {
+            if (unitGroupsMenuState is UnitGroupsFetched) {
+              Navigator.of(context).pushNamed(unitGroupsPageId);
             }
-          }),
-          BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
-            listener: (_, unitGroupsMenuState) {
-              if (unitGroupsMenuState is UnitGroupsFetched) {
-                Navigator.of(context).pushNamed(unitGroupsPageId);
-              }
-            },
-          )
-        ],
-        child: ConvertouchScaffold(
-          pageTitle: "New Unit",
-          appBarLeftWidget: backIcon(context),
-          appBarRightWidgets: [
-            checkIcon(context, _unitName.isNotEmpty, () {
-              FocusScope.of(context).unfocus();
-              BlocProvider.of<UnitsMenuBloc>(context).add(AddUnit(
-                  unitName: _unitName,
-                  unitAbbreviation:
-                      _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                  unitGroupId: unitGroup.id));
-              BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-                  unitGroupId: unitGroup.id,
-                  navigationAction: NavigationAction.pop));
-            }),
-          ],
-          body: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
-              child: Column(children: [
-                ConvertouchUnitGroupItem(unitGroup, onPressed: () {
-                  BlocProvider.of<UnitGroupsMenuBloc>(context)
-                      .add(const FetchUnitGroups());
-                }).buildForList(context),
-                const SizedBox(height: 20),
-                _buildTextField('Unit Name', _unitNameFieldController,
-                    (String value) async {
-                  setState(() {
-                    _unitName = value;
-                    _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
-                  });
-                }),
-                const SizedBox(height: 12),
-                _buildTextField('Unit Abbreviation', _unitAbbrFieldController,
-                    (String value) async {
-                  setState(() {
-                    _unitAbbr = value;
-                  });
-                },
-                    maxLength: unitAbbreviationMaxLength,
-                    lengthCounterVisible: true,
-                    hintTextVisible: true),
-                const SizedBox(height: 25),
-                LayoutBuilder(builder: (context, constraints) {
-                  if (unitGroup.ciUnit != null && _unitName.isNotEmpty) {
-                    return Column(children: [
-                      Row(children: const [
-                        Expanded(
-                            child: Divider(
-                                color: Color(0xFF426F99), thickness: 1.2)),
-                        SizedBox(width: 7),
-                        Text(
-                          "Set unit value equivalent",
-                          style: TextStyle(
-                              color: Color(0xFF426F99),
-                              fontWeight: FontWeight.w500),
+          },
+        )
+      ],
+      child:
+          BlocBuilder<UnitsMenuBloc, UnitsMenuState>(buildWhen: (prev, next) {
+        return prev != next && next is UnitsFetched;
+      }, builder: (_, unitsFetched) {
+        if (unitsFetched is UnitsFetched) {
+          return ConvertouchScaffold(
+            pageTitle: "New Unit",
+            appBarLeftWidget: backIcon(context),
+            appBarRightWidgets: [
+              checkIcon(context, _unitName.isNotEmpty, () {
+                FocusScope.of(context).unfocus();
+                BlocProvider.of<UnitsMenuBloc>(context).add(AddUnit(
+                    unitName: _unitName,
+                    unitAbbreviation:
+                        _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                    unitGroupId: unitsFetched.unitGroup.id));
+                BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
+                    unitGroupId: unitsFetched.unitGroup.id,
+                    navigationAction: NavigationAction.pop));
+              }),
+            ],
+            body: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
+                child: Column(children: [
+                  ConvertouchUnitGroupItem(unitsFetched.unitGroup,
+                      onTap: () {
+                    BlocProvider.of<UnitGroupsMenuBloc>(context)
+                        .add(const FetchUnitGroups());
+                  }).buildForList(context),
+                  const SizedBox(height: 20),
+                  _buildTextField('Unit Name', _unitNameFieldController,
+                      (String value) async {
+                    setState(() {
+                      _unitName = value;
+                      _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
+                    });
+                  }),
+                  const SizedBox(height: 12),
+                  _buildTextField('Unit Abbreviation', _unitAbbrFieldController,
+                      (String value) async {
+                    setState(() {
+                      _unitAbbr = value;
+                    });
+                  },
+                      maxLength: unitAbbreviationMaxLength,
+                      lengthCounterVisible: true,
+                      hintTextVisible: true),
+                  const SizedBox(height: 25),
+                  LayoutBuilder(builder: (context, constraints) {
+                    if (unitsFetched.units.isNotEmpty && _unitName.isNotEmpty) {
+                      return Column(children: [
+                        horizontalDividerWithText("Set unit value equivalent"),
+                        const SizedBox(height: 25),
+                        ConvertouchUnitValueListItem(
+                            UnitValueModel(
+                                unit: UnitModel(
+                                  name: _unitName,
+                                  abbreviation: _unitAbbr.isNotEmpty
+                                    ? _unitAbbr
+                                    : _unitAbbrHint),
+                                value: "1"
+                            )
                         ),
-                        SizedBox(width: 7),
-                        Expanded(
-                            child: Divider(
-                          color: Color(0xFF426F99),
-                          thickness: 1.2,
-                        )),
-                      ]),
-                      const SizedBox(height: 25),
-                      ConvertouchUnitValueListItem(UnitValueModel(
-                          UnitModel.withoutId(_unitName,
-                              _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint),
-                          "1")),
-                      const SizedBox(height: 9),
-                      ConvertouchUnitValueListItem(
-                          UnitValueModel(unitGroup.ciUnit!, "1")),
-                      const SizedBox(height: 25),
-                    ]);
-                  } else {
-                    return const SizedBox();
-                  }
-                }),
-              ]),
+                        const SizedBox(height: 9),
+                        ConvertouchUnitValueListItem(
+                            UnitValueModel(
+                                unit: unitsFetched.units[0],
+                                value: "1"
+                            )
+                        ),
+                        const SizedBox(height: 25),
+                      ]);
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
+                ]),
+              ),
             ),
-          ),
-        ));
+          );
+        } else {
+          return const SizedBox();
+        }
+      }),
+    );
   }
 
   Widget _buildTextField(
@@ -156,10 +155,10 @@ class _ConvertouchUnitCreationPageState
       onChanged: onChangedFunc,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
-            borderRadius: _fieldRadius,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Color(0xFF426F99))),
         focusedBorder: const OutlineInputBorder(
-            borderRadius: _fieldRadius,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: Color(0xFF426F99))),
         label: Container(
           constraints:

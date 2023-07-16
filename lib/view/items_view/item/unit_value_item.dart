@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class ConvertouchUnitValueItem extends ConvertouchItem {
   const ConvertouchUnitValueItem(
     this.unitValue, {
-    void Function()? onPressed,
+    void Function()? onTap,
     bool isSelected = false,
-  }) : super(onPressed: onPressed, isSelected: isSelected);
+  }) : super(onTap: onTap, isMarkedToSelect: isSelected);
 
   final UnitValueModel unitValue;
 

@@ -19,8 +19,7 @@ class FetchUnits extends UnitsMenuEvent {
 
   @override
   String toString() {
-    return 'FetchUnits{'
-        'unitGroupId: $unitGroupId}';
+    return 'FetchUnits{unitGroupId: $unitGroupId}';
   }
 }
 

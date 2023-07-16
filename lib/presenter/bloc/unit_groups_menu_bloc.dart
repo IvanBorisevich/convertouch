@@ -24,7 +24,9 @@ class UnitGroupsMenuBloc
 
       if (!unitGroupExists) {
         UnitGroupModel newUnitGroup =
-            UnitGroupModel(allUnitGroups.length + 1, event.unitGroupName);
+            UnitGroupModel(
+                id: allUnitGroups.length + 1,
+                name: event.unitGroupName);
         allUnitGroups.add(newUnitGroup);
         yield UnitGroupAdded(unitGroup: newUnitGroup);
       } else {
@@ -35,9 +37,9 @@ class UnitGroupsMenuBloc
 }
 
 final List<UnitGroupModel> allUnitGroups = [
-  UnitGroupModel(1, 'Length', ciUnitId: 1),
-  UnitGroupModel(2, 'Area'),
-  UnitGroupModel(3, 'Volume'),
+  UnitGroupModel(id: 1, name: 'Length'),
+  UnitGroupModel(id: 2, name: 'Area'),
+  UnitGroupModel(id: 3, name: 'Volume'),
   // UnitGroupModel(4, 'Speed'),
   // UnitGroupModel(5, 'Mass'),
   // UnitGroupModel(6, 'Currency'),

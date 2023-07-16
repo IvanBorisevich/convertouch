@@ -13,7 +13,6 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
     if (event is FetchUnits) {
       yield const UnitsFetching();
       UnitGroupModel unitGroup = getUnitGroup(event.unitGroupId);
-      unitGroup.ciUnit = getUnit(unitGroup.ciUnitId);
       yield UnitsFetched(
           units: allUnits,
           unitGroup: unitGroup,
@@ -27,7 +26,9 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
       } else {
         yield const UnitAdding();
         UnitModel newUnit = UnitModel(
-            allUnits.length + 1, event.unitName, event.unitAbbreviation);
+            id: allUnits.length + 1,
+            name: event.unitName,
+            abbreviation: event.unitAbbreviation);
         allUnits.add(newUnit);
         yield UnitAdded(addedUnit: newUnit);
       }
@@ -58,13 +59,13 @@ UnitGroupModel getUnitGroup(int unitGroupId) {
 }
 
 final List<UnitModel> allUnits = [
-  UnitModel(1, 'Centimeter', 'cm'),
-  UnitModel(2, 'Centimeter Square', 'cm2'),
-  UnitModel(3, 'Centimeter Square', 'mm2'),
-  UnitModel(4, 'Meter', 'm'),
-  UnitModel(5, 'Centimeter Square', 'mm3'),
-  UnitModel(6, 'Centimeter Square', 'cm2'),
-  UnitModel(7, 'Centimeter', 'cm'),
+  UnitModel(id: 1, name: 'Centimeter', abbreviation: 'cm'),
+  UnitModel(id: 2, name: 'Centimeter Square', abbreviation: 'cm2'),
+  UnitModel(id: 3, name: 'Centimeter Square', abbreviation: 'mm2'),
+  UnitModel(id: 4, name: 'Meter', abbreviation: 'm'),
+  UnitModel(id: 5, name: 'Centimeter Square', abbreviation: 'mm3'),
+  UnitModel(id: 6, name: 'Centimeter Square', abbreviation: 'cm2'),
+  UnitModel(id: 7, name: 'Centimeter', abbreviation: 'cm'),
   // UnitModel(8, 'Centimeter Square', 'mm4'),
   // UnitModel(9, 'Centimeter Square', 'cm2'),
   // UnitModel(10, 'Centimeter', 'cm'),

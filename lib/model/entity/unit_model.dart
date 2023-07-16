@@ -2,12 +2,14 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 
 class UnitModel extends ItemModelWithIdName {
-  const UnitModel(int id, String name, this.abbreviation) :
-      super(id, name, ItemType.unit);
+  const UnitModel({
+    int id = 0,
+    required String name,
+    this.coefficient = 1,
+    required this.abbreviation
+  }) : super(id: id, name: name, itemType: ItemType.unit);
 
-  const UnitModel.withoutId(String name, this.abbreviation) :
-      super(0, name, ItemType.unit);
-
+  final double coefficient;
   final String abbreviation;
 
   @override

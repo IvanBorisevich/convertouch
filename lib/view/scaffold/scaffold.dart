@@ -92,3 +92,24 @@ void showAlertDialog(BuildContext context, String message) {
     },
   );
 }
+
+Widget horizontalDividerWithText(String text) {
+  return Row(children: [
+    const Expanded(
+        child: Divider(
+            color: Color(0xFF426F99), thickness: 1.2)),
+    const SizedBox(width: 7),
+    Text(
+      text,
+      style: const TextStyle(
+          color: Color(0xFF426F99),
+          fontWeight: FontWeight.w500),
+    ),
+    const SizedBox(width: 7),
+    const Expanded(
+        child: Divider(
+          color: Color(0xFF426F99),
+          thickness: 1.2,
+        )),
+  ]);
+}
