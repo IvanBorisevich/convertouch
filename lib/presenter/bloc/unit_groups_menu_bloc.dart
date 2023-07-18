@@ -12,23 +12,21 @@ class UnitGroupsMenuBloc
       UnitGroupsMenuEvent event) async* {
     if (event is FetchUnitGroups) {
       yield const UnitGroupsFetching();
-      yield UnitGroupsFetched(
-          unitGroups: allUnitGroups,
-          navigationAction: event.navigationAction
-      );
+      yield UnitGroupsFetched(unitGroups: allUnitGroups, triggeredBy: event.triggeredBy);
     } else if (event is AddUnitGroup) {
-      yield const UnitGroupAdding();
+      yield const UnitGroupsFetching();
 
       bool unitGroupExists = allUnitGroups
           .any((unitGroup) => event.unitGroupName == unitGroup.name);
 
       if (!unitGroupExists) {
-        UnitGroupModel newUnitGroup =
-            UnitGroupModel(
-                id: allUnitGroups.length + 1,
-                name: event.unitGroupName);
+        UnitGroupModel newUnitGroup = UnitGroupModel(
+            id: allUnitGroups.length + 1, name: event.unitGroupName);
         allUnitGroups.add(newUnitGroup);
-        yield UnitGroupAdded(unitGroup: newUnitGroup);
+        yield UnitGroupsFetched(
+            unitGroups: allUnitGroups,
+            addedUnitGroup: newUnitGroup,
+            triggeredBy: event.triggeredBy);
       } else {
         yield UnitGroupExists(unitGroupName: event.unitGroupName);
       }

@@ -1,9 +1,9 @@
-import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 abstract class UnitGroupsMenuState extends ConvertouchBlocState {
-  const UnitGroupsMenuState();
+  const UnitGroupsMenuState({String? triggeredBy})
+      : super(triggeredBy: triggeredBy);
 }
 
 class UnitGroupsFetching extends UnitGroupsMenuState {
@@ -18,50 +18,27 @@ class UnitGroupsFetching extends UnitGroupsMenuState {
 class UnitGroupsFetched extends UnitGroupsMenuState {
   const UnitGroupsFetched({
     required this.unitGroups,
-    this.navigationAction
-  });
+    this.addedUnitGroup,
+    String? triggeredBy,
+  }) : super(triggeredBy: triggeredBy);
 
   final List<UnitGroupModel> unitGroups;
-  final NavigationAction? navigationAction;
+  final UnitGroupModel? addedUnitGroup;
 
   @override
   List<Object> get props => [unitGroups];
 
   @override
   String toString() {
-    return 'UnitGroupsFetched{unitsGroups: $unitGroups}';
-  }
-}
-
-class UnitGroupAdding extends UnitGroupsMenuState {
-  const UnitGroupAdding();
-
-  @override
-  String toString() {
-    return 'UnitGroupAdding{}';
-  }
-}
-
-class UnitGroupAdded extends UnitGroupsMenuState {
-  const UnitGroupAdded({
-    required this.unitGroup
-  });
-
-  final UnitGroupModel unitGroup;
-
-  @override
-  List<Object> get props => [unitGroup];
-
-  @override
-  String toString() {
-    return 'UnitGroupAdded{unitGroup: $unitGroup}';
+    return 'UnitGroupsFetched{'
+        'unitsGroups: $unitGroups, '
+        'addedUnitGroup: $addedUnitGroup, '
+        'triggeredBy: $triggeredBy}';
   }
 }
 
 class UnitGroupExists extends UnitGroupsMenuState {
-  const UnitGroupExists({
-    required this.unitGroupName
-  });
+  const UnitGroupExists({required this.unitGroupName});
 
   final String unitGroupName;
 

@@ -24,9 +24,11 @@ class _ConvertouchUnitGroupCreationPageState
   @override
   Widget build(BuildContext context) {
     return BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
+      listenWhen: (prev, next) {
+        return prev != next && next.triggeredBy == unitGroupCreationPageId;
+      },
       listener: (_, unitGroupsMenuState) {
-        if (unitGroupsMenuState is UnitGroupsFetched &&
-            unitGroupsMenuState.navigationAction == NavigationAction.pop) {
+        if (unitGroupsMenuState is UnitGroupsFetched) {
           Navigator.of(context).pop();
         } else if (unitGroupsMenuState is UnitGroupExists) {
           showAlertDialog(
@@ -37,13 +39,13 @@ class _ConvertouchUnitGroupCreationPageState
       },
       child: ConvertouchScaffold(
         pageTitle: "New Unit Group",
-        appBarLeftWidget: backIcon(context),
         appBarRightWidgets: [
           checkIcon(context, _isApplyButtonEnabled, () {
-            BlocProvider.of<UnitGroupsMenuBloc>(context)
-                .add(AddUnitGroup(unitGroupName: _controller.text));
             BlocProvider.of<UnitGroupsMenuBloc>(context).add(
-                const FetchUnitGroups(navigationAction: NavigationAction.pop));
+                AddUnitGroup(
+                    unitGroupName: _controller.text,
+                    triggeredBy: unitGroupCreationPageId
+                ));
           }),
         ],
         body: Column(

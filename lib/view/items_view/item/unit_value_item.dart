@@ -4,21 +4,31 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchUnitValueItem extends ConvertouchItem {
-  const ConvertouchUnitValueItem(
-    this.unitValue, {
+  const ConvertouchUnitValueItem(this.unitValue, {
     void Function()? onTap,
+    void Function()? onLongPress,
+    void Function(String)? onValueChanged,
     bool isSelected = false,
-  }) : super(onTap: onTap, isMarkedToSelect: isSelected);
+  }) : super(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      onValueChanged: onValueChanged,
+      isMarkedToSelect: isSelected);
 
   final UnitValueModel unitValue;
 
   @override
-  Widget buildForGrid(BuildContext context) {
+  Widget buildForGrid() {
     throw UnimplementedError();
   }
 
   @override
-  Widget buildForList(BuildContext context) {
-    return ConvertouchUnitValueListItem(unitValue);
+  Widget buildForList() {
+    return ConvertouchUnitValueListItem(
+      unitValue,
+      onTap: onTap,
+      onLongPress: onLongPress,
+      onValueChanged: onValueChanged,
+    );
   }
 }

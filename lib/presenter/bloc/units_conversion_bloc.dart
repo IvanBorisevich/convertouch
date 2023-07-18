@@ -31,12 +31,10 @@ class UnitsConversionBloc
         sourceUnitId: inputUnitId,
         sourceUnitValue: inputValue,
         unitGroup: event.unitGroup,
+        triggeredBy: event.triggeredBy,
       );
     } else if (event is ConvertUnitValue) {
-      List<int> targetUnitIds = event.targetUnitIds;
-      List<UnitModel> targetUnits = getUnits(targetUnitIds);
-
-      for (UnitModel targetUnit in targetUnits) {
+      for (UnitModel targetUnit in event.targetUnits) {
         if (targetUnit.id != event.inputUnitId) {
           yield const UnitConverting();
           String targetValue =

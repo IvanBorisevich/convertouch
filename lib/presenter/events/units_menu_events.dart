@@ -1,47 +1,51 @@
-import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitsMenuEvent extends ConvertouchEvent {
-  const UnitsMenuEvent();
+  const UnitsMenuEvent({
+    String? triggeredBy
+  }) : super(triggeredBy: triggeredBy);
 }
 
 class FetchUnits extends UnitsMenuEvent {
   const FetchUnits({
     required this.unitGroupId,
-    this.navigationAction,
-  });
+    String? triggeredBy,
+  }) : super(triggeredBy: triggeredBy);
 
   final int unitGroupId;
-  final NavigationAction? navigationAction;
 
   @override
   List<Object> get props => [unitGroupId];
 
   @override
   String toString() {
-    return 'FetchUnits{unitGroupId: $unitGroupId}';
+    return 'FetchUnits{unitGroupId: $unitGroupId, triggeredBy: $triggeredBy}';
   }
 }
 
 class AddUnit extends UnitsMenuEvent {
-  const AddUnit(
-      {required this.unitName,
-      required this.unitAbbreviation,
-      required this.unitGroupId});
+  const AddUnit({
+    required this.unitName,
+    required this.unitAbbreviation,
+    required this.unitGroup,
+    String? triggeredBy
+  }) : super(triggeredBy: triggeredBy);
 
   final String unitName;
   final String unitAbbreviation;
-  final int unitGroupId;
+  final UnitGroupModel unitGroup;
 
   @override
-  List<Object> get props => [unitName, unitAbbreviation, unitGroupId];
+  List<Object> get props => [unitName, unitAbbreviation, unitGroup];
 
   @override
   String toString() {
     return 'AddUnit{'
         'unitName: $unitName, '
         'unitAbbreviation: $unitAbbreviation, '
-        'unitGroupId: $unitGroupId}';
+        'unitGroup: $unitGroup,'
+        'triggeredBy: $triggeredBy}';
   }
 }
 

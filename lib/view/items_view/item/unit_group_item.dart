@@ -1,48 +1,43 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
-import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
-import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/view/items_view/item_view_mode/menu_grid_item.dart';
 import 'package:convertouch/view/items_view/item_view_mode/menu_list_item.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class ConvertouchUnitGroupItem extends ConvertouchItem {
   static const double itemLogoWidth = 50;
 
   const ConvertouchUnitGroupItem(this.unitGroup, {
     void Function()? onTap,
+    void Function()? onLongPress,
+    void Function(String)? onValueChanged,
     bool isSelected = false,
-  }) : super(onTap: onTap, isMarkedToSelect: isSelected);
+  }) : super(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      onValueChanged: onValueChanged,
+      isMarkedToSelect: isSelected);
 
   final UnitGroupModel unitGroup;
 
   @override
-  Widget buildForGrid(BuildContext context) {
+  Widget buildForGrid() {
     return ConvertouchMenuGridItem(
       unitGroup,
       logo: _buildUnitGroupIconButton(),
-      onTap: onTapFunc(context),
+      onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
 
   @override
-  Widget buildForList(BuildContext context) {
-    return ConvertouchMenuListItem(
-        unitGroup,
-        logo: wrapLogo(_buildUnitGroupIconButton(), itemLogoWidth),
-        onTap: onTapFunc(context)
+  Widget buildForList() {
+    return ConvertouchMenuListItem(unitGroup,
+      logo: wrapLogo(_buildUnitGroupIconButton(), itemLogoWidth),
+      onTap: onTap,
+      onLongPress: onLongPress,
     );
-  }
-
-  @override
-  void Function()? onTapFunc(BuildContext context) {
-    return () {
-      BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-          unitGroupId: unitGroup.id, navigationAction: NavigationAction.push));
-    };
   }
 
   Widget _buildUnitGroupIconButton() {

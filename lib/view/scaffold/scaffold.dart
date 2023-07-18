@@ -21,7 +21,14 @@ class ConvertouchScaffold extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        leading: appBarLeftWidget ?? menuIcon(context),
+        leading: appBarLeftWidget ??
+            (Navigator.canPop(context)
+                ? leadingIcon(Icons.arrow_back_rounded, () {
+                    Navigator.of(context).pop();
+                  })
+                : leadingIcon(Icons.menu, () {
+
+                  })),
         centerTitle: true,
         title: Text(
           pageTitle,
@@ -40,25 +47,13 @@ class ConvertouchScaffold extends StatelessWidget {
   }
 }
 
-Widget menuIcon(BuildContext context) {
+Widget leadingIcon(IconData iconData, void Function()? onPressed) {
   return IconButton(
-    icon: const Icon(
-      Icons.menu,
-      color: Color(0xFF426F99),
+    icon: Icon(
+      iconData,
+      color: const Color(0xFF426F99),
     ),
-    onPressed: () {},
-  );
-}
-
-Widget backIcon(BuildContext context) {
-  return IconButton(
-    icon: const Icon(
-      Icons.arrow_back_rounded,
-      color: Color(0xFF426F99),
-    ),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
+    onPressed: onPressed,
   );
 }
 
@@ -83,7 +78,7 @@ void showAlertDialog(BuildContext context, String message) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),
@@ -95,21 +90,18 @@ void showAlertDialog(BuildContext context, String message) {
 
 Widget horizontalDividerWithText(String text) {
   return Row(children: [
-    const Expanded(
-        child: Divider(
-            color: Color(0xFF426F99), thickness: 1.2)),
+    const Expanded(child: Divider(color: Color(0xFF426F99), thickness: 1.2)),
     const SizedBox(width: 7),
     Text(
       text,
       style: const TextStyle(
-          color: Color(0xFF426F99),
-          fontWeight: FontWeight.w500),
+          color: Color(0xFF426F99), fontWeight: FontWeight.w500),
     ),
     const SizedBox(width: 7),
     const Expanded(
         child: Divider(
-          color: Color(0xFF426F99),
-          thickness: 1.2,
-        )),
+      color: Color(0xFF426F99),
+      thickness: 1.2,
+    )),
   ]);
 }

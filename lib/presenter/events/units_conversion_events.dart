@@ -1,8 +1,11 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitsConversionEvent extends ConvertouchEvent {
-  const UnitsConversionEvent();
+  const UnitsConversionEvent({
+    String? triggeredBy
+  }) : super(triggeredBy: triggeredBy);
 }
 
 class InitializeConversion extends UnitsConversionEvent {
@@ -11,7 +14,8 @@ class InitializeConversion extends UnitsConversionEvent {
     this.inputUnitId = 0,
     required this.targetUnitIds,
     required this.unitGroup,
-  });
+    String? triggeredBy
+  }) : super(triggeredBy: triggeredBy);
 
   final String inputValue;
   final int inputUnitId;
@@ -32,7 +36,8 @@ class InitializeConversion extends UnitsConversionEvent {
         'inputValue: $inputValue, '
         'inputUnitId: $inputUnitId, '
         'targetUnitIds: $targetUnitIds, '
-        'unitGroup: $unitGroup}';
+        'unitGroup: $unitGroup,'
+        'triggeredBy: $triggeredBy}';
   }
 }
 
@@ -40,18 +45,18 @@ class ConvertUnitValue extends UnitsConversionEvent {
   const ConvertUnitValue({
     required this.inputValue,
     required this.inputUnitId,
-    required this.targetUnitIds,
+    required this.targetUnits,
   });
 
   final String inputValue;
   final int inputUnitId;
-  final List<int> targetUnitIds;
+  final List<UnitModel> targetUnits;
 
   @override
   List<Object> get props => [
     inputValue,
     inputUnitId,
-    targetUnitIds,
+    targetUnits,
   ];
 
   @override
@@ -59,6 +64,6 @@ class ConvertUnitValue extends UnitsConversionEvent {
     return 'ConvertUnitValue{'
         'inputValue: $inputValue, '
         'inputUnitId: $inputUnitId, '
-        'targetUnitIds: $targetUnitIds}';
+        'targetUnitIds: $targetUnits}';
   }
 }

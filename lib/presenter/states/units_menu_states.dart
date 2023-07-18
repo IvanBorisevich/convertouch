@@ -1,10 +1,11 @@
-import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 abstract class UnitsMenuState extends ConvertouchBlocState {
-  const UnitsMenuState();
+  const UnitsMenuState({
+    String? triggeredBy
+  }) : super(triggeredBy: triggeredBy);
 }
 
 class UnitsMenuInitState extends UnitsMenuState {
@@ -29,12 +30,13 @@ class UnitsFetched extends UnitsMenuState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.navigationAction,
-  });
+    this.addedUnit,
+    String? triggeredBy,
+  }) : super(triggeredBy: triggeredBy);
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
-  final NavigationAction? navigationAction;
+  final UnitModel? addedUnit;
 
   @override
   List<Object> get props => [units, unitGroup];
@@ -43,7 +45,9 @@ class UnitsFetched extends UnitsMenuState {
   String toString() {
     return 'UnitsFetched{'
         'units: $units, '
-        'unitGroup: $unitGroup}';
+        'unitGroup: $unitGroup, '
+        'addedUnit: $addedUnit, '
+        'triggeredBy: $triggeredBy}';
   }
 }
 
@@ -54,31 +58,6 @@ class UnitChecking extends UnitsMenuState {
   @override
   String toString() {
     return 'UnitChecking{}';
-  }
-}
-
-class UnitAdding extends UnitsMenuState {
-  const UnitAdding();
-
-  @override
-  String toString() {
-    return 'UnitAdding{}';
-  }
-}
-
-class UnitAdded extends UnitsMenuState {
-  const UnitAdded({
-    required this.addedUnit,
-  });
-
-  final UnitModel addedUnit;
-
-  @override
-  List<Object> get props => [addedUnit];
-
-  @override
-  String toString() {
-    return 'UnitAdded{addedUnit: $addedUnit}';
   }
 }
 

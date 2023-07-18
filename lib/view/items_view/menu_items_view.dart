@@ -4,19 +4,20 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatefulWidget {
-  const ConvertouchMenuItemsView(this.items, {
-    this.conversionUnitIds = const [],
-    this.viewMode = ItemsMenuViewMode.grid,
-    this.removalModeEnabled = false,
-    this.multipleSelectionEnabled = false,
-    super.key
-  });
+  const ConvertouchMenuItemsView(this.items,
+      {this.conversionUnitIds = const [],
+      this.viewMode = ItemsMenuViewMode.grid,
+      this.removalModeEnabled = false,
+      this.multipleSelectionEnabled = false,
+      this.onItemTap,
+      super.key});
 
   final List<ItemModelWithIdName> items;
   final List<int> conversionUnitIds;
   final ItemsMenuViewMode viewMode;
   final bool removalModeEnabled;
   final bool multipleSelectionEnabled;
+  final void Function(ItemModelWithIdName)? onItemTap;
 
   @override
   State createState() => _ConvertouchMenuItemsViewState();
@@ -29,11 +30,17 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
       if (widget.items.isNotEmpty) {
         switch (widget.viewMode) {
           case ItemsMenuViewMode.grid:
-            return ConvertouchItemsGrid(widget.items,
-                conversionUnitIds: widget.conversionUnitIds);
+            return ConvertouchItemsGrid(
+              widget.items,
+              conversionUnitIds: widget.conversionUnitIds,
+              onItemTap: widget.onItemTap,
+            );
           case ItemsMenuViewMode.list:
-            return ConvertouchItemsList(widget.items,
-                conversionUnitIds: widget.conversionUnitIds);
+            return ConvertouchItemsList(
+              widget.items,
+              conversionUnitIds: widget.conversionUnitIds,
+              onItemTap: widget.onItemTap,
+            );
         }
       }
       return const ConvertouchItemsEmptyView();
@@ -43,13 +50,14 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
 
 class ConvertouchItemsGrid extends StatelessWidget {
   const ConvertouchItemsGrid(this.items,
-      {this.conversionUnitIds = const [], super.key});
+      {this.conversionUnitIds = const [], this.onItemTap, super.key});
 
   static const double _listItemsSpacingSize = 5.0;
   static const int _numberOfItemsInRow = 4;
 
   final List<ItemModelWithIdName> items;
   final List<int> conversionUnitIds;
+  final void Function(ItemModelWithIdName)? onItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +72,13 @@ class ConvertouchItemsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         ItemModelWithIdName item = items[index];
         bool isSelected = conversionUnitIds.contains(item.id);
-        return ConvertouchItem.createItem(item, isSelected: isSelected)
-            .buildForGrid(context);
+        return ConvertouchItem.createItem(
+          item,
+          isSelected: isSelected,
+          onTap: () {
+            onItemTap?.call(item);
+          },
+        ).buildForGrid();
       },
     );
   }
@@ -73,12 +86,13 @@ class ConvertouchItemsGrid extends StatelessWidget {
 
 class ConvertouchItemsList extends StatelessWidget {
   const ConvertouchItemsList(this.items,
-      {this.conversionUnitIds = const [], super.key});
+      {this.conversionUnitIds = const [], this.onItemTap, super.key});
 
   static const double _listItemsSpacingSize = 5;
 
   final List<ItemModelWithIdName> items;
   final List<int> conversionUnitIds;
+  final void Function(ItemModelWithIdName)? onItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +102,13 @@ class ConvertouchItemsList extends StatelessWidget {
       itemBuilder: (context, index) {
         ItemModelWithIdName item = items[index];
         bool isSelected = conversionUnitIds.contains(item.id);
-        return ConvertouchItem.createItem(item, isSelected: isSelected)
-            .buildForList(context);
+        return ConvertouchItem.createItem(
+          item,
+          isSelected: isSelected,
+          onTap: () {
+            onItemTap?.call(item);
+          },
+        ).buildForList();
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(

@@ -16,21 +16,24 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
       yield UnitsFetched(
           units: allUnits,
           unitGroup: unitGroup,
-          navigationAction: event.navigationAction
-      );
+          triggeredBy: event.triggeredBy);
     } else if (event is AddUnit) {
       yield const UnitChecking();
       bool unitExists = allUnits.any((unit) => unit.name == event.unitName);
       if (unitExists) {
         yield UnitExists(unitName: event.unitName);
       } else {
-        yield const UnitAdding();
+        yield const UnitsFetching();
         UnitModel newUnit = UnitModel(
             id: allUnits.length + 1,
             name: event.unitName,
             abbreviation: event.unitAbbreviation);
         allUnits.add(newUnit);
-        yield UnitAdded(addedUnit: newUnit);
+        yield UnitsFetched(
+            units: allUnits,
+            addedUnit: newUnit,
+            unitGroup: event.unitGroup,
+            triggeredBy: event.triggeredBy);
       }
     } else if (event is SelectUnit) {
       yield const UnitSelecting();
@@ -41,9 +44,7 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
 
 List<UnitModel> getUnits(List<int> selectedUnitIds) {
   if (selectedUnitIds.isNotEmpty) {
-    return allUnits
-        .where((unit) => selectedUnitIds.contains(unit.id))
-        .toList();
+    return allUnits.where((unit) => selectedUnitIds.contains(unit.id)).toList();
   }
   return [];
 }

@@ -8,8 +8,9 @@ import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/unit_groups_menu_states.dart';
 import 'package:convertouch/presenter/states/units_menu_states.dart';
+import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:convertouch/view/items_view/item/unit_group_item.dart';
-import 'package:convertouch/view/items_view/item_view_mode/unit_value_list_item.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,6 @@ class ConvertouchUnitCreationPage extends StatefulWidget {
 
 class _ConvertouchUnitCreationPageState
     extends State<ConvertouchUnitCreationPage> {
-
   final _unitNameFieldController = TextEditingController();
   final _unitAbbrFieldController = TextEditingController();
 
@@ -34,111 +34,105 @@ class _ConvertouchUnitCreationPageState
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
-      listeners: [
-        BlocListener<UnitsMenuBloc, UnitsMenuState>(
-            listener: (_, unitsMenuState) {
-          if (unitsMenuState is UnitsFetched &&
-              unitsMenuState.navigationAction == NavigationAction.pop) {
-            Navigator.of(context).pop();
-          } else if (unitsMenuState is UnitExists) {
-            showAlertDialog(
-                context, "Unit '${unitsMenuState.unitName}' already exist");
-          }
-        }),
-        BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
-          listener: (_, unitGroupsMenuState) {
-            if (unitGroupsMenuState is UnitGroupsFetched) {
-              Navigator.of(context).pushNamed(unitGroupsPageId);
+        listeners: [
+          BlocListener<UnitsMenuBloc, UnitsMenuState>(listenWhen: (prev, next) {
+            return prev != next && next.triggeredBy == unitCreationPageId;
+          }, listener: (_, unitsMenuState) {
+            if (unitsMenuState is UnitsFetched) {
+              Navigator.of(context).pop();
+            } else if (unitsMenuState is UnitExists) {
+              showAlertDialog(
+                  context, "Unit '${unitsMenuState.unitName}' already exist");
             }
-          },
-        )
-      ],
-      child:
-          BlocBuilder<UnitsMenuBloc, UnitsMenuState>(buildWhen: (prev, next) {
-        return prev != next && next is UnitsFetched;
-      }, builder: (_, unitsFetched) {
-        if (unitsFetched is UnitsFetched) {
-          return ConvertouchScaffold(
-            pageTitle: "New Unit",
-            appBarLeftWidget: backIcon(context),
-            appBarRightWidgets: [
-              checkIcon(context, _unitName.isNotEmpty, () {
+          }),
+          BlocListener<UnitGroupsMenuBloc, UnitGroupsMenuState>(
+            listenWhen: (prev, next) {
+              return prev != next && next.triggeredBy == unitCreationPageId;
+            },
+            listener: (_, unitGroupsMenuState) {
+              if (unitGroupsMenuState is UnitGroupsFetched) {
+                Navigator.of(context).pushNamed(unitGroupsPageId);
+              }
+            },
+          )
+        ],
+        child: ConvertouchScaffold(
+          pageTitle: "New Unit",
+          appBarRightWidgets: [
+            wrapIntoUnitsMenuBloc((unitsFetched) {
+              return checkIcon(context, _unitName.isNotEmpty, () {
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitsMenuBloc>(context).add(AddUnit(
-                    unitName: _unitName,
-                    unitAbbreviation:
-                        _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                    unitGroupId: unitsFetched.unitGroup.id));
-                BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-                    unitGroupId: unitsFetched.unitGroup.id,
-                    navigationAction: NavigationAction.pop));
-              }),
-            ],
-            body: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
-                child: Column(children: [
-                  ConvertouchUnitGroupItem(unitsFetched.unitGroup,
+                  unitName: _unitName,
+                  unitAbbreviation:
+                      _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                  unitGroup: unitsFetched.unitGroup,
+                  triggeredBy: unitCreationPageId
+                ));
+              });
+            }),
+          ],
+          body: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
+              child: Column(children: [
+                wrapIntoUnitsMenuBloc((unitsFetched) {
+                  return ConvertouchUnitGroupItem(
+                      unitsFetched.unitGroup,
                       onTap: () {
-                    BlocProvider.of<UnitGroupsMenuBloc>(context)
-                        .add(const FetchUnitGroups());
-                  }).buildForList(context),
-                  const SizedBox(height: 20),
-                  _buildTextField('Unit Name', _unitNameFieldController,
-                      (String value) async {
-                    setState(() {
-                      _unitName = value;
-                      _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
-                    });
-                  }),
-                  const SizedBox(height: 12),
-                  _buildTextField('Unit Abbreviation', _unitAbbrFieldController,
-                      (String value) async {
-                    setState(() {
-                      _unitAbbr = value;
-                    });
-                  },
-                      maxLength: unitAbbreviationMaxLength,
-                      lengthCounterVisible: true,
-                      hintTextVisible: true),
-                  const SizedBox(height: 25),
-                  LayoutBuilder(builder: (context, constraints) {
+                        BlocProvider.of<UnitGroupsMenuBloc>(context).add(
+                          const FetchUnitGroups(
+                              triggeredBy: unitCreationPageId));
+                      }).buildForList();
+                }),
+                const SizedBox(height: 20),
+                _buildTextField('Unit Name', _unitNameFieldController,
+                    (String value) async {
+                  setState(() {
+                    _unitName = value;
+                    _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
+                  });
+                }),
+                const SizedBox(height: 12),
+                _buildTextField('Unit Abbreviation', _unitAbbrFieldController,
+                    (String value) async {
+                  setState(() {
+                    _unitAbbr = value;
+                  });
+                },
+                    maxLength: unitAbbreviationMaxLength,
+                    lengthCounterVisible: true,
+                    hintTextVisible: true),
+                const SizedBox(height: 25),
+                wrapIntoUnitsMenuBloc((unitsFetched) {
+                  return LayoutBuilder(builder: (context, constraints) {
                     if (unitsFetched.units.isNotEmpty && _unitName.isNotEmpty) {
                       return Column(children: [
                         horizontalDividerWithText("Set unit value equivalent"),
                         const SizedBox(height: 25),
-                        ConvertouchUnitValueListItem(
-                            UnitValueModel(
-                                unit: UnitModel(
-                                  name: _unitName,
-                                  abbreviation: _unitAbbr.isNotEmpty
+                        ConvertouchItem.createItem(UnitValueModel(
+                            unit: UnitModel(
+                                name: _unitName,
+                                abbreviation: _unitAbbr.isNotEmpty
                                     ? _unitAbbr
                                     : _unitAbbrHint),
-                                value: "1"
-                            )
-                        ),
+                            value: "1"
+                        )).buildForList(),
                         const SizedBox(height: 9),
-                        ConvertouchUnitValueListItem(
-                            UnitValueModel(
-                                unit: unitsFetched.units[0],
-                                value: "1"
-                            )
-                        ),
+                        ConvertouchItem.createItem(UnitValueModel(
+                            unit: unitsFetched.units[0], value: "1")
+                        ).buildForList(),
                         const SizedBox(height: 25),
                       ]);
                     } else {
                       return const SizedBox();
                     }
-                  }),
-                ]),
-              ),
+                  });
+                }),
+              ]),
             ),
-          );
-        } else {
-          return const SizedBox();
-        }
-      }),
-    );
+          ),
+        ));
   }
 
   Widget _buildTextField(

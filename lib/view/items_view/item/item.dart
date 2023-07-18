@@ -12,39 +12,45 @@ abstract class ConvertouchItem {
   const ConvertouchItem({
     this.onTap,
     this.onLongPress,
+    this.onValueChanged,
     this.isMarkedToSelect = false,
   });
 
   final void Function()? onTap;
   final void Function()? onLongPress;
+  final void Function(String)? onValueChanged;
   final bool isMarkedToSelect;
 
-  factory ConvertouchItem.createItem(ItemModel item,
-      {void Function()? onTap, bool isSelected = false}) {
+  factory ConvertouchItem.createItem(ItemModel item, {
+    void Function()? onTap,
+    void Function()? onLongPress,
+    void Function(String)? onValueChanged,
+    bool isSelected = false}) {
     switch (item.itemType) {
       case ItemType.unitGroup:
         return ConvertouchUnitGroupItem(item as UnitGroupModel,
-            onTap: onTap, isSelected: isSelected);
+            onTap: onTap,
+            onLongPress: onLongPress,
+            onValueChanged: onValueChanged,
+            isSelected: isSelected);
       case ItemType.unit:
         return ConvertouchUnitItem(item as UnitModel,
-            onTap: onTap, isSelected: isSelected);
+            onTap: onTap,
+            onLongPress: onLongPress,
+            onValueChanged: onValueChanged,
+            isSelected: isSelected);
       case ItemType.unitValue:
         return ConvertouchUnitValueItem(item as UnitValueModel,
-            onTap: onTap, isSelected: isSelected);
+            onTap: onTap,
+            onLongPress: onLongPress,
+            onValueChanged: onValueChanged,
+            isSelected: isSelected);
     }
   }
 
-  Widget buildForList(BuildContext context);
+  Widget buildForList();
 
-  Widget buildForGrid(BuildContext context);
-
-  void Function()? onTapFunc(BuildContext context) {
-    return onTap;
-  }
-
-  void Function()? onLongPressFunc(BuildContext context) {
-    return onLongPress;
-  }
+  Widget buildForGrid();
 
   Widget wrapLogo(Widget logo, double wrapWidth) {
     return Container(

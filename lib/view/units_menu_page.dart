@@ -1,24 +1,22 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/util/menu_page_util.dart';
-import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
-import 'package:convertouch/presenter/states/items_menu_view_state.dart';
+import 'package:convertouch/presenter/events/units_menu_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
-import 'package:convertouch/presenter/states/units_menu_states.dart';
 import 'package:convertouch/view/items_view/menu_items_view.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsMenuPage extends StatefulWidget {
-  const ConvertouchUnitsMenuPage({
-    this.unitsAddingEnabled = true,
-    this.removalModeEnabled = false,
-    super.key
-  });
+  const ConvertouchUnitsMenuPage(
+      {this.unitsAddingEnabled = true,
+      this.removalModeEnabled = false,
+      super.key});
 
   final bool unitsAddingEnabled;
   final bool removalModeEnabled;
@@ -35,38 +33,32 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<UnitsConversionBloc, UnitsConversionState>(
+      listenWhen: (prev, next) {
+        return prev != next && next.triggeredBy == unitsPageId;
+      },
       listener: (_, convertedUnitsState) {
         if (convertedUnitsState is ConversionInitialized) {
           Navigator.of(context).pop();
         }
       },
-      child:
-          BlocBuilder<UnitsMenuBloc, UnitsMenuState>(buildWhen: (prev, next) {
-        return prev != next && next is UnitsFetched;
-      }, builder: (_, unitsFetched) {
-        if (unitsFetched is UnitsFetched) {
-          return ConvertouchScaffold(
+      child: wrapIntoUnitsMenuBloc((unitsFetched) {
+        return ConvertouchScaffold(
             pageTitle: unitsFetched.unitGroup.name,
-            appBarLeftWidget: backIcon(context),
             appBarRightWidgets: [
-              BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
-                  buildWhen: (prev, next) {
-                return prev != next && next is ConversionInitialized;
-              }, builder: (_, conversionInitialized) {
-                return BlocBuilder<UnitsMenuBloc, UnitsMenuState>(
-                    buildWhen: (prev, next) {
-                  return prev != next && next is UnitSelected;
-                }, builder: (_, unitSelected) {
+              wrapIntoUnitsConversionBloc((conversionInitialized) {
+                return wrapIntoUnitsMenuBlocForItem((unitSelected) {
                   updateSelectedUnitIds(
                       _selectedUnitIds, unitSelected, conversionInitialized);
                   bool isButtonEnabled =
                       _selectedUnitIds.length >= _minNumOfUnitsToSelect;
 
                   return checkIcon(context, isButtonEnabled, () {
-                    BlocProvider.of<UnitsConversionBloc>(context).add(
-                        InitializeConversion(
-                            targetUnitIds: _selectedUnitIds,
-                            unitGroup: unitsFetched.unitGroup));
+                    BlocProvider.of<UnitsConversionBloc>(context)
+                        .add(InitializeConversion(
+                      targetUnitIds: _selectedUnitIds,
+                      unitGroup: unitsFetched.unitGroup,
+                      triggeredBy: unitsPageId,
+                    ));
                   });
                 });
               }),
@@ -75,14 +67,17 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
               children: [
                 const ConvertouchSearchBar(placeholder: "Search units..."),
                 Expanded(
-                  child: BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
-                    builder: (_, itemsMenuViewState) {
-                      return ConvertouchMenuItemsView(
-                        unitsFetched.units,
-                        conversionUnitIds: _selectedUnitIds,
-                        viewMode: itemsMenuViewState.pageViewMode
-                      );
-                    }),
+                  child: wrapIntoItemsMenuViewBloc((itemsMenuViewState) {
+                    return ConvertouchMenuItemsView(
+                      unitsFetched.units,
+                      conversionUnitIds: _selectedUnitIds,
+                      viewMode: itemsMenuViewState.pageViewMode,
+                      onItemTap: (item) {
+                        BlocProvider.of<UnitsMenuBloc>(context)
+                            .add(SelectUnit(unitId: item.id));
+                      },
+                    );
+                  }),
                 ),
               ],
             ),
@@ -94,11 +89,7 @@ class _ConvertouchUnitsMenuPageState extends State<ConvertouchUnitsMenuPage> {
                 },
                 child: const Icon(Icons.add),
               ),
-            )
-          );
-        } else {
-          return const SizedBox();
-        }
+            ));
       }),
     );
   }

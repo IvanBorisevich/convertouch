@@ -1,24 +1,21 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
-import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
-import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitValueListItem extends StatefulWidget {
   const ConvertouchUnitValueListItem(
       this.item, {
-        this.conversionUnitIds = const [],
         this.onTap,
         this.onLongPress,
+        this.onValueChanged,
         this.isMarkedToRemove = false,
         super.key
       });
 
   final UnitValueModel item;
-  final List<int> conversionUnitIds;
   final void Function()? onTap;
   final void Function()? onLongPress;
+  final void Function(String)? onValueChanged;
   final bool isMarkedToRemove;
 
   @override
@@ -54,13 +51,7 @@ class _ConvertouchUnitValueListItemState
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
               ],
-              onChanged: (String value) {
-                BlocProvider.of<UnitsConversionBloc>(context).add(
-                    ConvertUnitValue(
-                        inputValue: value,
-                        inputUnitId: widget.item.unit.id,
-                        targetUnitIds: widget.conversionUnitIds));
-              },
+              onChanged: widget.onValueChanged,
               decoration: InputDecoration(
                 enabledBorder: const OutlineInputBorder(
                     borderRadius: _elementsBorderRadius,

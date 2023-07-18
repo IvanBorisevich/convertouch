@@ -1,8 +1,8 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
-import 'package:convertouch/presenter/states/items_menu_view_state.dart';
 import 'package:convertouch/view/animation/items_menu_animation.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -76,8 +76,7 @@ class ConvertouchSearchBar extends StatelessWidget {
           color: const Color(0xFFF6F9FF),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: BlocBuilder<ItemsMenuViewBloc, ItemsMenuViewState>(
-            builder: (_, itemsMenuViewState) {
+        child: wrapIntoItemsMenuViewBloc((itemsMenuViewState) {
           return IconButton(
             icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(Icon(
                 itemViewModeIconMap[itemsMenuViewState.iconViewMode],
