@@ -6,6 +6,15 @@ abstract class UnitGroupsMenuState extends ConvertouchBlocState {
       : super(triggeredBy: triggeredBy);
 }
 
+class UnitGroupsInitState extends UnitGroupsMenuState {
+  const UnitGroupsInitState();
+
+  @override
+  String toString() {
+    return 'UnitGroupsInitState{}';
+  }
+}
+
 class UnitGroupsFetching extends UnitGroupsMenuState {
   const UnitGroupsFetching();
 
@@ -48,5 +57,33 @@ class UnitGroupExists extends UnitGroupsMenuState {
   @override
   String toString() {
     return 'UnitGroupExists{unitGroupName: $unitGroupName}';
+  }
+}
+
+class UnitGroupSelecting extends UnitGroupsMenuState {
+  const UnitGroupSelecting();
+
+  @override
+  String toString() {
+    return 'UnitGroupSelecting{}';
+  }
+}
+
+class UnitGroupSelected extends UnitGroupsMenuState {
+  const UnitGroupSelected({
+    required this.unitGroup,
+    String? triggeredBy,
+  }) : super(triggeredBy: triggeredBy);
+
+  final UnitGroupModel unitGroup;
+
+  @override
+  List<Object> get props => [unitGroup];
+
+  @override
+  String toString() {
+    return 'UnitGroupSelected{'
+        'unitGroup: $unitGroup, '
+        'triggeredBy: $triggeredBy}';
   }
 }

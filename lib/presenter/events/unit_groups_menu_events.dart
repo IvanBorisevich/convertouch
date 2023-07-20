@@ -1,3 +1,4 @@
+import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitGroupsMenuEvent extends ConvertouchEvent {
@@ -33,5 +34,22 @@ class AddUnitGroup extends UnitGroupsMenuEvent {
     return 'AddUnitGroup{'
         'unitGroupName: $unitGroupName, '
         'triggeredBy: $triggeredBy}';
+  }
+}
+
+class SelectUnitGroup extends UnitGroupsMenuEvent {
+  const SelectUnitGroup({
+    required this.unitGroup,
+    String? triggeredBy,
+  });
+
+  final UnitGroupModel unitGroup;
+
+  @override
+  List<Object> get props => [unitGroup];
+
+  @override
+  String toString() {
+    return 'SelectUnitGroup{unitGroup: $unitGroup, triggeredBy: $triggeredBy}';
   }
 }

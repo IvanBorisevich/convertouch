@@ -30,6 +30,12 @@ class UnitGroupsMenuBloc
       } else {
         yield UnitGroupExists(unitGroupName: event.unitGroupName);
       }
+    } else if (event is SelectUnitGroup) {
+      yield const UnitGroupSelecting();
+      yield UnitGroupSelected(
+        unitGroup: event.unitGroup,
+        triggeredBy: event.triggeredBy
+      );
     }
   }
 }
