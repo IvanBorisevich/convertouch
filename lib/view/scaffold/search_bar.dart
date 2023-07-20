@@ -2,7 +2,7 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
 import 'package:convertouch/view/animation/items_menu_animation.dart';
-import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/view/scaffold/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

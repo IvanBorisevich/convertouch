@@ -41,7 +41,7 @@ class SelectUnitGroup extends UnitGroupsMenuEvent {
   const SelectUnitGroup({
     required this.unitGroup,
     String? triggeredBy,
-  });
+  }) : super(triggeredBy: triggeredBy);
 
   final UnitGroupModel unitGroup;
 

@@ -7,15 +7,19 @@ import 'package:convertouch/presenter/bloc_observer.dart';
 import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
 import 'package:convertouch/view/animation/navigation_animation.dart';
 import 'package:convertouch/view/home_page.dart';
+import 'package:convertouch/view/scaffold/bloc.dart';
+import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:convertouch/view/unit_creation_page.dart';
 import 'package:convertouch/view/unit_group_creation_page.dart';
 import 'package:convertouch/view/unit_groups_menu_page.dart';
 import 'package:convertouch/view/units_menu_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 void main() {
   Bloc.observer = ConvertouchBlocObserver();
+  GetIt.I.registerSingleton<NavigationService>(NavigationService());
   runApp(const ConvertouchApp());
 }
 
@@ -40,15 +44,18 @@ class ConvertouchApp extends StatelessWidget {
           ..add(const FetchUnitGroups())),
         BlocProvider(create: (context) => UnitsMenuBloc()),
       ],
-      child: MaterialApp(
-        title: appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: quicksandFontFamily),
-        initialRoute: homePageId,
-        onGenerateRoute: (settings) {
-          return ConvertouchNavigationAnimation.wrapIntoAnimation(
-              _getRoute(settings.name), settings);
-        },
+      child: wrapIntoNavigationListeners(
+        MaterialApp(
+          title: appName,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: quicksandFontFamily),
+          initialRoute: homePageId,
+          navigatorKey: NavigationService.I.navigatorKey,
+          onGenerateRoute: (settings) {
+            return ConvertouchNavigationAnimation.wrapIntoAnimation(
+                _getRoute(settings.name), settings);
+          },
+        )
       ),
     );
   }
