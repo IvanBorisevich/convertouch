@@ -9,7 +9,7 @@ class ConvertouchHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return wrapIntoUnitsConversionBloc((conversionInitialized) {
+    return unitsConversionBloc((conversionInitialized) {
       return conversionInitialized is ConversionInitialized &&
               conversionInitialized.convertedUnitValues.isNotEmpty
           ? const ConvertouchUnitsConversionPage()

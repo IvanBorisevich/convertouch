@@ -38,11 +38,11 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
     final ActionTypeOnItemClick? actionOnItemSelect =
       ModalRoute.of(context)!.settings.arguments as ActionTypeOnItemClick?;
 
-    return wrapIntoUnitsBloc((unitsFetched) {
+    return unitsBloc((unitsFetched) {
       return ConvertouchScaffold(
         pageTitle: unitsFetched.unitGroup.name,
         appBarRightWidgets: [
-          wrapIntoUnitsBlocForItem((unitSelected) {
+          unitsBlocForItem((unitSelected) {
             int? newSelectedUnitId =
                 unitSelected is UnitSelected ? unitSelected.unitId : null;
             updateSelectedUnitIds(_highlightedUnitIds, newSelectedUnitId,
@@ -62,7 +62,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
           children: [
             const ConvertouchSearchBar(placeholder: "Search units..."),
             Expanded(
-              child: wrapIntoItemsViewModeBloc((itemsViewModeState) {
+              child: itemsViewModeBloc((itemsViewModeState) {
                 return ConvertouchMenuItemsView(
                   unitsFetched.units,
                   highlightedItemIds: _highlightedUnitIds,

@@ -25,8 +25,8 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
         children: [
           const ConvertouchSearchBar(placeholder: "Search unit groups..."),
           Expanded(
-            child: wrapIntoUnitGroupsBloc((unitGroupsFetched) {
-              return wrapIntoItemsViewModeBloc((itemsMenuViewState) {
+            child: unitGroupsBloc((unitGroupsFetched) {
+              return itemsViewModeBloc((itemsMenuViewState) {
                 return ConvertouchMenuItemsView(
                   unitGroupsFetched.unitGroups,
                   highlightedItemIds: [unitGroupsFetched.selectedUnitGroupId],

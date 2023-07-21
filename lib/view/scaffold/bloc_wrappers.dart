@@ -15,7 +15,7 @@ import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget wrapIntoUnitsBloc(
+Widget unitsBloc(
     Widget Function(UnitsFetched unitsFetched) builderFunc) {
   return BlocBuilder<UnitsBloc, UnitsState>(
       buildWhen: (prev, next) {
@@ -29,7 +29,7 @@ Widget wrapIntoUnitsBloc(
       });
 }
 
-Widget wrapIntoUnitsBlocForItem(
+Widget unitsBlocForItem(
     Widget Function(UnitsState unitSelected) builderFunc) {
   return BlocBuilder<UnitsBloc, UnitsState>(
       buildWhen: (prev, next) {
@@ -39,7 +39,7 @@ Widget wrapIntoUnitsBlocForItem(
       });
 }
 
-Widget wrapIntoUnitGroupsBloc(
+Widget unitGroupsBloc(
     Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc) {
   return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
       buildWhen: (prev, next) {
@@ -53,7 +53,7 @@ Widget wrapIntoUnitGroupsBloc(
       });
 }
 
-Widget wrapIntoUnitGroupsBlocForItem(
+Widget unitGroupsBlocForItem(
     Widget Function(UnitGroupSelected unitGroupSelected) builderFunc) {
   return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
       buildWhen: (prev, next) {
@@ -67,7 +67,7 @@ Widget wrapIntoUnitGroupsBlocForItem(
   });
 }
 
-Widget wrapIntoUnitCreationBloc(
+Widget unitCreationBloc(
     Widget Function(UnitCreationPrepared unitCreationStarted) builderFunc) {
   return BlocBuilder<UnitCreationBloc, UnitCreationState>(
     buildWhen: (prev, next) {
@@ -83,7 +83,7 @@ Widget wrapIntoUnitCreationBloc(
   );
 }
 
-Widget wrapIntoItemsViewModeBloc(
+Widget itemsViewModeBloc(
     Widget Function(ItemsViewModeState itemsMenuViewState) builderFunc) {
   return BlocBuilder<ItemsMenuViewBloc, ItemsViewModeState>(
       builder: (_, itemsMenuViewState) {
@@ -91,7 +91,7 @@ Widget wrapIntoItemsViewModeBloc(
       });
 }
 
-Widget wrapIntoUnitsConversionBloc(
+Widget unitsConversionBloc(
     Widget Function(UnitsConversionState conversionInitialized) builderFunc) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
       buildWhen: (prev, next) {
@@ -101,7 +101,7 @@ Widget wrapIntoUnitsConversionBloc(
       });
 }
 
-Widget wrapIntoUnitsConversionBlocForItem(UnitValueModel item,
+Widget unitsConversionBlocForItem(UnitValueModel item,
     Widget Function(UnitValueModel item) builderFunc) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
     buildWhen: (prev, next) {
@@ -117,7 +117,7 @@ Widget wrapIntoUnitsConversionBlocForItem(UnitValueModel item,
     });
 }
 
-Widget wrapIntoNavigationListeners(Widget widget) {
+Widget navigationListeners(Widget widget) {
   return MultiBlocListener(
       listeners: [
         BlocListener<UnitGroupsBloc, UnitGroupsState>(
@@ -189,7 +189,7 @@ Widget wrapIntoNavigationListeners(Widget widget) {
 }
 
 
-Widget wrapIntoUnitGroupCreationPageListener(BuildContext context, Widget widget) {
+Widget unitGroupCreationListener(BuildContext context, Widget widget) {
   return BlocListener<UnitGroupsBloc, UnitGroupsState>(
     listener: (_, unitGroupsMenuState) {
       if (unitGroupsMenuState is UnitGroupExists) {
@@ -201,7 +201,7 @@ Widget wrapIntoUnitGroupCreationPageListener(BuildContext context, Widget widget
   );
 }
 
-Widget wrapIntoUnitCreationPageListener(BuildContext context, Widget widget) {
+Widget unitCreationListener(BuildContext context, Widget widget) {
   return BlocListener<UnitsBloc, UnitsState>(
     listener: (_, unitsMenuState) {
       if (unitsMenuState is UnitExists) {

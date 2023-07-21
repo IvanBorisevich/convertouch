@@ -46,7 +46,7 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(create: (context) => UnitsBloc()),
         BlocProvider(create: (context) => UnitCreationBloc()),
       ],
-      child: wrapIntoNavigationListeners(
+      child: navigationListeners(
         MaterialApp(
           title: appName,
           debugShowCheckedModeBanner: false,

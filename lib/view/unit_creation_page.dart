@@ -32,12 +32,12 @@ class _ConvertouchUnitCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    return wrapIntoUnitCreationPageListener(
+    return unitCreationListener(
         context,
         ConvertouchScaffold(
           pageTitle: "New Unit",
           appBarRightWidgets: [
-            wrapIntoUnitCreationBloc((unitCreationInitialized) {
+            unitCreationBloc((unitCreationInitialized) {
               return checkIcon(context, _unitName.isNotEmpty, () {
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitsBloc>(context).add(AddUnit(
@@ -53,7 +53,7 @@ class _ConvertouchUnitCreationPageState
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
               child: Column(children: [
-                wrapIntoUnitCreationBloc((unitCreationStarted) {
+                unitCreationBloc((unitCreationStarted) {
                     UnitGroupModel unitGroup = unitCreationStarted.unitGroup;
                     return ConvertouchUnitGroupItem(
                       unitGroup,
@@ -86,7 +86,7 @@ class _ConvertouchUnitCreationPageState
                     lengthCounterVisible: true,
                     hintTextVisible: true),
                 const SizedBox(height: 25),
-                wrapIntoUnitCreationBloc((unitCreationStarted) {
+                unitCreationBloc((unitCreationStarted) {
                   return LayoutBuilder(builder: (context, constraints) {
                     if (unitCreationStarted.unitForEquivalent != null && _unitName.isNotEmpty) {
                       return Column(children: [

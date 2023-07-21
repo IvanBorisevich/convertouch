@@ -22,7 +22,7 @@ class _ConvertouchUnitGroupCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    return wrapIntoUnitGroupCreationPageListener(
+    return unitGroupCreationListener(
         context,
         ConvertouchScaffold(
           pageTitle: "New Unit Group",

@@ -38,7 +38,7 @@ class _ConvertouchConversionItemsViewState
             _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
         itemBuilder: (context, index) {
           UnitValueModel item = widget.convertedItems[index];
-          return wrapIntoUnitsConversionBlocForItem(item, (item) {
+          return unitsConversionBlocForItem(item, (item) {
             return ConvertouchItem.createItem(
               item,
               onTap: () {

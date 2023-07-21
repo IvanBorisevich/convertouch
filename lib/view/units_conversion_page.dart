@@ -22,7 +22,7 @@ class _ConvertouchUnitsConversionPageState
   @override
   Widget build(BuildContext context) {
     return ConvertouchScaffold(
-      body: wrapIntoUnitsConversionBloc((conversionInitialized) {
+      body: unitsConversionBloc((conversionInitialized) {
         if (conversionInitialized is ConversionInitialized) {
           return ConvertouchConversionItemsView(
             conversionInitialized.convertedUnitValues,
@@ -49,7 +49,7 @@ class _ConvertouchUnitsConversionPageState
         }
       }),
       floatingActionButton:
-          wrapIntoUnitsConversionBloc((conversionInitialized) {
+          unitsConversionBloc((conversionInitialized) {
         if (conversionInitialized is ConversionInitialized) {
           return FloatingActionButton(
             onPressed: () {
