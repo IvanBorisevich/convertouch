@@ -1,6 +1,6 @@
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
-import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,8 +30,7 @@ class UnitsConversionBloc
         convertedUnitValues: convertedUnitValues,
         sourceUnitId: inputUnitId,
         sourceUnitValue: inputValue,
-        unitGroup: event.unitGroup,
-        triggeredBy: event.triggeredBy,
+        unitGroup: event.unitGroup
       );
     } else if (event is ConvertUnitValue) {
       for (UnitModel targetUnit in event.targetUnits) {

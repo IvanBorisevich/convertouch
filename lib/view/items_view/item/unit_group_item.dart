@@ -33,7 +33,8 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
 
   @override
   Widget buildForList() {
-    return ConvertouchMenuListItem(unitGroup,
+    return ConvertouchMenuListItem(
+      unitGroup,
       logo: wrapLogo(_buildUnitGroupIconButton(), itemLogoWidth),
       onTap: onTap,
       onLongPress: onLongPress,

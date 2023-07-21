@@ -4,17 +4,18 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatefulWidget {
-  const ConvertouchMenuItemsView(this.items,
-      {this.conversionUnitIds = const [],
-      this.viewMode = ItemsMenuViewMode.grid,
-      this.removalModeEnabled = false,
-      this.multipleSelectionEnabled = false,
-      this.onItemTap,
-      super.key});
+  const ConvertouchMenuItemsView(this.items, {
+    this.highlightedItemIds,
+    this.viewMode = ItemsViewMode.grid,
+    this.removalModeEnabled = false,
+    this.multipleSelectionEnabled = false,
+    this.onItemTap,
+    super.key
+  });
 
   final List<ItemModelWithIdName> items;
-  final List<int> conversionUnitIds;
-  final ItemsMenuViewMode viewMode;
+  final List<int>? highlightedItemIds;
+  final ItemsViewMode viewMode;
   final bool removalModeEnabled;
   final bool multipleSelectionEnabled;
   final void Function(ItemModelWithIdName)? onItemTap;
@@ -29,16 +30,16 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
     return LayoutBuilder(builder: (context, constraints) {
       if (widget.items.isNotEmpty) {
         switch (widget.viewMode) {
-          case ItemsMenuViewMode.grid:
+          case ItemsViewMode.grid:
             return ConvertouchItemsGrid(
               widget.items,
-              conversionUnitIds: widget.conversionUnitIds,
+              highlightedItemIds: widget.highlightedItemIds,
               onItemTap: widget.onItemTap,
             );
-          case ItemsMenuViewMode.list:
+          case ItemsViewMode.list:
             return ConvertouchItemsList(
               widget.items,
-              conversionUnitIds: widget.conversionUnitIds,
+              highlightedItemIds: widget.highlightedItemIds,
               onItemTap: widget.onItemTap,
             );
         }
@@ -49,14 +50,17 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
 }
 
 class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(this.items,
-      {this.conversionUnitIds = const [], this.onItemTap, super.key});
+  const ConvertouchItemsGrid(this.items, {
+    this.highlightedItemIds,
+    this.onItemTap,
+    super.key
+  });
 
   static const double _listItemsSpacingSize = 5.0;
   static const int _numberOfItemsInRow = 4;
 
   final List<ItemModelWithIdName> items;
-  final List<int> conversionUnitIds;
+  final List<int>? highlightedItemIds;
   final void Function(ItemModelWithIdName)? onItemTap;
 
   @override
@@ -71,7 +75,7 @@ class ConvertouchItemsGrid extends StatelessWidget {
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemBuilder: (context, index) {
         ItemModelWithIdName item = items[index];
-        bool isSelected = conversionUnitIds.contains(item.id);
+        bool isSelected = (highlightedItemIds ?? []).contains(item.id);
         return ConvertouchItem.createItem(
           item,
           isSelected: isSelected,
@@ -85,13 +89,16 @@ class ConvertouchItemsGrid extends StatelessWidget {
 }
 
 class ConvertouchItemsList extends StatelessWidget {
-  const ConvertouchItemsList(this.items,
-      {this.conversionUnitIds = const [], this.onItemTap, super.key});
+  const ConvertouchItemsList(this.items, {
+    this.highlightedItemIds,
+    this.onItemTap,
+    super.key
+  });
 
   static const double _listItemsSpacingSize = 5;
 
   final List<ItemModelWithIdName> items;
-  final List<int> conversionUnitIds;
+  final List<int>? highlightedItemIds;
   final void Function(ItemModelWithIdName)? onItemTap;
 
   @override
@@ -101,7 +108,7 @@ class ConvertouchItemsList extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         ItemModelWithIdName item = items[index];
-        bool isSelected = conversionUnitIds.contains(item.id);
+        bool isSelected = (highlightedItemIds ?? []).contains(item.id);
         return ConvertouchItem.createItem(
           item,
           isSelected: isSelected,

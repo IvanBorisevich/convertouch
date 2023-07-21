@@ -1,22 +1,23 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
-import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
-import 'package:convertouch/presenter/events/units_menu_events.dart';
-import 'package:convertouch/presenter/states/units_menu_states.dart';
+import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
+import 'package:convertouch/presenter/events/units_events.dart';
+import 'package:convertouch/presenter/states/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
-  UnitsMenuBloc() : super(const UnitsMenuInitState());
+class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
+  UnitsBloc() : super(const UnitsInitState());
 
   @override
-  Stream<UnitsMenuState> mapEventToState(UnitsMenuEvent event) async* {
+  Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
     if (event is FetchUnits) {
       yield const UnitsFetching();
       UnitGroupModel unitGroup = getUnitGroup(event.unitGroupId);
       yield UnitsFetched(
-          units: allUnits,
-          unitGroup: unitGroup,
-          triggeredBy: event.triggeredBy);
+        units: allUnits,
+        unitGroup: unitGroup,
+        forPage: event.forPage,
+      );
     } else if (event is AddUnit) {
       yield const UnitChecking();
       bool unitExists = allUnits.any((unit) => unit.name == event.unitName);
@@ -32,8 +33,8 @@ class UnitsMenuBloc extends Bloc<UnitsMenuEvent, UnitsMenuState> {
         yield UnitsFetched(
             units: allUnits,
             addedUnit: newUnit,
-            unitGroup: event.unitGroup,
-            triggeredBy: event.triggeredBy);
+            unitGroup: event.unitGroup
+        );
       }
     } else if (event is SelectUnit) {
       yield const UnitSelecting();

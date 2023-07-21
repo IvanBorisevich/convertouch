@@ -1,36 +1,34 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
-abstract class UnitsMenuEvent extends ConvertouchEvent {
-  const UnitsMenuEvent({
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+abstract class UnitsEvent extends ConvertouchEvent {
+  const UnitsEvent();
 }
 
-class FetchUnits extends UnitsMenuEvent {
+class FetchUnits extends UnitsEvent {
   const FetchUnits({
     required this.unitGroupId,
-    String? triggeredBy,
-  }) : super(triggeredBy: triggeredBy);
+    this.forPage
+  });
 
   final int unitGroupId;
+  final String? forPage;
 
   @override
   List<Object> get props => [unitGroupId];
 
   @override
   String toString() {
-    return 'FetchUnits{unitGroupId: $unitGroupId, triggeredBy: $triggeredBy}';
+    return 'FetchUnits{unitGroupId: $unitGroupId, forPage: $forPage}';
   }
 }
 
-class AddUnit extends UnitsMenuEvent {
+class AddUnit extends UnitsEvent {
   const AddUnit({
     required this.unitName,
     required this.unitAbbreviation,
-    required this.unitGroup,
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+    required this.unitGroup
+  });
 
   final String unitName;
   final String unitAbbreviation;
@@ -44,12 +42,11 @@ class AddUnit extends UnitsMenuEvent {
     return 'AddUnit{'
         'unitName: $unitName, '
         'unitAbbreviation: $unitAbbreviation, '
-        'unitGroup: $unitGroup,'
-        'triggeredBy: $triggeredBy}';
+        'unitGroup: $unitGroup}';
   }
 }
 
-class SelectUnit extends UnitsMenuEvent {
+class SelectUnit extends UnitsEvent {
   const SelectUnit({
     required this.unitId
   });

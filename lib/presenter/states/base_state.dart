@@ -1,11 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 abstract class ConvertouchBlocState extends Equatable {
-  const ConvertouchBlocState({
-    this.triggeredBy,
-  });
-
-  final String? triggeredBy;
+  const ConvertouchBlocState();
 
   @override
   List<Object> get props => [];

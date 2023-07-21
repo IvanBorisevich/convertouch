@@ -1,7 +1,3 @@
-import 'package:convertouch/presenter/states/units_conversion_states.dart';
-import 'package:convertouch/presenter/states/units_menu_states.dart';
-
-
 final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
 const int _minGridItemWordSizeToWrap = 10;
 
@@ -12,23 +8,24 @@ int getGridItemNameLinesNumToWrap(String gridItemName) {
       : 2;
 }
 
-void updateSelectedUnitIds(final selectedUnitIds,
-    UnitsMenuState unitSelected, UnitsConversionState unitsConverted) {
-  if (unitSelected is UnitSelected) {
-    int selectedUnitId = unitSelected.unitId;
-    if (!selectedUnitIds.contains(selectedUnitId)) {
-      selectedUnitIds.add(selectedUnitId);
+void updateSelectedUnitIds(
+    final List<int> highlightedUnitIds,
+    int? newSelectedUnitId,
+    List<int>? conversionUnitIds) {
+
+  conversionUnitIds = conversionUnitIds ?? [];
+
+  if (newSelectedUnitId != null) {
+    if (!highlightedUnitIds.contains(newSelectedUnitId)) {
+      highlightedUnitIds.add(newSelectedUnitId);
     } else {
-      selectedUnitIds.removeWhere((unitId) => unitId == selectedUnitId);
+      highlightedUnitIds.removeWhere((unitId) => unitId == newSelectedUnitId);
     }
   }
 
-  List<int> conversionUnits = unitsConverted is ConversionInitialized
-      ? unitsConverted.convertedUnitValues.map((e) => e.unit.id).toList()
-      : [];
-  List<int> allSelectedUnitIds =
-      (conversionUnits + selectedUnitIds).toSet().toList();
+  List<int> newHighlightedUnitIds =
+      (conversionUnitIds + highlightedUnitIds).toSet().toList();
 
-  selectedUnitIds.clear();
-  selectedUnitIds.addAll(allSelectedUnitIds);
+  highlightedUnitIds.clear();
+  highlightedUnitIds.addAll(newHighlightedUnitIds);
 }

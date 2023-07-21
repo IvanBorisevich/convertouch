@@ -1,20 +1,20 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
-import 'package:convertouch/presenter/states/items_menu_view_state.dart';
+import 'package:convertouch/presenter/states/items_view_mode_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ItemsMenuViewBloc extends Bloc<ItemsMenuViewEvent, ItemsMenuViewState> {
+class ItemsMenuViewBloc extends Bloc<ItemsMenuViewEvent, ItemsViewModeState> {
   ItemsMenuViewBloc()
-      : super(ItemsMenuViewState(
-            pageViewMode: ItemsMenuViewMode.grid,
-            iconViewMode: _nextMode(ItemsMenuViewMode.grid)));
+      : super(ItemsViewModeState(
+            pageViewMode: ItemsViewMode.grid,
+            iconViewMode: _nextMode(ItemsViewMode.grid)));
 
   @override
-  Stream<ItemsMenuViewState> mapEventToState(ItemsMenuViewEvent event) async* {
+  Stream<ItemsViewModeState> mapEventToState(ItemsMenuViewEvent event) async* {
     if (event is ChangeViewMode) {
-      ItemsMenuViewMode pageViewMode = _nextMode(event.currentViewMode);
-      ItemsMenuViewMode iconViewMode = _nextMode(pageViewMode);
-      yield ItemsMenuViewState(
+      ItemsViewMode pageViewMode = _nextMode(event.currentViewMode);
+      ItemsViewMode iconViewMode = _nextMode(pageViewMode);
+      yield ItemsViewModeState(
           pageViewMode: pageViewMode,
           iconViewMode: iconViewMode
       );
@@ -22,8 +22,8 @@ class ItemsMenuViewBloc extends Bloc<ItemsMenuViewEvent, ItemsMenuViewState> {
   }
 }
 
-ItemsMenuViewMode _nextMode(ItemsMenuViewMode currentMode) {
-  int currentModeIndex = ItemsMenuViewMode.values.indexOf(currentMode);
-  int nextModeIndex = (currentModeIndex + 1) % ItemsMenuViewMode.values.length;
-  return ItemsMenuViewMode.values[nextModeIndex];
+ItemsViewMode _nextMode(ItemsViewMode currentMode) {
+  int currentModeIndex = ItemsViewMode.values.indexOf(currentMode);
+  int nextModeIndex = (currentModeIndex + 1) % ItemsViewMode.values.length;
+  return ItemsViewMode.values[nextModeIndex];
 }

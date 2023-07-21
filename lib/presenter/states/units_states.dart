@@ -2,14 +2,12 @@ import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-abstract class UnitsMenuState extends ConvertouchBlocState {
-  const UnitsMenuState({
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+abstract class UnitsState extends ConvertouchBlocState {
+  const UnitsState();
 }
 
-class UnitsMenuInitState extends UnitsMenuState {
-  const UnitsMenuInitState();
+class UnitsInitState extends UnitsState {
+  const UnitsInitState();
 
   @override
   String toString() {
@@ -17,7 +15,7 @@ class UnitsMenuInitState extends UnitsMenuState {
   }
 }
 
-class UnitsFetching extends UnitsMenuState {
+class UnitsFetching extends UnitsState {
   const UnitsFetching();
 
   @override
@@ -26,17 +24,20 @@ class UnitsFetching extends UnitsMenuState {
   }
 }
 
-class UnitsFetched extends UnitsMenuState {
+class UnitsFetched extends UnitsState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
+    this.conversionUnitIds,
     this.addedUnit,
-    String? triggeredBy,
-  }) : super(triggeredBy: triggeredBy);
+    this.forPage,
+  });
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
+  final List<int>? conversionUnitIds;
   final UnitModel? addedUnit;
+  final String? forPage;
 
   @override
   List<Object> get props => [units, unitGroup];
@@ -47,12 +48,13 @@ class UnitsFetched extends UnitsMenuState {
         'units: $units, '
         'unitGroup: $unitGroup, '
         'addedUnit: $addedUnit, '
-        'triggeredBy: $triggeredBy}';
+        'conversionUnitIds: $conversionUnitIds,'
+        'forPage: $forPage}';
   }
 }
 
 
-class UnitChecking extends UnitsMenuState {
+class UnitChecking extends UnitsState {
   const UnitChecking();
 
   @override
@@ -61,7 +63,7 @@ class UnitChecking extends UnitsMenuState {
   }
 }
 
-class UnitExists extends UnitsMenuState {
+class UnitExists extends UnitsState {
   const UnitExists({
     required this.unitName
   });
@@ -77,7 +79,7 @@ class UnitExists extends UnitsMenuState {
   }
 }
 
-class UnitSelecting extends UnitsMenuState {
+class UnitSelecting extends UnitsState {
   const UnitSelecting();
 
   @override
@@ -86,7 +88,7 @@ class UnitSelecting extends UnitsMenuState {
   }
 }
 
-class UnitSelected extends UnitsMenuState {
+class UnitSelected extends UnitsState {
   const UnitSelected({
     required this.unitId
   });

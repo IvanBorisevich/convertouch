@@ -1,7 +1,7 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
-import 'package:convertouch/view/scaffold/bloc.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {

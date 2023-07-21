@@ -10,7 +10,7 @@ class ChangeViewMode extends ItemsMenuViewEvent {
     required this.currentViewMode
   });
 
-  final ItemsMenuViewMode currentViewMode;
+  final ItemsViewMode currentViewMode;
 
   @override
   List<Object> get props => [

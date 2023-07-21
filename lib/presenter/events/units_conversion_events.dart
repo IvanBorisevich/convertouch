@@ -3,9 +3,7 @@ import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitsConversionEvent extends ConvertouchEvent {
-  const UnitsConversionEvent({
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+  const UnitsConversionEvent();
 }
 
 class InitializeConversion extends UnitsConversionEvent {
@@ -13,9 +11,8 @@ class InitializeConversion extends UnitsConversionEvent {
     this.inputValue = "1",
     this.inputUnitId = 0,
     required this.targetUnitIds,
-    required this.unitGroup,
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+    required this.unitGroup
+  });
 
   final String inputValue;
   final int inputUnitId;
@@ -36,8 +33,7 @@ class InitializeConversion extends UnitsConversionEvent {
         'inputValue: $inputValue, '
         'inputUnitId: $inputUnitId, '
         'targetUnitIds: $targetUnitIds, '
-        'unitGroup: $unitGroup,'
-        'triggeredBy: $triggeredBy}';
+        'unitGroup: $unitGroup}';
   }
 }
 

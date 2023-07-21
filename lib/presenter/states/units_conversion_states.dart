@@ -3,9 +3,7 @@ import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 abstract class UnitsConversionState extends ConvertouchBlocState {
-  const UnitsConversionState({
-    String? triggeredBy
-  }) : super(triggeredBy: triggeredBy);
+  const UnitsConversionState();
 }
 
 class UnitsConversionEmptyState extends UnitsConversionState {
@@ -31,9 +29,8 @@ class ConversionInitialized extends UnitsConversionState {
     required this.sourceUnitValue,
     required this.sourceUnitId,
     required this.convertedUnitValues,
-    required this.unitGroup,
-    String? triggeredBy,
-  }) : super(triggeredBy: triggeredBy);
+    required this.unitGroup
+  });
 
   final String sourceUnitValue;
   final int sourceUnitId;
@@ -54,8 +51,7 @@ class ConversionInitialized extends UnitsConversionState {
         'sourceUnitValue: $sourceUnitValue, '
         'sourceUnitId: $sourceUnitId, '
         'convertedUnitValues: $convertedUnitValues, '
-        'unitGroup: $unitGroup,'
-        'triggeredBy: $triggeredBy}';
+        'unitGroup: $unitGroup}';
   }
 }
 

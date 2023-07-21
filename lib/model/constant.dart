@@ -23,7 +23,13 @@ enum NavigationAction {
   none,
 }
 
-enum ItemsMenuViewMode {
+enum ItemsViewMode {
   list,
   grid,
+}
+
+enum ActionTypeOnItemClick {
+  markForSelection,
+  select,
+  fetch,
 }

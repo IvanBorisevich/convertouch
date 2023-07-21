@@ -1,14 +1,13 @@
-import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
-import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
-import 'package:convertouch/presenter/events/units_menu_events.dart';
+import 'package:convertouch/presenter/events/units_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:convertouch/view/items_view/conversion_items_view.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'scaffold/bloc.dart';
+import 'scaffold/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends StatefulWidget {
   const ConvertouchUnitsConversionPage({super.key});
@@ -31,9 +30,9 @@ class _ConvertouchUnitsConversionPageState
             sourceValue: conversionInitialized.sourceUnitValue,
             unitGroup: conversionInitialized.unitGroup,
             onItemTap: (item) {
-              BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id,
-                  triggeredBy: unitsConversionPageId));
+              BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
+                  unitGroupId: conversionInitialized.unitGroup.id
+              ));
             },
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
@@ -54,9 +53,9 @@ class _ConvertouchUnitsConversionPageState
         if (conversionInitialized is ConversionInitialized) {
           return FloatingActionButton(
             onPressed: () {
-              BlocProvider.of<UnitsMenuBloc>(context).add(FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id,
-                  triggeredBy: unitsConversionPageId));
+              BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
+                  unitGroupId: conversionInitialized.unitGroup.id
+              ));
             },
             child: const Icon(Icons.add),
           );

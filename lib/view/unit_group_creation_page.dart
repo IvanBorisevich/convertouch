@@ -1,7 +1,6 @@
-import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
-import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
-import 'package:convertouch/view/scaffold/bloc.dart';
+import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
+import 'package:convertouch/presenter/events/unit_groups_events.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,15 +22,15 @@ class _ConvertouchUnitGroupCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    return wrapIntoDialogListenerForUnitGroupsPage(
+    return wrapIntoUnitGroupCreationPageListener(
         context,
         ConvertouchScaffold(
           pageTitle: "New Unit Group",
           appBarRightWidgets: [
             checkIcon(context, _isApplyButtonEnabled, () {
-              BlocProvider.of<UnitGroupsMenuBloc>(context).add(AddUnitGroup(
-                  unitGroupName: _controller.text,
-                  triggeredBy: unitGroupCreationPageId));
+              BlocProvider.of<UnitGroupsBloc>(context).add(AddUnitGroup(
+                  unitGroupName: _controller.text
+              ));
             }),
           ],
           body: Column(

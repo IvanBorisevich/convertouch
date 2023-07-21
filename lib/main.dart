@@ -1,18 +1,19 @@
 import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
-import 'package:convertouch/presenter/bloc/unit_groups_menu_bloc.dart';
-import 'package:convertouch/presenter/bloc/units_menu_bloc.dart';
+import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/bloc_observer.dart';
-import 'package:convertouch/presenter/events/unit_groups_menu_events.dart';
+import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/view/animation/navigation_animation.dart';
 import 'package:convertouch/view/home_page.dart';
-import 'package:convertouch/view/scaffold/bloc.dart';
+import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:convertouch/view/unit_creation_page.dart';
 import 'package:convertouch/view/unit_group_creation_page.dart';
-import 'package:convertouch/view/unit_groups_menu_page.dart';
-import 'package:convertouch/view/units_menu_page.dart';
+import 'package:convertouch/view/unit_groups_page.dart';
+import 'package:convertouch/view/units_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -28,8 +29,8 @@ class ConvertouchApp extends StatelessWidget {
 
   static final Map<String, Widget> routes = {
     homePageId: const ConvertouchHomePage(),
-    unitGroupsPageId: const ConvertouchUnitGroupsMenuPage(),
-    unitsPageId: const ConvertouchUnitsMenuPage(),
+    unitGroupsPageId: const ConvertouchUnitGroupsPage(),
+    unitsPageId: const ConvertouchUnitsPage(),
     unitGroupCreationPageId: const ConvertouchUnitGroupCreationPage(),
     unitCreationPageId: const ConvertouchUnitCreationPage()
   };
@@ -40,9 +41,10 @@ class ConvertouchApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => UnitsConversionBloc()),
         BlocProvider(create: (context) => ItemsMenuViewBloc()),
-        BlocProvider(create: (context) => UnitGroupsMenuBloc()
+        BlocProvider(create: (context) => UnitGroupsBloc()
           ..add(const FetchUnitGroups())),
-        BlocProvider(create: (context) => UnitsMenuBloc()),
+        BlocProvider(create: (context) => UnitsBloc()),
+        BlocProvider(create: (context) => UnitCreationBloc()),
       ],
       child: wrapIntoNavigationListeners(
         MaterialApp(

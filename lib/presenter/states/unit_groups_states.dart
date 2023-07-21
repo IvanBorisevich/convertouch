@@ -1,12 +1,11 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-abstract class UnitGroupsMenuState extends ConvertouchBlocState {
-  const UnitGroupsMenuState({String? triggeredBy})
-      : super(triggeredBy: triggeredBy);
+abstract class UnitGroupsState extends ConvertouchBlocState {
+  const UnitGroupsState();
 }
 
-class UnitGroupsInitState extends UnitGroupsMenuState {
+class UnitGroupsInitState extends UnitGroupsState {
   const UnitGroupsInitState();
 
   @override
@@ -15,7 +14,7 @@ class UnitGroupsInitState extends UnitGroupsMenuState {
   }
 }
 
-class UnitGroupsFetching extends UnitGroupsMenuState {
+class UnitGroupsFetching extends UnitGroupsState {
   const UnitGroupsFetching();
 
   @override
@@ -24,29 +23,33 @@ class UnitGroupsFetching extends UnitGroupsMenuState {
   }
 }
 
-class UnitGroupsFetched extends UnitGroupsMenuState {
+class UnitGroupsFetched extends UnitGroupsState {
   const UnitGroupsFetched({
     required this.unitGroups,
     this.addedUnitGroup,
-    String? triggeredBy,
-  }) : super(triggeredBy: triggeredBy);
+    this.selectedUnitGroupId = 0,
+    this.forPage,
+  });
 
   final List<UnitGroupModel> unitGroups;
   final UnitGroupModel? addedUnitGroup;
+  final int selectedUnitGroupId;
+  final String? forPage;
 
   @override
-  List<Object> get props => [unitGroups];
+  List<Object> get props => [unitGroups, selectedUnitGroupId];
 
   @override
   String toString() {
     return 'UnitGroupsFetched{'
         'unitsGroups: $unitGroups, '
-        'addedUnitGroup: $addedUnitGroup, '
-        'triggeredBy: $triggeredBy}';
+        'addedUnitGroup: $addedUnitGroup,'
+        'selectedUnitGroupId: $selectedUnitGroupId,'
+        'forPage: $forPage}';
   }
 }
 
-class UnitGroupExists extends UnitGroupsMenuState {
+class UnitGroupExists extends UnitGroupsState {
   const UnitGroupExists({required this.unitGroupName});
 
   final String unitGroupName;
@@ -60,7 +63,7 @@ class UnitGroupExists extends UnitGroupsMenuState {
   }
 }
 
-class UnitGroupSelecting extends UnitGroupsMenuState {
+class UnitGroupSelecting extends UnitGroupsState {
   const UnitGroupSelecting();
 
   @override
@@ -69,11 +72,10 @@ class UnitGroupSelecting extends UnitGroupsMenuState {
   }
 }
 
-class UnitGroupSelected extends UnitGroupsMenuState {
+class UnitGroupSelected extends UnitGroupsState {
   const UnitGroupSelected({
-    required this.unitGroup,
-    String? triggeredBy,
-  }) : super(triggeredBy: triggeredBy);
+    required this.unitGroup
+  });
 
   final UnitGroupModel unitGroup;
 
@@ -83,7 +85,6 @@ class UnitGroupSelected extends UnitGroupsMenuState {
   @override
   String toString() {
     return 'UnitGroupSelected{'
-        'unitGroup: $unitGroup, '
-        'triggeredBy: $triggeredBy}';
+        'unitGroup: $unitGroup}';
   }
 }

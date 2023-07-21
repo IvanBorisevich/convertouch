@@ -1,14 +1,14 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
-class ItemsMenuViewState extends ConvertouchBlocState {
-  const ItemsMenuViewState({
+class ItemsViewModeState extends ConvertouchBlocState {
+  const ItemsViewModeState({
     required this.pageViewMode,
     required this.iconViewMode,
   });
 
-  final ItemsMenuViewMode pageViewMode;
-  final ItemsMenuViewMode iconViewMode;
+  final ItemsViewMode pageViewMode;
+  final ItemsViewMode iconViewMode;
 
   @override
   List<Object> get props => [
@@ -17,7 +17,7 @@ class ItemsMenuViewState extends ConvertouchBlocState {
 
   @override
   String toString() {
-    return 'ItemsMenuViewState{'
+    return 'ItemsViewState{'
         'pageViewMode: $pageViewMode, '
         'iconViewMode: $iconViewMode}';
   }
