@@ -18,8 +18,11 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       UnitGroupModel unitGroup = getUnitGroup(event.unitGroupId);
 
       List<int> markedUnitIds = [];
-      if (event.forPage == unitsConversionPageId ||
-          event.forPage == unitsPageId) {
+      if (event.forPage == unitCreationPageId) {
+        if (event.selectedUnit != null) {
+          markedUnitIds.add(event.selectedUnit!.id);
+        }
+      } else {
         markedUnitIds = event.markedUnitIds ?? [];
 
         if (event.newMarkedUnitId != null) {
@@ -29,10 +32,6 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
             markedUnitIds
                 .removeWhere((unitId) => unitId == event.newMarkedUnitId);
           }
-        }
-      } else if (event.forPage == unitCreationPageId) {
-        if (event.selectedUnit != null) {
-          markedUnitIds.add(event.selectedUnit!.id);
         }
       }
 
@@ -46,11 +45,16 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       UnitModel? selectedUnit = event.selectedUnit ??
           (allUnits.isNotEmpty ? allUnits[0] : null);
 
+      List<int>? markedUnitIdsForPage = event.forPage == unitCreationPageId
+          ? (event.selectedUnit != null ? [event.selectedUnit!.id] : [])
+          : markedUnitIds;
+
       yield UnitsFetched(
         units: allUnits,
         unitGroup: unitGroup,
         markedUnitIds: markedUnitIds,
         newMarkedUnitId: event.newMarkedUnitId,
+        markedUnitIdsForPage: markedUnitIdsForPage,
         selectedUnit: selectedUnit,
         itemClickAction: itemClickAction,
         canMarkedUnitsBeSelected: markedUnitIds.length >= _minUnitsNumToSelect,
@@ -72,6 +76,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
           units: allUnits,
           addedUnit: newUnit,
           unitGroup: event.unitGroup,
+          markedUnitIds: event.markedUnitIds,
         );
       }
     }

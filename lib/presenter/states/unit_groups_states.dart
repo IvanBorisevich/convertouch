@@ -29,6 +29,7 @@ class UnitGroupsFetched extends UnitGroupsState {
     required this.unitGroups,
     this.markedUnitGroupIds,
     this.addedUnitGroup,
+    this.markedUnitIds,
     this.initial = false,
     this.itemClickAction = ItemClickAction.fetch,
     this.forPage,
@@ -37,6 +38,7 @@ class UnitGroupsFetched extends UnitGroupsState {
   final List<UnitGroupModel> unitGroups;
   final List<int>? markedUnitGroupIds;
   final UnitGroupModel? addedUnitGroup;
+  final List<int>? markedUnitIds;
   final bool initial;
   final ItemClickAction itemClickAction;
   final String? forPage;
@@ -54,6 +56,7 @@ class UnitGroupsFetched extends UnitGroupsState {
         'unitsGroups: $unitGroups, '
         'markedUnitGroupIds: $markedUnitGroupIds, '
         'addedUnitGroup: $addedUnitGroup, '
+        'markedUnitIds: $markedUnitIds, '
         'initial: $initial, '
         'itemClickAction: $itemClickAction, '
         'forPage: $forPage}';

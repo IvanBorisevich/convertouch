@@ -9,12 +9,14 @@ abstract class UnitCreationEvent extends ConvertouchEvent {
 class PrepareUnitCreation extends UnitCreationEvent {
   const PrepareUnitCreation({
     required this.unitGroup,
-    this.unitForEquivalent,
+    this.equivalentUnit,
+    this.markedUnitIds,
     this.initial = false,
   });
 
   final UnitGroupModel unitGroup;
-  final UnitModel? unitForEquivalent;
+  final UnitModel? equivalentUnit;
+  final List<int>? markedUnitIds;
   final bool initial;
 
   @override
@@ -24,7 +26,8 @@ class PrepareUnitCreation extends UnitCreationEvent {
   String toString() {
     return 'PrepareUnitCreation{'
         'unitGroup: $unitGroup, '
-        'unitForEquivalent: $unitForEquivalent, '
+        'equivalentUnit: $equivalentUnit, '
+        'markedUnitIds: $markedUnitIds, '
         'initial: $initial}';
   }
 }

@@ -37,16 +37,17 @@ class _ConvertouchUnitCreationPageState
         ConvertouchScaffold(
           pageTitle: "New Unit",
           appBarRightWidgets: [
-            unitCreationBloc((unitCreationInitialized) {
+            unitCreationBloc((unitCreationPrepared) {
               return checkIcon(context,
                   isEnabled: _unitName.isNotEmpty,
                   onPressedFunc: () {
                     FocusScope.of(context).unfocus();
                     BlocProvider.of<UnitsBloc>(context).add(AddUnit(
-                        unitName: _unitName,
-                        unitAbbreviation:
-                            _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                        unitGroup: unitCreationInitialized.unitGroup
+                      unitName: _unitName,
+                      unitAbbreviation:
+                         _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                      unitGroup: unitCreationPrepared.unitGroup,
+                      markedUnitIds: unitCreationPrepared.markedUnitIds,
                     ));
                   });
             }),
@@ -55,19 +56,20 @@ class _ConvertouchUnitCreationPageState
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
               child: Column(children: [
-                unitCreationBloc((unitCreationStarted) {
-                    UnitGroupModel unitGroup = unitCreationStarted.unitGroup;
-                    return ConvertouchUnitGroupItem(
-                      unitGroup,
-                      onTap: () {
-                        BlocProvider.of<UnitGroupsBloc>(context).add(
-                            FetchUnitGroups(
-                                selectedUnitGroupId: unitGroup.id,
-                                forPage: unitCreationPageId
-                            )
-                        );
-                      },
-                    ).buildForList();
+                unitCreationBloc((unitCreationPrepared) {
+                  UnitGroupModel unitGroup = unitCreationPrepared.unitGroup;
+                  return ConvertouchUnitGroupItem(
+                    unitGroup,
+                    onTap: () {
+                      BlocProvider.of<UnitGroupsBloc>(context).add(
+                        FetchUnitGroups(
+                          selectedUnitGroupId: unitGroup.id,
+                          forPage: unitCreationPageId,
+                          markedUnitIds: unitCreationPrepared.markedUnitIds,
+                        ),
+                      );
+                    },
+                  ).buildForList();
                 }),
                 const SizedBox(height: 20),
                 _buildTextField('Unit Name', _unitNameFieldController,
@@ -117,6 +119,7 @@ class _ConvertouchUnitCreationPageState
                               FetchUnits(
                                 unitGroupId: unitCreationPrepared.unitGroup.id,
                                 selectedUnit: unitCreationPrepared.equivalentUnit,
+                                markedUnitIds: unitCreationPrepared.markedUnitIds,
                                 forPage: unitCreationPageId,
                               )
                             );

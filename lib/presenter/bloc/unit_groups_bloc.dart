@@ -28,6 +28,7 @@ class UnitGroupsBloc
       yield UnitGroupsFetched(
         unitGroups: allUnitGroups,
         markedUnitGroupIds: markedUnitGroupIds,
+        markedUnitIds: event.markedUnitIds,
         initial: event.initial,
         itemClickAction: itemClickAction,
         forPage: event.forPage,

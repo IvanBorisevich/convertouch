@@ -14,13 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsPage extends StatefulWidget {
-  const ConvertouchUnitsPage(
-      {this.unitsAddingEnabled = true,
-      this.removalModeEnabled = false,
-      super.key});
-
-  final bool unitsAddingEnabled;
-  final bool removalModeEnabled;
+  const ConvertouchUnitsPage({super.key});
 
   @override
   State createState() => _ConvertouchUnitsPageState();
@@ -35,10 +29,13 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
 
     return unitsBloc((unitsFetched) {
       return ConvertouchScaffold(
-        pageTitle: unitsFetched.unitGroup.name,
+        pageTitle: itemClickAction == ItemClickAction.select
+            ? "Select Unit"
+            : unitsFetched.unitGroup.name,
         appBarRightWidgets: [
           checkIcon(
             context,
+            isVisible: itemClickAction == ItemClickAction.mark,
             isEnabled: unitsFetched.canMarkedUnitsBeSelected,
             onPressedFunc: () {
               BlocProvider.of<UnitsConversionBloc>(context).add(
@@ -56,16 +53,18 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             Expanded(child: itemsViewModeBloc((itemsViewModeState) {
               return ConvertouchMenuItemsView(
                 unitsFetched.units,
-                markedItemIds: unitsFetched.markedUnitIds,
+                markedItemIds: unitsFetched.markedUnitIdsForPage,
                 viewMode: itemsViewModeState.pageViewMode,
                 onItemTap: (item) {
                   switch (itemClickAction) {
                     case ItemClickAction.select:
-                      BlocProvider.of<UnitCreationBloc>(context)
-                          .add(PrepareUnitCreation(
-                        unitGroup: unitsFetched.unitGroup,
-                        unitForEquivalent: item as UnitModel,
-                      ));
+                      BlocProvider.of<UnitCreationBloc>(context).add(
+                        PrepareUnitCreation(
+                          unitGroup: unitsFetched.unitGroup,
+                          equivalentUnit: item as UnitModel,
+                          markedUnitIds: unitsFetched.markedUnitIds,
+                        ),
+                      );
                       break;
                     case ItemClickAction.mark:
                     default:
@@ -84,18 +83,21 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
           ],
         ),
         floatingActionButton: Visibility(
-            visible: widget.unitsAddingEnabled,
-            child: FloatingActionButton(
-              onPressed: () {
-                BlocProvider.of<UnitCreationBloc>(context)
-                    .add(PrepareUnitCreation(
+          visible: itemClickAction != ItemClickAction.select,
+          child: FloatingActionButton(
+            onPressed: () {
+              BlocProvider.of<UnitCreationBloc>(context).add(
+                PrepareUnitCreation(
                   unitGroup: unitsFetched.unitGroup,
-                  unitForEquivalent: unitsFetched.selectedUnit,
+                  equivalentUnit: unitsFetched.selectedUnit,
+                  markedUnitIds: unitsFetched.markedUnitIds,
                   initial: true,
-                ));
-              },
-              child: const Icon(Icons.add),
-            )),
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          ),
+        ),
       );
     });
   }

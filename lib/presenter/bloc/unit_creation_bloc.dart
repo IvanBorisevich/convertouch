@@ -11,10 +11,12 @@ class UnitCreationBloc extends Bloc<UnitCreationEvent, UnitCreationState> {
   Stream<UnitCreationState> mapEventToState(UnitCreationEvent event) async* {
     if (event is PrepareUnitCreation) {
       yield const UnitCreationPreparing();
-      UnitModel? unitEquivalent = event.unitForEquivalent ?? allUnits[0];
+      UnitModel? equivalentUnit = event.equivalentUnit ?? allUnits[0];
+
       yield UnitCreationPrepared(
         unitGroup: event.unitGroup,
-        equivalentUnit: unitEquivalent,
+        equivalentUnit: equivalentUnit,
+        markedUnitIds: event.markedUnitIds,
         initial: event.initial,
       );
     }

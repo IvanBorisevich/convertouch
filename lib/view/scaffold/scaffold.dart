@@ -60,16 +60,20 @@ Widget leadingIcon(IconData iconData, void Function()? onPressed) {
 
 Widget checkIcon(
     BuildContext context, {
+      bool isVisible = true,
       bool isEnabled = false,
       void Function()? onPressedFunc,
     }) {
-  return IconButton(
-    icon: Icon(
-      Icons.check,
-      color: isEnabled ? const Color(0xFF426F99) : null,
+  return Visibility(
+    visible: isVisible,
+    child: IconButton(
+      icon: Icon(
+        Icons.check,
+        color: isEnabled ? const Color(0xFF426F99) : null,
+      ),
+      disabledColor: const Color(0xFFA0C4F5),
+      onPressed: isEnabled ? onPressedFunc : null,
     ),
-    disabledColor: const Color(0xFFA0C4F5),
-    onPressed: isEnabled ? onPressedFunc : null,
   );
 }
 

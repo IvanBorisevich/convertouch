@@ -28,11 +28,13 @@ class UnitCreationPrepared extends UnitCreationState {
   const UnitCreationPrepared({
     required this.unitGroup,
     this.equivalentUnit,
+    this.markedUnitIds,
     this.initial = false,
   });
 
   final UnitGroupModel unitGroup;
   final UnitModel? equivalentUnit;
+  final List<int>? markedUnitIds;
   final bool initial;
 
   @override
@@ -43,6 +45,7 @@ class UnitCreationPrepared extends UnitCreationState {
     return 'UnitCreationPrepared{'
         'unitGroup: $unitGroup, '
         'equivalentUnit: $equivalentUnit, '
+        'markedUnitIds: $markedUnitIds, '
         'initial: $initial}';
   }
 }

@@ -30,6 +30,7 @@ class UnitsFetched extends UnitsState {
     required this.units,
     required this.unitGroup,
     this.markedUnitIds,
+    this.markedUnitIdsForPage,
     this.newMarkedUnitId,
     this.addedUnit,
     this.selectedUnit,
@@ -41,6 +42,7 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
   final List<int>? markedUnitIds;
+  final List<int>? markedUnitIdsForPage;
   final int? newMarkedUnitId;
   final UnitModel? addedUnit;
   final UnitModel? selectedUnit;
@@ -64,6 +66,7 @@ class UnitsFetched extends UnitsState {
         'addedUnit: $addedUnit, '
         'selectedUnit: $selectedUnit, '
         'markedUnitIds: $markedUnitIds, '
+        'markedUnitIdsForPage: $markedUnitIdsForPage, '
         'newMarkedUnitId: $newMarkedUnitId, '
         'itemClickAction: $itemClickAction, '
         'canMarkedUnitsBeSelected: $canMarkedUnitsBeSelected, '

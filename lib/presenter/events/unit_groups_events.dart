@@ -8,11 +8,13 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 class FetchUnitGroups extends UnitGroupsEvent {
   const FetchUnitGroups({
     this.selectedUnitGroupId,
+    this.markedUnitIds,
     this.initial = false,
     this.forPage,
   });
 
   final int? selectedUnitGroupId;
+  final List<int>? markedUnitIds;
   final bool initial;
   final String? forPage;
 
@@ -20,6 +22,7 @@ class FetchUnitGroups extends UnitGroupsEvent {
   String toString() {
     return 'FetchUnitGroups{'
         'selectedUnitGroupId: $selectedUnitGroupId, '
+        'markedUnitIds: $markedUnitIds, '
         'initial: $initial, '
         'forPage: $forPage}';
   }

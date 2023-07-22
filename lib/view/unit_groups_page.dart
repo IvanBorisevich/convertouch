@@ -21,7 +21,9 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
       ModalRoute.of(context)!.settings.arguments as ItemClickAction?;
 
     return ConvertouchScaffold(
-      pageTitle: "Unit Groups",
+      pageTitle: itemClickAction == ItemClickAction.select
+          ? "Select Unit Group"
+          : "Unit Groups",
       body: Column(
         children: [
           const ConvertouchSearchBar(placeholder: "Search unit groups..."),
@@ -36,7 +38,10 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
                     switch (itemClickAction) {
                       case ItemClickAction.select:
                         BlocProvider.of<UnitCreationBloc>(context).add(
-                          PrepareUnitCreation(unitGroup: item as UnitGroupModel)
+                          PrepareUnitCreation(
+                            unitGroup: item as UnitGroupModel,
+                            markedUnitIds: unitGroupsFetched.markedUnitIds,
+                          ),
                         );
                         break;
                       case ItemClickAction.fetch:
@@ -52,11 +57,14 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          NavigationService.I.navigateTo(unitGroupCreationPageId);
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Visibility(
+        visible: itemClickAction != ItemClickAction.select,
+        child: FloatingActionButton(
+          onPressed: () {
+            NavigationService.I.navigateTo(unitGroupCreationPageId);
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
