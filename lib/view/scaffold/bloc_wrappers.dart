@@ -29,16 +29,6 @@ Widget unitsBloc(
       });
 }
 
-Widget unitsBlocForItem(
-    Widget Function(UnitsState unitSelected) builderFunc) {
-  return BlocBuilder<UnitsBloc, UnitsState>(
-      buildWhen: (prev, next) {
-        return prev != next && next is UnitSelected;
-      }, builder: (_, unitSelected) {
-        return builderFunc.call(unitSelected);
-      });
-}
-
 Widget unitGroupsBloc(
     Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc) {
   return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
@@ -68,7 +58,7 @@ Widget unitGroupsBlocForItem(
 }
 
 Widget unitCreationBloc(
-    Widget Function(UnitCreationPrepared unitCreationStarted) builderFunc) {
+    Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc) {
   return BlocBuilder<UnitCreationBloc, UnitCreationState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitCreationPrepared;
@@ -129,14 +119,10 @@ Widget navigationListeners(Widget widget) {
                 if (unitGroupsFetched.addedUnitGroup != null) {
                   NavigationService.I.navigateBack();
                 } else {
-                  ActionTypeOnItemClick actionOnItemSelect;
-                  if (unitGroupsFetched.forPage == unitCreationPageId) {
-                    actionOnItemSelect = ActionTypeOnItemClick.select;
-                  } else {
-                    actionOnItemSelect = ActionTypeOnItemClick.fetch;
+                  if (!unitGroupsFetched.initial) {
+                    NavigationService.I.navigateTo(unitGroupsPageId,
+                        arguments: unitGroupsFetched.itemClickAction);
                   }
-                  NavigationService.I.navigateTo(unitGroupsPageId,
-                      arguments: actionOnItemSelect);
                 }
                 break;
               case UnitGroupSelected:
@@ -153,14 +139,10 @@ Widget navigationListeners(Widget widget) {
                 if (unitsFetched.addedUnit != null) {
                   NavigationService.I.navigateBack();
                 } else {
-                  ActionTypeOnItemClick actionOnItemSelect;
-                  if (unitsFetched.forPage == unitCreationPageId) {
-                    actionOnItemSelect = ActionTypeOnItemClick.select;
-                  } else {
-                    actionOnItemSelect = ActionTypeOnItemClick.markForSelection;
+                  if (unitsFetched.forPage != unitsPageId) {
+                    NavigationService.I.navigateTo(unitsPageId,
+                        arguments: unitsFetched.itemClickAction);
                   }
-                  NavigationService.I.navigateTo(unitsPageId,
-                      arguments: actionOnItemSelect);
                 }
                 break;
             }

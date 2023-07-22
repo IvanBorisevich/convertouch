@@ -27,12 +27,12 @@ class UnitCreationPreparing extends UnitCreationState {
 class UnitCreationPrepared extends UnitCreationState {
   const UnitCreationPrepared({
     required this.unitGroup,
-    this.unitForEquivalent,
+    this.equivalentUnit,
     this.initial = false,
   });
 
   final UnitGroupModel unitGroup;
-  final UnitModel? unitForEquivalent;
+  final UnitModel? equivalentUnit;
   final bool initial;
 
   @override
@@ -42,7 +42,7 @@ class UnitCreationPrepared extends UnitCreationState {
   String toString() {
     return 'UnitCreationPrepared{'
         'unitGroup: $unitGroup, '
-        'unitForEquivalent: $unitForEquivalent, '
+        'equivalentUnit: $equivalentUnit, '
         'initial: $initial}';
   }
 }

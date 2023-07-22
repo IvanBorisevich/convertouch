@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
@@ -28,19 +29,32 @@ class UnitsFetched extends UnitsState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.conversionUnitIds,
+    this.markedUnitIds,
+    this.newMarkedUnitId,
     this.addedUnit,
+    this.selectedUnit,
+    this.itemClickAction = ItemClickAction.mark,
+    this.canMarkedUnitsBeSelected = false,
     this.forPage,
   });
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
-  final List<int>? conversionUnitIds;
+  final List<int>? markedUnitIds;
+  final int? newMarkedUnitId;
   final UnitModel? addedUnit;
+  final UnitModel? selectedUnit;
+  final ItemClickAction itemClickAction;
+  final bool canMarkedUnitsBeSelected;
   final String? forPage;
 
   @override
-  List<Object> get props => [units, unitGroup];
+  List<Object> get props => [
+    units,
+    unitGroup,
+    itemClickAction,
+    canMarkedUnitsBeSelected,
+  ];
 
   @override
   String toString() {
@@ -48,7 +62,11 @@ class UnitsFetched extends UnitsState {
         'units: $units, '
         'unitGroup: $unitGroup, '
         'addedUnit: $addedUnit, '
-        'conversionUnitIds: $conversionUnitIds,'
+        'selectedUnit: $selectedUnit, '
+        'markedUnitIds: $markedUnitIds, '
+        'newMarkedUnitId: $newMarkedUnitId, '
+        'itemClickAction: $itemClickAction, '
+        'canMarkedUnitsBeSelected: $canMarkedUnitsBeSelected, '
         'forPage: $forPage}';
   }
 }
@@ -76,30 +94,5 @@ class UnitExists extends UnitsState {
   @override
   String toString() {
     return 'UnitExists{unitName: $unitName}';
-  }
-}
-
-class UnitSelecting extends UnitsState {
-  const UnitSelecting();
-
-  @override
-  String toString() {
-    return 'UnitSelecting{}';
-  }
-}
-
-class UnitSelected extends UnitsState {
-  const UnitSelected({
-    required this.unitId
-  });
-
-  final int unitId;
-
-  @override
-  List<Object> get props => [unitId];
-
-  @override
-  String toString() {
-    return 'UnitSelected{unitId: $unitId}';
   }
 }

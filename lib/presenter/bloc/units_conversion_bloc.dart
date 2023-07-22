@@ -27,19 +27,22 @@ class UnitsConversionBloc
         ), targetUnits);
       }
       yield ConversionInitialized(
-        convertedUnitValues: convertedUnitValues,
+        conversionItems: convertedUnitValues,
         sourceUnitId: inputUnitId,
         sourceUnitValue: inputValue,
         unitGroup: event.unitGroup
       );
     } else if (event is ConvertUnitValue) {
-      for (UnitModel targetUnit in event.targetUnits) {
-        if (targetUnit.id != event.inputUnitId) {
+      for (UnitValueModel conversionItem in event.conversionItems) {
+        if (conversionItem.unit.id != event.inputUnitId) {
           yield const UnitConverting();
           String targetValue =
               event.inputValue.isNotEmpty ? "1${event.inputValue}" : "";
           yield UnitConverted(
-              unitValue: UnitValueModel(unit: targetUnit, value: targetValue)
+            unitValue: UnitValueModel(
+              unit: conversionItem.unit,
+              value: targetValue,
+            ),
           );
         }
       }

@@ -1,4 +1,5 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitsEvent extends ConvertouchEvent {
@@ -8,10 +9,16 @@ abstract class UnitsEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsEvent {
   const FetchUnits({
     required this.unitGroupId,
+    this.selectedUnit,
+    this.newMarkedUnitId,
+    this.markedUnitIds,
     this.forPage
   });
 
   final int unitGroupId;
+  final UnitModel? selectedUnit;
+  final int? newMarkedUnitId;
+  final List<int>? markedUnitIds;
   final String? forPage;
 
   @override
@@ -19,7 +26,12 @@ class FetchUnits extends UnitsEvent {
 
   @override
   String toString() {
-    return 'FetchUnits{unitGroupId: $unitGroupId, forPage: $forPage}';
+    return 'FetchUnits{'
+        'unitGroupId: $unitGroupId, '
+        'selectedUnit: $selectedUnit, '
+        'newMarkedUnitId: $newMarkedUnitId, '
+        'markedUnitIds: $markedUnitIds, '
+        'forPage: $forPage}';
   }
 }
 
@@ -43,21 +55,5 @@ class AddUnit extends UnitsEvent {
         'unitName: $unitName, '
         'unitAbbreviation: $unitAbbreviation, '
         'unitGroup: $unitGroup}';
-  }
-}
-
-class SelectUnit extends UnitsEvent {
-  const SelectUnit({
-    required this.unitId
-  });
-
-  final int unitId;
-
-  @override
-  List<Object> get props => [unitId];
-
-  @override
-  String toString() {
-    return 'SelectUnit{unitId: $unitId}';
   }
 }

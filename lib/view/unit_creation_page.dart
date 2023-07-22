@@ -38,15 +38,17 @@ class _ConvertouchUnitCreationPageState
           pageTitle: "New Unit",
           appBarRightWidgets: [
             unitCreationBloc((unitCreationInitialized) {
-              return checkIcon(context, _unitName.isNotEmpty, () {
-                FocusScope.of(context).unfocus();
-                BlocProvider.of<UnitsBloc>(context).add(AddUnit(
-                    unitName: _unitName,
-                    unitAbbreviation:
-                        _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                    unitGroup: unitCreationInitialized.unitGroup
-                ));
-              });
+              return checkIcon(context,
+                  isEnabled: _unitName.isNotEmpty,
+                  onPressedFunc: () {
+                    FocusScope.of(context).unfocus();
+                    BlocProvider.of<UnitsBloc>(context).add(AddUnit(
+                        unitName: _unitName,
+                        unitAbbreviation:
+                            _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                        unitGroup: unitCreationInitialized.unitGroup
+                    ));
+                  });
             }),
           ],
           body: SingleChildScrollView(
@@ -86,9 +88,10 @@ class _ConvertouchUnitCreationPageState
                     lengthCounterVisible: true,
                     hintTextVisible: true),
                 const SizedBox(height: 25),
-                unitCreationBloc((unitCreationStarted) {
+                unitCreationBloc((unitCreationPrepared) {
                   return LayoutBuilder(builder: (context, constraints) {
-                    if (unitCreationStarted.unitForEquivalent != null && _unitName.isNotEmpty) {
+                    if (unitCreationPrepared.equivalentUnit != null
+                        && _unitName.isNotEmpty) {
                       return Column(children: [
                         horizontalDividerWithText("Set unit value equivalent"),
                         const SizedBox(height: 25),
@@ -106,13 +109,14 @@ class _ConvertouchUnitCreationPageState
                         const SizedBox(height: 9),
                         ConvertouchItem.createItem(
                           UnitValueModel(
-                            unit: unitCreationStarted.unitForEquivalent!,
+                            unit: unitCreationPrepared.equivalentUnit!,
                             value: "1",
                           ),
                           onTap: () {
                             BlocProvider.of<UnitsBloc>(context).add(
                               FetchUnits(
-                                unitGroupId: unitCreationStarted.unitGroup.id,
+                                unitGroupId: unitCreationPrepared.unitGroup.id,
+                                selectedUnit: unitCreationPrepared.equivalentUnit,
                                 forPage: unitCreationPageId,
                               )
                             );

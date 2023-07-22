@@ -1,4 +1,5 @@
 import 'package:convertouch/model/constant.dart';
+import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
@@ -22,12 +23,12 @@ class ConvertouchScaffold extends StatelessWidget {
         child: Scaffold(
       appBar: AppBar(
         leading: appBarLeftWidget ??
-            (Navigator.canPop(context)
-                ? leadingIcon(Icons.arrow_back_rounded, () {
-                    Navigator.of(context).pop();
-                  })
-                : leadingIcon(Icons.menu, () {
+            (NavigationService.I.isHomePage()
+                ? leadingIcon(Icons.menu, () {
 
+                  })
+                : leadingIcon(Icons.arrow_back_rounded, () {
+                  NavigationService.I.navigateBack();
                   })),
         centerTitle: true,
         title: Text(
@@ -58,7 +59,10 @@ Widget leadingIcon(IconData iconData, void Function()? onPressed) {
 }
 
 Widget checkIcon(
-    BuildContext context, bool isEnabled, void Function()? onPressedFunc) {
+    BuildContext context, {
+      bool isEnabled = false,
+      void Function()? onPressedFunc,
+    }) {
   return IconButton(
     icon: Icon(
       Icons.check,
@@ -78,7 +82,7 @@ void showAlertDialog(BuildContext context, String message) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              NavigationService.I.navigateBack();
             },
             child: const Text('OK'),
           ),

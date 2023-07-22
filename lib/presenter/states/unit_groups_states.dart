@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
@@ -26,25 +27,35 @@ class UnitGroupsFetching extends UnitGroupsState {
 class UnitGroupsFetched extends UnitGroupsState {
   const UnitGroupsFetched({
     required this.unitGroups,
+    this.markedUnitGroupIds,
     this.addedUnitGroup,
-    this.selectedUnitGroupId = 0,
+    this.initial = false,
+    this.itemClickAction = ItemClickAction.fetch,
     this.forPage,
   });
 
   final List<UnitGroupModel> unitGroups;
+  final List<int>? markedUnitGroupIds;
   final UnitGroupModel? addedUnitGroup;
-  final int selectedUnitGroupId;
+  final bool initial;
+  final ItemClickAction itemClickAction;
   final String? forPage;
 
   @override
-  List<Object> get props => [unitGroups, selectedUnitGroupId];
+  List<Object> get props => [
+    unitGroups,
+    initial,
+    itemClickAction
+  ];
 
   @override
   String toString() {
     return 'UnitGroupsFetched{'
         'unitsGroups: $unitGroups, '
-        'addedUnitGroup: $addedUnitGroup,'
-        'selectedUnitGroupId: $selectedUnitGroupId,'
+        'markedUnitGroupIds: $markedUnitGroupIds, '
+        'addedUnitGroup: $addedUnitGroup, '
+        'initial: $initial, '
+        'itemClickAction: $itemClickAction, '
         'forPage: $forPage}';
   }
 }
@@ -84,7 +95,6 @@ class UnitGroupSelected extends UnitGroupsState {
 
   @override
   String toString() {
-    return 'UnitGroupSelected{'
-        'unitGroup: $unitGroup}';
+    return 'UnitGroupSelected{unitGroup: $unitGroup}';
   }
 }

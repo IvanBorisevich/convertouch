@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
@@ -6,6 +7,8 @@ import 'package:convertouch/presenter/states/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
+  static const int _minUnitsNumToSelect = 2;
+
   UnitsBloc() : super(const UnitsInitState());
 
   @override
@@ -13,9 +16,44 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     if (event is FetchUnits) {
       yield const UnitsFetching();
       UnitGroupModel unitGroup = getUnitGroup(event.unitGroupId);
+
+      List<int> markedUnitIds = [];
+      if (event.forPage == unitsConversionPageId ||
+          event.forPage == unitsPageId) {
+        markedUnitIds = event.markedUnitIds ?? [];
+
+        if (event.newMarkedUnitId != null) {
+          if (!markedUnitIds.contains(event.newMarkedUnitId)) {
+            markedUnitIds.add(event.newMarkedUnitId!);
+          } else {
+            markedUnitIds
+                .removeWhere((unitId) => unitId == event.newMarkedUnitId);
+          }
+        }
+      } else if (event.forPage == unitCreationPageId) {
+        if (event.selectedUnit != null) {
+          markedUnitIds.add(event.selectedUnit!.id);
+        }
+      }
+
+      ItemClickAction itemClickAction;
+      if (event.forPage == unitCreationPageId) {
+        itemClickAction = ItemClickAction.select;
+      } else {
+        itemClickAction = ItemClickAction.mark;
+      }
+
+      UnitModel? selectedUnit = event.selectedUnit ??
+          (allUnits.isNotEmpty ? allUnits[0] : null);
+
       yield UnitsFetched(
         units: allUnits,
         unitGroup: unitGroup,
+        markedUnitIds: markedUnitIds,
+        newMarkedUnitId: event.newMarkedUnitId,
+        selectedUnit: selectedUnit,
+        itemClickAction: itemClickAction,
+        canMarkedUnitsBeSelected: markedUnitIds.length >= _minUnitsNumToSelect,
         forPage: event.forPage,
       );
     } else if (event is AddUnit) {
@@ -31,14 +69,11 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
             abbreviation: event.unitAbbreviation);
         allUnits.add(newUnit);
         yield UnitsFetched(
-            units: allUnits,
-            addedUnit: newUnit,
-            unitGroup: event.unitGroup
+          units: allUnits,
+          addedUnit: newUnit,
+          unitGroup: event.unitGroup,
         );
       }
-    } else if (event is SelectUnit) {
-      yield const UnitSelecting();
-      yield UnitSelected(unitId: event.unitId);
     }
   }
 }

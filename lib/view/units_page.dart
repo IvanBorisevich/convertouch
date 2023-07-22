@@ -1,13 +1,11 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
-import 'package:convertouch/model/util/menu_page_util.dart';
 import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/unit_creation_events.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
-import 'package:convertouch/presenter/states/units_states.dart';
 import 'package:convertouch/view/items_view/menu_items_view.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
@@ -29,79 +27,72 @@ class ConvertouchUnitsPage extends StatefulWidget {
 }
 
 class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
-  static const int _minNumOfUnitsToSelect = 2;
-
-  final List<int> _highlightedUnitIds = [];
 
   @override
   Widget build(BuildContext context) {
-    final ActionTypeOnItemClick? actionOnItemSelect =
-      ModalRoute.of(context)!.settings.arguments as ActionTypeOnItemClick?;
+    final ItemClickAction? itemClickAction =
+        ModalRoute.of(context)!.settings.arguments as ItemClickAction?;
 
     return unitsBloc((unitsFetched) {
       return ConvertouchScaffold(
         pageTitle: unitsFetched.unitGroup.name,
         appBarRightWidgets: [
-          unitsBlocForItem((unitSelected) {
-            int? newSelectedUnitId =
-                unitSelected is UnitSelected ? unitSelected.unitId : null;
-            updateSelectedUnitIds(_highlightedUnitIds, newSelectedUnitId,
-                unitsFetched.conversionUnitIds);
-            bool isButtonEnabled =
-                _highlightedUnitIds.length >= _minNumOfUnitsToSelect;
-
-            return checkIcon(context, isButtonEnabled, () {
+          checkIcon(
+            context,
+            isEnabled: unitsFetched.canMarkedUnitsBeSelected,
+            onPressedFunc: () {
               BlocProvider.of<UnitsConversionBloc>(context).add(
-                  InitializeConversion(
-                      targetUnitIds: _highlightedUnitIds,
-                      unitGroup: unitsFetched.unitGroup));
-            });
-          })
+                InitializeConversion(
+                  targetUnitIds: unitsFetched.markedUnitIds!,
+                  unitGroup: unitsFetched.unitGroup,
+                ),
+              );
+            },
+          )
         ],
         body: Column(
           children: [
             const ConvertouchSearchBar(placeholder: "Search units..."),
-            Expanded(
-              child: itemsViewModeBloc((itemsViewModeState) {
-                return ConvertouchMenuItemsView(
-                  unitsFetched.units,
-                  highlightedItemIds: _highlightedUnitIds,
-                  viewMode: itemsViewModeState.pageViewMode,
-                  onItemTap: (item) {
-                    switch (actionOnItemSelect) {
-                      case ActionTypeOnItemClick.select:
-                        BlocProvider.of<UnitCreationBloc>(context).add(
-                          PrepareUnitCreation(
-                            unitGroup: unitsFetched.unitGroup,
-                            unitForEquivalent: item as UnitModel,
-                          )
-                        );
-                        break;
-                      case ActionTypeOnItemClick.markForSelection:
-                      default:
-                        BlocProvider.of<UnitsBloc>(context)
-                            .add(SelectUnit(unitId: item.id));
-                        break;
-                    }
-                  },
-                );
-              }),
-            ),
+            Expanded(child: itemsViewModeBloc((itemsViewModeState) {
+              return ConvertouchMenuItemsView(
+                unitsFetched.units,
+                markedItemIds: unitsFetched.markedUnitIds,
+                viewMode: itemsViewModeState.pageViewMode,
+                onItemTap: (item) {
+                  switch (itemClickAction) {
+                    case ItemClickAction.select:
+                      BlocProvider.of<UnitCreationBloc>(context)
+                          .add(PrepareUnitCreation(
+                        unitGroup: unitsFetched.unitGroup,
+                        unitForEquivalent: item as UnitModel,
+                      ));
+                      break;
+                    case ItemClickAction.mark:
+                    default:
+                      BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
+                        unitGroupId: unitsFetched.unitGroup.id,
+                        newMarkedUnitId: item.id,
+                        markedUnitIds: unitsFetched.markedUnitIds,
+                        forPage: unitsPageId,
+                      ));
+                      break;
+                  }
+                },
+                markItemsOnTap: itemClickAction == ItemClickAction.mark,
+              );
+            })),
           ],
         ),
         floatingActionButton: Visibility(
             visible: widget.unitsAddingEnabled,
             child: FloatingActionButton(
               onPressed: () {
-                BlocProvider.of<UnitCreationBloc>(context).add(
-                    PrepareUnitCreation(
-                      unitGroup: unitsFetched.unitGroup,
-                      unitForEquivalent: unitsFetched.units.isNotEmpty
-                          ? unitsFetched.units[0]
-                          : null,
-                      initial: true,
-                    )
-                );
+                BlocProvider.of<UnitCreationBloc>(context)
+                    .add(PrepareUnitCreation(
+                  unitGroup: unitsFetched.unitGroup,
+                  unitForEquivalent: unitsFetched.selectedUnit,
+                  initial: true,
+                ));
               },
               child: const Icon(Icons.add),
             )),

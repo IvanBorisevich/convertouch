@@ -12,12 +12,17 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
     void Function()? onTap,
     void Function()? onLongPress,
     void Function(String)? onValueChanged,
-    bool isSelected = false,
+    bool isMarkedToSelect = false,
+    bool removalModeEnabled = false,
+    bool markOnTap = false,
   }) : super(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      onValueChanged: onValueChanged,
-      isMarkedToSelect: isSelected);
+    onTap: onTap,
+    onLongPress: onLongPress,
+    onValueChanged: onValueChanged,
+    isMarkedToSelect: isMarkedToSelect,
+    removalModeEnabled: removalModeEnabled,
+    markOnTap: markOnTap,
+  );
 
   final UnitGroupModel unitGroup;
 
@@ -28,6 +33,9 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       logo: _buildUnitGroupIconButton(),
       onTap: onTap,
       onLongPress: onLongPress,
+      isMarkedToSelect: isMarkedToSelect,
+      removalModeEnabled: removalModeEnabled,
+      markOnTap: markOnTap,
     );
   }
 
@@ -38,6 +46,9 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       logo: wrapLogo(_buildUnitGroupIconButton(), itemLogoWidth),
       onTap: onTap,
       onLongPress: onLongPress,
+      isMarkedToSelect: isMarkedToSelect,
+      removalModeEnabled: removalModeEnabled,
+      markOnTap: markOnTap,
     );
   }
 

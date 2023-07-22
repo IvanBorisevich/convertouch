@@ -14,37 +14,53 @@ abstract class ConvertouchItem {
     this.onLongPress,
     this.onValueChanged,
     this.isMarkedToSelect = false,
+    this.removalModeEnabled = false,
+    this.markOnTap = false,
   });
 
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;
   final bool isMarkedToSelect;
+  final bool removalModeEnabled;
+  final bool markOnTap;
 
   factory ConvertouchItem.createItem(ItemModel item, {
     void Function()? onTap,
     void Function()? onLongPress,
     void Function(String)? onValueChanged,
-    bool isSelected = false}) {
+    bool isMarkedToSelect = false,
+    bool removalModeEnabled = false,
+    bool markOnTap = false,
+  }) {
     switch (item.itemType) {
       case ItemType.unitGroup:
         return ConvertouchUnitGroupItem(item as UnitGroupModel,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            onValueChanged: onValueChanged,
-            isSelected: isSelected);
+          onTap: onTap,
+          onLongPress: onLongPress,
+          onValueChanged: onValueChanged,
+          isMarkedToSelect: isMarkedToSelect,
+          removalModeEnabled: removalModeEnabled,
+          markOnTap: markOnTap,
+        );
       case ItemType.unit:
         return ConvertouchUnitItem(item as UnitModel,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            onValueChanged: onValueChanged,
-            isSelected: isSelected);
+          onTap: onTap,
+          onLongPress: onLongPress,
+          onValueChanged: onValueChanged,
+          isMarkedToSelect: isMarkedToSelect,
+          removalModeEnabled: removalModeEnabled,
+          markOnTap: markOnTap,
+        );
       case ItemType.unitValue:
         return ConvertouchUnitValueItem(item as UnitValueModel,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            onValueChanged: onValueChanged,
-            isSelected: isSelected);
+          onTap: onTap,
+          onLongPress: onLongPress,
+          onValueChanged: onValueChanged,
+          isMarkedToSelect: isMarkedToSelect,
+          removalModeEnabled: removalModeEnabled,
+          markOnTap: markOnTap,
+        );
     }
   }
 

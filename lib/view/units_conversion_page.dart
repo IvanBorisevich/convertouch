@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
@@ -25,23 +26,25 @@ class _ConvertouchUnitsConversionPageState
       body: unitsConversionBloc((conversionInitialized) {
         if (conversionInitialized is ConversionInitialized) {
           return ConvertouchConversionItemsView(
-            conversionInitialized.convertedUnitValues,
+            conversionInitialized.conversionItems,
             sourceUnitId: conversionInitialized.sourceUnitId,
             sourceValue: conversionInitialized.sourceUnitValue,
             unitGroup: conversionInitialized.unitGroup,
             onItemTap: (item) {
               BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id
+                unitGroupId: conversionInitialized.unitGroup.id,
+                markedUnitIds: conversionInitialized.conversionItems.map((item) => item.unit.id).toList(),
+                forPage: unitsConversionPageId,
               ));
             },
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
-                  ConvertUnitValue(
-                      inputValue: value,
-                      inputUnitId: item.unit.id,
-                      targetUnits: conversionInitialized.convertedUnitValues
-                          .map((unitValue) => unitValue.unit)
-                          .toList()));
+                ConvertUnitValue(
+                  inputValue: value,
+                  inputUnitId: item.unit.id,
+                  conversionItems: conversionInitialized.conversionItems
+                ),
+              );
             },
           );
         } else {
@@ -54,7 +57,9 @@ class _ConvertouchUnitsConversionPageState
           return FloatingActionButton(
             onPressed: () {
               BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id
+                unitGroupId: conversionInitialized.unitGroup.id,
+                markedUnitIds: conversionInitialized.conversionItems.map((item) => item.unit.id).toList(),
+                forPage: unitsConversionPageId,
               ));
             },
             child: const Icon(Icons.add),

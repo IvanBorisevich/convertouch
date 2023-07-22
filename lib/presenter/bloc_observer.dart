@@ -5,7 +5,7 @@ class ConvertouchBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    print("Convertouch event: " + event.toString());
+    print("Convertouch event: $event");
   }
 
   @override

@@ -11,8 +11,8 @@ class ConvertouchMenuGridItem extends StatefulWidget {
     this.onTap,
     this.onLongPress,
     this.isMarkedToSelect = false,
-    this.isMarkedToRemove = false,
-    this.isItemStateChangedOnTap = false,
+    this.removalModeEnabled = false,
+    this.markOnTap = false,
   });
 
   final ItemModelWithIdName item;
@@ -20,8 +20,8 @@ class ConvertouchMenuGridItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final bool isMarkedToSelect;
-  final bool isMarkedToRemove;
-  final bool isItemStateChangedOnTap;
+  final bool removalModeEnabled;
+  final bool markOnTap;
 
   @override
   State createState() => _ConvertouchMenuGridItemState();
@@ -29,6 +29,7 @@ class ConvertouchMenuGridItem extends StatefulWidget {
 
 class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
   late bool _isMarkedToSelect;
+  bool _isMarkedToRemove = false;
 
   @override
   void initState() {
@@ -40,10 +41,16 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.isItemStateChangedOnTap) {
-          setState(() {
-            _isMarkedToSelect = !_isMarkedToSelect;
-          });
+        if (widget.markOnTap) {
+          if (!widget.removalModeEnabled) {
+            setState(() {
+              _isMarkedToSelect = !_isMarkedToSelect;
+            });
+          } else {
+            setState(() {
+              _isMarkedToRemove = !_isMarkedToRemove;
+            });
+          }
         }
         widget.onTap?.call();
       },

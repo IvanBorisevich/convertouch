@@ -6,6 +6,7 @@ import 'package:convertouch/presenter/events/unit_creation_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
 import 'package:convertouch/view/items_view/menu_items_view.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ActionTypeOnItemClick? actionOnItemSelect =
-      ModalRoute.of(context)!.settings.arguments as ActionTypeOnItemClick?;
+    final ItemClickAction? itemClickAction =
+      ModalRoute.of(context)!.settings.arguments as ItemClickAction?;
 
     return ConvertouchScaffold(
       pageTitle: "Unit Groups",
@@ -29,16 +30,16 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
               return itemsViewModeBloc((itemsMenuViewState) {
                 return ConvertouchMenuItemsView(
                   unitGroupsFetched.unitGroups,
-                  highlightedItemIds: [unitGroupsFetched.selectedUnitGroupId],
+                  markedItemIds: unitGroupsFetched.markedUnitGroupIds,
                   viewMode: itemsMenuViewState.pageViewMode,
                   onItemTap: (item) {
-                    switch (actionOnItemSelect) {
-                      case ActionTypeOnItemClick.select:
+                    switch (itemClickAction) {
+                      case ItemClickAction.select:
                         BlocProvider.of<UnitCreationBloc>(context).add(
                           PrepareUnitCreation(unitGroup: item as UnitGroupModel)
                         );
                         break;
-                      case ActionTypeOnItemClick.fetch:
+                      case ItemClickAction.fetch:
                       default:
                         BlocProvider.of<UnitsBloc>(context).add(
                             FetchUnits(unitGroupId: item.id));
@@ -53,7 +54,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(unitGroupCreationPageId);
+          NavigationService.I.navigateTo(unitGroupCreationPageId);
         },
         child: const Icon(Icons.add),
       ),

@@ -28,20 +28,20 @@ class ConversionInitialized extends UnitsConversionState {
   const ConversionInitialized({
     required this.sourceUnitValue,
     required this.sourceUnitId,
-    required this.convertedUnitValues,
+    required this.conversionItems,
     required this.unitGroup
   });
 
   final String sourceUnitValue;
   final int sourceUnitId;
-  final List<UnitValueModel> convertedUnitValues;
+  final List<UnitValueModel> conversionItems;
   final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [
     sourceUnitValue,
     sourceUnitId,
-    convertedUnitValues,
+    conversionItems,
     unitGroup,
   ];
 
@@ -50,7 +50,7 @@ class ConversionInitialized extends UnitsConversionState {
     return 'ConversionInitialized{'
         'sourceUnitValue: $sourceUnitValue, '
         'sourceUnitId: $sourceUnitId, '
-        'convertedUnitValues: $convertedUnitValues, '
+        'conversionItems: $conversionItems, '
         'unitGroup: $unitGroup}';
   }
 }

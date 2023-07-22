@@ -28,8 +28,8 @@ enum ItemsViewMode {
   grid,
 }
 
-enum ActionTypeOnItemClick {
-  markForSelection,
+enum ItemClickAction {
+  mark,
   select,
   fetch,
 }

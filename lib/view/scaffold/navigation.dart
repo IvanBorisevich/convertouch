@@ -16,4 +16,8 @@ class NavigationService {
   void navigateBack() {
     navigatorKey.currentState?.pop();
   }
+
+  bool isHomePage() {
+    return navigatorKey.currentState?.canPop() == false;
+  }
 }

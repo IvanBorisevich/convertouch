@@ -1,4 +1,3 @@
-import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/unit_creation_events.dart';
@@ -12,11 +11,10 @@ class UnitCreationBloc extends Bloc<UnitCreationEvent, UnitCreationState> {
   Stream<UnitCreationState> mapEventToState(UnitCreationEvent event) async* {
     if (event is PrepareUnitCreation) {
       yield const UnitCreationPreparing();
-      UnitGroupModel unitGroup = event.unitGroup;
       UnitModel? unitEquivalent = event.unitForEquivalent ?? allUnits[0];
       yield UnitCreationPrepared(
         unitGroup: event.unitGroup,
-        unitForEquivalent: unitEquivalent,
+        equivalentUnit: unitEquivalent,
         initial: event.initial,
       );
     }

@@ -27,11 +27,13 @@ class _ConvertouchUnitGroupCreationPageState
         ConvertouchScaffold(
           pageTitle: "New Unit Group",
           appBarRightWidgets: [
-            checkIcon(context, _isApplyButtonEnabled, () {
-              BlocProvider.of<UnitGroupsBloc>(context).add(AddUnitGroup(
-                  unitGroupName: _controller.text
-              ));
-            }),
+            checkIcon(context,
+                isEnabled: _isApplyButtonEnabled,
+                onPressedFunc: () {
+                  BlocProvider.of<UnitGroupsBloc>(context).add(AddUnitGroup(
+                      unitGroupName: _controller.text
+                  ));
+                }),
           ],
           body: Column(
             children: [

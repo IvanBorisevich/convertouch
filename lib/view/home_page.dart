@@ -11,7 +11,7 @@ class ConvertouchHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return unitsConversionBloc((conversionInitialized) {
       return conversionInitialized is ConversionInitialized &&
-              conversionInitialized.convertedUnitValues.isNotEmpty
+              conversionInitialized.conversionItems.isNotEmpty
           ? const ConvertouchUnitsConversionPage()
           : const ConvertouchUnitGroupsPage();
     });

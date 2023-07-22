@@ -7,20 +7,20 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 
 class FetchUnitGroups extends UnitGroupsEvent {
   const FetchUnitGroups({
-    this.selectedUnitGroupId = 0,
+    this.selectedUnitGroupId,
+    this.initial = false,
     this.forPage,
   });
 
-  final int selectedUnitGroupId;
+  final int? selectedUnitGroupId;
+  final bool initial;
   final String? forPage;
-
-  @override
-  List<Object> get props => [selectedUnitGroupId];
 
   @override
   String toString() {
     return 'FetchUnitGroups{'
-        'selectedUnitGroupId: $selectedUnitGroupId,'
+        'selectedUnitGroupId: $selectedUnitGroupId, '
+        'initial: $initial, '
         'forPage: $forPage}';
   }
 }
@@ -37,8 +37,7 @@ class AddUnitGroup extends UnitGroupsEvent {
 
   @override
   String toString() {
-    return 'AddUnitGroup{'
-        'unitGroupName: $unitGroupName}';
+    return 'AddUnitGroup{unitGroupName: $unitGroupName}';
   }
 }
 

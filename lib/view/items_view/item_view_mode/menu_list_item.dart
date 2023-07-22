@@ -3,22 +3,23 @@ import 'package:convertouch/model/entity/item_model.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem extends StatefulWidget {
-  const ConvertouchMenuListItem(this.item,
-      {super.key,
-      required this.logo,
-      this.onTap,
-      this.onLongPress,
-      this.isMarkedToSelect = false,
-      this.isMarkedToRemove = false,
-      this.isItemStateChangedOnTap = false});
+  const ConvertouchMenuListItem(this.item, {
+    super.key,
+    required this.logo,
+    this.onTap,
+    this.onLongPress,
+    this.isMarkedToSelect = false,
+    this.removalModeEnabled = false,
+    this.markOnTap = false,
+  });
 
   final ItemModelWithIdName item;
   final Widget logo;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final bool isMarkedToSelect;
-  final bool isMarkedToRemove;
-  final bool isItemStateChangedOnTap;
+  final bool removalModeEnabled;
+  final bool markOnTap;
 
   @override
   State createState() => _ConvertouchMenuListItemState();
@@ -28,6 +29,7 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
   static const double itemContainerHeight = 50;
 
   late bool _isMarkedToSelect;
+  bool _isMarkedToRemove = false;
 
   @override
   void initState() {
@@ -39,10 +41,16 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.isItemStateChangedOnTap) {
-          setState(() {
-            _isMarkedToSelect = !_isMarkedToSelect;
-          });
+        if (widget.markOnTap) {
+          if (!widget.removalModeEnabled) {
+            setState(() {
+              _isMarkedToSelect = !_isMarkedToSelect;
+            });
+          } else {
+            setState(() {
+              _isMarkedToRemove = !_isMarkedToRemove;
+            });
+          }
         }
         widget.onTap?.call();
       },

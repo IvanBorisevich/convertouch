@@ -8,7 +8,6 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
         this.onTap,
         this.onLongPress,
         this.onValueChanged,
-        this.isMarkedToRemove = false,
         super.key
       });
 
@@ -16,7 +15,6 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;
-  final bool isMarkedToRemove;
 
   @override
   State<ConvertouchUnitValueListItem> createState() =>
