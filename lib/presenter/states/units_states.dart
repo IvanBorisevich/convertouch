@@ -29,48 +29,46 @@ class UnitsFetched extends UnitsState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.markedUnitIds,
-    this.markedUnitIdsForPage,
-    this.newMarkedUnitId,
+    this.markedUnits,
+    this.newMarkedUnit,
     this.addedUnit,
+    this.inputValue = "1",
     this.selectedUnit,
-    this.itemClickAction = ItemClickAction.mark,
-    this.canMarkedUnitsBeSelected = false,
-    this.forPage,
+    this.action = ConvertouchAction.fetchUnitsToStartMark,
+    this.useMarkedUnitsInConversion = false,
   });
 
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
-  final List<int>? markedUnitIds;
-  final List<int>? markedUnitIdsForPage;
-  final int? newMarkedUnitId;
+  final List<UnitModel>? markedUnits;
+  final UnitModel? newMarkedUnit;
   final UnitModel? addedUnit;
+  final String inputValue;
   final UnitModel? selectedUnit;
-  final ItemClickAction itemClickAction;
-  final bool canMarkedUnitsBeSelected;
-  final String? forPage;
+  final ConvertouchAction action;
+  final bool useMarkedUnitsInConversion;
 
   @override
   List<Object> get props => [
     units,
     unitGroup,
-    itemClickAction,
-    canMarkedUnitsBeSelected,
+    inputValue,
+    action,
+    useMarkedUnitsInConversion,
   ];
 
   @override
   String toString() {
     return 'UnitsFetched{'
-        'units: $units, '
+        //'units: $units, '
         'unitGroup: $unitGroup, '
         'addedUnit: $addedUnit, '
+        'inputValue: $inputValue, '
         'selectedUnit: $selectedUnit, '
-        'markedUnitIds: $markedUnitIds, '
-        'markedUnitIdsForPage: $markedUnitIdsForPage, '
-        'newMarkedUnitId: $newMarkedUnitId, '
-        'itemClickAction: $itemClickAction, '
-        'canMarkedUnitsBeSelected: $canMarkedUnitsBeSelected, '
-        'forPage: $forPage}';
+        'markedUnits: $markedUnits, '
+        'newMarkedUnit: $newMarkedUnit, '
+        'action: $action, '
+        'useMarkedUnitsInConversion: $useMarkedUnitsInConversion}';
   }
 }
 

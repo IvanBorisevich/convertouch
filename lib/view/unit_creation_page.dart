@@ -38,18 +38,22 @@ class _ConvertouchUnitCreationPageState
           pageTitle: "New Unit",
           appBarRightWidgets: [
             unitCreationBloc((unitCreationPrepared) {
-              return checkIcon(context,
-                  isEnabled: _unitName.isNotEmpty,
-                  onPressedFunc: () {
-                    FocusScope.of(context).unfocus();
-                    BlocProvider.of<UnitsBloc>(context).add(AddUnit(
+              return checkIcon(
+                context,
+                isEnabled: _unitName.isNotEmpty,
+                onPressedFunc: () {
+                  FocusScope.of(context).unfocus();
+                  BlocProvider.of<UnitsBloc>(context).add(
+                    AddUnit(
                       unitName: _unitName,
                       unitAbbreviation:
-                         _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                          _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
                       unitGroup: unitCreationPrepared.unitGroup,
-                      markedUnitIds: unitCreationPrepared.markedUnitIds,
-                    ));
-                  });
+                      markedUnits: unitCreationPrepared.markedUnits,
+                    ),
+                  );
+                },
+              );
             }),
           ],
           body: SingleChildScrollView(
@@ -61,51 +65,58 @@ class _ConvertouchUnitCreationPageState
                   return ConvertouchUnitGroupItem(
                     unitGroup,
                     onTap: () {
+                      FocusScope.of(context).unfocus();
                       BlocProvider.of<UnitGroupsBloc>(context).add(
                         FetchUnitGroups(
                           selectedUnitGroupId: unitGroup.id,
-                          forPage: unitCreationPageId,
-                          markedUnitIds: unitCreationPrepared.markedUnitIds,
+                          markedUnits: unitCreationPrepared.markedUnits,
+                          action: ConvertouchAction
+                              .fetchUnitGroupsToSelectForUnitCreation,
                         ),
                       );
                     },
                   ).buildForList();
                 }),
                 const SizedBox(height: 20),
-                _buildTextField('Unit Name', _unitNameFieldController,
-                    (String value) async {
-                  setState(() {
-                    _unitName = value;
-                    _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
-                  });
-                }),
+                _buildTextField(
+                  'Unit Name',
+                  _unitNameFieldController,
+                  (String value) async {
+                    setState(() {
+                      _unitName = value;
+                      _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
+                    });
+                  },
+                ),
                 const SizedBox(height: 12),
-                _buildTextField('Unit Abbreviation', _unitAbbrFieldController,
-                    (String value) async {
-                  setState(() {
-                    _unitAbbr = value;
-                  });
-                },
-                    maxLength: unitAbbreviationMaxLength,
-                    lengthCounterVisible: true,
-                    hintTextVisible: true),
+                _buildTextField(
+                  'Unit Abbreviation',
+                  _unitAbbrFieldController,
+                  (String value) async {
+                    setState(() {
+                      _unitAbbr = value;
+                    });
+                  },
+                  maxLength: unitAbbreviationMaxLength,
+                  lengthCounterVisible: true,
+                  hintTextVisible: true,
+                ),
                 const SizedBox(height: 25),
                 unitCreationBloc((unitCreationPrepared) {
                   return LayoutBuilder(builder: (context, constraints) {
-                    if (unitCreationPrepared.equivalentUnit != null
-                        && _unitName.isNotEmpty) {
+                    if (unitCreationPrepared.equivalentUnit != null &&
+                        _unitName.isNotEmpty) {
                       return Column(children: [
                         horizontalDividerWithText("Set unit value equivalent"),
                         const SizedBox(height: 25),
                         ConvertouchItem.createItem(
                           UnitValueModel(
                             unit: UnitModel(
-                              name: _unitName,
-                              abbreviation: _unitAbbr.isNotEmpty
-                                   ? _unitAbbr
-                                   : _unitAbbrHint
-                            ),
-                            value: "1"
+                                name: _unitName,
+                                abbreviation: _unitAbbr.isNotEmpty
+                                    ? _unitAbbr
+                                    : _unitAbbrHint),
+                            value: "1",
                           ),
                         ).buildForList(),
                         const SizedBox(height: 9),
@@ -115,20 +126,23 @@ class _ConvertouchUnitCreationPageState
                             value: "1",
                           ),
                           onTap: () {
+                            FocusScope.of(context).unfocus();
                             BlocProvider.of<UnitsBloc>(context).add(
                               FetchUnits(
                                 unitGroupId: unitCreationPrepared.unitGroup.id,
-                                selectedUnit: unitCreationPrepared.equivalentUnit,
-                                markedUnitIds: unitCreationPrepared.markedUnitIds,
-                                forPage: unitCreationPageId,
-                              )
+                                selectedUnit:
+                                    unitCreationPrepared.equivalentUnit,
+                                markedUnits: unitCreationPrepared.markedUnits,
+                                action: ConvertouchAction
+                                    .fetchUnitsToSelectForUnitCreation,
+                              ),
                             );
-                          }
+                          },
                         ).buildForList(),
                         const SizedBox(height: 25),
                       ]);
                     } else {
-                      return const SizedBox();
+                      return const SizedBox(height: 0, width: 0);
                     }
                   });
                 }),

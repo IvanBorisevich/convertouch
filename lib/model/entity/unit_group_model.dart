@@ -2,11 +2,14 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 
 class UnitGroupModel extends ItemModelWithIdName {
-  UnitGroupModel({
+  const UnitGroupModel({
     int id = 0,
     required String name,
     this.iconName = unitGroupDefaultIconName
   }) : super(id: id, name: name, itemType: ItemType.unitGroup);
+
+  @override
+  List<Object> get props => [id, name, itemType, iconName];
 
   final String iconName;
 

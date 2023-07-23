@@ -9,6 +9,9 @@ class UnitModel extends ItemModelWithIdName {
     required this.abbreviation
   }) : super(id: id, name: name, itemType: ItemType.unit);
 
+  @override
+  List<Object> get props => [id, name, itemType, coefficient, abbreviation];
+
   final double coefficient;
   final String abbreviation;
 

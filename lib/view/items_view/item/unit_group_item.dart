@@ -13,6 +13,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
     void Function()? onLongPress,
     void Function(String)? onValueChanged,
     bool isMarkedToSelect = false,
+    bool isSelected = false,
     bool removalModeEnabled = false,
     bool markOnTap = false,
   }) : super(
@@ -20,6 +21,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
     onLongPress: onLongPress,
     onValueChanged: onValueChanged,
     isMarkedToSelect: isMarkedToSelect,
+    isSelected: isSelected,
     removalModeEnabled: removalModeEnabled,
     markOnTap: markOnTap,
   );
@@ -34,6 +36,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       onTap: onTap,
       onLongPress: onLongPress,
       isMarkedToSelect: isMarkedToSelect,
+      isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
     );
@@ -47,6 +50,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       onTap: onTap,
       onLongPress: onLongPress,
       isMarkedToSelect: isMarkedToSelect,
+      isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
     );

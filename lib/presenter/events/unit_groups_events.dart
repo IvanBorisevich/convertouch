@@ -1,4 +1,6 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
 abstract class UnitGroupsEvent extends ConvertouchEvent {
@@ -8,23 +10,20 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 class FetchUnitGroups extends UnitGroupsEvent {
   const FetchUnitGroups({
     this.selectedUnitGroupId,
-    this.markedUnitIds,
-    this.initial = false,
-    this.forPage,
+    this.markedUnits,
+    required this.action,
   });
 
   final int? selectedUnitGroupId;
-  final List<int>? markedUnitIds;
-  final bool initial;
-  final String? forPage;
+  final List<UnitModel>? markedUnits;
+  final ConvertouchAction action;
 
   @override
   String toString() {
     return 'FetchUnitGroups{'
         'selectedUnitGroupId: $selectedUnitGroupId, '
-        'markedUnitIds: $markedUnitIds, '
-        'initial: $initial, '
-        'forPage: $forPage}';
+        'markedUnits: $markedUnits, '
+        'action: $action}';
   }
 }
 

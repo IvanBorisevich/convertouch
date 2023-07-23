@@ -12,60 +12,83 @@ import 'package:convertouch/view/scaffold/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchUnitGroupsPage extends StatelessWidget {
+class ConvertouchUnitGroupsPage extends StatefulWidget {
   const ConvertouchUnitGroupsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final ItemClickAction? itemClickAction =
-      ModalRoute.of(context)!.settings.arguments as ItemClickAction?;
+  State createState() => _ConvertouchUnitGroupsPageState();
+}
 
-    return ConvertouchScaffold(
-      pageTitle: itemClickAction == ItemClickAction.select
-          ? "Select Unit Group"
-          : "Unit Groups",
-      body: Column(
-        children: [
-          const ConvertouchSearchBar(placeholder: "Search unit groups..."),
-          Expanded(
-            child: unitGroupsBloc((unitGroupsFetched) {
-              return itemsViewModeBloc((itemsMenuViewState) {
+class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return unitGroupsBloc((unitGroupsFetched) {
+      return ConvertouchScaffold(
+        pageTitle: unitGroupsFetched.action ==
+                    ConvertouchAction.fetchUnitGroupsToSelectForConversion ||
+                unitGroupsFetched.action ==
+                    ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
+            ? "Select Unit Group"
+            : "Unit Groups",
+        body: Column(
+          children: [
+            const ConvertouchSearchBar(placeholder: "Search unit groups..."),
+            Expanded(
+              child: itemsViewModeBloc((itemsMenuViewState) {
                 return ConvertouchMenuItemsView(
                   unitGroupsFetched.unitGroups,
-                  markedItemIds: unitGroupsFetched.markedUnitGroupIds,
+                  selectedItemId: unitGroupsFetched.selectedUnitGroupId,
+                  showSelectedItem: unitGroupsFetched.action ==
+                          ConvertouchAction
+                              .fetchUnitGroupsToSelectForUnitCreation ||
+                      unitGroupsFetched.action ==
+                          ConvertouchAction
+                              .fetchUnitGroupsToSelectForConversion,
                   viewMode: itemsMenuViewState.pageViewMode,
                   onItemTap: (item) {
-                    switch (itemClickAction) {
-                      case ItemClickAction.select:
+                    switch (unitGroupsFetched.action) {
+                      case ConvertouchAction
+                          .fetchUnitGroupsToSelectForUnitCreation:
                         BlocProvider.of<UnitCreationBloc>(context).add(
                           PrepareUnitCreation(
                             unitGroup: item as UnitGroupModel,
-                            markedUnitIds: unitGroupsFetched.markedUnitIds,
+                            markedUnits: unitGroupsFetched.markedUnits,
+                            action: ConvertouchAction
+                                .updateUnitGroupForUnitCreation,
                           ),
                         );
                         break;
-                      case ItemClickAction.fetch:
+                      case ConvertouchAction.fetchUnitGroupsInitially:
+                      case ConvertouchAction
+                          .fetchUnitGroupsToSelectForUnitsFetching:
                       default:
                         BlocProvider.of<UnitsBloc>(context).add(
-                            FetchUnits(unitGroupId: item.id));
+                          FetchUnits(
+                            unitGroupId: item.id,
+                            action: ConvertouchAction.fetchUnitsToStartMark,
+                          ),
+                        );
                         break;
                     }
                   },
                 );
-              });
-            }),
-          ),
-        ],
-      ),
-      floatingActionButton: Visibility(
-        visible: itemClickAction != ItemClickAction.select,
-        child: FloatingActionButton(
-          onPressed: () {
-            NavigationService.I.navigateTo(unitGroupCreationPageId);
-          },
-          child: const Icon(Icons.add),
+              }),
+            ),
+          ],
         ),
-      ),
-    );
+        floatingActionButton: Visibility(
+          visible: unitGroupsFetched.action !=
+                  ConvertouchAction.fetchUnitGroupsToSelectForConversion &&
+              unitGroupsFetched.action !=
+                  ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation,
+          child: FloatingActionButton(
+            onPressed: () {
+              NavigationService.I.navigateTo(unitGroupCreationPageId);
+            },
+            child: const Icon(Icons.add),
+          ),
+        ),
+      );
+    });
   }
 }

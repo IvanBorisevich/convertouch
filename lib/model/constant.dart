@@ -28,8 +28,16 @@ enum ItemsViewMode {
   grid,
 }
 
-enum ItemClickAction {
-  mark,
-  select,
-  fetch,
+enum ConvertouchAction {
+  fetchUnitsToStartMark,
+  fetchUnitsToContinueMark,
+  fetchUnitsToSelectForConversion,
+  fetchUnitsToSelectForUnitCreation,
+  fetchUnitGroupsInitially,
+  fetchUnitGroupsToSelectForUnitCreation,
+  fetchUnitGroupsToSelectForUnitsFetching,
+  fetchUnitGroupsToSelectForConversion,
+  initUnitCreationParams,
+  updateUnitGroupForUnitCreation,
+  updateEquivalentUnitForUnitCreation,
 }

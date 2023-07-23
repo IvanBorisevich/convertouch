@@ -16,8 +16,8 @@ class UnitCreationBloc extends Bloc<UnitCreationEvent, UnitCreationState> {
       yield UnitCreationPrepared(
         unitGroup: event.unitGroup,
         equivalentUnit: equivalentUnit,
-        markedUnitIds: event.markedUnitIds,
-        initial: event.initial,
+        markedUnits: event.markedUnits,
+        action: event.action,
       );
     }
   }

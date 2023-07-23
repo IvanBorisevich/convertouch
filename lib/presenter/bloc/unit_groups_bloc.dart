@@ -1,4 +1,3 @@
-import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/presenter/states/unit_groups_states.dart';
@@ -13,25 +12,11 @@ class UnitGroupsBloc
     if (event is FetchUnitGroups) {
       yield const UnitGroupsFetching();
 
-      ItemClickAction itemClickAction;
-      if (event.forPage == unitCreationPageId) {
-        itemClickAction = ItemClickAction.select;
-      } else {
-        itemClickAction = ItemClickAction.fetch;
-      }
-
-      List<int> markedUnitGroupIds = [];
-      if (event.selectedUnitGroupId != null) {
-        markedUnitGroupIds.add(event.selectedUnitGroupId!);
-      }
-
       yield UnitGroupsFetched(
         unitGroups: allUnitGroups,
-        markedUnitGroupIds: markedUnitGroupIds,
-        markedUnitIds: event.markedUnitIds,
-        initial: event.initial,
-        itemClickAction: itemClickAction,
-        forPage: event.forPage,
+        selectedUnitGroupId: event.selectedUnitGroupId,
+        markedUnits: event.markedUnits,
+        action: event.action,
       );
     } else if (event is AddUnitGroup) {
       yield const UnitGroupsFetching();

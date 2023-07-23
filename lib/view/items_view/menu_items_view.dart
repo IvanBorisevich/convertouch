@@ -4,18 +4,25 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatefulWidget {
-  const ConvertouchMenuItemsView(this.items, {
+  const ConvertouchMenuItemsView(
+    this.items, {
     this.onItemTap,
-    this.markedItemIds,
+    this.markedItems,
+    this.showMarkedItems = false,
+    this.selectedItemId,
+    this.showSelectedItem = false,
     this.viewMode = ItemsViewMode.grid,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
-    super.key
+    super.key,
   });
 
   final List<ItemModelWithIdName> items;
   final void Function(ItemModelWithIdName)? onItemTap;
-  final List<int>? markedItemIds;
+  final List<ItemModelWithIdName>? markedItems;
+  final bool showMarkedItems;
+  final int? selectedItemId;
+  final bool showSelectedItem;
   final ItemsViewMode viewMode;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
@@ -33,7 +40,10 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
           case ItemsViewMode.grid:
             return ConvertouchItemsGrid(
               widget.items,
-              markedItemIds: widget.markedItemIds,
+              markedItems: widget.markedItems,
+              showMarkedItems: widget.showMarkedItems,
+              selectedItemId: widget.selectedItemId,
+              showSelectedItem: widget.showSelectedItem,
               onItemTap: widget.onItemTap,
               removalModeEnabled: widget.removalModeEnabled,
               markItemsOnTap: widget.markItemsOnTap,
@@ -41,7 +51,10 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
           case ItemsViewMode.list:
             return ConvertouchItemsList(
               widget.items,
-              markedItemIds: widget.markedItemIds,
+              markedItems: widget.markedItems,
+              showMarkedItems: widget.showMarkedItems,
+              selectedItemId: widget.selectedItemId,
+              showSelectedItem: widget.showSelectedItem,
               onItemTap: widget.onItemTap,
               removalModeEnabled: widget.removalModeEnabled,
               markItemsOnTap: widget.markItemsOnTap,
@@ -54,19 +67,26 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
 }
 
 class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(this.items, {
-    this.markedItemIds,
+  const ConvertouchItemsGrid(
+    this.items, {
+    this.markedItems,
+    this.showMarkedItems = false,
+    this.selectedItemId,
+    this.showSelectedItem = false,
     this.onItemTap,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
-    super.key
+    super.key,
   });
 
   static const double _listItemsSpacingSize = 5.0;
   static const int _numberOfItemsInRow = 4;
 
   final List<ItemModelWithIdName> items;
-  final List<int>? markedItemIds;
+  final List<ItemModelWithIdName>? markedItems;
+  final bool showMarkedItems;
+  final int? selectedItemId;
+  final bool showSelectedItem;
   final void Function(ItemModelWithIdName)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
@@ -82,15 +102,16 @@ class ConvertouchItemsGrid extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemBuilder: (context, index) {
-        ItemModelWithIdName item = items[index];
-        bool isMarkedToSelect = (markedItemIds ?? []).contains(item.id);
-        return ConvertouchItem.createItem(
-          item,
-          onTap: () {
-            onItemTap?.call(item);
-          },
-          isMarkedToSelect: isMarkedToSelect,
-          markOnTap: markItemsOnTap,
+        return _buildItem(
+          context,
+          items,
+          index,
+          markedItems,
+          showMarkedItems,
+          selectedItemId,
+          showSelectedItem,
+          onItemTap,
+          markItemsOnTap,
         ).buildForGrid();
       },
     );
@@ -98,18 +119,25 @@ class ConvertouchItemsGrid extends StatelessWidget {
 }
 
 class ConvertouchItemsList extends StatelessWidget {
-  const ConvertouchItemsList(this.items, {
-    this.markedItemIds,
+  const ConvertouchItemsList(
+    this.items, {
+    this.markedItems,
+    this.showMarkedItems = false,
+    this.selectedItemId,
+    this.showSelectedItem = false,
     this.onItemTap,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
-    super.key
+    super.key,
   });
 
   static const double _listItemsSpacingSize = 5;
 
   final List<ItemModelWithIdName> items;
-  final List<int>? markedItemIds;
+  final List<ItemModelWithIdName>? markedItems;
+  final bool showMarkedItems;
+  final int? selectedItemId;
+  final bool showSelectedItem;
   final void Function(ItemModelWithIdName)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
@@ -120,15 +148,16 @@ class ConvertouchItemsList extends StatelessWidget {
       padding: const EdgeInsets.all(_listItemsSpacingSize),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        ItemModelWithIdName item = items[index];
-        bool isMarkedToSelect = (markedItemIds ?? []).contains(item.id);
-        return ConvertouchItem.createItem(
-          item,
-          isMarkedToSelect: isMarkedToSelect,
-          onTap: () {
-            onItemTap?.call(item);
-          },
-          markOnTap: markItemsOnTap,
+        return _buildItem(
+          context,
+          items,
+          index,
+          markedItems,
+          showMarkedItems,
+          selectedItemId,
+          showSelectedItem,
+          onItemTap,
+          markItemsOnTap,
         ).buildForList();
       },
       separatorBuilder: (context, index) => Padding(
@@ -155,4 +184,29 @@ class ConvertouchItemsEmptyView extends StatelessWidget {
       )),
     );
   }
+}
+
+ConvertouchItem _buildItem(
+  BuildContext context,
+  List<ItemModelWithIdName> items,
+  int index,
+  List<ItemModelWithIdName>? markedItems,
+  bool showMarkedItems,
+  int? selectedItemId,
+  bool showSelectedItem,
+  void Function(ItemModelWithIdName)? onItemTap,
+  bool markOnTap,
+) {
+  ItemModelWithIdName item = items[index];
+  bool isMarkedToSelect = (markedItems ?? []).contains(item);
+  bool isSelected = item.id == selectedItemId;
+  return ConvertouchItem.createItem(
+    item,
+    onTap: () {
+      onItemTap?.call(item);
+    },
+    isMarkedToSelect: showMarkedItems && isMarkedToSelect,
+    isSelected: showSelectedItem && isSelected,
+    markOnTap: markOnTap,
+  );
 }

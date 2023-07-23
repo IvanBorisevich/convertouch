@@ -17,66 +17,60 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       yield const UnitsFetching();
       UnitGroupModel unitGroup = getUnitGroup(event.unitGroupId);
 
-      List<int> markedUnitIds = [];
-      if (event.forPage == unitCreationPageId) {
-        if (event.selectedUnit != null) {
-          markedUnitIds.add(event.selectedUnit!.id);
-        }
-      } else {
-        markedUnitIds = event.markedUnitIds ?? [];
+      List<UnitModel> markedUnits = event.markedUnits ?? [];
+      UnitModel? selectedUnit;
 
-        if (event.newMarkedUnitId != null) {
-          if (!markedUnitIds.contains(event.newMarkedUnitId)) {
-            markedUnitIds.add(event.newMarkedUnitId!);
+      if (event.action != ConvertouchAction.fetchUnitsToSelectForUnitCreation) {
+        selectedUnit = event.selectedUnit;
+
+        if (event.newMarkedUnit != null) {
+          if (!markedUnits.contains(event.newMarkedUnit)) {
+            markedUnits.add(event.newMarkedUnit!);
           } else {
-            markedUnitIds
-                .removeWhere((unitId) => unitId == event.newMarkedUnitId);
+            markedUnits.removeWhere((unit) => unit == event.newMarkedUnit);
           }
         }
-      }
-
-      ItemClickAction itemClickAction;
-      if (event.forPage == unitCreationPageId) {
-        itemClickAction = ItemClickAction.select;
       } else {
-        itemClickAction = ItemClickAction.mark;
+        selectedUnit =
+            event.selectedUnit ?? (allUnits.isNotEmpty ? allUnits[0] : null);
       }
-
-      UnitModel? selectedUnit = event.selectedUnit ??
-          (allUnits.isNotEmpty ? allUnits[0] : null);
-
-      List<int>? markedUnitIdsForPage = event.forPage == unitCreationPageId
-          ? (event.selectedUnit != null ? [event.selectedUnit!.id] : [])
-          : markedUnitIds;
 
       yield UnitsFetched(
         units: allUnits,
         unitGroup: unitGroup,
-        markedUnitIds: markedUnitIds,
-        newMarkedUnitId: event.newMarkedUnitId,
-        markedUnitIdsForPage: markedUnitIdsForPage,
+        markedUnits: markedUnits,
+        newMarkedUnit: event.newMarkedUnit,
+        inputValue: event.inputValue ?? "1",
         selectedUnit: selectedUnit,
-        itemClickAction: itemClickAction,
-        canMarkedUnitsBeSelected: markedUnitIds.length >= _minUnitsNumToSelect,
-        forPage: event.forPage,
+        action: event.action,
+        useMarkedUnitsInConversion: markedUnits.length >= _minUnitsNumToSelect,
       );
     } else if (event is AddUnit) {
       yield const UnitChecking();
+
       bool unitExists = allUnits.any((unit) => unit.name == event.unitName);
+
       if (unitExists) {
         yield UnitExists(unitName: event.unitName);
       } else {
         yield const UnitsFetching();
+
         UnitModel newUnit = UnitModel(
             id: allUnits.length + 1,
             name: event.unitName,
             abbreviation: event.unitAbbreviation);
+
         allUnits.add(newUnit);
+
+        bool useMarkedUnitsInConversion =
+            (event.markedUnits ?? []).length >= _minUnitsNumToSelect;
+
         yield UnitsFetched(
           units: allUnits,
-          addedUnit: newUnit,
           unitGroup: event.unitGroup,
-          markedUnitIds: event.markedUnitIds,
+          markedUnits: event.markedUnits,
+          addedUnit: newUnit,
+          useMarkedUnitsInConversion: useMarkedUnitsInConversion,
         );
       }
     }

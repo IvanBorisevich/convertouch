@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
@@ -28,24 +29,24 @@ class UnitCreationPrepared extends UnitCreationState {
   const UnitCreationPrepared({
     required this.unitGroup,
     this.equivalentUnit,
-    this.markedUnitIds,
-    this.initial = false,
+    this.markedUnits,
+    this.action = ConvertouchAction.initUnitCreationParams,
   });
 
   final UnitGroupModel unitGroup;
   final UnitModel? equivalentUnit;
-  final List<int>? markedUnitIds;
-  final bool initial;
+  final List<UnitModel>? markedUnits;
+  final ConvertouchAction action;
 
   @override
-  List<Object> get props => [unitGroup, initial];
+  List<Object> get props => [unitGroup, action];
 
   @override
   String toString() {
     return 'UnitCreationPrepared{'
         'unitGroup: $unitGroup, '
         'equivalentUnit: $equivalentUnit, '
-        'markedUnitIds: $markedUnitIds, '
-        'initial: $initial}';
+        'markedUnits: $markedUnits, '
+        'action: $action}';
   }
 }

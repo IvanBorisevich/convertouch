@@ -10,4 +10,12 @@ class UnitValueModel extends ItemModel {
 
   final UnitModel unit;
   final String value;
+
+  @override
+  List<Object> get props => [itemType, unit, value];
+
+  @override
+  String toString() {
+    return 'UnitValueModel{unit: $unit, value: $value}';
+  }
 }

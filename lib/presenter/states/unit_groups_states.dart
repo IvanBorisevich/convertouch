@@ -1,5 +1,6 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/states/base_state.dart';
 
 abstract class UnitGroupsState extends ConvertouchBlocState {
@@ -27,39 +28,32 @@ class UnitGroupsFetching extends UnitGroupsState {
 class UnitGroupsFetched extends UnitGroupsState {
   const UnitGroupsFetched({
     required this.unitGroups,
-    this.markedUnitGroupIds,
+    this.selectedUnitGroupId,
     this.addedUnitGroup,
-    this.markedUnitIds,
-    this.initial = false,
-    this.itemClickAction = ItemClickAction.fetch,
-    this.forPage,
+    this.markedUnits,
+    this.action = ConvertouchAction.fetchUnitGroupsToSelectForUnitsFetching,
   });
 
   final List<UnitGroupModel> unitGroups;
-  final List<int>? markedUnitGroupIds;
+  final int? selectedUnitGroupId;
   final UnitGroupModel? addedUnitGroup;
-  final List<int>? markedUnitIds;
-  final bool initial;
-  final ItemClickAction itemClickAction;
-  final String? forPage;
+  final List<UnitModel>? markedUnits;
+  final ConvertouchAction action;
 
   @override
   List<Object> get props => [
     unitGroups,
-    initial,
-    itemClickAction
+    action
   ];
 
   @override
   String toString() {
     return 'UnitGroupsFetched{'
         'unitsGroups: $unitGroups, '
-        'markedUnitGroupIds: $markedUnitGroupIds, '
+        'selectedUnitGroupId: $selectedUnitGroupId, '
         'addedUnitGroup: $addedUnitGroup, '
-        'markedUnitIds: $markedUnitIds, '
-        'initial: $initial, '
-        'itemClickAction: $itemClickAction, '
-        'forPage: $forPage}';
+        'markedUnits: $markedUnits, '
+        'action: $action}';
   }
 }
 

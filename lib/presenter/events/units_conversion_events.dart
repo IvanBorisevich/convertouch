@@ -1,4 +1,5 @@
 import 'package:convertouch/model/entity/unit_group_model.dart';
+import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/presenter/events/base_event.dart';
 
@@ -9,21 +10,22 @@ abstract class UnitsConversionEvent extends ConvertouchEvent {
 class InitializeConversion extends UnitsConversionEvent {
   const InitializeConversion({
     this.inputValue = "1",
-    this.inputUnitId = 0,
-    required this.targetUnitIds,
-    required this.unitGroup
+    this.inputUnit,
+    this.prevInputUnit,
+    required this.conversionUnits,
+    required this.unitGroup,
   });
 
   final String inputValue;
-  final int inputUnitId;
-  final List<int> targetUnitIds;
+  final UnitModel? inputUnit;
+  final UnitModel? prevInputUnit;
+  final List<UnitModel> conversionUnits;
   final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [
     inputValue,
-    inputUnitId,
-    targetUnitIds,
+    conversionUnits,
     unitGroup,
   ];
 
@@ -31,8 +33,9 @@ class InitializeConversion extends UnitsConversionEvent {
   String toString() {
     return 'InitializeConversion{'
         'inputValue: $inputValue, '
-        'inputUnitId: $inputUnitId, '
-        'targetUnitIds: $targetUnitIds, '
+        'inputUnit: $inputUnit, '
+        'prevInputUnit: $prevInputUnit, '
+        'conversionUnits: $conversionUnits, '
         'unitGroup: $unitGroup}';
   }
 }
@@ -40,18 +43,18 @@ class InitializeConversion extends UnitsConversionEvent {
 class ConvertUnitValue extends UnitsConversionEvent {
   const ConvertUnitValue({
     required this.inputValue,
-    required this.inputUnitId,
+    required this.inputUnit,
     required this.conversionItems,
   });
 
   final String inputValue;
-  final int inputUnitId;
+  final UnitModel inputUnit;
   final List<UnitValueModel> conversionItems;
 
   @override
   List<Object> get props => [
     inputValue,
-    inputUnitId,
+    inputUnit,
     conversionItems,
   ];
 
@@ -59,7 +62,7 @@ class ConvertUnitValue extends UnitsConversionEvent {
   String toString() {
     return 'ConvertUnitValue{'
         'inputValue: $inputValue, '
-        'inputUnitId: $inputUnitId, '
+        'inputUnit: $inputUnit, '
         'conversionUnitValues: $conversionItems}';
   }
 }

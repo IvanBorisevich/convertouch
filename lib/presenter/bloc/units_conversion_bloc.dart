@@ -1,6 +1,5 @@
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/model/entity/unit_value_model.dart';
-import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,34 +13,27 @@ class UnitsConversionBloc
       UnitsConversionEvent event) async* {
     if (event is InitializeConversion) {
       yield const ConversionInitializing();
-      int inputUnitId =
-          event.inputUnitId != 0 ? event.inputUnitId : event.targetUnitIds[0];
-      UnitModel? inputUnit = getUnit(inputUnitId);
+      UnitModel inputUnit = event.inputUnit ?? event.conversionUnits[0];
       String inputValue = event.inputValue.isNotEmpty ? event.inputValue : "1";
-      List<UnitValueModel> convertedUnitValues = [];
-      if (inputUnit != null) {
-        List<UnitModel> targetUnits = getUnits(event.targetUnitIds);
-        convertedUnitValues = _convertItems(UnitValueModel(
-            unit: inputUnit,
-            value: inputValue
-        ), targetUnits);
-      }
+      List<UnitValueModel> convertedUnitValues = _convertItems(inputUnit,
+          inputValue, event.prevInputUnit, event.conversionUnits);
+
       yield ConversionInitialized(
         conversionItems: convertedUnitValues,
-        sourceUnitId: inputUnitId,
+        sourceUnit: inputUnit,
         sourceUnitValue: inputValue,
-        unitGroup: event.unitGroup
+        unitGroup: event.unitGroup,
       );
     } else if (event is ConvertUnitValue) {
       for (UnitValueModel conversionItem in event.conversionItems) {
-        if (conversionItem.unit.id != event.inputUnitId) {
+        if (conversionItem.unit != event.inputUnit) {
           yield const UnitConverting();
-          String targetValue =
-              event.inputValue.isNotEmpty ? "1${event.inputValue}" : "";
+          String convertedValue = _convertUnitValue(event.inputUnit,
+              event.inputValue, conversionItem.unit);
           yield UnitConverted(
             unitValue: UnitValueModel(
               unit: conversionItem.unit,
-              value: targetValue,
+              value: convertedValue,
             ),
           );
         }
@@ -49,15 +41,27 @@ class UnitsConversionBloc
     }
   }
 
-  List<UnitValueModel> _convertItems(
-      UnitValueModel inputUnitValue, List<UnitModel> targetUnits) {
-    if (targetUnits.isEmpty) {
+  List<UnitValueModel> _convertItems(UnitModel inputUnit, String inputValue,
+      UnitModel? prevInputUnit, List<UnitModel> conversionUnits) {
+    if (conversionUnits.isEmpty) {
       return [];
     }
-    List<UnitValueModel> convertedItems = [];
-    for (var i = 0; i < targetUnits.length; i++) {
-      convertedItems.add(UnitValueModel(unit: targetUnits[i], value: '1'));
+
+    if (prevInputUnit != null) {
+      int indexOfPrevInputUnit = conversionUnits.indexOf(prevInputUnit);
+      conversionUnits[indexOfPrevInputUnit] = inputUnit;
     }
-    return convertedItems;
+
+    return conversionUnits.map((unit) =>
+        UnitValueModel(
+          unit: unit,
+          value: _convertUnitValue(inputUnit, inputValue, unit),
+        )
+    ).toList();
+  }
+
+  String _convertUnitValue(UnitModel inputUnit, String inputValue,
+      UnitModel targetUnit) {
+    return inputValue.isNotEmpty ? "1$inputValue" : "";
   }
 }

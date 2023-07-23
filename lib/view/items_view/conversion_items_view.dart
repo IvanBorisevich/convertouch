@@ -5,13 +5,15 @@ import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
-  const ConvertouchConversionItemsView(this.convertedItems,
-      {required this.sourceUnitId,
-      required this.sourceValue,
-      required this.unitGroup,
-      this.onItemTap,
-      this.onItemValueChanged,
-      super.key});
+  const ConvertouchConversionItemsView(
+    this.convertedItems, {
+    required this.sourceUnitId,
+    required this.sourceValue,
+    required this.unitGroup,
+    this.onItemTap,
+    this.onItemValueChanged,
+    super.key,
+  });
 
   final List<UnitValueModel> convertedItems;
   final int sourceUnitId;
@@ -34,30 +36,31 @@ class _ConvertouchConversionItemsViewState
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        padding: const EdgeInsetsDirectional.fromSTEB(_listSpacingLeftRight,
-            _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
-        itemBuilder: (context, index) {
-          UnitValueModel item = widget.convertedItems[index];
-          return unitsConversionBlocForItem(item, (item) {
-            return ConvertouchItem.createItem(
-              item,
-              onTap: () {
-                widget.onItemTap?.call(item);
-              },
-              onValueChanged: (String value) {
-                widget.onItemValueChanged?.call(item, value);
-              },
-            ).buildForList();
-          });
-        },
-        separatorBuilder: (context, index) => Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-                _listItemSpacing,
-                _listItemSpacing,
-                _listItemSpacing,
-                index == widget.convertedItems.length - 1
-                    ? _listItemSpacing
-                    : 0)),
-        itemCount: widget.convertedItems.length);
+      padding: const EdgeInsetsDirectional.fromSTEB(_listSpacingLeftRight,
+          _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
+      itemBuilder: (context, index) {
+        UnitValueModel item = widget.convertedItems[index];
+        return unitsConversionBlocForItem(item, (item) {
+          return ConvertouchItem.createItem(
+            item,
+            onTap: () {
+              widget.onItemTap?.call(item);
+            },
+            onValueChanged: (String value) {
+              widget.onItemValueChanged?.call(item, value);
+            },
+          ).buildForList();
+        });
+      },
+      separatorBuilder: (context, index) => Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(
+              _listItemSpacing,
+              _listItemSpacing,
+              _listItemSpacing,
+              index == widget.convertedItems.length - 1
+                  ? _listItemSpacing
+                  : 0)),
+      itemCount: widget.convertedItems.length,
+    );
   }
 }

@@ -41,24 +41,25 @@ class ConvertouchApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => UnitsConversionBloc()),
         BlocProvider(create: (context) => ItemsMenuViewBloc()),
-        BlocProvider(create: (context) => UnitGroupsBloc()
-          ..add(const FetchUnitGroups(initial: true))),
+        BlocProvider(create: (context) => UnitGroupsBloc()..add(
+          const FetchUnitGroups(
+            action: ConvertouchAction.fetchUnitGroupsInitially,
+          )),
+        ),
         BlocProvider(create: (context) => UnitsBloc()),
         BlocProvider(create: (context) => UnitCreationBloc()),
       ],
-      child: navigationListeners(
-        MaterialApp(
-          title: appName,
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(fontFamily: quicksandFontFamily),
-          initialRoute: homePageId,
-          navigatorKey: NavigationService.I.navigatorKey,
-          onGenerateRoute: (settings) {
-            return ConvertouchNavigationAnimation.wrapIntoAnimation(
-                _getRoute(settings.name), settings);
-          },
-        )
-      ),
+      child: navigationListeners(MaterialApp(
+        title: appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: quicksandFontFamily),
+        initialRoute: homePageId,
+        navigatorKey: NavigationService.I.navigatorKey,
+        onGenerateRoute: (settings) {
+          return ConvertouchNavigationAnimation.wrapIntoAnimation(
+              _getRoute(settings.name), settings);
+        },
+      )),
     );
   }
 

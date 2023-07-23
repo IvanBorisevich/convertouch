@@ -9,6 +9,7 @@ class ConvertouchMenuListItem extends StatefulWidget {
     this.onTap,
     this.onLongPress,
     this.isMarkedToSelect = false,
+    this.isSelected = false,
     this.removalModeEnabled = false,
     this.markOnTap = false,
   });
@@ -18,6 +19,7 @@ class ConvertouchMenuListItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final bool isMarkedToSelect;
+  final bool isSelected;
   final bool removalModeEnabled;
   final bool markOnTap;
 
@@ -41,29 +43,38 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.markOnTap) {
-          if (!widget.removalModeEnabled) {
-            setState(() {
-              _isMarkedToSelect = !_isMarkedToSelect;
-            });
-          } else {
-            setState(() {
-              _isMarkedToRemove = !_isMarkedToRemove;
-            });
+        if (widget.removalModeEnabled) {
+          setState(() {
+            _isMarkedToRemove = !_isMarkedToRemove;
+          });
+        } else {
+          if (!widget.isSelected) {
+            if (widget.markOnTap) {
+              setState(() {
+                _isMarkedToSelect = !_isMarkedToSelect;
+              });
+            }
           }
         }
-        widget.onTap?.call();
+
+        bool notMarkedAndCanBeSelected = !widget.markOnTap
+            && !widget.isMarkedToSelect;
+        if (widget.markOnTap || notMarkedAndCanBeSelected) {
+          widget.onTap?.call();
+        }
       },
       onLongPress: widget.onLongPress,
       child: Container(
         height: itemContainerHeight,
         decoration: BoxDecoration(
-          color: _isMarkedToSelect
+          color: widget.isSelected ? const Color(0xFF8BD5FD)
+              : (_isMarkedToSelect
               ? const Color(0xFFDEE6FF)
-              : const Color(0xFFF2F5FF),
+              : const Color(0xFFF2F5FF)
+          ),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _isMarkedToSelect
+            color: _isMarkedToSelect || widget.isSelected
                 ? const Color(0xFF366C9F)
                 : const Color(0xFFC9D5EA),
             width: 1,
@@ -78,7 +89,7 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
               thickness: 1,
               indent: 5,
               endIndent: 5,
-              color: _isMarkedToSelect
+              color: _isMarkedToSelect || widget.isSelected
                   ? const Color(0xFF366C9F)
                   : const Color(0xFFC9D5EA),
             ),

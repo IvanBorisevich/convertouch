@@ -27,22 +27,28 @@ class _ConvertouchUnitsConversionPageState
         if (conversionInitialized is ConversionInitialized) {
           return ConvertouchConversionItemsView(
             conversionInitialized.conversionItems,
-            sourceUnitId: conversionInitialized.sourceUnitId,
+            sourceUnitId: conversionInitialized.sourceUnit.id,
             sourceValue: conversionInitialized.sourceUnitValue,
             unitGroup: conversionInitialized.unitGroup,
             onItemTap: (item) {
-              BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
-                unitGroupId: conversionInitialized.unitGroup.id,
-                markedUnitIds: conversionInitialized.conversionItems.map((item) => item.unit.id).toList(),
-                forPage: unitsConversionPageId,
-              ));
+              BlocProvider.of<UnitsBloc>(context).add(
+                FetchUnits(
+                  unitGroupId: conversionInitialized.unitGroup.id,
+                  markedUnits: conversionInitialized.conversionItems
+                      .map((item) => item.unit)
+                      .toList(),
+                  inputValue: item.value,
+                  selectedUnit: item.unit,
+                  action: ConvertouchAction.fetchUnitsToSelectForConversion
+                ),
+              );
             },
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
                 ConvertUnitValue(
                   inputValue: value,
-                  inputUnitId: item.unit.id,
-                  conversionItems: conversionInitialized.conversionItems
+                  inputUnit: item.unit,
+                  conversionItems: conversionInitialized.conversionItems,
                 ),
               );
             },
@@ -51,16 +57,20 @@ class _ConvertouchUnitsConversionPageState
           return const SizedBox(width: 0, height: 0);
         }
       }),
-      floatingActionButton:
-          unitsConversionBloc((conversionInitialized) {
+      floatingActionButton: unitsConversionBloc((conversionInitialized) {
         if (conversionInitialized is ConversionInitialized) {
           return FloatingActionButton(
             onPressed: () {
-              BlocProvider.of<UnitsBloc>(context).add(FetchUnits(
-                unitGroupId: conversionInitialized.unitGroup.id,
-                markedUnitIds: conversionInitialized.conversionItems.map((item) => item.unit.id).toList(),
-                forPage: unitsConversionPageId,
-              ));
+              BlocProvider.of<UnitsBloc>(context).add(
+                FetchUnits(
+                  unitGroupId: conversionInitialized.unitGroup.id,
+                  markedUnits: conversionInitialized.conversionItems
+                      .map((item) => item.unit)
+                      .toList(),
+                  inputValue: conversionInitialized.sourceUnitValue,
+                  action: ConvertouchAction.fetchUnitsToStartMark,
+                ),
+              );
             },
             child: const Icon(Icons.add),
           );
