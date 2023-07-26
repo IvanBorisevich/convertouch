@@ -21,23 +21,24 @@ class ConvertouchUnitsPage extends StatefulWidget {
 }
 
 class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
+  late ConvertouchAction? action;
+
   @override
   Widget build(BuildContext context) {
+    action =
+        ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
+
     return unitsBloc((unitsFetched) {
       return ConvertouchScaffold(
-        pageTitle: unitsFetched.action ==
-                    ConvertouchAction.fetchUnitsToSelectForConversion ||
-                unitsFetched.action ==
-                    ConvertouchAction.fetchUnitsToSelectForUnitCreation
+        pageTitle: action == ConvertouchAction.fetchUnitsToSelectForConversion
+                || action == ConvertouchAction.fetchUnitsToSelectForUnitCreation
             ? "Select Unit"
             : unitsFetched.unitGroup.name,
         appBarRightWidgets: [
           checkIcon(
             context,
-            isVisible: unitsFetched.action ==
-                    ConvertouchAction.fetchUnitsToStartMark ||
-                unitsFetched.action ==
-                    ConvertouchAction.fetchUnitsToContinueMark,
+            isVisible: action == ConvertouchAction.fetchUnitsToStartMark ||
+                action == ConvertouchAction.fetchUnitsToContinueMark,
             isEnabled: unitsFetched.useMarkedUnitsInConversion,
             onPressedFunc: () {
               BlocProvider.of<UnitsConversionBloc>(context).add(
@@ -58,20 +59,18 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
               return ConvertouchMenuItemsView(
                 unitsFetched.units,
                 markedItems: unitsFetched.markedUnits,
-                showMarkedItems: unitsFetched.action !=
+                showMarkedItems: action !=
                     ConvertouchAction.fetchUnitsToSelectForUnitCreation,
                 selectedItemId: unitsFetched.selectedUnit?.id,
-                showSelectedItem: unitsFetched.action ==
+                showSelectedItem: action ==
                         ConvertouchAction.fetchUnitsToSelectForUnitCreation ||
-                    unitsFetched.action ==
-                        ConvertouchAction.fetchUnitsToSelectForConversion,
+                    action == ConvertouchAction.fetchUnitsToSelectForConversion,
                 viewMode: itemsViewModeState.pageViewMode,
-                markItemsOnTap: unitsFetched.action ==
-                        ConvertouchAction.fetchUnitsToStartMark ||
-                    unitsFetched.action ==
-                        ConvertouchAction.fetchUnitsToContinueMark,
+                markItemsOnTap:
+                    action == ConvertouchAction.fetchUnitsToStartMark ||
+                        action == ConvertouchAction.fetchUnitsToContinueMark,
                 onItemTap: (item) {
-                  switch (unitsFetched.action) {
+                  switch (action) {
                     case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
                       BlocProvider.of<UnitCreationBloc>(context).add(
                         PrepareUnitCreation(
@@ -113,10 +112,9 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
           ],
         ),
         floatingActionButton: Visibility(
-          visible: unitsFetched.action !=
-                  ConvertouchAction.fetchUnitsToSelectForConversion &&
-              unitsFetched.action !=
-                  ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+          visible:
+              action != ConvertouchAction.fetchUnitsToSelectForConversion &&
+                  action != ConvertouchAction.fetchUnitsToSelectForUnitCreation,
           child: FloatingActionButton(
             onPressed: () {
               BlocProvider.of<UnitCreationBloc>(context).add(

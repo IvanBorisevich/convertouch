@@ -23,7 +23,7 @@ class ConvertouchScaffold extends StatelessWidget {
         child: Scaffold(
       appBar: AppBar(
         leading: appBarLeftWidget ??
-            (NavigationService.I.isHomePage()
+            (!(ModalRoute.of(context)?.canPop ?? false)
                 ? leadingIcon(Icons.menu, () {
 
                   })

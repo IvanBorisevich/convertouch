@@ -20,16 +20,19 @@ class ConvertouchUnitGroupsPage extends StatefulWidget {
 }
 
 class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
+  late ConvertouchAction? action;
+
   @override
   Widget build(BuildContext context) {
+    action =
+        ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
     return unitGroupsBloc((unitGroupsFetched) {
       return ConvertouchScaffold(
-        pageTitle: unitGroupsFetched.action ==
-                    ConvertouchAction.fetchUnitGroupsToSelectForConversion ||
-                unitGroupsFetched.action ==
-                    ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
-            ? "Select Unit Group"
-            : "Unit Groups",
+        pageTitle:
+            action == ConvertouchAction.fetchUnitGroupsToSelectForConversion ||
+            action == ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
+                ? "Select Unit Group"
+                : "Unit Groups",
         body: Column(
           children: [
             const ConvertouchSearchBar(placeholder: "Search unit groups..."),
@@ -38,15 +41,15 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                 return ConvertouchMenuItemsView(
                   unitGroupsFetched.unitGroups,
                   selectedItemId: unitGroupsFetched.selectedUnitGroupId,
-                  showSelectedItem: unitGroupsFetched.action ==
+                  showSelectedItem: action ==
                           ConvertouchAction
                               .fetchUnitGroupsToSelectForUnitCreation ||
-                      unitGroupsFetched.action ==
+                      action ==
                           ConvertouchAction
                               .fetchUnitGroupsToSelectForConversion,
                   viewMode: itemsMenuViewState.pageViewMode,
                   onItemTap: (item) {
-                    switch (unitGroupsFetched.action) {
+                    switch (action) {
                       case ConvertouchAction
                           .fetchUnitGroupsToSelectForUnitCreation:
                         BlocProvider.of<UnitCreationBloc>(context).add(
@@ -77,9 +80,9 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
           ],
         ),
         floatingActionButton: Visibility(
-          visible: unitGroupsFetched.action !=
+          visible: action !=
                   ConvertouchAction.fetchUnitGroupsToSelectForConversion &&
-              unitGroupsFetched.action !=
+              action !=
                   ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation,
           child: FloatingActionButton(
             onPressed: () {

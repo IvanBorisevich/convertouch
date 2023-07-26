@@ -15,7 +15,9 @@ import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget unitsBloc(Widget Function(UnitsFetched unitsFetched) builderFunc) {
+Widget unitsBloc(
+  Widget Function(UnitsFetched unitsFetched) builderFunc,
+) {
   return BlocBuilder<UnitsBloc, UnitsState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitsFetched;
@@ -31,7 +33,8 @@ Widget unitsBloc(Widget Function(UnitsFetched unitsFetched) builderFunc) {
 }
 
 Widget unitGroupsBloc(
-    Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc) {
+  Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc,
+) {
   return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitGroupsFetched;
@@ -47,7 +50,8 @@ Widget unitGroupsBloc(
 }
 
 Widget unitGroupsBlocForItem(
-    Widget Function(UnitGroupSelected unitGroupSelected) builderFunc) {
+  Widget Function(UnitGroupSelected unitGroupSelected) builderFunc,
+) {
   return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitGroupSelected;
@@ -63,7 +67,8 @@ Widget unitGroupsBlocForItem(
 }
 
 Widget unitCreationBloc(
-    Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc) {
+  Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc,
+) {
   return BlocBuilder<UnitCreationBloc, UnitCreationState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitCreationPrepared;
@@ -79,7 +84,8 @@ Widget unitCreationBloc(
 }
 
 Widget itemsViewModeBloc(
-    Widget Function(ItemsViewModeState itemsMenuViewState) builderFunc) {
+  Widget Function(ItemsViewModeState itemsMenuViewState) builderFunc,
+) {
   return BlocBuilder<ItemsMenuViewBloc, ItemsViewModeState>(
     builder: (_, itemsMenuViewState) {
       return builderFunc.call(itemsMenuViewState);
@@ -88,7 +94,8 @@ Widget itemsViewModeBloc(
 }
 
 Widget unitsConversionBloc(
-    Widget Function(UnitsConversionState conversionInitialized) builderFunc) {
+  Widget Function(UnitsConversionState conversionInitialized) builderFunc,
+) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
     buildWhen: (prev, next) {
       return prev != next && next is ConversionInitialized;
@@ -100,81 +107,93 @@ Widget unitsConversionBloc(
 }
 
 Widget unitsConversionBlocForItem(
-    UnitValueModel item, Widget Function(UnitValueModel item) builderFunc) {
+  UnitValueModel item,
+  Widget Function(UnitValueModel item) builderFunc,
+) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
-      buildWhen: (prev, next) {
-    return prev != next &&
-        next is UnitConverted &&
-        next.unitValue.unit.id == item.unit.id;
-  }, builder: (_, unitConverted) {
-    if (unitConverted is UnitConverted &&
-        unitConverted.unitValue.unit.id == item.unit.id) {
-      return builderFunc.call(unitConverted.unitValue);
-    } else {
-      return builderFunc.call(item);
-    }
-  });
+    buildWhen: (prev, next) {
+      return prev != next &&
+          next is UnitConverted &&
+          next.unitValue.unit.id == item.unit.id;
+    },
+    builder: (_, unitConverted) {
+      if (unitConverted is UnitConverted &&
+          unitConverted.unitValue.unit.id == item.unit.id) {
+        return builderFunc.call(unitConverted.unitValue);
+      } else {
+        return builderFunc.call(item);
+      }
+    },
+  );
 }
 
 Widget navigationListeners(Widget widget) {
-  return MultiBlocListener(listeners: [
-    BlocListener<UnitGroupsBloc, UnitGroupsState>(
-      listener: (_, unitGroupsState) {
-        switch (unitGroupsState.runtimeType) {
-          case UnitGroupsFetched:
-            UnitGroupsFetched unitGroupsFetched =
-                unitGroupsState as UnitGroupsFetched;
-            if (unitGroupsFetched.addedUnitGroup != null) {
+  return MultiBlocListener(
+    listeners: [
+      BlocListener<UnitGroupsBloc, UnitGroupsState>(
+        listener: (_, unitGroupsState) {
+          switch (unitGroupsState.runtimeType) {
+            case UnitGroupsFetched:
+              UnitGroupsFetched unitGroupsFetched =
+                  unitGroupsState as UnitGroupsFetched;
+              if (unitGroupsFetched.addedUnitGroup != null) {
+                NavigationService.I.navigateBack();
+              } else if (unitGroupsFetched.action !=
+                  ConvertouchAction.fetchUnitGroupsInitially) {
+                NavigationService.I.navigateTo(unitGroupsPageId,
+                    arguments: unitGroupsFetched.action);
+              }
+              break;
+            case UnitGroupSelected:
               NavigationService.I.navigateBack();
-            } else if (unitGroupsFetched.action !=
-                ConvertouchAction.fetchUnitGroupsInitially) {
-              NavigationService.I.navigateTo(unitGroupsPageId);
-            }
-            break;
-          case UnitGroupSelected:
-            NavigationService.I.navigateBack();
-            break;
-        }
-      },
-    ),
-    BlocListener<UnitsBloc, UnitsState>(
-      listener: (_, unitsState) {
-        switch (unitsState.runtimeType) {
-          case UnitsFetched:
-            UnitsFetched unitsFetched = unitsState as UnitsFetched;
-            if (unitsFetched.addedUnit != null) {
+              break;
+          }
+        },
+      ),
+      BlocListener<UnitsBloc, UnitsState>(
+        listener: (_, unitsState) {
+          switch (unitsState.runtimeType) {
+            case UnitsFetched:
+              UnitsFetched unitsFetched = unitsState as UnitsFetched;
+              if (unitsFetched.addedUnit != null) {
+                NavigationService.I.navigateBack();
+              } else if (unitsFetched.action !=
+                  ConvertouchAction.fetchUnitsToContinueMark) {
+                NavigationService.I
+                    .navigateTo(unitsPageId, arguments: unitsFetched.action);
+              }
+              break;
+          }
+        },
+      ),
+      BlocListener<UnitCreationBloc, UnitCreationState>(
+        listener: (_, unitCreationState) {
+          if (unitCreationState is UnitCreationPrepared) {
+            if (unitCreationState.action ==
+                ConvertouchAction.initUnitCreationParams) {
+              NavigationService.I.navigateTo(unitCreationPageId);
+            } else {
               NavigationService.I.navigateBack();
-            } else if (unitsFetched.action !=
-                ConvertouchAction.fetchUnitsToContinueMark) {
-              NavigationService.I.navigateTo(unitsPageId);
             }
-            break;
-        }
-      },
-    ),
-    BlocListener<UnitCreationBloc, UnitCreationState>(
-      listener: (_, unitCreationState) {
-        if (unitCreationState is UnitCreationPrepared) {
-          if (unitCreationState.action ==
-              ConvertouchAction.initUnitCreationParams) {
-            NavigationService.I.navigateTo(unitCreationPageId);
-          } else {
+          }
+        },
+      ),
+      BlocListener<UnitsConversionBloc, UnitsConversionState>(
+        listener: (_, unitsConversionState) {
+          if (unitsConversionState is ConversionInitialized) {
             NavigationService.I.navigateBack();
           }
-        }
-      },
-    ),
-    BlocListener<UnitsConversionBloc, UnitsConversionState>(
-      listener: (_, unitsConversionState) {
-        if (unitsConversionState is ConversionInitialized) {
-          NavigationService.I.navigateBack();
-        }
-      },
-    ),
-  ], child: widget);
+        },
+      ),
+    ],
+    child: widget,
+  );
 }
 
-Widget unitGroupCreationListener(BuildContext context, Widget widget) {
+Widget unitGroupCreationListener(
+  BuildContext context,
+  Widget widget,
+) {
   return BlocListener<UnitGroupsBloc, UnitGroupsState>(
     listener: (_, unitGroupsMenuState) {
       if (unitGroupsMenuState is UnitGroupExists) {
@@ -186,7 +205,10 @@ Widget unitGroupCreationListener(BuildContext context, Widget widget) {
   );
 }
 
-Widget unitCreationListener(BuildContext context, Widget widget) {
+Widget unitCreationListener(
+  BuildContext context,
+  Widget widget,
+) {
   return BlocListener<UnitsBloc, UnitsState>(
     listener: (_, unitsMenuState) {
       if (unitsMenuState is UnitExists) {
