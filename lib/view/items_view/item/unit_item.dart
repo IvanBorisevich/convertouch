@@ -10,7 +10,7 @@ class ConvertouchUnitItem extends ConvertouchItem {
   static const Color borderColorMarked = Color(0xFF509CE0);
   static const Color borderColorSelected = Color(0xFF2F7DC2);
   static const Color backgroundColor = Color(0xFFDFEDFF);
-  static const Color backgroundColorMarked = Color(0xFFC7DFFF);
+  static const Color backgroundColorMarked = Color(0xFFCCE1FF);
   static const Color backgroundColorSelected = Color(0xFF95BBF3);
   static const Color contentColor = Color(0xFF366C9F);
   static const Color contentColorMarked = Color(0xFF366C9F);

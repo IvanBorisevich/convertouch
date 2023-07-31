@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ConvertouchItemsMenuAnimation {
-  static const int _menuViewModeButtonAnimationDuration = 150;
+class ConvertouchItemsViewModeButtonAnimation {
+  static const int _itemsViewModeButtonAnimationDuration = 150;
 
   static Widget wrapIntoAnimation(Widget menuViewModeButton) {
     return AnimatedSwitcher(
         duration:
-            const Duration(milliseconds: _menuViewModeButtonAnimationDuration),
+            const Duration(milliseconds: _itemsViewModeButtonAnimationDuration),
         transitionBuilder: (Widget child, Animation<double> animation) {
           return ScaleTransition(
               scale: animation,
