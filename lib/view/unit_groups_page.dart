@@ -88,6 +88,8 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
             onPressed: () {
               NavigationService.I.navigateTo(unitGroupCreationPageId);
             },
+            backgroundColor: const Color(0xFF7473FA),
+            elevation: 0,
             child: const Icon(Icons.add),
           ),
         ),

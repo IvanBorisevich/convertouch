@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSearchBar extends StatelessWidget {
-  const ConvertouchSearchBar({required this.placeholder, super.key});
+  const ConvertouchSearchBar({
+    required this.placeholder,
+    super.key,
+  });
 
   static const double _containerHeight = 53;
   static const double _elementsSpacing = 5;
@@ -25,7 +28,11 @@ class ConvertouchSearchBar extends StatelessWidget {
     return Container(
       height: _containerHeight,
       padding: const EdgeInsets.fromLTRB(
-          _elementsSpacing, 0, _elementsSpacing, _elementsSpacing),
+        _elementsSpacing,
+        0,
+        _elementsSpacing,
+        _elementsSpacing,
+      ),
       decoration: const BoxDecoration(
         color: Color(0xFFDEE9FF),
       ),
@@ -78,12 +85,18 @@ class ConvertouchSearchBar extends StatelessWidget {
         ),
         child: itemsViewModeBloc((itemsMenuViewState) {
           return IconButton(
-            icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(Icon(
+            icon: ConvertouchItemsMenuAnimation.wrapIntoAnimation(
+              Icon(
                 itemViewModeIconMap[itemsMenuViewState.iconViewMode],
-                key: ValueKey(itemsMenuViewState.pageViewMode))),
+                key: ValueKey(itemsMenuViewState.pageViewMode),
+              ),
+            ),
             onPressed: () {
-              BlocProvider.of<ItemsMenuViewBloc>(context)
-                  .add(ChangeViewMode(currentViewMode: itemsMenuViewState.pageViewMode));
+              BlocProvider.of<ItemsMenuViewBloc>(context).add(
+                ChangeViewMode(
+                  currentViewMode: itemsMenuViewState.pageViewMode,
+                ),
+              );
             },
             color: const Color(0xFF426F99),
           );

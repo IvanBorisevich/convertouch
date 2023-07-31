@@ -3,7 +3,8 @@ import 'package:convertouch/model/entity/item_model.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem extends StatefulWidget {
-  const ConvertouchMenuListItem(this.item, {
+  const ConvertouchMenuListItem(
+    this.item, {
     super.key,
     required this.logo,
     this.onTap,
@@ -12,6 +13,15 @@ class ConvertouchMenuListItem extends StatefulWidget {
     this.isSelected = false,
     this.removalModeEnabled = false,
     this.markOnTap = false,
+    this.borderColor = const Color(0xFF366C9F),
+    this.borderColorMarked = const Color(0xFF366C9F),
+    this.borderColorSelected = const Color(0xFF366C9F),
+    this.backgroundColor = const Color(0xFFF2F5FF),
+    this.backgroundColorSelected = const Color(0xFF8BD5FD),
+    this.backgroundColorMarked = const Color(0xFFDEE6FF),
+    this.contentColor = const Color(0xFF366C9F),
+    this.contentColorMarked = const Color(0xFF366C9F),
+    this.contentColorSelected = const Color(0xFF366C9F),
   });
 
   final ItemModelWithIdName item;
@@ -22,6 +32,15 @@ class ConvertouchMenuListItem extends StatefulWidget {
   final bool isSelected;
   final bool removalModeEnabled;
   final bool markOnTap;
+  final Color borderColor;
+  final Color borderColorMarked;
+  final Color borderColorSelected;
+  final Color backgroundColor;
+  final Color backgroundColorSelected;
+  final Color backgroundColorMarked;
+  final Color contentColor;
+  final Color contentColorMarked;
+  final Color contentColorSelected;
 
   @override
   State createState() => _ConvertouchMenuListItemState();
@@ -33,6 +52,10 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
   late bool _isMarkedToSelect;
   bool _isMarkedToRemove = false;
 
+  late Color _contentColor;
+  late Color _borderColor;
+  late Color _backgroundColor;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +64,20 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSelected) {
+      _borderColor = widget.borderColorSelected;
+      _backgroundColor = widget.backgroundColorSelected;
+      _contentColor = widget.contentColorSelected;
+    } else if (_isMarkedToSelect) {
+      _borderColor = widget.borderColorMarked;
+      _backgroundColor = widget.backgroundColorMarked;
+      _contentColor = widget.contentColorMarked;
+    } else {
+      _borderColor = widget.borderColor;
+      _backgroundColor = widget.backgroundColor;
+      _contentColor = widget.contentColor;
+    }
+
     return GestureDetector(
       onTap: () {
         if (widget.removalModeEnabled) {
@@ -57,8 +94,8 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
           }
         }
 
-        bool notMarkedAndCanBeSelected = !widget.markOnTap
-            && !widget.isMarkedToSelect;
+        bool notMarkedAndCanBeSelected =
+            !widget.markOnTap && !widget.isMarkedToSelect;
         if (widget.markOnTap || notMarkedAndCanBeSelected) {
           widget.onTap?.call();
         }
@@ -67,31 +104,31 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
       child: Container(
         height: itemContainerHeight,
         decoration: BoxDecoration(
-          color: widget.isSelected ? const Color(0xFF8BD5FD)
-              : (_isMarkedToSelect
-              ? const Color(0xFFDEE6FF)
-              : const Color(0xFFF2F5FF)
-          ),
+          color: _backgroundColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _isMarkedToSelect || widget.isSelected
-                ? const Color(0xFF366C9F)
-                : const Color(0xFFC9D5EA),
+            color: _borderColor,
             width: 1,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            widget.logo,
+            DefaultTextStyle(
+              style: TextStyle(
+                color: _contentColor,
+                fontWeight: FontWeight.w700,
+                fontFamily: quicksandFontFamily,
+                fontSize: 16,
+              ),
+              child: widget.logo,
+            ),
             VerticalDivider(
               width: 1,
               thickness: 1,
               indent: 5,
               endIndent: 5,
-              color: _isMarkedToSelect || widget.isSelected
-                  ? const Color(0xFF366C9F)
-                  : const Color(0xFFC9D5EA),
+              color: _borderColor,
             ),
             Expanded(
               child: Align(
@@ -100,10 +137,10 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
                   child: Text(
                     widget.item.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: quicksandFontFamily,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF366C9F),
+                      color: _contentColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

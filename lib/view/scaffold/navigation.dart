@@ -16,4 +16,8 @@ class NavigationService {
   void navigateBack() {
     navigatorKey.currentState?.pop();
   }
+
+  bool isHomePage(BuildContext context) {
+    return !(ModalRoute.of(context)?.canPop ?? false);
+  }
 }

@@ -3,75 +3,87 @@ import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
-  const ConvertouchScaffold(
-      {super.key,
-      this.appBarLeftWidget,
-      this.pageTitle = appName,
-      this.appBarRightWidgets,
-      this.body,
-      this.floatingActionButton});
+  const ConvertouchScaffold({
+    super.key,
+    this.appBarLeftWidget,
+    this.pageTitle = appName,
+    this.appBarRightWidgets,
+    this.body,
+    this.floatingActionButton,
+    this.appBarColor = const Color(0xFFDEE9FF),
+    this.appBarFontColor = const Color(0xFF426F99),
+    this.appBarIconColor = const Color(0xFF426F99),
+  });
 
   final Widget? appBarLeftWidget;
   final String pageTitle;
   final List<Widget>? appBarRightWidgets;
   final Widget? body;
   final Widget? floatingActionButton;
+  final Color appBarColor;
+  final Color appBarFontColor;
+  final Color appBarIconColor;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        leading: appBarLeftWidget ??
-            (!(ModalRoute.of(context)?.canPop ?? false)
-                ? leadingIcon(Icons.menu, () {
-
-                  })
-                : leadingIcon(Icons.arrow_back_rounded, () {
-                  NavigationService.I.navigateBack();
-                  })),
-        centerTitle: true,
-        title: Text(
-          pageTitle,
-          style: const TextStyle(
-              color: Color(0xFF426F99),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: appBarLeftWidget ??
+              (NavigationService.I.isHomePage(context)
+                  ? leadingIcon(Icons.menu, () {})
+                  : leadingIcon(Icons.arrow_back_rounded, () {
+                      NavigationService.I.navigateBack();
+                    })),
+          centerTitle: true,
+          title: Text(
+            pageTitle,
+            style: TextStyle(
+              color: appBarFontColor,
               fontSize: 20,
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: appBarColor,
+          elevation: 0,
+          actions: appBarRightWidgets,
         ),
-        backgroundColor: const Color(0xFFDEE9FF),
-        elevation: 0,
-        actions: appBarRightWidgets,
+        body: body,
+        floatingActionButton: floatingActionButton,
       ),
-      body: body,
-      floatingActionButton: floatingActionButton,
-    ));
+    );
+  }
+
+  Widget leadingIcon(
+    IconData iconData,
+    void Function()? onPressed,
+  ) {
+    return IconButton(
+      icon: Icon(
+        iconData,
+        color: appBarIconColor,
+      ),
+      onPressed: onPressed,
+    );
   }
 }
 
-Widget leadingIcon(IconData iconData, void Function()? onPressed) {
-  return IconButton(
-    icon: Icon(
-      iconData,
-      color: const Color(0xFF426F99),
-    ),
-    onPressed: onPressed,
-  );
-}
-
 Widget checkIcon(
-    BuildContext context, {
-      bool isVisible = true,
-      bool isEnabled = false,
-      void Function()? onPressedFunc,
-    }) {
+  BuildContext context, {
+  bool isVisible = true,
+  bool isEnabled = false,
+  Color iconColor = const Color(0xFF426F99),
+  Color iconColorDisabled = const Color(0xFFA0C4F5),
+  void Function()? onPressedFunc,
+}) {
   return Visibility(
     visible: isVisible,
     child: IconButton(
       icon: Icon(
         Icons.check,
-        color: isEnabled ? const Color(0xFF426F99) : null,
+        color: isEnabled ? iconColor : null,
       ),
-      disabledColor: const Color(0xFFA0C4F5),
+      disabledColor: iconColorDisabled,
       onPressed: isEnabled ? onPressedFunc : null,
     ),
   );

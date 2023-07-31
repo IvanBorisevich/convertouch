@@ -11,6 +11,7 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:convertouch/view/items_view/item/unit_group_item.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
+import 'package:convertouch/view/scaffold/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -78,10 +79,10 @@ class _ConvertouchUnitCreationPageState
                   ).buildForList();
                 }),
                 const SizedBox(height: 20),
-                _buildTextField(
-                  'Unit Name',
-                  _unitNameFieldController,
-                  (String value) async {
+                ConvertouchTextBox(
+                  label: 'Unit Name',
+                  controller: _unitNameFieldController,
+                  onChanged: (String value) async {
                     setState(() {
                       _unitName = value;
                       _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
@@ -89,17 +90,17 @@ class _ConvertouchUnitCreationPageState
                   },
                 ),
                 const SizedBox(height: 12),
-                _buildTextField(
-                  'Unit Abbreviation',
-                  _unitAbbrFieldController,
-                  (String value) async {
+                ConvertouchTextBox(
+                  label: 'Unit Abbreviation',
+                  controller: _unitAbbrFieldController,
+                  onChanged: (String value) async {
                     setState(() {
                       _unitAbbr = value;
                     });
                   },
-                  maxLength: unitAbbreviationMaxLength,
-                  lengthCounterVisible: true,
-                  hintTextVisible: true,
+                  maxTextLength: unitAbbreviationMaxLength,
+                  textLengthCounterVisible: true,
+                  hintText: _unitAbbrHint,
                 ),
                 const SizedBox(height: 25),
                 unitCreationBloc((unitCreationPrepared) {
@@ -150,51 +151,6 @@ class _ConvertouchUnitCreationPageState
             ),
           ),
         ));
-  }
-
-  Widget _buildTextField(
-      final String label,
-      final TextEditingController controller,
-      final void Function(String)? onChangedFunc,
-      {int? maxLength,
-      bool lengthCounterVisible = false,
-      bool hintTextVisible = false}) {
-    return TextField(
-      maxLength: maxLength,
-      obscureText: false,
-      controller: controller,
-      onChanged: onChangedFunc,
-      decoration: InputDecoration(
-        enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(color: Color(0xFF426F99))),
-        focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(color: Color(0xFF426F99))),
-        label: Container(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
-          child: Text(label, maxLines: 1),
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        labelStyle: const TextStyle(
-          color: Color(0xFF426F99),
-        ),
-        hintText: hintTextVisible ? _unitAbbrHint : null,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-        counterText: "",
-        suffixText: lengthCounterVisible
-            ? '${controller.text.length.toString()}/${maxLength.toString()}'
-            : null,
-      ),
-      style: const TextStyle(
-        color: Color(0xFF426F99),
-        fontSize: 17,
-        fontWeight: FontWeight.w500,
-      ),
-      textAlign: TextAlign.start,
-    );
   }
 
   @override

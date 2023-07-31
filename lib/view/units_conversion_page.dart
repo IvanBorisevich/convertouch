@@ -72,6 +72,8 @@ class _ConvertouchUnitsConversionPageState
                 ),
               );
             },
+            backgroundColor: const Color(0xFF6793BE),
+            elevation: 0,
             child: const Icon(Icons.add),
           );
         } else {

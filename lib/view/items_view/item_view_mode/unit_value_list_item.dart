@@ -1,20 +1,37 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
+import 'package:convertouch/view/scaffold/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ConvertouchUnitValueListItem extends StatefulWidget {
   const ConvertouchUnitValueListItem(
-      this.item, {
-        this.onTap,
-        this.onLongPress,
-        this.onValueChanged,
-        super.key
-      });
+    this.item, {
+    this.onTap,
+    this.onLongPress,
+    this.onValueChanged,
+    this.borderColor = const Color(0xFF426F99),
+    this.borderColorSelected = const Color(0xFF426F99),
+    this.unitValueBackgroundColor = const Color(0x00FFFFFF),
+    this.unitValueTextColor = const Color(0xFF426F99),
+    this.unitButtonBackgroundColor = const Color(0xFFE2EEF8),
+    this.unitButtonBackgroundColorSelected = const Color(0xFFE2EEF8),
+    this.unitButtonTextColor = const Color(0xFF426F99),
+    this.unitButtonTextColorSelected = const Color(0xFF223D56),
+    super.key,
+  });
 
   final UnitValueModel item;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;
+  final Color borderColor;
+  final Color borderColorSelected;
+  final Color unitValueBackgroundColor;
+  final Color unitValueTextColor;
+  final Color unitButtonBackgroundColor;
+  final Color unitButtonBackgroundColorSelected;
+  final Color unitButtonTextColor;
+  final Color unitButtonTextColorSelected;
 
   @override
   State<ConvertouchUnitValueListItem> createState() =>
@@ -26,12 +43,26 @@ class _ConvertouchUnitValueListItemState
   static const double _unitButtonWidth = 70;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;
-  static const double _convertedValueTextFontSize = 17;
   static const BorderRadius _elementsBorderRadius =
       BorderRadius.all(Radius.circular(8));
 
+  bool _isFocused = false;
+  late Color _borderColor;
+  late Color _unitButtonBackgroundColor;
+  late Color _unitButtonTextColor;
+
   @override
   Widget build(BuildContext context) {
+    if (_isFocused) {
+      _borderColor = widget.borderColorSelected;
+      _unitButtonBackgroundColor = widget.unitButtonBackgroundColorSelected;
+      _unitButtonTextColor = widget.unitButtonTextColorSelected;
+    } else {
+      _borderColor = widget.borderColor;
+      _unitButtonBackgroundColor = widget.unitButtonBackgroundColor;
+      _unitButtonTextColor = widget.unitButtonTextColor;
+    }
+
     return Container(
       height: _containerHeight,
       decoration: const BoxDecoration(
@@ -41,46 +72,27 @@ class _ConvertouchUnitValueListItemState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: TextField(
+            child: ConvertouchTextBox(
+              label: widget.item.unit.name,
               controller: TextEditingController(text: widget.item.value),
-              autofocus: false,
-              obscureText: false,
-              keyboardType: const TextInputType.numberWithOptions(signed: true),
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
               ],
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
               onChanged: widget.onValueChanged,
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                    borderRadius: _elementsBorderRadius,
-                    borderSide: BorderSide(color: Color(0xFF426F99))),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: _elementsBorderRadius,
-                    borderSide: BorderSide(color: Color(0xFF426F99))),
-                label: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 2),
-                  child: Text(
-                    widget.item.unit.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                  ),
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelStyle: const TextStyle(
-                  // overflow: TextOverflow.ellipsis,
-                  color: Color(0xFF426F99),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 15.0, horizontal: 15.0),
-              ),
-              style: const TextStyle(
-                color: Color(0xFF426F99),
-                fontSize: _convertedValueTextFontSize,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.start,
+              onFocusSelected: () {
+                setState(() {
+                  _isFocused = true;
+                });
+              },
+              onFocusLeft: () {
+                setState(() {
+                  _isFocused = false;
+                });
+              },
+              textColor: widget.unitValueTextColor,
+              borderColor: widget.borderColor,
+              borderColorFocused: widget.borderColorSelected,
             ),
           ),
           const SizedBox(width: 7),
@@ -92,19 +104,24 @@ class _ConvertouchUnitValueListItemState
               height: _unitButtonHeight,
               child: TextButton(
                 style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(const Color(0xffe2eef8)),
-                    shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Color(0xFF426F99),
-                          width: 1,
-                        ),
-                        borderRadius: _elementsBorderRadius))),
+                  backgroundColor: MaterialStateProperty.all(
+                    _unitButtonBackgroundColor,
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: _borderColor,
+                        width: 1,
+                      ),
+                      borderRadius: _elementsBorderRadius,
+                    ),
+                  ),
+                ),
                 onPressed: null,
                 child: Text(
                   widget.item.unit.abbreviation,
-                  style: const TextStyle(
-                    color: Color(0xFF426F99),
+                  style: TextStyle(
+                    color: _unitButtonTextColor,
                   ),
                   maxLines: 1,
                 ),

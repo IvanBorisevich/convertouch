@@ -2,6 +2,7 @@ import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
+import 'package:convertouch/view/scaffold/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,8 +15,6 @@ class ConvertouchUnitGroupCreationPage extends StatefulWidget {
 
 class _ConvertouchUnitGroupCreationPageState
     extends State<ConvertouchUnitGroupCreationPage> {
-  static const BorderRadius _fieldRadius = BorderRadius.all(Radius.circular(8));
-
   final _controller = TextEditingController();
 
   bool _isApplyButtonEnabled = false;
@@ -40,39 +39,14 @@ class _ConvertouchUnitGroupCreationPageState
               Expanded(
                 child: Container(
                   padding: const EdgeInsetsDirectional.fromSTEB(7, 8, 7, 0),
-                  child: TextField(
-                    autofocus: true,
-                    obscureText: false,
-                    controller: _controller,
+                  child: ConvertouchTextBox(
                     onChanged: (String value) async {
                       setState(() {
                         _isApplyButtonEnabled = value.isNotEmpty;
                       });
                     },
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                          borderRadius: _fieldRadius,
-                          borderSide: BorderSide(color: Color(0xFF426F99))),
-                      focusedBorder: const OutlineInputBorder(
-                          borderRadius: _fieldRadius,
-                          borderSide: BorderSide(color: Color(0xFF426F99))),
-                      label: Container(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width / 2),
-                        child: const Text("Unit Group Name", maxLines: 1),
-                      ),
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF426F99),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 15.0),
-                    ),
-                    style: const TextStyle(
-                      color: Color(0xFF426F99),
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.start,
+                    label: "Unit Group Name",
+                    controller: _controller,
                   ),
                 ),
               ),

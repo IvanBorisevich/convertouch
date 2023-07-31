@@ -7,6 +7,12 @@ import 'package:flutter/material.dart';
 
 class ConvertouchUnitGroupItem extends ConvertouchItem {
   static const double itemLogoWidth = 50;
+  static const Color borderColor = Color(0xFFC2CCFF);
+  static const Color borderColorSelected = Color(0xFFA5B2FF);
+  static const Color backgroundColor = Color(0xFFECF0FF);
+  static const Color backgroundColorSelected = Color(0xFFD6DCFF);
+  static const Color contentColor = Color(0xFF504EB6);
+  static const Color contentColorSelected = Color(0xFF2E2C8A);
 
   const ConvertouchUnitGroupItem(this.unitGroup, {
     void Function()? onTap,
@@ -39,6 +45,12 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
+      borderColor: borderColor,
+      borderColorSelected: borderColorSelected,
+      backgroundColor: backgroundColor,
+      backgroundColorSelected: backgroundColorSelected,
+      contentColor: contentColor,
+      contentColorSelected: contentColorSelected,
     );
   }
 
@@ -53,6 +65,12 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
+      borderColor: borderColor,
+      borderColorSelected: borderColorSelected,
+      backgroundColor: backgroundColor,
+      backgroundColorSelected: backgroundColorSelected,
+      contentColor: contentColor,
+      contentColorSelected: contentColorSelected,
     );
   }
 
@@ -61,7 +79,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       onPressed: null,
       icon: ImageIcon(
         AssetImage("$iconPathPrefix/${unitGroup.iconName}"),
-        color: const Color(0xFF366C9F),
+        color: isSelected ? contentColorSelected : contentColor,
         size: 35,
       ),
     );

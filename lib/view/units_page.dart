@@ -50,7 +50,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 ),
               );
             },
-          )
+          ),
         ],
         body: Column(
           children: [
@@ -126,6 +126,8 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 ),
               );
             },
+            backgroundColor: const Color(0xFF5499DA),
+            elevation: 0,
             child: const Icon(Icons.add),
           ),
         ),
