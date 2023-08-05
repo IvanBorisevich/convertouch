@@ -3,12 +3,15 @@ import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
+  static const double appBarPadding = 7;
+
   const ConvertouchScaffold({
     super.key,
+    required this.body,
     this.appBarLeftWidget,
     this.pageTitle = appName,
     this.appBarRightWidgets,
-    this.body,
+    this.secondaryAppBar,
     this.floatingActionButton,
     this.appBarColor = const Color(0xFFDEE9FF),
     this.appBarFontColor = const Color(0xFF426F99),
@@ -18,7 +21,8 @@ class ConvertouchScaffold extends StatelessWidget {
   final Widget? appBarLeftWidget;
   final String pageTitle;
   final List<Widget>? appBarRightWidgets;
-  final Widget? body;
+  final Widget? secondaryAppBar;
+  final Widget body;
   final Widget? floatingActionButton;
   final Color appBarColor;
   final Color appBarFontColor;
@@ -48,7 +52,29 @@ class ConvertouchScaffold extends StatelessWidget {
           elevation: 0,
           actions: appBarRightWidgets,
         ),
-        body: body,
+        body: Column(
+          children: [
+            Visibility(
+              visible: secondaryAppBar != null,
+              child: Container(
+                height: 53,
+                decoration: BoxDecoration(
+                  color: appBarColor,
+                ),
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  appBarPadding,
+                  0,
+                  appBarPadding,
+                  appBarPadding,
+                ),
+                child: secondaryAppBar,
+              ),
+            ),
+            Expanded(
+              child: body,
+            ),
+          ],
+        ),
         floatingActionButton: floatingActionButton,
       ),
     );
@@ -124,4 +150,11 @@ Widget horizontalDividerWithText(String text) {
       thickness: 1.2,
     )),
   ]);
+}
+
+Widget empty() {
+  return const SizedBox(
+    height: 0,
+    width: 0,
+  );
 }

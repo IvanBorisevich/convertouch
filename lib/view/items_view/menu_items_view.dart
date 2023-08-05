@@ -14,6 +14,7 @@ class ConvertouchMenuItemsView extends StatefulWidget {
     this.viewMode = ItemsViewMode.grid,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
+    this.itemsSpacing = 7,
     super.key,
   });
 
@@ -26,6 +27,7 @@ class ConvertouchMenuItemsView extends StatefulWidget {
   final ItemsViewMode viewMode;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
+  final double itemsSpacing;
 
   @override
   State createState() => _ConvertouchMenuItemsViewState();
@@ -47,6 +49,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
               onItemTap: widget.onItemTap,
               removalModeEnabled: widget.removalModeEnabled,
               markItemsOnTap: widget.markItemsOnTap,
+              itemsSpacing: widget.itemsSpacing,
             );
           case ItemsViewMode.list:
             return ConvertouchItemsList(
@@ -58,6 +61,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
               onItemTap: widget.onItemTap,
               removalModeEnabled: widget.removalModeEnabled,
               markItemsOnTap: widget.markItemsOnTap,
+              itemsSpacing: widget.itemsSpacing,
             );
         }
       }
@@ -76,10 +80,10 @@ class ConvertouchItemsGrid extends StatelessWidget {
     this.onItemTap,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
+    this.itemsSpacing = 7,
     super.key,
   });
 
-  static const double _listItemsSpacingSize = 5.0;
   static const int _numberOfItemsInRow = 4;
 
   final List<ItemModelWithIdName> items;
@@ -90,17 +94,18 @@ class ConvertouchItemsGrid extends StatelessWidget {
   final void Function(ItemModelWithIdName)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
+  final double itemsSpacing;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _numberOfItemsInRow,
-        mainAxisSpacing: _listItemsSpacingSize,
-        crossAxisSpacing: _listItemsSpacingSize,
+        mainAxisSpacing: itemsSpacing,
+        crossAxisSpacing: itemsSpacing,
       ),
-      padding: const EdgeInsets.all(_listItemsSpacingSize),
+      padding: EdgeInsets.all(itemsSpacing),
       itemBuilder: (context, index) {
         return _buildItem(
           context,
@@ -128,10 +133,9 @@ class ConvertouchItemsList extends StatelessWidget {
     this.onItemTap,
     this.removalModeEnabled = false,
     this.markItemsOnTap = false,
+    this.itemsSpacing = 7,
     super.key,
   });
-
-  static const double _listItemsSpacingSize = 5;
 
   final List<ItemModelWithIdName> items;
   final List<ItemModelWithIdName>? markedItems;
@@ -141,11 +145,12 @@ class ConvertouchItemsList extends StatelessWidget {
   final void Function(ItemModelWithIdName)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
+  final double itemsSpacing;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.all(_listItemsSpacingSize),
+      padding: EdgeInsets.all(itemsSpacing),
       itemCount: items.length,
       itemBuilder: (context, index) {
         return _buildItem(
@@ -162,10 +167,11 @@ class ConvertouchItemsList extends StatelessWidget {
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(
-            _listItemsSpacingSize,
-            _listItemsSpacingSize,
-            _listItemsSpacingSize,
-            index == items.length - 1 ? _listItemsSpacingSize : 0),
+          itemsSpacing,
+          itemsSpacing,
+          itemsSpacing,
+          index == items.length - 1 ? itemsSpacing : 0,
+        ),
       ),
     );
   }

@@ -22,37 +22,30 @@ class _ConvertouchUnitGroupCreationPageState
   @override
   Widget build(BuildContext context) {
     return unitGroupCreationListener(
-        context,
-        ConvertouchScaffold(
-          pageTitle: "New Unit Group",
-          appBarRightWidgets: [
-            checkIcon(context,
-                isEnabled: _isApplyButtonEnabled,
-                onPressedFunc: () {
-                  BlocProvider.of<UnitGroupsBloc>(context).add(AddUnitGroup(
-                      unitGroupName: _controller.text
-                  ));
-                }),
-          ],
-          body: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsetsDirectional.fromSTEB(7, 8, 7, 0),
-                  child: ConvertouchTextBox(
-                    onChanged: (String value) async {
-                      setState(() {
-                        _isApplyButtonEnabled = value.isNotEmpty;
-                      });
-                    },
-                    label: "Unit Group Name",
-                    controller: _controller,
-                  ),
-                ),
-              ),
-            ],
+      context,
+      ConvertouchScaffold(
+        pageTitle: "New Unit Group",
+        appBarRightWidgets: [
+          checkIcon(context, isEnabled: _isApplyButtonEnabled,
+              onPressedFunc: () {
+            BlocProvider.of<UnitGroupsBloc>(context)
+                .add(AddUnitGroup(unitGroupName: _controller.text));
+          }),
+        ],
+        body: Container(
+          padding: const EdgeInsetsDirectional.fromSTEB(7, 8, 7, 0),
+          child: ConvertouchTextBox(
+            onChanged: (String value) async {
+              setState(() {
+                _isApplyButtonEnabled = value.isNotEmpty;
+              });
+            },
+            label: "Unit Group Name",
+            controller: _controller,
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   @override

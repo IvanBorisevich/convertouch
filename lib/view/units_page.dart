@@ -25,13 +25,13 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
 
   @override
   Widget build(BuildContext context) {
-    action =
-        ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
+    action = ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
 
     return unitsBloc((unitsFetched) {
       return ConvertouchScaffold(
-        pageTitle: action == ConvertouchAction.fetchUnitsToSelectForConversion
-                || action == ConvertouchAction.fetchUnitsToSelectForUnitCreation
+        pageTitle: action ==
+                    ConvertouchAction.fetchUnitsToSelectForConversion ||
+                action == ConvertouchAction.fetchUnitsToSelectForUnitCreation
             ? "Select Unit"
             : unitsFetched.unitGroup.name,
         appBarRightWidgets: [
@@ -52,65 +52,61 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             },
           ),
         ],
-        body: Column(
-          children: [
+        secondaryAppBar:
             const ConvertouchSearchBar(placeholder: "Search units..."),
-            Expanded(child: itemsViewModeBloc((itemsViewModeState) {
-              return ConvertouchMenuItemsView(
-                unitsFetched.units,
-                markedItems: unitsFetched.markedUnits,
-                showMarkedItems: action !=
-                    ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-                selectedItemId: unitsFetched.selectedUnit?.id,
-                showSelectedItem: action ==
-                        ConvertouchAction.fetchUnitsToSelectForUnitCreation ||
+        body: itemsViewModeBloc((itemsViewModeState) {
+          return ConvertouchMenuItemsView(
+            unitsFetched.units,
+            markedItems: unitsFetched.markedUnits,
+            showMarkedItems:
+                action != ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+            selectedItemId: unitsFetched.selectedUnit?.id,
+            showSelectedItem:
+                action == ConvertouchAction.fetchUnitsToSelectForUnitCreation ||
                     action == ConvertouchAction.fetchUnitsToSelectForConversion,
-                viewMode: itemsViewModeState.pageViewMode,
-                markItemsOnTap:
-                    action == ConvertouchAction.fetchUnitsToStartMark ||
-                        action == ConvertouchAction.fetchUnitsToContinueMark,
-                onItemTap: (item) {
-                  switch (action) {
-                    case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
-                      BlocProvider.of<UnitCreationBloc>(context).add(
-                        PrepareUnitCreation(
-                          unitGroup: unitsFetched.unitGroup,
-                          equivalentUnit: item as UnitModel,
-                          markedUnits: unitsFetched.markedUnits,
-                          action: ConvertouchAction
-                              .updateEquivalentUnitForUnitCreation,
-                        ),
-                      );
-                      break;
-                    case ConvertouchAction.fetchUnitsToSelectForConversion:
-                      BlocProvider.of<UnitsConversionBloc>(context).add(
-                        InitializeConversion(
-                          inputUnit: item as UnitModel,
-                          inputValue: unitsFetched.inputValue,
-                          prevInputUnit: unitsFetched.selectedUnit,
-                          unitGroup: unitsFetched.unitGroup,
-                          conversionUnits: unitsFetched.markedUnits!,
-                        ),
-                      );
-                      break;
-                    case ConvertouchAction.fetchUnitsToStartMark:
-                    case ConvertouchAction.fetchUnitsToContinueMark:
-                    default:
-                      BlocProvider.of<UnitsBloc>(context).add(
-                        FetchUnits(
-                          unitGroupId: unitsFetched.unitGroup.id,
-                          newMarkedUnit: item as UnitModel,
-                          markedUnits: unitsFetched.markedUnits,
-                          action: ConvertouchAction.fetchUnitsToContinueMark,
-                        ),
-                      );
-                      break;
-                  }
-                },
-              );
-            })),
-          ],
-        ),
+            viewMode: itemsViewModeState.pageViewMode,
+            markItemsOnTap: action == ConvertouchAction.fetchUnitsToStartMark ||
+                action == ConvertouchAction.fetchUnitsToContinueMark,
+            onItemTap: (item) {
+              switch (action) {
+                case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
+                  BlocProvider.of<UnitCreationBloc>(context).add(
+                    PrepareUnitCreation(
+                      unitGroup: unitsFetched.unitGroup,
+                      equivalentUnit: item as UnitModel,
+                      markedUnits: unitsFetched.markedUnits,
+                      action:
+                          ConvertouchAction.updateEquivalentUnitForUnitCreation,
+                    ),
+                  );
+                  break;
+                case ConvertouchAction.fetchUnitsToSelectForConversion:
+                  BlocProvider.of<UnitsConversionBloc>(context).add(
+                    InitializeConversion(
+                      inputUnit: item as UnitModel,
+                      inputValue: unitsFetched.inputValue,
+                      prevInputUnit: unitsFetched.selectedUnit,
+                      unitGroup: unitsFetched.unitGroup,
+                      conversionUnits: unitsFetched.markedUnits!,
+                    ),
+                  );
+                  break;
+                case ConvertouchAction.fetchUnitsToStartMark:
+                case ConvertouchAction.fetchUnitsToContinueMark:
+                default:
+                  BlocProvider.of<UnitsBloc>(context).add(
+                    FetchUnits(
+                      unitGroupId: unitsFetched.unitGroup.id,
+                      newMarkedUnit: item as UnitModel,
+                      markedUnits: unitsFetched.markedUnits,
+                      action: ConvertouchAction.fetchUnitsToContinueMark,
+                    ),
+                  );
+                  break;
+              }
+            },
+          );
+        }),
         floatingActionButton: Visibility(
           visible:
               action != ConvertouchAction.fetchUnitsToSelectForConversion &&

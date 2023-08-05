@@ -1,5 +1,7 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/view/scaffold/textbox.dart';
+import 'package:convertouch/view/style/model/conversion_item_colors.dart';
+import 'package:convertouch/view/style/model/item_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,14 +11,7 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
     this.onTap,
     this.onLongPress,
     this.onValueChanged,
-    this.borderColor = const Color(0xFF426F99),
-    this.borderColorSelected = const Color(0xFF426F99),
-    this.unitValueBackgroundColor = const Color(0x00FFFFFF),
-    this.unitValueTextColor = const Color(0xFF426F99),
-    this.unitButtonBackgroundColor = const Color(0xFFE2EEF8),
-    this.unitButtonBackgroundColorSelected = const Color(0xFFE2EEF8),
-    this.unitButtonTextColor = const Color(0xFF426F99),
-    this.unitButtonTextColorSelected = const Color(0xFF223D56),
+    required this.itemColors,
     super.key,
   });
 
@@ -24,14 +19,7 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;
-  final Color borderColor;
-  final Color borderColorSelected;
-  final Color unitValueBackgroundColor;
-  final Color unitValueTextColor;
-  final Color unitButtonBackgroundColor;
-  final Color unitButtonBackgroundColorSelected;
-  final Color unitButtonTextColor;
-  final Color unitButtonTextColorSelected;
+  final ConvertouchItemColors itemColors;
 
   @override
   State<ConvertouchUnitValueListItem> createState() =>
@@ -53,14 +41,15 @@ class _ConvertouchUnitValueListItemState
 
   @override
   Widget build(BuildContext context) {
+    var itemColors = widget.itemColors as ConvertouchConversionItemColors;
     if (_isFocused) {
-      _borderColor = widget.borderColorSelected;
-      _unitButtonBackgroundColor = widget.unitButtonBackgroundColorSelected;
-      _unitButtonTextColor = widget.unitButtonTextColorSelected;
+      _borderColor = itemColors.borderColorSelected;
+      _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColorSelected;
+      _unitButtonTextColor = itemColors.unitButtonTextColorSelected;
     } else {
-      _borderColor = widget.borderColor;
-      _unitButtonBackgroundColor = widget.unitButtonBackgroundColor;
-      _unitButtonTextColor = widget.unitButtonTextColor;
+      _borderColor = itemColors.borderColor;
+      _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColor;
+      _unitButtonTextColor = itemColors.unitButtonTextColor;
     }
 
     return Container(
@@ -90,9 +79,9 @@ class _ConvertouchUnitValueListItemState
                   _isFocused = false;
                 });
               },
-              textColor: widget.unitValueTextColor,
-              borderColor: widget.borderColor,
-              borderColorFocused: widget.borderColorSelected,
+              textColor: itemColors.unitValueTextColor,
+              borderColor: itemColors.borderColor,
+              borderColorFocused: itemColors.borderColorSelected,
             ),
           ),
           const SizedBox(width: 7),

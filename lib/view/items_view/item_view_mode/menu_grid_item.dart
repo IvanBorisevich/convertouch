@@ -1,6 +1,7 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/util/menu_page_util.dart';
+import 'package:convertouch/view/style/model/item_colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuGridItem extends StatefulWidget {
@@ -8,21 +9,13 @@ class ConvertouchMenuGridItem extends StatefulWidget {
     this.item, {
     super.key,
     required this.logo,
+    required this.itemColors,
     this.onTap,
     this.onLongPress,
     this.isMarkedToSelect = false,
     this.isSelected = false,
     this.removalModeEnabled = false,
     this.markOnTap = false,
-    this.borderColor = const Color(0xFF366C9F),
-    this.borderColorMarked = const Color(0xFF366C9F),
-    this.borderColorSelected = const Color(0xFF366C9F),
-    this.backgroundColor = const Color(0xFFF2F5FF),
-    this.backgroundColorSelected = const Color(0xFF8BD5FD),
-    this.backgroundColorMarked = const Color(0xFFDEE6FF),
-    this.contentColor = const Color(0xFF366C9F),
-    this.contentColorMarked = const Color(0xFF366C9F),
-    this.contentColorSelected = const Color(0xFF366C9F),
   });
 
   final ItemModelWithIdName item;
@@ -33,15 +26,7 @@ class ConvertouchMenuGridItem extends StatefulWidget {
   final bool isSelected;
   final bool removalModeEnabled;
   final bool markOnTap;
-  final Color borderColor;
-  final Color borderColorMarked;
-  final Color borderColorSelected;
-  final Color backgroundColor;
-  final Color backgroundColorMarked;
-  final Color backgroundColorSelected;
-  final Color contentColor;
-  final Color contentColorMarked;
-  final Color contentColorSelected;
+  final ConvertouchItemColors itemColors;
 
   @override
   State createState() => _ConvertouchMenuGridItemState();
@@ -63,18 +48,19 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
 
   @override
   Widget build(BuildContext context) {
+    var itemColor = widget.itemColors;
     if (widget.isSelected) {
-      _borderColor = widget.borderColorSelected;
-      _backgroundColor = widget.backgroundColorSelected;
-      _contentColor = widget.contentColorSelected;
+      _borderColor = itemColor.borderColorSelected;
+      _backgroundColor = itemColor.backgroundColorSelected;
+      _contentColor = itemColor.contentColorSelected;
     } else if (_isMarkedToSelect) {
-      _borderColor = widget.borderColorMarked;
-      _backgroundColor = widget.backgroundColorMarked;
-      _contentColor = widget.contentColorMarked;
+      _borderColor = itemColor.borderColorMarked;
+      _backgroundColor = itemColor.backgroundColorMarked;
+      _contentColor = itemColor.contentColorMarked;
     } else {
-      _borderColor = widget.borderColor;
-      _backgroundColor = widget.backgroundColor;
-      _contentColor = widget.contentColor;
+      _borderColor = itemColor.borderColor;
+      _backgroundColor = itemColor.backgroundColor;
+      _contentColor = itemColor.contentColor;
     }
 
     return GestureDetector(

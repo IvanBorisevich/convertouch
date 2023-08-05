@@ -12,9 +12,6 @@ class ConvertouchSearchBar extends StatelessWidget {
     super.key,
   });
 
-  static const double _containerHeight = 53;
-  static const double _elementsSpacing = 5;
-  static const double _elementsHeight = _containerHeight - _elementsSpacing;
   static const double searchTextFieldFontSize = 16;
   static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
     ItemsViewMode.list: Icons.list_outlined,
@@ -25,25 +22,13 @@ class ConvertouchSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: _containerHeight,
-      padding: const EdgeInsets.fromLTRB(
-        _elementsSpacing,
-        0,
-        _elementsSpacing,
-        _elementsSpacing,
-      ),
-      decoration: const BoxDecoration(
-        color: Color(0xFFDEE9FF),
-      ),
-      child: Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSearchTextBox(context),
-          const SizedBox(width: _elementsSpacing),
+          const SizedBox(width: 7),
           _buildViewModeButton(context),
         ],
-      ),
     );
   }
 
@@ -76,8 +61,8 @@ class ConvertouchSearchBar extends StatelessWidget {
 
   Widget _buildViewModeButton(BuildContext context) {
     return SizedBox(
-      width: _elementsHeight,
-      height: _elementsHeight,
+      width: 46,
+      height: 46,
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF6F9FF),

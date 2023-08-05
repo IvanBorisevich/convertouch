@@ -28,6 +28,11 @@ enum ItemsViewMode {
   grid,
 }
 
+enum ConvertouchUITheme {
+  light,
+  dark,
+}
+
 enum ConvertouchAction {
   fetchUnitsToStartMark,
   fetchUnitsToContinueMark,

@@ -24,61 +24,51 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
 
   @override
   Widget build(BuildContext context) {
-    action =
-        ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
+    action = ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
     return unitGroupsBloc((unitGroupsFetched) {
       return ConvertouchScaffold(
         pageTitle:
             action == ConvertouchAction.fetchUnitGroupsToSelectForConversion ||
-            action == ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
+                    action ==
+                        ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
                 ? "Select Unit Group"
                 : "Unit Groups",
-        body: Column(
-          children: [
+        secondaryAppBar:
             const ConvertouchSearchBar(placeholder: "Search unit groups..."),
-            Expanded(
-              child: itemsViewModeBloc((itemsMenuViewState) {
-                return ConvertouchMenuItemsView(
-                  unitGroupsFetched.unitGroups,
-                  selectedItemId: unitGroupsFetched.selectedUnitGroupId,
-                  showSelectedItem: action ==
-                          ConvertouchAction
-                              .fetchUnitGroupsToSelectForUnitCreation ||
-                      action ==
-                          ConvertouchAction
-                              .fetchUnitGroupsToSelectForConversion,
-                  viewMode: itemsMenuViewState.pageViewMode,
-                  onItemTap: (item) {
-                    switch (action) {
-                      case ConvertouchAction
-                          .fetchUnitGroupsToSelectForUnitCreation:
-                        BlocProvider.of<UnitCreationBloc>(context).add(
-                          PrepareUnitCreation(
-                            unitGroup: item as UnitGroupModel,
-                            markedUnits: unitGroupsFetched.markedUnits,
-                            action: ConvertouchAction
-                                .updateUnitGroupForUnitCreation,
-                          ),
-                        );
-                        break;
-                      case ConvertouchAction.fetchUnitGroupsInitially:
-                      case ConvertouchAction
-                          .fetchUnitGroupsToSelectForUnitsFetching:
-                      default:
-                        BlocProvider.of<UnitsBloc>(context).add(
-                          FetchUnits(
-                            unitGroupId: item.id,
-                            action: ConvertouchAction.fetchUnitsToStartMark,
-                          ),
-                        );
-                        break;
-                    }
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
+        body: itemsViewModeBloc((itemsMenuViewState) {
+          return ConvertouchMenuItemsView(
+            unitGroupsFetched.unitGroups,
+            selectedItemId: unitGroupsFetched.selectedUnitGroupId,
+            showSelectedItem: action ==
+                    ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation ||
+                action ==
+                    ConvertouchAction.fetchUnitGroupsToSelectForConversion,
+            viewMode: itemsMenuViewState.pageViewMode,
+            onItemTap: (item) {
+              switch (action) {
+                case ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation:
+                  BlocProvider.of<UnitCreationBloc>(context).add(
+                    PrepareUnitCreation(
+                      unitGroup: item as UnitGroupModel,
+                      markedUnits: unitGroupsFetched.markedUnits,
+                      action: ConvertouchAction.updateUnitGroupForUnitCreation,
+                    ),
+                  );
+                  break;
+                case ConvertouchAction.fetchUnitGroupsInitially:
+                case ConvertouchAction.fetchUnitGroupsToSelectForUnitsFetching:
+                default:
+                  BlocProvider.of<UnitsBloc>(context).add(
+                    FetchUnits(
+                      unitGroupId: item.id,
+                      action: ConvertouchAction.fetchUnitsToStartMark,
+                    ),
+                  );
+                  break;
+              }
+            },
+          );
+        }),
         floatingActionButton: Visibility(
           visible: action !=
                   ConvertouchAction.fetchUnitGroupsToSelectForConversion &&
