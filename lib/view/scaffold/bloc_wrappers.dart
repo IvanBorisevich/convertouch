@@ -181,7 +181,7 @@ Widget navigationListeners(Widget widget) {
       BlocListener<UnitsConversionBloc, UnitsConversionState>(
         listener: (_, unitsConversionState) {
           if (unitsConversionState is ConversionInitialized) {
-            NavigationService.I.navigateBack();
+            NavigationService.I.navigateToHome();
           }
         },
       ),

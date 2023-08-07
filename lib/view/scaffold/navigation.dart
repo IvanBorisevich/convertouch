@@ -1,3 +1,4 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -19,5 +20,9 @@ class NavigationService {
 
   bool isHomePage(BuildContext context) {
     return !(ModalRoute.of(context)?.canPop ?? false);
+  }
+  
+  void navigateToHome() {
+    navigatorKey.currentState?.popUntil(ModalRoute.withName(homePageId));
   }
 }
