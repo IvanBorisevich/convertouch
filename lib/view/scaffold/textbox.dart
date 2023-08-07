@@ -1,3 +1,4 @@
+import 'package:convertouch/view/style/model/textbox_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,7 +6,6 @@ class ConvertouchTextBox extends StatefulWidget {
   const ConvertouchTextBox({
     super.key,
     this.label = "",
-    this.labelColor = const Color(0xFF426F99),
     this.autofocus = false,
     this.onChanged,
     this.onFocusSelected,
@@ -13,17 +13,14 @@ class ConvertouchTextBox extends StatefulWidget {
     this.maxTextLength,
     this.textLengthCounterVisible = false,
     this.hintText,
-    this.borderColor = const Color(0xFF426F99),
-    this.borderColorFocused = const Color(0xFF426F99),
     this.borderRadius = 8,
-    this.textColor = const Color(0xFF426F99),
     this.controller,
     this.inputFormatters,
     this.keyboardType,
+    required this.textBoxColors,
   });
 
   final String label;
-  final Color labelColor;
   final bool autofocus;
   final void Function(String)? onChanged;
   final void Function()? onFocusSelected;
@@ -31,13 +28,11 @@ class ConvertouchTextBox extends StatefulWidget {
   final int? maxTextLength;
   final bool textLengthCounterVisible;
   final String? hintText;
-  final Color borderColor;
-  final Color borderColorFocused;
   final double borderRadius;
-  final Color textColor;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
+  final ConvertouchTextBoxColors textBoxColors;
 
   @override
   State createState() => _ConvertouchTextBoxState();
@@ -75,11 +70,15 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         enabledBorder: OutlineInputBorder(
             borderRadius:
                 BorderRadius.all(Radius.circular(widget.borderRadius)),
-            borderSide: BorderSide(color: widget.borderColor)),
+            borderSide: BorderSide(
+              color: widget.textBoxColors.borderColor,
+            )),
         focusedBorder: OutlineInputBorder(
             borderRadius:
                 BorderRadius.all(Radius.circular(widget.borderRadius)),
-            borderSide: BorderSide(color: widget.borderColorFocused)),
+            borderSide: BorderSide(
+              color: widget.textBoxColors.borderColorFocused,
+            )),
         label: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width / 2,
@@ -96,7 +95,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelStyle: TextStyle(
-          color: widget.labelColor,
+          color: widget.textBoxColors.labelColor,
         ),
         hintText: widget.hintText,
         contentPadding: const EdgeInsets.symmetric(
@@ -109,7 +108,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
       ),
       style: TextStyle(
-        color: widget.textColor,
+        color: widget.textBoxColors.textColor,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

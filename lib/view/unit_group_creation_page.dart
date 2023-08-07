@@ -1,8 +1,10 @@
+import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/textbox.dart';
+import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,11 +28,17 @@ class _ConvertouchUnitGroupCreationPageState
       ConvertouchScaffold(
         pageTitle: "New Unit Group",
         appBarRightWidgets: [
-          checkIcon(context, isEnabled: _isApplyButtonEnabled,
-              onPressedFunc: () {
-            BlocProvider.of<UnitGroupsBloc>(context)
-                .add(AddUnitGroup(unitGroupName: _controller.text));
-          }),
+          checkIcon(
+            context,
+            isEnabled: _isApplyButtonEnabled,
+            onPressedFunc: () {
+              BlocProvider.of<UnitGroupsBloc>(context).add(
+                AddUnitGroup(
+                  unitGroupName: _controller.text,
+                ),
+              );
+            },
+          ),
         ],
         body: Container(
           padding: const EdgeInsetsDirectional.fromSTEB(7, 8, 7, 0),
@@ -42,6 +50,7 @@ class _ConvertouchUnitGroupCreationPageState
             },
             label: "Unit Group Name",
             controller: _controller,
+            textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
           ),
         ),
       ),

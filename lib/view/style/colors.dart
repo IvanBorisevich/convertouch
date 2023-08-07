@@ -2,13 +2,61 @@ import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/view/style/model/conversion_item_colors.dart';
 import 'package:convertouch/view/style/model/item_colors.dart';
 import 'package:convertouch/view/style/model/menu_item_colors.dart';
+import 'package:convertouch/view/style/model/scaffold_colors.dart';
+import 'package:convertouch/view/style/model/search_bar_colors.dart';
+import 'package:convertouch/view/style/model/textbox_colors.dart';
 import 'package:flutter/material.dart';
 
 const Color noColor = Color(0x00000000);
 const ConvertouchItemColors defaultItemColors = ConvertouchItemColors();
 
-var unitGroupItemColors = {
-  ConvertouchUITheme.light: const ConvertouchMenuItemColors(
+const unitsPageFloatingButtonColor = {
+  ConvertouchUITheme.light: Color(0xFF5499DA),
+};
+
+const unitGroupsPageFloatingButtonColor = {
+  ConvertouchUITheme.light: Color(0xFF7473FA),
+};
+
+const conversionPageFloatingButtonColor = {
+  ConvertouchUITheme.light: Color(0xFF6793BE),
+};
+
+const dividerWithTextColor = {
+  ConvertouchUITheme.light: Color(0xFF426F99),
+};
+
+const scaffoldColors = {
+  ConvertouchUITheme.light: ConvertouchScaffoldColors(
+    appBarColor: Color(0xFFDEE9FF),
+    appBarFontColor: Color(0xFF426F99),
+    appBarIconColor: Color(0xFF426F99),
+    appBarIconColorDisabled: Color(0xFFA0C4F5),
+  ),
+};
+
+const searchBarColors = {
+  ConvertouchUITheme.light: ConvertouchSearchBarColors(
+    searchBoxIconColor: Color(0xFF7BA2D3),
+    searchBoxFillColor: Color(0xFFF6F9FF),
+    hintColor: Color(0xFF7BA2D3),
+    textColor: Color(0xFF426F99),
+    viewModeButtonColor: Color(0xFFF6F9FF),
+    viewModeIconColor: Color(0xFF426F99),
+  ),
+};
+
+const textBoxColors = {
+  ConvertouchUITheme.light: ConvertouchTextBoxColors(
+    borderColor: Color(0xFF426F99),
+    borderColorFocused: Color(0xFF426F99),
+    textColor: Color(0xFF426F99),
+    labelColor: Color(0xFF426F99),
+  ),
+};
+
+const unitGroupItemColors = {
+  ConvertouchUITheme.light: ConvertouchMenuItemColors(
     borderColor: Color(0xFFC2CCFF),
     borderColorSelected: Color(0xFFA5B2FF),
     backgroundColor: Color(0xFFECF0FF),
@@ -18,8 +66,8 @@ var unitGroupItemColors = {
   ),
 };
 
-var unitGroupItemColorsInAppBar = {
-  ConvertouchUITheme.light: const ConvertouchMenuItemColors(
+const unitGroupItemColorsInAppBar = {
+  ConvertouchUITheme.light: ConvertouchMenuItemColors(
     borderColor: Color(0xFF426F99),
     borderColorSelected: Color(0xFF426F99),
     backgroundColor: Color(0x00000000),
@@ -29,8 +77,8 @@ var unitGroupItemColorsInAppBar = {
   ),
 };
 
-var unitItemColors = {
-  ConvertouchUITheme.light: const ConvertouchMenuItemColors(
+const unitItemColors = {
+  ConvertouchUITheme.light: ConvertouchMenuItemColors(
     borderColor: Color(0xFFB5DBFF),
     borderColorMarked: Color(0xFF509CE0),
     borderColorSelected: Color(0xFF2F7DC2),
@@ -43,14 +91,17 @@ var unitItemColors = {
   ),
 };
 
-var conversionItemColors = {
-  ConvertouchUITheme.light: const ConvertouchConversionItemColors(
-    borderColor: Color(0xFF7FA0BE),
-    borderColorSelected: Color(0xFF375067),
+const conversionItemColors = {
+  ConvertouchUITheme.light: ConvertouchConversionItemColors(
+    textBoxColors: ConvertouchTextBoxColors(
+      borderColor: Color(0xFF7FA0BE),
+      borderColorFocused: Color(0xFF375067),
+      textColor: Color(0xFF426F99),
+      labelColor: Color(0xFF7FA0BE),
+    ),
     unitButtonBackgroundColor: Color(0xFFE2EEF8),
     unitButtonBackgroundColorSelected: Color(0xFFB9D7F1),
     unitButtonTextColor: Color(0xFF426F99),
     unitButtonTextColorSelected: Color(0xFF2D4B67),
-    unitValueTextColor: Color(0xFF426F99),
   ),
 };

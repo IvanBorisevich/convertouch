@@ -1,5 +1,6 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/view/scaffold/navigation.dart';
+import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
@@ -13,9 +14,6 @@ class ConvertouchScaffold extends StatelessWidget {
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.floatingActionButton,
-    this.appBarColor = const Color(0xFFDEE9FF),
-    this.appBarFontColor = const Color(0xFF426F99),
-    this.appBarIconColor = const Color(0xFF426F99),
   });
 
   final Widget? appBarLeftWidget;
@@ -24,9 +22,6 @@ class ConvertouchScaffold extends StatelessWidget {
   final Widget? secondaryAppBar;
   final Widget body;
   final Widget? floatingActionButton;
-  final Color appBarColor;
-  final Color appBarFontColor;
-  final Color appBarIconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +38,13 @@ class ConvertouchScaffold extends StatelessWidget {
           title: Text(
             pageTitle,
             style: TextStyle(
-              color: appBarFontColor,
+              color: scaffoldColors[ConvertouchUITheme.light]!.appBarFontColor,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
-          backgroundColor: appBarColor,
+          backgroundColor:
+              scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
           elevation: 0,
           actions: appBarRightWidgets,
         ),
@@ -59,7 +55,7 @@ class ConvertouchScaffold extends StatelessWidget {
               child: Container(
                 height: 53,
                 decoration: BoxDecoration(
-                  color: appBarColor,
+                  color: scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
                 ),
                 padding: const EdgeInsetsDirectional.fromSTEB(
                   appBarPadding,
@@ -87,7 +83,7 @@ class ConvertouchScaffold extends StatelessWidget {
     return IconButton(
       icon: Icon(
         iconData,
-        color: appBarIconColor,
+        color: scaffoldColors[ConvertouchUITheme.light]!.appBarIconColor,
       ),
       onPressed: onPressed,
     );
@@ -98,8 +94,6 @@ Widget checkIcon(
   BuildContext context, {
   bool isVisible = true,
   bool isEnabled = false,
-  Color iconColor = const Color(0xFF426F99),
-  Color iconColorDisabled = const Color(0xFFA0C4F5),
   void Function()? onPressedFunc,
 }) {
   return Visibility(
@@ -107,9 +101,12 @@ Widget checkIcon(
     child: IconButton(
       icon: Icon(
         Icons.check,
-        color: isEnabled ? iconColor : null,
+        color: isEnabled
+            ? scaffoldColors[ConvertouchUITheme.light]!.appBarIconColor
+            : null,
       ),
-      disabledColor: iconColorDisabled,
+      disabledColor:
+          scaffoldColors[ConvertouchUITheme.light]!.appBarIconColorDisabled,
       onPressed: isEnabled ? onPressedFunc : null,
     ),
   );
@@ -132,24 +129,6 @@ void showAlertDialog(BuildContext context, String message) {
       );
     },
   );
-}
-
-Widget horizontalDividerWithText(String text) {
-  return Row(children: [
-    const Expanded(child: Divider(color: Color(0xFF426F99), thickness: 1.2)),
-    const SizedBox(width: 7),
-    Text(
-      text,
-      style: const TextStyle(
-          color: Color(0xFF426F99), fontWeight: FontWeight.w500),
-    ),
-    const SizedBox(width: 7),
-    const Expanded(
-        child: Divider(
-      color: Color(0xFF426F99),
-      thickness: 1.2,
-    )),
-  ]);
 }
 
 Widget empty() {

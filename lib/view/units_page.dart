@@ -1,8 +1,8 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
 import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/events/unit_creation_events.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
@@ -10,6 +10,7 @@ import 'package:convertouch/view/items_view/menu_items_view.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
+import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,8 +53,10 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             },
           ),
         ],
-        secondaryAppBar:
-            const ConvertouchSearchBar(placeholder: "Search units..."),
+        secondaryAppBar: ConvertouchSearchBar(
+          placeholder: "Search units...",
+          colors: searchBarColors[ConvertouchUITheme.light]!,
+        ),
         body: itemsViewModeBloc((itemsViewModeState) {
           return ConvertouchMenuItemsView(
             unitsFetched.units,
@@ -122,7 +125,8 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 ),
               );
             },
-            backgroundColor: const Color(0xFF5499DA),
+            backgroundColor:
+                unitsPageFloatingButtonColor[ConvertouchUITheme.light],
             elevation: 0,
             child: const Icon(Icons.add),
           ),

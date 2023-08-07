@@ -3,12 +3,14 @@ import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
 import 'package:convertouch/presenter/events/items_menu_view_event.dart';
 import 'package:convertouch/view/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/view/style/model/search_bar_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSearchBar extends StatelessWidget {
   const ConvertouchSearchBar({
     required this.placeholder,
+    required this.colors,
     super.key,
   });
 
@@ -19,16 +21,17 @@ class ConvertouchSearchBar extends StatelessWidget {
   };
 
   final String placeholder;
+  final ConvertouchSearchBarColors colors;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSearchTextBox(context),
-          const SizedBox(width: 7),
-          _buildViewModeButton(context),
-        ],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSearchTextBox(context),
+        const SizedBox(width: 7),
+        _buildViewModeButton(context),
+      ],
     );
   }
 
@@ -38,19 +41,24 @@ class ConvertouchSearchBar extends StatelessWidget {
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
-          suffixIcon: const Icon(Icons.search, color: Color(0xFF7BA2D3)),
+          suffixIcon: Icon(
+            Icons.search,
+            color: colors.searchBoxIconColor,
+          ),
           hintText: placeholder,
-          hintStyle: const TextStyle(
-              color: Color(0xFF7BA2D3), fontSize: searchTextFieldFontSize),
+          hintStyle: TextStyle(
+            color: colors.hintColor,
+            fontSize: searchTextFieldFontSize,
+          ),
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               borderSide: BorderSide.none),
           filled: true,
-          fillColor: const Color(0xFFF6F9FF),
+          fillColor: colors.searchBoxFillColor,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
         ),
-        style: const TextStyle(
-          color: Color(0xFF426F99),
+        style: TextStyle(
+          color: colors.textColor,
           fontSize: searchTextFieldFontSize,
           fontWeight: FontWeight.w500,
         ),
@@ -65,7 +73,7 @@ class ConvertouchSearchBar extends StatelessWidget {
       height: 46,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFF6F9FF),
+          color: colors.viewModeButtonColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: itemsViewModeBloc((itemsMenuViewState) {
@@ -83,7 +91,7 @@ class ConvertouchSearchBar extends StatelessWidget {
                 ),
               );
             },
-            color: const Color(0xFF426F99),
+            color: colors.viewModeIconColor,
           );
         }),
       ),

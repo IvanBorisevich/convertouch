@@ -1,6 +1,8 @@
 import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
+import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
+import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/presenter/events/units_conversion_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
@@ -10,6 +12,7 @@ import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'scaffold/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends StatefulWidget {
@@ -30,6 +33,18 @@ class _ConvertouchUnitsConversionPageState
           secondaryAppBar: ConvertouchItem.createItem(
             conversionInitialized.unitGroup,
             itemColors: unitGroupItemColorsInAppBar[ConvertouchUITheme.light]!,
+            onTap: () {
+              BlocProvider.of<UnitGroupsBloc>(context).add(
+                FetchUnitGroups(
+                  selectedUnitGroupId: conversionInitialized.unitGroup.id,
+                  markedUnits: conversionInitialized.conversionItems
+                      .map((item) => item.unit)
+                      .toList(),
+                  action:
+                      ConvertouchAction.fetchUnitGroupsToSelectForConversion,
+                ),
+              );
+            },
           ).buildForList(),
           body: ConvertouchConversionItemsView(
             conversionInitialized.conversionItems,
@@ -72,7 +87,8 @@ class _ConvertouchUnitsConversionPageState
                 ),
               );
             },
-            backgroundColor: const Color(0xFF6793BE),
+            backgroundColor:
+                conversionPageFloatingButtonColor[ConvertouchUITheme.light],
             elevation: 0,
             child: const Icon(Icons.add),
           ),

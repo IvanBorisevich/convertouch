@@ -9,6 +9,7 @@ import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/navigation.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
+import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,8 +34,10 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                         ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
                 ? "Select Unit Group"
                 : "Unit Groups",
-        secondaryAppBar:
-            const ConvertouchSearchBar(placeholder: "Search unit groups..."),
+        secondaryAppBar: ConvertouchSearchBar(
+          placeholder: "Search unit groups...",
+          colors: searchBarColors[ConvertouchUITheme.light]!,
+        ),
         body: itemsViewModeBloc((itemsMenuViewState) {
           return ConvertouchMenuItemsView(
             unitGroupsFetched.unitGroups,
@@ -78,7 +81,8 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
             onPressed: () {
               NavigationService.I.navigateTo(unitGroupCreationPageId);
             },
-            backgroundColor: const Color(0xFF7473FA),
+            backgroundColor:
+                unitGroupsPageFloatingButtonColor[ConvertouchUITheme.light],
             elevation: 0,
             child: const Icon(Icons.add),
           ),

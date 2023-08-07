@@ -1,7 +1,7 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
 import 'package:convertouch/model/util/menu_page_util.dart';
-import 'package:convertouch/view/style/model/item_colors.dart';
+import 'package:convertouch/view/style/model/menu_item_colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuGridItem extends StatefulWidget {
@@ -26,7 +26,7 @@ class ConvertouchMenuGridItem extends StatefulWidget {
   final bool isSelected;
   final bool removalModeEnabled;
   final bool markOnTap;
-  final ConvertouchItemColors itemColors;
+  final ConvertouchMenuItemColors itemColors;
 
   @override
   State createState() => _ConvertouchMenuGridItemState();

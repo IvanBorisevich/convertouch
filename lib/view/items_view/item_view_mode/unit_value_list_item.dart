@@ -1,7 +1,6 @@
 import 'package:convertouch/model/entity/unit_value_model.dart';
 import 'package:convertouch/view/scaffold/textbox.dart';
 import 'package:convertouch/view/style/model/conversion_item_colors.dart';
-import 'package:convertouch/view/style/model/item_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,7 +18,7 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;
-  final ConvertouchItemColors itemColors;
+  final ConvertouchConversionItemColors itemColors;
 
   @override
   State<ConvertouchUnitValueListItem> createState() =>
@@ -41,13 +40,13 @@ class _ConvertouchUnitValueListItemState
 
   @override
   Widget build(BuildContext context) {
-    var itemColors = widget.itemColors as ConvertouchConversionItemColors;
+    var itemColors = widget.itemColors;
     if (_isFocused) {
-      _borderColor = itemColors.borderColorSelected;
+      _borderColor = itemColors.textBoxColors.borderColorFocused;
       _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColorSelected;
       _unitButtonTextColor = itemColors.unitButtonTextColorSelected;
     } else {
-      _borderColor = itemColors.borderColor;
+      _borderColor = itemColors.textBoxColors.borderColor;
       _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColor;
       _unitButtonTextColor = itemColors.unitButtonTextColor;
     }
@@ -79,9 +78,7 @@ class _ConvertouchUnitValueListItemState
                   _isFocused = false;
                 });
               },
-              textColor: itemColors.unitValueTextColor,
-              borderColor: itemColors.borderColor,
-              borderColorFocused: itemColors.borderColorSelected,
+              textBoxColors: itemColors.textBoxColors,
             ),
           ),
           const SizedBox(width: 7),

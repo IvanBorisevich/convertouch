@@ -8,7 +8,9 @@ import 'package:convertouch/view/items_view/item/unit_group_item.dart';
 import 'package:convertouch/view/items_view/item/unit_item.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/style/colors.dart';
+import 'package:convertouch/view/style/model/conversion_item_colors.dart';
 import 'package:convertouch/view/style/model/item_colors.dart';
+import 'package:convertouch/view/style/model/menu_item_colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchItem {
@@ -19,7 +21,7 @@ class ConvertouchItem {
   bool isSelected = false;
   bool removalModeEnabled = false;
   bool markOnTap = false;
-  ConvertouchItemColors itemColors = defaultItemColors;
+  ConvertouchItemColors? itemColors;
 
   ConvertouchItem._({
     this.onTap,
@@ -29,7 +31,7 @@ class ConvertouchItem {
     required this.isSelected,
     required this.removalModeEnabled,
     required this.markOnTap,
-    required this.itemColors,
+    this.itemColors,
   });
 
   ConvertouchItem.fromItem(ConvertouchItem baseItem) {
@@ -52,7 +54,7 @@ class ConvertouchItem {
     bool isSelected = false,
     bool removalModeEnabled = false,
     bool markOnTap = false,
-    ConvertouchItemColors itemColors = defaultItemColors,
+    ConvertouchItemColors? itemColors,
   }) {
     ConvertouchItem baseItem = ConvertouchItem._(
       onTap: onTap,
@@ -66,11 +68,32 @@ class ConvertouchItem {
     );
     switch (item.itemType) {
       case ItemType.unitGroup:
-        return ConvertouchUnitGroupItem(item as UnitGroupModel, baseItem);
+        ConvertouchMenuItemColors unitGroupColors = itemColors != null
+            ? itemColors as ConvertouchMenuItemColors
+            : unitGroupItemColors[ConvertouchUITheme.light]!;
+        return ConvertouchUnitGroupItem(
+          item as UnitGroupModel,
+          baseItem,
+          unitGroupColors,
+        );
       case ItemType.unit:
-        return ConvertouchUnitItem(item as UnitModel, baseItem);
+        ConvertouchMenuItemColors unitColors = itemColors != null
+            ? itemColors as ConvertouchMenuItemColors
+            : unitItemColors[ConvertouchUITheme.light]!;
+        return ConvertouchUnitItem(
+          item as UnitModel,
+          baseItem,
+          unitColors,
+        );
       case ItemType.unitValue:
-        return ConvertouchConversionItem(item as UnitValueModel, baseItem);
+        ConvertouchConversionItemColors conversionColors = itemColors != null
+            ? itemColors as ConvertouchConversionItemColors
+            : conversionItemColors[ConvertouchUITheme.light]!;
+        return ConvertouchConversionItem(
+          item as UnitValueModel,
+          baseItem,
+          conversionColors,
+        );
     }
   }
 
@@ -83,11 +106,8 @@ class ConvertouchItem {
   }
 
   Widget wrapLogo(Widget logo, double wrapWidth) {
-    return Container(
+    return SizedBox(
       width: wrapWidth,
-      decoration: const BoxDecoration(
-        color: Color(0x00FFFFFF),
-      ),
       child: logo,
     );
   }

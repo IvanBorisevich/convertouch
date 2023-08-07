@@ -11,6 +11,7 @@ import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/textbox.dart';
+import 'package:convertouch/view/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -87,6 +88,7 @@ class _ConvertouchUnitCreationPageState
                     _unitAbbrHint = getInitialUnitAbbreviationFromName(value);
                   });
                 },
+                textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
               ),
               const SizedBox(height: 12),
               ConvertouchTextBox(
@@ -100,6 +102,7 @@ class _ConvertouchUnitCreationPageState
                 maxTextLength: unitAbbreviationMaxLength,
                 textLengthCounterVisible: true,
                 hintText: _unitAbbrHint,
+                textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
               ),
               const SizedBox(height: 25),
               unitCreationBloc((unitCreationPrepared) {
@@ -107,7 +110,7 @@ class _ConvertouchUnitCreationPageState
                   if (unitCreationPrepared.equivalentUnit != null &&
                       _unitName.isNotEmpty) {
                     return Column(children: [
-                      horizontalDividerWithText("Set unit value equivalent"),
+                      _horizontalDividerWithText("Set unit value equivalent"),
                       const SizedBox(height: 25),
                       ConvertouchItem.createItem(
                         UnitValueModel(
@@ -150,6 +153,32 @@ class _ConvertouchUnitCreationPageState
         ),
       ),
     );
+  }
+
+  Widget _horizontalDividerWithText(String text) {
+    return Row(children: [
+      Expanded(
+        child: Divider(
+          color: dividerWithTextColor[ConvertouchUITheme.light],
+          thickness: 1.2,
+        ),
+      ),
+      const SizedBox(width: 7),
+      Text(
+        text,
+        style: TextStyle(
+          color: dividerWithTextColor[ConvertouchUITheme.light],
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(width: 7),
+      Expanded(
+        child: Divider(
+          color: dividerWithTextColor[ConvertouchUITheme.light],
+          thickness: 1.2,
+        ),
+      ),
+    ]);
   }
 
   @override

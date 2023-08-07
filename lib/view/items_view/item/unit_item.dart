@@ -1,21 +1,21 @@
-import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/unit_model.dart';
+import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:convertouch/view/items_view/item_view_mode/menu_grid_item.dart';
 import 'package:convertouch/view/items_view/item_view_mode/menu_list_item.dart';
-import 'package:convertouch/view/items_view/item/item.dart';
-import 'package:convertouch/view/style/colors.dart';
+import 'package:convertouch/view/style/model/menu_item_colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchUnitItem extends ConvertouchItem {
   static const double itemLogoWidth = 65;
 
-  ConvertouchUnitItem(this.unit, ConvertouchItem item) : super.fromItem(item) {
-    if (itemColors == defaultItemColors) {
-      itemColors = unitItemColors[ConvertouchUITheme.light]!;
-    }
-  }
+  ConvertouchUnitItem(
+    this.unit,
+    ConvertouchItem item,
+    this.unitColors,
+  ) : super.fromItem(item);
 
   final UnitModel unit;
+  ConvertouchMenuItemColors unitColors;
 
   @override
   Widget buildForGrid() {
@@ -28,7 +28,7 @@ class ConvertouchUnitItem extends ConvertouchItem {
       isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
-      itemColors: itemColors,
+      itemColors: unitColors,
     );
   }
 
@@ -43,7 +43,7 @@ class ConvertouchUnitItem extends ConvertouchItem {
       isSelected: isSelected,
       removalModeEnabled: removalModeEnabled,
       markOnTap: markOnTap,
-      itemColors: itemColors,
+      itemColors: unitColors,
     );
   }
 
