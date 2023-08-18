@@ -10,7 +10,7 @@ import 'package:convertouch/presenter/states/unit_creation_states.dart';
 import 'package:convertouch/presenter/states/unit_groups_states.dart';
 import 'package:convertouch/presenter/states/units_conversion_states.dart';
 import 'package:convertouch/presenter/states/units_states.dart';
-import 'package:convertouch/view/scaffold/navigation.dart';
+import 'package:convertouch/view/scaffold/navigation_service.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -8,10 +8,12 @@ class NavigationService {
 
   Future<dynamic>? navigateTo(
     String routeName, {
-    Object? arguments
+    Object? arguments,
   }) {
-    return navigatorKey.currentState?.pushNamed(routeName,
-        arguments: arguments);
+    return navigatorKey.currentState?.pushNamed(
+      routeName,
+      arguments: arguments,
+    );
   }
 
   void navigateBack() {
@@ -21,7 +23,7 @@ class NavigationService {
   bool isHomePage(BuildContext context) {
     return !(ModalRoute.of(context)?.canPop ?? false);
   }
-  
+
   void navigateToHome() {
     navigatorKey.currentState?.popUntil(ModalRoute.withName(homePageId));
   }

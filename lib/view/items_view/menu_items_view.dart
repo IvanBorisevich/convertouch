@@ -1,5 +1,6 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
+import 'package:convertouch/view/animation/items_view_animation.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,8 @@ class ConvertouchMenuItemsView extends StatefulWidget {
 class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
   @override
   Widget build(BuildContext context) {
+    ConvertouchItemsViewAnimation.startItemsAnimation();
+
     return LayoutBuilder(builder: (context, constraints) {
       if (widget.items.isNotEmpty) {
         switch (widget.viewMode) {
@@ -67,6 +70,12 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
       }
       return const ConvertouchItemsEmptyView();
     });
+  }
+
+  @override
+  void dispose() {
+    ConvertouchItemsViewAnimation.dispose();
+    super.dispose();
   }
 }
 
@@ -107,17 +116,17 @@ class ConvertouchItemsGrid extends StatelessWidget {
       ),
       padding: EdgeInsets.all(itemsSpacing),
       itemBuilder: (context, index) {
-        return _buildItem(
-          context,
-          items,
-          index,
-          markedItems,
-          showMarkedItems,
-          selectedItemId,
-          showSelectedItem,
-          onItemTap,
-          markItemsOnTap,
-        ).buildForGrid();
+        return ConvertouchItemsViewAnimation.wrapItemIntoAnimation(
+          _buildItem(
+            items[index],
+            markedItems,
+            showMarkedItems,
+            selectedItemId,
+            showSelectedItem,
+            onItemTap,
+            markItemsOnTap,
+          ).buildForGrid(),
+        );
       },
     );
   }
@@ -153,17 +162,17 @@ class ConvertouchItemsList extends StatelessWidget {
       padding: EdgeInsets.all(itemsSpacing),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return _buildItem(
-          context,
-          items,
-          index,
-          markedItems,
-          showMarkedItems,
-          selectedItemId,
-          showSelectedItem,
-          onItemTap,
-          markItemsOnTap,
-        ).buildForList();
+        return ConvertouchItemsViewAnimation.wrapItemIntoAnimation(
+          _buildItem(
+            items[index],
+            markedItems,
+            showMarkedItems,
+            selectedItemId,
+            showSelectedItem,
+            onItemTap,
+            markItemsOnTap,
+          ).buildForList(),
+        );
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(
@@ -184,18 +193,20 @@ class ConvertouchItemsEmptyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SizedBox(
       child: Center(
-          child: Text(
-        "No Items",
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      )),
+        child: Text(
+          "No Items",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
     );
   }
 }
 
 ConvertouchItem _buildItem(
-  BuildContext context,
-  List<ItemModelWithIdName> items,
-  int index,
+  ItemModelWithIdName item,
   List<ItemModelWithIdName>? markedItems,
   bool showMarkedItems,
   int? selectedItemId,
@@ -203,8 +214,7 @@ ConvertouchItem _buildItem(
   void Function(ItemModelWithIdName)? onItemTap,
   bool markOnTap,
 ) {
-  ItemModelWithIdName item = items[index];
-  bool isMarkedToSelect = (markedItems ?? []).contains(item);
+  bool isMarkedToSelect = markedItems != null && markedItems.contains(item);
   bool isSelected = item.id == selectedItemId;
   return ConvertouchItem.createItem(
     item,

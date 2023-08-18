@@ -1,15 +1,16 @@
 import 'package:convertouch/model/constant.dart';
-import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
+import 'package:convertouch/presenter/bloc/items_view_animation_bloc.dart';
+import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
+import 'package:convertouch/presenter/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presenter/bloc_observer.dart';
 import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/view/animation/navigation_animation.dart';
 import 'package:convertouch/view/home_page.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
-import 'package:convertouch/view/scaffold/navigation.dart';
+import 'package:convertouch/view/scaffold/navigation_service.dart';
 import 'package:convertouch/view/unit_creation_page.dart';
 import 'package:convertouch/view/unit_group_creation_page.dart';
 import 'package:convertouch/view/unit_groups_page.dart';
@@ -21,6 +22,7 @@ import 'package:get_it/get_it.dart';
 void main() {
   Bloc.observer = ConvertouchBlocObserver();
   GetIt.I.registerSingleton<NavigationService>(NavigationService());
+  GetIt.I.registerSingleton<ItemsViewAnimationBloc>(ItemsViewAnimationBloc());
   runApp(const ConvertouchApp());
 }
 
@@ -41,25 +43,30 @@ class ConvertouchApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => UnitsConversionBloc()),
         BlocProvider(create: (context) => ItemsMenuViewBloc()),
-        BlocProvider(create: (context) => UnitGroupsBloc()..add(
-          const FetchUnitGroups(
-            action: ConvertouchAction.fetchUnitGroupsInitially,
-          )),
+        BlocProvider(
+          create: (context) => UnitGroupsBloc()
+            ..add(
+              const FetchUnitGroups(
+                action: ConvertouchAction.fetchUnitGroupsInitially,
+              ),
+            ),
         ),
         BlocProvider(create: (context) => UnitsBloc()),
         BlocProvider(create: (context) => UnitCreationBloc()),
       ],
-      child: navigationListeners(MaterialApp(
-        title: appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: quicksandFontFamily),
-        initialRoute: homePageId,
-        navigatorKey: NavigationService.I.navigatorKey,
-        onGenerateRoute: (settings) {
-          return ConvertouchNavigationAnimation.wrapIntoAnimation(
-              _getRoute(settings.name), settings);
-        },
-      )),
+      child: navigationListeners(
+        MaterialApp(
+          title: appName,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: quicksandFontFamily),
+          initialRoute: homePageId,
+          navigatorKey: NavigationService.I.navigatorKey,
+          onGenerateRoute: (settings) {
+            return ConvertouchNavigationAnimation.wrapIntoAnimation(
+                _getRoute(settings.name), settings);
+          },
+        ),
+      ),
     );
   }
 

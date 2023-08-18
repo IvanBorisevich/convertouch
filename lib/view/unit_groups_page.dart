@@ -6,7 +6,7 @@ import 'package:convertouch/presenter/events/unit_creation_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
 import 'package:convertouch/view/items_view/menu_items_view.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
-import 'package:convertouch/view/scaffold/navigation.dart';
+import 'package:convertouch/view/scaffold/navigation_service.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
 import 'package:convertouch/view/scaffold/search_bar.dart';
 import 'package:convertouch/view/style/colors.dart';
