@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ConvertouchNavigationAnimation {
-  static Route<dynamic>? wrapIntoAnimation(Widget route, RouteSettings settings) {
+  static Route<dynamic>? wrapIntoAnimation(
+    Widget route,
+    RouteSettings settings,
+  ) {
     return PageRouteBuilder(
       settings: settings,
       pageBuilder: (_, __, ___) => route,

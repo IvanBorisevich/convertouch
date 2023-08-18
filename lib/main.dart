@@ -1,6 +1,5 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/presenter/bloc/items_menu_view_bloc.dart';
-import 'package:convertouch/presenter/bloc/items_view_animation_bloc.dart';
 import 'package:convertouch/presenter/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
@@ -22,7 +21,6 @@ import 'package:get_it/get_it.dart';
 void main() {
   Bloc.observer = ConvertouchBlocObserver();
   GetIt.I.registerSingleton<NavigationService>(NavigationService());
-  GetIt.I.registerSingleton<ItemsViewAnimationBloc>(ItemsViewAnimationBloc());
   runApp(const ConvertouchApp());
 }
 

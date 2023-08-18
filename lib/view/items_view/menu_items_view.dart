@@ -1,6 +1,6 @@
 import 'package:convertouch/model/constant.dart';
 import 'package:convertouch/model/entity/item_model.dart';
-import 'package:convertouch/view/animation/items_view_animation.dart';
+import 'package:convertouch/view/animation/fade_scale_animation.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +37,7 @@ class ConvertouchMenuItemsView extends StatefulWidget {
 class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
   @override
   Widget build(BuildContext context) {
-    ConvertouchItemsViewAnimation.startItemsAnimation();
+    //ConvertouchItemsViewAnimation.startItemsAnimation();
 
     return LayoutBuilder(builder: (context, constraints) {
       if (widget.items.isNotEmpty) {
@@ -70,12 +70,6 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
       }
       return const ConvertouchItemsEmptyView();
     });
-  }
-
-  @override
-  void dispose() {
-    ConvertouchItemsViewAnimation.dispose();
-    super.dispose();
   }
 }
 
@@ -116,8 +110,8 @@ class ConvertouchItemsGrid extends StatelessWidget {
       ),
       padding: EdgeInsets.all(itemsSpacing),
       itemBuilder: (context, index) {
-        return ConvertouchItemsViewAnimation.wrapItemIntoAnimation(
-          _buildItem(
+        return ConvertouchFadeScaleAnimation(
+          child: _buildItem(
             items[index],
             markedItems,
             showMarkedItems,
@@ -162,8 +156,8 @@ class ConvertouchItemsList extends StatelessWidget {
       padding: EdgeInsets.all(itemsSpacing),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return ConvertouchItemsViewAnimation.wrapItemIntoAnimation(
-          _buildItem(
+        return ConvertouchFadeScaleAnimation(
+          child: _buildItem(
             items[index],
             markedItems,
             showMarkedItems,

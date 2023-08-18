@@ -7,6 +7,7 @@ import 'package:convertouch/presenter/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presenter/bloc/units_bloc.dart';
 import 'package:convertouch/presenter/events/unit_groups_events.dart';
 import 'package:convertouch/presenter/events/units_events.dart';
+import 'package:convertouch/view/animation/fade_scale_animation.dart';
 import 'package:convertouch/view/items_view/item/item.dart';
 import 'package:convertouch/view/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/view/scaffold/scaffold.dart';
@@ -106,13 +107,21 @@ class _ConvertouchUnitCreationPageState
               ),
               const SizedBox(height: 25),
               unitCreationBloc((unitCreationPrepared) {
-                return LayoutBuilder(builder: (context, constraints) {
-                  if (unitCreationPrepared.equivalentUnit != null &&
-                      _unitName.isNotEmpty) {
-                    return Column(children: [
-                      _horizontalDividerWithText("Set unit value equivalent"),
-                      const SizedBox(height: 25),
-                      ConvertouchItem.createItem(
+                bool equivalentUnitVisible = _unitName.isNotEmpty &&
+                    unitCreationPrepared.equivalentUnit != null;
+                return Column(
+                  children: [
+                    ConvertouchFadeScaleAnimation(
+                      duration: const Duration(milliseconds: 150),
+                      reverse: !equivalentUnitVisible,
+                      child: _horizontalDividerWithText(
+                          "Set unit value equivalent"),
+                    ),
+                    const SizedBox(height: 25),
+                    ConvertouchFadeScaleAnimation(
+                      duration: const Duration(milliseconds: 150),
+                      reverse: !equivalentUnitVisible,
+                      child: ConvertouchItem.createItem(
                         UnitValueModel(
                           unit: UnitModel(
                               name: _unitName,
@@ -122,8 +131,12 @@ class _ConvertouchUnitCreationPageState
                           value: "1",
                         ),
                       ).buildForList(),
-                      const SizedBox(height: 9),
-                      ConvertouchItem.createItem(
+                    ),
+                    const SizedBox(height: 9),
+                    ConvertouchFadeScaleAnimation(
+                      duration: const Duration(milliseconds: 150),
+                      reverse: !equivalentUnitVisible,
+                      child: ConvertouchItem.createItem(
                         UnitValueModel(
                           unit: unitCreationPrepared.equivalentUnit!,
                           value: "1",
@@ -141,12 +154,10 @@ class _ConvertouchUnitCreationPageState
                           );
                         },
                       ).buildForList(),
-                      const SizedBox(height: 25),
-                    ]);
-                  } else {
-                    return const SizedBox(height: 0, width: 0);
-                  }
-                });
+                    ),
+                    const SizedBox(height: 25),
+                  ],
+                );
               }),
             ]),
           ),
