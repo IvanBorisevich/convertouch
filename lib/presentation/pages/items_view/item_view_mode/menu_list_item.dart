@@ -82,7 +82,8 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
 
         bool notMarkedAndCanBeSelected =
             !widget.markOnTap && !widget.isMarkedToSelect;
-        if (widget.markOnTap || notMarkedAndCanBeSelected) {
+        if (!widget.isSelected &&
+            (widget.markOnTap || notMarkedAndCanBeSelected)) {
           widget.onTap?.call();
         }
       },

@@ -80,7 +80,8 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
 
         bool notMarkedAndCanBeSelected =
             !widget.markOnTap && !widget.isMarkedToSelect;
-        if (widget.markOnTap || notMarkedAndCanBeSelected) {
+        if (!widget.isSelected &&
+            (widget.markOnTap || notMarkedAndCanBeSelected)) {
           widget.onTap?.call();
         }
       },
@@ -140,7 +141,6 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
 
 final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
 const int _minGridItemWordSizeToWrap = 10;
-
 
 int _getGridItemNameLinesNumToWrap(String gridItemName) {
   return gridItemName.indexOf(_spaceOrEndOfWord) > _minGridItemWordSizeToWrap

@@ -26,7 +26,7 @@ Widget unitsBloc(
       if (unitsFetched is UnitsFetched) {
         return builderFunc.call(unitsFetched);
       } else {
-        return const SizedBox(width: 0, height: 0);
+        return empty();
       }
     },
   );
@@ -43,7 +43,7 @@ Widget unitGroupsBloc(
       if (unitGroupsFetched is UnitGroupsFetched) {
         return builderFunc.call(unitGroupsFetched);
       } else {
-        return const SizedBox(width: 0, height: 0);
+        return empty();
       }
     },
   );
@@ -60,7 +60,7 @@ Widget unitGroupsBlocForItem(
       if (unitGroupSelected is UnitGroupSelected) {
         return builderFunc.call(unitGroupSelected);
       } else {
-        return const SizedBox(width: 0, height: 0);
+        return empty();
       }
     },
   );
@@ -77,18 +77,22 @@ Widget unitCreationBloc(
       if (unitCreationState is UnitCreationPrepared) {
         return builderFunc.call(unitCreationState);
       } else {
-        return const SizedBox(width: 0, height: 0);
+        return empty();
       }
     },
   );
 }
 
 Widget itemsViewModeBloc(
-  Widget Function(ItemsViewModeState itemsMenuViewState) builderFunc,
+  Widget Function(ItemsViewModeChanged itemsViewModeChanged) builderFunc,
 ) {
   return BlocBuilder<ItemsMenuViewBloc, ItemsViewModeState>(
     builder: (_, itemsMenuViewState) {
-      return builderFunc.call(itemsMenuViewState);
+      if (itemsMenuViewState is ItemsViewModeChanged) {
+        return builderFunc.call(itemsMenuViewState);
+      } else {
+        return empty();
+      }
     },
   );
 }

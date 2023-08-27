@@ -42,7 +42,7 @@ class InitializeConversion extends UnitsConversionEvent {
 
 class ConvertUnitValue extends UnitsConversionEvent {
   const ConvertUnitValue({
-    required this.inputValue,
+    this.inputValue = "1",
     required this.inputUnit,
     required this.conversionItems,
   });

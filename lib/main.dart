@@ -39,8 +39,8 @@ class ConvertouchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => UnitsConversionBloc()),
-        BlocProvider(create: (context) => ItemsMenuViewBloc()),
+        BlocProvider(create: (context) => di.locator<UnitsConversionBloc>()),
+        BlocProvider(create: (context) => di.locator<ItemsMenuViewBloc>()),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBloc>()
             ..add(

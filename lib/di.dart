@@ -8,14 +8,18 @@ import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
+import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
+import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -93,5 +97,29 @@ void init() {
     () => UnitCreationBloc(
       getBaseUnitUseCase: locator(),
     ),
+  );
+
+  // units conversion
+
+  locator.registerFactory(
+    () => UnitsConversionBloc(
+      convertUnitValueUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ConvertUnitValueUseCase>(
+    () => ConvertUnitValueUseCase(),
+  );
+
+  // items menu view mode
+
+  locator.registerFactory(
+    () => ItemsMenuViewBloc(
+      changeItemsMenuViewUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ChangeItemsMenuViewUseCase>(
+    () => ChangeItemsMenuViewUseCase(),
   );
 }

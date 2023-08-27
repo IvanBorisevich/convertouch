@@ -82,3 +82,19 @@ class UnitConverted extends UnitsConversionState {
     return 'UnitConverted{unitValue: $unitValue}';
   }
 }
+
+class UnitsConversionErrorState extends UnitsConversionState {
+  final String message;
+
+  const UnitsConversionErrorState({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() {
+    return 'UnitsConversionErrorState{message: $message}';
+  }
+}
