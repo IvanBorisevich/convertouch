@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
 abstract class UnitsState extends ConvertouchBlocState {
@@ -29,22 +29,22 @@ class UnitsFetched extends UnitsState {
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
-    this.markedUnits,
+    this.markedUnits = const [],
     this.newMarkedUnit,
-    this.addedUnit,
+    this.addedUnitId = -1,
     this.inputValue = "1",
     this.selectedUnit,
     this.action = ConvertouchAction.fetchUnitsToStartMark,
     this.useMarkedUnitsInConversion = false,
   });
 
-  final List<UnitEntity> units;
-  final UnitGroupEntity unitGroup;
-  final List<UnitEntity>? markedUnits;
-  final UnitEntity? newMarkedUnit;
-  final UnitEntity? addedUnit;
+  final List<UnitModel> units;
+  final UnitGroupModel unitGroup;
+  final List<UnitModel> markedUnits;
+  final UnitModel? newMarkedUnit;
+  final int addedUnitId;
   final String inputValue;
-  final UnitEntity? selectedUnit;
+  final UnitModel? selectedUnit;
   final ConvertouchAction action;
   final bool useMarkedUnitsInConversion;
 
@@ -55,14 +55,15 @@ class UnitsFetched extends UnitsState {
     inputValue,
     action,
     useMarkedUnitsInConversion,
+    markedUnits,
   ];
 
   @override
   String toString() {
     return 'UnitsFetched{'
-        //'units: $units, '
+        'units: $units, '
         'unitGroup: $unitGroup, '
-        'addedUnit: $addedUnit, '
+        'addedUnitId: $addedUnitId, '
         'inputValue: $inputValue, '
         'selectedUnit: $selectedUnit, '
         'markedUnits: $markedUnits, '
@@ -95,5 +96,21 @@ class UnitExists extends UnitsState {
   @override
   String toString() {
     return 'UnitExists{unitName: $unitName}';
+  }
+}
+
+class UnitsErrorState extends UnitsState {
+  final String message;
+
+  const UnitsErrorState({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() {
+    return 'UnitsErrorState{message: $message}';
   }
 }

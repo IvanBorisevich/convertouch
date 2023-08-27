@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
 import 'package:convertouch/presentation/pages/items_view/item_view_mode/menu_grid_item.dart';
 import 'package:convertouch/presentation/pages/items_view/item_view_mode/menu_list_item.dart';
@@ -14,7 +14,7 @@ class ConvertouchUnitItem extends ConvertouchItem {
     this.unitColors,
   ) : super.fromItem(item);
 
-  final UnitEntity unit;
+  final UnitModel unit;
   ConvertouchMenuItemColors unitColors;
 
   @override

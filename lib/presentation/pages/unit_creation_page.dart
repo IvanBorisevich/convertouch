@@ -1,10 +1,10 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
@@ -62,7 +62,7 @@ class _ConvertouchUnitCreationPageState
             padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 0),
             child: Column(children: [
               unitCreationBloc((unitCreationPrepared) {
-                UnitGroupEntity unitGroup = unitCreationPrepared.unitGroup;
+                UnitGroupModel unitGroup = unitCreationPrepared.unitGroup;
                 return ConvertouchItem.createItem(
                   unitGroup,
                   onTap: () {
@@ -121,12 +121,14 @@ class _ConvertouchUnitCreationPageState
                       duration: const Duration(milliseconds: 150),
                       reverse: !equivalentUnitVisible,
                       child: ConvertouchItem.createItem(
-                        UnitValueEntity(
-                          unit: UnitEntity(
-                              name: _unitName,
-                              abbreviation: _unitAbbr.isNotEmpty
-                                  ? _unitAbbr
-                                  : _unitAbbrHint),
+                        UnitValueModel(
+                          unit: UnitModel(
+                            name: _unitName,
+                            abbreviation: _unitAbbr.isNotEmpty
+                                ? _unitAbbr
+                                : _unitAbbrHint,
+                            unitGroupId: unitCreationPrepared.unitGroup.id,
+                          ),
                           value: "1",
                         ),
                       ).buildForList(),
@@ -136,7 +138,7 @@ class _ConvertouchUnitCreationPageState
                       duration: const Duration(milliseconds: 150),
                       reverse: !equivalentUnitVisible,
                       child: ConvertouchItem.createItem(
-                        UnitValueEntity(
+                        UnitValueModel(
                           unit: unitCreationPrepared.equivalentUnit!,
                           value: "1",
                         ),

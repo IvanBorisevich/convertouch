@@ -1,8 +1,14 @@
-import 'package:convertouch/domain/entities/failure_entity.dart';
-import 'package:dartz/dartz.dart';
+import 'package:convertouch/domain/model/failure.dart';
+import 'package:either_dart/either.dart';
 
 abstract class UseCase<InputType, OutputType> {
   const UseCase();
 
-  Future<Either<OutputType, FailureEntity>> execute({InputType input});
+  Future<Either<Failure, OutputType>> execute(InputType input);
+}
+
+abstract class UseCaseNoInput<OutputType> {
+  const UseCaseNoInput();
+
+  Future<Either<Failure, OutputType>> execute();
 }

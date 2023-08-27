@@ -1,5 +1,5 @@
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
 import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +15,12 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     super.key,
   });
 
-  final List<UnitValueEntity> convertedItems;
+  final List<UnitValueModel> convertedItems;
   final int sourceUnitId;
   final String sourceValue;
-  final UnitGroupEntity unitGroup;
-  final void Function(UnitValueEntity)? onItemTap;
-  final void Function(UnitValueEntity, String)? onItemValueChanged;
+  final UnitGroupModel unitGroup;
+  final void Function(UnitValueModel)? onItemTap;
+  final void Function(UnitValueModel, String)? onItemValueChanged;
 
   @override
   State createState() => _ConvertouchConversionItemsViewState();
@@ -39,7 +39,7 @@ class _ConvertouchConversionItemsViewState
       padding: const EdgeInsetsDirectional.fromSTEB(_listSpacingLeftRight,
           _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
       itemBuilder: (context, index) {
-        UnitValueEntity item = widget.convertedItems[index];
+        UnitValueModel item = widget.convertedItems[index];
         return unitsConversionBlocForItem(item, (item) {
           return ConvertouchItem.createItem(
             item,

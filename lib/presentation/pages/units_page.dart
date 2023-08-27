@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
@@ -46,7 +46,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 InitializeConversion(
                   inputValue: unitsFetched.inputValue,
                   inputUnit: unitsFetched.selectedUnit,
-                  conversionUnits: unitsFetched.markedUnits!,
+                  conversionUnits: unitsFetched.markedUnits,
                   unitGroup: unitsFetched.unitGroup,
                 ),
               );
@@ -76,7 +76,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                   BlocProvider.of<UnitCreationBloc>(context).add(
                     PrepareUnitCreation(
                       unitGroup: unitsFetched.unitGroup,
-                      equivalentUnit: item as UnitEntity,
+                      equivalentUnit: item as UnitModel,
                       markedUnits: unitsFetched.markedUnits,
                       action:
                           ConvertouchAction.updateEquivalentUnitForUnitCreation,
@@ -86,11 +86,11 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 case ConvertouchAction.fetchUnitsToSelectForConversion:
                   BlocProvider.of<UnitsConversionBloc>(context).add(
                     InitializeConversion(
-                      inputUnit: item as UnitEntity,
+                      inputUnit: item as UnitModel,
                       inputValue: unitsFetched.inputValue,
                       prevInputUnit: unitsFetched.selectedUnit,
                       unitGroup: unitsFetched.unitGroup,
-                      conversionUnits: unitsFetched.markedUnits!,
+                      conversionUnits: unitsFetched.markedUnits,
                     ),
                   );
                   break;
@@ -100,7 +100,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                   BlocProvider.of<UnitsBloc>(context).add(
                     FetchUnits(
                       unitGroupId: unitsFetched.unitGroup.id,
-                      newMarkedUnit: item as UnitEntity,
+                      newMarkedUnit: item as UnitModel,
                       markedUnits: unitsFetched.markedUnits,
                       action: ConvertouchAction.fetchUnitsToContinueMark,
                     ),

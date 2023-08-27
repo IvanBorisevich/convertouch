@@ -1,6 +1,6 @@
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/base_event.dart';
 
 abstract class UnitsConversionEvent extends ConvertouchEvent {
@@ -17,10 +17,10 @@ class InitializeConversion extends UnitsConversionEvent {
   });
 
   final String inputValue;
-  final UnitEntity? inputUnit;
-  final UnitEntity? prevInputUnit;
-  final List<UnitEntity> conversionUnits;
-  final UnitGroupEntity unitGroup;
+  final UnitModel? inputUnit;
+  final UnitModel? prevInputUnit;
+  final List<UnitModel> conversionUnits;
+  final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [
@@ -48,8 +48,8 @@ class ConvertUnitValue extends UnitsConversionEvent {
   });
 
   final String inputValue;
-  final UnitEntity inputUnit;
-  final List<UnitValueEntity> conversionItems;
+  final UnitModel inputUnit;
+  final List<UnitValueModel> conversionItems;
 
   @override
   List<Object> get props => [

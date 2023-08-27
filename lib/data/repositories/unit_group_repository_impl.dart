@@ -1,8 +1,9 @@
 import 'package:convertouch/data/dao/unit_group_dao.dart';
-import 'package:convertouch/domain/entities/failure_entity.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
+import 'package:convertouch/data/translators/unit_group_translator.dart';
+import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
-import 'package:dartz/dartz.dart';
+import 'package:either_dart/either.dart';
 
 class UnitGroupRepositoryImpl extends UnitGroupRepository {
   final UnitGroupDao unitGroupDao;
@@ -10,16 +11,42 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<List<UnitGroupEntity>, FailureEntity>> fetchUnitGroups() async {
+  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups() async {
     try {
       final result = await unitGroupDao.fetchUnitGroups();
-      return Left(
-        result.map((model) => model.toEntity()).toList(),
+      return Right(
+        result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
       );
-    } on Exception {
-      return const Right(
-        DatabaseFailureEntity("Error when fetching unit groups"),
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when fetching unit groups: $e"),
       );
     }
   }
+
+  @override
+  Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup) async {
+    try {
+      final result = await unitGroupDao
+          .addUnitGroup(UnitGroupTranslator.I.fromModel(unitGroup));
+      return Right(result);
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when adding a unit group: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, UnitGroupModel>> getUnitGroup(int unitGroupId) async {
+    try {
+      final result = await unitGroupDao.getUnitGroup(unitGroupId);
+      return Right(UnitGroupTranslator.I.toModel(result));
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when searching a unit group by id: $e"),
+      );
+    }
+  }
+
 }

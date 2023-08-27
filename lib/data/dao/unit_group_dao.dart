@@ -1,7 +1,11 @@
-import 'package:convertouch/data/models/unit_group_model.dart';
+import 'package:convertouch/data/entities/unit_group_entity.dart';
 
 abstract class UnitGroupDao {
   const UnitGroupDao();
 
-  Future<List<UnitGroupModel>> fetchUnitGroups();
+  Future<List<UnitGroupEntity>> fetchUnitGroups();
+
+  Future<int> addUnitGroup(UnitGroupEntity unitGroupEntity);
+
+  Future<UnitGroupEntity> getUnitGroup(int unitGroupId);
 }

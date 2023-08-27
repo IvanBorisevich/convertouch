@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/item_entity.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class ConvertouchMenuListItem extends StatefulWidget {
     this.markOnTap = false,
   });
 
-  final ItemModelWithIdName item;
+  final IdNameItemModel item;
   final Widget logo;
   final void Function()? onTap;
   final void Function()? onLongPress;

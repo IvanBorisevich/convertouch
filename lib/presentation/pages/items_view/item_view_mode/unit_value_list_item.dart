@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
 import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class ConvertouchUnitValueListItem extends StatefulWidget {
     super.key,
   });
 
-  final UnitValueEntity item;
+  final UnitValueModel item;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function(String)? onValueChanged;

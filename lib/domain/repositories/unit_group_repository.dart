@@ -1,9 +1,13 @@
-import 'package:convertouch/domain/entities/failure_entity.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:dartz/dartz.dart';
+import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:either_dart/either.dart';
 
 abstract class UnitGroupRepository {
   const UnitGroupRepository();
 
-  Future<Either<List<UnitGroupEntity>, FailureEntity>> fetchUnitGroups();
+  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups();
+
+  Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup);
+
+  Future<Either<Failure, UnitGroupModel>> getUnitGroup(int unitGroupId);
 }

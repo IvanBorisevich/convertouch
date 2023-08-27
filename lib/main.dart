@@ -49,8 +49,8 @@ class ConvertouchApp extends StatelessWidget {
               ),
             ),
         ),
-        BlocProvider(create: (context) => UnitsBloc()),
-        BlocProvider(create: (context) => UnitCreationBloc()),
+        BlocProvider(create: (context) => di.locator<UnitsBloc>()),
+        BlocProvider(create: (context) => di.locator<UnitCreationBloc>()),
       ],
       child: navigationListeners(
         MaterialApp(

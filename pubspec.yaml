@@ -39,7 +39,7 @@ dependencies:
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
   get_it: ^7.6.0
-  dartz: ^0.10.1
+  either_dart: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,27 @@
+import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+
+class UnitValueModel extends ItemModel {
+  const UnitValueModel({
+    required this.unit,
+    required this.value,
+  }) : super(
+          itemType: ItemType.unitValue,
+        );
+
+  final UnitModel unit;
+  final String value;
+
+  @override
+  List<Object> get props => [
+        itemType,
+        unit,
+        value,
+      ];
+
+  @override
+  String toString() {
+    return 'UnitValueModel{unit: $unit, value: $value}';
+  }
+}

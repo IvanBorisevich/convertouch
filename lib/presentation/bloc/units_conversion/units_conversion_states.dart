@@ -1,6 +1,6 @@
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
 abstract class UnitsConversionState extends ConvertouchBlocState {
@@ -34,9 +34,9 @@ class ConversionInitialized extends UnitsConversionState {
   });
 
   final String sourceUnitValue;
-  final UnitEntity sourceUnit;
-  final List<UnitValueEntity> conversionItems;
-  final UnitGroupEntity unitGroup;
+  final UnitModel sourceUnit;
+  final List<UnitValueModel> conversionItems;
+  final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [
@@ -70,7 +70,7 @@ class UnitConverted extends UnitsConversionState {
     required this.unitValue
   });
 
-  final UnitValueEntity unitValue;
+  final UnitValueModel unitValue;
 
   @override
   List<Object> get props => [

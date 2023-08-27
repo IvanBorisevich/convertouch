@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/item_entity.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +19,9 @@ class ConvertouchMenuItemsView extends StatefulWidget {
     super.key,
   });
 
-  final List<ItemModelWithIdName> items;
-  final void Function(ItemModelWithIdName)? onItemTap;
-  final List<ItemModelWithIdName>? markedItems;
+  final List<IdNameItemModel> items;
+  final void Function(IdNameItemModel)? onItemTap;
+  final List<IdNameItemModel>? markedItems;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
@@ -87,12 +87,12 @@ class ConvertouchItemsGrid extends StatelessWidget {
 
   static const int _numberOfItemsInRow = 4;
 
-  final List<ItemModelWithIdName> items;
-  final List<ItemModelWithIdName>? markedItems;
+  final List<IdNameItemModel> items;
+  final List<IdNameItemModel>? markedItems;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
-  final void Function(ItemModelWithIdName)? onItemTap;
+  final void Function(IdNameItemModel)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
   final double itemsSpacing;
@@ -138,12 +138,12 @@ class ConvertouchItemsList extends StatelessWidget {
     super.key,
   });
 
-  final List<ItemModelWithIdName> items;
-  final List<ItemModelWithIdName>? markedItems;
+  final List<IdNameItemModel> items;
+  final List<IdNameItemModel>? markedItems;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
-  final void Function(ItemModelWithIdName)? onItemTap;
+  final void Function(IdNameItemModel)? onItemTap;
   final bool removalModeEnabled;
   final bool markItemsOnTap;
   final double itemsSpacing;
@@ -198,12 +198,12 @@ class ConvertouchItemsEmptyView extends StatelessWidget {
 }
 
 ConvertouchItem _buildItem(
-  ItemModelWithIdName item,
-  List<ItemModelWithIdName>? markedItems,
+  IdNameItemModel item,
+  List<IdNameItemModel>? markedItems,
   bool showMarkedItems,
   int? selectedItemId,
   bool showSelectedItem,
-  void Function(ItemModelWithIdName)? onItemTap,
+  void Function(IdNameItemModel)? onItemTap,
   bool markOnTap,
 ) {
   bool isMarkedToSelect = markedItems != null && markedItems.contains(item);

@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/item_entity.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/pages/items_view/item/unit_group_item.dart';
 import 'package:convertouch/presentation/pages/items_view/item/unit_item.dart';
@@ -46,7 +46,7 @@ class ConvertouchItem {
   }
 
   factory ConvertouchItem.createItem(
-    ItemEntity item, {
+    ItemModel item, {
     void Function()? onTap,
     void Function()? onLongPress,
     void Function(String)? onValueChanged,
@@ -72,7 +72,7 @@ class ConvertouchItem {
             ? itemColors as ConvertouchMenuItemColors
             : unitGroupItemColors[ConvertouchUITheme.light]!;
         return ConvertouchUnitGroupItem(
-          item as UnitGroupEntity,
+          item as UnitGroupModel,
           baseItem,
           unitGroupColors,
         );
@@ -81,7 +81,7 @@ class ConvertouchItem {
             ? itemColors as ConvertouchMenuItemColors
             : unitItemColors[ConvertouchUITheme.light]!;
         return ConvertouchUnitItem(
-          item as UnitEntity,
+          item as UnitModel,
           baseItem,
           unitColors,
         );
@@ -90,7 +90,7 @@ class ConvertouchItem {
             ? itemColors as ConvertouchConversionItemColors
             : conversionItemColors[ConvertouchUITheme.light]!;
         return ConvertouchConversionItem(
-          item as UnitValueEntity,
+          item as UnitValueModel,
           baseItem,
           conversionColors,
         );

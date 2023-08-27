@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
 abstract class UnitGroupsState extends ConvertouchBlocState {
@@ -28,22 +28,25 @@ class UnitGroupsFetching extends UnitGroupsState {
 class UnitGroupsFetched extends UnitGroupsState {
   const UnitGroupsFetched({
     required this.unitGroups,
-    this.selectedUnitGroupId,
-    this.addedUnitGroup,
-    this.markedUnits,
+    this.selectedUnitGroupId = -1,
+    this.addedUnitGroupId = -1,
+    this.markedUnits = const [],
     this.action = ConvertouchAction.fetchUnitGroupsToSelectForUnitsFetching,
   });
 
-  final List<UnitGroupEntity> unitGroups;
-  final int? selectedUnitGroupId;
-  final UnitGroupEntity? addedUnitGroup;
-  final List<UnitEntity>? markedUnits;
+  final List<UnitGroupModel> unitGroups;
+  final int selectedUnitGroupId;
+  final int addedUnitGroupId;
+  final List<UnitModel> markedUnits;
   final ConvertouchAction action;
 
   @override
   List<Object> get props => [
     unitGroups,
-    action
+    action,
+    selectedUnitGroupId,
+    addedUnitGroupId,
+    markedUnits,
   ];
 
   @override
@@ -51,7 +54,7 @@ class UnitGroupsFetched extends UnitGroupsState {
     return 'UnitGroupsFetched{'
         'unitsGroups: $unitGroups, '
         'selectedUnitGroupId: $selectedUnitGroupId, '
-        'addedUnitGroup: $addedUnitGroup, '
+        'addedUnitGroupId: $addedUnitGroupId, '
         'markedUnits: $markedUnits, '
         'action: $action}';
   }
@@ -85,7 +88,7 @@ class UnitGroupSelected extends UnitGroupsState {
     required this.unitGroup
   });
 
-  final UnitGroupEntity unitGroup;
+  final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [unitGroup];
@@ -105,4 +108,9 @@ class UnitGroupsErrorState extends UnitGroupsState {
 
   @override
   List<Object> get props => [message];
+
+  @override
+  String toString() {
+    return 'UnitGroupsErrorState{message: $message}';
+  }
 }

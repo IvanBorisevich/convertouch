@@ -1,16 +1,16 @@
 import 'package:convertouch/domain/constants.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class ItemEntity extends Equatable {
-  const ItemEntity({
+abstract class ItemModel extends Equatable {
+  const ItemModel({
     required this.itemType
   });
 
   final ItemType itemType;
 }
 
-abstract class ItemModelWithIdName extends ItemEntity {
-  const ItemModelWithIdName({
+abstract class IdNameItemModel extends ItemModel {
+  const IdNameItemModel({
     required this.id,
     required this.name,
     required ItemType itemType

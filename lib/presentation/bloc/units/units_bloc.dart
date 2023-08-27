@@ -1,7 +1,8 @@
-import 'package:convertouch/data/dao/db/unit_group_db_dao_impl.dart';
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
+import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
+import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/bloc/units/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,111 +10,117 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
   static const int _minUnitsNumToSelect = 2;
 
-  UnitsBloc() : super(const UnitsInitState());
+  final GetUnitGroupUseCase getUnitGroupUseCase;
+  final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
+  final AddUnitUseCase addUnitUseCase;
+
+  UnitsBloc({
+    required this.getUnitGroupUseCase,
+    required this.fetchUnitsOfGroupUseCase,
+    required this.addUnitUseCase,
+  }) : super(const UnitsInitState());
 
   @override
   Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
     if (event is FetchUnits) {
       yield const UnitsFetching();
-      UnitGroupEntity unitGroup = getUnitGroup(event.unitGroupId);
-
-      List<UnitEntity> markedUnits = event.markedUnits ?? [];
-      UnitEntity? selectedUnit;
-
-      if (event.action != ConvertouchAction.fetchUnitsToSelectForUnitCreation) {
-        selectedUnit = event.selectedUnit;
-
-        if (event.newMarkedUnit != null) {
-          if (!markedUnits.contains(event.newMarkedUnit)) {
-            markedUnits.add(event.newMarkedUnit!);
-          } else {
-            markedUnits.removeWhere((unit) => unit == event.newMarkedUnit);
-          }
-        }
-      } else {
-        selectedUnit =
-            event.selectedUnit ?? (allUnits.isNotEmpty ? allUnits[0] : null);
-      }
-
-      yield UnitsFetched(
-        units: allUnits,
-        unitGroup: unitGroup,
-        markedUnits: markedUnits,
-        newMarkedUnit: event.newMarkedUnit,
-        inputValue: event.inputValue ?? "1",
-        selectedUnit: selectedUnit,
-        action: event.action,
-        useMarkedUnitsInConversion: markedUnits.length >= _minUnitsNumToSelect,
+      final fetchUnitsOfGroupResult = await fetchUnitsOfGroupUseCase.execute(
+        event.unitGroupId,
       );
+
+      if (fetchUnitsOfGroupResult.isLeft) {
+        yield UnitsErrorState(message: fetchUnitsOfGroupResult.left.message);
+      } else {
+        final unitGroupCaseResult =
+            await getUnitGroupUseCase.execute(event.unitGroupId);
+
+        if (unitGroupCaseResult.isLeft) {
+          yield UnitsErrorState(message: unitGroupCaseResult.left.message);
+        } else {
+          List<UnitModel> unitsOfGroup = fetchUnitsOfGroupResult.right;
+
+          List<UnitModel> markedUnits = _updateMarkedUnits(
+            event.markedUnits,
+            event.newMarkedUnit,
+            event.action,
+          );
+
+          UnitModel? selectedUnit = event.selectedUnit;
+          if (selectedUnit == null &&
+              event.action ==
+                  ConvertouchAction.fetchUnitsToSelectForUnitCreation) {
+            selectedUnit = unitsOfGroup.first;
+          }
+
+          yield UnitsFetched(
+            units: unitsOfGroup,
+            unitGroup: unitGroupCaseResult.right,
+            markedUnits: markedUnits,
+            newMarkedUnit: event.newMarkedUnit,
+            inputValue: event.inputValue ?? "1",
+            selectedUnit: selectedUnit,
+            action: event.action,
+            useMarkedUnitsInConversion:
+                markedUnits.length >= _minUnitsNumToSelect,
+          );
+        }
+      }
     } else if (event is AddUnit) {
       yield const UnitChecking();
 
-      bool unitExists = allUnits.any((unit) => unit.name == event.unitName);
+      final addUnitResult = await addUnitUseCase.execute(
+        UnitModel(
+          name: event.unitName,
+          abbreviation: event.unitAbbreviation,
+          unitGroupId: event.unitGroup.id,
+        ),
+      );
 
-      if (unitExists) {
-        yield UnitExists(unitName: event.unitName);
-      } else {
-        yield const UnitsFetching();
-
-        UnitEntity newUnit = UnitEntity(
-            id: allUnits.length + 1,
-            name: event.unitName,
-            abbreviation: event.unitAbbreviation);
-
-        allUnits.add(newUnit);
-
-        bool useMarkedUnitsInConversion =
-            (event.markedUnits ?? []).length >= _minUnitsNumToSelect;
-
-        yield UnitsFetched(
-          units: allUnits,
-          unitGroup: event.unitGroup,
-          markedUnits: event.markedUnits,
-          addedUnit: newUnit,
-          useMarkedUnitsInConversion: useMarkedUnitsInConversion,
+      if (addUnitResult.isLeft) {
+        yield UnitsErrorState(
+          message: addUnitResult.left.message,
         );
+      } else {
+        int addedUnitId = addUnitResult.right;
+        if (addedUnitId > -1) {
+          yield const UnitsFetching();
+
+          final fetchUnitsOfGroupResult =
+              await fetchUnitsOfGroupUseCase.execute(event.unitGroup.id);
+          yield fetchUnitsOfGroupResult.fold(
+            (error) => UnitsErrorState(
+              message: error.message,
+            ),
+            (unitsOfGroup) => UnitsFetched(
+              units: unitsOfGroup,
+              unitGroup: event.unitGroup,
+              markedUnits: event.markedUnits,
+              addedUnitId: addedUnitId,
+              useMarkedUnitsInConversion:
+                  event.markedUnits.length >= _minUnitsNumToSelect,
+            ),
+          );
+        } else {
+          yield UnitExists(unitName: event.unitName);
+        }
       }
     }
   }
-}
 
-List<UnitEntity> getUnits(List<int> selectedUnitIds) {
-  if (selectedUnitIds.isNotEmpty) {
-    return allUnits.where((unit) => selectedUnitIds.contains(unit.id)).toList();
+  List<UnitModel> _updateMarkedUnits(
+    List<UnitModel>? markedUnits,
+    UnitModel? markedUnit,
+    ConvertouchAction action,
+  ) {
+    List<UnitModel> resultMarkedUnits = List.from(markedUnits ?? []);
+    if (action != ConvertouchAction.fetchUnitsToSelectForUnitCreation &&
+        markedUnit != null) {
+      if (!resultMarkedUnits.contains(markedUnit)) {
+        resultMarkedUnits.add(markedUnit);
+      } else {
+        resultMarkedUnits.removeWhere((unit) => unit == markedUnit);
+      }
+    }
+    return resultMarkedUnits;
   }
-  return [];
 }
-
-UnitEntity? getUnit(int? unitId) {
-  return unitId != null
-      ? allUnits.firstWhere((unit) => unit.id == unitId)
-      : null;
-}
-
-UnitGroupEntity getUnitGroup(int unitGroupId) {
-  return allUnitGroups.firstWhere((unitModel) => unitModel.id == unitGroupId).toEntity();
-}
-
-final List<UnitEntity> allUnits = [
-  UnitEntity(id: 1, name: 'Centimeter', abbreviation: 'cm'),
-  UnitEntity(id: 2, name: 'Centimeter Square', abbreviation: 'cm2'),
-  UnitEntity(id: 3, name: 'Centimeter Square', abbreviation: 'mm2'),
-  UnitEntity(id: 4, name: 'Meter', abbreviation: 'm'),
-  UnitEntity(id: 5, name: 'Centimeter Square', abbreviation: 'mm3'),
-  UnitEntity(id: 6, name: 'Centimeter Square', abbreviation: 'cm2'),
-  UnitEntity(id: 7, name: 'Centimeter', abbreviation: 'cm'),
-  // UnitModel(8, 'Centimeter Square', 'mm4'),
-  // UnitModel(9, 'Centimeter Square', 'cm2'),
-  // UnitModel(10, 'Centimeter', 'cm'),
-  // UnitModel(11, 'Centimeter Square2 g uygtyfty tyf tyf ygf tyfyt t', 'km/h'),
-  // UnitModel(12, 'Centimeter Square hhhh hhhhhhhh', 'cm2'),
-  // UnitModel(13, 'Centimeter', 'cm'),
-  // UnitModel(14, 'Centimeter Square', 'cm2'),
-  // UnitModel(15, 'Centimeter Square', 'cm2'),
-  // UnitModel(16, 'Centimeter', 'cm'),
-  // UnitModel(17, 'Centimeter Square', 'cm2'),
-  // UnitModel(18, 'Centimeter Square', 'cm2'),
-  // UnitModel(19, 'Centimeter', 'cm'),
-  // UnitModel(20, 'Centimeter Square', 'cm2'),
-  // UnitModel(21, 'Centimeter Square', 'cm2'),
-];

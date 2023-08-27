@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_events.dart';
@@ -52,7 +52,7 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                 case ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation:
                   BlocProvider.of<UnitCreationBloc>(context).add(
                     PrepareUnitCreation(
-                      unitGroup: item as UnitGroupEntity,
+                      unitGroup: item as UnitGroupModel,
                       markedUnits: unitGroupsFetched.markedUnits,
                       action: ConvertouchAction.updateUnitGroupForUnitCreation,
                     ),

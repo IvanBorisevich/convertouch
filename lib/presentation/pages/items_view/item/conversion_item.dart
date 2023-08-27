@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/entities/unit_value_entity.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
 import 'package:convertouch/presentation/pages/items_view/item_view_mode/unit_value_list_item.dart';
 import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
@@ -11,7 +11,7 @@ class ConvertouchConversionItem extends ConvertouchItem {
     this.conversionColors,
   ) : super.fromItem(baseItem);
 
-  final UnitValueEntity unitValue;
+  final UnitValueModel unitValue;
   final ConvertouchConversionItemColors conversionColors;
 
   @override

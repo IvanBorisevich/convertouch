@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/entities/unit_entity.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
 abstract class UnitCreationState extends ConvertouchBlocState {
@@ -29,17 +29,17 @@ class UnitCreationPrepared extends UnitCreationState {
   const UnitCreationPrepared({
     required this.unitGroup,
     this.equivalentUnit,
-    this.markedUnits,
+    this.markedUnits = const [],
     this.action = ConvertouchAction.initUnitCreationParams,
   });
 
-  final UnitGroupEntity unitGroup;
-  final UnitEntity? equivalentUnit;
-  final List<UnitEntity>? markedUnits;
+  final UnitGroupModel unitGroup;
+  final UnitModel? equivalentUnit;
+  final List<UnitModel> markedUnits;
   final ConvertouchAction action;
 
   @override
-  List<Object> get props => [unitGroup, action];
+  List<Object> get props => [unitGroup, action, markedUnits];
 
   @override
   String toString() {
@@ -48,5 +48,21 @@ class UnitCreationPrepared extends UnitCreationState {
         'equivalentUnit: $equivalentUnit, '
         'markedUnits: $markedUnits, '
         'action: $action}';
+  }
+}
+
+class UnitCreationErrorState extends UnitCreationState {
+  final String message;
+
+  const UnitCreationErrorState({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() {
+    return 'UnitCreationErrorState{message: $message}';
   }
 }
