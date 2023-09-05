@@ -8,7 +8,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   const ConvertouchConversionItemsView(
     this.convertedItems, {
     required this.sourceUnitId,
-    required this.sourceValue,
+    this.sourceValue,
     required this.unitGroup,
     this.onItemTap,
     this.onItemValueChanged,
@@ -17,7 +17,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
   final List<UnitValueModel> convertedItems;
   final int sourceUnitId;
-  final String sourceValue;
+  final double? sourceValue;
   final UnitGroupModel unitGroup;
   final void Function(UnitValueModel)? onItemTap;
   final void Function(UnitValueModel, String)? onItemValueChanged;
@@ -36,9 +36,17 @@ class _ConvertouchConversionItemsViewState
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsetsDirectional.fromSTEB(_listSpacingLeftRight,
-          _listSpacingTop, _listSpacingLeftRight, _listSpacingBottom),
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        _listSpacingLeftRight,
+        _listSpacingTop,
+        _listSpacingLeftRight,
+        _listSpacingBottom,
+      ),
       itemBuilder: (context, index) {
+        /*
+        TODO: change logic to distinguish update conversion item (from bloc)
+         and replace it with widget.convertedItems[index]
+         */
         UnitValueModel item = widget.convertedItems[index];
         return unitsConversionBlocForItem(item, (item) {
           return ConvertouchItem.createItem(
@@ -53,13 +61,13 @@ class _ConvertouchConversionItemsViewState
         });
       },
       separatorBuilder: (context, index) => Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(
-              _listItemSpacing,
-              _listItemSpacing,
-              _listItemSpacing,
-              index == widget.convertedItems.length - 1
-                  ? _listItemSpacing
-                  : 0)),
+        padding: EdgeInsetsDirectional.fromSTEB(
+          _listItemSpacing,
+          _listItemSpacing,
+          _listItemSpacing,
+          index == widget.convertedItems.length - 1 ? _listItemSpacing : 0,
+        ),
+      ),
       itemCount: widget.convertedItems.length,
     );
   }

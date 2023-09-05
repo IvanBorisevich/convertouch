@@ -20,7 +20,7 @@ class UnitsConversionBloc
     if (event is InitializeConversion) {
       yield const ConversionInitializing();
       UnitModel inputUnit = event.inputUnit ?? event.conversionUnits[0];
-      String inputValue = event.inputValue;
+      double? inputValue = event.inputValue;
 
       UnitValueModel inputUnitValue = UnitValueModel(
         unit: inputUnit,
@@ -60,13 +60,13 @@ class UnitsConversionBloc
     } else if (event is ConvertUnitValue) {
       UnitValueModel inputUnitValue = UnitValueModel(
         unit: event.inputUnit,
-        value: event.inputValue,
+        value: double.tryParse(event.inputValue),
       );
 
       for (UnitValueModel conversionItem in event.conversionItems) {
-        if (conversionItem.unit != event.inputUnit) {
-          yield const UnitConverting();
+        yield const UnitConverting();
 
+        if (conversionItem.unit != event.inputUnit) {
           final conversionResult = await convertUnitValueUseCase.execute(
             UnitConversionInput(
               inputUnitValue: inputUnitValue,
@@ -84,6 +84,10 @@ class UnitsConversionBloc
               unitValue: conversionResult.right,
             );
           }
+        } else {
+          yield UnitConverted(
+            unitValue: inputUnitValue,
+          );
         }
       }
     }

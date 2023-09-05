@@ -7,18 +7,18 @@ class UnitValueModel extends ItemModel {
     required this.unit,
     required this.value,
   }) : super(
-          itemType: ItemType.unitValue,
-        );
+    itemType: ItemType.unitValue,
+  );
 
   final UnitModel unit;
-  final String value;
+  final double? value;
 
   @override
-  List<Object> get props => [
-        itemType,
-        unit,
-        value,
-      ];
+  List<Object?> get props => [
+    itemType,
+    unit,
+    value,
+  ];
 
   @override
   String toString() {

@@ -63,7 +63,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       keyboardType: widget.keyboardType,
       autofocus: widget.autofocus,
       focusNode: _focusNode,
-      controller: widget.controller,
+      controller: widget.controller?..selection = TextSelection.collapsed(
+        offset: widget.controller?.text.length ?? 0,
+      ),
       inputFormatters: widget.inputFormatters,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
@@ -104,7 +106,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         counterText: "",
         suffixText: widget.textLengthCounterVisible
-            ? '${widget.controller?.text.length.toString()}/$_maxTextLengthStr'
+            ? '${widget.controller?.text.length}/$_maxTextLengthStr'
             : null,
       ),
       style: TextStyle(

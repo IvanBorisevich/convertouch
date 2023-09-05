@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/utils/unit_value_util.dart';
 import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
 import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +34,20 @@ class _ConvertouchUnitValueListItemState
   static const BorderRadius _elementsBorderRadius =
       BorderRadius.all(Radius.circular(8));
 
-  bool _isFocused = false;
+  final _unitValueController = TextEditingController();
+
+  late bool _isFocused;
   late Color _borderColor;
   late Color _unitButtonBackgroundColor;
   late Color _unitButtonTextColor;
+  late String _rawUnitValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFocused = false;
+    _rawUnitValue = formatValue(widget.item.value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +62,15 @@ class _ConvertouchUnitValueListItemState
       _unitButtonTextColor = itemColors.unitButtonTextColor;
     }
 
+    if (!_isFocused) {
+      _rawUnitValue = formatValue(widget.item.value);
+      _unitValueController.text = formatValueInScientificNotation(
+        widget.item.value,
+      );
+    }
+
+    print("widget value: ${widget.item.value}, is focused: $_isFocused, rawUnitValue: $_rawUnitValue, contr text: ${_unitValueController.text}");
+
     return Container(
       height: _containerHeight,
       decoration: const BoxDecoration(
@@ -62,15 +82,22 @@ class _ConvertouchUnitValueListItemState
           Expanded(
             child: ConvertouchTextBox(
               label: widget.item.unit.name,
-              controller: TextEditingController(text: widget.item.value),
+              controller: _unitValueController,
               inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)')),
               ],
-              keyboardType: const TextInputType.numberWithOptions(signed: true),
-              onChanged: widget.onValueChanged,
+              keyboardType: const TextInputType.numberWithOptions(
+                signed: false,
+                decimal: true,
+              ),
+              onChanged: (value) {
+                _rawUnitValue = value;
+                widget.onValueChanged?.call(value);
+              },
               onFocusSelected: () {
                 setState(() {
                   _isFocused = true;
+                  _unitValueController.text = _rawUnitValue;
                 });
               },
               onFocusLeft: () {

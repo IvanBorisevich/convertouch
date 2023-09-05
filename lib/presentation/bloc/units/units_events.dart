@@ -19,7 +19,7 @@ class FetchUnits extends UnitsEvent {
 
   final int unitGroupId;
   final UnitModel? selectedUnit;
-  final String? inputValue;
+  final double? inputValue;
   final UnitModel? newMarkedUnit;
   final List<UnitModel> markedUnits;
   final ConvertouchAction action;

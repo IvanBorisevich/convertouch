@@ -129,7 +129,7 @@ class _ConvertouchUnitCreationPageState
                                 : _unitAbbrHint,
                             unitGroupId: unitCreationPrepared.unitGroup.id,
                           ),
-                          value: "1",
+                          value: 1,
                         ),
                       ).buildForList(),
                     ),
@@ -140,7 +140,7 @@ class _ConvertouchUnitCreationPageState
                       child: ConvertouchItem.createItem(
                         UnitValueModel(
                           unit: unitCreationPrepared.equivalentUnit!,
-                          value: "1",
+                          value: 1,
                         ),
                         onTap: () {
                           FocusScope.of(context).unfocus();

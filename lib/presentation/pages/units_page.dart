@@ -44,7 +44,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             onPressedFunc: () {
               BlocProvider.of<UnitsConversionBloc>(context).add(
                 InitializeConversion(
-                  inputValue: unitsFetched.inputValue,
+                  inputValue: unitsFetched.inputValue ?? 1,
                   inputUnit: unitsFetched.selectedUnit,
                   conversionUnits: unitsFetched.markedUnits,
                   unitGroup: unitsFetched.unitGroup,

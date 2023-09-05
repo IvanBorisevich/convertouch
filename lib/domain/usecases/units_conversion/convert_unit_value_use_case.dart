@@ -12,15 +12,16 @@ class ConvertUnitValueUseCase
   ) async {
     return Future(() {
       try {
-        double inputValue = double.parse(input.inputUnitValue.value);
+        double? inputValue = input.inputUnitValue.value;
         double inputUnitCoefficient = input.inputUnitValue.unit.coefficient;
         double targetUnitCoefficient = input.targetUnit.coefficient;
-        double targetValue =
-            inputValue * inputUnitCoefficient / targetUnitCoefficient;
+        double? targetValue = inputValue != null
+            ? inputValue * inputUnitCoefficient / targetUnitCoefficient
+            : null;
         return Right(
           UnitValueModel(
             unit: input.targetUnit,
-            value: targetValue.toString(),
+            value: targetValue,
           ),
         );
       } catch (e) {

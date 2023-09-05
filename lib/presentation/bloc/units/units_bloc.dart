@@ -57,7 +57,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
             unitGroup: unitGroupCaseResult.right,
             markedUnits: markedUnits,
             newMarkedUnit: event.newMarkedUnit,
-            inputValue: event.inputValue ?? "1",
+            inputValue: event.inputValue,
             selectedUnit: selectedUnit,
             action: event.action,
             useMarkedUnitsInConversion:

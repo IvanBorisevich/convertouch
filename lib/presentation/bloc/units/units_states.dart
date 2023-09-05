@@ -32,7 +32,7 @@ class UnitsFetched extends UnitsState {
     this.markedUnits = const [],
     this.newMarkedUnit,
     this.addedUnitId = -1,
-    this.inputValue = "1",
+    this.inputValue,
     this.selectedUnit,
     this.action = ConvertouchAction.fetchUnitsToStartMark,
     this.useMarkedUnitsInConversion = false,
@@ -43,7 +43,7 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> markedUnits;
   final UnitModel? newMarkedUnit;
   final int addedUnitId;
-  final String inputValue;
+  final double? inputValue;
   final UnitModel? selectedUnit;
   final ConvertouchAction action;
   final bool useMarkedUnitsInConversion;
@@ -52,7 +52,6 @@ class UnitsFetched extends UnitsState {
   List<Object> get props => [
     units,
     unitGroup,
-    inputValue,
     action,
     useMarkedUnitsInConversion,
     markedUnits,

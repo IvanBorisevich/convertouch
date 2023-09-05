@@ -9,14 +9,14 @@ abstract class UnitsConversionEvent extends ConvertouchEvent {
 
 class InitializeConversion extends UnitsConversionEvent {
   const InitializeConversion({
-    this.inputValue = "1",
+    this.inputValue,
     this.inputUnit,
     this.prevInputUnit,
     required this.conversionUnits,
     required this.unitGroup,
   });
 
-  final String inputValue;
+  final double? inputValue;
   final UnitModel? inputUnit;
   final UnitModel? prevInputUnit;
   final List<UnitModel> conversionUnits;
@@ -24,7 +24,6 @@ class InitializeConversion extends UnitsConversionEvent {
 
   @override
   List<Object> get props => [
-    inputValue,
     conversionUnits,
     unitGroup,
   ];
@@ -42,7 +41,7 @@ class InitializeConversion extends UnitsConversionEvent {
 
 class ConvertUnitValue extends UnitsConversionEvent {
   const ConvertUnitValue({
-    this.inputValue = "1",
+    required this.inputValue,
     required this.inputUnit,
     required this.conversionItems,
   });
