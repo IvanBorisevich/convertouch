@@ -57,39 +57,6 @@ class UnitsConversionBloc
           unitGroup: event.unitGroup,
         );
       }
-    } else if (event is ConvertUnitValue) {
-      UnitValueModel inputUnitValue = UnitValueModel(
-        unit: event.inputUnit,
-        value: double.tryParse(event.inputValue),
-      );
-
-      for (UnitValueModel conversionItem in event.conversionItems) {
-        yield const UnitConverting();
-
-        if (conversionItem.unit != event.inputUnit) {
-          final conversionResult = await convertUnitValueUseCase.execute(
-            UnitConversionInput(
-              inputUnitValue: inputUnitValue,
-              targetUnit: conversionItem.unit,
-            ),
-          );
-
-          if (conversionResult.isLeft) {
-            yield UnitsConversionErrorState(
-              message: conversionResult.left.message,
-            );
-            break;
-          } else {
-            yield UnitConverted(
-              unitValue: conversionResult.right,
-            );
-          }
-        } else {
-          yield UnitConverted(
-            unitValue: inputUnitValue,
-          );
-        }
-      }
     }
   }
 }

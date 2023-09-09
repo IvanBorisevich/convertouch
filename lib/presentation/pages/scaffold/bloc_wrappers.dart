@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
@@ -49,23 +48,6 @@ Widget unitGroupsBloc(
   );
 }
 
-Widget unitGroupsBlocForItem(
-  Widget Function(UnitGroupSelected unitGroupSelected) builderFunc,
-) {
-  return BlocBuilder<UnitGroupsBloc, UnitGroupsState>(
-    buildWhen: (prev, next) {
-      return prev != next && next is UnitGroupSelected;
-    },
-    builder: (_, unitGroupSelected) {
-      if (unitGroupSelected is UnitGroupSelected) {
-        return builderFunc.call(unitGroupSelected);
-      } else {
-        return empty();
-      }
-    },
-  );
-}
-
 Widget unitCreationBloc(
   Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc,
 ) {
@@ -106,27 +88,6 @@ Widget unitsConversionBloc(
     },
     builder: (_, conversionInitialized) {
       return builderFunc.call(conversionInitialized);
-    },
-  );
-}
-
-Widget unitsConversionBlocForItem(
-  UnitValueModel item,
-  Widget Function(UnitValueModel item) builderFunc,
-) {
-  return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
-    buildWhen: (prev, next) {
-      return prev != next &&
-          next is UnitConverted &&
-          next.unitValue.unit.id == item.unit.id;
-    },
-    builder: (_, unitConverted) {
-      if (unitConverted is UnitConverted &&
-          unitConverted.unitValue.unit.id == item.unit.id) {
-        return builderFunc.call(unitConverted.unitValue);
-      } else {
-        return builderFunc.call(item);
-      }
     },
   );
 }

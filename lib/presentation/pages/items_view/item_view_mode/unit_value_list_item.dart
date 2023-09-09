@@ -69,8 +69,6 @@ class _ConvertouchUnitValueListItemState
       );
     }
 
-    print("widget value: ${widget.item.value}, is focused: $_isFocused, rawUnitValue: $_rawUnitValue, contr text: ${_unitValueController.text}");
-
     return Container(
       height: _containerHeight,
       decoration: const BoxDecoration(

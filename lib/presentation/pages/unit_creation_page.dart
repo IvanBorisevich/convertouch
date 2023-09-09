@@ -114,7 +114,8 @@ class _ConvertouchUnitCreationPageState
                       duration: const Duration(milliseconds: 150),
                       reverse: !equivalentUnitVisible,
                       child: _horizontalDividerWithText(
-                          "Set unit value equivalent"),
+                        "Set unit value equivalent",
+                      ),
                     ),
                     const SizedBox(height: 25),
                     ConvertouchFadeScaleAnimation(

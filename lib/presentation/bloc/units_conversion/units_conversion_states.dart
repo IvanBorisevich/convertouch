@@ -55,33 +55,6 @@ class ConversionInitialized extends UnitsConversionState {
   }
 }
 
-class UnitConverting extends UnitsConversionState {
-  const UnitConverting();
-
-  @override
-  String toString() {
-    return 'UnitConverting{}';
-  }
-}
-
-class UnitConverted extends UnitsConversionState {
-  const UnitConverted({
-    required this.unitValue
-  });
-
-  final UnitValueModel unitValue;
-
-  @override
-  List<Object> get props => [
-    unitValue
-  ];
-
-  @override
-  String toString() {
-    return 'UnitConverted{unitValue: $unitValue}';
-  }
-}
-
 class UnitsConversionErrorState extends UnitsConversionState {
   final String message;
 

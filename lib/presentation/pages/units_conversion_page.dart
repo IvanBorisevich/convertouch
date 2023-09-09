@@ -66,10 +66,13 @@ class _ConvertouchUnitsConversionPageState
             },
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
-                ConvertUnitValue(
-                  inputValue: value,
+                InitializeConversion(
+                  inputValue: double.tryParse(value),
                   inputUnit: item.unit,
-                  conversionItems: conversionInitialized.conversionItems,
+                  conversionUnits: conversionInitialized.conversionItems
+                      .map((item) => item.unit)
+                      .toList(),
+                  unitGroup: conversionInitialized.unitGroup,
                 ),
               );
             },

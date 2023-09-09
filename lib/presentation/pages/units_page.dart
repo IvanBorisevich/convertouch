@@ -99,6 +99,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 default:
                   BlocProvider.of<UnitsBloc>(context).add(
                     FetchUnits(
+                      inputValue: unitsFetched.inputValue,
                       unitGroupId: unitsFetched.unitGroup.id,
                       newMarkedUnit: item as UnitModel,
                       markedUnits: unitsFetched.markedUnits,

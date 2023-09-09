@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
-import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
@@ -43,22 +42,16 @@ class _ConvertouchConversionItemsViewState
         _listSpacingBottom,
       ),
       itemBuilder: (context, index) {
-        /*
-        TODO: change logic to distinguish update conversion item (from bloc)
-         and replace it with widget.convertedItems[index]
-         */
         UnitValueModel item = widget.convertedItems[index];
-        return unitsConversionBlocForItem(item, (item) {
-          return ConvertouchItem.createItem(
-            item,
-            onTap: () {
-              widget.onItemTap?.call(item);
-            },
-            onValueChanged: (String value) {
-              widget.onItemValueChanged?.call(item, value);
-            },
-          ).buildForList();
-        });
+        return ConvertouchItem.createItem(
+          item,
+          onTap: () {
+            widget.onItemTap?.call(item);
+          },
+          onValueChanged: (String value) {
+            widget.onItemValueChanged?.call(item, value);
+          },
+        ).buildForList();
       },
       separatorBuilder: (context, index) => Padding(
         padding: EdgeInsetsDirectional.fromSTEB(
