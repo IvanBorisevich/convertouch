@@ -44,16 +44,27 @@ class AddUnit extends UnitsEvent {
     required this.unitName,
     required this.unitAbbreviation,
     required this.unitGroup,
+    required this.newUnitValue,
+    required this.equivalentUnit,
+    required this.equivalentUnitValue,
     this.markedUnits = const [],
   });
 
   final String unitName;
   final String unitAbbreviation;
   final UnitGroupModel unitGroup;
+  final double newUnitValue;
+  final UnitModel equivalentUnit;
+  final double equivalentUnitValue;
   final List<UnitModel> markedUnits;
 
   @override
-  List<Object> get props => [unitName, unitAbbreviation, unitGroup];
+  List<Object> get props => [
+    unitName,
+    unitAbbreviation,
+    unitGroup,
+    equivalentUnit,
+  ];
 
   @override
   String toString() {
@@ -61,6 +72,9 @@ class AddUnit extends UnitsEvent {
         'unitName: $unitName, '
         'unitAbbreviation: $unitAbbreviation, '
         'unitGroup: $unitGroup, '
+        'newUnitValue: $newUnitValue, '
+        'equivalentUnit: $equivalentUnit, '
+        'equivalentUnitValue: $equivalentUnitValue, '
         'markedUnits: $markedUnits}';
   }
 }

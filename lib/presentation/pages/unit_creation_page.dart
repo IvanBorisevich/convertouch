@@ -31,6 +31,9 @@ class _ConvertouchUnitCreationPageState
   String _unitAbbr = "";
   String _unitAbbrHint = "";
 
+  String _newUnitValue = "1";
+  String _equivalentUnitValue = "1";
+
   @override
   Widget build(BuildContext context) {
     return unitCreationListener(
@@ -44,15 +47,20 @@ class _ConvertouchUnitCreationPageState
               isEnabled: _unitName.isNotEmpty,
               onPressedFunc: () {
                 FocusScope.of(context).unfocus();
-                BlocProvider.of<UnitsBloc>(context).add(
-                  AddUnit(
-                    unitName: _unitName,
-                    unitAbbreviation:
-                        _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                    unitGroup: unitCreationPrepared.unitGroup,
-                    markedUnits: unitCreationPrepared.markedUnits,
-                  ),
-                );
+                if (_equivalentUnitValue.isNotEmpty) {
+                  BlocProvider.of<UnitsBloc>(context).add(
+                    AddUnit(
+                      unitName: _unitName,
+                      unitAbbreviation:
+                      _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                      unitGroup: unitCreationPrepared.unitGroup,
+                      newUnitValue: double.tryParse(_newUnitValue) ?? 1,
+                      equivalentUnit: unitCreationPrepared.equivalentUnit!,
+                      equivalentUnitValue: double.parse(_equivalentUnitValue),
+                      markedUnits: unitCreationPrepared.markedUnits,
+                    ),
+                  );
+                }
               },
             );
           }),
@@ -130,8 +138,13 @@ class _ConvertouchUnitCreationPageState
                                 : _unitAbbrHint,
                             unitGroupId: unitCreationPrepared.unitGroup.id,
                           ),
-                          value: 1,
+                          value: double.tryParse(_newUnitValue),
                         ),
+                        onValueChanged: (value) {
+                          setState(() {
+                            _newUnitValue = value;
+                          });
+                        },
                       ).buildForList(),
                     ),
                     const SizedBox(height: 9),
@@ -141,8 +154,13 @@ class _ConvertouchUnitCreationPageState
                       child: ConvertouchItem.createItem(
                         UnitValueModel(
                           unit: unitCreationPrepared.equivalentUnit!,
-                          value: 1,
+                          value: double.tryParse(_equivalentUnitValue),
                         ),
+                        onValueChanged: (value) {
+                          setState(() {
+                            _equivalentUnitValue = value;
+                          });
+                        },
                         onTap: () {
                           FocusScope.of(context).unfocus();
                           BlocProvider.of<UnitsBloc>(context).add(

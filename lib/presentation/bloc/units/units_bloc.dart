@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
+import 'package:convertouch/domain/usecases/units/model/unit_adding_input.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/bloc/units/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,10 +70,15 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       yield const UnitChecking();
 
       final addUnitResult = await addUnitUseCase.execute(
-        UnitModel(
-          name: event.unitName,
-          abbreviation: event.unitAbbreviation,
-          unitGroupId: event.unitGroup.id,
+        UnitAddingInput(
+          newUnit: UnitModel(
+            name: event.unitName,
+            abbreviation: event.unitAbbreviation,
+            unitGroupId: event.unitGroup.id,
+          ),
+          newUnitValue: event.newUnitValue,
+          equivalentUnit: event.equivalentUnit,
+          equivalentUnitValue: event.equivalentUnitValue,
         ),
       );
 
