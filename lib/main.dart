@@ -1,12 +1,12 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/bloc_observer.dart';
-import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
 import 'package:convertouch/presentation/pages/animation/navigation_animation.dart';
 import 'package:convertouch/presentation/pages/home_page.dart';
 import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
@@ -61,7 +61,9 @@ class ConvertouchApp extends StatelessWidget {
           navigatorKey: NavigationService.I.navigatorKey,
           onGenerateRoute: (settings) {
             return ConvertouchNavigationAnimation.wrapIntoAnimation(
-                _getRoute(settings.name), settings);
+              _getRoute(settings.name),
+              settings,
+            );
           },
         ),
       ),

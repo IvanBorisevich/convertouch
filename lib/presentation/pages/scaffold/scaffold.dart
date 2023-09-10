@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
+import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -27,13 +28,24 @@ class ConvertouchScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const ConvertouchSideMenu(),
         appBar: AppBar(
-          leading: appBarLeftWidget ??
-              (NavigationService.I.isHomePage(context)
-                  ? leadingIcon(Icons.menu, () {})
-                  : leadingIcon(Icons.arrow_back_rounded, () {
-                      NavigationService.I.navigateBack();
-                    })),
+          leading: Builder(
+            builder: (context) {
+              if (appBarLeftWidget != null) {
+                return appBarLeftWidget!;
+              }
+              if (NavigationService.I.isHomePage(context)) {
+                return leadingIcon(Icons.menu, () {
+                  Scaffold.of(context).openDrawer();
+                });
+              } else {
+                return leadingIcon(Icons.arrow_back_rounded, () {
+                  NavigationService.I.navigateBack();
+                });
+              }
+            },
+          ),
           centerTitle: true,
           title: Text(
             pageTitle,
