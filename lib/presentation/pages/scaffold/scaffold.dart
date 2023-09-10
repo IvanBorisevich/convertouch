@@ -28,7 +28,9 @@ class ConvertouchScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const ConvertouchSideMenu(),
+        drawer: ConvertouchSideMenu(
+          colors: sideMenuColors[ConvertouchUITheme.light]!,
+        ),
         appBar: AppBar(
           leading: Builder(
             builder: (context) {

@@ -4,6 +4,7 @@ import 'package:convertouch/presentation/pages/style/model/item_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/scaffold_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/search_bar_colors.dart';
+import 'package:convertouch/presentation/pages/style/model/side_menu_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/textbox_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,16 @@ const scaffoldColors = {
     appBarFontColor: Color(0xFF426F99),
     appBarIconColor: Color(0xFF426F99),
     appBarIconColorDisabled: Color(0xFFA0C4F5),
+  ),
+};
+
+const sideMenuColors = {
+  ConvertouchUITheme.light: ConvertouchSideMenuColors(
+    backgroundColor: Color(0xFFF9FCFF),
+    headerColor: Color(0xFFB0D7FC),
+    contentColor: Color(0xFF134B80),
+    activeSwitcherColor: Color(0xFF3E8DD7),
+    footerDividerColor: Color(0xFFA0C8F1),
   ),
 };
 
