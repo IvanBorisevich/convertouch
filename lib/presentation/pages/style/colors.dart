@@ -38,11 +38,11 @@ const scaffoldColors = {
 
 const sideMenuColors = {
   ConvertouchUITheme.light: ConvertouchSideMenuColors(
-    backgroundColor: Color(0xFFF9FCFF),
+    backgroundColor: Color(0xFFDEEBFC),
     headerColor: Color(0xFFB0D7FC),
     contentColor: Color(0xFF134B80),
     activeSwitcherColor: Color(0xFF3E8DD7),
-    footerDividerColor: Color(0xFFA0C8F1),
+    footerDividerColor: Color(0xFF84ADD7),
   ),
 };
 

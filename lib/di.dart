@@ -17,6 +17,7 @@ import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
@@ -121,5 +122,11 @@ void init() {
 
   locator.registerLazySingleton<ChangeItemsMenuViewUseCase>(
     () => ChangeItemsMenuViewUseCase(),
+  );
+
+  // side menu
+
+  locator.registerFactory(
+    () => SideMenuBloc(),
   );
 }

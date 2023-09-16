@@ -1,12 +1,13 @@
 import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
+import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
-  static const double appBarPadding = 7;
-
   const ConvertouchScaffold({
     super.key,
     required this.body,
@@ -15,6 +16,7 @@ class ConvertouchScaffold extends StatelessWidget {
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.floatingActionButton,
+    this.appBarPadding = 7,
   });
 
   final Widget? appBarLeftWidget;
@@ -23,74 +25,92 @@ class ConvertouchScaffold extends StatelessWidget {
   final Widget? secondaryAppBar;
   final Widget body;
   final Widget? floatingActionButton;
+  final double appBarPadding;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        drawer: ConvertouchSideMenu(
-          colors: sideMenuColors[ConvertouchUITheme.light]!,
-        ),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) {
-              if (appBarLeftWidget != null) {
-                return appBarLeftWidget!;
-              }
-              if (NavigationService.I.isHomePage(context)) {
-                return leadingIcon(Icons.menu, () {
-                  Scaffold.of(context).openDrawer();
-                });
-              } else {
-                return leadingIcon(Icons.arrow_back_rounded, () {
-                  NavigationService.I.navigateBack();
-                });
-              }
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            pageTitle,
-            style: TextStyle(
-              color: scaffoldColors[ConvertouchUITheme.light]!.appBarFontColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          backgroundColor:
-              scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
-          elevation: 0,
-          actions: appBarRightWidgets,
-        ),
-        body: Column(
+      child: GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.velocity.pixelsPerSecond.dx > 0) {
+            BlocProvider.of<SideMenuBloc>(context).add(
+              const OpenSideMenu(),
+            );
+          }
+        },
+        child: Stack(
           children: [
-            Visibility(
-              visible: secondaryAppBar != null,
-              child: Container(
-                height: 53,
-                decoration: BoxDecoration(
-                  color: scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
+            Scaffold(
+                appBar: AppBar(
+                  leading: Builder(
+                    builder: (context) {
+                      if (appBarLeftWidget != null) {
+                        return appBarLeftWidget!;
+                      }
+                      if (NavigationService.I.isHomePage(context)) {
+                        return _leadingIcon(Icons.menu, () {
+                          BlocProvider.of<SideMenuBloc>(context).add(
+                            const OpenSideMenu(),
+                          );
+                        });
+                      } else {
+                        return _leadingIcon(Icons.arrow_back_rounded, () {
+                          NavigationService.I.navigateBack();
+                        });
+                      }
+                    },
+                  ),
+                  centerTitle: true,
+                  title: Text(
+                    pageTitle,
+                    style: TextStyle(
+                      color: scaffoldColors[ConvertouchUITheme.light]!
+                          .appBarFontColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  backgroundColor:
+                      scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
+                  elevation: 0,
+                  actions: appBarRightWidgets,
                 ),
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  appBarPadding,
-                  0,
-                  appBarPadding,
-                  appBarPadding,
+                body: Column(
+                  children: [
+                    Visibility(
+                      visible: secondaryAppBar != null,
+                      child: Container(
+                        height: 53,
+                        decoration: BoxDecoration(
+                          color: scaffoldColors[ConvertouchUITheme.light]!
+                              .appBarColor,
+                        ),
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                          appBarPadding,
+                          0,
+                          appBarPadding,
+                          appBarPadding,
+                        ),
+                        child: secondaryAppBar,
+                      ),
+                    ),
+                    Expanded(
+                      child: body,
+                    ),
+                  ],
                 ),
-                child: secondaryAppBar,
+                floatingActionButton: floatingActionButton,
               ),
-            ),
-            Expanded(
-              child: body,
+            ConvertouchSideMenu(
+              colors: sideMenuColors[ConvertouchUITheme.light]!,
             ),
           ],
         ),
-        floatingActionButton: floatingActionButton,
       ),
     );
   }
 
-  Widget leadingIcon(
+  Widget _leadingIcon(
     IconData iconData,
     void Function()? onPressed,
   ) {
