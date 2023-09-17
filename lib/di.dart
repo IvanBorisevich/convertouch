@@ -1,7 +1,6 @@
-import 'package:convertouch/data/dao/db/unit_dao_db_impl.dart';
-import 'package:convertouch/data/dao/db/unit_group_dao_db_impl.dart';
+import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
+import 'package:convertouch/data/dao/db/unit_dao_db.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
-import 'package:convertouch/data/dao/unit_group_dao.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -28,7 +27,7 @@ import 'presentation/bloc/unit_creation/unit_creation_bloc.dart';
 
 final locator = GetIt.I;
 
-void init() {
+void init(ConvertouchDatabase database) {
   // navigation service
 
   locator.registerLazySingleton<NavigationService>(
@@ -53,10 +52,7 @@ void init() {
     () => AddUnitGroupUseCase(locator()),
   );
   locator.registerLazySingleton<UnitGroupRepository>(
-    () => UnitGroupRepositoryImpl(locator()),
-  );
-  locator.registerLazySingleton<UnitGroupDao>(
-    () => UnitGroupDaoDbImpl(),
+    () => UnitGroupRepositoryImpl(database.unitGroupDao),
   );
   locator.registerLazySingleton<UnitGroupTranslator>(
     () => UnitGroupTranslator(),
@@ -86,7 +82,7 @@ void init() {
     () => UnitRepositoryImpl(locator()),
   );
   locator.registerLazySingleton<UnitDao>(
-    () => UnitDaoDbImpl(),
+    () => UnitDaoDb(),
   );
   locator.registerLazySingleton<UnitTranslator>(
     () => UnitTranslator(),

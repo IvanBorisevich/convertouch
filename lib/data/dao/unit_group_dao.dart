@@ -7,5 +7,5 @@ abstract class UnitGroupDao {
 
   Future<int> addUnitGroup(UnitGroupEntity unitGroupEntity);
 
-  Future<UnitGroupEntity> getUnitGroup(int unitGroupId);
+  Future<UnitGroupEntity?> getUnitGroup(int id);
 }

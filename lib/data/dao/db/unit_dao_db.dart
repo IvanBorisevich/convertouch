@@ -1,7 +1,7 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 
-class UnitDaoDbImpl extends UnitDao {
+class UnitDaoDb extends UnitDao {
   @override
   Future<List<UnitEntity>> fetchUnitsOfGroup(int unitGroupId) {
     return Future(

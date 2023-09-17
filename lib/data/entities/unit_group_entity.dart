@@ -1,18 +1,24 @@
-import 'package:convertouch/data/entities/item_entity.dart';
 import 'package:convertouch/domain/constants.dart';
+import 'package:floor/floor.dart';
 
-class UnitGroupEntity extends ItemEntity {
+const String unitGroupsTableName = 'unit_groups';
+
+@Entity(
+  tableName: unitGroupsTableName,
+  indices: [
+    Index(value: ['name'], unique: true),
+  ],
+)
+class UnitGroupEntity {
+  @PrimaryKey(autoGenerate: true)
+  final int id;
+  final String name;
+  @ColumnInfo(name: 'icon_name')
   final String iconName;
 
   const UnitGroupEntity({
-    required int id,
-    required String name,
+    required this.id,
+    required this.name,
     this.iconName = unitGroupDefaultIconName,
-  }) : super(
-    id: id,
-    name: name,
-  );
-
-  @override
-  List<Object> get props => [id, name, iconName];
+  });
 }

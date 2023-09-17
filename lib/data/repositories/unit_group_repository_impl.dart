@@ -41,12 +41,20 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   Future<Either<Failure, UnitGroupModel>> getUnitGroup(int unitGroupId) async {
     try {
       final result = await unitGroupDao.getUnitGroup(unitGroupId);
+      if (result == null) {
+        return Left(
+          DatabaseFailure(
+            "Unit group with id = $unitGroupId not found",
+          ),
+        );
+      }
       return Right(UnitGroupTranslator.I.toModel(result));
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when searching a unit group by id: $e"),
+        DatabaseFailure(
+          "Error when searching a unit group by id = $unitGroupId: $e",
+        ),
       );
     }
   }
-
 }
