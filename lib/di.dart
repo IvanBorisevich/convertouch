@@ -1,6 +1,4 @@
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
-import 'package:convertouch/data/dao/db/unit_dao_db.dart';
-import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -79,10 +77,7 @@ void init(ConvertouchDatabase database) {
   );
 
   locator.registerLazySingleton<UnitRepository>(
-    () => UnitRepositoryImpl(locator()),
-  );
-  locator.registerLazySingleton<UnitDao>(
-    () => UnitDaoDb(),
+    () => UnitRepositoryImpl(database.unitDao),
   );
   locator.registerLazySingleton<UnitTranslator>(
     () => UnitTranslator(),

@@ -17,7 +17,7 @@ class UnitGroupEntity {
   final String iconName;
 
   const UnitGroupEntity({
-    required this.id,
+    this.id,
     required this.name,
     this.iconName = unitGroupDefaultIconName,
   });
