@@ -1,12 +1,12 @@
 class UnitEntity {
-  final int id;
+  final int? id;
   final String name;
   final String abbreviation;
   final double coefficient;
   final int unitGroupId;
 
   const UnitEntity({
-    required this.id,
+    this.id,
     required this.name,
     required this.abbreviation,
     required this.coefficient,

@@ -63,7 +63,7 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                 default:
                   BlocProvider.of<UnitsBloc>(context).add(
                     FetchUnits(
-                      unitGroupId: item.id,
+                      unitGroupId: item.id!,
                       action: ConvertouchAction.fetchUnitsToStartMark,
                     ),
                   );

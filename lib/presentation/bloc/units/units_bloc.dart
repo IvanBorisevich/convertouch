@@ -74,7 +74,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
           newUnit: UnitModel(
             name: event.unitName,
             abbreviation: event.unitAbbreviation,
-            unitGroupId: event.unitGroup.id,
+            unitGroupId: event.unitGroup.id!,
           ),
           newUnitValue: event.newUnitValue,
           equivalentUnit: event.equivalentUnit,
@@ -92,7 +92,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
           yield const UnitsFetching();
 
           final fetchUnitsOfGroupResult =
-              await fetchUnitsOfGroupUseCase.execute(event.unitGroup.id);
+              await fetchUnitsOfGroupUseCase.execute(event.unitGroup.id!);
           yield fetchUnitsOfGroupResult.fold(
             (error) => UnitsErrorState(
               message: error.message,

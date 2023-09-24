@@ -17,7 +17,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       final result = await unitDao.fetchUnitsOfGroup(unitGroupId);
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
     } catch (e) {
       return Left(
@@ -28,9 +28,10 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel>> getBaseUnit(int unitGroupId) async {
+  Future<Either<Failure, UnitModel?>> getBaseUnit(int unitGroupId) async {
     try {
-      final result = await unitDao.getBaseUnit(unitGroupId);
+      var result = await unitDao.getBaseUnit(unitGroupId);
+      result ??= await unitDao.getFirstUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result));
     } catch (e) {
       return Left(
@@ -43,7 +44,7 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<Failure, int>> addUnit(UnitModel unit) async {
     try {
-      final result = await unitDao.addUnit(UnitTranslator.I.fromModel(unit));
+      final result = await unitDao.addUnit(UnitTranslator.I.fromModel(unit)!);
       return Right(result);
     } catch (e) {
       return Left(

@@ -16,7 +16,7 @@ class UnitCreationBloc extends Bloc<UnitCreationEvent, UnitCreationState> {
       yield const UnitCreationPreparing();
 
       final getBaseUnitResult =
-          await getBaseUnitUseCase.execute(event.unitGroup.id);
+          await getBaseUnitUseCase.execute(event.unitGroup.id!);
 
       yield getBaseUnitResult.fold(
         (error) => UnitCreationErrorState(

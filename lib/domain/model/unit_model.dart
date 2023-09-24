@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/item_model.dart';
 
 class UnitModel extends IdNameItemModel {
   const UnitModel({
-    int id = 0,
+    int? id,
     required String name,
     this.coefficient = 1,
     required this.abbreviation,
@@ -19,7 +19,7 @@ class UnitModel extends IdNameItemModel {
   final int unitGroupId;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     id,
     name,
     itemType,

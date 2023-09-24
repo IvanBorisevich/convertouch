@@ -47,20 +47,18 @@ class _ConvertouchUnitCreationPageState
               isEnabled: _unitName.isNotEmpty,
               onPressedFunc: () {
                 FocusScope.of(context).unfocus();
-                if (_equivalentUnitValue.isNotEmpty) {
-                  BlocProvider.of<UnitsBloc>(context).add(
-                    AddUnit(
-                      unitName: _unitName,
-                      unitAbbreviation:
-                      _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                      unitGroup: unitCreationPrepared.unitGroup,
-                      newUnitValue: double.tryParse(_newUnitValue) ?? 1,
-                      equivalentUnit: unitCreationPrepared.equivalentUnit!,
-                      equivalentUnitValue: double.parse(_equivalentUnitValue),
-                      markedUnits: unitCreationPrepared.markedUnits,
-                    ),
-                  );
-                }
+                BlocProvider.of<UnitsBloc>(context).add(
+                  AddUnit(
+                    unitName: _unitName,
+                    unitAbbreviation:
+                        _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                    unitGroup: unitCreationPrepared.unitGroup,
+                    newUnitValue: double.tryParse(_newUnitValue) ?? 1,
+                    equivalentUnit: unitCreationPrepared.equivalentUnit,
+                    equivalentUnitValue: double.tryParse(_equivalentUnitValue),
+                    markedUnits: unitCreationPrepared.markedUnits,
+                  ),
+                );
               },
             );
           }),
@@ -77,7 +75,7 @@ class _ConvertouchUnitCreationPageState
                     FocusScope.of(context).unfocus();
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       FetchUnitGroups(
-                        selectedUnitGroupId: unitGroup.id,
+                        selectedUnitGroupId: unitGroup.id!,
                         markedUnits: unitCreationPrepared.markedUnits,
                         action: ConvertouchAction
                             .fetchUnitGroupsToSelectForUnitCreation,
@@ -114,70 +112,127 @@ class _ConvertouchUnitCreationPageState
               ),
               const SizedBox(height: 25),
               unitCreationBloc((unitCreationPrepared) {
-                bool equivalentUnitVisible = _unitName.isNotEmpty &&
+                bool newUnitNameEntered = _unitName.isNotEmpty;
+                bool equivalentUnitExists =
                     unitCreationPrepared.equivalentUnit != null;
-                return Column(
-                  children: [
-                    ConvertouchFadeScaleAnimation(
-                      duration: const Duration(milliseconds: 150),
-                      reverse: !equivalentUnitVisible,
-                      child: _horizontalDividerWithText(
-                        "Set unit value equivalent",
+                if (equivalentUnitExists) {
+                  return Column(
+                    children: [
+                      ConvertouchFadeScaleAnimation(
+                        duration: const Duration(milliseconds: 150),
+                        reverse: !newUnitNameEntered,
+                        child: _horizontalDividerWithText(
+                          "Set unit value equivalent",
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      ConvertouchFadeScaleAnimation(
+                        duration: const Duration(milliseconds: 150),
+                        reverse: !newUnitNameEntered,
+                        child: ConvertouchItem.createItem(
+                          UnitValueModel(
+                            unit: UnitModel(
+                              name: _unitName,
+                              abbreviation: _unitAbbr.isNotEmpty
+                                  ? _unitAbbr
+                                  : _unitAbbrHint,
+                              unitGroupId: unitCreationPrepared.unitGroup.id!,
+                            ),
+                            value: double.tryParse(_newUnitValue),
+                          ),
+                          onValueChanged: (value) {
+                            setState(() {
+                              _newUnitValue = value;
+                            });
+                          },
+                        ).buildForList(),
+                      ),
+                      const SizedBox(height: 9),
+                      ConvertouchFadeScaleAnimation(
+                        duration: const Duration(milliseconds: 150),
+                        reverse: !newUnitNameEntered,
+                        child: ConvertouchItem.createItem(
+                          UnitValueModel(
+                            unit: unitCreationPrepared.equivalentUnit!,
+                            value: double.tryParse(_equivalentUnitValue),
+                          ),
+                          onValueChanged: (value) {
+                            setState(() {
+                              _equivalentUnitValue = value;
+                            });
+                          },
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            BlocProvider.of<UnitsBloc>(context).add(
+                              FetchUnits(
+                                unitGroupId: unitCreationPrepared.unitGroup.id!,
+                                selectedUnit:
+                                    unitCreationPrepared.equivalentUnit,
+                                markedUnits: unitCreationPrepared.markedUnits,
+                                action: ConvertouchAction
+                                    .fetchUnitsToSelectForUnitCreation,
+                              ),
+                            );
+                          },
+                        ).buildForList(),
+                      ),
+                      const SizedBox(height: 25),
+                    ],
+                  );
+                } else {
+                  return ConvertouchFadeScaleAnimation(
+                    duration: const Duration(milliseconds: 150),
+                    child: Container(
+                      padding: const EdgeInsetsDirectional.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color(0xFFE7EFFF),
+                      ),
+                      child: const Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Color(0xFF345E85),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                  start: 5,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Note",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF345E85),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                            child: Text(
+                              "It's a first unit you are going to add to the "
+                              "current group, so there isn't an equivalent "
+                              "unit yet to be selected",
+                              style: TextStyle(
+                                color: Color(0xFF426F99),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 25),
-                    ConvertouchFadeScaleAnimation(
-                      duration: const Duration(milliseconds: 150),
-                      reverse: !equivalentUnitVisible,
-                      child: ConvertouchItem.createItem(
-                        UnitValueModel(
-                          unit: UnitModel(
-                            name: _unitName,
-                            abbreviation: _unitAbbr.isNotEmpty
-                                ? _unitAbbr
-                                : _unitAbbrHint,
-                            unitGroupId: unitCreationPrepared.unitGroup.id,
-                          ),
-                          value: double.tryParse(_newUnitValue),
-                        ),
-                        onValueChanged: (value) {
-                          setState(() {
-                            _newUnitValue = value;
-                          });
-                        },
-                      ).buildForList(),
-                    ),
-                    const SizedBox(height: 9),
-                    ConvertouchFadeScaleAnimation(
-                      duration: const Duration(milliseconds: 150),
-                      reverse: !equivalentUnitVisible,
-                      child: ConvertouchItem.createItem(
-                        UnitValueModel(
-                          unit: unitCreationPrepared.equivalentUnit!,
-                          value: double.tryParse(_equivalentUnitValue),
-                        ),
-                        onValueChanged: (value) {
-                          setState(() {
-                            _equivalentUnitValue = value;
-                          });
-                        },
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                          BlocProvider.of<UnitsBloc>(context).add(
-                            FetchUnits(
-                              unitGroupId: unitCreationPrepared.unitGroup.id,
-                              selectedUnit: unitCreationPrepared.equivalentUnit,
-                              markedUnits: unitCreationPrepared.markedUnits,
-                              action: ConvertouchAction
-                                  .fetchUnitsToSelectForUnitCreation,
-                            ),
-                          );
-                        },
-                      ).buildForList(),
-                    ),
-                    const SizedBox(height: 25),
-                  ],
-                );
+                  );
+                }
               }),
             ]),
           ),

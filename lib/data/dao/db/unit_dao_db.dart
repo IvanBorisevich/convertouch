@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 
@@ -12,10 +13,22 @@ class UnitDaoDb extends UnitDao {
   }
 
   @override
-  Future<UnitEntity> getBaseUnit(int unitGroupId) {
+  Future<UnitEntity?> getBaseUnit(int unitGroupId) {
     return Future(
-      () => _allUnits.firstWhere((unitEntity) =>
-          unitEntity.unitGroupId == unitGroupId && unitEntity.coefficient == 1),
+      () => _allUnits.firstWhereOrNull(
+        (unitEntity) =>
+            unitEntity.unitGroupId == unitGroupId &&
+            unitEntity.coefficient == 1,
+      ),
+    );
+  }
+
+  @override
+  Future<UnitEntity?> getFirstUnit(int unitGroupId) {
+    return Future(
+      () => _allUnits.firstWhereOrNull(
+        (unitEntity) => unitEntity.unitGroupId == unitGroupId,
+      ),
     );
   }
 

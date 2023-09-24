@@ -5,7 +5,9 @@ abstract class UnitDao {
 
   Future<List<UnitEntity>> fetchUnitsOfGroup(int unitGroupId);
 
-  Future<UnitEntity> getBaseUnit(int unitGroupId);
+  Future<UnitEntity?> getBaseUnit(int unitGroupId);
+
+  Future<UnitEntity?> getFirstUnit(int unitGroupId);
 
   Future<int> addUnit(UnitEntity unit);
 }

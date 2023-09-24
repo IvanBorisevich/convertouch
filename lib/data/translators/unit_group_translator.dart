@@ -3,20 +3,26 @@ import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
-class UnitGroupTranslator extends Translator<UnitGroupModel, UnitGroupEntity> {
+class UnitGroupTranslator extends Translator<UnitGroupModel?, UnitGroupEntity?> {
   static final UnitGroupTranslator I = di.locator.get<UnitGroupTranslator>();
 
   @override
-  UnitGroupModel toModel(UnitGroupEntity entity) {
+  UnitGroupModel? toModel(UnitGroupEntity? entity) {
+    if (entity == null) {
+      return null;
+    }
     return UnitGroupModel(
-      id: entity.id,
+      id: entity.id!,
       name: entity.name,
       iconName: entity.iconName,
     );
   }
 
   @override
-  UnitGroupEntity fromModel(UnitGroupModel model) {
+  UnitGroupEntity? fromModel(UnitGroupModel? model) {
+    if (model == null) {
+      return null;
+    }
     return UnitGroupEntity(
       id: model.id,
       name: model.name,

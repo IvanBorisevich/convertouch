@@ -7,7 +7,7 @@ abstract class UnitRepository {
 
   Future<Either<Failure, List<UnitModel>>> fetchUnitsOfGroup(int unitGroupId);
 
-  Future<Either<Failure, UnitModel>> getBaseUnit(int unitGroupId);
+  Future<Either<Failure, UnitModel?>> getBaseUnit(int unitGroupId);
 
   Future<Either<Failure, int>> addUnit(UnitModel unit);
 }

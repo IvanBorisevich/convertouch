@@ -85,9 +85,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `icon_name` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT NOT NULL)');
         await database.execute(
-            'CREATE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
+            'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -127,7 +127,7 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   Future<List<UnitGroupEntity>> fetchUnitGroups() async {
     return _queryAdapter.queryList('select * from unit_groups',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
-            id: row['id'] as int,
+            id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String));
   }
@@ -137,7 +137,7 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
     return _queryAdapter.query(
         'select * from unit_groups where id = ?1 limit 1',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
-            id: row['id'] as int,
+            id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String),
         arguments: [id]);

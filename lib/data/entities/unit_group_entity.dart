@@ -11,7 +11,7 @@ const String unitGroupsTableName = 'unit_groups';
 )
 class UnitGroupEntity {
   @PrimaryKey(autoGenerate: true)
-  final int id;
+  final int? id;
   final String name;
   @ColumnInfo(name: 'icon_name')
   final String iconName;

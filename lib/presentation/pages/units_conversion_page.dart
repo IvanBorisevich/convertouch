@@ -36,7 +36,7 @@ class _ConvertouchUnitsConversionPageState
             onTap: () {
               BlocProvider.of<UnitGroupsBloc>(context).add(
                 FetchUnitGroups(
-                  selectedUnitGroupId: conversionInitialized.unitGroup.id,
+                  selectedUnitGroupId: conversionInitialized.unitGroup.id!,
                   markedUnits: conversionInitialized.conversionItems
                       .map((item) => item.unit)
                       .toList(),
@@ -48,13 +48,13 @@ class _ConvertouchUnitsConversionPageState
           ).buildForList(),
           body: ConvertouchConversionItemsView(
             conversionInitialized.conversionItems,
-            sourceUnitId: conversionInitialized.sourceUnit.id,
+            sourceUnitId: conversionInitialized.sourceUnit.id!,
             sourceValue: conversionInitialized.sourceUnitValue,
             unitGroup: conversionInitialized.unitGroup,
             onItemTap: (item) {
               BlocProvider.of<UnitsBloc>(context).add(
                 FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id,
+                  unitGroupId: conversionInitialized.unitGroup.id!,
                   markedUnits: conversionInitialized.conversionItems
                       .map((item) => item.unit)
                       .toList(),
@@ -81,7 +81,7 @@ class _ConvertouchUnitsConversionPageState
             onPressed: () {
               BlocProvider.of<UnitsBloc>(context).add(
                 FetchUnits(
-                  unitGroupId: conversionInitialized.unitGroup.id,
+                  unitGroupId: conversionInitialized.unitGroup.id!,
                   markedUnits: conversionInitialized.conversionItems
                       .map((item) => item.unit)
                       .toList(),

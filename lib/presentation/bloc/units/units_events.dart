@@ -45,8 +45,8 @@ class AddUnit extends UnitsEvent {
     required this.unitAbbreviation,
     required this.unitGroup,
     required this.newUnitValue,
-    required this.equivalentUnit,
-    required this.equivalentUnitValue,
+    this.equivalentUnit,
+    this.equivalentUnitValue,
     this.markedUnits = const [],
   });
 
@@ -54,12 +54,12 @@ class AddUnit extends UnitsEvent {
   final String unitAbbreviation;
   final UnitGroupModel unitGroup;
   final double newUnitValue;
-  final UnitModel equivalentUnit;
-  final double equivalentUnitValue;
+  final UnitModel? equivalentUnit;
+  final double? equivalentUnitValue;
   final List<UnitModel> markedUnits;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     unitName,
     unitAbbreviation,
     unitGroup,
