@@ -5,7 +5,7 @@ class UnitGroupModel extends IdNameItemModel {
   const UnitGroupModel({
     int? id,
     required String name,
-    this.iconName = unitGroupDefaultIconName,
+    this.iconName,
   }) : super(
     id: id,
     name: name,
@@ -20,7 +20,7 @@ class UnitGroupModel extends IdNameItemModel {
     iconName,
   ];
 
-  final String iconName;
+  final String? iconName;
 
   @override
   String toString() {

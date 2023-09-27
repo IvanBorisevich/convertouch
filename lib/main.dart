@@ -25,7 +25,7 @@ void main() async {
   Bloc.observer = ConvertouchBlocObserver();
   final ConvertouchDatabase database = await $FloorConvertouchDatabase
       .databaseBuilder('convertouch_database.db')
-      .addMigrations([migration1to2]).build();
+      .build();
   di.init(database);
   runApp(const ConvertouchApp());
 }

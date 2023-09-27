@@ -1,9 +1,11 @@
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
+import 'package:convertouch/domain/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
-class UnitGroupTranslator extends Translator<UnitGroupModel?, UnitGroupEntity?> {
+class UnitGroupTranslator
+    extends Translator<UnitGroupModel?, UnitGroupEntity?> {
   static final UnitGroupTranslator I = di.locator.get<UnitGroupTranslator>();
 
   @override
@@ -14,7 +16,7 @@ class UnitGroupTranslator extends Translator<UnitGroupModel?, UnitGroupEntity?> 
     return UnitGroupModel(
       id: entity.id!,
       name: entity.name,
-      iconName: entity.iconName,
+      iconName: entity.iconName ?? unitGroupDefaultIconName,
     );
   }
 
@@ -26,7 +28,8 @@ class UnitGroupTranslator extends Translator<UnitGroupModel?, UnitGroupEntity?> 
     return UnitGroupEntity(
       id: model.id,
       name: model.name,
-      iconName: model.iconName,
+      iconName:
+          model.iconName != unitGroupDefaultIconName ? model.iconName : null,
     );
   }
 }

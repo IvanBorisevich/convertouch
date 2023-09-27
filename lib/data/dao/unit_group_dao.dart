@@ -3,9 +3,11 @@ import 'package:convertouch/data/entities/unit_group_entity.dart';
 abstract class UnitGroupDao {
   const UnitGroupDao();
 
-  Future<List<UnitGroupEntity>> fetchUnitGroups();
+  Future<List<UnitGroupEntity>> getAll();
 
-  Future<int> addUnitGroup(UnitGroupEntity unitGroupEntity);
+  Future<UnitGroupEntity?> get(int id);
 
-  Future<UnitGroupEntity?> getUnitGroup(int id);
+  Future<int> insert(UnitGroupEntity unitGroupEntity);
+
+  Future<int> update(UnitGroupEntity unitGroupEntity);
 }

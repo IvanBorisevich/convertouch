@@ -12,6 +12,7 @@ import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
+import 'package:convertouch/domain/usecases/units/import_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
@@ -75,9 +76,15 @@ void init(ConvertouchDatabase database) {
   locator.registerLazySingleton<GetBaseUnitUseCase>(
     () => GetBaseUnitUseCase(locator()),
   );
+  locator.registerLazySingleton<ImportUnitsUseCase>(
+    () => ImportUnitsUseCase(locator()),
+  );
 
   locator.registerLazySingleton<UnitRepository>(
-    () => UnitRepositoryImpl(database.unitDao),
+    () => UnitRepositoryImpl(
+      unitDao: database.unitDao,
+      unitGroupDao: database.unitGroupDao,
+    ),
   );
   locator.registerLazySingleton<UnitTranslator>(
     () => UnitTranslator(),

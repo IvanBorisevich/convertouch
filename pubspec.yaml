@@ -74,6 +74,7 @@ flutter:
     - assets/
     - assets/fonts/
     - assets/icons/
+    - assets/data/default-units.json
 
   fonts:
     - family: Quicksand

@@ -13,11 +13,16 @@ class ConvertUnitValueUseCase
     return Future(() {
       try {
         double? inputValue = input.inputUnitValue.value;
-        double inputUnitCoefficient = input.inputUnitValue.unit.coefficient;
-        double targetUnitCoefficient = input.targetUnit.coefficient;
-        double? targetValue = inputValue != null
-            ? inputValue * inputUnitCoefficient / targetUnitCoefficient
-            : null;
+        double? inputUnitCoefficient = input.inputUnitValue.unit.coefficient;
+        double? targetUnitCoefficient = input.targetUnit.coefficient;
+        double? targetValue;
+        if (inputUnitCoefficient != null && targetUnitCoefficient != null) {
+           targetValue = inputValue != null
+              ? inputValue * inputUnitCoefficient / targetUnitCoefficient
+              : null;
+        } else {
+          throw Exception("Formulas are not supported yet");
+        }
         return Right(
           UnitValueModel(
             unit: input.targetUnit,

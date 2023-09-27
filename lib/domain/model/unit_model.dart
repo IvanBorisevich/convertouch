@@ -5,7 +5,7 @@ class UnitModel extends IdNameItemModel {
   const UnitModel({
     int? id,
     required String name,
-    this.coefficient = 1,
+    this.coefficient,
     required this.abbreviation,
     required this.unitGroupId,
   }) : super(
@@ -14,9 +14,9 @@ class UnitModel extends IdNameItemModel {
           itemType: ItemType.unit,
         );
 
-  final double coefficient;
+  final double? coefficient;
   final String abbreviation;
-  final int unitGroupId;
+  final int? unitGroupId;
 
   @override
   List<Object?> get props => [

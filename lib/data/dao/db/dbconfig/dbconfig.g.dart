@@ -71,7 +71,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 1,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -87,9 +87,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL NOT NULL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -124,6 +124,15 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName
+                }),
+        _unitGroupEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'unit_groups',
+            ['id'],
+            (UnitGroupEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'icon_name': item.iconName
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -134,29 +143,37 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
 
   final InsertionAdapter<UnitGroupEntity> _unitGroupEntityInsertionAdapter;
 
+  final UpdateAdapter<UnitGroupEntity> _unitGroupEntityUpdateAdapter;
+
   @override
-  Future<List<UnitGroupEntity>> fetchUnitGroups() async {
+  Future<List<UnitGroupEntity>> getAll() async {
     return _queryAdapter.queryList('select * from unit_groups',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
-            iconName: row['icon_name'] as String));
+            iconName: row['icon_name'] as String?));
   }
 
   @override
-  Future<UnitGroupEntity?> getUnitGroup(int id) async {
+  Future<UnitGroupEntity?> get(int id) async {
     return _queryAdapter.query(
         'select * from unit_groups where id = ?1 limit 1',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
-            iconName: row['icon_name'] as String),
+            iconName: row['icon_name'] as String?),
         arguments: [id]);
   }
 
   @override
-  Future<int> addUnitGroup(UnitGroupEntity unitGroupEntity) {
+  Future<int> insert(UnitGroupEntity unitGroupEntity) {
     return _unitGroupEntityInsertionAdapter.insertAndReturnId(
+        unitGroupEntity, OnConflictStrategy.fail);
+  }
+
+  @override
+  Future<int> update(UnitGroupEntity unitGroupEntity) {
+    return _unitGroupEntityUpdateAdapter.updateAndReturnChangedRows(
         unitGroupEntity, OnConflictStrategy.abort);
   }
 }
@@ -175,6 +192,17 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'abbreviation': item.abbreviation,
                   'coefficient': item.coefficient,
                   'unit_group_id': item.unitGroupId
+                }),
+        _unitEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'units',
+            ['id'],
+            (UnitEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'abbreviation': item.abbreviation,
+                  'coefficient': item.coefficient,
+                  'unit_group_id': item.unitGroupId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -185,16 +213,18 @@ class _$UnitDaoDb extends UnitDaoDb {
 
   final InsertionAdapter<UnitEntity> _unitEntityInsertionAdapter;
 
+  final UpdateAdapter<UnitEntity> _unitEntityUpdateAdapter;
+
   @override
-  Future<List<UnitEntity>> fetchUnitsOfGroup(int unitGroupId) async {
+  Future<List<UnitEntity>> getAll(int unitGroupId) async {
     return _queryAdapter.queryList(
         'select * from units where unit_group_id = ?1',
         mapper: (Map<String, Object?> row) => UnitEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
-            coefficient: row['coefficient'] as double,
-            unitGroupId: row['unit_group_id'] as int),
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int?),
         arguments: [unitGroupId]);
   }
 
@@ -206,27 +236,33 @@ class _$UnitDaoDb extends UnitDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
-            coefficient: row['coefficient'] as double,
-            unitGroupId: row['unit_group_id'] as int),
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int?),
         arguments: [unitGroupId]);
   }
 
   @override
-  Future<UnitEntity?> getFirstUnit(int unitGroupId) async {
+  Future<UnitEntity?> getFirst(int unitGroupId) async {
     return _queryAdapter.query(
         'select * from units where unit_group_id = ?1 limit 1',
         mapper: (Map<String, Object?> row) => UnitEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
-            coefficient: row['coefficient'] as double,
-            unitGroupId: row['unit_group_id'] as int),
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int?),
         arguments: [unitGroupId]);
   }
 
   @override
-  Future<int> addUnit(UnitEntity unit) {
+  Future<int> insert(UnitEntity unit) {
     return _unitEntityInsertionAdapter.insertAndReturnId(
+        unit, OnConflictStrategy.fail);
+  }
+
+  @override
+  Future<int> update(UnitEntity unit) {
+    return _unitEntityUpdateAdapter.updateAndReturnChangedRows(
         unit, OnConflictStrategy.abort);
   }
 }

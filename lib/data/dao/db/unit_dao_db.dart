@@ -6,7 +6,7 @@ import 'package:floor/floor.dart';
 abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select * from $unitsTableName where unit_group_id = :unitGroupId')
-  Future<List<UnitEntity>> fetchUnitsOfGroup(int unitGroupId);
+  Future<List<UnitEntity>> getAll(int unitGroupId);
 
   @override
   @Query('select * from $unitsTableName '
@@ -18,11 +18,15 @@ abstract class UnitDaoDb extends UnitDao {
   @Query(
       'select * from $unitsTableName '
       'where unit_group_id = :unitGroupId limit 1')
-  Future<UnitEntity?> getFirstUnit(int unitGroupId);
+  Future<UnitEntity?> getFirst(int unitGroupId);
 
   @override
-  @insert
-  Future<int> addUnit(UnitEntity unit);
+  @Insert(onConflict: OnConflictStrategy.fail)
+  Future<int> insert(UnitEntity unit);
+
+  @override
+  @Update()
+  Future<int> update(UnitEntity unit);
 }
 
 // final List<UnitEntity> _allUnits = [

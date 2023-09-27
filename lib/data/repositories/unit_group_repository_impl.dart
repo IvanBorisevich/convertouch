@@ -13,7 +13,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   @override
   Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups() async {
     try {
-      final result = await unitGroupDao.fetchUnitGroups();
+      final result = await unitGroupDao.getAll();
       return Right(
         result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
       );
@@ -28,7 +28,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup) async {
     try {
       final result = await unitGroupDao
-          .addUnitGroup(UnitGroupTranslator.I.fromModel(unitGroup)!);
+          .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
       return Right(result);
     } catch (e) {
       return Left(
@@ -40,7 +40,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   @override
   Future<Either<Failure, UnitGroupModel>> getUnitGroup(int unitGroupId) async {
     try {
-      final result = await unitGroupDao.getUnitGroup(unitGroupId);
+      final result = await unitGroupDao.get(unitGroupId);
       if (result == null) {
         return Left(
           DatabaseFailure(

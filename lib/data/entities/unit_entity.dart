@@ -22,15 +22,35 @@ class UnitEntity {
   final int? id;
   final String name;
   final String abbreviation;
-  final double coefficient;
+  final double? coefficient;
   @ColumnInfo(name: 'unit_group_id')
-  final int unitGroupId;
+  final int? unitGroupId;
 
   const UnitEntity({
     this.id,
     required this.name,
     required this.abbreviation,
     required this.coefficient,
-    required this.unitGroupId,
+    this.unitGroupId,
   });
+
+  static UnitEntity fromJson(
+    Map<String, dynamic> data, {
+    int? unitGroupId,
+  }) {
+    return UnitEntity(
+      name: data['name'],
+      abbreviation: data['abbreviation'],
+      coefficient: double.tryParse(data['coefficient'].toString()),
+      unitGroupId: unitGroupId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'abbreviation': abbreviation,
+      'coefficient': coefficient,
+    };
+  }
 }
