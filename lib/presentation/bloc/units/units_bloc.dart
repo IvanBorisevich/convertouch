@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';

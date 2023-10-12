@@ -1,8 +1,13 @@
-final unitDataVersions = [
+const temperatureGroup = "Temperature";
+const degreeCelsius = "Degree Celsius";
+const degreeFahrenheit = "Degree Fahrenheit";
+const degreeKelvin = "Degree Kelvin";
+
+const unitDataVersions = [
   unitsV1,
 ];
 
-var unitsV1 = [
+const unitsV1 = [
   {
     "groupName": "Length",
     "units": [
@@ -63,11 +68,11 @@ var unitsV1 = [
     ]
   },
   {
-    "groupName": "Temperature",
+    "groupName": temperatureGroup,
     "units": [
-      {"abbreviation": "°C", "name": "Degree Celsius"},
-      {"abbreviation": "°F", "name": "Degree Fahrenheit"},
-      {"abbreviation": "°K", "name": "Degree Kelvin"}
+      {"abbreviation": "°C", "name": degreeCelsius},
+      {"abbreviation": "°F", "name": degreeFahrenheit},
+      {"abbreviation": "°K", "name": degreeKelvin}
     ]
   },
   {

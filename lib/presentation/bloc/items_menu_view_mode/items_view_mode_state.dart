@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
 abstract class ItemsViewModeState extends ConvertouchBlocState {

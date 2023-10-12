@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:convertouch/data/assets/default_units.dart';
+import 'package:convertouch/domain/constants/default_units.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';

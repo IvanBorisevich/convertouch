@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 
 class UnitGroupModel extends IdNameItemModel {

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/usecases/units_conversion/formulas_map.dart';
 import 'package:convertouch/domain/usecases/units_conversion/model/unit_conversion_input.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
@@ -17,11 +18,19 @@ class ConvertUnitValueUseCase
         double? targetUnitCoefficient = input.targetUnit.coefficient;
         double? targetValue;
         if (inputUnitCoefficient != null && targetUnitCoefficient != null) {
-           targetValue = inputValue != null
+          targetValue = inputValue != null
               ? inputValue * inputUnitCoefficient / targetUnitCoefficient
               : null;
         } else {
-          throw Exception("Formulas are not supported yet");
+          String group = input.unitGroup.name;
+          String srcUnit = input.inputUnitValue.unit.name;
+          String tgtUnit = input.targetUnit.name;
+
+          var srcToSi = getFormula(group, srcUnit);
+          var siToTgt = getFormula(group, tgtUnit);
+
+          double? siValue = srcToSi.applyForward(inputValue);
+          targetValue = siToTgt.applyReverse(siValue);
         }
         return Right(
           UnitValueModel(

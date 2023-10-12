@@ -1,7 +1,7 @@
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
 class UnitGroupTranslator

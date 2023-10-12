@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/item_colors.dart';
 import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart';

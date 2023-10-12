@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';

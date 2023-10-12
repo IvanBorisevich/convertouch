@@ -35,6 +35,7 @@ class UnitsConversionBloc
             inputUnitValue: inputUnitValue,
             targetUnit:
                 targetUnit == event.prevInputUnit ? inputUnit : targetUnit,
+            unitGroup: event.unitGroup,
           ),
         );
 

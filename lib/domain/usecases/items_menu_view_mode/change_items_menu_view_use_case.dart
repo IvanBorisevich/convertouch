@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/model/items_menu_view_mode_output.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';

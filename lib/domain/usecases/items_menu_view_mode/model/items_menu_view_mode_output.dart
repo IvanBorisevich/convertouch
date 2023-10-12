@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 
 class ItemsMenuViewModeOutput {
   final ItemsViewMode pageViewMode;

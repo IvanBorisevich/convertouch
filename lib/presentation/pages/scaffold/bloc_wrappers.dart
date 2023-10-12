@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';

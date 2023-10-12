@@ -1,5 +1,5 @@
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class NavigationService {

@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:floor/floor.dart';
 
 const String unitGroupsTableName = 'unit_groups';
