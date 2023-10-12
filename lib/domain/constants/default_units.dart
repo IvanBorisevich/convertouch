@@ -2,6 +2,12 @@ const temperatureGroup = "Temperature";
 const degreeCelsius = "Degree Celsius";
 const degreeFahrenheit = "Degree Fahrenheit";
 const degreeKelvin = "Degree Kelvin";
+const degreeRankine = "Degree Rankine";
+const degreeDelisle = "Degree Delisle";
+const degreeNewton = "Degree Newton";
+const degreeReaumur = "Degree Réaumur";
+const degreeRomer = "Degree Rømer";
+
 
 const unitDataVersions = [
   unitsV1,
@@ -72,7 +78,12 @@ const unitsV1 = [
     "units": [
       {"abbreviation": "°C", "name": degreeCelsius},
       {"abbreviation": "°F", "name": degreeFahrenheit},
-      {"abbreviation": "°K", "name": degreeKelvin}
+      {"abbreviation": "K", "name": degreeKelvin},
+      {"abbreviation": "°R", "name": degreeRankine},
+      {"abbreviation": "°De", "name": degreeDelisle},
+      {"abbreviation": "°N", "name": degreeNewton},
+      {"abbreviation": "°Ré", "name": degreeReaumur},
+      {"abbreviation": "°Rø", "name": degreeRomer},
     ]
   },
   {

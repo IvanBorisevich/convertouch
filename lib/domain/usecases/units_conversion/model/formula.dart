@@ -17,3 +17,10 @@ class ConvertouchFormula {
 }
 
 typedef FormulasMap = Map<String, Map<String, ConvertouchFormula>>;
+
+double _identityFunc(double x) => x;
+
+const ConvertouchFormula identity = ConvertouchFormula(
+  forward: _identityFunc,
+  reverse: _identityFunc,
+);
