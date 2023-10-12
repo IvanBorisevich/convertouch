@@ -12,4 +12,6 @@ abstract class UnitDao {
   Future<int> insert(UnitEntity unit);
 
   Future<int> update(UnitEntity unit);
+
+  Future<int> merge(UnitEntity unit);
 }

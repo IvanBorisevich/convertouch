@@ -19,15 +19,13 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
   @override
   @Update()
   Future<int> update(UnitGroupEntity unitGroupEntity);
-}
 
-// final List<UnitGroupEntity> _allUnitGroups = [
-//   UnitGroupEntity(id: 1, name: 'Length'),
-//   UnitGroupEntity(id: 2, name: 'Area'),
-//   UnitGroupEntity(id: 3, name: 'Mass'),
-//   UnitGroupEntity(id: 4, name: 'Speed'),
-//   UnitGroupEntity(id: 5, name: 'Volume'),
-//   UnitGroupEntity(id: 6, name: 'Currency'),
-//   UnitGroupEntity(id: 7, name: 'Temperature'),
-//   UnitGroupEntity(id: 8, name: 'Numeral System'),
-// ];
+  @override
+  Future<int> merge(UnitGroupEntity unitGroupEntity) {
+    return Future.sync(
+      () => insert(unitGroupEntity),
+    ).onError(
+      (error, stackTrace) => update(unitGroupEntity),
+    );
+  }
+}

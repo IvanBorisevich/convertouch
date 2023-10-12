@@ -52,7 +52,7 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
     return IconButton(
       onPressed: null,
       icon: ImageIcon(
-        AssetImage("$iconPathPrefix/${unitGroup.iconName}"),
+        AssetImage("$iconAssetsPathPrefix/${unitGroup.iconName}"),
         color: isSelected
             ? unitGroupColors.contentColorSelected
             : unitGroupColors.contentColor,

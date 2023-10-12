@@ -12,7 +12,6 @@ import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
-import 'package:convertouch/domain/usecases/units/import_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
@@ -26,7 +25,19 @@ import 'presentation/bloc/unit_creation/unit_creation_bloc.dart';
 
 final locator = GetIt.I;
 
-void init(ConvertouchDatabase database) {
+Future<void> init() async {
+  // database
+
+  locator.registerLazySingleton<ConvertouchDatabaseHelper>(
+    () => ConvertouchDatabaseHelper(),
+  );
+
+  ConvertouchDatabase database =
+      await ConvertouchDatabaseHelper.I.initDatabase();
+  locator.registerLazySingleton(
+    () => database,
+  );
+
   // navigation service
 
   locator.registerLazySingleton<NavigationService>(
@@ -35,7 +46,7 @@ void init(ConvertouchDatabase database) {
 
   // unit groups
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => UnitGroupsBloc(
       fetchUnitGroupsUseCase: locator(),
       addUnitGroupUseCase: locator(),
@@ -59,7 +70,7 @@ void init(ConvertouchDatabase database) {
 
   // units
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => UnitsBloc(
       getUnitGroupUseCase: locator(),
       fetchUnitsOfGroupUseCase: locator(),
@@ -76,9 +87,6 @@ void init(ConvertouchDatabase database) {
   locator.registerLazySingleton<GetBaseUnitUseCase>(
     () => GetBaseUnitUseCase(locator()),
   );
-  locator.registerLazySingleton<ImportUnitsUseCase>(
-    () => ImportUnitsUseCase(locator()),
-  );
 
   locator.registerLazySingleton<UnitRepository>(
     () => UnitRepositoryImpl(
@@ -92,7 +100,7 @@ void init(ConvertouchDatabase database) {
 
   // unit creation
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => UnitCreationBloc(
       getBaseUnitUseCase: locator(),
     ),
@@ -100,7 +108,7 @@ void init(ConvertouchDatabase database) {
 
   // units conversion
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => UnitsConversionBloc(
       convertUnitValueUseCase: locator(),
     ),
@@ -112,7 +120,7 @@ void init(ConvertouchDatabase database) {
 
   // items menu view mode
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => ItemsMenuViewBloc(
       changeItemsMenuViewUseCase: locator(),
     ),
@@ -124,7 +132,7 @@ void init(ConvertouchDatabase database) {
 
   // side menu
 
-  locator.registerFactory(
+  locator.registerLazySingleton(
     () => SideMenuBloc(),
   );
 }

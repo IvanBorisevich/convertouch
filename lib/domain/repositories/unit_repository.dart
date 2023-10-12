@@ -10,6 +10,4 @@ abstract class UnitRepository {
   Future<Either<Failure, UnitModel?>> getBaseUnit(int unitGroupId);
 
   Future<Either<Failure, int>> addUnit(UnitModel unit);
-
-  Future<Either<Failure, void>> importFromJson(Map<String, dynamic> json);
 }

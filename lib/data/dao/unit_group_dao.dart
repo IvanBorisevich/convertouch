@@ -10,4 +10,6 @@ abstract class UnitGroupDao {
   Future<int> insert(UnitGroupEntity unitGroupEntity);
 
   Future<int> update(UnitGroupEntity unitGroupEntity);
+
+  Future<int> merge(UnitGroupEntity unitGroupEntity);
 }

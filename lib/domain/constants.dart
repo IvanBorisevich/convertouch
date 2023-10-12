@@ -1,10 +1,8 @@
 const String appName = "Convertouch";
 
-const String iconPathPrefix = "assets/icons";
-const String dataPathPrefix = "assets/data";
+const String iconAssetsPathPrefix = "assets/icons";
 
 const String unitGroupDefaultIconName = "unit-group.png";
-const String defaultUnitsJsonFileName = "default-units.json";
 const String quicksandFontFamily = "Quicksand";
 
 const String homePageId = '/';

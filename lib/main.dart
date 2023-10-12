@@ -1,4 +1,4 @@
-import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
+import 'dart:developer';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
@@ -23,10 +23,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = ConvertouchBlocObserver();
-  final ConvertouchDatabase database = await $FloorConvertouchDatabase
-      .databaseBuilder('convertouch_database.db')
-      .build();
-  di.init(database);
+  await di.init();
+  log("Dependencies initialization finished");
   runApp(const ConvertouchApp());
 }
 
