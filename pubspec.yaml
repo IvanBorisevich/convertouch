@@ -45,6 +45,7 @@ dependencies:
   floor: ^1.4.2
   collection: ^1.17.2
   path: ^1.8.3
+  drag_and_drop_lists: ^0.3.3
 
 dev_dependencies:
   flutter_test:
