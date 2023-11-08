@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/item.dart';
-import 'package:convertouch/presentation/pages/items_view/item_view_mode/unit_value_list_item.dart';
+import 'package:convertouch/presentation/pages/items_view/item_view_mode/conversion_list_item.dart';
 import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +21,9 @@ class ConvertouchConversionItem extends ConvertouchItem {
 
   @override
   Widget buildForList() {
-    return ConvertouchUnitValueListItem(
+    return ConvertouchConversionListItem(
       unitValue,
       onTap: onTap,
-      onLongPress: onLongPress,
       onValueChanged: onValueChanged,
       itemColors: conversionColors,
     );

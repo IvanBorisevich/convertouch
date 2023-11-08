@@ -41,66 +41,66 @@ class ConvertouchScaffold extends StatelessWidget {
         child: Stack(
           children: [
             Scaffold(
-                appBar: AppBar(
-                  leading: Builder(
-                    builder: (context) {
-                      if (appBarLeftWidget != null) {
-                        return appBarLeftWidget!;
-                      }
-                      if (NavigationService.I.isHomePage(context)) {
-                        return _leadingIcon(Icons.menu, () {
-                          BlocProvider.of<SideMenuBloc>(context).add(
-                            const OpenSideMenu(),
-                          );
-                        });
-                      } else {
-                        return _leadingIcon(Icons.arrow_back_rounded, () {
-                          NavigationService.I.navigateBack();
-                        });
-                      }
-                    },
-                  ),
-                  centerTitle: true,
-                  title: Text(
-                    pageTitle,
-                    style: TextStyle(
-                      color: scaffoldColors[ConvertouchUITheme.light]!
-                          .appBarFontColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  backgroundColor:
-                      scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
-                  elevation: 0,
-                  actions: appBarRightWidgets,
+              appBar: AppBar(
+                leading: Builder(
+                  builder: (context) {
+                    if (appBarLeftWidget != null) {
+                      return appBarLeftWidget!;
+                    }
+                    if (NavigationService.I.isHomePage(context)) {
+                      return _leadingIcon(Icons.menu, () {
+                        BlocProvider.of<SideMenuBloc>(context).add(
+                          const OpenSideMenu(),
+                        );
+                      });
+                    } else {
+                      return _leadingIcon(Icons.arrow_back_rounded, () {
+                        NavigationService.I.navigateBack();
+                      });
+                    }
+                  },
                 ),
-                body: Column(
-                  children: [
-                    Visibility(
-                      visible: secondaryAppBar != null,
-                      child: Container(
-                        height: 53,
-                        decoration: BoxDecoration(
-                          color: scaffoldColors[ConvertouchUITheme.light]!
-                              .appBarColor,
-                        ),
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                          appBarPadding,
-                          0,
-                          appBarPadding,
-                          appBarPadding,
-                        ),
-                        child: secondaryAppBar,
-                      ),
-                    ),
-                    Expanded(
-                      child: body,
-                    ),
-                  ],
+                centerTitle: true,
+                title: Text(
+                  pageTitle,
+                  style: TextStyle(
+                    color: scaffoldColors[ConvertouchUITheme.light]!
+                        .appBarFontColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                floatingActionButton: floatingActionButton,
+                backgroundColor:
+                    scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
+                elevation: 0,
+                actions: appBarRightWidgets,
               ),
+              body: Column(
+                children: [
+                  Visibility(
+                    visible: secondaryAppBar != null,
+                    child: Container(
+                      height: 53,
+                      decoration: BoxDecoration(
+                        color: scaffoldColors[ConvertouchUITheme.light]!
+                            .appBarColor,
+                      ),
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                        appBarPadding,
+                        0,
+                        appBarPadding,
+                        appBarPadding,
+                      ),
+                      child: secondaryAppBar,
+                    ),
+                  ),
+                  Expanded(
+                    child: body,
+                  ),
+                ],
+              ),
+              floatingActionButton: floatingActionButton,
+            ),
             ConvertouchSideMenu(
               colors: sideMenuColors[ConvertouchUITheme.light]!,
             ),

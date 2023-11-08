@@ -25,9 +25,12 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       logo: _buildUnitGroupIconButton(),
       onTap: onTap,
       onLongPress: onLongPress,
+      onSelectForRemoval: onSelectForRemoval,
+      onDeselectForRemoval: onDeselectForRemoval,
       isMarkedToSelect: isMarkedToSelect,
-      isSelected: isSelected,
-      removalModeEnabled: removalModeEnabled,
+      selected: selected,
+      selectedForRemoval: selectedForRemoval,
+      removalMode: removalMode,
       markOnTap: markOnTap,
       itemColors: unitGroupColors,
     );
@@ -40,9 +43,12 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       logo: wrapLogo(_buildUnitGroupIconButton(), itemLogoWidth),
       onTap: onTap,
       onLongPress: onLongPress,
+      onSelectForRemoval: onSelectForRemoval,
+      onDeselectForRemoval: onDeselectForRemoval,
       isMarkedToSelect: isMarkedToSelect,
-      isSelected: isSelected,
-      removalModeEnabled: removalModeEnabled,
+      selected: selected,
+      selectedForRemoval: selectedForRemoval,
+      removalMode: removalMode,
       markOnTap: markOnTap,
       itemColors: unitGroupColors,
     );
@@ -53,10 +59,10 @@ class ConvertouchUnitGroupItem extends ConvertouchItem {
       onPressed: null,
       icon: ImageIcon(
         AssetImage("$iconAssetsPathPrefix/${unitGroup.iconName}"),
-        color: isSelected
+        color: selected
             ? unitGroupColors.contentColorSelected
             : unitGroupColors.contentColor,
-        size: 35,
+        size: 25,
       ),
     );
   }

@@ -17,9 +17,12 @@ class ConvertouchItem {
   void Function()? onTap;
   void Function()? onLongPress;
   void Function(String)? onValueChanged;
+  void Function()? onSelectForRemoval;
+  void Function()? onDeselectForRemoval;
   bool isMarkedToSelect = false;
-  bool isSelected = false;
-  bool removalModeEnabled = false;
+  bool selected = false;
+  bool selectedForRemoval = false;
+  bool removalMode = false;
   bool markOnTap = false;
   ConvertouchItemColors? itemColors;
 
@@ -27,9 +30,12 @@ class ConvertouchItem {
     this.onTap,
     this.onLongPress,
     this.onValueChanged,
+    this.onSelectForRemoval,
+    this.onDeselectForRemoval,
     required this.isMarkedToSelect,
-    required this.isSelected,
-    required this.removalModeEnabled,
+    required this.selected,
+    required this.selectedForRemoval,
+    required this.removalMode,
     required this.markOnTap,
     this.itemColors,
   });
@@ -38,9 +44,12 @@ class ConvertouchItem {
     onTap = baseItem.onTap;
     onLongPress = baseItem.onLongPress;
     onValueChanged = baseItem.onValueChanged;
+    onSelectForRemoval = baseItem.onSelectForRemoval;
+    onDeselectForRemoval = baseItem.onDeselectForRemoval;
     isMarkedToSelect = baseItem.isMarkedToSelect;
-    isSelected = baseItem.isSelected;
-    removalModeEnabled = baseItem.removalModeEnabled;
+    selected = baseItem.selected;
+    selectedForRemoval = baseItem.selectedForRemoval;
+    removalMode = baseItem.removalMode;
     markOnTap = baseItem.markOnTap;
     itemColors = baseItem.itemColors;
   }
@@ -50,9 +59,12 @@ class ConvertouchItem {
     void Function()? onTap,
     void Function()? onLongPress,
     void Function(String)? onValueChanged,
+    void Function()? onSelectForRemoval,
+    void Function()? onDeselectForRemoval,
     bool isMarkedToSelect = false,
-    bool isSelected = false,
-    bool removalModeEnabled = false,
+    bool selected = false,
+    bool selectedForRemoval = false,
+    bool removalMode = false,
     bool markOnTap = false,
     ConvertouchItemColors? itemColors,
   }) {
@@ -60,9 +72,12 @@ class ConvertouchItem {
       onTap: onTap,
       onLongPress: onLongPress,
       onValueChanged: onValueChanged,
+      onSelectForRemoval: onSelectForRemoval,
+      onDeselectForRemoval: onDeselectForRemoval,
       isMarkedToSelect: isMarkedToSelect,
-      isSelected: isSelected,
-      removalModeEnabled: removalModeEnabled,
+      selected: selected,
+      selectedForRemoval: selectedForRemoval,
+      removalMode: removalMode,
       markOnTap: markOnTap,
       itemColors: itemColors,
     );

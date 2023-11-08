@@ -33,8 +33,10 @@ class _ConvertouchConversionItemsViewState
   static const double _listSpacingRight = 7;
   static const double _listSpacingTop = 9;
   static const double _listItemSpacing = 9;
-  static const double _dragHandlerWidth = 30;
+  static const double _dragHandlerWidth = 38;
   static const double _dragHandlerHeight = 35;
+  static const double _removalHandlerWidth = 32;
+  static const double _removalHandlerHeight = 35;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +51,10 @@ class _ConvertouchConversionItemsViewState
             padding: const EdgeInsets.only(bottom: _listItemSpacing),
             child: Row(
               children: [
-                SizedBox(
+                Container(
                   width: _dragHandlerWidth,
                   height: _dragHandlerHeight,
+                  padding: EdgeInsets.zero,
                   child: ReorderableDragStartListener(
                     index: index,
                     child: const Card(
@@ -78,6 +81,21 @@ class _ConvertouchConversionItemsViewState
                       );
                     },
                   ).buildForList(),
+                ),
+                Container(
+                  width: _removalHandlerWidth,
+                  height: _removalHandlerHeight,
+                  padding: EdgeInsets.zero,
+                  child: IconButton(
+                    splashColor: Colors.transparent,      // on tap effect color
+                    highlightColor: Colors.transparent,   // on long pressed effect color
+                    padding: const EdgeInsets.only(left: 5),
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.remove_circle_outline,
+                      color: Color(0xFF7FA0BE),
+                    ),
+                  ),
                 ),
               ],
             ),

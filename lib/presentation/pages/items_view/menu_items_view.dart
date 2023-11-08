@@ -41,7 +41,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
       if (widget.items.isNotEmpty) {
         switch (widget.viewMode) {
           case ItemsViewMode.grid:
-            return ConvertouchItemsGrid(
+            return ConvertouchGrid(
               widget.items,
               markedItems: widget.markedItems,
               showMarkedItems: widget.showMarkedItems,
@@ -53,7 +53,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
               itemsSpacing: widget.itemsSpacing,
             );
           case ItemsViewMode.list:
-            return ConvertouchItemsList(
+            return ConvertouchList(
               widget.items,
               markedItems: widget.markedItems,
               showMarkedItems: widget.showMarkedItems,
@@ -71,22 +71,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
   }
 }
 
-class ConvertouchItemsGrid extends StatelessWidget {
-  const ConvertouchItemsGrid(
-    this.items, {
-    this.markedItems,
-    this.showMarkedItems = false,
-    this.selectedItemId,
-    this.showSelectedItem = false,
-    this.onItemTap,
-    this.removalModeEnabled = false,
-    this.markItemsOnTap = false,
-    this.itemsSpacing = 7,
-    super.key,
-  });
-
-  static const int _numberOfItemsInRow = 4;
-
+class ConvertouchGrid extends StatelessWidget {
   final List<IdNameItemModel> items;
   final List<IdNameItemModel>? markedItems;
   final bool showMarkedItems;
@@ -96,13 +81,28 @@ class ConvertouchItemsGrid extends StatelessWidget {
   final bool removalModeEnabled;
   final bool markItemsOnTap;
   final double itemsSpacing;
+  final int rowItemsNumber;
+
+  const ConvertouchGrid(
+    this.items, {
+    this.markedItems,
+    this.showMarkedItems = false,
+    this.selectedItemId,
+    this.showSelectedItem = false,
+    this.onItemTap,
+    this.removalModeEnabled = false,
+    this.markItemsOnTap = false,
+    this.itemsSpacing = 7,
+    this.rowItemsNumber = 4,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: _numberOfItemsInRow,
+        crossAxisCount: rowItemsNumber,
         mainAxisSpacing: itemsSpacing,
         crossAxisSpacing: itemsSpacing,
       ),
@@ -124,8 +124,18 @@ class ConvertouchItemsGrid extends StatelessWidget {
   }
 }
 
-class ConvertouchItemsList extends StatelessWidget {
-  const ConvertouchItemsList(
+class ConvertouchList extends StatelessWidget {
+  final List<IdNameItemModel> items;
+  final List<IdNameItemModel>? markedItems;
+  final bool showMarkedItems;
+  final int? selectedItemId;
+  final bool showSelectedItem;
+  final void Function(IdNameItemModel)? onItemTap;
+  final bool removalModeEnabled;
+  final bool markItemsOnTap;
+  final double itemsSpacing;
+
+  const ConvertouchList(
     this.items, {
     this.markedItems,
     this.showMarkedItems = false,
@@ -137,16 +147,6 @@ class ConvertouchItemsList extends StatelessWidget {
     this.itemsSpacing = 7,
     super.key,
   });
-
-  final List<IdNameItemModel> items;
-  final List<IdNameItemModel>? markedItems;
-  final bool showMarkedItems;
-  final int? selectedItemId;
-  final bool showSelectedItem;
-  final void Function(IdNameItemModel)? onItemTap;
-  final bool removalModeEnabled;
-  final bool markItemsOnTap;
-  final double itemsSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +214,7 @@ ConvertouchItem _buildItem(
       onItemTap?.call(item);
     },
     isMarkedToSelect: showMarkedItems && isMarkedToSelect,
-    isSelected: showSelectedItem && isSelected,
+    selected: showSelectedItem && isSelected,
     markOnTap: markOnTap,
   );
 }

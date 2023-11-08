@@ -4,6 +4,19 @@ import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuGridItem extends StatefulWidget {
+  final IdNameItemModel item;
+  final Widget logo;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
+  final void Function()? onSelectForRemoval;
+  final void Function()? onDeselectForRemoval;
+  final bool isMarkedToSelect;
+  final bool selected;
+  final bool selectedForRemoval;
+  final bool removalMode;
+  final bool markOnTap;
+  final ConvertouchMenuItemColors itemColors;
+
   const ConvertouchMenuGridItem(
     this.item, {
     super.key,
@@ -11,21 +24,14 @@ class ConvertouchMenuGridItem extends StatefulWidget {
     required this.itemColors,
     this.onTap,
     this.onLongPress,
+    this.onSelectForRemoval,
+    this.onDeselectForRemoval,
     this.isMarkedToSelect = false,
-    this.isSelected = false,
-    this.removalModeEnabled = false,
+    this.selected = false,
+    this.selectedForRemoval = false,
+    this.removalMode = false,
     this.markOnTap = false,
   });
-
-  final IdNameItemModel item;
-  final Widget logo;
-  final void Function()? onTap;
-  final void Function()? onLongPress;
-  final bool isMarkedToSelect;
-  final bool isSelected;
-  final bool removalModeEnabled;
-  final bool markOnTap;
-  final ConvertouchMenuItemColors itemColors;
 
   @override
   State createState() => _ConvertouchMenuGridItemState();
@@ -48,7 +54,7 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
   @override
   Widget build(BuildContext context) {
     var itemColor = widget.itemColors;
-    if (widget.isSelected) {
+    if (widget.selected) {
       _borderColor = itemColor.borderColorSelected;
       _backgroundColor = itemColor.backgroundColorSelected;
       _contentColor = itemColor.contentColorSelected;
@@ -64,12 +70,12 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
 
     return GestureDetector(
       onTap: () {
-        if (widget.removalModeEnabled) {
+        if (widget.removalMode) {
           setState(() {
             _isMarkedToRemove = !_isMarkedToRemove;
           });
         } else {
-          if (!widget.isSelected) {
+          if (!widget.selected) {
             if (widget.markOnTap) {
               setState(() {
                 _isMarkedToSelect = !_isMarkedToSelect;
@@ -80,7 +86,7 @@ class _ConvertouchMenuGridItemState extends State<ConvertouchMenuGridItem> {
 
         bool notMarkedAndCanBeSelected =
             !widget.markOnTap && !widget.isMarkedToSelect;
-        if (!widget.isSelected &&
+        if (!widget.selected &&
             (widget.markOnTap || notMarkedAndCanBeSelected)) {
           widget.onTap?.call();
         }

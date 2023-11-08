@@ -5,29 +5,27 @@ import 'package:convertouch/presentation/pages/style/model/conversion_item_color
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ConvertouchUnitValueListItem extends StatefulWidget {
-  const ConvertouchUnitValueListItem(
+class ConvertouchConversionListItem extends StatefulWidget {
+  final UnitValueModel item;
+  final void Function()? onTap;
+  final void Function(String)? onValueChanged;
+  final ConvertouchConversionItemColors itemColors;
+
+  const ConvertouchConversionListItem(
     this.item, {
     this.onTap,
-    this.onLongPress,
     this.onValueChanged,
     required this.itemColors,
     super.key,
   });
 
-  final UnitValueModel item;
-  final void Function()? onTap;
-  final void Function()? onLongPress;
-  final void Function(String)? onValueChanged;
-  final ConvertouchConversionItemColors itemColors;
-
   @override
-  State<ConvertouchUnitValueListItem> createState() =>
-      _ConvertouchUnitValueListItemState();
+  State<ConvertouchConversionListItem> createState() =>
+      _ConvertouchConversionListItemState();
 }
 
-class _ConvertouchUnitValueListItemState
-    extends State<ConvertouchUnitValueListItem> {
+class _ConvertouchConversionListItemState
+    extends State<ConvertouchConversionListItem> {
   static const double _unitButtonWidth = 70;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;
@@ -109,7 +107,6 @@ class _ConvertouchUnitValueListItemState
           const SizedBox(width: 7),
           GestureDetector(
             onTap: widget.onTap,
-            onLongPress: widget.onLongPress,
             child: SizedBox(
               width: _unitButtonWidth,
               height: _unitButtonHeight,
@@ -133,6 +130,7 @@ class _ConvertouchUnitValueListItemState
                   widget.item.unit.abbreviation,
                   style: TextStyle(
                     color: _unitButtonTextColor,
+                    fontWeight: FontWeight.w700,
                   ),
                   maxLines: 1,
                 ),
