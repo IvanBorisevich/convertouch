@@ -1,18 +1,17 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
+import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_states.dart';
 import 'package:convertouch/presentation/pages/items_view/conversion_items_view.dart';
-import 'package:convertouch/presentation/pages/items_view/item/item.dart';
+import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'scaffold/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends StatefulWidget {
@@ -30,7 +29,7 @@ class _ConvertouchUnitsConversionPageState
     return unitsConversionBloc((conversionInitialized) {
       if (conversionInitialized is ConversionInitialized) {
         return ConvertouchScaffold(
-          secondaryAppBar: ConvertouchItem.createItem(
+          secondaryAppBar: ConvertouchMenuItem(
             conversionInitialized.unitGroup,
             itemColors: unitGroupItemColorsInAppBar[ConvertouchUITheme.light]!,
             onTap: () {
@@ -45,7 +44,7 @@ class _ConvertouchUnitsConversionPageState
                 ),
               );
             },
-          ).buildForList(),
+          ),
           body: ConvertouchConversionItemsView(
             conversionInitialized.conversionItems,
             sourceUnitId: conversionInitialized.sourceUnit.id!,

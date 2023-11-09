@@ -7,7 +7,8 @@ import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dar
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
-import 'package:convertouch/presentation/pages/items_view/item/item.dart';
+import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
@@ -69,7 +70,7 @@ class _ConvertouchUnitCreationPageState
             child: Column(children: [
               unitCreationBloc((unitCreationPrepared) {
                 UnitGroupModel unitGroup = unitCreationPrepared.unitGroup;
-                return ConvertouchItem.createItem(
+                return ConvertouchMenuItem(
                   unitGroup,
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -82,7 +83,7 @@ class _ConvertouchUnitCreationPageState
                       ),
                     );
                   },
-                ).buildForList();
+                );
               }),
               const SizedBox(height: 20),
               ConvertouchTextBox(
@@ -129,7 +130,7 @@ class _ConvertouchUnitCreationPageState
                       ConvertouchFadeScaleAnimation(
                         duration: const Duration(milliseconds: 150),
                         reverse: !newUnitNameEntered,
-                        child: ConvertouchItem.createItem(
+                        child: ConvertouchConversionItem(
                           UnitValueModel(
                             unit: UnitModel(
                               name: _unitName,
@@ -145,13 +146,13 @@ class _ConvertouchUnitCreationPageState
                               _newUnitValue = value;
                             });
                           },
-                        ).buildForList(),
+                        ),
                       ),
                       const SizedBox(height: 9),
                       ConvertouchFadeScaleAnimation(
                         duration: const Duration(milliseconds: 150),
                         reverse: !newUnitNameEntered,
-                        child: ConvertouchItem.createItem(
+                        child: ConvertouchConversionItem(
                           UnitValueModel(
                             unit: unitCreationPrepared.equivalentUnit!,
                             value: double.tryParse(_equivalentUnitValue),
@@ -174,7 +175,7 @@ class _ConvertouchUnitCreationPageState
                               ),
                             );
                           },
-                        ).buildForList(),
+                        ),
                       ),
                       const SizedBox(height: 25),
                     ],

@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
-import 'package:convertouch/presentation/pages/items_view/item/item.dart';
+import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
@@ -69,7 +69,7 @@ class _ConvertouchConversionItemsViewState
                   ),
                 ),
                 Expanded(
-                  child: ConvertouchItem.createItem(
+                  child: ConvertouchConversionItem(
                     widget.convertedItems[index],
                     onTap: () {
                       widget.onItemTap?.call(widget.convertedItems[index]);
@@ -80,15 +80,17 @@ class _ConvertouchConversionItemsViewState
                         value,
                       );
                     },
-                  ).buildForList(),
+                  ),
                 ),
                 Container(
                   width: _removalHandlerWidth,
                   height: _removalHandlerHeight,
                   padding: EdgeInsets.zero,
                   child: IconButton(
-                    splashColor: Colors.transparent,      // on tap effect color
-                    highlightColor: Colors.transparent,   // on long pressed effect color
+                    splashColor: Colors.transparent,
+                    // on tap effect color
+                    highlightColor: Colors.transparent,
+                    // on long pressed effect color
                     padding: const EdgeInsets.only(left: 5),
                     onPressed: () {},
                     icon: const Icon(
