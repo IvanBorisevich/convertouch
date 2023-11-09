@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/presentation/pages/scaffold/checkbox.dart';
 import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
   static const double itemContainerHeight = 50;
 
   late bool _isMarkedToSelect;
-  bool _isMarkedToRemove = false;
+  bool _selectedForRemoval = false;
 
   late Color _contentColor;
   late Color _borderColor;
@@ -74,7 +75,7 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
       onTap: () {
         if (widget.removalMode) {
           setState(() {
-            _isMarkedToRemove = !_isMarkedToRemove;
+            _selectedForRemoval = !_selectedForRemoval;
           });
         } else {
           if (!widget.selected) {
@@ -94,50 +95,67 @@ class _ConvertouchMenuListItemState extends State<ConvertouchMenuListItem> {
         }
       },
       onLongPress: widget.onLongPress,
-      child: Container(
+      child: SizedBox(
         height: itemContainerHeight,
-        decoration: BoxDecoration(
-          color: _backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: _borderColor,
-            width: 1,
-          ),
-        ),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
           children: [
-            DefaultTextStyle(
-              style: TextStyle(
-                color: _contentColor,
-                fontWeight: FontWeight.w700,
-                fontFamily: quicksandFontFamily,
-                fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: ConvertouchCheckbox(
+                _selectedForRemoval,
+                color: _borderColor,
+                colorChecked: _contentColor,
               ),
-              child: widget.logo,
-            ),
-            VerticalDivider(
-              width: 1,
-              thickness: 1,
-              indent: 5,
-              endIndent: 5,
-              color: _borderColor,
             ),
             Expanded(
-              child: Align(
-                alignment: const AlignmentDirectional(-1, 0),
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
-                  child: Text(
-                    widget.item.name,
-                    style: TextStyle(
-                      fontFamily: quicksandFontFamily,
-                      fontWeight: FontWeight.w600,
-                      color: _contentColor,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: _backgroundColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _borderColor,
+                    width: 1,
                   ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    DefaultTextStyle(
+                      style: TextStyle(
+                        color: _contentColor,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: quicksandFontFamily,
+                        fontSize: 16,
+                      ),
+                      child: widget.logo,
+                    ),
+                    VerticalDivider(
+                      width: 1,
+                      thickness: 1,
+                      indent: 5,
+                      endIndent: 5,
+                      color: _borderColor,
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: const AlignmentDirectional(-1, 0),
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20, 0, 15, 0),
+                          child: Text(
+                            widget.item.name,
+                            style: TextStyle(
+                              fontFamily: quicksandFontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: _contentColor,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

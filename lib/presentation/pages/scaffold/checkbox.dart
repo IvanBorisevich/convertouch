@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class ConvertouchCheckbox extends StatefulWidget {
   final bool value;
-  final void Function()? onCheck;
-  final void Function()? onUncheck;
+  final Color color;
+  final Color colorChecked;
 
   const ConvertouchCheckbox(
     this.value, {
-    this.onCheck,
-    this.onUncheck,
+    this.color = Colors.blueAccent,
+    this.colorChecked = const Color(0xFF1D4D9D),
     super.key,
   });
 
@@ -27,38 +27,21 @@ class _ConvertouchCheckboxState extends State<ConvertouchCheckbox> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _value = !_value;
-          if (_value) {
-            widget.onCheck?.call();
-          } else {
-            widget.onUncheck?.call();
-          }
-        });
-      },
-      child: Container(
-        width: 50,
-        height: 50,
-        padding: const EdgeInsets.all(12),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: const Color(0xFF426F99),
-              width: 1,
-            ),
-            color: _value ? const Color(0xFF426F99) : Colors.transparent,
-          ),
-          child: Icon(
-            _value ? Icons.check : Icons.check_outlined,
-            size: 20,
-            color: _value ? Colors.white : const Color(0xFF426F99),
-          ),
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: _value ? widget.colorChecked : widget.color,
+          width: 1,
         ),
+        color: _value ? widget.colorChecked : Colors.transparent,
+      ),
+      child: Icon(
+        Icons.check_outlined,
+        size: 15,
+        color: _value ? Colors.white : Colors.transparent,
       ),
     );
-
   }
 }
