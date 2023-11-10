@@ -34,9 +34,8 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                         ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
                 ? "Select Unit Group"
                 : "Unit Groups",
-        secondaryAppBar: ConvertouchSearchBar(
+        secondaryAppBar: const ConvertouchSearchBar(
           placeholder: "Search unit groups...",
-          colors: searchBarColors[ConvertouchUITheme.light]!,
         ),
         body: itemsViewModeBloc((itemsMenuViewState) {
           return ConvertouchMenuItemsView(

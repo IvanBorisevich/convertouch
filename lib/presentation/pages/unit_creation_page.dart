@@ -61,6 +61,7 @@ class _ConvertouchUnitCreationPageState
                   ),
                 );
               },
+              color: scaffoldColor[ConvertouchUITheme.light]!,
             );
           }),
         ],
@@ -95,7 +96,6 @@ class _ConvertouchUnitCreationPageState
                     _unitAbbrHint = _getInitialUnitAbbreviationFromName(value);
                   });
                 },
-                textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
               ),
               const SizedBox(height: 12),
               ConvertouchTextBox(
@@ -109,7 +109,6 @@ class _ConvertouchUnitCreationPageState
                 maxTextLength: _unitAbbreviationMaxLength,
                 textLengthCounterVisible: true,
                 hintText: _unitAbbrHint,
-                textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
               ),
               const SizedBox(height: 25),
               unitCreationBloc((unitCreationPrepared) {

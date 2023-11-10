@@ -54,12 +54,23 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
               onTap: () {
                 widget.onItemTap?.call(item);
               },
-              // onLongPress: onLongPress,
-              // onSelectForRemoval: onSelectForRemoval,
-              // onDeselectForRemoval: onDeselectForRemoval,
+              onLongPress: () {
+                setState(() {
+                  _removalMode = true;
+                });
+              },
+              onSelectForRemoval: () {
+                setState(() {
+                  _selectedItemIdsForRemoval.add(item.id!);
+                });
+              },
+              onDeselectForRemoval: () {
+                setState(() {
+                  _selectedItemIdsForRemoval.remove(item.id!);
+                });
+              },
               isMarkedToSelect: isMarkedToSelect,
               selected: selected,
-              // selectedForRemoval: selectedForRemoval,
               removalMode: _removalMode,
               markOnTap: widget.markItemsOnTap,
             ),

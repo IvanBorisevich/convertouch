@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/domain/utils/unit_value_util.dart';
 import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
-import 'package:convertouch/presentation/pages/style/model/conversion_item_colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,13 +11,13 @@ class ConvertouchConversionItem extends StatefulWidget {
   final UnitValueModel item;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
-  final ConvertouchConversionItemColors? itemColors;
+  final ConvertouchConversionItemColor? color;
 
   const ConvertouchConversionItem(
     this.item, {
     this.onTap,
     this.onValueChanged,
-    this.itemColors,
+    this.color,
     super.key,
   });
 
@@ -26,8 +26,7 @@ class ConvertouchConversionItem extends StatefulWidget {
       _ConvertouchConversionItemState();
 }
 
-class _ConvertouchConversionItemState
-    extends State<ConvertouchConversionItem> {
+class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   static const double _unitButtonWidth = 70;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;
@@ -37,9 +36,9 @@ class _ConvertouchConversionItemState
   final _unitValueController = TextEditingController();
 
   late bool _isFocused;
-  late Color _borderColor;
-  late Color _unitButtonBackgroundColor;
-  late Color _unitButtonTextColor;
+
+  late ConvertouchTextBoxColor _textBoxColor;
+  late ConvertouchMenuItemColor _unitButtonColor;
   late String _rawUnitValue;
 
   @override
@@ -51,16 +50,10 @@ class _ConvertouchConversionItemState
 
   @override
   Widget build(BuildContext context) {
-    var itemColors = widget.itemColors ?? conversionItemColors[ConvertouchUITheme.light]!;
-    if (_isFocused) {
-      _borderColor = itemColors.textBoxColors.borderColorFocused;
-      _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColorSelected;
-      _unitButtonTextColor = itemColors.unitButtonTextColorSelected;
-    } else {
-      _borderColor = itemColors.textBoxColors.borderColor;
-      _unitButtonBackgroundColor = itemColors.unitButtonBackgroundColor;
-      _unitButtonTextColor = itemColors.unitButtonTextColor;
-    }
+    var itemColor =
+        widget.color ?? conversionItemColor[ConvertouchUITheme.light]!;
+    _textBoxColor = itemColor.textBox;
+    _unitButtonColor = itemColor.unitButton;
 
     if (!_isFocused) {
       _rawUnitValue = formatValue(widget.item.value);
@@ -103,7 +96,7 @@ class _ConvertouchConversionItemState
                   _isFocused = false;
                 });
               },
-              textBoxColors: itemColors.textBoxColors,
+              customColor: _textBoxColor,
             ),
           ),
           const SizedBox(width: 7),
@@ -115,12 +108,16 @@ class _ConvertouchConversionItemState
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    _unitButtonBackgroundColor,
+                    _isFocused
+                        ? _unitButtonColor.focused.background
+                        : _unitButtonColor.regular.background,
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       side: BorderSide(
-                        color: _borderColor,
+                        color: _isFocused
+                            ? _unitButtonColor.focused.border
+                            : _unitButtonColor.regular.border,
                         width: 1,
                       ),
                       borderRadius: _elementsBorderRadius,
@@ -131,7 +128,9 @@ class _ConvertouchConversionItemState
                 child: Text(
                   widget.item.unit.abbreviation,
                   style: TextStyle(
-                    color: _unitButtonTextColor,
+                    color: _isFocused
+                        ? _unitButtonColor.focused.content
+                        : _unitButtonColor.regular.content,
                     fontWeight: FontWeight.w700,
                   ),
                   maxLines: 1,

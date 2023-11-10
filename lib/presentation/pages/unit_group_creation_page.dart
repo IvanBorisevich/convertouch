@@ -38,6 +38,7 @@ class _ConvertouchUnitGroupCreationPageState
                 ),
               );
             },
+            color: scaffoldColor[ConvertouchUITheme.light]!,
           ),
         ],
         body: Container(
@@ -50,7 +51,6 @@ class _ConvertouchUnitGroupCreationPageState
             },
             label: "Unit Group Name",
             controller: _controller,
-            textBoxColors: textBoxColors[ConvertouchUITheme.light]!,
           ),
         ),
       ),

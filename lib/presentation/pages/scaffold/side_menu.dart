@@ -1,20 +1,24 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_states.dart';
-import 'package:convertouch/presentation/pages/style/model/side_menu_colors.dart';
+import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSideMenu extends StatefulWidget {
-  final ConvertouchSideMenuColors colors;
   final double headerHeight;
   final double widthPercentage;
+  final ConvertouchUITheme theme;
+  final ConvertouchSideMenuColor? customColor;
 
   const ConvertouchSideMenu({
-    required this.colors,
     this.headerHeight = 50,
     this.widthPercentage = 0.8,
+    this.theme = ConvertouchUITheme.light,
+    this.customColor,
     super.key,
   });
 
@@ -43,6 +47,8 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
 
   @override
   Widget build(BuildContext context) {
+    final ConvertouchSideMenuColor color =
+        widget.customColor ?? sideMenuColor[widget.theme]!;
     final double pageWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<SideMenuBloc, SideMenuState>(
       builder: (_, sideMenuState) {
@@ -84,14 +90,14 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                   Container(
                     width: pageWidth * widget.widthPercentage,
                     decoration: BoxDecoration(
-                      color: widget.colors.backgroundColor,
+                      color: color.regular.backgroundColor,
                     ),
                     child: Column(
                       children: <Widget>[
                         Container(
                           height: widget.headerHeight,
                           decoration: BoxDecoration(
-                            color: widget.colors.headerColor,
+                            color: color.regular.headerColor,
                           ),
                           child: Center(
                             child: Text(
@@ -100,7 +106,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                               style: TextStyle(
                                 fontSize: 19,
                                 fontWeight: FontWeight.w600,
-                                color: widget.colors.contentColor,
+                                color: color.regular.contentColor,
                               ),
                             ),
                           ),
@@ -110,11 +116,11 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                           leadingIconData: Icons.dark_mode_outlined,
                           trailing: Switch(
                             value: true,
-                            activeTrackColor: widget.colors.headerColor,
-                            activeColor: widget.colors.activeSwitcherColor,
+                            activeTrackColor: color.regular.headerColor,
+                            activeColor: color.regular.activeSwitcherColor,
                             onChanged: (bool value) {},
                           ),
-                          contentColor: widget.colors.contentColor,
+                          contentColor: color.regular.contentColor,
                           title: "Dark Mode",
                           onTap: () {
                             Navigator.of(context).pop();
@@ -123,7 +129,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                         ConvertouchSideMenuItem(
                           leadingIconData: Icons.settings,
                           title: "Settings",
-                          contentColor: widget.colors.contentColor,
+                          contentColor: color.regular.contentColor,
                           onTap: () {
                             Navigator.of(context).pop();
                           },
@@ -131,7 +137,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                         ConvertouchSideMenuItem(
                           leadingIconData: Icons.exit_to_app,
                           title: "Exit",
-                          contentColor: widget.colors.contentColor,
+                          contentColor: color.regular.contentColor,
                           onTap: () {
                             SystemNavigator.pop();
                           },
@@ -146,12 +152,13 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Divider(color: widget.colors.footerDividerColor),
+                                  Divider(
+                                      color: color.regular.footerDividerColor),
                                   const SizedBox(height: 7),
                                   Text(
                                     "v.1.0.0",
                                     style: TextStyle(
-                                      color: widget.colors.contentColor,
+                                      color: color.regular.contentColor,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),

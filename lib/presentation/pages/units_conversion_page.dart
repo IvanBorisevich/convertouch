@@ -31,7 +31,7 @@ class _ConvertouchUnitsConversionPageState
         return ConvertouchScaffold(
           secondaryAppBar: ConvertouchMenuItem(
             conversionInitialized.unitGroup,
-            itemColors: unitGroupItemColorsInAppBar[ConvertouchUITheme.light]!,
+            color: appBarUnitGroupItemColor[ConvertouchUITheme.light]!,
             onTap: () {
               BlocProvider.of<UnitGroupsBloc>(context).add(
                 FetchUnitGroups(

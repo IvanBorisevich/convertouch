@@ -2,10 +2,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/presentation/pages/scaffold/checkbox.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
-import 'package:convertouch/presentation/pages/style/model/menu_item_colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem extends StatefulWidget {
@@ -17,24 +17,22 @@ class ConvertouchMenuItem extends StatefulWidget {
   final void Function()? onDeselectForRemoval;
   final bool isMarkedToSelect;
   final bool selected;
-  final bool selectedForRemoval;
   final bool removalMode;
   final bool markOnTap;
-  final ConvertouchMenuItemColors? itemColors;
+  final ConvertouchMenuItemColor? color;
 
   const ConvertouchMenuItem(
     this.item, {
     this.itemsViewMode = ItemsViewMode.list,
-    this.itemColors,
     this.onTap,
     this.onLongPress,
     this.onSelectForRemoval,
     this.onDeselectForRemoval,
     this.isMarkedToSelect = false,
     this.selected = false,
-    this.selectedForRemoval = false,
     this.removalMode = false,
     this.markOnTap = false,
+    this.color,
     super.key,
   });
 
@@ -43,12 +41,9 @@ class ConvertouchMenuItem extends StatefulWidget {
 }
 
 class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
+  late MenuItemColorVariation _color;
   late bool _isMarkedToSelect;
   bool _selectedForRemoval = false;
-
-  late Color _contentColor;
-  late Color _borderColor;
-  late Color _backgroundColor;
 
   @override
   void initState() {
@@ -58,28 +53,22 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchMenuItemColors itemColor;
+    ConvertouchMenuItemColor itemColor;
 
-    if (widget.itemColors != null) {
-      itemColor = widget.itemColors!;
+    if (widget.color != null) {
+      itemColor = widget.color!;
     } else if (widget.item.runtimeType == UnitGroupModel) {
-      itemColor = unitGroupItemColors[ConvertouchUITheme.light]!;
+      itemColor = unitGroupItemColor[ConvertouchUITheme.light]!;
     } else {
-      itemColor = unitItemColors[ConvertouchUITheme.light]!;
+      itemColor = unitItemColor[ConvertouchUITheme.light]!;
     }
 
     if (widget.selected) {
-      _borderColor = itemColor.borderColorSelected;
-      _backgroundColor = itemColor.backgroundColorSelected;
-      _contentColor = itemColor.contentColorSelected;
+      _color = itemColor.selected;
     } else if (_isMarkedToSelect) {
-      _borderColor = itemColor.borderColorMarked;
-      _backgroundColor = itemColor.backgroundColorMarked;
-      _contentColor = itemColor.contentColorMarked;
+      _color = itemColor.marked;
     } else {
-      _borderColor = itemColor.borderColor;
-      _backgroundColor = itemColor.backgroundColor;
-      _contentColor = itemColor.contentColor;
+      _color = itemColor.regular;
     }
 
     Widget logo = empty();
@@ -92,7 +81,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
             AssetImage(
               "$iconAssetsPathPrefix/${unitGroup.iconName}",
             ),
-            color: _contentColor,
+            color: _color.content,
             size: 25,
           ),
         );
@@ -116,6 +105,11 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
           setState(() {
             _selectedForRemoval = !_selectedForRemoval;
           });
+          if (_selectedForRemoval) {
+            widget.onSelectForRemoval?.call();
+          } else {
+            widget.onDeselectForRemoval?.call();
+          }
         } else {
           if (!widget.selected) {
             if (widget.markOnTap) {
@@ -141,17 +135,17 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
               return ConvertouchMenuGridItem(
                 widget.item,
                 logo: logo,
-                borderColor: _borderColor,
-                contentColor: _contentColor,
-                backgroundColor: _backgroundColor,
+                borderColor: _color.border,
+                contentColor: _color.content,
+                backgroundColor: _color.background,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
                 widget.item,
                 logo: logo,
-                borderColor: _borderColor,
-                contentColor: _contentColor,
-                backgroundColor: _backgroundColor,
+                borderColor: _color.border,
+                contentColor: _color.content,
+                backgroundColor: _color.background,
               );
           }
         },

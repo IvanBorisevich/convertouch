@@ -1,3 +1,0 @@
-class ConvertouchItemColors {
-  const ConvertouchItemColors();
-}

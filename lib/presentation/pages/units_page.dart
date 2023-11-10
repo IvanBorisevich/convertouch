@@ -51,11 +51,11 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 ),
               );
             },
+            color: scaffoldColor[ConvertouchUITheme.light]!,
           ),
         ],
-        secondaryAppBar: ConvertouchSearchBar(
+        secondaryAppBar: const ConvertouchSearchBar(
           placeholder: "Search units...",
-          colors: searchBarColors[ConvertouchUITheme.light]!,
         ),
         body: itemsViewModeBloc((itemsViewModeState) {
           return ConvertouchMenuItemsView(

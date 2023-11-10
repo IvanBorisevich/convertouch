@@ -4,31 +4,38 @@ import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatelessWidget {
+  final Widget body;
+  final ConvertouchUITheme theme;
+  final Widget? appBarLeftWidget;
+  final String pageTitle;
+  final List<Widget>? appBarRightWidgets;
+  final Widget? secondaryAppBar;
+  final Widget? floatingActionButton;
+  final double appBarPadding;
+  final ConvertouchScaffoldColor? customColor;
+
   const ConvertouchScaffold({
-    super.key,
     required this.body,
+    this.theme = ConvertouchUITheme.light,
     this.appBarLeftWidget,
     this.pageTitle = appName,
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.floatingActionButton,
     this.appBarPadding = 7,
+    this.customColor,
+    super.key,
   });
-
-  final Widget? appBarLeftWidget;
-  final String pageTitle;
-  final List<Widget>? appBarRightWidgets;
-  final Widget? secondaryAppBar;
-  final Widget body;
-  final Widget? floatingActionButton;
-  final double appBarPadding;
 
   @override
   Widget build(BuildContext context) {
+    ConvertouchScaffoldColor color = customColor ?? scaffoldColor[theme]!;
+
     return SafeArea(
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
@@ -48,15 +55,23 @@ class ConvertouchScaffold extends StatelessWidget {
                       return appBarLeftWidget!;
                     }
                     if (NavigationService.I.isHomePage(context)) {
-                      return _leadingIcon(Icons.menu, () {
-                        BlocProvider.of<SideMenuBloc>(context).add(
-                          const OpenSideMenu(),
-                        );
-                      });
+                      return _leadingIcon(
+                        Icons.menu,
+                        () {
+                          BlocProvider.of<SideMenuBloc>(context).add(
+                            const OpenSideMenu(),
+                          );
+                        },
+                        color,
+                      );
                     } else {
-                      return _leadingIcon(Icons.arrow_back_rounded, () {
-                        NavigationService.I.navigateBack();
-                      });
+                      return _leadingIcon(
+                        Icons.arrow_back_rounded,
+                        () {
+                          NavigationService.I.navigateBack();
+                        },
+                        color,
+                      );
                     }
                   },
                 ),
@@ -64,14 +79,12 @@ class ConvertouchScaffold extends StatelessWidget {
                 title: Text(
                   pageTitle,
                   style: TextStyle(
-                    color: scaffoldColors[ConvertouchUITheme.light]!
-                        .appBarFontColor,
+                    color: color.regular.appBarFontColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor:
-                    scaffoldColors[ConvertouchUITheme.light]!.appBarColor,
+                backgroundColor: color.regular.appBarColor,
                 elevation: 0,
                 actions: appBarRightWidgets,
               ),
@@ -82,8 +95,7 @@ class ConvertouchScaffold extends StatelessWidget {
                     child: Container(
                       height: 53,
                       decoration: BoxDecoration(
-                        color: scaffoldColors[ConvertouchUITheme.light]!
-                            .appBarColor,
+                        color: color.regular.appBarColor,
                       ),
                       padding: EdgeInsetsDirectional.fromSTEB(
                         appBarPadding,
@@ -101,9 +113,7 @@ class ConvertouchScaffold extends StatelessWidget {
               ),
               floatingActionButton: floatingActionButton,
             ),
-            ConvertouchSideMenu(
-              colors: sideMenuColors[ConvertouchUITheme.light]!,
-            ),
+            const ConvertouchSideMenu(),
           ],
         ),
       ),
@@ -113,11 +123,12 @@ class ConvertouchScaffold extends StatelessWidget {
   Widget _leadingIcon(
     IconData iconData,
     void Function()? onPressed,
+    ConvertouchScaffoldColor color,
   ) {
     return IconButton(
       icon: Icon(
         iconData,
-        color: scaffoldColors[ConvertouchUITheme.light]!.appBarIconColor,
+        color: color.regular.appBarIconColor,
       ),
       onPressed: onPressed,
     );
@@ -129,18 +140,16 @@ Widget checkIcon(
   bool isVisible = true,
   bool isEnabled = false,
   void Function()? onPressedFunc,
+  required ConvertouchScaffoldColor color,
 }) {
   return Visibility(
     visible: isVisible,
     child: IconButton(
       icon: Icon(
         Icons.check,
-        color: isEnabled
-            ? scaffoldColors[ConvertouchUITheme.light]!.appBarIconColor
-            : null,
+        color: isEnabled ? color.regular.appBarIconColor : null,
       ),
-      disabledColor:
-          scaffoldColors[ConvertouchUITheme.light]!.appBarIconColorDisabled,
+      disabledColor: color.regular.appBarIconColorDisabled,
       onPressed: isEnabled ? onPressedFunc : null,
     ),
   );
