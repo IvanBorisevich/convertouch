@@ -1,27 +1,22 @@
 import 'dart:ui';
 
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
-  const ConvertouchConversionItemsView(
-    this.convertedItems, {
-    required this.sourceUnitId,
-    this.sourceValue,
-    required this.unitGroup,
-    this.onItemTap,
-    this.onItemValueChanged,
-    super.key,
-  });
-
   final List<UnitValueModel> convertedItems;
-  final int sourceUnitId;
-  final double? sourceValue;
-  final UnitGroupModel unitGroup;
   final void Function(UnitValueModel)? onItemTap;
   final void Function(UnitValueModel, String)? onItemValueChanged;
+  final void Function(UnitValueModel)? onItemRemove;
+
+  const ConvertouchConversionItemsView(
+    this.convertedItems, {
+    this.onItemTap,
+    this.onItemValueChanged,
+    this.onItemRemove,
+    super.key,
+  });
 
   @override
   State createState() => _ConvertouchConversionItemsViewState();
@@ -92,7 +87,9 @@ class _ConvertouchConversionItemsViewState
                     highlightColor: Colors.transparent,
                     // on long pressed effect color
                     padding: const EdgeInsets.only(left: 5),
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.onItemRemove?.call(widget.convertedItems[index]);
+                    },
                     icon: const Icon(
                       Icons.remove_circle_outline,
                       color: Color(0xFF7FA0BE),

@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 
@@ -28,19 +27,16 @@ class ConversionInitializing extends UnitsConversionState {
 class ConversionInitialized extends UnitsConversionState {
   const ConversionInitialized({
     this.sourceUnitValue,
-    required this.sourceUnit,
     required this.conversionItems,
     required this.unitGroup,
   });
 
   final double? sourceUnitValue;
-  final UnitModel sourceUnit;
   final List<UnitValueModel> conversionItems;
   final UnitGroupModel unitGroup;
 
   @override
   List<Object> get props => [
-    sourceUnit,
     conversionItems,
     unitGroup,
   ];
@@ -49,7 +45,6 @@ class ConversionInitialized extends UnitsConversionState {
   String toString() {
     return 'ConversionInitialized{'
         'sourceUnitValue: $sourceUnitValue, '
-        'sourceUnit: $sourceUnit, '
         'conversionItems: $conversionItems, '
         'unitGroup: $unitGroup}';
   }

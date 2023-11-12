@@ -12,6 +12,7 @@ import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../bloc/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends StatefulWidget {
@@ -47,9 +48,6 @@ class _ConvertouchUnitsConversionPageState
           ),
           body: ConvertouchConversionItemsView(
             conversionInitialized.conversionItems,
-            sourceUnitId: conversionInitialized.sourceUnit.id!,
-            sourceValue: conversionInitialized.sourceUnitValue,
-            unitGroup: conversionInitialized.unitGroup,
             onItemTap: (item) {
               BlocProvider.of<UnitsBloc>(context).add(
                 FetchUnits(
@@ -71,6 +69,15 @@ class _ConvertouchUnitsConversionPageState
                   conversionUnits: conversionInitialized.conversionItems
                       .map((item) => item.unit)
                       .toList(),
+                  unitGroup: conversionInitialized.unitGroup,
+                ),
+              );
+            },
+            onItemRemove: (item) {
+              BlocProvider.of<UnitsConversionBloc>(context).add(
+                RemoveConversion(
+                  unitValueModel: item,
+                  currentConversionItems: conversionInitialized.conversionItems,
                   unitGroup: conversionInitialized.unitGroup,
                 ),
               );

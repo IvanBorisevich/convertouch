@@ -53,11 +53,21 @@ class UnitsConversionBloc
       if (!stoppedOnError) {
         yield ConversionInitialized(
           conversionItems: convertedUnitValues,
-          sourceUnit: inputUnit,
           sourceUnitValue: inputValue,
           unitGroup: event.unitGroup,
         );
       }
+    } else if (event is RemoveConversion) {
+      yield const ConversionInitializing();
+
+      List<UnitValueModel> conversionItems = event.currentConversionItems;
+      conversionItems
+          .removeWhere((item) => event.unitValueModel.unit == item.unit);
+
+      yield ConversionInitialized(
+        conversionItems: conversionItems,
+        unitGroup: event.unitGroup,
+      );
     }
   }
 }

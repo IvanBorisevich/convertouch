@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/base_event.dart';
 
 abstract class UnitsConversionEvent extends ConvertouchEvent {
@@ -35,5 +36,32 @@ class InitializeConversion extends UnitsConversionEvent {
         'prevInputUnit: $prevInputUnit, '
         'conversionUnits: $conversionUnits, '
         'unitGroup: $unitGroup}';
+  }
+}
+
+class RemoveConversion extends UnitsConversionEvent {
+  final UnitValueModel unitValueModel;
+  final List<UnitValueModel> currentConversionItems;
+  final UnitGroupModel unitGroup;
+
+  const RemoveConversion({
+    required this.unitValueModel,
+    required this.currentConversionItems,
+    required this.unitGroup,
+  });
+
+  @override
+  List<Object> get props => [
+    unitValueModel,
+    currentConversionItems,
+    unitGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'RemoveConversion{unitValueModel: $unitValueModel, '
+        'currentConversionItems: $currentConversionItems, '
+        'unitGroup: $unitGroup'
+        '}';
   }
 }
