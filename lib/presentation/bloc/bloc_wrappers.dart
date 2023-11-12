@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_states.dar
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_states.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_states.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
@@ -145,6 +146,15 @@ Widget navigationListeners(Widget widget) {
                   NavigationService.I
                       .navigateTo(unitsPageId, arguments: unitsFetched.action);
                 }
+              } else {
+                BlocProvider.of<UnitsConversionBloc>(_).add(
+                  InitializeConversion(
+                    conversionUnits: unitsFetched.markedUnits,
+                    unitGroup: unitsFetched.unitGroup,
+                    inputValue: unitsFetched.inputValue,
+                    inputUnit: unitsFetched.selectedUnit,
+                  ),
+                );
               }
               break;
           }

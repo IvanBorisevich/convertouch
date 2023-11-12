@@ -82,10 +82,12 @@ class AddUnit extends UnitsEvent {
 class RemoveUnits extends UnitsEvent {
   final List<int> ids;
   final UnitGroupModel unitGroup;
+  final List<UnitModel>? markedUnits;
 
   const RemoveUnits({
     required this.ids,
     required this.unitGroup,
+    this.markedUnits,
   });
 
   @override

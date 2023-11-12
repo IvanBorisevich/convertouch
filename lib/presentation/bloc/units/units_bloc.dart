@@ -53,7 +53,8 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
           if (selectedUnit == null &&
               event.action ==
                   ConvertouchAction.fetchUnitsToSelectForUnitCreation) {
-            selectedUnit = unitsOfGroup.first;
+            selectedUnit =
+                markedUnits.isNotEmpty ? markedUnits.first : unitsOfGroup.first;
           }
 
           yield UnitsFetched(
@@ -124,14 +125,21 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         final fetchUnitGroupsResult = await fetchUnitsOfGroupUseCase.execute(
           event.unitGroup.id!,
         );
+
+        List<UnitModel>? markedUnits = event.markedUnits;
+        if (markedUnits != null) {
+          markedUnits.removeWhere((element) => event.ids.contains(element.id));
+        }
+
         yield fetchUnitGroupsResult.fold(
-              (error) => UnitsErrorState(
+          (error) => UnitsErrorState(
             message: error.message,
           ),
-              (units) => UnitsFetched(
+          (units) => UnitsFetched(
             units: units,
             unitGroup: event.unitGroup,
             needToNavigate: false,
+            markedUnits: markedUnits ?? [],
           ),
         );
       }

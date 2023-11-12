@@ -149,8 +149,17 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 RemoveUnits(
                   ids: appState.selectedItemIdsForRemoval,
                   unitGroup: unitsFetched.unitGroup,
+                  markedUnits: unitsFetched.markedUnits,
                 ),
               );
+              // BlocProvider.of<UnitsConversionBloc>(context).add(
+              //   InitializeConversion(
+              //     conversionUnits: unitsFetched.markedUnits,
+              //     unitGroup: unitsFetched.unitGroup,
+              //     inputValue: unitsFetched.inputValue,
+              //     inputUnit: unitsFetched.selectedUnit,
+              //   ),
+              // );
               BlocProvider.of<AppBloc>(context).add(
                 const DisableRemovalMode(),
               );
