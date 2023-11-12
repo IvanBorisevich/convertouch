@@ -1,3 +1,5 @@
+const currencyGroup = "Currency";
+
 const temperatureGroup = "Temperature";
 const degreeCelsius = "Degree Celsius";
 const degreeFahrenheit = "Degree Fahrenheit";
@@ -87,7 +89,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Currency",
+    "groupName": currencyGroup,
     "units": [
       {"abbreviation": "\$", "name": "Dollar USA (USD)"},
       {"abbreviation": "BYN", "name": "Ruble Belarus (BYN)"},

@@ -1,3 +1,5 @@
+import 'package:convertouch/domain/constants/default_units.dart';
+
 const String appName = "Convertouch";
 
 const String iconAssetsPathPrefix = "assets/icons";
@@ -47,3 +49,8 @@ enum ConvertouchAction {
   updateUnitGroupForUnitCreation,
   updateEquivalentUnitForUnitCreation,
 }
+
+const List<String> unitGroupsNoAddUnits = [
+  temperatureGroup,
+  currencyGroup,
+];

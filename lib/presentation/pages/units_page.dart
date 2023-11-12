@@ -141,9 +141,10 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
               child: const Icon(Icons.add),
             ),
             floatingActionButtonVisible: ![
-              ConvertouchAction.fetchUnitsToSelectForConversion,
-              ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-            ].contains(action),
+                  ConvertouchAction.fetchUnitsToSelectForConversion,
+                  ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+                ].contains(action) &&
+                !unitGroupsNoAddUnits.contains(unitsFetched.unitGroup.name),
             onFloatingButtonForRemovalClick: () {
               BlocProvider.of<UnitsBloc>(context).add(
                 RemoveUnits(
@@ -152,14 +153,6 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                   markedUnits: unitsFetched.markedUnits,
                 ),
               );
-              // BlocProvider.of<UnitsConversionBloc>(context).add(
-              //   InitializeConversion(
-              //     conversionUnits: unitsFetched.markedUnits,
-              //     unitGroup: unitsFetched.unitGroup,
-              //     inputValue: unitsFetched.inputValue,
-              //     inputUnit: unitsFetched.selectedUnit,
-              //   ),
-              // );
               BlocProvider.of<AppBloc>(context).add(
                 const DisableRemovalMode(),
               );
