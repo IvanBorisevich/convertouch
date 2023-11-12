@@ -17,6 +17,10 @@ const conversionPageFloatingButtonColor = {
   ConvertouchUITheme.light: Color(0xFF6793BE),
 };
 
+const removalFloatingButtonColor = {
+  ConvertouchUITheme.light: Color(0xFFB04731),
+};
+
 const dividerWithTextColor = {
   ConvertouchUITheme.light: Color(0xFF426F99),
 };
@@ -24,6 +28,7 @@ const dividerWithTextColor = {
 const scaffoldColor = {
   ConvertouchUITheme.light: ConvertouchScaffoldColor(
     regular: ScaffoldColorVariation(
+      backgroundColor: Color(0xFFFCFEFF),
       appBarColor: Color(0xFFDEE9FF),
       appBarFontColor: Color(0xFF426F99),
       appBarIconColor: Color(0xFF426F99),

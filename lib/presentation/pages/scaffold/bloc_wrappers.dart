@@ -1,18 +1,33 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_states.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_view_mode_state.dart';
+import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_states.dart';
+import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_states.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_states.dart';
+import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_states.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_states.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+Widget appBloc(
+  Widget Function(AppState appState) builderFunc,
+) {
+  return BlocBuilder<AppBloc, AppState>(
+    buildWhen: (prev, next) {
+      return prev != next;
+    },
+    builder: (_, appState) {
+      return builderFunc.call(appState);
+    },
+  );
+}
 
 Widget unitsBloc(
   Widget Function(UnitsFetched unitsFetched) builderFunc,

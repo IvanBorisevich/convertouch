@@ -14,6 +14,7 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
@@ -39,7 +40,11 @@ Future<void> init() async {
     () => database,
   );
 
-  // navigation service
+  // app, global
+
+  locator.registerLazySingleton(
+    () => AppBloc(),
+  );
 
   locator.registerLazySingleton<NavigationService>(
     () => NavigationService(),

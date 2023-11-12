@@ -1,6 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
+import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
@@ -36,88 +39,146 @@ class ConvertouchScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     ConvertouchScaffoldColor color = customColor ?? scaffoldColor[theme]!;
 
-    return SafeArea(
-      child: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (details.velocity.pixelsPerSecond.dx > 0) {
-            BlocProvider.of<SideMenuBloc>(context).add(
-              const OpenSideMenu(),
-            );
-          }
-        },
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                leading: Builder(
-                  builder: (context) {
-                    if (appBarLeftWidget != null) {
-                      return appBarLeftWidget!;
-                    }
-                    if (NavigationService.I.isHomePage(context)) {
-                      return _leadingIcon(
-                        Icons.menu,
-                        () {
-                          BlocProvider.of<SideMenuBloc>(context).add(
-                            const OpenSideMenu(),
-                          );
-                        },
-                        color,
-                      );
-                    } else {
-                      return _leadingIcon(
-                        Icons.arrow_back_rounded,
-                        () {
-                          NavigationService.I.navigateBack();
-                        },
-                        color,
-                      );
-                    }
-                  },
-                ),
-                centerTitle: true,
-                title: Text(
-                  pageTitle,
-                  style: TextStyle(
-                    color: color.regular.appBarFontColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+    return appBloc((appState) {
+      return SafeArea(
+        child: GestureDetector(
+          onHorizontalDragEnd: (details) {
+            if (details.velocity.pixelsPerSecond.dx > 0) {
+              BlocProvider.of<SideMenuBloc>(context).add(
+                const OpenSideMenu(),
+              );
+            }
+          },
+          child: Stack(
+            children: [
+              Scaffold(
+                backgroundColor: color.regular.backgroundColor,
+                appBar: AppBar(
+                  leading: Builder(
+                    builder: (context) {
+                      if (appBarLeftWidget != null) {
+                        return appBarLeftWidget!;
+                      }
+                      if (appState.removalMode) {
+                        return _leadingIcon(
+                          Icons.clear,
+                          () {
+                            BlocProvider.of<AppBloc>(context).add(
+                              const DisableRemovalMode(),
+                            );
+                          },
+                          color,
+                        );
+                      } else if (NavigationService.I.isHomePage(context)) {
+                        return _leadingIcon(
+                          Icons.menu,
+                          () {
+                            BlocProvider.of<SideMenuBloc>(context).add(
+                              const OpenSideMenu(),
+                            );
+                          },
+                          color,
+                        );
+                      } else {
+                        return _leadingIcon(
+                          Icons.arrow_back_rounded,
+                          () {
+                            NavigationService.I.navigateBack();
+                          },
+                          color,
+                        );
+                      }
+                    },
                   ),
-                ),
-                backgroundColor: color.regular.appBarColor,
-                elevation: 0,
-                actions: appBarRightWidgets,
-              ),
-              body: Column(
-                children: [
-                  Visibility(
-                    visible: secondaryAppBar != null,
-                    child: Container(
-                      height: 53,
-                      decoration: BoxDecoration(
-                        color: color.regular.appBarColor,
-                      ),
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                        appBarPadding,
-                        0,
-                        appBarPadding,
-                        appBarPadding,
-                      ),
-                      child: secondaryAppBar,
+                  centerTitle: true,
+                  title: Text(
+                    pageTitle,
+                    style: TextStyle(
+                      color: color.regular.appBarFontColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Expanded(
-                    child: body,
+                  backgroundColor: color.regular.appBarColor,
+                  elevation: 0,
+                  actions: appBarRightWidgets,
+                ),
+                body: Column(
+                  children: [
+                    Visibility(
+                      visible: secondaryAppBar != null,
+                      child: Container(
+                        height: 53,
+                        decoration: BoxDecoration(
+                          color: color.regular.appBarColor,
+                        ),
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                          appBarPadding,
+                          0,
+                          appBarPadding,
+                          appBarPadding,
+                        ),
+                        child: secondaryAppBar,
+                      ),
+                    ),
+                    Expanded(
+                      child: body,
+                    ),
+                  ],
+                ),
+                floatingActionButton: SizedBox(
+                  height: 68,
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      FittedBox(
+                        child: appState.removalMode
+                            ? FloatingActionButton(
+                                onPressed: () {},
+                                backgroundColor:
+                                    removalFloatingButtonColor[theme],
+                                elevation: 0,
+                                child: const Icon(Icons.delete_outline_rounded),
+                              )
+                            : floatingActionButton,
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: removalFloatingButtonColor[theme],
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: color.regular.backgroundColor,
+                              width: 2,
+                              strokeAlign: BorderSide.strokeAlignOutside,
+                            ),
+                          ),
+                          child: appState.selectedItemIdsForRemoval.isNotEmpty
+                              ? Text(
+                                  appState.selectedItemIdsForRemoval.length
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: color.regular.backgroundColor,
+                                    fontSize: 14,
+                                  ),
+                                )
+                              : empty(),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-              floatingActionButton: floatingActionButton,
-            ),
-            const ConvertouchSideMenu(),
-          ],
+              const ConvertouchSideMenu(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _leadingIcon(

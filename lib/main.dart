@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
@@ -56,6 +57,7 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(create: (context) => di.locator<UnitsBloc>()),
         BlocProvider(create: (context) => di.locator<UnitCreationBloc>()),
         BlocProvider(create: (context) => di.locator<SideMenuBloc>()),
+        BlocProvider(create: (context) => di.locator<AppBloc>()),
       ],
       child: navigationListeners(
         MaterialApp(

@@ -37,12 +37,14 @@ class TextBoxColorVariation extends ConvertouchColorVariation {
 }
 
 class ScaffoldColorVariation extends ConvertouchColorVariation {
+  final Color backgroundColor;
   final Color appBarColor;
   final Color appBarFontColor;
   final Color appBarIconColor;
   final Color appBarIconColorDisabled;
 
   const ScaffoldColorVariation({
+    this.backgroundColor = noColor,
     this.appBarColor = noColor,
     this.appBarFontColor = noColor,
     this.appBarIconColor = noColor,
