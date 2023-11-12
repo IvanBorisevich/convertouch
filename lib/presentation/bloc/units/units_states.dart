@@ -26,6 +26,17 @@ class UnitsFetching extends UnitsState {
 }
 
 class UnitsFetched extends UnitsState {
+  final List<UnitModel> units;
+  final UnitGroupModel unitGroup;
+  final List<UnitModel> markedUnits;
+  final UnitModel? newMarkedUnit;
+  final int addedUnitId;
+  final double? inputValue;
+  final UnitModel? selectedUnit;
+  final bool needToNavigate;
+  final ConvertouchAction action;
+  final bool useMarkedUnitsInConversion;
+
   const UnitsFetched({
     required this.units,
     required this.unitGroup,
@@ -34,19 +45,10 @@ class UnitsFetched extends UnitsState {
     this.addedUnitId = -1,
     this.inputValue,
     this.selectedUnit,
+    this.needToNavigate = true,
     this.action = ConvertouchAction.fetchUnitsToStartMark,
     this.useMarkedUnitsInConversion = false,
   });
-
-  final List<UnitModel> units;
-  final UnitGroupModel unitGroup;
-  final List<UnitModel> markedUnits;
-  final UnitModel? newMarkedUnit;
-  final int addedUnitId;
-  final double? inputValue;
-  final UnitModel? selectedUnit;
-  final ConvertouchAction action;
-  final bool useMarkedUnitsInConversion;
 
   @override
   List<Object> get props => [

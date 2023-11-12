@@ -266,6 +266,17 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 
   @override
+  Future<void> remove(List<int> ids) async {
+    const offset = 1;
+    final _sqliteVariablesForIds =
+        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
+            .join(',');
+    await _queryAdapter.queryNoReturn(
+        'delete from units where id in (' + _sqliteVariablesForIds + ')',
+        arguments: [...ids]);
+  }
+
+  @override
   Future<int> insert(UnitEntity unit) {
     return _unitEntityInsertionAdapter.insertAndReturnId(
         unit, OnConflictStrategy.fail);

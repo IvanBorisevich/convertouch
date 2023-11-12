@@ -78,3 +78,27 @@ class AddUnit extends UnitsEvent {
         'markedUnits: $markedUnits}';
   }
 }
+
+class RemoveUnits extends UnitsEvent {
+  final List<int> ids;
+  final UnitGroupModel unitGroup;
+
+  const RemoveUnits({
+    required this.ids,
+    required this.unitGroup,
+  });
+
+  @override
+  List<Object> get props => [
+    ids,
+    unitGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'RemoveUnits{'
+        'ids: $ids, '
+        'unitGroup: $unitGroup'
+        '}';
+  }
+}

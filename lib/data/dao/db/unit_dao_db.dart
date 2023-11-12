@@ -35,4 +35,8 @@ abstract class UnitDaoDb extends UnitDao {
       (error, stackTrace) => update(unit),
     );
   }
+
+  @override
+  @Query("delete from $unitsTableName where id in (:ids)")
+  Future<void> remove(List<int> ids);
 }

@@ -57,4 +57,18 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> removeUnits(List<int> unitIds) async {
+    try {
+      await unitDao.remove(unitIds);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        DatabaseFailure(
+          "Error when deleting units by ids = $unitIds: $e",
+        ),
+      );
+    }
+  }
 }

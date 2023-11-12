@@ -14,6 +14,7 @@ import 'package:convertouch/domain/usecases/unit_groups/remove_unit_groups_use_c
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
+import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
@@ -86,6 +87,7 @@ Future<void> init() async {
       getUnitGroupUseCase: locator(),
       fetchUnitsOfGroupUseCase: locator(),
       addUnitUseCase: locator(),
+      removeUnitsUseCase: locator(),
     ),
   );
 
@@ -97,6 +99,9 @@ Future<void> init() async {
   );
   locator.registerLazySingleton<GetBaseUnitUseCase>(
     () => GetBaseUnitUseCase(locator()),
+  );
+  locator.registerLazySingleton<RemoveUnitsUseCase>(
+    () => RemoveUnitsUseCase(locator()),
   );
 
   locator.registerLazySingleton<UnitRepository>(

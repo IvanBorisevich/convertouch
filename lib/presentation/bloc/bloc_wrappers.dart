@@ -137,12 +137,14 @@ Widget navigationListeners(Widget widget) {
           switch (unitsState.runtimeType) {
             case UnitsFetched:
               UnitsFetched unitsFetched = unitsState as UnitsFetched;
-              if (unitsFetched.addedUnitId > -1) {
-                NavigationService.I.navigateBack();
-              } else if (unitsFetched.action !=
-                  ConvertouchAction.fetchUnitsToContinueMark) {
-                NavigationService.I
-                    .navigateTo(unitsPageId, arguments: unitsFetched.action);
+              if (unitsFetched.needToNavigate) {
+                if (unitsFetched.addedUnitId > -1) {
+                  NavigationService.I.navigateBack();
+                } else if (unitsFetched.action !=
+                    ConvertouchAction.fetchUnitsToContinueMark) {
+                  NavigationService.I
+                      .navigateTo(unitsPageId, arguments: unitsFetched.action);
+                }
               }
               break;
           }

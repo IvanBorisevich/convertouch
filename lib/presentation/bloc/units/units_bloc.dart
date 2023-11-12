@@ -4,6 +4,7 @@ import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/model/unit_adding_input.dart';
+import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/bloc/units/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,11 +15,13 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
   final GetUnitGroupUseCase getUnitGroupUseCase;
   final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
   final AddUnitUseCase addUnitUseCase;
+  final RemoveUnitsUseCase removeUnitsUseCase;
 
   UnitsBloc({
     required this.getUnitGroupUseCase,
     required this.fetchUnitsOfGroupUseCase,
     required this.addUnitUseCase,
+    required this.removeUnitsUseCase,
   }) : super(const UnitsInitState());
 
   @override
@@ -109,6 +112,28 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         } else {
           yield UnitExists(unitName: event.unitName);
         }
+      }
+    } else if (event is RemoveUnits) {
+      yield const UnitsFetching();
+      final result = await removeUnitsUseCase.execute(event.ids);
+      if (result.isLeft) {
+        yield UnitsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        final fetchUnitGroupsResult = await fetchUnitsOfGroupUseCase.execute(
+          event.unitGroup.id!,
+        );
+        yield fetchUnitGroupsResult.fold(
+              (error) => UnitsErrorState(
+            message: error.message,
+          ),
+              (units) => UnitsFetched(
+            units: units,
+            unitGroup: event.unitGroup,
+            needToNavigate: false,
+          ),
+        );
       }
     }
   }
