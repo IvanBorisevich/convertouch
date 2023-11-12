@@ -2,9 +2,9 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/app/app_events.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +15,7 @@ class ConvertouchMenuItemsView extends StatefulWidget {
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
+  final bool removalModeAllowed;
   final ItemsViewMode viewMode;
   final bool markItemsOnTap;
   final double itemsSpacing;
@@ -26,6 +27,7 @@ class ConvertouchMenuItemsView extends StatefulWidget {
     this.showMarkedItems = false,
     this.selectedItemId,
     this.showSelectedItem = false,
+    this.removalModeAllowed = true,
     this.viewMode = ItemsViewMode.grid,
     this.markItemsOnTap = false,
     this.itemsSpacing = 7,
@@ -57,7 +59,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
                   widget.onItemTap?.call(item);
                 },
                 onLongPress: () {
-                  if (!appState.removalMode) {
+                  if (widget.removalModeAllowed && !appState.removalMode) {
                     BlocProvider.of<AppBloc>(context).add(
                       SelectItemForRemoval(
                         itemId: item.id!,
