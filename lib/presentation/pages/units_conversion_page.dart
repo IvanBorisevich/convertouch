@@ -94,6 +94,7 @@ class _ConvertouchUnitsConversionPageState
             elevation: 0,
             child: const Icon(Icons.add),
           ),
+          floatingActionButtonVisible: true,
         );
       } else {
         return empty();

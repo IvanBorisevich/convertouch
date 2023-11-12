@@ -33,17 +33,19 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
     return appBloc((appState) {
       return unitsBloc((unitsFetched) {
         return ConvertouchScaffold(
-            pageTitle:
-                action == ConvertouchAction.fetchUnitsToSelectForConversion ||
-                        action ==
-                            ConvertouchAction.fetchUnitsToSelectForUnitCreation
-                    ? "Select Unit"
-                    : unitsFetched.unitGroup.name,
+            pageTitle: [
+              ConvertouchAction.fetchUnitsToSelectForConversion,
+              ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+            ].contains(action)
+                ? "Select Unit"
+                : unitsFetched.unitGroup.name,
             appBarRightWidgets: [
               checkIcon(
                 context,
-                isVisible: action == ConvertouchAction.fetchUnitsToStartMark ||
-                    action == ConvertouchAction.fetchUnitsToContinueMark,
+                isVisible: [
+                  ConvertouchAction.fetchUnitsToStartMark,
+                  ConvertouchAction.fetchUnitsToContinueMark,
+                ].contains(action),
                 isEnabled: unitsFetched.useMarkedUnitsInConversion,
                 onPressedFunc: () {
                   BlocProvider.of<UnitsConversionBloc>(context).add(
@@ -68,13 +70,15 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 showMarkedItems: action !=
                     ConvertouchAction.fetchUnitsToSelectForUnitCreation,
                 selectedItemId: unitsFetched.selectedUnit?.id,
-                showSelectedItem: action ==
-                        ConvertouchAction.fetchUnitsToSelectForUnitCreation ||
-                    action == ConvertouchAction.fetchUnitsToSelectForConversion,
+                showSelectedItem: [
+                  ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+                  ConvertouchAction.fetchUnitsToSelectForConversion,
+                ].contains(action),
                 viewMode: itemsViewModeState.pageViewMode,
-                markItemsOnTap:
-                    action == ConvertouchAction.fetchUnitsToStartMark ||
-                        action == ConvertouchAction.fetchUnitsToContinueMark,
+                markItemsOnTap: [
+                  ConvertouchAction.fetchUnitsToStartMark,
+                  ConvertouchAction.fetchUnitsToContinueMark,
+                ].contains(action),
                 removalModeAllowed: [
                   ConvertouchAction.fetchUnitsToStartMark,
                   ConvertouchAction.fetchUnitsToContinueMark,
@@ -136,9 +140,10 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
               elevation: 0,
               child: const Icon(Icons.add),
             ),
-            floatingActionButtonVisible: action !=
-                    ConvertouchAction.fetchUnitsToSelectForConversion &&
-                action != ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+            floatingActionButtonVisible: ![
+              ConvertouchAction.fetchUnitsToSelectForConversion,
+              ConvertouchAction.fetchUnitsToSelectForUnitCreation,
+            ].contains(action),
             onFloatingButtonForRemovalClick: () {
               BlocProvider.of<UnitsBloc>(context).add(
                 RemoveUnits(

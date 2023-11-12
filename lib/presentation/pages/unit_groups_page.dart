@@ -34,11 +34,10 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
     return appBloc((appState) {
       return unitGroupsBloc((unitGroupsFetched) {
         return ConvertouchScaffold(
-            pageTitle: action ==
-                        ConvertouchAction
-                            .fetchUnitGroupsToSelectForConversion ||
-                    action ==
-                        ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation
+            pageTitle: [
+              ConvertouchAction.fetchUnitGroupsToSelectForConversion,
+              ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation,
+            ].contains(action)
                 ? "Select Unit Group"
                 : "Unit Groups",
             secondaryAppBar: const ConvertouchSearchBar(
