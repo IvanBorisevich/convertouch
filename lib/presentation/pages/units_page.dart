@@ -7,7 +7,7 @@ import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
 import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
-import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';

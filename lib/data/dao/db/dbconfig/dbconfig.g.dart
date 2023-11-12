@@ -166,6 +166,17 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   }
 
   @override
+  Future<void> remove(List<int> ids) async {
+    const offset = 1;
+    final _sqliteVariablesForIds =
+        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
+            .join(',');
+    await _queryAdapter.queryNoReturn(
+        'delete from unit_groups where id in (' + _sqliteVariablesForIds + ')',
+        arguments: [...ids]);
+  }
+
+  @override
   Future<int> insert(UnitGroupEntity unitGroupEntity) {
     return _unitGroupEntityInsertionAdapter.insertAndReturnId(
         unitGroupEntity, OnConflictStrategy.fail);

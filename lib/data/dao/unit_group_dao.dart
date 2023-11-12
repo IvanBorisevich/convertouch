@@ -12,4 +12,6 @@ abstract class UnitGroupDao {
   Future<int> update(UnitGroupEntity unitGroupEntity);
 
   Future<int> merge(UnitGroupEntity unitGroupEntity);
+
+  Future<void> remove(List<int> ids);
 }

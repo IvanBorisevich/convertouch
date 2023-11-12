@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_menu_view_mode/items_menu_view_event.dart';
 import 'package:convertouch/presentation/pages/animation/items_view_mode_button_animation.dart';
-import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:flutter/material.dart';

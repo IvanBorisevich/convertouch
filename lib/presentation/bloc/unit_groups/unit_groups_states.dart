@@ -26,19 +26,21 @@ class UnitGroupsFetching extends UnitGroupsState {
 }
 
 class UnitGroupsFetched extends UnitGroupsState {
+  final List<UnitGroupModel> unitGroups;
+  final int selectedUnitGroupId;
+  final int addedUnitGroupId;
+  final List<UnitModel> markedUnits;
+  final bool needToNavigate;
+  final ConvertouchAction action;
+
   const UnitGroupsFetched({
     required this.unitGroups,
     this.selectedUnitGroupId = -1,
     this.addedUnitGroupId = -1,
     this.markedUnits = const [],
+    this.needToNavigate = true,
     this.action = ConvertouchAction.fetchUnitGroupsToSelectForUnitsFetching,
   });
-
-  final List<UnitGroupModel> unitGroups;
-  final int selectedUnitGroupId;
-  final int addedUnitGroupId;
-  final List<UnitModel> markedUnits;
-  final ConvertouchAction action;
 
   @override
   List<Object> get props => [
@@ -47,6 +49,7 @@ class UnitGroupsFetched extends UnitGroupsState {
     selectedUnitGroupId,
     addedUnitGroupId,
     markedUnits,
+    needToNavigate,
   ];
 
   @override
@@ -56,6 +59,7 @@ class UnitGroupsFetched extends UnitGroupsState {
         'selectedUnitGroupId: $selectedUnitGroupId, '
         'addedUnitGroupId: $addedUnitGroupId, '
         'markedUnits: $markedUnits, '
+        'needToNavigate: $needToNavigate, '
         'action: $action}';
   }
 }

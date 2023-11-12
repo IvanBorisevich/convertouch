@@ -65,3 +65,19 @@ class SelectUnitGroup extends UnitGroupsEvent {
     return 'SelectUnitGroup{unitGroup: $unitGroup}';
   }
 }
+
+class RemoveUnitGroups extends UnitGroupsEvent {
+  final List<int> ids;
+
+  const RemoveUnitGroups({
+    required this.ids,
+  });
+
+  @override
+  List<Object> get props => [ids];
+
+  @override
+  String toString() {
+    return 'RemoveUnitGroups{ids: $ids}';
+  }
+}

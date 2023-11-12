@@ -3,7 +3,7 @@ import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/app/app_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
-import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
@@ -20,6 +20,7 @@ class ConvertouchScaffold extends StatelessWidget {
   final Widget? secondaryAppBar;
   final Widget? floatingActionButton;
   final bool floatingActionButtonVisible;
+  final void Function()? onFloatingButtonForRemovalClick;
   final double appBarPadding;
   final ConvertouchScaffoldColor? customColor;
 
@@ -32,6 +33,7 @@ class ConvertouchScaffold extends StatelessWidget {
     this.secondaryAppBar,
     this.floatingActionButton,
     this.floatingActionButtonVisible = false,
+    this.onFloatingButtonForRemovalClick,
     this.appBarPadding = 7,
     this.customColor,
     super.key,
@@ -137,7 +139,9 @@ class ConvertouchScaffold extends StatelessWidget {
                       children: [
                         FittedBox(
                           child: appState.removalMode
-                              ? _floatingActionButtonForRemoval()
+                              ? _floatingActionButtonForRemoval(
+                                  onClick: onFloatingButtonForRemovalClick,
+                                )
                               : floatingActionButton,
                         ),
                         Align(
@@ -194,13 +198,12 @@ class ConvertouchScaffold extends StatelessWidget {
     );
   }
 
-  Widget _floatingActionButtonForRemoval() {
+  Widget _floatingActionButtonForRemoval({void Function()? onClick}) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: onClick,
       backgroundColor: removalFloatingButtonColor[theme],
       elevation: 0,
-      child:
-      const Icon(Icons.delete_outline_rounded),
+      child: const Icon(Icons.delete_outline_rounded),
     );
   }
 }

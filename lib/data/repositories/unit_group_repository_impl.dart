@@ -57,4 +57,18 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> removeUnitGroups(List<int> unitGroupIds) async {
+    try {
+      await unitGroupDao.remove(unitGroupIds);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        DatabaseFailure(
+          "Error when deleting unit groups by ids = $unitGroupIds: $e",
+        ),
+      );
+    }
+  }
 }

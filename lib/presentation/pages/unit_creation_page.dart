@@ -9,7 +9,7 @@ import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
-import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';

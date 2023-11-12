@@ -28,4 +28,8 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
       (error, stackTrace) => update(unitGroupEntity),
     );
   }
+
+  @override
+  @Query("delete from $unitGroupsTableName where id in (:ids)")
+  Future<void> remove(List<int> ids);
 }

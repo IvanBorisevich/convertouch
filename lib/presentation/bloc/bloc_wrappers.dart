@@ -116,12 +116,14 @@ Widget navigationListeners(Widget widget) {
             case UnitGroupsFetched:
               UnitGroupsFetched unitGroupsFetched =
                   unitGroupsState as UnitGroupsFetched;
-              if (unitGroupsFetched.addedUnitGroupId > -1) {
-                NavigationService.I.navigateBack();
-              } else if (unitGroupsFetched.action !=
-                  ConvertouchAction.fetchUnitGroupsInitially) {
-                NavigationService.I.navigateTo(unitGroupsPageId,
-                    arguments: unitGroupsFetched.action);
+              if (unitGroupsFetched.needToNavigate) {
+                if (unitGroupsFetched.addedUnitGroupId > -1) {
+                  NavigationService.I.navigateBack();
+                } else if (unitGroupsFetched.action !=
+                    ConvertouchAction.fetchUnitGroupsInitially) {
+                  NavigationService.I.navigateTo(unitGroupsPageId,
+                      arguments: unitGroupsFetched.action);
+                }
               }
               break;
             case UnitGroupSelected:

@@ -12,7 +12,7 @@ import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'scaffold/bloc_wrappers.dart';
+import '../bloc/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends StatefulWidget {
   const ConvertouchUnitsConversionPage({super.key});

@@ -10,6 +10,7 @@ import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_me
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
+import 'package:convertouch/domain/usecases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
@@ -56,6 +57,7 @@ Future<void> init() async {
     () => UnitGroupsBloc(
       fetchUnitGroupsUseCase: locator(),
       addUnitGroupUseCase: locator(),
+      removeUnitGroupsUseCase: locator(),
     ),
   );
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
@@ -66,6 +68,9 @@ Future<void> init() async {
   );
   locator.registerLazySingleton<AddUnitGroupUseCase>(
     () => AddUnitGroupUseCase(locator()),
+  );
+  locator.registerLazySingleton<RemoveUnitGroupsUseCase>(
+    () => RemoveUnitGroupsUseCase(locator()),
   );
   locator.registerLazySingleton<UnitGroupRepository>(
     () => UnitGroupRepositoryImpl(database.unitGroupDao),
