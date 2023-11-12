@@ -75,7 +75,10 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                 markItemsOnTap:
                     action == ConvertouchAction.fetchUnitsToStartMark ||
                         action == ConvertouchAction.fetchUnitsToContinueMark,
-                //removalModeAllowed: action == ConvertouchAction.,
+                removalModeAllowed: [
+                  ConvertouchAction.fetchUnitsToStartMark,
+                  ConvertouchAction.fetchUnitsToContinueMark,
+                ].contains(action),
                 onItemTap: (item) {
                   switch (action) {
                     case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
