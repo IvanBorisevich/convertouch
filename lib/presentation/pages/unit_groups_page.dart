@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_events.dart';
+import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
 import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
@@ -71,21 +71,18 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
             },
           );
         }),
-        floatingActionButton: Visibility(
-          visible: action !=
-                  ConvertouchAction.fetchUnitGroupsToSelectForConversion &&
-              action !=
-                  ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation,
-          child: FloatingActionButton(
-            onPressed: () {
-              NavigationService.I.navigateTo(unitGroupCreationPageId);
-            },
-            backgroundColor:
-                unitGroupsPageFloatingButtonColor[ConvertouchUITheme.light],
-            elevation: 0,
-            child: const Icon(Icons.add),
-          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            NavigationService.I.navigateTo(unitGroupCreationPageId);
+          },
+          backgroundColor:
+              unitGroupsPageFloatingButtonColor[ConvertouchUITheme.light],
+          elevation: 0,
+          child: const Icon(Icons.add),
         ),
+        floatingActionButtonVisible: action !=
+                ConvertouchAction.fetchUnitGroupsToSelectForConversion &&
+            action != ConvertouchAction.fetchUnitGroupsToSelectForUnitCreation,
       );
     });
   }

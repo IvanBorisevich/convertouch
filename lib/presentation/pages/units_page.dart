@@ -1,11 +1,11 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_events.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
+import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units/units_events.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
 import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/pages/scaffold/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
@@ -111,27 +111,25 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             },
           );
         }),
-        floatingActionButton: Visibility(
-          visible:
-              action != ConvertouchAction.fetchUnitsToSelectForConversion &&
-                  action != ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-          child: FloatingActionButton(
-            onPressed: () {
-              BlocProvider.of<UnitCreationBloc>(context).add(
-                PrepareUnitCreation(
-                  unitGroup: unitsFetched.unitGroup,
-                  equivalentUnit: unitsFetched.selectedUnit,
-                  markedUnits: unitsFetched.markedUnits,
-                  action: ConvertouchAction.initUnitCreationParams,
-                ),
-              );
-            },
-            backgroundColor:
-                unitsPageFloatingButtonColor[ConvertouchUITheme.light],
-            elevation: 0,
-            child: const Icon(Icons.add),
-          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            BlocProvider.of<UnitCreationBloc>(context).add(
+              PrepareUnitCreation(
+                unitGroup: unitsFetched.unitGroup,
+                equivalentUnit: unitsFetched.selectedUnit,
+                markedUnits: unitsFetched.markedUnits,
+                action: ConvertouchAction.initUnitCreationParams,
+              ),
+            );
+          },
+          backgroundColor:
+              unitsPageFloatingButtonColor[ConvertouchUITheme.light],
+          elevation: 0,
+          child: const Icon(Icons.add),
         ),
+        floatingActionButtonVisible:
+            action != ConvertouchAction.fetchUnitsToSelectForConversion &&
+                action != ConvertouchAction.fetchUnitsToSelectForUnitCreation,
       );
     });
   }

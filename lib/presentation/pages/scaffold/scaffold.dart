@@ -19,6 +19,7 @@ class ConvertouchScaffold extends StatelessWidget {
   final List<Widget>? appBarRightWidgets;
   final Widget? secondaryAppBar;
   final Widget? floatingActionButton;
+  final bool floatingActionButtonVisible;
   final double appBarPadding;
   final ConvertouchScaffoldColor? customColor;
 
@@ -30,6 +31,7 @@ class ConvertouchScaffold extends StatelessWidget {
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.floatingActionButton,
+    this.floatingActionButtonVisible = false,
     this.appBarPadding = 7,
     this.customColor,
     super.key,
@@ -126,50 +128,47 @@ class ConvertouchScaffold extends StatelessWidget {
                     ),
                   ],
                 ),
-                floatingActionButton: SizedBox(
-                  height: 68,
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      FittedBox(
-                        child: appState.removalMode
-                            ? FloatingActionButton(
-                                onPressed: () {},
-                                backgroundColor:
-                                    removalFloatingButtonColor[theme],
-                                elevation: 0,
-                                child: const Icon(Icons.delete_outline_rounded),
-                              )
-                            : floatingActionButton,
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: removalFloatingButtonColor[theme],
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: color.regular.backgroundColor,
-                              width: 2,
-                              strokeAlign: BorderSide.strokeAlignOutside,
-                            ),
-                          ),
-                          child: appState.selectedItemIdsForRemoval.isNotEmpty
-                              ? Text(
-                                  appState.selectedItemIdsForRemoval.length
-                                      .toString(),
-                                  style: TextStyle(
-                                    color: color.regular.backgroundColor,
-                                    fontSize: 14,
-                                  ),
-                                )
-                              : empty(),
+                floatingActionButton: Visibility(
+                  visible: floatingActionButtonVisible,
+                  child: SizedBox(
+                    height: 68,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        FittedBox(
+                          child: appState.removalMode
+                              ? _floatingActionButtonForRemoval()
+                              : floatingActionButton,
                         ),
-                      ),
-                    ],
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: removalFloatingButtonColor[theme],
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: color.regular.backgroundColor,
+                                width: 2,
+                                strokeAlign: BorderSide.strokeAlignOutside,
+                              ),
+                            ),
+                            child: appState.selectedItemIdsForRemoval.isNotEmpty
+                                ? Text(
+                                    appState.selectedItemIdsForRemoval.length
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: color.regular.backgroundColor,
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                : empty(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -192,6 +191,16 @@ class ConvertouchScaffold extends StatelessWidget {
         color: color.regular.appBarIconColor,
       ),
       onPressed: onPressed,
+    );
+  }
+
+  Widget _floatingActionButtonForRemoval() {
+    return FloatingActionButton(
+      onPressed: () {},
+      backgroundColor: removalFloatingButtonColor[theme],
+      elevation: 0,
+      child:
+      const Icon(Icons.delete_outline_rounded),
     );
   }
 }
