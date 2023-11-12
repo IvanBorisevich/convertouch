@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/app/app_events.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/side_menu.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
@@ -133,7 +133,7 @@ class ConvertouchScaffold extends StatelessWidget {
                 floatingActionButton: Visibility(
                   visible: floatingActionButtonVisible,
                   child: SizedBox(
-                    height: 68,
+                    height: 70,
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [
@@ -144,33 +144,34 @@ class ConvertouchScaffold extends StatelessWidget {
                                 )
                               : floatingActionButton,
                         ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: removalFloatingButtonColor[theme],
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: color.regular.backgroundColor,
-                                width: 2,
-                                strokeAlign: BorderSide.strokeAlignOutside,
-                              ),
-                            ),
-                            child: appState.selectedItemIdsForRemoval.isNotEmpty
-                                ? Text(
+                        appState.selectedItemIdsForRemoval.isNotEmpty
+                            ? Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: removalFloatingButtonColor[theme],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: color.regular.backgroundColor,
+                                      width: 1,
+                                      strokeAlign:
+                                          BorderSide.strokeAlignOutside,
+                                    ),
+                                  ),
+                                  child: Text(
                                     appState.selectedItemIdsForRemoval.length
                                         .toString(),
                                     style: TextStyle(
                                       color: color.regular.backgroundColor,
                                       fontSize: 14,
                                     ),
-                                  )
-                                : empty(),
-                          ),
-                        ),
+                                  ),
+                                ),
+                              )
+                            : empty(),
                       ],
                     ),
                   ),
