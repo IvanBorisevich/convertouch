@@ -39,6 +39,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
             ].contains(action)
                 ? "Select Unit"
                 : unitsFetched.unitGroup.name,
+            theme: appState.uiTheme,
             appBarRightWidgets: [
               checkIcon(
                 context,
@@ -57,11 +58,12 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                     ),
                   );
                 },
-                color: scaffoldColor[ConvertouchUITheme.light]!,
+                color: scaffoldColor[appState.uiTheme]!,
               ),
             ],
-            secondaryAppBar: const ConvertouchSearchBar(
+            secondaryAppBar: ConvertouchSearchBar(
               placeholder: "Search units...",
+              theme: appState.uiTheme,
             ),
             body: itemsViewModeBloc((itemsViewModeState) {
               return ConvertouchMenuItemsView(
@@ -135,8 +137,7 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                   ),
                 );
               },
-              backgroundColor:
-                  unitsPageFloatingButtonColor[ConvertouchUITheme.light],
+              backgroundColor: unitsPageFloatingButtonColor[appState.uiTheme],
               elevation: 0,
               child: const Icon(Icons.add),
             ),

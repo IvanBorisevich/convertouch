@@ -18,14 +18,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget appBloc(
-  Widget Function(AppState appState) builderFunc,
+  Widget Function(AppStateChanged appState) builderFunc,
 ) {
   return BlocBuilder<AppBloc, AppState>(
     buildWhen: (prev, next) {
-      return prev != next;
+      return prev != next && next is AppStateChanged;
     },
     builder: (_, appState) {
-      return builderFunc.call(appState);
+      if (appState is AppStateChanged) {
+        return builderFunc.call(appState);
+      } else {
+        return empty();
+      }
     },
   );
 }

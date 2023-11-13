@@ -3,12 +3,12 @@ import 'package:convertouch/presentation/bloc/app/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(const AppState());
+  AppBloc() : super(const AppStateChanged());
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
     if (event is SelectItemForRemoval) {
-      yield const AppStateProcessing();
+      yield const AppStateChanging();
 
       List<int> result;
       if (event.currentSelectedItemIdsForRemoval == null ||
@@ -24,13 +24,22 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         result.remove(event.itemId);
       }
 
-      yield AppState(
+      yield AppStateChanged(
         removalMode: true,
         selectedItemIdsForRemoval: result,
+        uiTheme: event.uiTheme,
       );
     } else if (event is DisableRemovalMode) {
-      yield const AppState(
+      yield AppStateChanged(
         removalMode: false,
+        uiTheme: event.uiTheme,
+      );
+    } else if (event is ChangeUiTheme) {
+      yield const AppStateChanging();
+      yield AppStateChanged(
+        removalMode: event.removalMode,
+        selectedItemIdsForRemoval: event.currentSelectedItemIdsForRemoval ?? [],
+        uiTheme: event.targetUiTheme,
       );
     }
   }

@@ -14,6 +14,7 @@ import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart'
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +32,11 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
   Widget build(BuildContext context) {
     action = ModalRoute.of(context)!.settings.arguments as ConvertouchAction? ??
         ConvertouchAction.fetchUnitGroupsInitially;
+
     return appBloc((appState) {
+      FloatingButtonColorVariation color =
+          unitGroupsPageFloatingButtonColor[appState.uiTheme]!;
+
       return unitGroupsBloc((unitGroupsFetched) {
         return ConvertouchScaffold(
             pageTitle: [
@@ -40,8 +45,10 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
             ].contains(action)
                 ? "Select Unit Group"
                 : "Unit Groups",
-            secondaryAppBar: const ConvertouchSearchBar(
+            theme: appState.uiTheme,
+            secondaryAppBar: ConvertouchSearchBar(
               placeholder: "Search unit groups...",
+              theme: appState.uiTheme,
             ),
             body: itemsViewModeBloc((itemsMenuViewState) {
               return ConvertouchMenuItemsView(
@@ -86,8 +93,8 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
               onPressed: () {
                 NavigationService.I.navigateTo(unitGroupCreationPageId);
               },
-              backgroundColor:
-                  unitGroupsPageFloatingButtonColor[ConvertouchUITheme.light],
+              backgroundColor: color.background,
+              foregroundColor: color.foreground,
               elevation: 0,
               child: const Icon(Icons.add),
             ),

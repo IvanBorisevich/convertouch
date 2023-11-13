@@ -1,4 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_states.dart';
@@ -17,7 +19,7 @@ class ConvertouchSideMenu extends StatefulWidget {
   const ConvertouchSideMenu({
     this.headerHeight = 50,
     this.widthPercentage = 0.8,
-    this.theme = ConvertouchUITheme.light,
+    required this.theme,
     this.customColor,
     super.key,
   });
@@ -30,10 +32,10 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
     with SingleTickerProviderStateMixin {
   late AnimationController _sideMenuAnimationController;
   late CurvedAnimation _curvedAnimation;
+  late bool _darkTheme;
 
   @override
   void initState() {
-    super.initState();
     _sideMenuAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -43,6 +45,10 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
       parent: _sideMenuAnimationController,
       curve: Curves.linear,
     );
+
+    _darkTheme = false;
+
+    super.initState();
   }
 
   @override
@@ -114,16 +120,36 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                         const SizedBox(height: 8),
                         ConvertouchSideMenuItem(
                           leadingIconData: Icons.dark_mode_outlined,
-                          trailing: Switch(
-                            value: true,
-                            activeTrackColor: color.regular.headerColor,
-                            activeColor: color.regular.activeSwitcherColor,
-                            onChanged: (bool value) {},
-                          ),
                           contentColor: color.regular.contentColor,
-                          title: "Dark Mode",
+                          activeSwitcherColor:
+                              color.regular.activeSwitcherColor,
+                          activeSwitcherTrackColor: color.regular.headerColor,
+                          title: "Dark Theme",
+                          isSwitchable: true,
+                          switcherValue: _darkTheme,
                           onTap: () {
-                            Navigator.of(context).pop();
+                            setState(() {
+                              _darkTheme = !_darkTheme;
+                            });
+                            BlocProvider.of<AppBloc>(context).add(
+                              ChangeUiTheme(
+                                targetUiTheme: _darkTheme
+                                    ? ConvertouchUITheme.dark
+                                    : ConvertouchUITheme.light,
+                              ),
+                            );
+                          },
+                          onSwitch: (bool value) {
+                            setState(() {
+                              _darkTheme = value;
+                            });
+                            BlocProvider.of<AppBloc>(context).add(
+                              ChangeUiTheme(
+                                targetUiTheme: _darkTheme
+                                    ? ConvertouchUITheme.dark
+                                    : ConvertouchUITheme.light,
+                              ),
+                            );
                           },
                         ),
                         ConvertouchSideMenuItem(
@@ -190,19 +216,29 @@ class ConvertouchSideMenuItem extends StatelessWidget {
   final IconData leadingIconData;
   final String title;
   final Color contentColor;
+  final Color? activeSwitcherTrackColor;
+  final Color? activeSwitcherColor;
+  final bool isSwitchable;
+  final bool switcherValue;
   final Widget? trailing;
   final double padding;
   final double paddingBetweenSpaceAndTitle;
   final void Function()? onTap;
+  final void Function(bool)? onSwitch;
 
   const ConvertouchSideMenuItem({
     required this.leadingIconData,
     required this.title,
     required this.contentColor,
+    this.activeSwitcherTrackColor,
+    this.activeSwitcherColor,
+    this.isSwitchable = false,
+    this.switcherValue = false,
     this.trailing,
     this.padding = 5,
     this.paddingBetweenSpaceAndTitle = 5,
     this.onTap,
+    this.onSwitch,
     super.key,
   });
 
@@ -210,7 +246,10 @@ class ConvertouchSideMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
         padding: EdgeInsets.fromLTRB(padding, 0, padding, padding),
         child: Row(
           children: [
@@ -232,7 +271,14 @@ class ConvertouchSideMenuItem extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
-                child: trailing,
+                child: isSwitchable
+                    ? Switch(
+                        value: switcherValue,
+                        activeTrackColor: activeSwitcherTrackColor,
+                        activeColor: activeSwitcherColor,
+                        onChanged: onSwitch,
+                      )
+                    : trailing,
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchCheckbox extends StatelessWidget {
@@ -9,8 +10,8 @@ class ConvertouchCheckbox extends StatelessWidget {
   const ConvertouchCheckbox(
     this.value, {
     this.size = 15,
-    this.color = Colors.blueAccent,
-    this.colorChecked = const Color(0xFF1D4D9D),
+    this.color = noColor,
+    this.colorChecked = noColor,
     super.key,
   });
 

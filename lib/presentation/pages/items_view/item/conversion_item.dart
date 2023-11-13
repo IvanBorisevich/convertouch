@@ -11,12 +11,14 @@ class ConvertouchConversionItem extends StatefulWidget {
   final UnitValueModel item;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
+  final ConvertouchUITheme theme;
   final ConvertouchConversionItemColor? color;
 
   const ConvertouchConversionItem(
     this.item, {
     this.onTap,
     this.onValueChanged,
+    required this.theme,
     this.color,
     super.key,
   });
@@ -50,8 +52,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
 
   @override
   Widget build(BuildContext context) {
-    var itemColor =
-        widget.color ?? conversionItemColor[ConvertouchUITheme.light]!;
+    var itemColor = widget.color ?? conversionItemColor[widget.theme]!;
     _textBoxColor = itemColor.textBox;
     _unitButtonColor = itemColor.unitButton;
 
@@ -97,6 +98,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 });
               },
               customColor: _textBoxColor,
+              theme: widget.theme,
             ),
           ),
           const SizedBox(width: 7),

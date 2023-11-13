@@ -26,7 +26,7 @@ class ConvertouchScaffold extends StatelessWidget {
 
   const ConvertouchScaffold({
     required this.body,
-    this.theme = ConvertouchUITheme.light,
+    required this.theme,
     this.appBarLeftWidget,
     this.pageTitle = appName,
     this.appBarRightWidgets,
@@ -177,7 +177,9 @@ class ConvertouchScaffold extends StatelessWidget {
                   ),
                 ),
               ),
-              const ConvertouchSideMenu(),
+              ConvertouchSideMenu(
+                theme: theme,
+              ),
             ],
           ),
         ),

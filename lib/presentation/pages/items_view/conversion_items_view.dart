@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,14 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final void Function(UnitValueModel)? onItemTap;
   final void Function(UnitValueModel, String)? onItemValueChanged;
   final void Function(UnitValueModel)? onItemRemove;
+  final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
     this.convertedItems, {
     this.onItemTap,
     this.onItemValueChanged,
     this.onItemRemove,
+    required this.theme,
     super.key,
   });
 
@@ -75,6 +78,7 @@ class _ConvertouchConversionItemsViewState
                         value,
                       );
                     },
+                    theme: widget.theme,
                   ),
                 ),
                 Container(

@@ -85,3 +85,13 @@ class SideMenuColorVariation extends ConvertouchColorVariation {
     this.footerDividerColor = noColor,
   });
 }
+
+class FloatingButtonColorVariation extends ConvertouchColorVariation {
+  final Color background;
+  final Color foreground;
+
+  const FloatingButtonColorVariation({
+    this.background = noColor,
+    this.foreground = noColor,
+  });
+}

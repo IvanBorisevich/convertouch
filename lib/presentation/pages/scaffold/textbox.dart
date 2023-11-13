@@ -33,7 +33,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.controller,
     this.inputFormatters,
     this.keyboardType,
-    this.theme = ConvertouchUITheme.light,
+    required this.theme,
     this.customColor,
     super.key,
   });

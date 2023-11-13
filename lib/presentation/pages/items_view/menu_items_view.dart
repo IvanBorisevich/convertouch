@@ -82,6 +82,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
                 selectedForRemoval:
                     appState.selectedItemIdsForRemoval.contains(item.id!),
                 markOnTap: widget.markItemsOnTap,
+                theme: appState.uiTheme,
               ),
             );
           }

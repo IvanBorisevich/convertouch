@@ -20,6 +20,7 @@ class ConvertouchMenuItem extends StatefulWidget {
   final bool removalMode;
   final bool selectedForRemoval;
   final bool markOnTap;
+  final ConvertouchUITheme theme;
   final ConvertouchMenuItemColor? color;
 
   const ConvertouchMenuItem(
@@ -33,6 +34,7 @@ class ConvertouchMenuItem extends StatefulWidget {
     this.removalMode = false,
     this.selectedForRemoval = false,
     this.markOnTap = false,
+    required this.theme,
     this.color,
     super.key,
   });
@@ -58,9 +60,9 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
     if (widget.color != null) {
       itemColor = widget.color!;
     } else if (widget.item.runtimeType == UnitGroupModel) {
-      itemColor = unitGroupItemColor[ConvertouchUITheme.light]!;
+      itemColor = unitGroupItemColor[widget.theme]!;
     } else {
-      itemColor = unitItemColor[ConvertouchUITheme.light]!;
+      itemColor = unitItemColor[widget.theme]!;
     }
 
     if (widget.selected) {

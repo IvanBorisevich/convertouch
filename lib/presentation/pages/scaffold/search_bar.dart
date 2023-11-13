@@ -21,7 +21,7 @@ class ConvertouchSearchBar extends StatelessWidget {
 
   const ConvertouchSearchBar({
     required this.placeholder,
-    this.theme = ConvertouchUITheme.light,
+    required this.theme,
     this.customColor,
     super.key,
   });
