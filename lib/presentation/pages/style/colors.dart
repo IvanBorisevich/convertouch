@@ -17,8 +17,8 @@ const scaffoldColor = {
   ),
   ConvertouchUITheme.dark: ConvertouchScaffoldColor(
     regular: ScaffoldColorVariation(
-      backgroundColor: Color(0xFF353C48),
-      appBarColor: Color(0xFF262B34),
+      backgroundColor: Color(0xFF373F4B),
+      appBarColor: Color(0xFF2C323D),
       appBarFontColor: Color(0xFFB2B2B2),
       appBarIconColor: Color(0xFFB2B2B2),
       appBarIconColorDisabled: Color(0xFF8D8D8D),
@@ -41,7 +41,7 @@ const searchBarColor = {
     regular: SearchBarColorVariation(
       searchBoxIconColor: Color(0xFFB2B2B2),
       searchBoxFillColor: Color(0xFF444C59),
-      hintColor: Color(0xFF939292),
+      hintColor: Color(0xFF8791A1),
       textColor: Color(0xFFB2B2B2),
       viewModeButtonColor: Color(0xFF444C59),
       viewModeIconColor: Color(0xFFB2B2B2),
@@ -60,11 +60,11 @@ const sideMenuColor = {
     ),
   ),
   ConvertouchUITheme.dark: ConvertouchSideMenuColor(regular: SideMenuColorVariation(
-    backgroundColor: Color(0xFF383838),
-    headerColor: Color(0xFF4B4B4B),
+    backgroundColor: Color(0xFF404957),
+    headerColor: Color(0xFF333944),
     contentColor: Color(0xFFB2B2B2),
     activeSwitcherColor: Color(0xFFB2B2B2),
-    footerDividerColor: Color(0xFF4B4B4B),
+    footerDividerColor: Color(0xFF6E7B8F),
   )),
 };
 
@@ -77,21 +77,21 @@ const unitGroupItemColor = {
       content: Color(0xFF3A3A88),
     ),
     selected: MenuItemColorVariation(
-      border: Color(0xFFA5B2FF),
-      background: Color(0xFFD6DCFF),
-      content: Color(0xFF2E2C8A),
+      border: Color(0xFF9EADFA),
+      background: Color(0xFFE5EAFF),
+      content: Color(0xFF303073),
     ),
   ),
   ConvertouchUITheme.dark: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
-      border: Color(0xFF5F6279),
-      background: Color(0xFF3F4652),
-      content: Color(0xFF9297C5),
+      border: Color(0xFF585A6C),
+      background: Color(0xFF3E4754),
+      content: Color(0xFFA1A4CE),
     ),
     selected: MenuItemColorVariation(
       border: Color(0xFFA5B2FF),
-      background: Color(0xFFD6DCFF),
-      content: Color(0xFF2E2C8A),
+      background: Color(0xFF3E4754),
+      content: Color(0xFFB3B6DE),
     ),
   ),
 };
@@ -102,19 +102,11 @@ const appBarUnitGroupItemColor = {
       border: Color(0xFF426F99),
       content: Color(0xFF426F99),
     ),
-    selected: MenuItemColorVariation(
-      border: Color(0xFF426F99),
-      content: Color(0xFF426F99),
-    ),
   ),
   ConvertouchUITheme.dark: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
-      border: Color(0xFF5F6279),
-      content: Color(0xFF8F94C0),
-    ),
-    selected: MenuItemColorVariation(
-      border: Color(0xFF426F99),
-      content: Color(0xFF426F99),
+      border: Color(0xFF60647E),
+      content: Color(0xFFA1A4CE),
     ),
   ),
 };
@@ -133,31 +125,32 @@ const unitItemColor = {
     ),
     selected: MenuItemColorVariation(
       border: Color(0xFF2F7DC2),
-      background: Color(0xFF95BBF3),
-      content: Color(0xFF0A4175),
+      background: Color(0xFFCCE1FF),
+      content: Color(0xFF366C9F),
     ),
   ),
   ConvertouchUITheme.dark: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
-      border: Color(0xFFB5DBFF),
-      background: Color(0xFFDFEDFF),
-      content: Color(0xFF366C9F),
+      border: Color(0xFF54616C),
+      background: Color(0xFF3E4754),
+      content: Color(0xFF7DAAD3),
     ),
     marked: MenuItemColorVariation(
-      border: Color(0xFF509CE0),
-      background: Color(0xFFCCE1FF),
-      content: Color(0xFF366C9F),
+      border: Color(0xFF7A9EBE),
+      background: Color(0xE4415F7E),
+      content: Color(0xFFA0CAF1),
     ),
     selected: MenuItemColorVariation(
-      border: Color(0xFF2F7DC2),
-      background: Color(0xFF95BBF3),
-      content: Color(0xFF0A4175),
+      border: Color(0xFF7A9EBE),
+      background: Color(0xE4415F7E),
+      content: Color(0xFFA0CAF1),
     ),
   ),
 };
 
 const conversionItemColor = {
   ConvertouchUITheme.light: ConvertouchConversionItemColor(
+    handlersColor: Color(0xFF7FA0BE),
     textBox: ConvertouchTextBoxColor(
       regular: TextBoxColorVariation(
         border: Color(0xFF7FA0BE),
@@ -184,28 +177,29 @@ const conversionItemColor = {
     ),
   ),
   ConvertouchUITheme.dark: ConvertouchConversionItemColor(
+    handlersColor: Color(0xFF7FA0BE),
     textBox: ConvertouchTextBoxColor(
       regular: TextBoxColorVariation(
         border: Color(0xFF7FA0BE),
-        content: Color(0xFF426F99),
+        content: Color(0xFF8FB1D0),
         label: Color(0xFF7FA0BE),
       ),
       focused: TextBoxColorVariation(
-        border: Color(0xFF375067),
-        content: Color(0xFF426F99),
-        label: Color(0xFF7FA0BE),
+        border: Color(0xFF98BAD9),
+        content: Color(0xFFA0C4E5),
+        label: Color(0xFF98BAD9),
       ),
     ),
     unitButton: ConvertouchMenuItemColor(
       regular: MenuItemColorVariation(
         border: Color(0xFF7FA0BE),
-        background: Color(0xFFE2EEF8),
-        content: Color(0xFF426F99),
+        background: Color(0xFF373F4B),
+        content: Color(0xFF7FA0BE),
       ),
       focused: MenuItemColorVariation(
-        border: Color(0xFF375067),
-        background: Color(0xFFB9D7F1),
-        content: Color(0xFF2D4B67),
+        border: Color(0xFF8FB1D0),
+        background: Color(0xDF49597A),
+        content: Color(0xFF8FB1D0),
       ),
     ),
   ),
@@ -217,19 +211,31 @@ const unitGroupsPageFloatingButtonColor = {
     foreground: Color(0xFFDEE9FF),
   ),
   ConvertouchUITheme.dark: FloatingButtonColorVariation(
-    background: Color(0xFF5352B0),
+    background: Color(0xFF616491),
     foreground: Color(0xFFD1CFD3),
   ),
 };
 
 const unitsPageFloatingButtonColor = {
-  ConvertouchUITheme.light: Color(0xFF5499DA),
-  ConvertouchUITheme.dark: Color(0xFF5499DA),
+  ConvertouchUITheme.light: FloatingButtonColorVariation(
+    background: Color(0xFF5499DA),
+    foreground: Color(0xFFDEE9FF),
+  ),
+  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+    background: Color(0xDB446F96),
+    foreground: Color(0xFFD1CFD3),
+  ),
 };
 
 const conversionPageFloatingButtonColor = {
-  ConvertouchUITheme.light: Color(0xFF6793BE),
-  ConvertouchUITheme.dark: Color(0xFF6793BE),
+  ConvertouchUITheme.light: FloatingButtonColorVariation(
+    background: Color(0xFF6793BE),
+    foreground: Color(0xFFDEE9FF),
+  ),
+  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+    background: Color(0xDB446F96),
+    foreground: Color(0xFFD1CFD3),
+  ),
 };
 
 const removalFloatingButtonColor = {
@@ -238,8 +244,8 @@ const removalFloatingButtonColor = {
 };
 
 const dividerWithTextColor = {
-  ConvertouchUITheme.light: Color(0xFF426F99),
-  ConvertouchUITheme.dark: Color(0xFF426F99),
+  ConvertouchUITheme.light: Color(0xFF709FCB),
+  ConvertouchUITheme.dark: Color(0xFF709FCB),
 };
 
 const textBoxColor = {
@@ -248,23 +254,54 @@ const textBoxColor = {
       border: Color(0xFF426F99),
       content: Color(0xFF426F99),
       label: Color(0xFF426F99),
+      hint: Color(0xFF426F99),
     ),
     focused: TextBoxColorVariation(
       border: Color(0xFF426F99),
       content: Color(0xFF426F99),
       label: Color(0xFF426F99),
+      hint: Color(0xFF426F99),
     ),
   ),
   ConvertouchUITheme.dark: ConvertouchTextBoxColor(
     regular: TextBoxColorVariation(
-      border: Color(0xFF426F99),
-      content: Color(0xFF426F99),
-      label: Color(0xFF426F99),
+      border: Color(0xFF709FCB),
+      content: Color(0xFF709FCB),
+      label: Color(0xFF709FCB),
+      hint: Color(0xFF709FCB),
     ),
     focused: TextBoxColorVariation(
-      border: Color(0xFF426F99),
-      content: Color(0xFF426F99),
-      label: Color(0xFF426F99),
+      border: Color(0xFF709FCB),
+      content: Color(0xFF709FCB),
+      label: Color(0xFF709FCB),
+      hint: Color(0xFF709FCB),
+    ),
+  ),
+};
+
+const unitGroupTextBoxColor = {
+  ConvertouchUITheme.light: ConvertouchTextBoxColor(
+    regular: TextBoxColorVariation(
+      border: Color(0xFF5F4299),
+      content: Color(0xFF5F4299),
+      label: Color(0xFF5F4299),
+    ),
+    focused: TextBoxColorVariation(
+      border: Color(0xFF5F4299),
+      content: Color(0xFF5F4299),
+      label: Color(0xFF5F4299),
+    ),
+  ),
+  ConvertouchUITheme.dark: ConvertouchTextBoxColor(
+    regular: TextBoxColorVariation(
+      border: Color(0xFFA1A4CE),
+      content: Color(0xFFA1A4CE),
+      label: Color(0xFFA1A4CE),
+    ),
+    focused: TextBoxColorVariation(
+      border: Color(0xFFC1C3E5),
+      content: Color(0xFFC1C3E5),
+      label: Color(0xFFC1C3E5),
     ),
   ),
 };

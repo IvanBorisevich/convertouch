@@ -13,6 +13,7 @@ import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +32,9 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
     action = ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
 
     return appBloc((appState) {
+      FloatingButtonColorVariation color =
+          unitsPageFloatingButtonColor[appState.uiTheme]!;
+
       return unitsBloc((unitsFetched) {
         return ConvertouchScaffold(
             pageTitle: [
@@ -137,7 +141,8 @@ class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
                   ),
                 );
               },
-              backgroundColor: unitsPageFloatingButtonColor[appState.uiTheme],
+              backgroundColor: color.background,
+              foregroundColor: color.foreground,
               elevation: 0,
               child: const Icon(Icons.add),
             ),

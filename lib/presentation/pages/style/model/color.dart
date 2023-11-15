@@ -1,4 +1,5 @@
 import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
+import 'package:flutter/material.dart';
 
 abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
   final T regular;
@@ -36,10 +37,12 @@ class ConvertouchTextBoxColor extends ConvertouchColor<TextBoxColorVariation> {
 class ConvertouchConversionItemColor {
   final ConvertouchTextBoxColor textBox;
   final ConvertouchMenuItemColor unitButton;
+  final Color handlersColor;
 
   const ConvertouchConversionItemColor({
     required this.textBox,
     required this.unitButton,
+    required this.handlersColor,
   });
 }
 

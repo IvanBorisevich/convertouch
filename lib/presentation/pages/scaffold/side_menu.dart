@@ -107,7 +107,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                           ),
                           child: Center(
                             child: Text(
-                              "Menu",
+                              "Convertouch",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 19,

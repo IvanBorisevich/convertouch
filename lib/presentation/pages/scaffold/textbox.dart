@@ -108,6 +108,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           color: color.regular.label,
         ),
         hintText: widget.hintText,
+        hintStyle: TextStyle(
+          color: color.regular.hint,
+        ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 15.0,
           horizontal: 15.0,
@@ -118,7 +121,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
       ),
       style: TextStyle(
-        color: color.regular.content,
+        color: _focusNode.hasFocus
+            ? color.focused.content
+            : color.regular.content,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

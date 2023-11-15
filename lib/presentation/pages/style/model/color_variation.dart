@@ -28,11 +28,13 @@ class TextBoxColorVariation extends ConvertouchColorVariation {
   final Color border;
   final Color content;
   final Color label;
+  final Color hint;
 
   const TextBoxColorVariation({
     this.border = noColor,
     this.content = noColor,
     this.label = noColor,
+    this.hint = noColor,
   });
 }
 

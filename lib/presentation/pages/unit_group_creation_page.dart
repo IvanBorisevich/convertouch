@@ -43,7 +43,7 @@ class _ConvertouchUnitGroupCreationPageState
             ),
           ],
           body: Container(
-            padding: const EdgeInsetsDirectional.fromSTEB(7, 8, 7, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(7, 15, 7, 0),
             child: ConvertouchTextBox(
               onChanged: (String value) async {
                 setState(() {
@@ -53,6 +53,7 @@ class _ConvertouchUnitGroupCreationPageState
               label: "Unit Group Name",
               controller: _controller,
               theme: appState.uiTheme,
+              customColor: unitGroupTextBoxColor[appState.uiTheme],
             ),
           ),
         ),

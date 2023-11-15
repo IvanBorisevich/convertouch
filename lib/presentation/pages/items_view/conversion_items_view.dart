@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
@@ -55,13 +56,13 @@ class _ConvertouchConversionItemsViewState
                   padding: EdgeInsets.zero,
                   child: ReorderableDragStartListener(
                     index: index,
-                    child: const Card(
+                    child: Card(
                       margin: EdgeInsets.zero,
                       color: Colors.transparent,
                       shadowColor: Colors.transparent,
                       child: Icon(
                         Icons.drag_indicator_outlined,
-                        color: Color(0xFF7FA0BE),
+                        color: conversionItemColor[widget.theme]!.handlersColor,
                       ),
                     ),
                   ),
@@ -94,9 +95,9 @@ class _ConvertouchConversionItemsViewState
                     onPressed: () {
                       widget.onItemRemove?.call(widget.convertedItems[index]);
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.remove_circle_outline,
-                      color: Color(0xFF7FA0BE),
+                      color: conversionItemColor[widget.theme]!.handlersColor,
                     ),
                   ),
                 ),

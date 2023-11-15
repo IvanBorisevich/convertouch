@@ -131,6 +131,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
                 widget.item,
                 removalMode: widget.removalMode,
                 selectedForRemoval: widget.selectedForRemoval,
+                selectedForConversion: widget.selected,
                 logo: logo,
                 color: _color,
               );
@@ -139,6 +140,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
                 widget.item,
                 removalMode: widget.removalMode,
                 selectedForRemoval: widget.selectedForRemoval,
+                selectedForConversion: widget.selected,
                 logo: logo,
                 color: _color,
               );
@@ -155,6 +157,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final Widget logo;
   final double itemContainerHeight;
   final bool selectedForRemoval;
+  final bool selectedForConversion;
   final MenuItemColorVariation color;
 
   const ConvertouchMenuListItem(
@@ -164,6 +167,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
     this.itemContainerHeight = 50,
     required this.color,
     this.selectedForRemoval = false,
+        this.selectedForConversion = false,
     super.key,
   });
 
@@ -179,8 +183,9 @@ class ConvertouchMenuListItem extends StatelessWidget {
                 color: color.background,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
+                  strokeAlign: selectedForConversion ? BorderSide.strokeAlignOutside : BorderSide.strokeAlignInside,
                   color: color.border,
-                  width: 1,
+                  width: selectedForConversion ? 2 : 1,
                 ),
               ),
               child: Row(
@@ -206,8 +211,8 @@ class ConvertouchMenuListItem extends StatelessWidget {
                     child: logo,
                   ),
                   VerticalDivider(
-                    width: 1,
-                    thickness: 1,
+                    width: selectedForConversion ? 3 : 1,
+                    thickness: selectedForConversion ? 2 : 1,
                     indent: 5,
                     endIndent: 5,
                     color: color.border,
@@ -246,6 +251,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final bool removalMode;
   final Widget logo;
   final bool selectedForRemoval;
+  final bool selectedForConversion;
   final MenuItemColorVariation color;
 
   const ConvertouchMenuGridItem(
@@ -254,6 +260,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.logo,
     required this.color,
     this.selectedForRemoval = false,
+    this.selectedForConversion = false,
     super.key,
   });
 
@@ -264,8 +271,9 @@ class ConvertouchMenuGridItem extends StatelessWidget {
         color: color.background,
         borderRadius: BorderRadius.circular(7),
         border: Border.all(
+          strokeAlign: selectedForConversion ? BorderSide.strokeAlignOutside : BorderSide.strokeAlignInside,
           color: color.border,
-          width: 1,
+          width: selectedForConversion ? 2 : 1,
         ),
       ),
       child: Column(

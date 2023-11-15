@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/pages/items_view/conversion_items_view.
 import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,9 +29,13 @@ class _ConvertouchUnitsConversionPageState
   @override
   Widget build(BuildContext context) {
     return appBloc((appState) {
+      FloatingButtonColorVariation color =
+          conversionPageFloatingButtonColor[appState.uiTheme]!;
+
       return unitsConversionBloc((conversionInitialized) {
         if (conversionInitialized is ConversionInitialized) {
           return ConvertouchScaffold(
+            pageTitle: "Conversions",
             theme: appState.uiTheme,
             secondaryAppBar: ConvertouchMenuItem(
               conversionInitialized.unitGroup,
@@ -43,7 +48,7 @@ class _ConvertouchUnitsConversionPageState
                         .map((item) => item.unit)
                         .toList(),
                     action:
-                    ConvertouchAction.fetchUnitGroupsToSelectForConversion,
+                        ConvertouchAction.fetchUnitGroupsToSelectForConversion,
                   ),
                 );
               },
@@ -80,7 +85,8 @@ class _ConvertouchUnitsConversionPageState
                 BlocProvider.of<UnitsConversionBloc>(context).add(
                   RemoveConversion(
                     unitValueModel: item,
-                    currentConversionItems: conversionInitialized.conversionItems,
+                    currentConversionItems:
+                        conversionInitialized.conversionItems,
                     unitGroup: conversionInitialized.unitGroup,
                   ),
                 );
@@ -100,8 +106,8 @@ class _ConvertouchUnitsConversionPageState
                   ),
                 );
               },
-              backgroundColor:
-              conversionPageFloatingButtonColor[appState.uiTheme],
+              backgroundColor: color.background,
+              foregroundColor: color.foreground,
               elevation: 0,
               child: const Icon(Icons.add),
             ),
