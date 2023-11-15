@@ -11,9 +11,9 @@ class AppStateChanged extends AppState {
   final ConvertouchUITheme uiTheme;
 
   const AppStateChanged({
-    this.removalMode = false,
+    required this.removalMode,
     this.selectedItemIdsForRemoval = const [],
-    this.uiTheme = ConvertouchUITheme.light,
+    required this.uiTheme,
   });
 
   @override

@@ -68,7 +68,9 @@ class ConvertouchScaffold extends StatelessWidget {
                           Icons.clear,
                           () {
                             BlocProvider.of<AppBloc>(context).add(
-                              const DisableRemovalMode(),
+                              DisableRemovalMode(
+                                uiTheme: appState.uiTheme,
+                              ),
                             );
                           },
                           color,
@@ -152,7 +154,7 @@ class ConvertouchScaffold extends StatelessWidget {
                                     horizontal: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: removalFloatingButtonColor[theme],
+                                    color: removalFloatingButtonColor[theme]!.background,
                                     borderRadius: BorderRadius.circular(5),
                                     border: Border.all(
                                       color: color.regular.backgroundColor,
@@ -165,7 +167,7 @@ class ConvertouchScaffold extends StatelessWidget {
                                     appState.selectedItemIdsForRemoval.length
                                         .toString(),
                                     style: TextStyle(
-                                      color: color.regular.backgroundColor,
+                                      color: removalFloatingButtonColor[theme]!.foreground,
                                       fontSize: 14,
                                     ),
                                   ),
@@ -204,7 +206,8 @@ class ConvertouchScaffold extends StatelessWidget {
   Widget _floatingActionButtonForRemoval({void Function()? onClick}) {
     return FloatingActionButton(
       onPressed: onClick,
-      backgroundColor: removalFloatingButtonColor[theme],
+      backgroundColor: removalFloatingButtonColor[theme]!.background,
+      foregroundColor: removalFloatingButtonColor[theme]!.foreground,
       elevation: 0,
       child: const Icon(Icons.delete_outline_rounded),
     );

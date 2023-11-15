@@ -63,6 +63,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
                     BlocProvider.of<AppBloc>(context).add(
                       SelectItemForRemoval(
                         itemId: item.id!,
+                        uiTheme: appState.uiTheme,
                       ),
                     );
                   }
@@ -73,6 +74,7 @@ class _ConvertouchMenuItemsViewState extends State<ConvertouchMenuItemsView> {
                       itemId: item.id!,
                       currentSelectedItemIdsForRemoval:
                           appState.selectedItemIdsForRemoval,
+                      uiTheme: appState.uiTheme,
                     ),
                   );
                 },

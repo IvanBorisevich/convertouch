@@ -109,7 +109,9 @@ class _ConvertouchUnitGroupsPageState extends State<ConvertouchUnitGroupsPage> {
                 ),
               );
               BlocProvider.of<AppBloc>(context).add(
-                const DisableRemovalMode(),
+                DisableRemovalMode(
+                  uiTheme: appState.uiTheme,
+                ),
               );
             });
       });

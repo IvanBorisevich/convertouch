@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/app/app_events.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 import 'package:convertouch/presentation/bloc/side_menu/side_menu_states.dart';
@@ -46,7 +47,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
       curve: Curves.linear,
     );
 
-    _darkTheme = false;
+    _darkTheme = widget.theme == ConvertouchUITheme.dark;
 
     super.initState();
   }
@@ -118,40 +119,48 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                           ),
                         ),
                         const SizedBox(height: 8),
-                        ConvertouchSideMenuItem(
-                          leadingIconData: Icons.dark_mode_outlined,
-                          contentColor: color.regular.contentColor,
-                          activeSwitcherColor:
-                              color.regular.activeSwitcherColor,
-                          activeSwitcherTrackColor: color.regular.headerColor,
-                          title: "Dark Theme",
-                          isSwitchable: true,
-                          switcherValue: _darkTheme,
-                          onTap: () {
-                            setState(() {
-                              _darkTheme = !_darkTheme;
-                            });
-                            BlocProvider.of<AppBloc>(context).add(
-                              ChangeUiTheme(
-                                targetUiTheme: _darkTheme
-                                    ? ConvertouchUITheme.dark
-                                    : ConvertouchUITheme.light,
-                              ),
-                            );
-                          },
-                          onSwitch: (bool value) {
-                            setState(() {
-                              _darkTheme = value;
-                            });
-                            BlocProvider.of<AppBloc>(context).add(
-                              ChangeUiTheme(
-                                targetUiTheme: _darkTheme
-                                    ? ConvertouchUITheme.dark
-                                    : ConvertouchUITheme.light,
-                              ),
-                            );
-                          },
-                        ),
+                        appBloc((appState) {
+                          return ConvertouchSideMenuItem(
+                            leadingIconData: Icons.dark_mode_outlined,
+                            contentColor: color.regular.contentColor,
+                            activeSwitcherColor:
+                                color.regular.activeSwitcherColor,
+                            activeSwitcherTrackColor: color.regular.headerColor,
+                            title: "Dark Theme",
+                            isSwitchable: true,
+                            switcherValue: _darkTheme,
+                            onTap: () {
+                              setState(() {
+                                _darkTheme = !_darkTheme;
+                              });
+                              BlocProvider.of<AppBloc>(context).add(
+                                ChangeUiTheme(
+                                  uiTheme: _darkTheme
+                                      ? ConvertouchUITheme.dark
+                                      : ConvertouchUITheme.light,
+                                  removalMode: appState.removalMode,
+                                  currentSelectedItemIdsForRemoval:
+                                      appState.selectedItemIdsForRemoval,
+                                ),
+                              );
+                            },
+                            onSwitch: (bool value) {
+                              setState(() {
+                                _darkTheme = value;
+                              });
+                              BlocProvider.of<AppBloc>(context).add(
+                                ChangeUiTheme(
+                                  uiTheme: _darkTheme
+                                      ? ConvertouchUITheme.dark
+                                      : ConvertouchUITheme.light,
+                                  removalMode: appState.removalMode,
+                                  currentSelectedItemIdsForRemoval:
+                                      appState.selectedItemIdsForRemoval,
+                                ),
+                              );
+                            },
+                          );
+                        }),
                         ConvertouchSideMenuItem(
                           leadingIconData: Icons.settings,
                           title: "Settings",

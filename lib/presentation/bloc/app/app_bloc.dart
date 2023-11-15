@@ -1,9 +1,14 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/app/app_events.dart';
 import 'package:convertouch/presentation/bloc/app/app_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(const AppStateChanged());
+  AppBloc()
+      : super(const AppStateChanged(
+          removalMode: false,
+          uiTheme: ConvertouchUITheme.light,
+        ));
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
@@ -39,7 +44,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       yield AppStateChanged(
         removalMode: event.removalMode,
         selectedItemIdsForRemoval: event.currentSelectedItemIdsForRemoval ?? [],
-        uiTheme: event.targetUiTheme,
+        uiTheme: event.uiTheme,
       );
     }
   }

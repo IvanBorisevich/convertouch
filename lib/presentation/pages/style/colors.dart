@@ -239,8 +239,14 @@ const conversionPageFloatingButtonColor = {
 };
 
 const removalFloatingButtonColor = {
-  ConvertouchUITheme.light: Color(0xFFD36422),
-  ConvertouchUITheme.dark: Color(0xFFD36422),
+  ConvertouchUITheme.light: FloatingButtonColorVariation(
+    background: Color(0xFFD36422),
+    foreground: Color(0xFFDEE9FF),
+  ),
+  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+    background: Color(0xFF9D5225),
+    foreground: Color(0xFFDEE9FF),
+  ),
 };
 
 const dividerWithTextColor = {
