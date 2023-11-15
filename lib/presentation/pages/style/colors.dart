@@ -19,8 +19,8 @@ const scaffoldColor = {
     regular: ScaffoldColorVariation(
       backgroundColor: Color(0xFF373F4B),
       appBarColor: Color(0xFF2C323D),
-      appBarFontColor: Color(0xFFB2B2B2),
-      appBarIconColor: Color(0xFFB2B2B2),
+      appBarFontColor: Color(0xFFCCD7E0),
+      appBarIconColor: Color(0xFFCCD7E0),
       appBarIconColorDisabled: Color(0xFF8D8D8D),
     ),
   ),
@@ -39,12 +39,12 @@ const searchBarColor = {
   ),
   ConvertouchUITheme.dark: ConvertouchSearchBarColor(
     regular: SearchBarColorVariation(
-      searchBoxIconColor: Color(0xFFB2B2B2),
+      searchBoxIconColor: Color(0xFFCCD7E0),
       searchBoxFillColor: Color(0xFF444C59),
       hintColor: Color(0xFF8791A1),
       textColor: Color(0xFFB2B2B2),
       viewModeButtonColor: Color(0xFF444C59),
-      viewModeIconColor: Color(0xFFB2B2B2),
+      viewModeIconColor: Color(0xFFCCD7E0),
     ),
   ),
 };
@@ -110,7 +110,7 @@ const unitGroupItemColor = {
     regular: MenuItemColorVariation(
       border: Color(0xFF585A6C),
       background: Color(0xFF3E4754),
-      content: Color(0xFFA1A4CE),
+      content: Color(0xFFB1B5EA),
     ),
     selected: MenuItemColorVariation(
       border: Color(0xFFA5B2FF),
