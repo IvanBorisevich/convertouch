@@ -6,12 +6,14 @@ abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
   final T marked;
   final T selected;
   final T focused;
+  final T? switchedOn;
 
   const ConvertouchColor({
     required this.regular,
     required this.marked,
     required this.selected,
     required this.focused,
+    this.switchedOn,
   });
 }
 
@@ -73,5 +75,15 @@ class ConvertouchSideMenuColor
     super.marked = defaultSideMenuColor,
     super.selected = defaultSideMenuColor,
     super.focused = defaultSideMenuColor,
+  });
+}
+
+class ConvertouchSwitcherColor extends ConvertouchColor<SwitcherColorVariation> {
+  const ConvertouchSwitcherColor({
+    required super.regular,
+    super.marked = defaultSwitcherColor,
+    super.selected = defaultSwitcherColor,
+    super.focused = defaultSwitcherColor,
+    super.switchedOn = defaultSwitcherColor,
   });
 }

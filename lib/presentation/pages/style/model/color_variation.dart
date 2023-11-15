@@ -6,7 +6,7 @@ const TextBoxColorVariation defaultTextBoxColor = TextBoxColorVariation();
 const ScaffoldColorVariation defaultScaffoldColor = ScaffoldColorVariation();
 const SearchBarColorVariation defaultSearchBarColor = SearchBarColorVariation();
 const SideMenuColorVariation defaultSideMenuColor = SideMenuColorVariation();
-
+const SwitcherColorVariation defaultSwitcherColor = SwitcherColorVariation();
 
 abstract class ConvertouchColorVariation {
   const ConvertouchColorVariation();
@@ -95,5 +95,15 @@ class FloatingButtonColorVariation extends ConvertouchColorVariation {
   const FloatingButtonColorVariation({
     this.background = noColor,
     this.foreground = noColor,
+  });
+}
+
+class SwitcherColorVariation extends ConvertouchColorVariation {
+  final Color thumb;
+  final Color track;
+
+  const SwitcherColorVariation({
+    this.thumb = noColor,
+    this.track = noColor,
   });
 }

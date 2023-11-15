@@ -59,15 +59,39 @@ const sideMenuColor = {
       footerDividerColor: Color(0xFF84ADD7),
     ),
   ),
-  ConvertouchUITheme.dark: ConvertouchSideMenuColor(regular: SideMenuColorVariation(
-    backgroundColor: Color(0xFF404957),
-    headerColor: Color(0xFF333944),
-    contentColor: Color(0xFFB2B2B2),
-    activeSwitcherColor: Color(0xFFB2B2B2),
-    footerDividerColor: Color(0xFF6E7B8F),
-  )),
+  ConvertouchUITheme.dark: ConvertouchSideMenuColor(
+    regular: SideMenuColorVariation(
+      backgroundColor: Color(0xFF404957),
+      headerColor: Color(0xFF333944),
+      contentColor: Color(0xFFDFEAEE),
+      activeSwitcherColor: Color(0xFFB2B2B2),
+      footerDividerColor: Color(0xFF6E7B8F),
+    ),
+  ),
 };
 
+const sideMenuSwitcherColor = {
+  ConvertouchUITheme.light: ConvertouchSwitcherColor(
+    regular: SwitcherColorVariation(
+      thumb: Color(0xFFABBCCE),
+      track: Color(0xFF5E6D7C),
+    ),
+    switchedOn: SwitcherColorVariation(
+      thumb: Color(0xFF134B80),
+      track: Color(0xFFB0D7FC),
+    ),
+  ),
+  ConvertouchUITheme.dark: ConvertouchSwitcherColor(
+    regular: SwitcherColorVariation(
+      thumb: Color(0xFFB2B2B2),
+      track: Color(0xFF333944),
+    ),
+    switchedOn: SwitcherColorVariation(
+      thumb: Color(0xFF78B7F1),
+      track: Color(0xFF347ABB),
+    ),
+  ),
+};
 
 const unitGroupItemColor = {
   ConvertouchUITheme.light: ConvertouchMenuItemColor(

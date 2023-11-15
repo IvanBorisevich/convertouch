@@ -56,6 +56,9 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
   Widget build(BuildContext context) {
     final ConvertouchSideMenuColor color =
         widget.customColor ?? sideMenuColor[widget.theme]!;
+    final ConvertouchSwitcherColor switcherColor =
+        sideMenuSwitcherColor[widget.theme]!;
+
     final double pageWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<SideMenuBloc, SideMenuState>(
       builder: (_, sideMenuState) {
@@ -123,9 +126,7 @@ class _ConvertouchSideMenuState extends State<ConvertouchSideMenu>
                           return ConvertouchSideMenuItem(
                             leadingIconData: Icons.dark_mode_outlined,
                             contentColor: color.regular.contentColor,
-                            activeSwitcherColor:
-                                color.regular.activeSwitcherColor,
-                            activeSwitcherTrackColor: color.regular.headerColor,
+                            switcherColor: switcherColor,
                             title: "Dark Theme",
                             isSwitchable: true,
                             switcherValue: _darkTheme,
@@ -225,8 +226,7 @@ class ConvertouchSideMenuItem extends StatelessWidget {
   final IconData leadingIconData;
   final String title;
   final Color contentColor;
-  final Color? activeSwitcherTrackColor;
-  final Color? activeSwitcherColor;
+  final ConvertouchSwitcherColor? switcherColor;
   final bool isSwitchable;
   final bool switcherValue;
   final Widget? trailing;
@@ -239,8 +239,7 @@ class ConvertouchSideMenuItem extends StatelessWidget {
     required this.leadingIconData,
     required this.title,
     required this.contentColor,
-    this.activeSwitcherTrackColor,
-    this.activeSwitcherColor,
+    this.switcherColor,
     this.isSwitchable = false,
     this.switcherValue = false,
     this.trailing,
@@ -283,8 +282,10 @@ class ConvertouchSideMenuItem extends StatelessWidget {
                 child: isSwitchable
                     ? Switch(
                         value: switcherValue,
-                        activeTrackColor: activeSwitcherTrackColor,
-                        activeColor: activeSwitcherColor,
+                        inactiveTrackColor: switcherColor?.regular.track,
+                        inactiveThumbColor: switcherColor?.regular.thumb,
+                        activeTrackColor: switcherColor?.switchedOn?.track,
+                        activeColor: switcherColor?.switchedOn?.thumb,
                         onChanged: onSwitch,
                       )
                     : trailing,
