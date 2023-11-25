@@ -6,8 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc()
       : super(const AppStateChanged(
+          pageId: unitsConversionPageId,
+          pageTitle: appName,
+          floatingButtonVisible: false,
           removalMode: false,
-          uiTheme: ConvertouchUITheme.light,
+          theme: ConvertouchUITheme.light,
         ));
 
   @override
@@ -30,21 +33,33 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       }
 
       yield AppStateChanged(
+        pageId: event.currentPageId,
+        prevPageId: event.currentPageId,
+        pageTitle: event.pageTitle,
+        floatingButtonVisible: event.floatingButtonVisible,
         removalMode: true,
         selectedItemIdsForRemoval: result,
-        uiTheme: event.uiTheme,
+        theme: event.uiTheme,
       );
     } else if (event is DisableRemovalMode) {
       yield AppStateChanged(
+        pageId: event.currentPageId,
+        prevPageId: event.currentPageId,
+        pageTitle: event.pageTitle,
+        floatingButtonVisible: event.floatingButtonVisible,
         removalMode: false,
-        uiTheme: event.uiTheme,
+        theme: event.uiTheme,
       );
     } else if (event is ChangeUiTheme) {
       yield const AppStateChanging();
       yield AppStateChanged(
+        pageId: event.currentPageId,
+        prevPageId: event.currentPageId,
+        pageTitle: event.pageTitle,
+        floatingButtonVisible: event.floatingButtonVisible,
         removalMode: event.removalMode,
         selectedItemIdsForRemoval: event.currentSelectedItemIdsForRemoval ?? [],
-        uiTheme: event.uiTheme,
+        theme: event.uiTheme,
       );
     }
   }

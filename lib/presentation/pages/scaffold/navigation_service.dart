@@ -20,11 +20,18 @@ class NavigationService {
     navigatorKey.currentState?.pop();
   }
 
-  bool isHomePage(BuildContext context) {
-    return !(ModalRoute.of(context)?.canPop ?? false);
+  void navigateToStartPage(String startPageName) {
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      startPageName,
+      (route) => false,
+    );
   }
 
   void navigateToHome() {
-    navigatorKey.currentState?.popUntil(ModalRoute.withName(homePageId));
+    navigateToStartPage(homePageId);
+  }
+
+  bool isStartPage(BuildContext context) {
+    return !(ModalRoute.of(context)?.canPop ?? false);
   }
 }

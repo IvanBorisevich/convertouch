@@ -2,15 +2,15 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/scaffold/checkbox.dart';
-import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem extends StatefulWidget {
-  final IdNameItemModel item;
+  final IdNameItemModel? item;
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;
@@ -24,8 +24,9 @@ class ConvertouchMenuItem extends StatefulWidget {
   final ConvertouchMenuItemColor? color;
 
   const ConvertouchMenuItem(
-    this.item, {
-    this.itemsViewMode = ItemsViewMode.list,
+    {
+      this.item,
+      this.itemsViewMode = ItemsViewMode.list,
     this.onTap,
     this.onLongPress,
     this.onSelectForRemoval,
@@ -73,7 +74,17 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
       _color = itemColor.regular;
     }
 
-    Widget logo = empty();
+    Widget logo = IconButton(
+      onPressed: null,
+      icon: ImageIcon(
+        const AssetImage(
+          "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
+        ),
+        color: _color.content,
+        size: 25,
+      ),
+    );
+
     switch (widget.item.runtimeType) {
       case UnitGroupModel:
         UnitGroupModel unitGroup = widget.item as UnitGroupModel;
@@ -125,25 +136,36 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
       onLongPress: widget.onLongPress,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          switch (widget.itemsViewMode) {
-            case ItemsViewMode.grid:
-              return ConvertouchMenuGridItem(
-                widget.item,
-                removalMode: widget.removalMode,
-                selectedForRemoval: widget.selectedForRemoval,
-                selectedForConversion: widget.selected,
-                logo: logo,
-                color: _color,
-              );
-            case ItemsViewMode.list:
-              return ConvertouchMenuListItem(
-                widget.item,
-                removalMode: widget.removalMode,
-                selectedForRemoval: widget.selectedForRemoval,
-                selectedForConversion: widget.selected,
-                logo: logo,
-                color: _color,
-              );
+          if (widget.item != null) {
+            switch (widget.itemsViewMode) {
+              case ItemsViewMode.grid:
+                return ConvertouchMenuGridItem(
+                  widget.item!,
+                  removalMode: widget.removalMode,
+                  selectedForRemoval: widget.selectedForRemoval,
+                  selectedForConversion: widget.selected,
+                  logo: logo,
+                  color: _color,
+                );
+              case ItemsViewMode.list:
+                return ConvertouchMenuListItem(
+                  widget.item!,
+                  removalMode: widget.removalMode,
+                  selectedForRemoval: widget.selectedForRemoval,
+                  selectedForConversion: widget.selected,
+                  logo: logo,
+                  color: _color,
+                );
+            }
+          } else {
+            return ConvertouchMenuListItem(
+              null,
+              removalMode: widget.removalMode,
+              selectedForRemoval: widget.selectedForRemoval,
+              selectedForConversion: widget.selected,
+              logo: logo,
+              color: _color,
+            );
           }
         },
       ),
@@ -152,7 +174,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
 }
 
 class ConvertouchMenuListItem extends StatelessWidget {
-  final IdNameItemModel item;
+  final IdNameItemModel? item;
   final bool removalMode;
   final Widget logo;
   final double itemContainerHeight;
@@ -224,7 +246,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
                         child: Text(
-                          item.name,
+                          item != null ? item!.name : "Select a unit group...",
                           style: TextStyle(
                             fontFamily: quicksandFontFamily,
                             fontWeight: FontWeight.w600,

@@ -27,16 +27,16 @@ class ConversionInitializing extends UnitsConversionState {
 class ConversionInitialized extends UnitsConversionState {
   const ConversionInitialized({
     this.sourceUnitValue,
-    required this.conversionItems,
-    required this.unitGroup,
+    this.conversionItems = const [],
+    this.unitGroup,
   });
 
   final double? sourceUnitValue;
   final List<UnitValueModel> conversionItems;
-  final UnitGroupModel unitGroup;
+  final UnitGroupModel? unitGroup;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     conversionItems,
     unitGroup,
   ];

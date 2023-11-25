@@ -10,14 +10,7 @@ import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart'
 import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
-import 'package:convertouch/presentation/pages/animation/navigation_animation.dart';
 import 'package:convertouch/presentation/pages/home_page.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
-import 'package:convertouch/presentation/pages/unit_creation_page.dart';
-import 'package:convertouch/presentation/pages/unit_group_creation_page.dart';
-import 'package:convertouch/presentation/pages/unit_groups_page.dart';
-import 'package:convertouch/presentation/pages/units_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,14 +24,6 @@ void main() async {
 
 class ConvertouchApp extends StatelessWidget {
   const ConvertouchApp({super.key});
-
-  static final Map<String, Widget> routes = {
-    homePageId: const ConvertouchHomePage(),
-    unitGroupsPageId: const ConvertouchUnitGroupsPage(),
-    unitsPageId: const ConvertouchUnitsPage(),
-    unitGroupCreationPageId: const ConvertouchUnitGroupCreationPage(),
-    unitCreationPageId: const ConvertouchUnitCreationPage()
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -59,25 +44,12 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(create: (context) => di.locator<SideMenuBloc>()),
         BlocProvider(create: (context) => di.locator<AppBloc>()),
       ],
-      child: navigationListeners(
-        MaterialApp(
-          title: appName,
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(fontFamily: quicksandFontFamily),
-          initialRoute: homePageId,
-          navigatorKey: NavigationService.I.navigatorKey,
-          onGenerateRoute: (settings) {
-            return ConvertouchNavigationAnimation.wrapIntoAnimation(
-              _getRoute(settings.name),
-              settings,
-            );
-          },
-        ),
+      child: MaterialApp(
+        title: appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: quicksandFontFamily),
+        home: const ConvertouchHomePage(),
       ),
     );
-  }
-
-  Widget _getRoute(String? routeName) {
-    return routes[routeName] ?? routes[homePageId]!;
   }
 }

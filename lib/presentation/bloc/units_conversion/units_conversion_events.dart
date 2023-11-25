@@ -12,18 +12,18 @@ class InitializeConversion extends UnitsConversionEvent {
     this.inputValue,
     this.inputUnit,
     this.prevInputUnit,
-    required this.conversionUnits,
-    required this.unitGroup,
+    this.conversionUnits,
+    this.unitGroup,
   });
 
   final double? inputValue;
   final UnitModel? inputUnit;
   final UnitModel? prevInputUnit;
-  final List<UnitModel> conversionUnits;
-  final UnitGroupModel unitGroup;
+  final List<UnitModel>? conversionUnits;
+  final UnitGroupModel? unitGroup;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     conversionUnits,
     unitGroup,
   ];

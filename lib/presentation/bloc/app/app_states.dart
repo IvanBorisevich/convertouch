@@ -6,21 +6,33 @@ abstract class AppState extends ConvertouchBlocState {
 }
 
 class AppStateChanged extends AppState {
+  final String pageId;
+  final String? prevPageId;
+  final String pageTitle;
+  final bool floatingButtonVisible;
   final bool removalMode;
   final List<int> selectedItemIdsForRemoval;
-  final ConvertouchUITheme uiTheme;
+  final ConvertouchUITheme theme;
 
   const AppStateChanged({
+    required this.pageId,
+    this.prevPageId,
+    required this.pageTitle,
+    required this.floatingButtonVisible,
     required this.removalMode,
     this.selectedItemIdsForRemoval = const [],
-    required this.uiTheme,
+    required this.theme,
   });
 
   @override
   List<Object?> get props => [
+    pageId,
+    prevPageId,
+    pageTitle,
+    floatingButtonVisible,
     removalMode,
     selectedItemIdsForRemoval,
-    uiTheme,
+    theme,
   ];
 
   @override
@@ -28,7 +40,7 @@ class AppStateChanged extends AppState {
     return 'AppStateChanged{'
         'removalMode: $removalMode, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
-        'uiTheme: $uiTheme'
+        'theme: $theme'
         '}';
   }
 }

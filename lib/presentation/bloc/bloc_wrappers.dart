@@ -12,8 +12,8 @@ import 'package:convertouch/presentation/bloc/units/units_states.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_states.dart';
+import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
-import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -100,14 +100,18 @@ Widget itemsViewModeBloc(
 }
 
 Widget unitsConversionBloc(
-  Widget Function(UnitsConversionState conversionInitialized) builderFunc,
+  Widget Function(ConversionInitialized conversionInitialized) builderFunc,
 ) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
     buildWhen: (prev, next) {
       return prev != next && next is ConversionInitialized;
     },
     builder: (_, conversionInitialized) {
-      return builderFunc.call(conversionInitialized);
+      if (conversionInitialized is ConversionInitialized) {
+        return builderFunc.call(conversionInitialized);
+      } else {
+        return empty();
+      }
     },
   );
 }

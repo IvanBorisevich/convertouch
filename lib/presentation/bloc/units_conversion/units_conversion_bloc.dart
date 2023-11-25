@@ -19,34 +19,38 @@ class UnitsConversionBloc
       UnitsConversionEvent event) async* {
     if (event is InitializeConversion) {
       yield const ConversionInitializing();
-      UnitModel inputUnit = event.inputUnit ?? event.conversionUnits[0];
-      double? inputValue = event.inputValue;
-
-      UnitValueModel inputUnitValue = UnitValueModel(
-        unit: inputUnit,
-        value: inputValue,
-      );
 
       List<UnitValueModel> convertedUnitValues = [];
       bool stoppedOnError = false;
-      for (UnitModel targetUnit in event.conversionUnits) {
-        final conversionResult = await convertUnitValueUseCase.execute(
-          UnitConversionInput(
-            inputUnitValue: inputUnitValue,
-            targetUnit:
-                targetUnit == event.prevInputUnit ? inputUnit : targetUnit,
-            unitGroup: event.unitGroup,
-          ),
+      double? inputValue = event.inputValue;
+
+      if (event.conversionUnits != null && event.unitGroup != null) {
+        UnitModel inputUnit = event.inputUnit ?? event.conversionUnits![0];
+
+        UnitValueModel inputUnitValue = UnitValueModel(
+          unit: inputUnit,
+          value: inputValue,
         );
 
-        if (conversionResult.isLeft) {
-          yield UnitsConversionErrorState(
-            message: conversionResult.left.message,
+        for (UnitModel targetUnit in event.conversionUnits!) {
+          final conversionResult = await convertUnitValueUseCase.execute(
+            UnitConversionInput(
+              inputUnitValue: inputUnitValue,
+              targetUnit:
+              targetUnit == event.prevInputUnit ? inputUnit : targetUnit,
+              unitGroup: event.unitGroup!,
+            ),
           );
-          stoppedOnError = true;
-          break;
-        } else {
-          convertedUnitValues.add(conversionResult.right);
+
+          if (conversionResult.isLeft) {
+            yield UnitsConversionErrorState(
+              message: conversionResult.left.message,
+            );
+            stoppedOnError = true;
+            break;
+          } else {
+            convertedUnitValues.add(conversionResult.right);
+          }
         }
       }
 

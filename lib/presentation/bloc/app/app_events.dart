@@ -2,10 +2,18 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/base_event.dart';
 
 abstract class AppEvent extends ConvertouchEvent {
+  final String currentPageId;
+  final String? nextPageId;
+  final String pageTitle;
+  final bool floatingButtonVisible;
   final List<int>? currentSelectedItemIdsForRemoval;
   final ConvertouchUITheme uiTheme;
 
   const AppEvent({
+    required this.currentPageId,
+    this.nextPageId,
+    required this.pageTitle,
+    required this.floatingButtonVisible,
     this.currentSelectedItemIdsForRemoval,
     required this.uiTheme,
   });
@@ -16,6 +24,10 @@ class SelectItemForRemoval extends AppEvent {
 
   const SelectItemForRemoval({
     required this.itemId,
+    required super.currentPageId,
+    required super.nextPageId,
+    required super.pageTitle,
+    required super.floatingButtonVisible,
     super.currentSelectedItemIdsForRemoval,
     required super.uiTheme,
   });
@@ -39,6 +51,10 @@ class SelectItemForRemoval extends AppEvent {
 
 class DisableRemovalMode extends AppEvent {
   const DisableRemovalMode({
+    required super.currentPageId,
+    super.nextPageId,
+    required super.pageTitle,
+    required super.floatingButtonVisible,
     required super.uiTheme,
   });
 
@@ -57,6 +73,10 @@ class ChangeUiTheme extends AppEvent {
   final bool removalMode;
 
   const ChangeUiTheme({
+    required super.currentPageId,
+    required super.nextPageId,
+    required super.pageTitle,
+    required super.floatingButtonVisible,
     required super.uiTheme,
     super.currentSelectedItemIdsForRemoval,
     required this.removalMode,
