@@ -1,26 +1,25 @@
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/bloc/app/app_states.dart';
-import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units/units_events.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/pages/scaffold/app_bar.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/bloc_wrappers.dart';
 
 class ConvertouchUnitsConversionPage extends ConvertouchPage {
   const ConvertouchUnitsConversionPage({super.key});
 
   @override
-  Widget buildBody(BuildContext context, AppStateChanged appState) {
-    return unitsConversionBloc((conversionInitialized) {
+  Widget build(BuildContext context) {
+    return unitsConversionBloc((pageState) {
       return Column(
         children: [
           Container(
@@ -30,64 +29,58 @@ class ConvertouchUnitsConversionPage extends ConvertouchPage {
             ),
             padding: const EdgeInsetsDirectional.fromSTEB(7, 7, 7, 7),
             child: ConvertouchMenuItem(
-              item: conversionInitialized.unitGroup,
-              color: appBarUnitGroupItemColor[appState.theme]!,
+              item: pageState.unitGroupInConversion,
+              color: appBarUnitGroupItemColor[pageState.theme]!,
               onTap: () {
                 BlocProvider.of<UnitGroupsBloc>(context).add(
-                  FetchUnitGroups(
-                    selectedUnitGroupId: conversionInitialized.unitGroup != null
-                        ? conversionInitialized.unitGroup!.id!
-                        : -1,
-                    markedUnits: conversionInitialized.conversionItems
-                        .map((item) => item.unit)
-                        .toList(),
-                    action:
-                        ConvertouchAction.fetchUnitGroupsToSelectForConversion,
+                  FetchUnitGroupsForConversion(
+                    unitGroupInConversion: pageState.unitGroupInConversion,
                   ),
                 );
               },
-              theme: appState.theme,
+              theme: pageState.theme,
             ),
           ),
           Expanded(
             child: ConvertouchConversionItemsView(
-              conversionInitialized.conversionItems,
+              pageState.conversionItems,
               onItemTap: (item) {
-                BlocProvider.of<UnitsBloc>(context).add(
-                  FetchUnits(
-                    unitGroupId: conversionInitialized.unitGroup!.id!,
-                    markedUnits: conversionInitialized.conversionItems
-                        .map((item) => item.unit)
-                        .toList(),
-                    inputValue: item.value,
-                    selectedUnit: item.unit,
-                    action: ConvertouchAction.fetchUnitsToSelectForConversion,
-                  ),
-                );
+                // BlocProvider.of<UnitsBloc>(context).add(
+                //   FetchUnits(
+                //     unitGroupId: conversionInitialized.unitGroup!.id!,
+                //     markedUnits: conversionInitialized.conversionItems
+                //         .map((item) => item.unit)
+                //         .toList(),
+                //     inputValue: item.value,
+                //     selectedUnit: item.unit,
+                //     action: ConvertouchAction.fetchUnitsToSelectForConversion,
+                //   ),
+                // );
               },
               onItemValueChanged: (item, value) {
                 BlocProvider.of<UnitsConversionBloc>(context).add(
                   InitializeConversion(
-                    inputValue: double.tryParse(value),
-                    inputUnit: item.unit,
-                    conversionUnits: conversionInitialized.conversionItems
+                    sourceConversionItem: UnitValueModel(
+                      unit: item.unit,
+                      value: double.tryParse(value),
+                    ),
+                    unitsInConversion: pageState.conversionItems
                         .map((item) => item.unit)
                         .toList(),
-                    unitGroup: conversionInitialized.unitGroup,
+                    unitGroupInConversion: pageState.unitGroupInConversion,
                   ),
                 );
               },
               onItemRemove: (item) {
                 BlocProvider.of<UnitsConversionBloc>(context).add(
                   RemoveConversion(
-                    unitValueModel: item,
-                    currentConversionItems:
-                        conversionInitialized.conversionItems,
-                    unitGroup: conversionInitialized.unitGroup!,
+                    unitIdBeingRemoved: item.unit.id!,
+                    conversionItems: pageState.conversionItems,
+                    unitGroupInConversion: pageState.unitGroupInConversion,
                   ),
                 );
               },
-              theme: appState.theme,
+              theme: pageState.theme,
             ),
           ),
         ],
@@ -96,33 +89,77 @@ class ConvertouchUnitsConversionPage extends ConvertouchPage {
   }
 
   @override
-  Widget buildButtonToAdd(BuildContext context, AppStateChanged appState) {
-    return unitsConversionBloc((conversionInitialized) {
-      return floatingActionButton(
-        iconData: Icons.add,
-        onClick: conversionInitialized.unitGroup != null ? () {
-          BlocProvider.of<UnitsBloc>(context).add(
-            FetchUnits(
-              unitGroupId: conversionInitialized.unitGroup!.id!,
-              markedUnits: conversionInitialized.conversionItems
-                  .map((item) => item.unit)
-                  .toList(),
-              inputValue: conversionInitialized.sourceUnitValue,
-              action: ConvertouchAction.fetchUnitsToStartMark,
-            ),
-          );
-        } : null,
-        color: conversionPageFloatingButtonColor[appState.theme]!,
-      );
-    });
+  void onStart(BuildContext context) {
+    BlocProvider.of<UnitsConversionBloc>(context).add(
+      // TODO: support last session params retrieval
+      const InitializeConversion(),
+    );
   }
 
   @override
-  void onStart(BuildContext context, AppStateChanged appState) {
-    BlocProvider.of<UnitsConversionBloc>(context).add(
-      InitializeConversion(
+  PreferredSizeWidget buildAppBar(BuildContext context) {
+    return ConvertouchAppBar(
+      content: unitsConversionBloc((pageState) {
+        return buildAppBarForState(context, pageState);
+      }),);
+  }
 
-      ),
-    );
+  @override
+  Widget buildFloatingActionButton(BuildContext context) {
+    return unitsConversionBloc((pageState) {
+      ConvertouchScaffoldColor commonColor = scaffoldColor[pageState.theme]!;
+      FloatingButtonColorVariation removalButtonColor = removalFloatingButtonColor[pageState.theme]!;
+
+      return Visibility(
+        visible: pageState.floatingButtonVisible,
+        child: SizedBox(
+          height: 70,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              FittedBox(
+                child: pageState.removalMode
+                    ? floatingActionButton(
+                  iconData: Icons.delete_outline_rounded,
+                  onClick: () {
+                    BlocProvider.of<UnitsBloc>(context).add(
+                      pageState.unitGroupInConversion != null ?
+                      FetchUnitsForConversion(
+                        unitGroupInConversion: pageState.unitGroupInConversion,
+                      ) : FetchUnitGroupsForConversion(
+                        unitGroupInConversion: pageState.unitGroupInConversion,
+                      ),
+                    );
+                  },
+                  color: conversionPageFloatingButtonColor[pageState.theme]!,
+                )
+                    : floatingActionButton(
+                  iconData: Icons.add,
+                  onClick: () {
+                    BlocProvider.of<UnitsBloc>(context).add(
+                      pageState.unitGroupInConversion != null ?
+                      FetchUnitsForConversion(
+                        unitGroupInConversion: pageState.unitGroupInConversion,
+                      ) : FetchUnitGroupsForConversion(
+                        unitGroupInConversion: pageState.unitGroupInConversion,
+                      ),
+                    );
+                  },
+                  color: conversionPageFloatingButtonColor[pageState.theme]!,
+                ),
+              ),
+              pageState.removalMode
+                  ? itemsRemovalCounter(
+                itemsCount: pageState.selectedItemIdsForRemoval.length,
+                backgroundColor: removalButtonColor.background,
+                foregroundColor: removalButtonColor.foreground,
+                borderColor: commonColor.regular.backgroundColor,
+              )
+                  : empty(),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
