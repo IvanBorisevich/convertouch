@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/base_event.dart';
 
-abstract class UnitCreationEvent extends ConvertouchPageEvent {
+abstract class UnitCreationEvent extends ConvertouchCommonEvent {
   const UnitCreationEvent({
     super.currentPageId = unitCreationPageId,
     super.startPageIndex = 1,

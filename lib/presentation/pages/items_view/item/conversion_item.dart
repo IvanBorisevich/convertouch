@@ -52,7 +52,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
 
   @override
   Widget build(BuildContext context) {
-    var itemColor = widget.color ?? conversionItemColor[widget.theme]!;
+    var itemColor = widget.color ?? conversionItemColors[widget.theme]!;
     _textBoxColor = itemColor.textBox;
     _unitButtonColor = itemColor.unitButton;
 

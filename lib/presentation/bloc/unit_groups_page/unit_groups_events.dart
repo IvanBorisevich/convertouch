@@ -1,12 +1,10 @@
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/bloc/base_event.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class UnitGroupsEvent extends ConvertouchPageEvent {
-  const UnitGroupsEvent({
-    super.currentPageId = unitGroupsPageId,
-    super.currentState,
-    super.startPageIndex = 1,
-  });
+abstract class UnitGroupsEvent extends Equatable {
+  const UnitGroupsEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class FetchUnitGroups extends UnitGroupsEvent {
@@ -14,28 +12,26 @@ class FetchUnitGroups extends UnitGroupsEvent {
 
   @override
   String toString() {
-    return 'FetchUnitGroups{${super.toString()}}';
+    return 'FetchUnitGroups{}';
   }
 }
 
-class FetchUnitsForGroup extends UnitGroupsEvent {
+class FetchUnitsOfGroup extends UnitGroupsEvent {
   final int unitGroupId;
 
-  const FetchUnitsForGroup({
+  const FetchUnitsOfGroup({
     required this.unitGroupId,
   });
 
   @override
   List<Object?> get props => [
     unitGroupId,
-    super.props,
   ];
 
   @override
   String toString() {
-    return 'FetchUnitsForEquivalentUnitSelection{'
-        'unitGroupId: $unitGroupId, '
-        '${super.toString()}}';
+    return 'FetchUnitsOfGroup{'
+        'unitGroupId: $unitGroupId}';
   }
 }
 
@@ -44,7 +40,7 @@ class PrepareUnitGroupCreation extends UnitGroupsEvent {
 
   @override
   String toString() {
-    return 'PrepareUnitGroupCreation{${super.toString()}}';
+    return 'PrepareUnitGroupCreation{}';
   }
 }
 
@@ -64,7 +60,6 @@ class RemoveUnitGroups extends UnitGroupsEvent {
   @override
   String toString() {
     return 'RemoveUnitGroups{'
-        'ids: $ids, '
-        '${super.toString()}}';
+        'ids: $ids}';
   }
 }

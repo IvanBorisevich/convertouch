@@ -1,3 +1,5 @@
+import 'package:convertouch/presentation/bloc/base_bloc.dart';
+import 'package:convertouch/presentation/bloc/base_state.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
@@ -12,16 +14,16 @@ import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget unitsBloc(
-  Widget Function(UnitsFetched unitsFetched) builderFunc,
+Widget commonBloc(
+  Widget Function(ConvertouchCommonStateBuilt commonState) builderFunc,
 ) {
-  return BlocBuilder<UnitsBloc, UnitsState>(
+  return BlocBuilder<ConvertouchCommonBloc, ConvertouchCommonState>(
     buildWhen: (prev, next) {
-      return prev != next && next is UnitsFetched;
+      return prev != next && next is ConvertouchCommonStateBuilt;
     },
-    builder: (_, unitsFetched) {
-      if (unitsFetched is UnitsFetched) {
-        return builderFunc.call(unitsFetched);
+    builder: (_, commonState) {
+      if (commonState is ConvertouchCommonStateBuilt) {
+        return builderFunc.call(commonState);
       } else {
         return empty();
       }
@@ -29,6 +31,23 @@ Widget unitsBloc(
   );
 }
 
+// Widget unitsBloc(
+//   Widget Function(UnitsFetched unitsFetched) builderFunc,
+// ) {
+//   return BlocBuilder<UnitsBloc, UnitsState>(
+//     buildWhen: (prev, next) {
+//       return prev != next && next is UnitsFetched;
+//     },
+//     builder: (_, unitsFetched) {
+//       if (unitsFetched is UnitsFetched) {
+//         return builderFunc.call(unitsFetched);
+//       } else {
+//         return empty();
+//       }
+//     },
+//   );
+// }
+//
 Widget unitGroupsBloc(
   Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc,
 ) {
@@ -45,50 +64,51 @@ Widget unitGroupsBloc(
     },
   );
 }
-
-Widget unitCreationBloc(
-  Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc,
-) {
-  return BlocBuilder<UnitCreationBloc, UnitCreationState>(
-    buildWhen: (prev, next) {
-      return prev != next && next is UnitCreationPrepared;
-    },
-    builder: (_, unitCreationState) {
-      if (unitCreationState is UnitCreationPrepared) {
-        return builderFunc.call(unitCreationState);
-      } else {
-        return empty();
-      }
-    },
-  );
-}
-
-Widget unitGroupCreationBloc(
-    Widget Function(UnitGroupCreationPrepared unitGroupCreationPrepared) builderFunc,
-    ) {
-  return BlocBuilder<UnitGroupCreationBloc, UnitGroupCreationState>(
-    buildWhen: (prev, next) {
-      return prev != next && next is UnitGroupCreationPrepared;
-    },
-    builder: (_, unitGroupCreationState) {
-      if (unitGroupCreationState is UnitGroupCreationPrepared) {
-        return builderFunc.call(unitGroupCreationState);
-      } else {
-        return empty();
-      }
-    },
-  );
-}
+//
+// Widget unitCreationBloc(
+//   Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc,
+// ) {
+//   return BlocBuilder<UnitCreationBloc, UnitCreationState>(
+//     buildWhen: (prev, next) {
+//       return prev != next && next is UnitCreationPrepared;
+//     },
+//     builder: (_, unitCreationState) {
+//       if (unitCreationState is UnitCreationPrepared) {
+//         return builderFunc.call(unitCreationState);
+//       } else {
+//         return empty();
+//       }
+//     },
+//   );
+// }
+//
+// Widget unitGroupCreationBloc(
+//   Widget Function(UnitGroupCreationPrepared unitGroupCreationPrepared)
+//       builderFunc,
+// ) {
+//   return BlocBuilder<UnitGroupCreationBloc, UnitGroupCreationState>(
+//     buildWhen: (prev, next) {
+//       return prev != next && next is UnitGroupCreationPrepared;
+//     },
+//     builder: (_, unitGroupCreationState) {
+//       if (unitGroupCreationState is UnitGroupCreationPrepared) {
+//         return builderFunc.call(unitGroupCreationState);
+//       } else {
+//         return empty();
+//       }
+//     },
+//   );
+// }
 
 Widget unitsConversionBloc(
-  Widget Function(ConversionInitialized conversionInitialized) builderFunc,
+  Widget Function(ConversionBuilt conversionInitialized) builderFunc,
 ) {
   return BlocBuilder<UnitsConversionBloc, UnitsConversionState>(
     buildWhen: (prev, next) {
-      return prev != next && next is ConversionInitialized;
+      return prev != next && next is ConversionBuilt;
     },
     builder: (_, conversionInitialized) {
-      if (conversionInitialized is ConversionInitialized) {
+      if (conversionInitialized is ConversionBuilt) {
         return builderFunc.call(conversionInitialized);
       } else {
         return empty();
@@ -97,32 +117,32 @@ Widget unitsConversionBloc(
   );
 }
 
-Widget unitGroupCreationListener(
-  BuildContext context,
-  Widget widget,
-) {
-  return BlocListener<UnitGroupCreationBloc, UnitGroupCreationState>(
-    listener: (_, unitGroupCreationState) {
-      if (unitGroupCreationState is UnitGroupExists) {
-        showAlertDialog(context,
-            "Unit group '${unitGroupCreationState.unitGroupName}' already exist");
-      }
-    },
-    child: widget,
-  );
-}
-
-Widget unitCreationListener(
-  BuildContext context,
-  Widget widget,
-) {
-  return BlocListener<UnitCreationBloc, UnitCreationState>(
-    listener: (_, unitCreationState) {
-      if (unitCreationState is UnitExists) {
-        showAlertDialog(
-            context, "Unit '${unitCreationState.unitName}' already exist");
-      }
-    },
-    child: widget,
-  );
-}
+// Widget unitGroupCreationListener(
+//   BuildContext context,
+//   Widget widget,
+// ) {
+//   return BlocListener<UnitGroupCreationBloc, UnitGroupCreationState>(
+//     listener: (_, unitGroupCreationState) {
+//       if (unitGroupCreationState is UnitGroupExists) {
+//         showAlertDialog(context,
+//             "Unit group '${unitGroupCreationState.unitGroupName}' already exist");
+//       }
+//     },
+//     child: widget,
+//   );
+// }
+//
+// Widget unitCreationListener(
+//   BuildContext context,
+//   Widget widget,
+// ) {
+//   return BlocListener<UnitCreationBloc, UnitCreationState>(
+//     listener: (_, unitCreationState) {
+//       if (unitCreationState is UnitExists) {
+//         showAlertDialog(
+//             context, "Unit '${unitCreationState.unitName}' already exist");
+//       }
+//     },
+//     child: widget,
+//   );
+// }

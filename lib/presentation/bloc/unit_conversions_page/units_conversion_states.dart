@@ -1,62 +1,51 @@
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
-import 'package:convertouch/presentation/bloc/base_state.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class UnitsConversionState extends ConvertouchPageState {
-  const UnitsConversionState({
-    super.pageId = unitsConversionPageId,
-    super.pageTitle = "Conversions",
-    super.startPageIndex = 0,
-    super.unitGroupInConversion,
-    super.floatingButtonVisible = true,
-    super.removalMode,
-    super.selectedItemIdsForRemoval,
-    super.theme,
-  });
+abstract class UnitsConversionState extends Equatable {
+  const UnitsConversionState();
+
+  @override
+  List<Object?> get props => [];
 }
 
-class UnitsConversionInitState extends UnitsConversionState {
-  const UnitsConversionInitState();
+class ConversionInBuilding extends UnitsConversionState {
+  const ConversionInBuilding();
 
   @override
   String toString() {
-    return 'UnitsConversionInitState{${super.toString()}}';
+    return 'ConversionInBuilding{}';
   }
 }
 
-class ConversionInitializing extends UnitsConversionState {
-  const ConversionInitializing();
-
-  @override
-  String toString() {
-    return 'ConversionInitializing{}';
-  }
-}
-
-class ConversionInitialized extends UnitsConversionState {
+class ConversionBuilt extends UnitsConversionState {
+  final UnitGroupModel? unitGroup;
   final UnitValueModel? sourceConversionItem;
   final List<UnitValueModel> conversionItems;
+  final bool floatingButtonVisible;
 
-  const ConversionInitialized({
-    required this.sourceConversionItem,
+  const ConversionBuilt({
+    this.unitGroup,
+    this.sourceConversionItem,
     this.conversionItems = const [],
-    required super.unitGroupInConversion,
+    this.floatingButtonVisible = true,
   });
 
   @override
   List<Object?> get props => [
+    unitGroup,
     sourceConversionItem,
     conversionItems,
-    super.props,
+    floatingButtonVisible,
   ];
 
   @override
   String toString() {
-    return 'ConversionInitialized{'
+    return 'ConversionBuilt{'
+        'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
         'conversionItems: $conversionItems, '
-        '${super.toString()}'
-        '}';
+        'floatingButtonVisible: $floatingButtonVisible}';
   }
 }
 

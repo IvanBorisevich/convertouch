@@ -1,4 +1,5 @@
 import 'package:convertouch/presentation/bloc/base_state.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:convertouch/presentation/pages/style/model/color.dart';
@@ -8,20 +9,45 @@ import 'package:flutter/material.dart';
 abstract class ConvertouchPage extends StatelessWidget {
   const ConvertouchPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return commonBloc((commonState) {
+      return buildBody(context, commonState);
+    });
+  }
+
   void onStart(BuildContext context);
-  Widget buildFloatingActionButton(BuildContext context);
+
+  Widget buildAppBar(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  );
+
+  Widget buildBody(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  );
+
+  Widget buildFloatingActionButton(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  );
+
   List<Widget>? buildAppBarRightIcons(BuildContext context) {
     return [];
   }
-  PreferredSizeWidget buildAppBar(BuildContext context);
 
-  PreferredSizeWidget buildAppBarForState(BuildContext context, ConvertouchPageState pageState,) {
-    ConvertouchScaffoldColor commonColor = scaffoldColor[pageState.theme]!;
+  Widget buildAppBarForState(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState, {
+    required String pageTitle,
+  }) {
+    ConvertouchScaffoldColor commonColor = scaffoldColors[commonState.theme]!;
 
     return AppBar(
       leading: Builder(
         builder: (context) {
-          if (pageState.removalMode) {
+          if (commonState.removalMode) {
             return leadingIcon(
               icon: Icons.clear,
               onClick: () {
@@ -36,7 +62,7 @@ abstract class ConvertouchPage extends StatelessWidget {
                 // );
               },
             );
-          } else if (!NavigationService.I.isStartPage(context)) {
+          } else if (commonState.prevState != null) {
             return leadingIcon(
               icon: Icons.arrow_back_rounded,
               onClick: () {
@@ -50,7 +76,7 @@ abstract class ConvertouchPage extends StatelessWidget {
       ),
       centerTitle: true,
       title: Text(
-        pageState.pageTitle,
+        pageTitle,
         style: TextStyle(
           color: commonColor.regular.appBarFontColor,
           fontSize: 20,
@@ -137,6 +163,40 @@ Widget itemsRemovalCounter({
         style: TextStyle(
           color: foregroundColor,
           fontSize: 14,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget checkIcon(
+  BuildContext context, {
+  bool isVisible = true,
+  bool isEnabled = false,
+  void Function()? onPressedFunc,
+  required ConvertouchScaffoldColor color,
+}) {
+  return Visibility(
+    visible: isVisible,
+    child: IconButton(
+      icon: Icon(
+        Icons.check,
+        color: isEnabled ? color.regular.appBarIconColor : null,
+      ),
+      disabledColor: color.regular.appBarIconColorDisabled,
+      onPressed: isEnabled ? onPressedFunc : null,
+    ),
+  );
+}
+
+Widget noItemsView(String label) {
+  return SizedBox(
+    child: Center(
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
         ),
       ),
     ),

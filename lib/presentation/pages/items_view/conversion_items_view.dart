@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _ConvertouchConversionItemsViewState
                       shadowColor: Colors.transparent,
                       child: Icon(
                         Icons.drag_indicator_outlined,
-                        color: conversionItemColor[widget.theme]!.handlersColor,
+                        color: conversionItemColors[widget.theme]!.handlersColor,
                       ),
                     ),
                   ),
@@ -97,7 +98,7 @@ class _ConvertouchConversionItemsViewState
                     },
                     icon: Icon(
                       Icons.remove_circle_outline,
-                      color: conversionItemColor[widget.theme]!.handlersColor,
+                      color: conversionItemColors[widget.theme]!.handlersColor,
                     ),
                   ),
                 ),
@@ -133,28 +134,33 @@ class _ConvertouchConversionItemsViewState
       );
     }
 
-    return ReorderableListView.builder(
-      itemBuilder: (context, index) {
-        return cards[index];
-      },
-      itemCount: widget.convertedItems.length,
-      buildDefaultDragHandles: false,
-      proxyDecorator: proxyDecorator,
-      padding: const EdgeInsets.fromLTRB(
-        _listSpacingLeft,
-        _listSpacingTop,
-        _listSpacingRight,
-        0,
-      ),
-      onReorder: (int oldIndex, int newIndex) {
-        setState(() {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
-          }
-          final UnitValueModel item = widget.convertedItems.removeAt(oldIndex);
-          widget.convertedItems.insert(newIndex, item);
-        });
-      },
-    );
+    if (widget.convertedItems.isNotEmpty) {
+      return ReorderableListView.builder(
+        itemBuilder: (context, index) {
+          return cards[index];
+        },
+        itemCount: widget.convertedItems.length,
+        buildDefaultDragHandles: false,
+        proxyDecorator: proxyDecorator,
+        padding: const EdgeInsets.fromLTRB(
+          _listSpacingLeft,
+          _listSpacingTop,
+          _listSpacingRight,
+          0,
+        ),
+        onReorder: (int oldIndex, int newIndex) {
+          setState(() {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            final UnitValueModel item = widget.convertedItems.removeAt(
+                oldIndex);
+            widget.convertedItems.insert(newIndex, item);
+          });
+        },
+      );
+    } else {
+      return noItemsView("No conversion items found");
+    }
   }
 }

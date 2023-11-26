@@ -42,7 +42,7 @@ Future<void> init() async {
   // app, global
 
   locator.registerLazySingleton(
-    () => ConvertouchPageBloc(),
+    () => ConvertouchCommonBloc(),
   );
 
   locator.registerLazySingleton<NavigationService>(
@@ -79,13 +79,13 @@ Future<void> init() async {
 
   // units
 
-  locator.registerLazySingleton(
-    () => UnitsBloc(
-      getUnitGroupUseCase: locator(),
-      fetchUnitsOfGroupUseCase: locator(),
-      removeUnitsUseCase: locator(),
-    ),
-  );
+  // locator.registerLazySingleton(
+  //   () => UnitsBloc(
+  //     getUnitGroupUseCase: locator(),
+  //     fetchUnitsOfGroupUseCase: locator(),
+  //     removeUnitsUseCase: locator(),
+  //   ),
+  // );
 
   locator.registerLazySingleton<FetchUnitsOfGroupUseCase>(
     () => FetchUnitsOfGroupUseCase(locator()),
@@ -112,20 +112,20 @@ Future<void> init() async {
 
   // unit creation
 
-  locator.registerLazySingleton(
-    () => UnitCreationBloc(
-      addUnitUseCase: locator(),
-      getBaseUnitUseCase: locator(),
-    ),
-  );
+  // locator.registerLazySingleton(
+  //   () => UnitCreationBloc(
+  //     addUnitUseCase: locator(),
+  //     getBaseUnitUseCase: locator(),
+  //   ),
+  // );
 
   // unit group creation
 
-  locator.registerLazySingleton(
-    () => UnitGroupCreationBloc(
-      addUnitGroupUseCase: locator(),
-    ),
-  );
+  // locator.registerLazySingleton(
+  //   () => UnitGroupCreationBloc(
+  //     addUnitGroupUseCase: locator(),
+  //   ),
+  // );
 
   // units conversion
 

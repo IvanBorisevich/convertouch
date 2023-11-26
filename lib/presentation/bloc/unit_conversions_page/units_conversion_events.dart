@@ -1,88 +1,93 @@
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
-import 'package:convertouch/presentation/bloc/base_event.dart';
-import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class UnitsConversionEvent extends ConvertouchPageEvent {
-  const UnitsConversionEvent({
-    super.currentPageId = unitsConversionPageId,
-    super.currentState = ConversionInitialized,
-    super.startPageIndex = 0,
-    super.unitGroupInConversion,
-  });
+abstract class UnitsConversionEvent extends Equatable {
+  const UnitsConversionEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
-class InitializeConversion extends UnitsConversionEvent {
+class BuildConversion extends UnitsConversionEvent {
+  final UnitGroupModel? unitGroup;
   final UnitValueModel? sourceConversionItem;
-  final List<UnitModel>? unitsInConversion;
+  final List<UnitModel>? units;
 
-  const InitializeConversion({
+  const BuildConversion({
+    this.unitGroup,
     this.sourceConversionItem,
-    this.unitsInConversion,
-    super.unitGroupInConversion,
+    this.units,
   });
 
   @override
   List<Object?> get props => [
+    unitGroup,
     sourceConversionItem,
-    unitsInConversion,
-    super.props,
+    units,
   ];
 
   @override
   String toString() {
-    return 'InitializeConversion{'
+    return 'BuildConversion{'
+        'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
-        'unitsInConversion: $unitsInConversion, '
-        '${super.toString()}}';
+        'units: $units}';
   }
 }
 
 class FetchUnitGroupsForConversion extends UnitsConversionEvent {
+  final UnitGroupModel? unitGroupInConversion;
+
   const FetchUnitGroupsForConversion({
-    super.unitGroupInConversion,
+    this.unitGroupInConversion,
   });
 
   @override
   String toString() {
-    return 'FetchUnitGroupsForConversion{${super.toString()}}';
+    return 'FetchUnitGroupsForConversion{'
+        'unitGroupInConversion: $unitGroupInConversion}';
   }
 }
 
 class FetchUnitsForConversion extends UnitsConversionEvent {
+  final UnitGroupModel? unitGroupInConversion;
+
   const FetchUnitsForConversion({
-    required super.unitGroupInConversion,
+    this.unitGroupInConversion,
   });
 
   @override
   String toString() {
-    return 'FetchUnitsForConversion{${super.toString()}}';
+    return 'FetchUnitsForConversion{'
+        'unitGroupInConversion: $unitGroupInConversion}';
   }
 }
 
-class RemoveConversion extends UnitsConversionEvent {
-  final int unitIdBeingRemoved;
+class RemoveConversionItem extends UnitsConversionEvent {
+  final UnitGroupModel? unitGroupInConversion;
+  final int itemUnitId;
   final List<UnitValueModel> conversionItems;
 
-  const RemoveConversion({
-    required this.unitIdBeingRemoved,
+  const RemoveConversionItem({
+    required this.unitGroupInConversion,
+    required this.itemUnitId,
     required this.conversionItems,
-    required super.unitGroupInConversion,
   });
 
   @override
-  List<Object> get props => [
-    unitIdBeingRemoved,
+  List<Object?> get props => [
+    unitGroupInConversion,
+    itemUnitId,
     conversionItems,
-    super.props,
   ];
 
   @override
   String toString() {
-    return 'RemoveConversion{'
-        'unitIdBeingRemoved: $unitIdBeingRemoved, '
-        'conversionItems: $conversionItems, '
-        '${super.toString()}}';
+    return 'RemoveConversionItem{'
+        'unitGroupInConversion: $unitGroupInConversion, '
+        'itemUnitId: $itemUnitId, '
+        'conversionItems: $conversionItems}';
   }
 }

@@ -1,31 +1,38 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
-class ConvertouchPageState extends Equatable {
+abstract class ConvertouchCommonState extends Equatable {
+  const ConvertouchCommonState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ConvertouchCommonStateInBuilding extends ConvertouchCommonState {
+  const ConvertouchCommonStateInBuilding();
+
+  @override
+  String toString() {
+    return 'ConvertouchCommonStateInBuilding{}';
+  }
+}
+
+class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
   final String pageId;
   final Type? prevState;
   final String pageTitle;
   final int startPageIndex;
-  final UnitGroupModel? unitGroupInConversion;
-  final bool floatingButtonVisible;
   final bool removalMode;
   final List<int> selectedItemIdsForRemoval;
-  final ItemsViewMode? pageViewMode;
-  final ItemsViewMode? iconViewMode;
   final ConvertouchUITheme theme;
 
-  const ConvertouchPageState({
+  const ConvertouchCommonStateBuilt({
     required this.pageId,
     this.prevState,
-    required this.pageTitle,
+    this.pageTitle = '',
     required this.startPageIndex,
-    this.unitGroupInConversion,
-    required this.floatingButtonVisible,
     this.removalMode = false,
     this.selectedItemIdsForRemoval = const [],
-    this.pageViewMode,
-    this.iconViewMode,
     this.theme = ConvertouchUITheme.light,
   });
 
@@ -35,28 +42,20 @@ class ConvertouchPageState extends Equatable {
     prevState,
     pageTitle,
     startPageIndex,
-    unitGroupInConversion,
-    floatingButtonVisible,
     removalMode,
     selectedItemIdsForRemoval,
-    pageViewMode,
-    iconViewMode,
     theme,
   ];
 
   @override
   String toString() {
-    return 'ConvertouchPageState{'
+    return 'ConvertouchCommonStateBuilt{'
         'pageId: $pageId, '
         'prevState: $prevState, '
         'pageTitle: $pageTitle, '
         'startPageIndex: $startPageIndex, '
-        'unitGroupInConversion: $unitGroupInConversion, '
-        'floatingButtonVisible: $floatingButtonVisible, '
         'removalMode: $removalMode, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
-        'pageViewMode: $pageViewMode, '
-        'iconViewMode: $iconViewMode, '
         'theme: $theme'
         '}';
   }

@@ -62,7 +62,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   @override
   Widget build(BuildContext context) {
     ConvertouchTextBoxColor color =
-        widget.customColor ?? textBoxColor[widget.theme]!;
+        widget.customColor ?? textBoxColors[widget.theme]!;
 
     return TextField(
       maxLength: widget.maxTextLength,

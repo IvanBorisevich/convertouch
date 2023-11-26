@@ -1,13 +1,28 @@
 import 'package:convertouch/presentation/bloc/base_event.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
-import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchPageBloc extends Bloc<ConvertouchPageEvent, ConvertouchPageState> {
-  ConvertouchPageBloc() : super(const UnitsConversionInitState());
+class ConvertouchCommonBloc
+    extends Bloc<ConvertouchCommonEvent, ConvertouchCommonState> {
+  ConvertouchCommonBloc()
+      : super(
+          const ConvertouchCommonStateBuilt(
+            pageId: '',
+            startPageIndex: 0,
+          ),
+        );
 
   @override
-  Stream<ConvertouchPageState> mapEventToState(ConvertouchPageEvent event) async* {
-    yield const UnitsConversionInitState();
+  Stream<ConvertouchCommonState> mapEventToState(
+    ConvertouchCommonEvent event,
+  ) async* {
+    yield ConvertouchCommonStateBuilt(
+      pageId: event.currentPageId,
+      prevState: event.currentState,
+      startPageIndex: event.startPageIndex,
+      removalMode: event.selectedItemIdsForRemoval.isNotEmpty,
+      selectedItemIdsForRemoval: event.selectedItemIdsForRemoval,
+      theme: event.theme,
+    );
   }
 }

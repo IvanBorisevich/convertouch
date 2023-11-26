@@ -2,43 +2,40 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/model/unit_conversion_input.dart';
-import 'package:convertouch/presentation/bloc/base_event.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsConversionBloc
-    extends Bloc<ConvertouchPageEvent, UnitsConversionState> {
+    extends Bloc<UnitsConversionEvent, UnitsConversionState> {
   final ConvertUnitValueUseCase convertUnitValueUseCase;
 
   UnitsConversionBloc({
     required this.convertUnitValueUseCase,
-  }) : super(const UnitsConversionInitState());
+  }) : super(const ConversionBuilt());
 
   @override
-  Stream<UnitsConversionState> mapEventToState(
-      ConvertouchPageEvent event) async* {
-    if (event is InitializeConversion) {
-      yield const ConversionInitializing();
+  Stream<UnitsConversionState> mapEventToState(UnitsConversionEvent event) async* {
+    if (event is BuildConversion) {
+      yield const ConversionInBuilding();
 
       List<UnitValueModel> convertedUnitValues = [];
       bool stoppedOnError = false;
       UnitValueModel? sourceConversionItem = event.sourceConversionItem;
 
-      if (event.unitsInConversion != null &&
-          event.unitGroupInConversion != null) {
+      if (event.units != null && event.unitGroup != null) {
 
         sourceConversionItem ??= UnitValueModel(
-          unit: event.unitsInConversion![0],
+          unit: event.units![0],
           value: 1,
         );
 
-        for (UnitModel targetUnit in event.unitsInConversion!) {
+        for (UnitModel targetUnit in event.units!) {
           final conversionResult = await convertUnitValueUseCase.execute(
             UnitConversionInput(
               inputUnitValue: sourceConversionItem,
               targetUnit: targetUnit,
-              unitGroup: event.unitGroupInConversion!,
+              unitGroup: event.unitGroup!,
             ),
           );
 
@@ -55,23 +52,23 @@ class UnitsConversionBloc
       }
 
       if (!stoppedOnError) {
-        yield ConversionInitialized(
+        yield ConversionBuilt(
           conversionItems: convertedUnitValues,
           sourceConversionItem: sourceConversionItem,
-          unitGroupInConversion: event.unitGroupInConversion,
+          unitGroup: event.unitGroup,
         );
       }
-    } else if (event is RemoveConversion) {
-      yield const ConversionInitializing();
+    } else if (event is RemoveConversionItem) {
+      yield const ConversionInBuilding();
 
       List<UnitValueModel> conversionItems = event.conversionItems;
       conversionItems
-          .removeWhere((item) => event.unitIdBeingRemoved == item.unit.id);
+          .removeWhere((item) => event.itemUnitId == item.unit.id);
 
-      yield ConversionInitialized(
+      yield ConversionBuilt(
         sourceConversionItem: conversionItems[0],
         conversionItems: conversionItems,
-        unitGroupInConversion: event.unitGroupInConversion,
+        unitGroup: event.unitGroupInConversion,
       );
     }
   }

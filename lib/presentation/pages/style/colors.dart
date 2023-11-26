@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 const Color noColor = Colors.transparent;
 
-const scaffoldColor = {
+const scaffoldColors = {
   ConvertouchUITheme.light: ConvertouchScaffoldColor(
     regular: ScaffoldColorVariation(
       backgroundColor: Color(0xFFFCFEFF),
@@ -26,7 +26,7 @@ const scaffoldColor = {
   ),
 };
 
-const searchBarColor = {
+const searchBarColors = {
   ConvertouchUITheme.light: ConvertouchSearchBarColor(
     regular: SearchBarColorVariation(
       searchBoxIconColor: Color(0xFF426F99),
@@ -49,7 +49,7 @@ const searchBarColor = {
   ),
 };
 
-const sideMenuColor = {
+const sideMenuColors = {
   ConvertouchUITheme.light: ConvertouchSideMenuColor(
     regular: SideMenuColorVariation(
       backgroundColor: Color(0xFFDEEBFC),
@@ -70,7 +70,7 @@ const sideMenuColor = {
   ),
 };
 
-const sideMenuSwitcherColor = {
+const sideMenuSwitcherColors = {
   ConvertouchUITheme.light: ConvertouchSwitcherColor(
     regular: SwitcherColorVariation(
       thumb: Color(0xFFABBCCE),
@@ -93,7 +93,7 @@ const sideMenuSwitcherColor = {
   ),
 };
 
-const unitGroupItemColor = {
+const unitGroupItemColors = {
   ConvertouchUITheme.light: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
       border: Color(0xFFC2CCFF),
@@ -120,7 +120,7 @@ const unitGroupItemColor = {
   ),
 };
 
-const appBarUnitGroupItemColor = {
+const appBarUnitGroupItemColors = {
   ConvertouchUITheme.light: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
       border: Color(0xFF426F99),
@@ -135,7 +135,7 @@ const appBarUnitGroupItemColor = {
   ),
 };
 
-const unitItemColor = {
+const unitItemColors = {
   ConvertouchUITheme.light: ConvertouchMenuItemColor(
     regular: MenuItemColorVariation(
       border: Color(0xFFB5DBFF),
@@ -172,7 +172,7 @@ const unitItemColor = {
   ),
 };
 
-const conversionItemColor = {
+const conversionItemColors = {
   ConvertouchUITheme.light: ConvertouchConversionItemColor(
     handlersColor: Color(0xFF7FA0BE),
     textBox: ConvertouchTextBoxColor(
@@ -229,7 +229,7 @@ const conversionItemColor = {
   ),
 };
 
-const unitGroupsPageFloatingButtonColor = {
+const unitGroupsPageFloatingButtonColors = {
   ConvertouchUITheme.light: FloatingButtonColorVariation(
     background: Color(0xFF7473FA),
     foreground: Color(0xFFDEE9FF),
@@ -240,7 +240,7 @@ const unitGroupsPageFloatingButtonColor = {
   ),
 };
 
-const unitsPageFloatingButtonColor = {
+const unitsPageFloatingButtonColors = {
   ConvertouchUITheme.light: FloatingButtonColorVariation(
     background: Color(0xFF5499DA),
     foreground: Color(0xFFDEE9FF),
@@ -251,7 +251,7 @@ const unitsPageFloatingButtonColor = {
   ),
 };
 
-const conversionPageFloatingButtonColor = {
+const conversionPageFloatingButtonColors = {
   ConvertouchUITheme.light: FloatingButtonColorVariation(
     background: Color(0xFF6793BE),
     foreground: Color(0xFFDEE9FF),
@@ -262,7 +262,7 @@ const conversionPageFloatingButtonColor = {
   ),
 };
 
-const removalFloatingButtonColor = {
+const removalFloatingButtonColors = {
   ConvertouchUITheme.light: FloatingButtonColorVariation(
     background: Color(0xFFD36422),
     foreground: Color(0xFFDEE9FF),
@@ -273,12 +273,12 @@ const removalFloatingButtonColor = {
   ),
 };
 
-const dividerWithTextColor = {
+const dividerWithTextColors = {
   ConvertouchUITheme.light: Color(0xFF709FCB),
   ConvertouchUITheme.dark: Color(0xFF709FCB),
 };
 
-const textBoxColor = {
+const textBoxColors = {
   ConvertouchUITheme.light: ConvertouchTextBoxColor(
     regular: TextBoxColorVariation(
       border: Color(0xFF426F99),
@@ -309,7 +309,7 @@ const textBoxColor = {
   ),
 };
 
-const unitGroupTextBoxColor = {
+const unitGroupTextBoxColors = {
   ConvertouchUITheme.light: ConvertouchTextBoxColor(
     regular: TextBoxColorVariation(
       border: Color(0xFF5F4299),

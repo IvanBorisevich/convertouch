@@ -30,7 +30,7 @@ class ConvertouchSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchSearchBarColor color = customColor ?? searchBarColor[theme]!;
+    ConvertouchSearchBarColor color = customColor ?? searchBarColors[theme]!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
