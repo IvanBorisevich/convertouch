@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/scaffold/app_bar.dart';
@@ -5,6 +6,7 @@ import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:convertouch/presentation/pages/style/model/color.dart';
 import 'package:convertouch/presentation/pages/unit_groups_page.dart';
 import 'package:convertouch/presentation/pages/units_conversion_page.dart';
+import 'package:convertouch/presentation/pages/units_page.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchHomePage extends StatefulWidget {
@@ -40,19 +42,32 @@ class _ConvertouchHomePageState extends State<ConvertouchHomePage> {
     // Icons.menu_rounded,
   ];
 
-  static const List<ConvertouchPage> startPages = [
-    ConvertouchUnitsConversionPage(),
-    ConvertouchUnitGroupsPage(),
+  static const Map<String, ConvertouchPage> pages = {
+    unitsConversionPageId: ConvertouchUnitsConversionPage(),
+    unitGroupsPageId: ConvertouchUnitGroupsPage(),
+    unitsPageId: ConvertouchUnitsPage(),
+  };
+
+  static const List<String> startPages = [
+    unitsConversionPageId,
+    unitGroupsPageId,
   ];
 
   int _selectedPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchPage selectedPage = startPages[_selectedPageIndex];
-    selectedPage.onStart(context);
-
     return commonBloc((commonState) {
+      String selectedPageId;
+      if (commonState.prevState == null) {
+        selectedPageId = startPages[_selectedPageIndex];
+      } else {
+        selectedPageId = commonState.pageId;
+      }
+
+      ConvertouchPage selectedPage = pages[selectedPageId]!;
+      selectedPage.onStart(context);
+
       ConvertouchScaffoldColor commonColor = scaffoldColors[commonState.theme]!;
 
       return SafeArea(

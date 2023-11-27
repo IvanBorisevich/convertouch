@@ -31,23 +31,23 @@ Widget commonBloc(
   );
 }
 
-// Widget unitsBloc(
-//   Widget Function(UnitsFetched unitsFetched) builderFunc,
-// ) {
-//   return BlocBuilder<UnitsBloc, UnitsState>(
-//     buildWhen: (prev, next) {
-//       return prev != next && next is UnitsFetched;
-//     },
-//     builder: (_, unitsFetched) {
-//       if (unitsFetched is UnitsFetched) {
-//         return builderFunc.call(unitsFetched);
-//       } else {
-//         return empty();
-//       }
-//     },
-//   );
-// }
-//
+Widget unitsBloc(
+  Widget Function(UnitsFetched unitsFetched) builderFunc,
+) {
+  return BlocBuilder<UnitsBloc, UnitsState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitsFetched;
+    },
+    builder: (_, unitsFetched) {
+      if (unitsFetched is UnitsFetched) {
+        return builderFunc.call(unitsFetched);
+      } else {
+        return empty();
+      }
+    },
+  );
+}
+
 Widget unitGroupsBloc(
   Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc,
 ) {

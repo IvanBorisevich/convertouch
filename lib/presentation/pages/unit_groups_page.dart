@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/presentation/bloc/base_bloc.dart';
+import 'package:convertouch/presentation/bloc/base_event.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
@@ -11,7 +15,6 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
-import 'package:convertouch/presentation/pages/scaffold/navigation_service.dart';
 import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
 import 'package:convertouch/presentation/pages/style/colors.dart';
 import 'package:convertouch/presentation/pages/style/model/color.dart';
@@ -23,14 +26,15 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
   const ConvertouchUnitGroupsPage({super.key});
 
   @override
-  Widget buildBody(BuildContext context, ConvertouchCommonStateBuilt commonState,) {
+  Widget buildBody(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
     return unitGroupsBloc((pageState) {
-      ScaffoldColorVariation scaffoldColor = scaffoldColors[commonState.theme]!.regular;
-      FloatingButtonColorVariation color =
-          unitGroupsPageFloatingButtonColors[commonState.theme]!;
+      ScaffoldColorVariation scaffoldColor =
+          scaffoldColors[commonState.theme]!.regular;
 
       UnitGroupModel? selectedGroup;
-
       if (pageState is UnitGroupsFetchedForUnitCreation) {
         selectedGroup = pageState.unitGroupInUnitCreation;
       } else if (pageState is UnitGroupsFetchedForConversion) {
@@ -59,20 +63,30 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
               showSelectedItem: selectedGroup != null,
               removalModeAllowed: pageState.runtimeType == UnitGroupsFetched,
               onItemTap: (item) {
-                // if (pageState is UnitGroupsFetchedForUnitCreation) {
-                //   BlocProvider.of<UnitCreationBloc>(context).add(
-                //     PrepareUnitCreation(
-                //       unitGroup: item as UnitGroupModel,
-                //     ),
-                //   );
-                // } else if (pageState is UnitGroupsFetchedForConversion) {
-                // } else {
-                //   BlocProvider.of<UnitsBloc>(context).add(
-                //     FetchUnitsOfGroup(
-                //       unitGroupId: item.id!,
-                //     ),
-                //   );
-                // }
+                BlocProvider.of<ConvertouchCommonBloc>(context).add(
+                  const ConvertouchCommonEvent(
+                    targetPageId: unitsPageId,
+                    currentState: UnitGroupsFetched,
+                    // startPageIndex: commonState.startPageIndex,
+                  ),
+                );
+
+                if (pageState.runtimeType == UnitGroupsFetched) {
+                  BlocProvider.of<UnitsBloc>(context).add(
+                    FetchUnitsOfGroup(
+                      unitGroupId: item.id!,
+                    ),
+                  );
+                } else if (pageState.runtimeType ==
+                    UnitGroupsFetchedForConversion) {
+                } else if (pageState.runtimeType ==
+                    UnitGroupsFetchedForUnitCreation) {
+                  // BlocProvider.of<UnitCreationBloc>(context).add(
+                  //   PrepareUnitCreation(
+                  //     unitGroup: item as UnitGroupModel,
+                  //   ),
+                  // );
+                }
               },
               commonState: commonState,
             ),
@@ -84,17 +98,17 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
 
   @override
   void onStart(BuildContext context) {
+    log("On Start loading unit group page");
     BlocProvider.of<UnitGroupsBloc>(context).add(
-      // TODO: support last session params retrieval
       const FetchUnitGroups(),
     );
   }
 
   @override
   Widget buildAppBar(
-      BuildContext context,
-      ConvertouchCommonStateBuilt commonState,
-      ) {
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
     return unitGroupsBloc((unitGroupsFetched) {
       return buildAppBarForState(
         context,
@@ -105,7 +119,10 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
   }
 
   @override
-  Widget buildFloatingActionButton(BuildContext context, ConvertouchCommonStateBuilt commonState,) {
+  Widget buildFloatingActionButton(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
     return unitGroupsBloc((pageState) {
       ConvertouchScaffoldColor commonColor = scaffoldColors[commonState.theme]!;
       FloatingButtonColorVariation removalButtonColor =
@@ -123,8 +140,8 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
                     ? floatingActionButton(
                         iconData: Icons.delete_outline_rounded,
                         onClick: () {},
-                        color:
-                            conversionPageFloatingButtonColors[commonState.theme]!,
+                        color: unitGroupsPageFloatingButtonColors[
+                            commonState.theme]!,
                       )
                     : floatingActionButton(
                         iconData: Icons.add,
@@ -133,8 +150,8 @@ class ConvertouchUnitGroupsPage extends ConvertouchPage {
                           //   PrepareUnitGroupCreation(),
                           // );
                         },
-                        color:
-                            conversionPageFloatingButtonColors[commonState.theme]!,
+                        color: unitGroupsPageFloatingButtonColors[
+                            commonState.theme]!,
                       ),
               ),
               commonState.removalMode

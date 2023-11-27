@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/base_bloc.dart';
 import 'package:convertouch/presentation/bloc/base_event.dart';
@@ -96,6 +98,7 @@ class ConvertouchUnitsConversionPage extends ConvertouchPage {
 
   @override
   void onStart(BuildContext context) {
+    log("On start loading unit conversions page");
     BlocProvider.of<UnitsConversionBloc>(context).add(
       // TODO: support last session params retrieval
       const BuildConversion(),

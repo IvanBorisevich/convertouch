@@ -1,60 +1,70 @@
-// import 'package:convertouch/domain/constants/constants.dart';
-// import 'package:convertouch/domain/model/unit_group_model.dart';
-// import 'package:convertouch/domain/model/unit_model.dart';
-// import 'package:convertouch/presentation/bloc/base_event.dart';
-// import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-//
-// abstract class UnitsEvent extends ConvertouchCommonEvent {
-//   final UnitGroupModel unitGroup;
-//
-//   const UnitsEvent({
-//     required this.unitGroup,
-//     super.currentPageId = unitsPageId,
-//     super.currentState = UnitsFetched,
-//     super.startPageIndex = 1,
-//   });
-// }
-//
-// class PrepareUnitCreation extends UnitsEvent {
-//   final UnitModel? equivalentUnit;
-//
-//   const PrepareUnitCreation({
-//     required super.unitGroup,
-//     this.equivalentUnit,
-//   });
-//
-//   @override
-//   List<Object?> get props => [
-//     equivalentUnit,
-//     super.props,
-//   ];
-//
-//   @override
-//   String toString() {
-//     return 'PrepareUnitCreation{'
-//         'equivalentUnit: $equivalentUnit, '
-//         '${super.toString()}}';
-//   }
-// }
-//
-// class RemoveUnits extends UnitsEvent {
-//   final List<int> ids;
-//
-//   const RemoveUnits({
-//     required this.ids,
-//     required super.unitGroup,
-//   });
-//
-//   @override
-//   List<Object> get props => [
-//     ids,
-//     super.props,
-//   ];
-//
-//   @override
-//   String toString() {
-//     return 'RemoveUnits{'
-//         'ids: $ids, '
-//         '${super.toString()}}';
-//   }
-// }
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class UnitsEvent extends Equatable {
+  const UnitsEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchUnitsOfGroup extends UnitsEvent {
+  final int unitGroupId;
+
+  const FetchUnitsOfGroup({
+    required this.unitGroupId,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitGroupId,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitsOfGroup{'
+        'unitGroupId: $unitGroupId}';
+  }
+}
+
+class PrepareUnitCreation extends UnitsEvent {
+  final int unitGroupId;
+  final UnitModel? equivalentUnit;
+
+  const PrepareUnitCreation({
+    required this.unitGroupId,
+    this.equivalentUnit,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitGroupId,
+    equivalentUnit,
+  ];
+
+  @override
+  String toString() {
+    return 'PrepareUnitCreation{'
+        'unitGroupId: $unitGroupId, '
+        'equivalentUnit: $equivalentUnit}';
+  }
+}
+
+class RemoveUnits extends UnitsEvent {
+  final List<int> ids;
+
+  const RemoveUnits({
+    required this.ids,
+  });
+
+  @override
+  List<Object> get props => [
+    ids,
+  ];
+
+  @override
+  String toString() {
+    return 'RemoveUnits{'
+        'ids: $ids}';
+  }
+}

@@ -1,19 +1,16 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/presentation/bloc/base_bloc.dart';
-import 'package:convertouch/presentation/bloc/base_event.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 import 'package:convertouch/presentation/pages/abstract_page.dart';
 import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchMenuItemsView extends StatelessWidget {
   final List<IdNameItemModel> items;
   final ConvertouchCommonStateBuilt commonState;
   final void Function(IdNameItemModel)? onItemTap;
-  final List<IdNameItemModel>? markedItems;
+  final List<int>? markedItemIds;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
@@ -25,7 +22,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.items, {
       required this.commonState,
     this.onItemTap,
-    this.markedItems,
+    this.markedItemIds,
     this.showMarkedItems = false,
     this.selectedItemId,
     this.showSelectedItem = false,
@@ -45,8 +42,8 @@ class ConvertouchMenuItemsView extends StatelessWidget {
           bool selected = showSelectedItem &&
               items[index].id == selectedItemId;
           bool isMarkedToSelect = showMarkedItems &&
-              markedItems != null &&
-              markedItems!.contains(items[index]);
+              markedItemIds != null &&
+              markedItemIds!.contains(items[index].id);
           return ConvertouchFadeScaleAnimation(
             child: ConvertouchMenuItem(
               item,

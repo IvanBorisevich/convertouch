@@ -16,25 +16,6 @@ class FetchUnitGroups extends UnitGroupsEvent {
   }
 }
 
-class FetchUnitsOfGroup extends UnitGroupsEvent {
-  final int unitGroupId;
-
-  const FetchUnitsOfGroup({
-    required this.unitGroupId,
-  });
-
-  @override
-  List<Object?> get props => [
-    unitGroupId,
-  ];
-
-  @override
-  String toString() {
-    return 'FetchUnitsOfGroup{'
-        'unitGroupId: $unitGroupId}';
-  }
-}
-
 class PrepareUnitGroupCreation extends UnitGroupsEvent {
   const PrepareUnitGroupCreation();
 

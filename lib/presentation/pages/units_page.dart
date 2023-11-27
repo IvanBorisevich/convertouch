@@ -1,171 +1,190 @@
-// import 'package:convertouch/domain/constants/constants.dart';
-// import 'package:convertouch/domain/model/unit_model.dart';
-// import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
-// import 'package:convertouch/presentation/bloc/app/app_events.dart';
-// import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-// import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_bloc.dart';
-// import 'package:convertouch/presentation/bloc/unit_creation/unit_creation_events.dart';
-// import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
-// import 'package:convertouch/presentation/bloc/units/units_events.dart';
-// import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_bloc.dart';
-// import 'package:convertouch/presentation/bloc/units_conversion/units_conversion_events.dart';
-// import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
-// import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
-// import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
-// import 'package:convertouch/presentation/pages/style/colors.dart';
-// import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-//
-// class ConvertouchUnitsPage extends StatefulWidget {
-//   const ConvertouchUnitsPage({super.key});
-//
-//   @override
-//   State createState() => _ConvertouchUnitsPageState();
-// }
-//
-// class _ConvertouchUnitsPageState extends State<ConvertouchUnitsPage> {
-//   late ConvertouchAction? action;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     action = ModalRoute.of(context)!.settings.arguments as ConvertouchAction?;
-//
-//     return appBloc((appState) {
-//       FloatingButtonColorVariation color =
-//           unitsPageFloatingButtonColor[appState.theme]!;
-//
-//       return unitsBloc((unitsFetched) {
-//         return ConvertouchScaffold(
-//             pageTitle: [
-//               ConvertouchAction.fetchUnitsToSelectForConversion,
-//               ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-//             ].contains(action)
-//                 ? "Select Unit"
-//                 : unitsFetched.unitGroup.name,
-//             theme: appState.theme,
-//             appBarRightWidgets: [
-//               checkIcon(
-//                 context,
-//                 isVisible: [
-//                   ConvertouchAction.fetchUnitsToStartMark,
-//                   ConvertouchAction.fetchUnitsToContinueMark,
-//                 ].contains(action),
-//                 isEnabled: unitsFetched.useMarkedUnitsInConversion,
-//                 onPressedFunc: () {
-//                   BlocProvider.of<UnitsConversionBloc>(context).add(
-//                     InitializeConversion(
-//                       inputValue: unitsFetched.inputValue ?? 1,
-//                       inputUnit: unitsFetched.selectedUnit,
-//                       conversionUnits: unitsFetched.markedUnits,
-//                       unitGroup: unitsFetched.unitGroup,
-//                     ),
-//                   );
-//                 },
-//                 color: scaffoldColor[appState.theme]!,
-//               ),
-//             ],
-//             secondaryAppBar: ConvertouchSearchBar(
-//               placeholder: "Search units...",
-//               theme: appState.theme,
-//             ),
-//             body: itemsViewModeBloc((itemsViewModeState) {
-//               return ConvertouchMenuItemsView(
-//                 unitsFetched.units,
-//                 markedItems: unitsFetched.markedUnits,
-//                 showMarkedItems: action !=
-//                     ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-//                 selectedItemId: unitsFetched.selectedUnit?.id,
-//                 showSelectedItem: [
-//                   ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-//                   ConvertouchAction.fetchUnitsToSelectForConversion,
-//                 ].contains(action),
-//                 viewMode: itemsViewModeState.pageViewMode,
-//                 markItemsOnTap: [
-//                   ConvertouchAction.fetchUnitsToStartMark,
-//                   ConvertouchAction.fetchUnitsToContinueMark,
-//                 ].contains(action),
-//                 removalModeAllowed: [
-//                   ConvertouchAction.fetchUnitsToStartMark,
-//                   ConvertouchAction.fetchUnitsToContinueMark,
-//                 ].contains(action),
-//                 onItemTap: (item) {
-//                   switch (action) {
-//                     case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
-//                       BlocProvider.of<UnitCreationBloc>(context).add(
-//                         PrepareUnitCreation(
-//                           unitGroup: unitsFetched.unitGroup,
-//                           equivalentUnit: item as UnitModel,
-//                           markedUnits: unitsFetched.markedUnits,
-//                           action: ConvertouchAction
-//                               .updateEquivalentUnitForUnitCreation,
-//                         ),
-//                       );
-//                       break;
-//                     case ConvertouchAction.fetchUnitsToSelectForConversion:
-//                       BlocProvider.of<UnitsConversionBloc>(context).add(
-//                         InitializeConversion(
-//                           inputUnit: item as UnitModel,
-//                           inputValue: unitsFetched.inputValue,
-//                           prevInputUnit: unitsFetched.selectedUnit,
-//                           unitGroup: unitsFetched.unitGroup,
-//                           conversionUnits: unitsFetched.markedUnits,
-//                         ),
-//                       );
-//                       break;
-//                     case ConvertouchAction.fetchUnitsToStartMark:
-//                     case ConvertouchAction.fetchUnitsToContinueMark:
-//                     default:
-//                       BlocProvider.of<UnitsBloc>(context).add(
-//                         FetchUnits(
-//                           inputValue: unitsFetched.inputValue,
-//                           unitGroupId: unitsFetched.unitGroup.id!,
-//                           newMarkedUnit: item as UnitModel,
-//                           markedUnits: unitsFetched.markedUnits,
-//                           action: ConvertouchAction.fetchUnitsToContinueMark,
-//                         ),
-//                       );
-//                       break;
-//                   }
-//                 },
-//               );
-//             }),
-//             floatingActionButton: FloatingActionButton(
-//               onPressed: () {
-//                 BlocProvider.of<UnitCreationBloc>(context).add(
-//                   PrepareUnitCreation(
-//                     unitGroup: unitsFetched.unitGroup,
-//                     equivalentUnit: unitsFetched.selectedUnit,
-//                     markedUnits: unitsFetched.markedUnits,
-//                     action: ConvertouchAction.initUnitCreationParams,
-//                   ),
-//                 );
-//               },
-//               backgroundColor: color.background,
-//               foregroundColor: color.foreground,
-//               elevation: 0,
-//               child: const Icon(Icons.add),
-//             ),
-//             floatingActionButtonVisible: ![
-//                   ConvertouchAction.fetchUnitsToSelectForConversion,
-//                   ConvertouchAction.fetchUnitsToSelectForUnitCreation,
-//                 ].contains(action) &&
-//                 !unitGroupsNoAddUnits.contains(unitsFetched.unitGroup.name),
-//             onFloatingButtonForRemovalClick: () {
-//               BlocProvider.of<UnitsBloc>(context).add(
-//                 RemoveUnits(
-//                   ids: appState.selectedItemIdsForRemoval,
-//                   unitGroup: unitsFetched.unitGroup,
-//                   markedUnits: unitsFetched.markedUnits,
-//                 ),
-//               );
-//               BlocProvider.of<AppBloc>(context).add(
-//                 DisableRemovalMode(
-//                   uiTheme: appState.theme,
-//                 ),
-//               );
-//             });
-//       });
-//     });
-//   }
-// }
+import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/presentation/bloc/base_state.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
+import 'package:convertouch/presentation/pages/abstract_page.dart';
+import 'package:convertouch/presentation/pages/items_view/menu_items_view.dart';
+import 'package:convertouch/presentation/pages/scaffold/search_bar.dart';
+import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/pages/style/model/color.dart';
+import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
+import 'package:flutter/material.dart';
+
+class ConvertouchUnitsPage extends ConvertouchPage {
+  const ConvertouchUnitsPage({super.key});
+
+  @override
+  Widget buildBody(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
+    return unitsBloc((pageState) {
+      ScaffoldColorVariation scaffoldColor =
+          scaffoldColors[commonState.theme]!.regular;
+
+      List<int> unitIdsSelectedForConversion = [];
+      UnitModel? selectedEquivalentUnit;
+      bool showMarkedItems = false;
+
+      if (pageState is UnitsFetchedForEquivalentUnitSelection) {
+        selectedEquivalentUnit = pageState.selectedEquivalentUnit;
+      } else if (pageState is UnitsFetchedForConversion) {
+        unitIdsSelectedForConversion = pageState.unitIdsSelectedForConversion;
+        showMarkedItems = true;
+      }
+
+      return Column(
+        children: [
+          Container(
+            height: 53,
+            decoration: BoxDecoration(
+              color: scaffoldColor.appBarColor,
+            ),
+            padding: const EdgeInsetsDirectional.fromSTEB(7, 0, 7, 7),
+            child: ConvertouchSearchBar(
+              placeholder: "Search units...",
+              theme: commonState.theme,
+              iconViewMode: ItemsViewMode.list, //pageState.iconViewMode!,
+              pageViewMode: ItemsViewMode.grid,
+            ),
+          ),
+          Expanded(
+            child: ConvertouchMenuItemsView(
+              pageState.units,
+              markedItemIds: unitIdsSelectedForConversion,
+              showMarkedItems: showMarkedItems,
+              selectedItemId: selectedEquivalentUnit?.id,
+              showSelectedItem: selectedEquivalentUnit != null,
+              markItemsOnTap:
+                  pageState.runtimeType == UnitsFetchedForConversion,
+              removalModeAllowed: pageState.runtimeType == UnitsFetched,
+              onItemTap: (item) {
+                // switch (action) {
+                //   case ConvertouchAction.fetchUnitsToSelectForUnitCreation:
+                //     BlocProvider.of<UnitCreationBloc>(context).add(
+                //       PrepareUnitCreation(
+                //         unitGroup: unitsFetched.unitGroup,
+                //         equivalentUnit: item as UnitModel,
+                //         markedUnits: unitsFetched.markedUnits,
+                //         action: ConvertouchAction
+                //             .updateEquivalentUnitForUnitCreation,
+                //       ),
+                //     );
+                //     break;
+                //   case ConvertouchAction.fetchUnitsToSelectForConversion:
+                //     BlocProvider.of<UnitsConversionBloc>(context).add(
+                //       InitializeConversion(
+                //         inputUnit: item as UnitModel,
+                //         inputValue: unitsFetched.inputValue,
+                //         prevInputUnit: unitsFetched.selectedUnit,
+                //         unitGroup: unitsFetched.unitGroup,
+                //         conversionUnits: unitsFetched.markedUnits,
+                //       ),
+                //     );
+                //     break;
+                //   case ConvertouchAction.fetchUnitsToStartMark:
+                //   case ConvertouchAction.fetchUnitsToContinueMark:
+                //   default:
+                //     BlocProvider.of<UnitsBloc>(context).add(
+                //       FetchUnits(
+                //         inputValue: unitsFetched.inputValue,
+                //         unitGroupId: unitsFetched.unitGroup.id!,
+                //         newMarkedUnit: item as UnitModel,
+                //         markedUnits: unitsFetched.markedUnits,
+                //         action: ConvertouchAction.fetchUnitsToContinueMark,
+                //       ),
+                //     );
+                //     break;
+                // }
+              },
+              commonState: commonState,
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  @override
+  void onStart(BuildContext context) {
+  }
+
+  @override
+  Widget buildAppBar(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
+    return unitsBloc((pageState) {
+      String pageTitle;
+      switch (pageState.runtimeType) {
+        case UnitsFetchedForConversion:
+          pageTitle = "Select Units For Conversion";
+          break;
+        case UnitsFetchedForEquivalentUnitSelection:
+          pageTitle = "Select Equivalent Unit";
+          break;
+        default:
+          pageTitle = "Units";
+          break;
+      }
+
+      return buildAppBarForState(
+        context,
+        commonState,
+        pageTitle: pageTitle,
+      );
+    });
+  }
+
+  @override
+  Widget buildFloatingActionButton(
+    BuildContext context,
+    ConvertouchCommonStateBuilt commonState,
+  ) {
+    return unitGroupsBloc((pageState) {
+      ConvertouchScaffoldColor commonColor = scaffoldColors[commonState.theme]!;
+      FloatingButtonColorVariation removalButtonColor =
+      removalFloatingButtonColors[commonState.theme]!;
+
+      return Visibility(
+        visible: pageState.floatingButtonVisible,
+        child: SizedBox(
+          height: 70,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              FittedBox(
+                child: commonState.removalMode
+                    ? floatingActionButton(
+                  iconData: Icons.delete_outline_rounded,
+                  onClick: () {},
+                  color:
+                  unitsPageFloatingButtonColors[commonState.theme]!,
+                )
+                    : floatingActionButton(
+                  iconData: Icons.add,
+                  onClick: () {
+                    // BlocProvider.of<UnitGroupsBloc>(context).add(
+                    //   PrepareUnitGroupCreation(),
+                    // );
+                  },
+                  color:
+                  unitsPageFloatingButtonColors[commonState.theme]!,
+                ),
+              ),
+              commonState.removalMode
+                  ? itemsRemovalCounter(
+                itemsCount: commonState.selectedItemIdsForRemoval.length,
+                backgroundColor: removalButtonColor.background,
+                foregroundColor: removalButtonColor.foreground,
+                borderColor: commonColor.regular.backgroundColor,
+              )
+                  : empty(),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}

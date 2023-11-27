@@ -20,8 +20,6 @@ class ConvertouchCommonStateInBuilding extends ConvertouchCommonState {
 class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
   final String pageId;
   final Type? prevState;
-  final String pageTitle;
-  final int startPageIndex;
   final bool removalMode;
   final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
@@ -29,8 +27,6 @@ class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
   const ConvertouchCommonStateBuilt({
     required this.pageId,
     this.prevState,
-    this.pageTitle = '',
-    required this.startPageIndex,
     this.removalMode = false,
     this.selectedItemIdsForRemoval = const [],
     this.theme = ConvertouchUITheme.light,
@@ -40,8 +36,6 @@ class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
   List<Object?> get props => [
     pageId,
     prevState,
-    pageTitle,
-    startPageIndex,
     removalMode,
     selectedItemIdsForRemoval,
     theme,
@@ -52,8 +46,6 @@ class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
     return 'ConvertouchCommonStateBuilt{'
         'pageId: $pageId, '
         'prevState: $prevState, '
-        'pageTitle: $pageTitle, '
-        'startPageIndex: $startPageIndex, '
         'removalMode: $removalMode, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
         'theme: $theme'

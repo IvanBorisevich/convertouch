@@ -31,7 +31,7 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(create: (context) => di.locator<ConvertouchCommonBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsConversionBloc>()),
         BlocProvider(create: (context) => di.locator<UnitGroupsBloc>()),
-        // BlocProvider(create: (context) => di.locator<UnitsBloc>()),
+        BlocProvider(create: (context) => di.locator<UnitsBloc>()),
         // BlocProvider(create: (context) => di.locator<UnitCreationBloc>()),
         // BlocProvider(create: (context) => di.locator<UnitGroupCreationBloc>()),
       ],
