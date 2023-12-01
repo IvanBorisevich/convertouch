@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
-import 'package:convertouch/presentation/pages/abstract_page.dart';
-import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
-import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
+import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatelessWidget {

@@ -20,10 +20,10 @@ enum ItemType {
   unitValue,
 }
 
-enum NavigationAction {
-  pop,
-  push,
-  none,
+enum BottomNavbarItem {
+  home,
+  unitsMenu,
+  more,
 }
 
 enum ItemsViewMode {

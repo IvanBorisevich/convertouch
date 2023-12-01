@@ -5,8 +5,8 @@
 // import 'package:convertouch/presentation/bloc/side_menu/side_menu_bloc.dart';
 // import 'package:convertouch/presentation/bloc/side_menu/side_menu_events.dart';
 // import 'package:convertouch/presentation/bloc/side_menu/side_menu_states.dart';
-// import 'package:convertouch/presentation/pages/style/colors.dart';
-// import 'package:convertouch/presentation/pages/style/model/color.dart';
+// import 'package:convertouch/presentation/ui/style/colors.dart';
+// import 'package:convertouch/presentation/ui/style/model/color.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';

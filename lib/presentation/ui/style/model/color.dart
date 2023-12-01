@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 abstract class ConvertouchColor<T extends ConvertouchColorVariation> {

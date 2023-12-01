@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchCheckbox extends StatelessWidget {

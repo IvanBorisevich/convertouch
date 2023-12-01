@@ -2,19 +2,15 @@ import 'package:convertouch/presentation/bloc/base_bloc.dart';
 import 'package:convertouch/presentation/bloc/base_state.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_states.dart';
-import 'package:convertouch/presentation/bloc/unit_group_creation_page/unit_group_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_creation_page/unit_group_creation_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:convertouch/presentation/pages/abstract_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget commonBloc(
+Widget globalBloc(
   Widget Function(ConvertouchCommonStateBuilt commonState) builderFunc,
 ) {
   return BlocBuilder<ConvertouchCommonBloc, ConvertouchCommonState>(

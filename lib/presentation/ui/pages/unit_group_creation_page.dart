@@ -1,9 +1,9 @@
 // import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_bloc.dart';
 // import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
 // import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-// import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
-// import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
-// import 'package:convertouch/presentation/pages/style/colors.dart';
+// import 'package:convertouch/presentation/ui/scaffold/scaffold.dart';
+// import 'package:convertouch/presentation/ui/scaffold/textbox.dart';
+// import 'package:convertouch/presentation/ui/style/colors.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 //

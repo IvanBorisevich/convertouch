@@ -7,12 +7,12 @@
 // import 'package:convertouch/presentation/bloc/unit_groups/unit_groups_events.dart';
 // import 'package:convertouch/presentation/bloc/units/units_bloc.dart';
 // import 'package:convertouch/presentation/bloc/units/units_events.dart';
-// import 'package:convertouch/presentation/pages/animation/fade_scale_animation.dart';
-// import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
-// import 'package:convertouch/presentation/pages/items_view/item/menu_item.dart';
-// import 'package:convertouch/presentation/pages/scaffold/scaffold.dart';
-// import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
-// import 'package:convertouch/presentation/pages/style/colors.dart';
+// import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
+// import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
+// import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
+// import 'package:convertouch/presentation/ui/scaffold/scaffold.dart';
+// import 'package:convertouch/presentation/ui/scaffold/textbox.dart';
+// import 'package:convertouch/presentation/ui/style/colors.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 //

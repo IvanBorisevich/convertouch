@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/pages/style/model/color.dart';
-import 'package:convertouch/presentation/pages/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/model/color.dart';
+import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 const Color noColor = Colors.transparent;
@@ -254,7 +254,7 @@ const unitsPageFloatingButtonColors = {
 const conversionPageFloatingButtonColors = {
   ConvertouchUITheme.light: FloatingButtonColorVariation(
     background: Color(0xFF6793BE),
-    foreground: Color(0xFFDEE9FF),
+    foreground: Color(0xFFF5F7FF),
   ),
   ConvertouchUITheme.dark: FloatingButtonColorVariation(
     background: Color(0xDB446F96),

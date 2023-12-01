@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
-import 'package:convertouch/presentation/pages/abstract_page.dart';
-import 'package:convertouch/presentation/pages/items_view/item/conversion_item.dart';
-import 'package:convertouch/presentation/pages/style/colors.dart';
+import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {

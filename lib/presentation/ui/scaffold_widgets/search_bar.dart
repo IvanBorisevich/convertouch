@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/pages/animation/items_view_mode_button_animation.dart';
-import 'package:convertouch/presentation/pages/style/colors.dart';
-import 'package:convertouch/presentation/pages/style/model/color.dart';
+import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchSearchBar extends StatelessWidget {

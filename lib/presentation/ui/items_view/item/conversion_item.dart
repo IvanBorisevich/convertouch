@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/domain/utils/unit_value_util.dart';
-import 'package:convertouch/presentation/pages/scaffold/textbox.dart';
-import 'package:convertouch/presentation/pages/style/colors.dart';
-import 'package:convertouch/presentation/pages/style/model/color.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
