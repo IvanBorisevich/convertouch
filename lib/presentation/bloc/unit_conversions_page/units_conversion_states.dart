@@ -22,13 +22,11 @@ class ConversionBuilt extends UnitsConversionState {
   final UnitGroupModel? unitGroup;
   final UnitValueModel? sourceConversionItem;
   final List<UnitValueModel> conversionItems;
-  final bool floatingButtonVisible;
 
   const ConversionBuilt({
     this.unitGroup,
     this.sourceConversionItem,
     this.conversionItems = const [],
-    this.floatingButtonVisible = true,
   });
 
   @override
@@ -36,7 +34,6 @@ class ConversionBuilt extends UnitsConversionState {
     unitGroup,
     sourceConversionItem,
     conversionItems,
-    floatingButtonVisible,
   ];
 
   @override
@@ -44,8 +41,7 @@ class ConversionBuilt extends UnitsConversionState {
     return 'ConversionBuilt{'
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
-        'conversionItems: $conversionItems, '
-        'floatingButtonVisible: $floatingButtonVisible}';
+        'conversionItems: $conversionItems}';
   }
 }
 

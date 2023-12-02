@@ -17,16 +17,16 @@ import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_creation_page/unit_group_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.I;
 
 Future<void> init() async {
-  // database
+  // app
 
   locator.registerLazySingleton<ConvertouchDatabaseHelper>(
     () => ConvertouchDatabaseHelper(),
@@ -37,8 +37,6 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => database,
   );
-
-  // app, global
 
   locator.registerLazySingleton(
     () => ConvertouchAppBloc(),
@@ -53,6 +51,11 @@ Future<void> init() async {
       removeUnitGroupsUseCase: locator(),
     ),
   );
+
+  locator.registerLazySingleton(
+    () => UnitGroupsBlocForConversion(),
+  );
+
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
     () => FetchUnitGroupsUseCase(locator()),
   );
@@ -80,6 +83,10 @@ Future<void> init() async {
       fetchUnitsOfGroupUseCase: locator(),
       removeUnitsUseCase: locator(),
     ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitsBlocForConversion(),
   );
 
   locator.registerLazySingleton<FetchUnitsOfGroupUseCase>(

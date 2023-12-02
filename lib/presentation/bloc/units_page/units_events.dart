@@ -28,42 +28,42 @@ class FetchUnits extends UnitsEvent {
   }
 }
 
-class FetchUnitsForConversion extends FetchUnits {
-  final List<int>? unitIdsAlreadyMarkedForConversion;
-  final int? unitIdNewlyMarkedForConversion;
+class FetchUnitsForConversion extends UnitsEvent {
+  final List<UnitModel>? unitsAlreadyMarkedForConversion;
+  final UnitModel? unitNewlyMarkedForConversion;
 
   const FetchUnitsForConversion({
-    required super.unitGroup,
-    this.unitIdsAlreadyMarkedForConversion,
-    this.unitIdNewlyMarkedForConversion,
+    this.unitsAlreadyMarkedForConversion,
+    this.unitNewlyMarkedForConversion,
   });
 
   @override
   List<Object?> get props => [
-    unitIdNewlyMarkedForConversion,
-    unitIdsAlreadyMarkedForConversion,
+    unitNewlyMarkedForConversion,
+    unitsAlreadyMarkedForConversion,
     super.props,
   ];
 
   @override
   String toString() {
     return 'FetchUnitsForConversion{'
-        'unitGroup: $unitGroup, '
-        'unitIdNewlyMarkedForConversion: $unitIdNewlyMarkedForConversion, '
-        'unitIdsAlreadyMarkedForConversion: $unitIdsAlreadyMarkedForConversion'
+        'unitNewlyMarkedForConversion: $unitNewlyMarkedForConversion, '
+        'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion'
         '}';
   }
 }
 
-class FetchUnitsForEquivalentUnitSelection extends FetchUnits {
+class FetchUnitsForEquivalentUnitSelection extends UnitsEvent {
+  final UnitModel? selectedEquivalentUnit;
+
   const FetchUnitsForEquivalentUnitSelection({
-    required super.unitGroup,
+    required this.selectedEquivalentUnit,
   });
 
   @override
   String toString() {
     return 'FetchUnitsForEquivalentUnitSelection{'
-        'unitGroup: $unitGroup}';
+        'selectedEquivalentUnit: $selectedEquivalentUnit}';
   }
 }
 

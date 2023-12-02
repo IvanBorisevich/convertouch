@@ -7,8 +7,6 @@ import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
-  static const int _minUnitsNumForConversion = 2;
-
   final GetUnitGroupUseCase getUnitGroupUseCase;
   final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
@@ -31,41 +29,10 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       if (fetchUnitsOfGroupResult.isLeft) {
         yield UnitsErrorState(message: fetchUnitsOfGroupResult.left.message);
       } else {
-        switch (event.runtimeType) {
-          case FetchUnitsForConversion:
-            var e = event as FetchUnitsForConversion;
-
-            List<int> allMarkedUnitIds = _updateMarkedUnitIds(
-              e.unitIdsAlreadyMarkedForConversion,
-              e.unitIdNewlyMarkedForConversion,
-            );
-
-            List<UnitModel> allMarkedUnits = fetchUnitsOfGroupResult.right
-                .where((unit) => allMarkedUnitIds.contains(unit.id))
-                .toList();
-
-            yield UnitsFetchedForConversion(
-              units: fetchUnitsOfGroupResult.right,
-              unitGroup: event.unitGroup,
-              unitIdsMarkedForConversion: allMarkedUnitIds,
-              unitsMarkedForConversion: allMarkedUnits,
-              allowUnitsToBeAddedToConversion:
-                  allMarkedUnitIds.length >= _minUnitsNumForConversion,
-            );
-            break;
-          case FetchUnitsForEquivalentUnitSelection:
-            yield UnitsFetchedForEquivalentUnitSelection(
-              units: fetchUnitsOfGroupResult.right,
-              unitGroup: event.unitGroup,
-            );
-            break;
-          default:
-            yield UnitsFetched(
-              units: fetchUnitsOfGroupResult.right,
-              unitGroup: event.unitGroup,
-            );
-            break;
-        }
+        yield UnitsFetched(
+          units: fetchUnitsOfGroupResult.right,
+          unitGroup: event.unitGroup,
+        );
       }
     } else if (event is RemoveUnits) {
       // final result = await removeUnitsUseCase.execute(event.ids);
@@ -96,26 +63,5 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       //   );
       // }
     }
-  }
-
-  List<int> _updateMarkedUnitIds(
-    List<int>? unitIdsAlreadyMarkedForConversion,
-    int? unitIdNewlyMarkedForConversion,
-  ) {
-    List<int> result = unitIdsAlreadyMarkedForConversion ?? [];
-
-    if (unitIdNewlyMarkedForConversion == null) {
-      return result;
-    }
-
-    if (!result.contains(unitIdNewlyMarkedForConversion)) {
-      result.add(unitIdNewlyMarkedForConversion);
-    } else {
-      result.removeWhere(
-        (unit) => unit == unitIdNewlyMarkedForConversion,
-      );
-    }
-
-    return result;
   }
 }

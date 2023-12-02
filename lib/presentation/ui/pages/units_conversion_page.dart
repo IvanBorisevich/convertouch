@@ -1,8 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
@@ -33,7 +35,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
                     pageState.unitGroup!,
                     color: appBarUnitGroupItemColors[appState.theme]!,
                     onTap: () {
-                      BlocProvider.of<UnitGroupsBloc>(context).add(
+                      BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
                         FetchUnitGroupsToChangeOneInConversion(
                           unitGroupInConversion: pageState.unitGroup!,
                         ),
@@ -90,15 +92,20 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
             onClick: () {
               if (pageState.unitGroup == null) {
                 BlocProvider.of<UnitGroupsBloc>(context).add(
+                  const FetchUnitGroups(),
+                );
+                BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
                   const FetchUnitGroupsToFetchUnitsForConversion(),
                 );
                 Navigator.of(context).pushNamed(unitGroupsPageId);
               } else {
                 BlocProvider.of<UnitsBloc>(context).add(
+                  FetchUnits(unitGroup: pageState.unitGroup!),
+                );
+                BlocProvider.of<UnitsBlocForConversion>(context).add(
                   FetchUnitsForConversion(
-                    unitGroup: pageState.unitGroup!,
-                    unitIdsAlreadyMarkedForConversion: pageState.conversionItems
-                        .map((unitValue) => unitValue.unit.id!)
+                    unitsAlreadyMarkedForConversion: pageState.conversionItems
+                        .map((unitValue) => unitValue.unit)
                         .toList(),
                   ),
                 );

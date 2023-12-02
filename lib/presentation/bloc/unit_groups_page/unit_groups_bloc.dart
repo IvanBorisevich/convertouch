@@ -28,23 +28,7 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
           message: result.left.message,
         );
       } else {
-        switch (event.runtimeType) {
-          case FetchUnitGroupsToFetchUnitsForConversion:
-            yield UnitGroupsFetchedToFetchUnitsForConversion(
-              unitGroups: result.right,
-            );
-            break;
-          case FetchUnitGroupsToChangeOneInConversion:
-            var e = event as FetchUnitGroupsToChangeOneInConversion;
-            yield UnitGroupsFetchedToChangeOneInConversion(
-              unitGroups: result.right,
-              unitGroupInConversion: e.unitGroupInConversion,
-            );
-            break;
-          default:
-            yield UnitGroupsFetched(unitGroups: result.right);
-            break;
-        }
+        yield UnitGroupsFetched(unitGroups: result.right);
       }
     } else if (event is RemoveUnitGroups) {
       final result = await removeUnitGroupsUseCase.execute(event.ids);

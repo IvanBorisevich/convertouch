@@ -19,17 +19,14 @@ class UnitGroupsFetching extends UnitGroupsState {
 
 class UnitGroupsFetched extends UnitGroupsState {
   final List<UnitGroupModel> unitGroups;
-  final bool floatingButtonVisible;
 
   const UnitGroupsFetched({
     required this.unitGroups,
-    this.floatingButtonVisible = true,
   });
 
   @override
   List<Object?> get props => [
     unitGroups,
-    floatingButtonVisible,
   ];
 
   @override
@@ -39,23 +36,19 @@ class UnitGroupsFetched extends UnitGroupsState {
   }
 }
 
-class UnitGroupsFetchedToFetchUnitsForConversion extends UnitGroupsFetched {
-  const UnitGroupsFetchedToFetchUnitsForConversion({
-    required super.unitGroups,
-  });
+class UnitGroupsFetchedToFetchUnitsForConversion extends UnitGroupsState {
+  const UnitGroupsFetchedToFetchUnitsForConversion();
 
   @override
   String toString() {
-    return 'UnitGroupsFetchedToFetchUnitsForConversion{'
-        'unitGroups: $unitGroups}';
+    return 'UnitGroupsFetchedToFetchUnitsForConversion{}';
   }
 }
 
-class UnitGroupsFetchedToChangeOneInConversion extends UnitGroupsFetched {
+class UnitGroupsFetchedToChangeOneInConversion extends UnitGroupsState {
   final UnitGroupModel unitGroupInConversion;
 
   const UnitGroupsFetchedToChangeOneInConversion({
-    required super.unitGroups,
     required this.unitGroupInConversion,
   });
 
@@ -66,13 +59,11 @@ class UnitGroupsFetchedToChangeOneInConversion extends UnitGroupsFetched {
   }
 }
 
-class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
+class UnitGroupsFetchedForUnitCreation extends UnitGroupsState {
   final UnitGroupModel? unitGroupInUnitCreation;
 
   const UnitGroupsFetchedForUnitCreation({
-    required super.unitGroups,
     this.unitGroupInUnitCreation,
-    super.floatingButtonVisible = false,
   });
 
   @override
@@ -84,7 +75,6 @@ class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
   @override
   String toString() {
     return 'UnitGroupsFetchedForUnitCreation{'
-        'unitGroups: $unitGroups, '
         'unitGroupInUnitCreation: $unitGroupInUnitCreation}';
   }
 }

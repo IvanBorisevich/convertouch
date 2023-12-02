@@ -21,43 +21,36 @@ class UnitsFetching extends UnitsState {
 class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel? unitGroup;
-  final bool floatingButtonVisible;
 
   const UnitsFetched({
     this.units = const [],
     this.unitGroup,
-    this.floatingButtonVisible = true,
   });
 
   @override
   List<Object?> get props => [
     units,
     unitGroup,
-    floatingButtonVisible,
   ];
 
   @override
   String toString() {
     return 'UnitsFetched{'
         'units: $units, '
-        'unitGroup: $unitGroup, '
-        'floatingButtonVisible: $floatingButtonVisible}';
+        'unitGroup: $unitGroup}';
   }
 }
 
 
-class UnitsFetchedForConversion extends UnitsFetched {
+class UnitsFetchedForConversion extends UnitsState {
   final List<UnitModel> unitsMarkedForConversion;
   final List<int> unitIdsMarkedForConversion;
   final bool allowUnitsToBeAddedToConversion;
 
   const UnitsFetchedForConversion({
-    required super.units,
-    required super.unitGroup,
     required this.unitsMarkedForConversion,
     required this.unitIdsMarkedForConversion,
     required this.allowUnitsToBeAddedToConversion,
-    super.floatingButtonVisible = false,
   });
 
   @override
@@ -65,7 +58,6 @@ class UnitsFetchedForConversion extends UnitsFetched {
     unitsMarkedForConversion,
     unitIdsMarkedForConversion,
     allowUnitsToBeAddedToConversion,
-    super.props,
   ];
 
   @override
@@ -77,27 +69,22 @@ class UnitsFetchedForConversion extends UnitsFetched {
 }
 
 
-class UnitsFetchedForEquivalentUnitSelection extends UnitsFetched {
+class UnitsFetchedForEquivalentUnitSelection extends UnitsState {
   final UnitModel? selectedEquivalentUnit;
 
   const UnitsFetchedForEquivalentUnitSelection({
-    required super.units,
-    required super.unitGroup,
     this.selectedEquivalentUnit,
-    super.floatingButtonVisible = false,
   });
 
   @override
   List<Object?> get props => [
     selectedEquivalentUnit,
-    super.props,
   ];
 
   @override
   String toString() {
     return 'UnitsFetchedForEquivalentUnitSelection{'
-        'selectedEquivalentUnit: $selectedEquivalentUnit, '
-        '${super.toString()}}';
+        'selectedEquivalentUnit: $selectedEquivalentUnit}';
   }
 }
 

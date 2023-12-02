@@ -20,95 +20,94 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unitGroupsBloc((pageState) {
-      return appBloc((appState) {
-        FloatingButtonColorVariation floatingButtonColor =
-            unitGroupsPageFloatingButtonColors[appState.theme]!;
+    return appBloc((appState) {
+      return unitGroupsBloc((pageState) {
+        return unitGroupsBlocForConversion((pageStateForConversion) {
+          FloatingButtonColorVariation floatingButtonColor =
+              unitGroupsPageFloatingButtonColors[appState.theme]!;
 
-        UnitGroupModel? selectedGroup;
-        String pageTitle = "Unit Groups";
-        bool showSelectedItem = false;
-        bool removalModeAllowed = true;
+          UnitGroupModel? selectedGroup;
+          String pageTitle = "Unit Groups";
+          bool showSelectedItem = false;
+          bool removalModeAllowed = true;
+          bool floatingButtonVisible = true;
 
-        if (appState.activeNavbarItem == BottomNavbarItem.home) {
-          showSelectedItem = true;
-          removalModeAllowed = false;
+          if (appState.activeNavbarItem == BottomNavbarItem.home) {
+            showSelectedItem = true;
+            removalModeAllowed = false;
+            floatingButtonVisible = false;
 
-          if (pageState is UnitGroupsFetchedForUnitCreation) {
-            pageTitle = "Select Group Of New Unit";
-            selectedGroup = pageState.unitGroupInUnitCreation;
-          } else if (pageState is UnitGroupsFetchedToChangeOneInConversion) {
-            pageTitle = "Change Group In Conversion";
-            selectedGroup = pageState.unitGroupInConversion;
-          } else if (pageState is UnitGroupsFetchedToFetchUnitsForConversion) {
-            pageTitle = "Select Group";
+            if (pageStateForConversion is UnitGroupsFetchedToChangeOneInConversion) {
+              pageTitle = "Change Group In Conversion";
+              selectedGroup = pageStateForConversion.unitGroupInConversion;
+            } else if (pageStateForConversion is UnitGroupsFetchedToFetchUnitsForConversion) {
+              pageTitle = "Select Group";
+            }
           }
-        }
 
-        return ConvertouchPage(
-          appState: appState,
-          title: pageTitle,
-          secondaryAppBar: ConvertouchSearchBar(
-            placeholder: "Search unit groups...",
-            theme: appState.theme,
-            iconViewMode: ItemsViewMode.list,
-            pageViewMode: ItemsViewMode.grid,
-          ),
-          body: ConvertouchMenuItemsView(
-            pageState.unitGroups,
-            selectedItemId: selectedGroup?.id,
-            showSelectedItem: showSelectedItem,
-            removalModeAllowed: removalModeAllowed,
-            onItemTap: (item) {
-              switch (pageState.runtimeType) {
-                case UnitGroupsFetched:
-                  BlocProvider.of<UnitsBloc>(context).add(
-                    FetchUnits(unitGroup: item as UnitGroupModel),
-                  );
-                  Navigator.of(context).pushNamed(unitsPageId);
-                  break;
-                case UnitGroupsFetchedToFetchUnitsForConversion:
-                  BlocProvider.of<UnitsBloc>(context).add(
-                    FetchUnitsForConversion(
-                      unitGroup: item as UnitGroupModel,
-                    ),
-                  );
-                  Navigator.of(context).pushNamed(unitsPageId);
-                  break;
-                case UnitGroupsFetchedToChangeOneInConversion:
-                  BlocProvider.of<UnitsConversionBloc>(context).add(
-                    BuildConversion(unitGroup: item as UnitGroupModel),
-                  );
-                  Navigator.of(context).pop();
-                  break;
-                case UnitGroupsFetchedForUnitCreation:
-                  // BlocProvider.of<UnitCreationBloc>(context).add(
-                  //   PrepareUnitCreation(
-                  //     unitGroup: item as UnitGroupModel,
-                  //   ),
-                  // );
-                  break;
-              }
-            },
-            theme: appState.theme,
-          ),
-          floatingActionButton: ConvertouchFloatingActionButton.adding(
-            onClick: () {
-              // BlocProvider.of<UnitsBloc>(context).add(
-              //   pageState.unitGroupInConversion != null
-              //       ? FetchUnitsForConversion(
-              //           unitGroupInConversion: pageState.unitGroupInConversion,
-              //         )
-              //       : FetchUnitGroupsForConversion(
-              //           unitGroupInConversion: pageState.unitGroupInConversion,
-              //         ),
-              // );
-            },
-            visible: pageState.floatingButtonVisible,
-            background: floatingButtonColor.background,
-            foreground: floatingButtonColor.foreground,
-          ),
-        );
+          return ConvertouchPage(
+            appState: appState,
+            title: pageTitle,
+            secondaryAppBar: ConvertouchSearchBar(
+              placeholder: "Search unit groups...",
+              theme: appState.theme,
+              iconViewMode: ItemsViewMode.list,
+              pageViewMode: ItemsViewMode.grid,
+            ),
+            body: ConvertouchMenuItemsView(
+              pageState.unitGroups,
+              selectedItemId: selectedGroup?.id,
+              showSelectedItem: showSelectedItem,
+              removalModeAllowed: removalModeAllowed,
+              onItemTap: (item) {
+                switch (pageState.runtimeType) {
+                  case UnitGroupsFetched:
+                    BlocProvider.of<UnitsBloc>(context).add(
+                      FetchUnits(unitGroup: item as UnitGroupModel),
+                    );
+                    Navigator.of(context).pushNamed(unitsPageId);
+                    break;
+                  case UnitGroupsFetchedToFetchUnitsForConversion:
+                    BlocProvider.of<UnitsBloc>(context).add(
+                      FetchUnits(unitGroup: item as UnitGroupModel),
+                    );
+                    Navigator.of(context).pushNamed(unitsPageId);
+                    break;
+                  case UnitGroupsFetchedToChangeOneInConversion:
+                    BlocProvider.of<UnitsConversionBloc>(context).add(
+                      BuildConversion(unitGroup: item as UnitGroupModel),
+                    );
+                    Navigator.of(context).pop();
+                    break;
+                  case UnitGroupsFetchedForUnitCreation:
+                    // BlocProvider.of<UnitCreationBloc>(context).add(
+                    //   PrepareUnitCreation(
+                    //     unitGroup: item as UnitGroupModel,
+                    //   ),
+                    // );
+                    break;
+                }
+              },
+              theme: appState.theme,
+            ),
+            floatingActionButton: ConvertouchFloatingActionButton.adding(
+              onClick: () {
+                // BlocProvider.of<UnitsBloc>(context).add(
+                //   pageState.unitGroupInConversion != null
+                //       ? FetchUnitsForConversion(
+                //           unitGroupInConversion: pageState.unitGroupInConversion,
+                //         )
+                //       : FetchUnitGroupsForConversion(
+                //           unitGroupInConversion: pageState.unitGroupInConversion,
+                //         ),
+                // );
+              },
+              visible: floatingButtonVisible,
+              background: floatingButtonColor.background,
+              foreground: floatingButtonColor.foreground,
+            ),
+          );
+        });
       });
     });
   }
