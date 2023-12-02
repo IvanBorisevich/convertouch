@@ -15,13 +15,12 @@ import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.
 import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
-import 'package:convertouch/presentation/bloc/base_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_creation_page/unit_group_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/services/navigation_service.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.I;
@@ -42,11 +41,7 @@ Future<void> init() async {
   // app, global
 
   locator.registerLazySingleton(
-    () => ConvertouchCommonBloc(),
-  );
-
-  locator.registerLazySingleton<NavigationService>(
-    () => NavigationService(),
+    () => ConvertouchAppBloc(),
   );
 
   // unit groups

@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/presentation/bloc/base_state.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatelessWidget {
   final List<IdNameItemModel> items;
-  final ConvertouchCommonStateBuilt commonState;
   final void Function(IdNameItemModel)? onItemTap;
   final List<int>? markedItemIds;
   final bool showMarkedItems;
@@ -17,10 +15,10 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final bool removalModeAllowed;
   final bool markItemsOnTap;
   final double itemsSpacing;
+  final ConvertouchUITheme theme;
 
   const ConvertouchMenuItemsView(
     this.items, {
-      required this.commonState,
     this.onItemTap,
     this.markedItemIds,
     this.showMarkedItems = false,
@@ -29,25 +27,24 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.removalModeAllowed = true,
     this.markItemsOnTap = false,
     this.itemsSpacing = 7,
+    required this.theme,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-
     return LayoutBuilder(builder: (context, constraints) {
       if (items.isNotEmpty) {
         Widget? itemBuilder(context, index) {
           IdNameItemModel item = items[index];
-          bool selected = showSelectedItem &&
-              items[index].id == selectedItemId;
+          bool selected = showSelectedItem && items[index].id == selectedItemId;
           bool isMarkedToSelect = showMarkedItems &&
               markedItemIds != null &&
               markedItemIds!.contains(items[index].id);
           return ConvertouchFadeScaleAnimation(
             child: ConvertouchMenuItem(
               item,
-              itemsViewMode: ItemsViewMode.grid, //ommonState.pageViewMode!,
+              itemsViewMode: ItemsViewMode.grid,
               onTap: () {
                 onItemTap?.call(item);
               },
@@ -78,7 +75,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
               // selectedForRemoval:
               //   pageState.selectedItemIdsForRemoval.contains(item.id!),
               markOnTap: markItemsOnTap,
-              theme: commonState.theme,
+              theme: theme,
             ),
           );
         }

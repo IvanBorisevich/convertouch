@@ -1,4 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchBottomNavigationBar extends StatelessWidget {
@@ -12,6 +15,11 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
     BottomNavbarItem.unitsMenu: Icons.dashboard_customize_rounded,
   };
 
+  static const _navBarLabels = {
+    BottomNavbarItem.home: "Home",
+    BottomNavbarItem.unitsMenu: "Units Menu",
+  };
+
   final BottomNavbarItem selectedItem;
   final Function(BottomNavbarItem)? onItemSelect;
 
@@ -23,17 +31,24 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: [
-        _buildNavbarItem(BottomNavbarItem.home),
-        _buildNavbarItem(BottomNavbarItem.unitsMenu),
-      ],
-      onTap: (index) {
-        onItemSelect?.call(BottomNavbarItem.values[index]);
-      },
-      currentIndex: selectedItem.index,
-    );
+    return appBloc((appState) {
+      ConvertouchScaffoldColor color = scaffoldColors[appState.theme]!;
+
+      return BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          _buildNavbarItem(BottomNavbarItem.home),
+          _buildNavbarItem(BottomNavbarItem.unitsMenu),
+        ],
+        onTap: (index) {
+          onItemSelect?.call(BottomNavbarItem.values[index]);
+        },
+        currentIndex: selectedItem.index,
+        elevation: 0,
+        backgroundColor: color.regular.appBarColor,
+        unselectedItemColor: color.regular.appBarFontColor,
+      );
+    });
   }
 
   BottomNavigationBarItem _buildNavbarItem(BottomNavbarItem bottomNavbarItem) {
@@ -43,7 +58,7 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
             ? _navBarIconsSelected[bottomNavbarItem]
             : _navBarIcons[bottomNavbarItem],
       ),
-      label: bottomNavbarItem.name,
+      label: _navBarLabels[bottomNavbarItem],
     );
   }
 }

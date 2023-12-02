@@ -1,5 +1,5 @@
-import 'package:convertouch/presentation/bloc/base_bloc.dart';
-import 'package:convertouch/presentation/bloc/base_state.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -10,16 +10,16 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget globalBloc(
-  Widget Function(ConvertouchCommonStateBuilt commonState) builderFunc,
+Widget appBloc(
+  Widget Function(ConvertouchAppStateBuilt appState) builderFunc,
 ) {
-  return BlocBuilder<ConvertouchCommonBloc, ConvertouchCommonState>(
+  return BlocBuilder<ConvertouchAppBloc, ConvertouchAppState>(
     buildWhen: (prev, next) {
-      return prev != next && next is ConvertouchCommonStateBuilt;
+      return prev != next && next is ConvertouchAppStateBuilt;
     },
-    builder: (_, commonState) {
-      if (commonState is ConvertouchCommonStateBuilt) {
-        return builderFunc.call(commonState);
+    builder: (_, appState) {
+      if (appState is ConvertouchAppStateBuilt) {
+        return builderFunc.call(appState);
       } else {
         return empty();
       }

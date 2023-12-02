@@ -9,35 +9,7 @@
 //   });
 // }
 //
-// class FetchUnitGroupsForUnitCreation extends UnitCreationEvent {
-//   const FetchUnitGroupsForUnitCreation();
-//
-//   @override
-//   String toString() {
-//     return 'FetchUnitGroupsForUnitCreation{${super.toString()}}';
-//   }
-// }
-//
-// class FetchUnitsForEquivalentUnitSelection extends UnitCreationEvent {
-//   final int unitGroupId;
-//
-//   const FetchUnitsForEquivalentUnitSelection({
-//     required this.unitGroupId,
-//   });
-//
-//   @override
-//   List<Object?> get props => [
-//     unitGroupId,
-//     super.props,
-//   ];
-//
-//   @override
-//   String toString() {
-//     return 'FetchUnitsForEquivalentUnitSelection{'
-//         'unitGroupId: $unitGroupId, '
-//         '${super.toString()}}';
-//   }
-// }
+
 //
 // class AddUnit extends UnitCreationEvent {
 //   final UnitModel unit;

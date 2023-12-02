@@ -18,20 +18,35 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
 
   @override
   Stream<UnitGroupsState> mapEventToState(UnitGroupsEvent event) async* {
-    if (event is FetchUnitGroups) {
-      yield const UnitGroupsFetching();
+    yield const UnitGroupsFetching();
 
+    if (event is FetchUnitGroups) {
       final result = await fetchUnitGroupsUseCase.execute();
-      yield result.fold(
-        (error) => UnitGroupsErrorState(
-          message: error.message,
-        ),
-        (unitGroups) => UnitGroupsFetched(
-          unitGroups: unitGroups,
-        ),
-      );
+
+      if (result.isLeft) {
+        yield UnitGroupsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        switch (event.runtimeType) {
+          case FetchUnitGroupsToFetchUnitsForConversion:
+            yield UnitGroupsFetchedToFetchUnitsForConversion(
+              unitGroups: result.right,
+            );
+            break;
+          case FetchUnitGroupsToChangeOneInConversion:
+            var e = event as FetchUnitGroupsToChangeOneInConversion;
+            yield UnitGroupsFetchedToChangeOneInConversion(
+              unitGroups: result.right,
+              unitGroupInConversion: e.unitGroupInConversion,
+            );
+            break;
+          default:
+            yield UnitGroupsFetched(unitGroups: result.right);
+            break;
+        }
+      }
     } else if (event is RemoveUnitGroups) {
-      yield const UnitGroupsFetching();
       final result = await removeUnitGroupsUseCase.execute(event.ids);
       if (result.isLeft) {
         yield UnitGroupsErrorState(

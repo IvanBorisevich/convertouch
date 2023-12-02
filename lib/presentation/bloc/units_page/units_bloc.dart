@@ -7,7 +7,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
-  static const int _minUnitsNumToSelect = 2;
+  static const int _minUnitsNumForConversion = 2;
 
   final GetUnitGroupUseCase getUnitGroupUseCase;
   final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
@@ -21,30 +21,53 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
 
   @override
   Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
-    if (event is FetchUnitsOfGroup) {
-      yield const UnitsFetching();
+    yield const UnitsFetching();
+
+    if (event is FetchUnits) {
       final fetchUnitsOfGroupResult = await fetchUnitsOfGroupUseCase.execute(
-        event.unitGroupId,
+        event.unitGroup.id!,
       );
 
       if (fetchUnitsOfGroupResult.isLeft) {
         yield UnitsErrorState(message: fetchUnitsOfGroupResult.left.message);
       } else {
-        final unitGroupCaseResult =
-            await getUnitGroupUseCase.execute(event.unitGroupId);
+        switch (event.runtimeType) {
+          case FetchUnitsForConversion:
+            var e = event as FetchUnitsForConversion;
 
-        if (unitGroupCaseResult.isLeft) {
-          yield UnitsErrorState(message: unitGroupCaseResult.left.message);
-        } else {
-          List<UnitModel> unitsOfGroup = fetchUnitsOfGroupResult.right;
+            List<int> allMarkedUnitIds = _updateMarkedUnitIds(
+              e.unitIdsAlreadyMarkedForConversion,
+              e.unitIdNewlyMarkedForConversion,
+            );
 
-          yield UnitsFetched(
-            units: unitsOfGroup,
-          );
+            List<UnitModel> allMarkedUnits = fetchUnitsOfGroupResult.right
+                .where((unit) => allMarkedUnitIds.contains(unit.id))
+                .toList();
+
+            yield UnitsFetchedForConversion(
+              units: fetchUnitsOfGroupResult.right,
+              unitGroup: event.unitGroup,
+              unitIdsMarkedForConversion: allMarkedUnitIds,
+              unitsMarkedForConversion: allMarkedUnits,
+              allowUnitsToBeAddedToConversion:
+                  allMarkedUnitIds.length >= _minUnitsNumForConversion,
+            );
+            break;
+          case FetchUnitsForEquivalentUnitSelection:
+            yield UnitsFetchedForEquivalentUnitSelection(
+              units: fetchUnitsOfGroupResult.right,
+              unitGroup: event.unitGroup,
+            );
+            break;
+          default:
+            yield UnitsFetched(
+              units: fetchUnitsOfGroupResult.right,
+              unitGroup: event.unitGroup,
+            );
+            break;
         }
       }
     } else if (event is RemoveUnits) {
-      // yield const UnitsFetching();
       // final result = await removeUnitsUseCase.execute(event.ids);
       // if (result.isLeft) {
       //   yield UnitsErrorState(
@@ -75,20 +98,24 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     }
   }
 
-  // List<UnitModel> _updateMarkedUnits(
-  //   List<UnitModel>? markedUnits,
-  //   UnitModel? markedUnit,
-  //   ConvertouchAction action,
-  // ) {
-  //   List<UnitModel> resultMarkedUnits = List.from(markedUnits ?? []);
-  //   if (action != ConvertouchAction.fetchUnitsToSelectForUnitCreation &&
-  //       markedUnit != null) {
-  //     if (!resultMarkedUnits.contains(markedUnit)) {
-  //       resultMarkedUnits.add(markedUnit);
-  //     } else {
-  //       resultMarkedUnits.removeWhere((unit) => unit == markedUnit);
-  //     }
-  //   }
-  //   return resultMarkedUnits;
-  // }
+  List<int> _updateMarkedUnitIds(
+    List<int>? unitIdsAlreadyMarkedForConversion,
+    int? unitIdNewlyMarkedForConversion,
+  ) {
+    List<int> result = unitIdsAlreadyMarkedForConversion ?? [];
+
+    if (unitIdNewlyMarkedForConversion == null) {
+      return result;
+    }
+
+    if (!result.contains(unitIdNewlyMarkedForConversion)) {
+      result.add(unitIdNewlyMarkedForConversion);
+    } else {
+      result.removeWhere(
+        (unit) => unit == unitIdNewlyMarkedForConversion,
+      );
+    }
+
+    return result;
+  }
 }

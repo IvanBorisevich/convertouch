@@ -1,36 +1,28 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
-class ConvertouchCommonEvent extends Equatable {
-  final String targetPageId;
-  final int? startPageIndex;
-  final Type? currentState;
+class ConvertouchAppEvent extends Equatable {
+  final BottomNavbarItem activeNavbarItem;
   final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
 
-  const ConvertouchCommonEvent({
-    required this.targetPageId,
-    this.currentState,
-    this.startPageIndex,
+  const ConvertouchAppEvent({
+    required this.activeNavbarItem,
     this.selectedItemIdsForRemoval = const [],
     this.theme = ConvertouchUITheme.light,
   });
 
   @override
   List<Object?> get props => [
-        targetPageId,
-        currentState,
-        startPageIndex,
+    activeNavbarItem,
         selectedItemIdsForRemoval,
         theme,
       ];
 
   @override
   String toString() {
-    return 'ConvertouchCommonEvent{'
-        'targetPageId: $targetPageId, '
-        'currentState: $currentState, '
-        'startPageIndex: $startPageIndex, '
+    return 'ConvertouchAppEvent{'
+        'activeNavbarItem: $activeNavbarItem, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
         'theme: $theme'
         '}';

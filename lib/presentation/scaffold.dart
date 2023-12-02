@@ -1,7 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_event.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar_item_navigator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
   const ConvertouchScaffold({super.key});
@@ -26,7 +29,12 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           );
     } else {
       setState(() => _selectedNavbarItem = bottomNavbarItem);
+
+      BlocProvider.of<ConvertouchAppBloc>(context).add(
+        ConvertouchAppEvent(activeNavbarItem: _selectedNavbarItem),
+      );
     }
+
   }
 
   @override
@@ -45,18 +53,20 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         }
         return isFirstRouteInSelectedNavbarItem;
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            _buildOffstageNavigator(BottomNavbarItem.home, homePageId),
-            _buildOffstageNavigator(
-                BottomNavbarItem.unitsMenu, unitGroupsPageId),
-            // _buildOffstageNavigator(BottomNavbarItem.more),
-          ],
-        ),
-        bottomNavigationBar: ConvertouchBottomNavigationBar(
-          selectedItem: _selectedNavbarItem,
-          onItemSelect: _selectNavbarItem,
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              _buildOffstageNavigator(BottomNavbarItem.home, homePageId),
+              _buildOffstageNavigator(
+                  BottomNavbarItem.unitsMenu, unitGroupsPageId),
+              // _buildOffstageNavigator(BottomNavbarItem.more),
+            ],
+          ),
+          bottomNavigationBar: ConvertouchBottomNavigationBar(
+            selectedItem: _selectedNavbarItem,
+            onItemSelect: _selectNavbarItem,
+          ),
         ),
       ),
     );

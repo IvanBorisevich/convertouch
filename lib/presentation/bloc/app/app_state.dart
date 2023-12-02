@@ -1,32 +1,30 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class ConvertouchCommonState extends Equatable {
-  const ConvertouchCommonState();
+abstract class ConvertouchAppState extends Equatable {
+  const ConvertouchAppState();
 
   @override
   List<Object?> get props => [];
 }
 
-class ConvertouchCommonStateInBuilding extends ConvertouchCommonState {
-  const ConvertouchCommonStateInBuilding();
+class ConvertouchAppStateInBuilding extends ConvertouchAppState {
+  const ConvertouchAppStateInBuilding();
 
   @override
   String toString() {
-    return 'ConvertouchCommonStateInBuilding{}';
+    return 'ConvertouchAppStateInBuilding{}';
   }
 }
 
-class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
-  final String pageId;
-  final Type? prevState;
+class ConvertouchAppStateBuilt extends ConvertouchAppState {
+  final BottomNavbarItem activeNavbarItem;
   final bool removalMode;
   final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
 
-  const ConvertouchCommonStateBuilt({
-    required this.pageId,
-    this.prevState,
+  const ConvertouchAppStateBuilt({
+    required this.activeNavbarItem,
     this.removalMode = false,
     this.selectedItemIdsForRemoval = const [],
     this.theme = ConvertouchUITheme.light,
@@ -34,8 +32,7 @@ class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
 
   @override
   List<Object?> get props => [
-    pageId,
-    prevState,
+    activeNavbarItem,
     removalMode,
     selectedItemIdsForRemoval,
     theme,
@@ -43,9 +40,8 @@ class ConvertouchCommonStateBuilt extends ConvertouchCommonState {
 
   @override
   String toString() {
-    return 'ConvertouchCommonStateBuilt{'
-        'pageId: $pageId, '
-        'prevState: $prevState, '
+    return 'ConvertouchAppStateBuilt{'
+        'activeNavbarItem: $activeNavbarItem, '
         'removalMode: $removalMode, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
         'theme: $theme'

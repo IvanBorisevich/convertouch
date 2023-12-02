@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitGroupsEvent extends Equatable {
@@ -15,6 +16,39 @@ class FetchUnitGroups extends UnitGroupsEvent {
     return 'FetchUnitGroups{}';
   }
 }
+
+class FetchUnitGroupsToFetchUnitsForConversion extends FetchUnitGroups {
+  const FetchUnitGroupsToFetchUnitsForConversion();
+
+  @override
+  String toString() {
+    return 'FetchUnitGroupsToFetchUnitsForConversion{}';
+  }
+}
+
+class FetchUnitGroupsToChangeOneInConversion extends FetchUnitGroups {
+  final UnitGroupModel unitGroupInConversion;
+
+  const FetchUnitGroupsToChangeOneInConversion({
+    required this.unitGroupInConversion,
+  });
+
+  @override
+  String toString() {
+    return 'FetchUnitGroupsToChangeOneInConversion{'
+        'unitGroupInConversion: $unitGroupInConversion}';
+  }
+}
+
+class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
+  const FetchUnitGroupsForUnitCreation();
+
+  @override
+  String toString() {
+    return 'FetchUnitGroupsForUnitCreation{}';
+  }
+}
+
 
 class PrepareUnitGroupCreation extends UnitGroupsEvent {
   const PrepareUnitGroupCreation();

@@ -39,24 +39,29 @@ class UnitGroupsFetched extends UnitGroupsState {
   }
 }
 
-class UnitGroupsFetchedForConversion extends UnitGroupsFetched {
-  final UnitGroupModel? unitGroupInConversion;
-
-  const UnitGroupsFetchedForConversion({
+class UnitGroupsFetchedToFetchUnitsForConversion extends UnitGroupsFetched {
+  const UnitGroupsFetchedToFetchUnitsForConversion({
     required super.unitGroups,
-    this.unitGroupInConversion,
-    super.floatingButtonVisible = false,
   });
 
   @override
-  List<Object?> get props => [
-    unitGroupInConversion,
-    super.props,
-  ];
+  String toString() {
+    return 'UnitGroupsFetchedToFetchUnitsForConversion{'
+        'unitGroups: $unitGroups}';
+  }
+}
+
+class UnitGroupsFetchedToChangeOneInConversion extends UnitGroupsFetched {
+  final UnitGroupModel unitGroupInConversion;
+
+  const UnitGroupsFetchedToChangeOneInConversion({
+    required super.unitGroups,
+    required this.unitGroupInConversion,
+  });
 
   @override
   String toString() {
-    return 'UnitGroupsFetchedForConversion{'
+    return 'UnitGroupsFetchedToChangeOneInConversion{'
         'unitGroupInConversion: $unitGroupInConversion}';
   }
 }

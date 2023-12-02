@@ -37,34 +37,6 @@ class BuildConversion extends UnitsConversionEvent {
   }
 }
 
-class FetchUnitGroupsForConversion extends UnitsConversionEvent {
-  final UnitGroupModel? unitGroupInConversion;
-
-  const FetchUnitGroupsForConversion({
-    this.unitGroupInConversion,
-  });
-
-  @override
-  String toString() {
-    return 'FetchUnitGroupsForConversion{'
-        'unitGroupInConversion: $unitGroupInConversion}';
-  }
-}
-
-class FetchUnitsForConversion extends UnitsConversionEvent {
-  final UnitGroupModel? unitGroupInConversion;
-
-  const FetchUnitsForConversion({
-    this.unitGroupInConversion,
-  });
-
-  @override
-  String toString() {
-    return 'FetchUnitsForConversion{'
-        'unitGroupInConversion: $unitGroupInConversion}';
-  }
-}
-
 class RemoveConversionItem extends UnitsConversionEvent {
   final UnitGroupModel? unitGroupInConversion;
   final int itemUnitId;

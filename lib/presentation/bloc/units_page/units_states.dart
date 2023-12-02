@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,16 +20,19 @@ class UnitsFetching extends UnitsState {
 
 class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
+  final UnitGroupModel? unitGroup;
   final bool floatingButtonVisible;
 
   const UnitsFetched({
     this.units = const [],
+    this.unitGroup,
     this.floatingButtonVisible = true,
   });
 
   @override
   List<Object?> get props => [
     units,
+    unitGroup,
     floatingButtonVisible,
   ];
 
@@ -36,35 +40,39 @@ class UnitsFetched extends UnitsState {
   String toString() {
     return 'UnitsFetched{'
         'units: $units, '
+        'unitGroup: $unitGroup, '
         'floatingButtonVisible: $floatingButtonVisible}';
   }
 }
 
 
 class UnitsFetchedForConversion extends UnitsFetched {
-  final List<int> unitIdsAlreadyInConversion;
-  final List<int> unitIdsSelectedForConversion;
+  final List<UnitModel> unitsMarkedForConversion;
+  final List<int> unitIdsMarkedForConversion;
+  final bool allowUnitsToBeAddedToConversion;
 
   const UnitsFetchedForConversion({
     required super.units,
-    required this.unitIdsAlreadyInConversion,
-    required this.unitIdsSelectedForConversion,
+    required super.unitGroup,
+    required this.unitsMarkedForConversion,
+    required this.unitIdsMarkedForConversion,
+    required this.allowUnitsToBeAddedToConversion,
     super.floatingButtonVisible = false,
   });
 
   @override
   List<Object?> get props => [
-    unitIdsAlreadyInConversion,
-    unitIdsSelectedForConversion,
+    unitsMarkedForConversion,
+    unitIdsMarkedForConversion,
+    allowUnitsToBeAddedToConversion,
     super.props,
   ];
 
   @override
   String toString() {
     return 'UnitsFetchedForConversion{'
-        'unitIdsAlreadyInConversion: $unitIdsAlreadyInConversion, '
-        'unitIdsSelectedForConversion: $unitIdsSelectedForConversion, '
-        '${super.toString()}}';
+        'unitsMarkedForConversion: $unitsMarkedForConversion, '
+        'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion}';
   }
 }
 
@@ -74,6 +82,7 @@ class UnitsFetchedForEquivalentUnitSelection extends UnitsFetched {
 
   const UnitsFetchedForEquivalentUnitSelection({
     required super.units,
+    required super.unitGroup,
     this.selectedEquivalentUnit,
     super.floatingButtonVisible = false,
   });

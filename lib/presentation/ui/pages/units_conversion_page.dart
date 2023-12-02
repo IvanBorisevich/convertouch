@@ -1,4 +1,9 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
@@ -6,6 +11,7 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_but
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsConversionPage extends StatelessWidget {
   const ConvertouchUnitsConversionPage({super.key});
@@ -13,28 +19,32 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return unitsConversionBloc((pageState) {
-      return globalBloc((globalState) {
+      return appBloc((appState) {
         FloatingButtonColorVariation floatingButtonColor =
-            conversionPageFloatingButtonColors[globalState.theme]!;
+            conversionPageFloatingButtonColors[appState.theme]!;
 
         return ConvertouchPage(
-          globalState: globalState,
+          appState: appState,
           title: "Conversions",
           secondaryAppBar: pageState.unitGroup != null
-              ? ConvertouchMenuItem(
-                  pageState.unitGroup!,
-                  color: appBarUnitGroupItemColors[globalState.theme]!,
-                  onTap: () {
-                    // BlocProvider.of<UnitGroupsBloc>(context).add(
-                    //   FetchUnitGroupsForConversion(
-                    //     unitGroupInConversion:
-                    //         pageState.unitGroupInConversion,
-                    //   ),
-                    // );
-                  },
-                  theme: globalState.theme,
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: ConvertouchMenuItem(
+                    pageState.unitGroup!,
+                    color: appBarUnitGroupItemColors[appState.theme]!,
+                    onTap: () {
+                      BlocProvider.of<UnitGroupsBloc>(context).add(
+                        FetchUnitGroupsToChangeOneInConversion(
+                          unitGroupInConversion: pageState.unitGroup!,
+                        ),
+                      );
+                      Navigator.of(context).pushNamed(unitGroupsPageId);
+                    },
+                    theme: appState.theme,
+                  ),
                 )
               : empty(),
+          secondaryAppBarHeight: pageState.unitGroup != null ? 60 : 0,
           secondaryAppBarColor: Colors.transparent,
           body: ConvertouchConversionItemsView(
             pageState.conversionItems,
@@ -74,19 +84,26 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
               //   ),
               // );
             },
-            theme: globalState.theme,
+            theme: appState.theme,
           ),
           floatingActionButton: ConvertouchFloatingActionButton.adding(
             onClick: () {
-              // BlocProvider.of<UnitsBloc>(context).add(
-              //   pageState.unitGroupInConversion != null
-              //       ? FetchUnitsForConversion(
-              //           unitGroupInConversion: pageState.unitGroupInConversion,
-              //         )
-              //       : FetchUnitGroupsForConversion(
-              //           unitGroupInConversion: pageState.unitGroupInConversion,
-              //         ),
-              // );
+              if (pageState.unitGroup == null) {
+                BlocProvider.of<UnitGroupsBloc>(context).add(
+                  const FetchUnitGroupsToFetchUnitsForConversion(),
+                );
+                Navigator.of(context).pushNamed(unitGroupsPageId);
+              } else {
+                BlocProvider.of<UnitsBloc>(context).add(
+                  FetchUnitsForConversion(
+                    unitGroup: pageState.unitGroup!,
+                    unitIdsAlreadyMarkedForConversion: pageState.conversionItems
+                        .map((unitValue) => unitValue.unit.id!)
+                        .toList(),
+                  ),
+                );
+                Navigator.of(context).pushNamed(unitsPageId);
+              }
             },
             background: floatingButtonColor.background,
             foreground: floatingButtonColor.foreground,

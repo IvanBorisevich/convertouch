@@ -1,30 +1,31 @@
-import 'package:convertouch/presentation/bloc/base_state.dart';
+import 'package:convertouch/presentation/bloc/app/app_state.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
-import 'package:convertouch/presentation/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchPage extends StatelessWidget {
-  final ConvertouchCommonStateBuilt globalState;
+  final ConvertouchAppStateBuilt appState;
   final Widget body;
   final String title;
   final List<Widget>? appBarRightWidgets;
   final Widget? secondaryAppBar;
   final Color? secondaryAppBarColor;
-  final double appBarPadding;
+  final double secondaryAppBarHeight;
+  final double secondaryAppBarPadding;
   final Widget? floatingActionButton;
   final void Function()? onItemsRemove;
 
   const ConvertouchPage({
-    required this.globalState,
+    required this.appState,
     required this.body,
     required this.title,
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.secondaryAppBarColor,
-    this.appBarPadding = 7,
+    this.secondaryAppBarHeight = 53,
+    this.secondaryAppBarPadding = 7,
     this.floatingActionButton,
     this.onItemsRemove,
     super.key,
@@ -32,16 +33,16 @@ class ConvertouchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchScaffoldColor scaffoldColor = scaffoldColors[globalState.theme]!;
+    ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
     FloatingButtonColorVariation removalButtonColor =
-        removalFloatingButtonColors[globalState.theme]!;
+        removalFloatingButtonColors[appState.theme]!;
 
     return Scaffold(
       backgroundColor: scaffoldColor.regular.backgroundColor,
       appBar: AppBar(
         leading: Builder(
           builder: (context) {
-            if (globalState.removalMode) {
+            if (appState.removalMode) {
               return leadingIcon(
                 icon: Icons.clear,
                 onClick: () {
@@ -56,10 +57,13 @@ class ConvertouchPage extends StatelessWidget {
                   // );
                 },
               );
-            } else if (globalState.prevState != null) {
+            } else if (ModalRoute.of(context)?.canPop ?? true) {
               return leadingIcon(
                 icon: Icons.arrow_back_rounded,
-                onClick: () {},
+                color: scaffoldColor.regular,
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               );
             } else {
               return empty();
@@ -84,15 +88,15 @@ class ConvertouchPage extends StatelessWidget {
           Visibility(
             visible: secondaryAppBar != null,
             child: Container(
-              height: 53,
+              height: secondaryAppBarHeight,
               decoration: BoxDecoration(
-                color: secondaryAppBarColor ?? scaffoldColor.regular.appBarColor,
+                color:
+                    secondaryAppBarColor ?? scaffoldColor.regular.appBarColor,
               ),
-              padding: EdgeInsetsDirectional.fromSTEB(
-                appBarPadding,
-                0,
-                appBarPadding,
-                appBarPadding,
+              padding: EdgeInsetsDirectional.only(
+                start: secondaryAppBarPadding,
+                end: secondaryAppBarPadding,
+                bottom: secondaryAppBarPadding,
               ),
               child: secondaryAppBar,
             ),
@@ -102,10 +106,10 @@ class ConvertouchPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: globalState.removalMode
+      floatingActionButton: appState.removalMode
           ? ConvertouchFloatingActionButton.removal(
               extraLabelText:
-                  globalState.selectedItemIdsForRemoval.length.toString(),
+                  appState.selectedItemIdsForRemoval.length.toString(),
               background: removalButtonColor.background,
               foreground: removalButtonColor.foreground,
               border: scaffoldColor.regular.backgroundColor,
@@ -138,33 +142,13 @@ void showAlertDialog(BuildContext context, String message) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              NavigationService.I.navigateBack();
+              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),
         ],
       );
     },
-  );
-}
-
-Widget checkIcon(
-  BuildContext context, {
-  bool isVisible = true,
-  bool isEnabled = false,
-  void Function()? onPressedFunc,
-  required ConvertouchScaffoldColor color,
-}) {
-  return Visibility(
-    visible: isVisible,
-    child: IconButton(
-      icon: Icon(
-        Icons.check,
-        color: isEnabled ? color.regular.appBarIconColor : null,
-      ),
-      disabledColor: color.regular.appBarIconColorDisabled,
-      onPressed: isEnabled ? onPressedFunc : null,
-    ),
   );
 }
 

@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/units_conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/units_page.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
@@ -19,6 +20,7 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
     return {
       homePageId: (context) => const ConvertouchUnitsConversionPage(),
       unitGroupsPageId: (context) => const ConvertouchUnitGroupsPage(),
+      unitsPageId: (context) => const ConvertouchUnitsPage(),
     };
   }
 

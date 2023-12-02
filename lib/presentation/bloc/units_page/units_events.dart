@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,22 +9,61 @@ abstract class UnitsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchUnitsOfGroup extends UnitsEvent {
-  final int unitGroupId;
+class FetchUnits extends UnitsEvent {
+  final UnitGroupModel unitGroup;
 
-  const FetchUnitsOfGroup({
-    required this.unitGroupId,
+  const FetchUnits({
+    required this.unitGroup,
   });
 
   @override
   List<Object?> get props => [
-    unitGroupId,
+    unitGroup,
   ];
 
   @override
   String toString() {
-    return 'FetchUnitsOfGroup{'
-        'unitGroupId: $unitGroupId}';
+    return 'FetchUnits{'
+        'unitGroup: $unitGroup}';
+  }
+}
+
+class FetchUnitsForConversion extends FetchUnits {
+  final List<int>? unitIdsAlreadyMarkedForConversion;
+  final int? unitIdNewlyMarkedForConversion;
+
+  const FetchUnitsForConversion({
+    required super.unitGroup,
+    this.unitIdsAlreadyMarkedForConversion,
+    this.unitIdNewlyMarkedForConversion,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitIdNewlyMarkedForConversion,
+    unitIdsAlreadyMarkedForConversion,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitsForConversion{'
+        'unitGroup: $unitGroup, '
+        'unitIdNewlyMarkedForConversion: $unitIdNewlyMarkedForConversion, '
+        'unitIdsAlreadyMarkedForConversion: $unitIdsAlreadyMarkedForConversion'
+        '}';
+  }
+}
+
+class FetchUnitsForEquivalentUnitSelection extends FetchUnits {
+  const FetchUnitsForEquivalentUnitSelection({
+    required super.unitGroup,
+  });
+
+  @override
+  String toString() {
+    return 'FetchUnitsForEquivalentUnitSelection{'
+        'unitGroup: $unitGroup}';
   }
 }
 
