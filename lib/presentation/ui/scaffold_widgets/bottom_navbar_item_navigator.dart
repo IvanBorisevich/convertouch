@@ -1,7 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/pages/unit_groups_page.dart';
+import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart';
 import 'package:convertouch/presentation/ui/pages/units_conversion_page.dart';
-import 'package:convertouch/presentation/ui/pages/units_page.dart';
+import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
@@ -18,9 +20,14 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     return {
-      homePageId: (context) => const ConvertouchUnitsConversionPage(),
-      unitGroupsPageId: (context) => const ConvertouchUnitGroupsPage(),
-      unitsPageId: (context) => const ConvertouchUnitsPage(),
+      unitsConversionPage: (context) => const ConvertouchUnitsConversionPage(),
+      unitGroupsPageRegular: (context) =>
+          const ConvertouchUnitGroupsPageRegular(),
+      unitGroupsPageForConversion: (context) =>
+          const ConvertouchUnitGroupsPageForConversion(),
+      unitsPageRegular: (context) => const ConvertouchUnitsPageRegular(),
+      unitsPageForConversion: (context) =>
+          const ConvertouchUnitsPageForConversion(),
     };
   }
 

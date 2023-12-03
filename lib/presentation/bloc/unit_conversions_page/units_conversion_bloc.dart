@@ -12,10 +12,14 @@ class UnitsConversionBloc
 
   UnitsConversionBloc({
     required this.convertUnitValueUseCase,
-  }) : super(const ConversionBuilt());
+  }) : super(const ConversionBuilt(
+    unitGroup: null,
+    sourceConversionItem: null,
+  ));
 
   @override
-  Stream<UnitsConversionState> mapEventToState(UnitsConversionEvent event) async* {
+  Stream<UnitsConversionState> mapEventToState(
+      UnitsConversionEvent event) async* {
     if (event is BuildConversion) {
       yield const ConversionInBuilding();
 
@@ -24,7 +28,6 @@ class UnitsConversionBloc
       UnitValueModel? sourceConversionItem = event.sourceConversionItem;
 
       if (event.units != null && event.unitGroup != null) {
-
         sourceConversionItem ??= UnitValueModel(
           unit: event.units![0],
           value: 1,
@@ -62,8 +65,7 @@ class UnitsConversionBloc
       yield const ConversionInBuilding();
 
       List<UnitValueModel> conversionItems = event.conversionItems;
-      conversionItems
-          .removeWhere((item) => event.itemUnitId == item.unit.id);
+      conversionItems.removeWhere((item) => event.itemUnitId == item.unit.id);
 
       yield ConversionBuilt(
         sourceConversionItem: conversionItems[0],

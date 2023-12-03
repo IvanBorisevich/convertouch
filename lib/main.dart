@@ -7,6 +7,7 @@ import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/scaffold.dart';
@@ -30,8 +31,12 @@ class ConvertouchApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => di.locator<ConvertouchAppBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsConversionBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsBlocForConversion>()),
+        BlocProvider(
+          create: (context) =>
+              di.locator<UnitGroupsBloc>()..add(const FetchUnitGroups()),
+        ),
+        BlocProvider(
+            create: (context) => di.locator<UnitGroupsBlocForConversion>()),
         BlocProvider(create: (context) => di.locator<UnitsBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsBlocForConversion>()),
         // BlocProvider(create: (context) => di.locator<UnitCreationBloc>()),

@@ -24,9 +24,6 @@ class UnitGroupModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'UnitGroupModel{'
-        'id: $id, '
-        'name: $name, '
-        'iconName: $iconName}';
+    return 'UnitGroupModel{$name}';
   }
 }

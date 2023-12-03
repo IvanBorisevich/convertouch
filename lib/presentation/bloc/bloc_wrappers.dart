@@ -8,7 +8,7 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_state
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,11 +47,18 @@ Widget unitsBloc(
 }
 
 Widget unitsBlocForConversion(
-    Widget Function(UnitsState pageStateForConversion) builderFunc,
-    ) {
+  Widget Function(UnitsFetchedToMarkForConversion pageState) builderFunc,
+) {
   return BlocBuilder<UnitsBlocForConversion, UnitsState>(
-    builder: (_, unitsState) {
-      return builderFunc.call(unitsState);
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitsFetchedToMarkForConversion;
+    },
+    builder: (_, unitsFetched) {
+      if (unitsFetched is UnitsFetchedToMarkForConversion) {
+        return builderFunc.call(unitsFetched);
+      } else {
+        return empty();
+      }
     },
   );
 }
@@ -74,11 +81,18 @@ Widget unitGroupsBloc(
 }
 
 Widget unitGroupsBlocForConversion(
-    Widget Function(UnitGroupsState pageStateForConversion) builderFunc,
-    ) {
+  Widget Function(UnitGroupsFetchedForConversion pageState) builderFunc,
+) {
   return BlocBuilder<UnitGroupsBlocForConversion, UnitGroupsState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitGroupsFetchedForConversion;
+    },
     builder: (_, unitGroupsState) {
-      return builderFunc.call(unitGroupsState);
+      if (unitGroupsState is UnitGroupsFetchedForConversion) {
+        return builderFunc.call(unitGroupsState);
+      } else {
+        return empty();
+      }
     },
   );
 }

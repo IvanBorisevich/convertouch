@@ -53,7 +53,9 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton(
-    () => UnitGroupsBlocForConversion(),
+    () => UnitGroupsBlocForConversion(
+      fetchUnitGroupsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
@@ -86,7 +88,9 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton(
-    () => UnitsBlocForConversion(),
+    () => UnitsBlocForConversion(
+      fetchUnitsOfGroupUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchUnitsOfGroupUseCase>(

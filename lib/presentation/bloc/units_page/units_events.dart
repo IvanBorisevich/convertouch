@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitsEvent extends Equatable {
@@ -28,42 +29,47 @@ class FetchUnits extends UnitsEvent {
   }
 }
 
-class FetchUnitsForConversion extends UnitsEvent {
+class FetchUnitsToMarkForConversion extends FetchUnits {
   final List<UnitModel>? unitsAlreadyMarkedForConversion;
   final UnitModel? unitNewlyMarkedForConversion;
+  final UnitValueModel? currentSourceConversionItem;
 
-  const FetchUnitsForConversion({
+  const FetchUnitsToMarkForConversion({
+    required super.unitGroup,
     this.unitsAlreadyMarkedForConversion,
     this.unitNewlyMarkedForConversion,
+    this.currentSourceConversionItem,
   });
 
   @override
   List<Object?> get props => [
     unitNewlyMarkedForConversion,
     unitsAlreadyMarkedForConversion,
+    currentSourceConversionItem,
     super.props,
   ];
 
   @override
   String toString() {
-    return 'FetchUnitsForConversion{'
+    return 'FetchUnitsToMarkForConversion{'
         'unitNewlyMarkedForConversion: $unitNewlyMarkedForConversion, '
-        'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion'
+        'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion, '
+        'currentSourceConversionItem: $currentSourceConversionItem'
         '}';
   }
 }
 
-class FetchUnitsForEquivalentUnitSelection extends UnitsEvent {
-  final UnitModel? selectedEquivalentUnit;
+class OpenUnitsToSelectEquivalentUnit extends UnitsEvent {
+  final UnitModel? currentSelectedEquivalentUnit;
 
-  const FetchUnitsForEquivalentUnitSelection({
-    required this.selectedEquivalentUnit,
+  const OpenUnitsToSelectEquivalentUnit({
+    required this.currentSelectedEquivalentUnit,
   });
 
   @override
   String toString() {
-    return 'FetchUnitsForEquivalentUnitSelection{'
-        'selectedEquivalentUnit: $selectedEquivalentUnit}';
+    return 'OpenUnitsToSelectEquivalentUnit{'
+        'currentSelectedEquivalentUnit: $currentSelectedEquivalentUnit}';
   }
 }
 

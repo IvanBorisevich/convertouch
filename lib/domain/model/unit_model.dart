@@ -30,11 +30,6 @@ class UnitModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'UnitModel{'
-        'id: $id, '
-        'name: $name, '
-        'coefficient: $coefficient, '
-        'abbreviation: $abbreviation, '
-        'unitGroupId: $unitGroupId}';
+    return 'UnitModel{$name, c=$coefficient}';
   }
 }

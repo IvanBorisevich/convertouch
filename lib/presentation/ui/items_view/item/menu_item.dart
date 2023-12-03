@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/checkbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';

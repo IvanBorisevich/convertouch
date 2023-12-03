@@ -34,7 +34,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         ConvertouchAppEvent(activeNavbarItem: _selectedNavbarItem),
       );
     }
-
   }
 
   @override
@@ -57,9 +56,10 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         child: Scaffold(
           body: Stack(
             children: [
-              _buildOffstageNavigator(BottomNavbarItem.home, homePageId),
               _buildOffstageNavigator(
-                  BottomNavbarItem.unitsMenu, unitGroupsPageId),
+                  BottomNavbarItem.home, unitsConversionPage),
+              _buildOffstageNavigator(
+                  BottomNavbarItem.unitsMenu, unitGroupsPageRegular),
               // _buildOffstageNavigator(BottomNavbarItem.more),
             ],
           ),

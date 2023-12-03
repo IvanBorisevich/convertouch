@@ -17,26 +17,31 @@ class FetchUnitGroups extends UnitGroupsEvent {
   }
 }
 
-class FetchUnitGroupsToFetchUnitsForConversion extends FetchUnitGroups {
-  const FetchUnitGroupsToFetchUnitsForConversion();
+class FetchUnitGroupsForFirstAddingToConversion extends FetchUnitGroups {
+  const FetchUnitGroupsForFirstAddingToConversion();
 
   @override
   String toString() {
-    return 'FetchUnitGroupsToFetchUnitsForConversion{}';
+    return 'FetchUnitGroupsForFirstAddingToConversion{}';
   }
 }
 
-class FetchUnitGroupsToChangeOneInConversion extends FetchUnitGroups {
-  final UnitGroupModel unitGroupInConversion;
+class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
+  final UnitGroupModel currentUnitGroupInConversion;
 
-  const FetchUnitGroupsToChangeOneInConversion({
-    required this.unitGroupInConversion,
+  const FetchUnitGroupsForChangeInConversion({
+    required this.currentUnitGroupInConversion,
   });
 
   @override
+  List<Object?> get props => [
+    currentUnitGroupInConversion,
+  ];
+
+  @override
   String toString() {
-    return 'FetchUnitGroupsToChangeOneInConversion{'
-        'unitGroupInConversion: $unitGroupInConversion}';
+    return 'FetchUnitGroupsForChangeInConversion{'
+        'currentUnitGroupInConversion: $currentUnitGroupInConversion}';
   }
 }
 

@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
@@ -15,7 +14,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     required this.getUnitGroupUseCase,
     required this.fetchUnitsOfGroupUseCase,
     required this.removeUnitsUseCase,
-  }) : super(const UnitsFetched());
+  }) : super(const UnitsFetched(unitGroup: null));
 
   @override
   Stream<UnitsState> mapEventToState(UnitsEvent event) async* {

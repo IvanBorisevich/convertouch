@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitsState extends Equatable {
@@ -24,7 +25,7 @@ class UnitsFetched extends UnitsState {
 
   const UnitsFetched({
     this.units = const [],
-    this.unitGroup,
+    required this.unitGroup,
   });
 
   @override
@@ -42,15 +43,19 @@ class UnitsFetched extends UnitsState {
 }
 
 
-class UnitsFetchedForConversion extends UnitsState {
+class UnitsFetchedToMarkForConversion extends UnitsFetched {
   final List<UnitModel> unitsMarkedForConversion;
   final List<int> unitIdsMarkedForConversion;
   final bool allowUnitsToBeAddedToConversion;
+  final UnitValueModel? currentSourceConversionItem;
 
-  const UnitsFetchedForConversion({
+  const UnitsFetchedToMarkForConversion({
+    required super.units,
+    required super.unitGroup,
     required this.unitsMarkedForConversion,
     required this.unitIdsMarkedForConversion,
     required this.allowUnitsToBeAddedToConversion,
+    this.currentSourceConversionItem,
   });
 
   @override
@@ -58,33 +63,37 @@ class UnitsFetchedForConversion extends UnitsState {
     unitsMarkedForConversion,
     unitIdsMarkedForConversion,
     allowUnitsToBeAddedToConversion,
+    currentSourceConversionItem,
+    super.props,
   ];
 
   @override
   String toString() {
-    return 'UnitsFetchedForConversion{'
+    return 'UnitsFetchedToMarkForConversion{'
         'unitsMarkedForConversion: $unitsMarkedForConversion, '
-        'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion}';
+        'unitIdsMarkedForConversion: $unitIdsMarkedForConversion, '
+        'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion, '
+        'currentSourceConversionItem: $currentSourceConversionItem}';
   }
 }
 
 
-class UnitsFetchedForEquivalentUnitSelection extends UnitsState {
-  final UnitModel? selectedEquivalentUnit;
+class UnitsOpenedToSelectEquivalentUnit extends UnitsState {
+  final UnitModel? currentSelectedEquivalentUnit;
 
-  const UnitsFetchedForEquivalentUnitSelection({
-    this.selectedEquivalentUnit,
+  const UnitsOpenedToSelectEquivalentUnit({
+    this.currentSelectedEquivalentUnit,
   });
 
   @override
   List<Object?> get props => [
-    selectedEquivalentUnit,
+    currentSelectedEquivalentUnit,
   ];
 
   @override
   String toString() {
-    return 'UnitsFetchedForEquivalentUnitSelection{'
-        'selectedEquivalentUnit: $selectedEquivalentUnit}';
+    return 'UnitsOpenedToSelectEquivalentUnit{'
+        'currentSelectedEquivalentUnit: $currentSelectedEquivalentUnit}';
   }
 }
 

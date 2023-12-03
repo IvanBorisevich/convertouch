@@ -1,18 +1,19 @@
 import 'package:convertouch/domain/constants/default_units.dart';
 
 const String appName = "Convertouch";
-
 const String iconAssetsPathPrefix = "assets/icons";
-
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
 
-const String homePageId = '/';
-const String unitsConversionPageId = "unitsConversionPage";
-const String unitGroupsPageId = "unitGroupsPage";
-const String unitsPageId = "unitsPage";
-const String unitCreationPageId = "unitCreationPage";
-const String unitGroupCreationPageId = "unitGroupCreationPage";
+const String unitsConversionPage = "unitsConversionPage";
+const String unitGroupsPageRegular = "unitGroupsPageRegular";
+const String unitGroupsPageForConversion = "unitGroupsPageForConversion";
+const String unitGroupsPageForUnitCreation = "unitGroupsPageForUnitCreation";
+const String unitsPageRegular = "unitsPageRegular";
+const String unitsPageForConversion = "unitsPageForConversion";
+const String unitsPageForUnitCreation = "unitsPageForUnitCreation";
+const String unitGroupCreationPage = "unitGroupCreationPage";
+const String unitCreationPage = "unitCreationPage";
 
 enum ItemType {
   unit,

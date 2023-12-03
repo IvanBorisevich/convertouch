@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -62,6 +62,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                 onPressed: onClick,
                 backgroundColor: background,
                 foregroundColor: foreground,
+                disabledElevation: 0,
                 elevation: 0,
                 child: Icon(
                   icon,

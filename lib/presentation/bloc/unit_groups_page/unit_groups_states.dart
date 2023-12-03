@@ -36,33 +36,50 @@ class UnitGroupsFetched extends UnitGroupsState {
   }
 }
 
-class UnitGroupsFetchedToFetchUnitsForConversion extends UnitGroupsState {
-  const UnitGroupsFetchedToFetchUnitsForConversion();
-
-  @override
-  String toString() {
-    return 'UnitGroupsFetchedToFetchUnitsForConversion{}';
-  }
+abstract class UnitGroupsFetchedForConversion extends UnitGroupsFetched {
+  const UnitGroupsFetchedForConversion({
+    required super.unitGroups,
+  });
 }
 
-class UnitGroupsFetchedToChangeOneInConversion extends UnitGroupsState {
-  final UnitGroupModel unitGroupInConversion;
-
-  const UnitGroupsFetchedToChangeOneInConversion({
-    required this.unitGroupInConversion,
+class UnitGroupsFetchedForFirstAddingToConversion extends UnitGroupsFetchedForConversion {
+  const UnitGroupsFetchedForFirstAddingToConversion({
+    required super.unitGroups,
   });
 
   @override
   String toString() {
-    return 'UnitGroupsFetchedToChangeOneInConversion{'
-        'unitGroupInConversion: $unitGroupInConversion}';
+    return 'UnitGroupsFetchedForFirstAddingToConversion{'
+        'unitGroups: $unitGroups}';
   }
 }
 
-class UnitGroupsFetchedForUnitCreation extends UnitGroupsState {
+class UnitGroupsFetchedForChangeInConversion extends UnitGroupsFetchedForConversion {
+  final UnitGroupModel currentUnitGroupInConversion;
+
+  const UnitGroupsFetchedForChangeInConversion({
+    required super.unitGroups,
+    required this.currentUnitGroupInConversion,
+  });
+
+  @override
+  List<Object?> get props => [
+    currentUnitGroupInConversion,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'UnitGroupsFetchedForChangeInConversion{'
+        'currentUnitGroupInConversion: $currentUnitGroupInConversion}';
+  }
+}
+
+class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
   final UnitGroupModel? unitGroupInUnitCreation;
 
   const UnitGroupsFetchedForUnitCreation({
+    required super.unitGroups,
     this.unitGroupInUnitCreation,
   });
 
@@ -79,7 +96,6 @@ class UnitGroupsFetchedForUnitCreation extends UnitGroupsState {
   }
 }
 
-
 class UnitGroupsErrorState extends UnitGroupsState {
   final String message;
 
@@ -88,7 +104,9 @@ class UnitGroupsErrorState extends UnitGroupsState {
   });
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [
+    message,
+  ];
 
   @override
   String toString() {

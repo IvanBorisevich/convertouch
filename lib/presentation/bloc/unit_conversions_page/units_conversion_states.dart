@@ -24,8 +24,8 @@ class ConversionBuilt extends UnitsConversionState {
   final List<UnitValueModel> conversionItems;
 
   const ConversionBuilt({
-    this.unitGroup,
-    this.sourceConversionItem,
+    required this.unitGroup,
+    required this.sourceConversionItem,
     this.conversionItems = const [],
   });
 

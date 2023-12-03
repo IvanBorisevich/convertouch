@@ -22,6 +22,6 @@ class UnitValueModel extends ItemModel {
 
   @override
   String toString() {
-    return 'UnitValueModel{unit: $unit, value: $value}';
+    return 'UnitValueModel{$value ${unit.name}}';
   }
 }

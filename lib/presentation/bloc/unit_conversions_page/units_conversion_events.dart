@@ -16,9 +16,9 @@ class BuildConversion extends UnitsConversionEvent {
   final List<UnitModel>? units;
 
   const BuildConversion({
-    this.unitGroup,
-    this.sourceConversionItem,
-    this.units,
+    required this.unitGroup,
+    required this.sourceConversionItem,
+    required this.units,
   });
 
   @override
