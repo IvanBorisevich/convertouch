@@ -53,17 +53,6 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
           body: ConvertouchConversionItemsView(
             pageState.conversionItems,
             onItemTap: (item) {
-              // BlocProvider.of<UnitsBloc>(context).add(
-              //   FetchUnits(
-              //     unitGroupId: conversionInitialized.unitGroup!.id!,
-              //     markedUnits: conversionInitialized.conversionItems
-              //         .map((item) => item.unit)
-              //         .toList(),
-              //     inputValue: item.value,
-              //     selectedUnit: item.unit,
-              //     action: ConvertouchAction.fetchUnitsToSelectForConversion,
-              //   ),
-              // );
             },
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
@@ -80,13 +69,13 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
               );
             },
             onItemRemove: (item) {
-              // BlocProvider.of<UnitsConversionBloc>(context).add(
-              //   RemoveConversionItem(
-              //     itemUnitId: item.unit.id!,
-              //     conversionItems: pageState.conversionItems,
-              //     unitGroupInConversion: pageState.unitGroupInConversion,
-              //   ),
-              // );
+              BlocProvider.of<UnitsConversionBloc>(context).add(
+                RemoveConversionItem(
+                  itemUnitId: item.unit.id!,
+                  conversionItems: pageState.conversionItems,
+                  unitGroupInConversion: pageState.unitGroup,
+                ),
+              );
             },
             theme: appState.theme,
           ),

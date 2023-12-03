@@ -68,7 +68,7 @@ class UnitsConversionBloc
       conversionItems.removeWhere((item) => event.itemUnitId == item.unit.id);
 
       yield ConversionBuilt(
-        sourceConversionItem: conversionItems[0],
+        sourceConversionItem: conversionItems.firstOrNull,
         conversionItems: conversionItems,
         unitGroup: event.unitGroupInConversion,
       );
