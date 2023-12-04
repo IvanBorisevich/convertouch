@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/ui/pages/unit_group_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_conversion.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart';
 import 'package:convertouch/presentation/ui/pages/units_conversion_page.dart';
@@ -28,6 +29,8 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
       unitsPageRegular: (context) => const ConvertouchUnitsPageRegular(),
       unitsPageForConversion: (context) =>
           const ConvertouchUnitsPageForConversion(),
+      unitGroupCreationPage: (context) =>
+          const ConvertouchUnitGroupCreationPage(),
     };
   }
 

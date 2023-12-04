@@ -7,6 +7,8 @@ abstract class UnitGroupDao {
 
   Future<UnitGroupEntity?> get(int id);
 
+  Future<UnitGroupEntity?> getByName(String name);
+
   Future<int> insert(UnitGroupEntity unitGroupEntity);
 
   Future<int> update(UnitGroupEntity unitGroupEntity);

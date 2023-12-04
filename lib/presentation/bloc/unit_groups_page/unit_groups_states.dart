@@ -96,6 +96,25 @@ class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
   }
 }
 
+class UnitGroupExists extends UnitGroupsState {
+  final String unitGroupName;
+
+  const UnitGroupExists({
+    required this.unitGroupName,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitGroupName,
+  ];
+
+  @override
+  String toString() {
+    return 'UnitGroupExists{'
+        'unitGroupName: $unitGroupName}';
+  }
+}
+
 class UnitGroupsErrorState extends UnitGroupsState {
   final String message;
 

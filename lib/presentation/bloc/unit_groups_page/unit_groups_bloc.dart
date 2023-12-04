@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/remove_unit_groups_use_case.dart';
@@ -46,6 +47,37 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
             unitGroups: unitGroups,
           ),
         );
+      }
+    } else if (event is AddUnitGroup) {
+      yield const UnitGroupsFetching();
+
+      final addUnitGroupResult = await addUnitGroupUseCase.execute(
+        UnitGroupModel(
+          name: event.unitGroupName,
+        ),
+      );
+
+      if (addUnitGroupResult.isLeft) {
+        yield UnitGroupsErrorState(
+          message: addUnitGroupResult.left.message,
+        );
+      } else {
+        int addedUnitGroupId = addUnitGroupResult.right;
+        if (addedUnitGroupId > -1) {
+          final fetchUnitGroupsResult = await fetchUnitGroupsUseCase.execute();
+          yield fetchUnitGroupsResult.fold(
+            (error) => UnitGroupsErrorState(
+              message: error.message,
+            ),
+            (unitGroups) => UnitGroupsFetched(
+              unitGroups: unitGroups,
+            ),
+          );
+        } else {
+          yield UnitGroupExists(
+            unitGroupName: event.unitGroupName,
+          );
+        }
       }
     }
   }

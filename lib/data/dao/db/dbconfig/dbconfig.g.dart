@@ -166,6 +166,17 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   }
 
   @override
+  Future<UnitGroupEntity?> getByName(String name) async {
+    return _queryAdapter.query(
+        'select * from unit_groups where name = ?1 limit 1',
+        mapper: (Map<String, Object?> row) => UnitGroupEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            iconName: row['icon_name'] as String?),
+        arguments: [name]);
+  }
+
+  @override
   Future<void> remove(List<int> ids) async {
     const offset = 1;
     final _sqliteVariablesForIds =

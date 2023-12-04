@@ -34,7 +34,9 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           selectedUnitGroupId: null,
           removalModeAllowed: true,
           floatingButton: ConvertouchFloatingActionButton.adding(
-            onClick: () {},
+            onClick: () {
+              Navigator.of(context).pushNamed(unitGroupCreationPage);
+            },
             visible: true,
             background: floatingButtonColor.background,
             foreground: floatingButtonColor.foreground,

@@ -13,6 +13,10 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
   Future<UnitGroupEntity?> get(int id);
 
   @override
+  @Query('select * from $unitGroupsTableName where name = :name limit 1')
+  Future<UnitGroupEntity?> getByName(String name);
+
+  @override
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<int> insert(UnitGroupEntity unitGroupEntity);
 

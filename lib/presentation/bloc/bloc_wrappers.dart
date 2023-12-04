@@ -153,23 +153,23 @@ Widget unitGroupsBlocForConversion(
 //   );
 // }
 //
-// Widget unitGroupCreationBloc(
-//   Widget Function(UnitGroupCreationPrepared unitGroupCreationPrepared)
-//       builderFunc,
-// ) {
-//   return BlocBuilder<UnitGroupCreationBloc, UnitGroupCreationState>(
-//     buildWhen: (prev, next) {
-//       return prev != next && next is UnitGroupCreationPrepared;
-//     },
-//     builder: (_, unitGroupCreationState) {
-//       if (unitGroupCreationState is UnitGroupCreationPrepared) {
-//         return builderFunc.call(unitGroupCreationState);
-//       } else {
-//         return empty();
-//       }
-//     },
-//   );
-// }
+
+Widget unitGroupCreationListener(
+  BuildContext context, {
+  required Widget child,
+}) {
+  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
+    listener: (_, unitGroupsMenuState) {
+      if (unitGroupsMenuState is UnitGroupExists) {
+        showAlertDialog(context,
+            "Unit group '${unitGroupsMenuState.unitGroupName}' already exist");
+      } else if (unitGroupsMenuState is UnitGroupsFetched) {
+        Navigator.of(context).pop();
+      }
+    },
+    child: child,
+  );
+}
 
 Widget unitsConversionBloc(
   Widget Function(ConversionBuilt conversionInitialized) builderFunc,

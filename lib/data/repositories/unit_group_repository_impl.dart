@@ -27,9 +27,14 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   @override
   Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup) async {
     try {
-      final result = await unitGroupDao
-          .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
-      return Right(result);
+      final existingGroup = await unitGroupDao.getByName(unitGroup.name);
+      if (existingGroup == null) {
+        final result = await unitGroupDao
+            .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
+        return Right(result);
+      } else {
+        return const Right(-1);
+      }
     } catch (e) {
       return Left(
         DatabaseFailure("Error when adding a unit group: $e"),

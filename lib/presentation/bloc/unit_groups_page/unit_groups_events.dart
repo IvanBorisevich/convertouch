@@ -83,3 +83,22 @@ class RemoveUnitGroups extends UnitGroupsEvent {
         'ids: $ids}';
   }
 }
+
+class AddUnitGroup extends UnitGroupsEvent {
+  final String unitGroupName;
+
+  const AddUnitGroup({
+    required this.unitGroupName,
+  });
+
+  @override
+  List<Object> get props => [
+    unitGroupName,
+  ];
+
+  @override
+  String toString() {
+    return 'AddUnitGroup{'
+        'unitGroupName: $unitGroupName}';
+  }
+}
