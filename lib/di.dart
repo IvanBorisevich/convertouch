@@ -6,6 +6,7 @@ import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
@@ -16,6 +17,7 @@ import 'package:convertouch/domain/usecases/units/get_base_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
@@ -40,6 +42,22 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => ConvertouchAppBloc(),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitGroupsViewModeBloc(
+      changeItemsMenuViewUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitsViewModeBloc(
+      changeItemsMenuViewUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ChangeItemsMenuViewUseCase>(
+    () => ChangeItemsMenuViewUseCase(),
   );
 
   // unit groups

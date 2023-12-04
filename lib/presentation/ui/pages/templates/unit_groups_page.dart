@@ -1,11 +1,13 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_event.dart';
 import 'package:convertouch/presentation/ui/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitGroupsPage extends StatelessWidget {
   final String pageTitle;
@@ -32,26 +34,36 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBloc((appState) {
-      return ConvertouchPage(
-        appState: appState,
-        title: pageTitle,
-        appBarRightWidgets: appBarRightWidgets,
-        secondaryAppBar: ConvertouchSearchBar(
-          placeholder: "Search unit groups...",
-          theme: appState.theme,
-          iconViewMode: ItemsViewMode.list,
-          pageViewMode: ItemsViewMode.grid,
-        ),
-        body: ConvertouchMenuItemsView(
-          unitGroups,
-          selectedItemId: selectedUnitGroupId,
-          showSelectedItem: selectedUnitGroupVisible,
-          removalModeAllowed: removalModeAllowed,
-          onItemTap: onUnitGroupTap,
-          theme: appState.theme,
-        ),
-        floatingActionButton: floatingButton,
-      );
+      return unitGroupsViewModeBloc((viewModeState) {
+        return ConvertouchPage(
+          appState: appState,
+          title: pageTitle,
+          appBarRightWidgets: appBarRightWidgets,
+          secondaryAppBar: ConvertouchSearchBar(
+            placeholder: "Search unit groups...",
+            theme: appState.theme,
+            iconViewMode: viewModeState.iconViewMode,
+            pageViewMode: viewModeState.pageViewMode,
+            onViewModeChange: () {
+              BlocProvider.of<UnitGroupsViewModeBloc>(context).add(
+                ChangeMenuItemsView(
+                  targetViewMode: viewModeState.iconViewMode,
+                ),
+              );
+            },
+          ),
+          body: ConvertouchMenuItemsView(
+            unitGroups,
+            selectedItemId: selectedUnitGroupId,
+            showSelectedItem: selectedUnitGroupVisible,
+            removalModeAllowed: removalModeAllowed,
+            onItemTap: onUnitGroupTap,
+            viewMode: viewModeState.pageViewMode,
+            theme: appState.theme,
+          ),
+          floatingActionButton: floatingButton,
+        );
+      });
     });
   }
 }

@@ -1,5 +1,7 @@
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_states.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -22,6 +24,42 @@ Widget appBloc(
     builder: (_, appState) {
       if (appState is ConvertouchAppStateBuilt) {
         return builderFunc.call(appState);
+      } else {
+        return empty();
+      }
+    },
+  );
+}
+
+// TODO: refactor view mode blocs in order to avoid duplicates
+
+Widget unitsViewModeBloc(
+  Widget Function(MenuItemsViewStateSet viewModeState) builderFunc,
+) {
+  return BlocBuilder<UnitsViewModeBloc, MenuItemsViewState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is MenuItemsViewStateSet;
+    },
+    builder: (_, viewModeState) {
+      if (viewModeState is MenuItemsViewStateSet) {
+        return builderFunc.call(viewModeState);
+      } else {
+        return empty();
+      }
+    },
+  );
+}
+
+Widget unitGroupsViewModeBloc(
+  Widget Function(MenuItemsViewStateSet viewModeState) builderFunc,
+) {
+  return BlocBuilder<UnitGroupsViewModeBloc, MenuItemsViewState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is MenuItemsViewStateSet;
+    },
+    builder: (_, viewModeState) {
+      if (viewModeState is MenuItemsViewStateSet) {
+        return builderFunc.call(viewModeState);
       } else {
         return empty();
       }

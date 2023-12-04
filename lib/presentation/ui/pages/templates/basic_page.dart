@@ -37,84 +37,87 @@ class ConvertouchPage extends StatelessWidget {
     FloatingButtonColorVariation removalButtonColor =
         removalFloatingButtonColors[appState.theme]!;
 
-    return Scaffold(
-      backgroundColor: scaffoldColor.regular.backgroundColor,
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) {
-            if (appState.removalMode) {
-              return leadingIcon(
-                icon: Icons.clear,
-                onClick: () {
-                  // BlocProvider.of<AppBloc>(context).add(
-                  //   DisableRemovalMode(
-                  //     currentPageId: appState.pageId,
-                  //     pageTitle: appState.pageTitle,
-                  //     floatingButtonVisible:
-                  //     appState.floatingButtonVisible,
-                  //     uiTheme: appState.theme,
-                  //   ),
-                  // );
-                },
-              );
-            } else if (ModalRoute.of(context)?.canPop ?? true) {
-              return leadingIcon(
-                icon: Icons.arrow_back_rounded,
-                color: scaffoldColor.regular,
-                onClick: () {
-                  Navigator.of(context).pop();
-                },
-              );
-            } else {
-              return empty();
-            }
-          },
-        ),
-        centerTitle: true,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: scaffoldColor.regular.appBarFontColor,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: scaffoldColor.regular.backgroundColor,
+        appBar: AppBar(
+          leading: Builder(
+            builder: (context) {
+              if (appState.removalMode) {
+                return leadingIcon(
+                  icon: Icons.clear,
+                  onClick: () {
+                    // BlocProvider.of<AppBloc>(context).add(
+                    //   DisableRemovalMode(
+                    //     currentPageId: appState.pageId,
+                    //     pageTitle: appState.pageTitle,
+                    //     floatingButtonVisible:
+                    //     appState.floatingButtonVisible,
+                    //     uiTheme: appState.theme,
+                    //   ),
+                    // );
+                  },
+                );
+              } else if (ModalRoute.of(context)?.canPop ?? true) {
+                return leadingIcon(
+                  icon: Icons.arrow_back_rounded,
+                  color: scaffoldColor.regular,
+                  onClick: () {
+                    Navigator.of(context).pop();
+                  },
+                );
+              } else {
+                return empty();
+              }
+            },
           ),
-        ),
-        backgroundColor: scaffoldColor.regular.appBarColor,
-        elevation: 0,
-        actions: appBarRightWidgets,
-      ),
-      body: Column(
-        children: [
-          Visibility(
-            visible: secondaryAppBar != null,
-            child: Container(
-              height: secondaryAppBarHeight,
-              decoration: BoxDecoration(
-                color:
-                    secondaryAppBarColor ?? scaffoldColor.regular.appBarColor,
-              ),
-              padding: EdgeInsetsDirectional.only(
-                start: secondaryAppBarPadding,
-                end: secondaryAppBarPadding,
-                bottom: secondaryAppBarPadding,
-              ),
-              child: secondaryAppBar,
+          centerTitle: true,
+          title: Text(
+            title,
+            style: TextStyle(
+              color: scaffoldColor.regular.appBarFontColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          Expanded(
-            child: body,
-          ),
-        ],
+          backgroundColor: scaffoldColor.regular.appBarColor,
+          elevation: 0,
+          actions: appBarRightWidgets,
+        ),
+        body: Column(
+          children: [
+            Visibility(
+              visible: secondaryAppBar != null,
+              child: Container(
+                height: secondaryAppBarHeight,
+                decoration: BoxDecoration(
+                  color:
+                      secondaryAppBarColor ?? scaffoldColor.regular.appBarColor,
+                ),
+                padding: EdgeInsetsDirectional.fromSTEB(
+                  secondaryAppBarPadding,
+                  0,
+                  secondaryAppBarPadding,
+                  secondaryAppBarPadding,
+                ),
+                child: secondaryAppBar,
+              ),
+            ),
+            Expanded(
+              child: body,
+            ),
+          ],
+        ),
+        floatingActionButton: appState.removalMode
+            ? ConvertouchFloatingActionButton.removal(
+                extraLabelText:
+                    appState.selectedItemIdsForRemoval.length.toString(),
+                background: removalButtonColor.background,
+                foreground: removalButtonColor.foreground,
+                border: scaffoldColor.regular.backgroundColor,
+              )
+            : floatingActionButton,
       ),
-      floatingActionButton: appState.removalMode
-          ? ConvertouchFloatingActionButton.removal(
-              extraLabelText:
-                  appState.selectedItemIdsForRemoval.length.toString(),
-              background: removalButtonColor.background,
-              foreground: removalButtonColor.foreground,
-              border: scaffoldColor.regular.backgroundColor,
-            )
-          : floatingActionButton,
     );
   }
 }

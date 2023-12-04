@@ -12,8 +12,8 @@ class ChangeItemsMenuViewUseCase
   ) {
     return Future(() {
       try {
-        ItemsViewMode pageViewMode = _nextMode(input);
-        ItemsViewMode iconViewMode = _nextMode(pageViewMode);
+        ItemsViewMode pageViewMode = input;
+        ItemsViewMode iconViewMode = _nextMode(input);
         return Right(
           ItemsMenuViewModeOutput(
             pageViewMode: pageViewMode,
@@ -29,8 +29,7 @@ class ChangeItemsMenuViewUseCase
   }
 
   ItemsViewMode _nextMode(ItemsViewMode currentMode) {
-    int currentModeIndex = ItemsViewMode.values.indexOf(currentMode);
-    int nextModeIndex = (currentModeIndex + 1) % ItemsViewMode.values.length;
+    int nextModeIndex = (currentMode.index + 1) % ItemsViewMode.values.length;
     return ItemsViewMode.values[nextModeIndex];
   }
 }

@@ -4,6 +4,7 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
@@ -30,6 +31,8 @@ class ConvertouchApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => di.locator<ConvertouchAppBloc>()),
+        BlocProvider(create: (context) => di.locator<UnitGroupsViewModeBloc>()),
+        BlocProvider(create: (context) => di.locator<UnitsViewModeBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsConversionBloc>()),
         BlocProvider(
           create: (context) =>

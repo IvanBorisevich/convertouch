@@ -1,11 +1,13 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_event.dart';
 import 'package:convertouch/presentation/ui/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsPage extends StatelessWidget {
   final String pageTitle;
@@ -38,29 +40,39 @@ class ConvertouchUnitsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBloc((appState) {
-      return ConvertouchPage(
-        appState: appState,
-        title: pageTitle,
-        appBarRightWidgets: appBarRightWidgets,
-        secondaryAppBar: ConvertouchSearchBar(
-          placeholder: "Search units...",
-          theme: appState.theme,
-          iconViewMode: ItemsViewMode.list,
-          pageViewMode: ItemsViewMode.grid,
-        ),
-        body: ConvertouchMenuItemsView(
-          units,
-          markedItemIds: markedUnitIdsForConversion,
-          showMarkedItems: markedUnitsForConversionVisible,
-          selectedItemId: selectedUnitId,
-          showSelectedItem: selectedUnitVisible,
-          markItemsOnTap: markUnitsOnTap,
-          removalModeAllowed: removalModeAllowed,
-          onItemTap: onUnitTap,
-          theme: appState.theme,
-        ),
-        floatingActionButton: floatingButton,
-      );
+      return unitsViewModeBloc((viewModeState) {
+        return ConvertouchPage(
+          appState: appState,
+          title: pageTitle,
+          appBarRightWidgets: appBarRightWidgets,
+          secondaryAppBar: ConvertouchSearchBar(
+            placeholder: "Search units...",
+            theme: appState.theme,
+            iconViewMode: viewModeState.iconViewMode,
+            pageViewMode: viewModeState.pageViewMode,
+            onViewModeChange: () {
+              BlocProvider.of<UnitsViewModeBloc>(context).add(
+                ChangeMenuItemsView(
+                  targetViewMode: viewModeState.iconViewMode,
+                ),
+              );
+            },
+          ),
+          body: ConvertouchMenuItemsView(
+            units,
+            markedItemIds: markedUnitIdsForConversion,
+            showMarkedItems: markedUnitsForConversionVisible,
+            selectedItemId: selectedUnitId,
+            showSelectedItem: selectedUnitVisible,
+            markItemsOnTap: markUnitsOnTap,
+            removalModeAllowed: removalModeAllowed,
+            onItemTap: onUnitTap,
+            viewMode: viewModeState.pageViewMode,
+            theme: appState.theme,
+          ),
+          floatingActionButton: floatingButton,
+        );
+      });
     });
   }
 }

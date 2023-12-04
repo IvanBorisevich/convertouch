@@ -15,6 +15,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final bool removalModeAllowed;
   final bool markItemsOnTap;
   final double itemsSpacing;
+  final ItemsViewMode viewMode;
   final ConvertouchUITheme theme;
 
   const ConvertouchMenuItemsView(
@@ -27,90 +28,93 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.removalModeAllowed = true,
     this.markItemsOnTap = false,
     this.itemsSpacing = 7,
+    required this.viewMode,
     required this.theme,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (items.isNotEmpty) {
-        Widget? itemBuilder(context, index) {
-          IdNameItemModel item = items[index];
-          bool selected = showSelectedItem && items[index].id == selectedItemId;
-          bool isMarkedToSelect = showMarkedItems &&
-              markedItemIds != null &&
-              markedItemIds!.contains(items[index].id);
-          return ConvertouchFadeScaleAnimation(
-            child: ConvertouchMenuItem(
-              item,
-              itemsViewMode: ItemsViewMode.grid,
-              onTap: () {
-                onItemTap?.call(item);
-              },
-              onLongPress: () {
-                // if (removalModeAllowed && !pageState.removalMode) {
-                //   BlocProvider.of<ConvertouchCommonBloc>(context).add(
-                //     SelectMenuItemForRemoval(
-                //       item: item,
-                //       currentPageId: pageState.pageId!,
-                //       startPageIndex: pageState.startPageIndex,
-                //     ),
-                //   );
-                // }
-              },
-              onSelectForRemoval: () {
-                // BlocProvider.of<ConvertouchCommonBloc>(context).add(
-                //   SelectMenuItemForRemoval(
-                //     item: item,
-                //     currentPageId: pageState.pageId!,
-                //     startPageIndex: pageState.startPageIndex,
-                //     selectedItemIdsForRemoval: pageState.selectedItemIdsForRemoval,
-                //   ),
-                // );
-              },
-              isMarkedToSelect: isMarkedToSelect,
-              selected: selected,
-              // removalMode: pageState.removalMode,
-              // selectedForRemoval:
-              //   pageState.selectedItemIdsForRemoval.contains(item.id!),
-              markOnTap: markItemsOnTap,
-              theme: theme,
-            ),
-          );
-        }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (items.isNotEmpty) {
 
-        var v = ItemsViewMode.grid;
-
-        switch (v) {
-          case ItemsViewMode.grid:
-            return GridView.builder(
-              itemCount: items.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: itemsSpacing,
-                crossAxisSpacing: itemsSpacing,
+          Widget? itemBuilder(context, index) {
+            IdNameItemModel item = items[index];
+            bool selected =
+                showSelectedItem && items[index].id == selectedItemId;
+            bool isMarkedToSelect = showMarkedItems &&
+                markedItemIds != null &&
+                markedItemIds!.contains(items[index].id);
+            return ConvertouchFadeScaleAnimation(
+              child: ConvertouchMenuItem(
+                item,
+                itemsViewMode: ItemsViewMode.grid,
+                onTap: () {
+                  onItemTap?.call(item);
+                },
+                onLongPress: () {
+                  // if (removalModeAllowed && !pageState.removalMode) {
+                  //   BlocProvider.of<ConvertouchCommonBloc>(context).add(
+                  //     SelectMenuItemForRemoval(
+                  //       item: item,
+                  //       currentPageId: pageState.pageId!,
+                  //       startPageIndex: pageState.startPageIndex,
+                  //     ),
+                  //   );
+                  // }
+                },
+                onSelectForRemoval: () {
+                  // BlocProvider.of<ConvertouchCommonBloc>(context).add(
+                  //   SelectMenuItemForRemoval(
+                  //     item: item,
+                  //     currentPageId: pageState.pageId!,
+                  //     startPageIndex: pageState.startPageIndex,
+                  //     selectedItemIdsForRemoval: pageState.selectedItemIdsForRemoval,
+                  //   ),
+                  // );
+                },
+                isMarkedToSelect: isMarkedToSelect,
+                selected: selected,
+                // removalMode: pageState.removalMode,
+                // selectedForRemoval:
+                //   pageState.selectedItemIdsForRemoval.contains(item.id!),
+                markOnTap: markItemsOnTap,
+                theme: theme,
               ),
-              padding: EdgeInsets.all(itemsSpacing),
-              itemBuilder: itemBuilder,
             );
-          case ItemsViewMode.list:
-            return ListView.separated(
-              padding: EdgeInsets.all(itemsSpacing),
-              itemCount: items.length,
-              itemBuilder: itemBuilder,
-              separatorBuilder: (context, index) => Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(
-                  itemsSpacing,
-                  itemsSpacing,
-                  itemsSpacing,
-                  index == items.length - 1 ? itemsSpacing : 0,
+          }
+
+          switch (viewMode) {
+            case ItemsViewMode.grid:
+              return GridView.builder(
+                itemCount: items.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: itemsSpacing,
+                  crossAxisSpacing: itemsSpacing,
                 ),
-              ),
-            );
+                padding: EdgeInsets.all(itemsSpacing),
+                itemBuilder: itemBuilder,
+              );
+            case ItemsViewMode.list:
+              return ListView.separated(
+                padding: EdgeInsets.all(itemsSpacing),
+                itemCount: items.length,
+                itemBuilder: itemBuilder,
+                separatorBuilder: (context, index) => Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                    itemsSpacing,
+                    itemsSpacing,
+                    itemsSpacing,
+                    index == items.length - 1 ? itemsSpacing : 0,
+                  ),
+                ),
+              );
+          }
         }
-      }
-      return noItemsView("No menu items found");
-    });
+        return noItemsView("No menu items found");
+      },
+    );
   }
 }
