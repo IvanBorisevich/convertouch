@@ -58,7 +58,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
             showSelectedItem: selectedUnitGroupVisible,
             removalModeAllowed: removalModeAllowed,
             onItemTap: onUnitGroupTap,
-            viewMode: viewModeState.pageViewMode,
+            itemsViewMode: viewModeState.pageViewMode,
             theme: appState.theme,
           ),
           floatingActionButton: floatingButton,

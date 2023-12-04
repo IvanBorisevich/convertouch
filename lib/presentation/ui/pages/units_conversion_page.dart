@@ -44,6 +44,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
                       Navigator.of(context)
                           .pushNamed(unitGroupsPageForConversion);
                     },
+                    itemsViewMode: ItemsViewMode.list,
                     theme: appState.theme,
                   ),
                 )

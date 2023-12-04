@@ -15,7 +15,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final bool removalModeAllowed;
   final bool markItemsOnTap;
   final double itemsSpacing;
-  final ItemsViewMode viewMode;
+  final ItemsViewMode itemsViewMode;
   final ConvertouchUITheme theme;
 
   const ConvertouchMenuItemsView(
@@ -28,7 +28,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.removalModeAllowed = true,
     this.markItemsOnTap = false,
     this.itemsSpacing = 7,
-    required this.viewMode,
+    required this.itemsViewMode,
     required this.theme,
     super.key,
   });
@@ -49,7 +49,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchMenuItem(
                 item,
-                itemsViewMode: ItemsViewMode.grid,
+                itemsViewMode: itemsViewMode,
                 onTap: () {
                   onItemTap?.call(item);
                 },
@@ -85,7 +85,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
             );
           }
 
-          switch (viewMode) {
+          switch (itemsViewMode) {
             case ItemsViewMode.grid:
               return GridView.builder(
                 itemCount: items.length,

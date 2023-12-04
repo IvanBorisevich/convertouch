@@ -25,7 +25,7 @@ class ConvertouchMenuItem extends StatefulWidget {
 
   const ConvertouchMenuItem(
     this.item, {
-    this.itemsViewMode = ItemsViewMode.list,
+    required this.itemsViewMode,
     this.onTap,
     this.onLongPress,
     this.onSelectForRemoval,

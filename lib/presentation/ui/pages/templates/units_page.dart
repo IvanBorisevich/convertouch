@@ -67,7 +67,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
             markItemsOnTap: markUnitsOnTap,
             removalModeAllowed: removalModeAllowed,
             onItemTap: onUnitTap,
-            viewMode: viewModeState.pageViewMode,
+            itemsViewMode: viewModeState.pageViewMode,
             theme: appState.theme,
           ),
           floatingActionButton: floatingButton,
