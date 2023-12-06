@@ -12,11 +12,11 @@ class AddUnitUseCase extends UseCase<UnitAddingInput, int> {
 
   @override
   Future<Either<Failure, int>> execute(UnitAddingInput input) async {
-    double newUnitValue = input.newUnitValue;
-    double equivalentUnitValue = input.equivalentUnitValue ?? 1;
-    double equivalentUnitCoefficient = input.equivalentUnit?.coefficient ?? 1;
+    double newUnitValue = input.newUnitValue ?? 1;
+    double baseUnitValue = input.baseUnitValue ?? 1;
+    double baseUnitCoefficient = input.baseUnit?.coefficient ?? 1;
     double newUnitCoefficient =
-        equivalentUnitValue / newUnitValue * equivalentUnitCoefficient;
+        baseUnitValue / newUnitValue * baseUnitCoefficient;
 
     return await unitRepository.addUnit(
       UnitModel(

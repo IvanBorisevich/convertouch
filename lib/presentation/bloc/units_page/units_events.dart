@@ -59,40 +59,59 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
   }
 }
 
-class OpenUnitsToSelectEquivalentUnit extends UnitsEvent {
-  final UnitModel? currentSelectedEquivalentUnit;
+class FetchUnitsForUnitCreation extends FetchUnits {
+  final UnitModel? currentSelectedBaseUnit;
 
-  const OpenUnitsToSelectEquivalentUnit({
-    required this.currentSelectedEquivalentUnit,
-  });
-
-  @override
-  String toString() {
-    return 'OpenUnitsToSelectEquivalentUnit{'
-        'currentSelectedEquivalentUnit: $currentSelectedEquivalentUnit}';
-  }
-}
-
-class PrepareUnitCreation extends UnitsEvent {
-  final int unitGroupId;
-  final UnitModel? equivalentUnit;
-
-  const PrepareUnitCreation({
-    required this.unitGroupId,
-    this.equivalentUnit,
+  const FetchUnitsForUnitCreation({
+    required super.unitGroup,
+    required this.currentSelectedBaseUnit,
   });
 
   @override
   List<Object?> get props => [
-    unitGroupId,
-    equivalentUnit,
+    currentSelectedBaseUnit,
+    super.props,
   ];
 
   @override
   String toString() {
-    return 'PrepareUnitCreation{'
-        'unitGroupId: $unitGroupId, '
-        'equivalentUnit: $equivalentUnit}';
+    return 'FetchUnitsForUnitCreation{'
+        'currentSelectedBaseUnit: $currentSelectedBaseUnit}';
+  }
+}
+
+class AddUnit extends UnitsEvent {
+  final UnitModel newUnit;
+  final String? newUnitValue;
+  final UnitModel? baseUnit;
+  final String? baseUnitValue;
+  final UnitGroupModel unitGroup;
+
+  const AddUnit({
+    required this.newUnit,
+    required this.newUnitValue,
+    required this.baseUnit,
+    required this.baseUnitValue,
+    required this.unitGroup,
+  });
+
+  @override
+  List<Object?> get props => [
+    newUnit,
+    newUnitValue,
+    baseUnit,
+    baseUnitValue,
+    unitGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'AddUnit{'
+        'newUnit: $newUnit, '
+        'newUnitValue: $newUnitValue, '
+        'baseUnit: $baseUnit, '
+        'baseUnitValue: $baseUnitValue, '
+        'unitGroup: $unitGroup}';
   }
 }
 

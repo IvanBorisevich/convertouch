@@ -19,10 +19,13 @@ import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_
 import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_creation.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.I;
@@ -76,6 +79,12 @@ Future<void> init() async {
     ),
   );
 
+  locator.registerLazySingleton(
+    () => UnitGroupsBlocForUnitCreation(
+      fetchUnitGroupsUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
     () => FetchUnitGroupsUseCase(locator()),
   );
@@ -100,6 +109,7 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => UnitsBloc(
       getUnitGroupUseCase: locator(),
+      addUnitUseCase: locator(),
       fetchUnitsOfGroupUseCase: locator(),
       removeUnitsUseCase: locator(),
     ),
@@ -111,14 +121,20 @@ Future<void> init() async {
     ),
   );
 
+  locator.registerLazySingleton(
+    () => UnitsBlocForUnitCreation(
+      fetchUnitsOfGroupUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<FetchUnitsOfGroupUseCase>(
     () => FetchUnitsOfGroupUseCase(locator()),
   );
   locator.registerLazySingleton<AddUnitUseCase>(
     () => AddUnitUseCase(locator()),
   );
-  locator.registerLazySingleton<GetBaseUnitUseCase>(
-    () => GetBaseUnitUseCase(locator()),
+  locator.registerLazySingleton<GetDefaultBaseUnitUseCase>(
+    () => GetDefaultBaseUnitUseCase(locator()),
   );
   locator.registerLazySingleton<RemoveUnitsUseCase>(
     () => RemoveUnitsUseCase(locator()),
@@ -136,20 +152,12 @@ Future<void> init() async {
 
   // unit creation
 
-  // locator.registerLazySingleton(
-  //   () => UnitCreationBloc(
-  //     addUnitUseCase: locator(),
-  //     getBaseUnitUseCase: locator(),
-  //   ),
-  // );
-
-  // unit group creation
-
-  // locator.registerLazySingleton(
-  //   () => UnitGroupCreationBloc(
-  //     addUnitGroupUseCase: locator(),
-  //   ),
-  // );
+  locator.registerLazySingleton(
+    () => UnitCreationBloc(
+      addUnitUseCase: locator(),
+      getDefaultBaseUnitUseCase: locator(),
+    ),
+  );
 
   // units conversion
 

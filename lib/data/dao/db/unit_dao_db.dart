@@ -11,13 +11,14 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select * from $unitsTableName '
       'where unit_group_id = :unitGroupId '
-      'and coefficient = 1')
-  Future<UnitEntity?> getBaseUnit(int unitGroupId);
+      'and name = :name')
+  Future<UnitEntity?> getByName(int unitGroupId, String name);
 
   @override
   @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId limit 1')
-  Future<UnitEntity?> getFirst(int unitGroupId);
+      'where unit_group_id = :unitGroupId '
+      'limit 1')
+  Future<UnitEntity?> getFirstUnit(int unitGroupId);
 
   @override
   @Insert(onConflict: OnConflictStrategy.fail)

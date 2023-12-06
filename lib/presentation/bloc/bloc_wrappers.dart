@@ -4,11 +4,15 @@ import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_bl
 import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_states.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_conversions_page/units_conversion_states.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_creation.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +105,23 @@ Widget unitsBlocForConversion(
   );
 }
 
+Widget unitsBlocForUnitCreation(
+  Widget Function(UnitsFetchedForUnitCreation pageState) builderFunc,
+) {
+  return BlocBuilder<UnitsBlocForUnitCreation, UnitsState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitsFetchedForUnitCreation;
+    },
+    builder: (_, unitsFetched) {
+      if (unitsFetched is UnitsFetchedForUnitCreation) {
+        return builderFunc.call(unitsFetched);
+      } else {
+        return empty();
+      }
+    },
+  );
+}
+
 Widget unitGroupsBloc(
   Widget Function(UnitGroupsFetched unitGroupsFetched) builderFunc,
 ) {
@@ -135,39 +156,39 @@ Widget unitGroupsBlocForConversion(
   );
 }
 
-//
-// Widget unitCreationBloc(
-//   Widget Function(UnitCreationPrepared unitCreationPrepared) builderFunc,
-// ) {
-//   return BlocBuilder<UnitCreationBloc, UnitCreationState>(
-//     buildWhen: (prev, next) {
-//       return prev != next && next is UnitCreationPrepared;
-//     },
-//     builder: (_, unitCreationState) {
-//       if (unitCreationState is UnitCreationPrepared) {
-//         return builderFunc.call(unitCreationState);
-//       } else {
-//         return empty();
-//       }
-//     },
-//   );
-// }
-//
 
-Widget unitGroupCreationListener(
-  BuildContext context, {
-  required Widget child,
-}) {
-  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
-    listener: (_, unitGroupsMenuState) {
-      if (unitGroupsMenuState is UnitGroupExists) {
-        showAlertDialog(context,
-            "Unit group '${unitGroupsMenuState.unitGroupName}' already exist");
-      } else if (unitGroupsMenuState is UnitGroupsFetched) {
-        Navigator.of(context).pop();
+Widget unitGroupsBlocForUnitCreation(
+    Widget Function(UnitGroupsFetchedForUnitCreation pageState) builderFunc,
+    ) {
+  return BlocBuilder<UnitGroupsBlocForUnitCreation, UnitGroupsState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitGroupsFetchedForUnitCreation;
+    },
+    builder: (_, unitGroupsState) {
+      if (unitGroupsState is UnitGroupsFetchedForUnitCreation) {
+        return builderFunc.call(unitGroupsState);
+      } else {
+        return empty();
       }
     },
-    child: child,
+  );
+}
+
+
+Widget unitCreationBloc(
+  Widget Function(UnitCreationPrepared pageState) builderFunc,
+) {
+  return BlocBuilder<UnitCreationBloc, UnitCreationState>(
+    buildWhen: (prev, next) {
+      return prev != next && next is UnitCreationPrepared;
+    },
+    builder: (_, unitCreationState) {
+      if (unitCreationState is UnitCreationPrepared) {
+        return builderFunc.call(unitCreationState);
+      } else {
+        return empty();
+      }
+    },
   );
 }
 
@@ -188,32 +209,35 @@ Widget unitsConversionBloc(
   );
 }
 
-// Widget unitGroupCreationListener(
-//   BuildContext context,
-//   Widget widget,
-// ) {
-//   return BlocListener<UnitGroupCreationBloc, UnitGroupCreationState>(
-//     listener: (_, unitGroupCreationState) {
-//       if (unitGroupCreationState is UnitGroupExists) {
-//         showAlertDialog(context,
-//             "Unit group '${unitGroupCreationState.unitGroupName}' already exist");
-//       }
-//     },
-//     child: widget,
-//   );
-// }
-//
-// Widget unitCreationListener(
-//   BuildContext context,
-//   Widget widget,
-// ) {
-//   return BlocListener<UnitCreationBloc, UnitCreationState>(
-//     listener: (_, unitCreationState) {
-//       if (unitCreationState is UnitExists) {
-//         showAlertDialog(
-//             context, "Unit '${unitCreationState.unitName}' already exist");
-//       }
-//     },
-//     child: widget,
-//   );
-// }
+Widget unitGroupCreationListener(
+  BuildContext context, {
+  required Widget child,
+}) {
+  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
+    listener: (_, unitGroupsState) {
+      if (unitGroupsState is UnitGroupExists) {
+        showAlertDialog(context,
+            "Unit group '${unitGroupsState.unitGroupName}' already exist");
+      } else if (unitGroupsState is UnitGroupsFetched) {
+        Navigator.of(context).pop();
+      }
+    },
+    child: child,
+  );
+}
+
+Widget unitCreationListener(
+  BuildContext context, {
+  required Widget child,
+}) {
+  return BlocListener<UnitsBloc, UnitsState>(
+    listener: (_, unitsState) {
+      if (unitsState is UnitExists) {
+        showAlertDialog(context, "Unit '${unitsState.unitName}' already exist");
+      } else if (unitsState is UnitsFetched) {
+        Navigator.of(context).pop();
+      }
+    },
+    child: child,
+  );
+}

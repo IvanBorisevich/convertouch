@@ -46,23 +46,24 @@ class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
 }
 
 class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
-  const FetchUnitGroupsForUnitCreation();
+  final UnitGroupModel currentUnitGroupInUnitCreation;
+
+  const FetchUnitGroupsForUnitCreation({
+    required this.currentUnitGroupInUnitCreation,
+  });
+
+  @override
+  List<Object?> get props => [
+    currentUnitGroupInUnitCreation,
+  ];
 
   @override
   String toString() {
-    return 'FetchUnitGroupsForUnitCreation{}';
+    return 'FetchUnitGroupsForUnitCreation{'
+        'currentUnitGroupInUnitCreation: $currentUnitGroupInUnitCreation}';
   }
 }
 
-
-class PrepareUnitGroupCreation extends UnitGroupsEvent {
-  const PrepareUnitGroupCreation();
-
-  @override
-  String toString() {
-    return 'PrepareUnitGroupCreation{}';
-  }
-}
 
 class RemoveUnitGroups extends UnitGroupsEvent {
   final List<int> ids;

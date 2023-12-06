@@ -78,22 +78,44 @@ class UnitsFetchedToMarkForConversion extends UnitsFetched {
 }
 
 
-class UnitsOpenedToSelectEquivalentUnit extends UnitsState {
-  final UnitModel? currentSelectedEquivalentUnit;
+class UnitsFetchedForUnitCreation extends UnitsFetched {
+  final UnitModel? currentSelectedBaseUnit;
 
-  const UnitsOpenedToSelectEquivalentUnit({
-    this.currentSelectedEquivalentUnit,
+  const UnitsFetchedForUnitCreation({
+    required super.units,
+    required super.unitGroup,
+    required this.currentSelectedBaseUnit,
   });
 
   @override
   List<Object?> get props => [
-    currentSelectedEquivalentUnit,
+    currentSelectedBaseUnit,
+    super.props,
   ];
 
   @override
   String toString() {
-    return 'UnitsOpenedToSelectEquivalentUnit{'
-        'currentSelectedEquivalentUnit: $currentSelectedEquivalentUnit}';
+    return 'UnitsFetchedForUnitCreation{'
+        'currentSelectedBaseUnit: $currentSelectedBaseUnit}';
+  }
+}
+
+class UnitExists extends UnitsState {
+  final String unitName;
+
+  const UnitExists({
+    required this.unitName,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitName,
+  ];
+
+  @override
+  String toString() {
+    return 'UnitExists{'
+        'unitName: $unitName}';
   }
 }
 

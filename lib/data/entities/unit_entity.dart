@@ -24,19 +24,19 @@ class UnitEntity {
   final String abbreviation;
   final double? coefficient;
   @ColumnInfo(name: 'unit_group_id')
-  final int? unitGroupId;
+  final int unitGroupId;
 
   const UnitEntity({
     this.id,
     required this.name,
     required this.abbreviation,
     required this.coefficient,
-    this.unitGroupId,
+    required this.unitGroupId,
   });
 
   static UnitEntity fromJson(
     Map<String, dynamic> data, {
-    int? unitGroupId,
+    required int unitGroupId,
   }) {
     return UnitEntity(
       name: data['name'],

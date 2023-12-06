@@ -89,7 +89,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -246,25 +246,28 @@ class _$UnitDaoDb extends UnitDaoDb {
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int?),
+            unitGroupId: row['unit_group_id'] as int),
         arguments: [unitGroupId]);
   }
 
   @override
-  Future<UnitEntity?> getBaseUnit(int unitGroupId) async {
+  Future<UnitEntity?> getByName(
+    int unitGroupId,
+    String name,
+  ) async {
     return _queryAdapter.query(
-        'select * from units where unit_group_id = ?1 and coefficient = 1',
+        'select * from units where unit_group_id = ?1 and name = ?2',
         mapper: (Map<String, Object?> row) => UnitEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int?),
-        arguments: [unitGroupId]);
+            unitGroupId: row['unit_group_id'] as int),
+        arguments: [unitGroupId, name]);
   }
 
   @override
-  Future<UnitEntity?> getFirst(int unitGroupId) async {
+  Future<UnitEntity?> getFirstUnit(int unitGroupId) async {
     return _queryAdapter.query(
         'select * from units where unit_group_id = ?1 limit 1',
         mapper: (Map<String, Object?> row) => UnitEntity(
@@ -272,7 +275,7 @@ class _$UnitDaoDb extends UnitDaoDb {
             name: row['name'] as String,
             abbreviation: row['abbreviation'] as String,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int?),
+            unitGroupId: row['unit_group_id'] as int),
         arguments: [unitGroupId]);
   }
 

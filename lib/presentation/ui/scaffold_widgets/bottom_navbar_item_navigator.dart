@@ -1,9 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/ui/pages/unit_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_creation.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart';
 import 'package:convertouch/presentation/ui/pages/units_conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/units_page_for_unit_creation.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
 import 'package:flutter/material.dart';
 
@@ -20,18 +23,48 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
   });
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
-    return {
-      unitsConversionPage: (context) => const ConvertouchUnitsConversionPage(),
-      unitGroupsPageRegular: (context) =>
+    MapEntry<String, WidgetBuilder> route(String pageId, Widget page) {
+      return MapEntry(pageId, (context) => page);
+    }
+
+    return {}..addEntries([
+        route(
+          unitsConversionPage,
+          const ConvertouchUnitsConversionPage(),
+        ),
+        route(
+          unitGroupsPageRegular,
           const ConvertouchUnitGroupsPageRegular(),
-      unitGroupsPageForConversion: (context) =>
+        ),
+        route(
+          unitGroupsPageForConversion,
           const ConvertouchUnitGroupsPageForConversion(),
-      unitsPageRegular: (context) => const ConvertouchUnitsPageRegular(),
-      unitsPageForConversion: (context) =>
+        ),
+        route(
+          unitGroupsPageForUnitCreation,
+          const ConvertouchUnitGroupsPageForUnitCreation(),
+        ),
+        route(
+          unitsPageRegular,
+          const ConvertouchUnitsPageRegular(),
+        ),
+        route(
+          unitsPageForConversion,
           const ConvertouchUnitsPageForConversion(),
-      unitGroupCreationPage: (context) =>
+        ),
+        route(
+          unitsPageForUnitCreation,
+          const ConvertouchUnitsPageForUnitCreation(),
+        ),
+        route(
+          unitGroupCreationPage,
           const ConvertouchUnitGroupCreationPage(),
-    };
+        ),
+        route(
+          unitCreationPage,
+          const ConvertouchUnitCreationPage(),
+        ),
+      ]);
   }
 
   @override

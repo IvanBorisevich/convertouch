@@ -29,7 +29,9 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
           message: result.left.message,
         );
       } else {
-        yield UnitGroupsFetched(unitGroups: result.right);
+        yield UnitGroupsFetched(
+          unitGroups: result.right,
+        );
       }
     } else if (event is RemoveUnitGroups) {
       final result = await removeUnitGroupsUseCase.execute(event.ids);
@@ -63,7 +65,11 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
         );
       } else {
         int addedUnitGroupId = addUnitGroupResult.right;
-        if (addedUnitGroupId > -1) {
+        if (addedUnitGroupId == -1) {
+          yield UnitGroupExists(
+            unitGroupName: event.unitGroupName,
+          );
+        } else {
           final fetchUnitGroupsResult = await fetchUnitGroupsUseCase.execute();
           yield fetchUnitGroupsResult.fold(
             (error) => UnitGroupsErrorState(
@@ -72,10 +78,6 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
             (unitGroups) => UnitGroupsFetched(
               unitGroups: unitGroups,
             ),
-          );
-        } else {
-          yield UnitGroupExists(
-            unitGroupName: event.unitGroupName,
           );
         }
       }

@@ -33,14 +33,13 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> getBaseUnit(int unitGroupId) async {
+  Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(int unitGroupId) async {
     try {
-      var result = await unitDao.getBaseUnit(unitGroupId);
-      result ??= await unitDao.getFirst(unitGroupId);
+      var result = await unitDao.getFirstUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result));
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when retrieving base unit "
+        DatabaseFailure("Error when retrieving default base unit "
             "of the group with id = $unitGroupId: $e"),
       );
     }
@@ -49,8 +48,13 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<Failure, int>> addUnit(UnitModel unit) async {
     try {
-      final result = await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
-      return Right(result);
+      final existingUnit = await unitDao.getByName(unit.unitGroupId, unit.name);
+      if (existingUnit == null) {
+        final result = await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
+        return Right(result);
+      } else {
+        return const Right(-1);
+      }
     } catch (e) {
       return Left(
         DatabaseFailure("Error when adding a unit: $e"),

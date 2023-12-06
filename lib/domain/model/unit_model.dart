@@ -16,7 +16,7 @@ class UnitModel extends IdNameItemModel {
 
   final double? coefficient;
   final String abbreviation;
-  final int? unitGroupId;
+  final int unitGroupId;
 
   @override
   List<Object?> get props => [
