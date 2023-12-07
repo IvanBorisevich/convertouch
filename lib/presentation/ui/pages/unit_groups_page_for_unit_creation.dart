@@ -16,18 +16,23 @@ class ConvertouchUnitGroupsPageForUnitCreation extends StatelessWidget {
         return ConvertouchUnitGroupsPage(
           pageTitle: "Group of New Unit",
           unitGroups: pageState.unitGroups,
-          onUnitGroupTap: (item) {
+          onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(
-                unitGroup: item as UnitGroupModel,
+                unitGroup: unitGroup as UnitGroupModel,
                 baseUnit: null,
               ),
             );
             Navigator.of(context).pop();
           },
+          onUnitGroupTapForRemoval: null,
+          onUnitGroupLongPress: null,
+          onUnitGroupsRemove: null,
           appBarRightWidgets: const [],
           selectedUnitGroupVisible: true,
           selectedUnitGroupId: pageState.unitGroupInUnitCreation?.id,
+          itemIdsSelectedForRemoval: const [],
+          removalModeEnabled: false,
           removalModeAllowed: false,
           floatingButton: null,
         );

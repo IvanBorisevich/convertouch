@@ -7,6 +7,7 @@ abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
   final T selected;
   final T focused;
   final T? switchedOn;
+  final T? disabled;
 
   const ConvertouchColor({
     required this.regular,
@@ -14,6 +15,7 @@ abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
     required this.selected,
     required this.focused,
     this.switchedOn,
+    this.disabled,
   });
 }
 

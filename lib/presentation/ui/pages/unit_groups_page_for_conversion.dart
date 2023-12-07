@@ -30,17 +30,22 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
         return ConvertouchUnitGroupsPage(
           pageTitle: pageTitle,
           unitGroups: pageState.unitGroups,
-          onUnitGroupTap: (item) {
+          onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
               FetchUnitsToMarkForConversion(
-                unitGroup: item as UnitGroupModel,
+                unitGroup: unitGroup as UnitGroupModel,
               ),
             );
             Navigator.of(context).pushNamed(unitsPageForConversion);
           },
+          onUnitGroupTapForRemoval: null,
+          onUnitGroupLongPress: null,
+          onUnitGroupsRemove: null,
+          itemIdsSelectedForRemoval: const [],
           appBarRightWidgets: const [],
           selectedUnitGroupVisible: selectedUnitGroupVisible,
           selectedUnitGroupId: selectedUnitGroupId,
+          removalModeEnabled: false,
           removalModeAllowed: false,
           floatingButton: null,
         );

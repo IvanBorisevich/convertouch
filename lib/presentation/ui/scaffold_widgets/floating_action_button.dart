@@ -6,7 +6,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final IconData icon;
   final void Function()? onClick;
   final bool visible;
-  final bool extraLabelEnabled;
+  final bool extraLabelVisible;
   final String extraLabelText;
   final Color background;
   final Color foreground;
@@ -16,7 +16,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     required this.icon,
     this.onClick,
     this.visible = true,
-    this.extraLabelEnabled = false,
+    this.extraLabelVisible = false,
     this.extraLabelText = "",
     this.background = noColor,
     this.foreground = noColor,
@@ -28,7 +28,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.icon = Icons.add,
     this.onClick,
     this.visible = true,
-    this.extraLabelEnabled = false,
+    this.extraLabelVisible = false,
     this.extraLabelText = "",
     this.background = noColor,
     this.foreground = noColor,
@@ -40,7 +40,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.icon = Icons.delete_outline_rounded,
     this.onClick,
     this.visible = true,
-    this.extraLabelEnabled = true,
+    this.extraLabelVisible = true,
     required this.extraLabelText,
     this.background = noColor,
     this.foreground = noColor,
@@ -70,7 +70,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                 ),
               ),
             ),
-            extraLabelEnabled
+            extraLabelVisible
                 ? Align(
                     alignment: Alignment.topRight,
                     child: Container(

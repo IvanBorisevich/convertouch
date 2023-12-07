@@ -13,10 +13,31 @@ class ConvertouchAppBloc
   Stream<ConvertouchAppState> mapEventToState(
     ConvertouchAppEvent event,
   ) async* {
+    yield const ConvertouchAppStateInBuilding();
+
+    bool removalMode = false;
+    List<int> selectedItemIdsForRemoval = [];
+
+    if (event is SelectMenuItemForRemoval) {
+      if (event.selectedItemIdsForRemoval.isNotEmpty) {
+        selectedItemIdsForRemoval = event.selectedItemIdsForRemoval;
+      }
+
+      if (!selectedItemIdsForRemoval.contains(event.itemId)) {
+        selectedItemIdsForRemoval.add(event.itemId);
+      } else {
+        selectedItemIdsForRemoval.remove(event.itemId);
+      }
+
+      removalMode = true;
+    } else if (event is DisableRemovalMode) {
+      removalMode = false;
+    }
+
     yield ConvertouchAppStateBuilt(
       activeNavbarItem: event.activeNavbarItem,
-      removalMode: event.selectedItemIdsForRemoval.isNotEmpty,
-      selectedItemIdsForRemoval: event.selectedItemIdsForRemoval,
+      removalMode: removalMode,
+      selectedItemIdsForRemoval: selectedItemIdsForRemoval,
       theme: event.theme,
     );
   }

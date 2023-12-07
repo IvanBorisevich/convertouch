@@ -26,12 +26,17 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
             );
             Navigator.of(context).pop();
           },
+          onUnitsRemove: null,
+          onUnitTapForRemoval: null,
+          onUnitLongPress: null,
+          itemIdsSelectedForRemoval: const [],
+          removalModeAllowed: false,
+          removalModeEnabled: false,
           markedUnitsForConversionVisible: false,
           markUnitsOnTap: false,
           markedUnitIdsForConversion: null,
           selectedUnitVisible: true,
           selectedUnitId: pageState.currentSelectedBaseUnit?.id,
-          removalModeAllowed: false,
           floatingButton: null,
         );
       });

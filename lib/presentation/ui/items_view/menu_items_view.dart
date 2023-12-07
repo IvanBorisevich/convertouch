@@ -8,11 +8,15 @@ import 'package:flutter/material.dart';
 class ConvertouchMenuItemsView extends StatelessWidget {
   final List<IdNameItemModel> items;
   final void Function(IdNameItemModel)? onItemTap;
+  final void Function(IdNameItemModel)? onItemTapForRemoval;
+  final void Function(IdNameItemModel)? onItemLongPress;
   final List<int>? markedItemIds;
+  final List<int> itemIdsSelectedForRemoval;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
   final bool removalModeAllowed;
+  final bool removalModeEnabled;
   final bool markItemsOnTap;
   final double itemsSpacing;
   final ItemsViewMode itemsViewMode;
@@ -21,11 +25,15 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   const ConvertouchMenuItemsView(
     this.items, {
     this.onItemTap,
+    this.onItemTapForRemoval,
+    this.onItemLongPress,
     this.markedItemIds,
+    this.itemIdsSelectedForRemoval = const [],
     this.showMarkedItems = false,
     this.selectedItemId,
     this.showSelectedItem = false,
-    this.removalModeAllowed = true,
+    this.removalModeAllowed = false,
+    this.removalModeEnabled = false,
     this.markItemsOnTap = false,
     this.itemsSpacing = 7,
     required this.itemsViewMode,
@@ -38,7 +46,6 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (items.isNotEmpty) {
-
           Widget? itemBuilder(context, index) {
             IdNameItemModel item = items[index];
             bool selected =
@@ -54,31 +61,16 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                   onItemTap?.call(item);
                 },
                 onLongPress: () {
-                  // if (removalModeAllowed && !pageState.removalMode) {
-                  //   BlocProvider.of<ConvertouchCommonBloc>(context).add(
-                  //     SelectMenuItemForRemoval(
-                  //       item: item,
-                  //       currentPageId: pageState.pageId!,
-                  //       startPageIndex: pageState.startPageIndex,
-                  //     ),
-                  //   );
-                  // }
+                  onItemLongPress?.call(item);
                 },
-                onSelectForRemoval: () {
-                  // BlocProvider.of<ConvertouchCommonBloc>(context).add(
-                  //   SelectMenuItemForRemoval(
-                  //     item: item,
-                  //     currentPageId: pageState.pageId!,
-                  //     startPageIndex: pageState.startPageIndex,
-                  //     selectedItemIdsForRemoval: pageState.selectedItemIdsForRemoval,
-                  //   ),
-                  // );
+                onTapForRemoval: () {
+                  onItemTapForRemoval?.call(item);
                 },
                 isMarkedToSelect: isMarkedToSelect,
                 selected: selected,
-                // removalMode: pageState.removalMode,
-                // selectedForRemoval:
-                //   pageState.selectedItemIdsForRemoval.contains(item.id!),
+                removalMode: removalModeAllowed && removalModeEnabled,
+                selectedForRemoval:
+                    itemIdsSelectedForRemoval.contains(item.id!),
                 markOnTap: markItemsOnTap,
                 theme: theme,
               ),

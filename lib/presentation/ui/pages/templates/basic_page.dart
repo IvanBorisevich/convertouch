@@ -1,9 +1,12 @@
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/app/app_state.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchPage extends StatelessWidget {
   final ConvertouchAppStateBuilt appState;
@@ -46,16 +49,11 @@ class ConvertouchPage extends StatelessWidget {
               if (appState.removalMode) {
                 return leadingIcon(
                   icon: Icons.clear,
+                  color: scaffoldColor.regular,
                   onClick: () {
-                    // BlocProvider.of<AppBloc>(context).add(
-                    //   DisableRemovalMode(
-                    //     currentPageId: appState.pageId,
-                    //     pageTitle: appState.pageTitle,
-                    //     floatingButtonVisible:
-                    //     appState.floatingButtonVisible,
-                    //     uiTheme: appState.theme,
-                    //   ),
-                    // );
+                    BlocProvider.of<ConvertouchAppBloc>(context).add(
+                      const DisableRemovalMode(),
+                    );
                   },
                 );
               } else if (ModalRoute.of(context)?.canPop ?? true) {
@@ -110,11 +108,18 @@ class ConvertouchPage extends StatelessWidget {
         ),
         floatingActionButton: appState.removalMode
             ? ConvertouchFloatingActionButton.removal(
+                visible: appState.selectedItemIdsForRemoval.isNotEmpty,
                 extraLabelText:
                     appState.selectedItemIdsForRemoval.length.toString(),
                 background: removalButtonColor.background,
                 foreground: removalButtonColor.foreground,
                 border: scaffoldColor.regular.backgroundColor,
+                onClick: () {
+                  onItemsRemove?.call();
+                  BlocProvider.of<ConvertouchAppBloc>(context).add(
+                    const DisableRemovalMode(),
+                  );
+                },
               )
             : floatingActionButton,
       ),

@@ -13,6 +13,10 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final String pageTitle;
   final List<UnitModel> units;
   final void Function(IdNameItemModel)? onUnitTap;
+  final void Function(IdNameItemModel)? onUnitTapForRemoval;
+  final void Function(IdNameItemModel)? onUnitLongPress;
+  final void Function()? onUnitsRemove;
+  final List<int> itemIdsSelectedForRemoval;
   final List<Widget>? appBarRightWidgets;
   final bool markedUnitsForConversionVisible;
   final bool markUnitsOnTap;
@@ -20,12 +24,17 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final bool selectedUnitVisible;
   final int? selectedUnitId;
   final bool removalModeAllowed;
+  final bool removalModeEnabled;
   final Widget? floatingButton;
 
   const ConvertouchUnitsPage({
     required this.pageTitle,
     required this.units,
     required this.onUnitTap,
+    required this.onUnitTapForRemoval,
+    required this.onUnitLongPress,
+    required this.onUnitsRemove,
+    required this.itemIdsSelectedForRemoval,
     required this.appBarRightWidgets,
     required this.markedUnitsForConversionVisible,
     required this.markUnitsOnTap,
@@ -33,6 +42,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
     required this.selectedUnitVisible,
     required this.selectedUnitId,
     required this.removalModeAllowed,
+    required this.removalModeEnabled,
     required this.floatingButton,
     super.key,
   });
@@ -61,16 +71,21 @@ class ConvertouchUnitsPage extends StatelessWidget {
           body: ConvertouchMenuItemsView(
             units,
             markedItemIds: markedUnitIdsForConversion,
+            itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
             showMarkedItems: markedUnitsForConversionVisible,
             selectedItemId: selectedUnitId,
             showSelectedItem: selectedUnitVisible,
             markItemsOnTap: markUnitsOnTap,
             removalModeAllowed: removalModeAllowed,
+            removalModeEnabled: removalModeEnabled,
             onItemTap: onUnitTap,
+            onItemTapForRemoval: onUnitTapForRemoval,
+            onItemLongPress: onUnitLongPress,
             itemsViewMode: viewModeState.pageViewMode,
             theme: appState.theme,
           ),
           floatingActionButton: floatingButton,
+          onItemsRemove: onUnitsRemove,
         );
       });
     });

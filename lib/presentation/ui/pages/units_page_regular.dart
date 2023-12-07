@@ -1,7 +1,11 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
@@ -24,12 +28,39 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           units: pageState.units,
           appBarRightWidgets: const [],
           onUnitTap: (unit) {},
+          onUnitTapForRemoval: (unit) {
+            BlocProvider.of<ConvertouchAppBloc>(context).add(
+              SelectMenuItemForRemoval(
+                itemId: unit.id!,
+                selectedItemIdsForRemoval: appState.selectedItemIdsForRemoval,
+              ),
+            );
+          },
+          onUnitLongPress: (unit) {
+            if (!appState.removalMode) {
+              BlocProvider.of<ConvertouchAppBloc>(context).add(
+                SelectMenuItemForRemoval(
+                  itemId: unit.id!,
+                ),
+              );
+            }
+          },
+          onUnitsRemove: () {
+            BlocProvider.of<UnitsBloc>(context).add(
+              RemoveUnits(
+                ids: appState.selectedItemIdsForRemoval,
+                unitGroup: pageState.unitGroup!,
+              ),
+            );
+          },
+          itemIdsSelectedForRemoval: appState.selectedItemIdsForRemoval,
+          removalModeAllowed: true,
+          removalModeEnabled: appState.removalMode,
           markedUnitsForConversionVisible: false,
           markUnitsOnTap: false,
           markedUnitIdsForConversion: null,
           selectedUnitVisible: false,
           selectedUnitId: null,
-          removalModeAllowed: true,
           floatingButton: ConvertouchFloatingActionButton.adding(
             onClick: () {
               BlocProvider.of<UnitCreationBloc>(context).add(

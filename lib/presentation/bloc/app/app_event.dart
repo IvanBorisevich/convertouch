@@ -15,9 +15,9 @@ class ConvertouchAppEvent extends Equatable {
   @override
   List<Object?> get props => [
     activeNavbarItem,
-        selectedItemIdsForRemoval,
-        theme,
-      ];
+    selectedItemIdsForRemoval,
+    theme,
+  ];
 
   @override
   String toString() {
@@ -29,51 +29,36 @@ class ConvertouchAppEvent extends Equatable {
   }
 }
 
-// class ChangeMenuItemsViewMode extends ConvertouchCommonEvent {
-//   const ChangeMenuItemsViewMode({
-//     required super.currentPageId,
-//     required super.startPageIndex,
-//     required super.targetViewMode,
-//   });
-//
-//   @override
-//   String toString() {
-//     return 'ChangeMenuItemsViewMode{${super.toString()}}';
-//   }
-// }
-//
-// class SelectMenuItemForRemoval extends ConvertouchCommonEvent {
-//   final IdNameItemModel item;
-//
-//   const SelectMenuItemForRemoval({
-//     required this.item,
-//     required super.currentPageId,
-//     required super.startPageIndex,
-//     super.selectedItemIdsForRemoval,
-//   });
-//
-//   @override
-//   List<Object?> get props => [
-//         item,
-//         super.props,
-//       ];
-//
-//   @override
-//   String toString() {
-//     return 'SelectMenuItemForRemoval{'
-//         'item: $item, '
-//         '${super.toString()}}';
-//   }
-// }
-//
-// class DisableRemovalMode extends ConvertouchCommonEvent {
-//   const DisableRemovalMode({
-//     required super.currentPageId,
-//     required super.startPageIndex,
-//   });
-//
-//   @override
-//   String toString() {
-//     return 'DisableRemovalMode{}';
-//   }
-// }
+class SelectMenuItemForRemoval extends ConvertouchAppEvent {
+  final int itemId;
+
+  const SelectMenuItemForRemoval({
+    required this.itemId,
+    super.activeNavbarItem = BottomNavbarItem.unitsMenu,
+    super.selectedItemIdsForRemoval,
+  });
+
+  @override
+  List<Object?> get props => [
+    itemId,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'SelectMenuItemForRemoval{'
+        'itemId: $itemId, '
+        '${super.toString()}}';
+  }
+}
+
+class DisableRemovalMode extends ConvertouchAppEvent {
+  const DisableRemovalMode({
+    super.activeNavbarItem = BottomNavbarItem.unitsMenu,
+  });
+
+  @override
+  String toString() {
+    return 'DisableRemovalMode{}';
+  }
+}

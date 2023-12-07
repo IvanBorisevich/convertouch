@@ -40,15 +40,16 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
           message: result.left.message,
         );
       } else {
-        final fetchUnitGroupsResult = await fetchUnitGroupsUseCase.execute();
-        yield fetchUnitGroupsResult.fold(
-          (error) => UnitGroupsErrorState(
-            message: error.message,
-          ),
-          (unitGroups) => UnitGroupsFetched(
-            unitGroups: unitGroups,
-          ),
-        );
+        add(const FetchUnitGroups());
+        // final fetchUnitGroupsResult = await fetchUnitGroupsUseCase.execute();
+        // yield fetchUnitGroupsResult.fold(
+        //   (error) => UnitGroupsErrorState(
+        //     message: error.message,
+        //   ),
+        //   (unitGroups) => UnitGroupsFetched(
+        //     unitGroups: unitGroups,
+        //   ),
+        // );
       }
     } else if (event is AddUnitGroup) {
       yield const UnitGroupsFetching();

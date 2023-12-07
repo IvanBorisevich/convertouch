@@ -36,7 +36,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
       } else {
         yield UnitsFetched(
           units: result.right,
-          unitGroup: event.unitGroup,
+          unitGroup: unitGroup,
         );
       }
     } else if (event is AddUnit) {
@@ -78,33 +78,14 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         }
       }
     } else if (event is RemoveUnits) {
-      // final result = await removeUnitsUseCase.execute(event.ids);
-      // if (result.isLeft) {
-      //   yield UnitsErrorState(
-      //     message: result.left.message,
-      //   );
-      // } else {
-      //   final fetchUnitGroupsResult = await fetchUnitsOfGroupUseCase.execute(
-      //     event.unitGroup.id!,
-      //   );
-      //
-      //   List<UnitModel>? markedUnits = event.markedUnits;
-      //   if (markedUnits != null) {
-      //     markedUnits.removeWhere((element) => event.ids.contains(element.id));
-      //   }
-      //
-      //   yield fetchUnitGroupsResult.fold(
-      //     (error) => UnitsErrorState(
-      //       message: error.message,
-      //     ),
-      //     (units) => UnitsFetched(
-      //       units: units,
-      //       unitGroup: event.unitGroup,
-      //       needToNavigate: false,
-      //       markedUnits: markedUnits ?? [],
-      //     ),
-      //   );
-      // }
+      final result = await removeUnitsUseCase.execute(event.ids);
+      if (result.isLeft) {
+        yield UnitsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        add(FetchUnits(unitGroup: event.unitGroup));
+      }
     }
   }
 }

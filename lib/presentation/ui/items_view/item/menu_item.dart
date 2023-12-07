@@ -14,7 +14,7 @@ class ConvertouchMenuItem extends StatefulWidget {
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;
-  final void Function()? onSelectForRemoval;
+  final void Function()? onTapForRemoval;
   final bool isMarkedToSelect;
   final bool selected;
   final bool removalMode;
@@ -28,7 +28,7 @@ class ConvertouchMenuItem extends StatefulWidget {
     required this.itemsViewMode,
     this.onTap,
     this.onLongPress,
-    this.onSelectForRemoval,
+    this.onTapForRemoval,
     this.isMarkedToSelect = false,
     this.selected = false,
     this.removalMode = false,
@@ -114,7 +114,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
     return GestureDetector(
       onTap: () {
         if (widget.removalMode) {
-          widget.onSelectForRemoval?.call();
+          widget.onTapForRemoval?.call();
         } else {
           if (!widget.selected) {
             if (widget.markOnTap) {

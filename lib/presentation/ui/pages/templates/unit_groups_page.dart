@@ -13,9 +13,14 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
   final String pageTitle;
   final List<UnitGroupModel> unitGroups;
   final void Function(IdNameItemModel)? onUnitGroupTap;
+  final void Function(IdNameItemModel)? onUnitGroupTapForRemoval;
+  final void Function(IdNameItemModel)? onUnitGroupLongPress;
+  final void Function()? onUnitGroupsRemove;
+  final List<int> itemIdsSelectedForRemoval;
   final List<Widget>? appBarRightWidgets;
   final bool selectedUnitGroupVisible;
   final int? selectedUnitGroupId;
+  final bool removalModeEnabled;
   final bool removalModeAllowed;
   final Widget? floatingButton;
 
@@ -23,9 +28,14 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
     required this.pageTitle,
     required this.unitGroups,
     required this.onUnitGroupTap,
+    required this.onUnitGroupTapForRemoval,
+    required this.onUnitGroupLongPress,
+    required this.onUnitGroupsRemove,
+    required this.itemIdsSelectedForRemoval,
     required this.appBarRightWidgets,
     required this.selectedUnitGroupVisible,
     required this.selectedUnitGroupId,
+    required this.removalModeEnabled,
     required this.removalModeAllowed,
     required this.floatingButton,
     super.key,
@@ -56,12 +66,17 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
             unitGroups,
             selectedItemId: selectedUnitGroupId,
             showSelectedItem: selectedUnitGroupVisible,
+            itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
+            removalModeEnabled: removalModeEnabled,
             removalModeAllowed: removalModeAllowed,
             onItemTap: onUnitGroupTap,
+            onItemTapForRemoval: onUnitGroupTapForRemoval,
+            onItemLongPress: onUnitGroupLongPress,
             itemsViewMode: viewModeState.pageViewMode,
             theme: appState.theme,
           ),
           floatingActionButton: floatingButton,
+          onItemsRemove: onUnitGroupsRemove,
         );
       });
     });

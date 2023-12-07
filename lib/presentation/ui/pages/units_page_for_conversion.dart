@@ -34,25 +34,30 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
         return ConvertouchUnitsPage(
           pageTitle: 'Add units to conversion',
           units: pageState.units,
-          onUnitTap: (item) {
+          onUnitTap: (unit) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
               FetchUnitsToMarkForConversion(
                 unitGroup: pageState.unitGroup!,
                 unitsAlreadyMarkedForConversion:
                     pageState.unitsMarkedForConversion,
-                unitNewlyMarkedForConversion: item as UnitModel,
+                unitNewlyMarkedForConversion: unit as UnitModel,
                 currentSourceConversionItem:
                     pageState.currentSourceConversionItem,
               ),
             );
           },
+          onUnitTapForRemoval: null,
+          onUnitLongPress: null,
+          onUnitsRemove: null,
+          itemIdsSelectedForRemoval: const [],
+          removalModeAllowed: false,
+          removalModeEnabled: false,
           appBarRightWidgets: const [],
           markedUnitsForConversionVisible: true,
           markUnitsOnTap: true,
           markedUnitIdsForConversion: markedUnitIds,
           selectedUnitVisible: false,
           selectedUnitId: null,
-          removalModeAllowed: false,
           floatingButton: ConvertouchFloatingActionButton(
             icon: Icons.check_outlined,
             visible: allowUnitsToBeAddedToConversion,
