@@ -37,7 +37,7 @@ enum ConvertouchUITheme {
   dark,
 }
 
-const List<String> unitGroupsNoAddUnits = [
+const List<String> notExtendableUnitGroups = [
   temperatureGroup,
   currencyGroup,
 ];
