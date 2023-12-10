@@ -4,10 +4,11 @@ import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_ev
 import 'package:convertouch/presentation/bloc/menu_items_view/menu_items_view_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitGroupsViewModeBloc extends Bloc<MenuItemsViewEvent, MenuItemsViewState> {
+abstract class MenuViewModeBloc
+    extends Bloc<MenuItemsViewEvent, MenuItemsViewState> {
   final ChangeItemsMenuViewUseCase changeItemsMenuViewUseCase;
 
-  UnitGroupsViewModeBloc({
+  MenuViewModeBloc({
     required this.changeItemsMenuViewUseCase,
   }) : super(const MenuItemsViewStateSet(
           pageViewMode: ItemsViewMode.grid,
@@ -20,11 +21,11 @@ class UnitGroupsViewModeBloc extends Bloc<MenuItemsViewEvent, MenuItemsViewState
       yield const MenuItemsViewStateSetting();
 
       final result =
-      await changeItemsMenuViewUseCase.execute(event.targetViewMode);
+          await changeItemsMenuViewUseCase.execute(event.targetViewMode);
 
       yield result.fold(
-            (error) => MenuItemsViewErrorState(message: error.message),
-            (changedViewMode) => MenuItemsViewStateSet(
+        (error) => MenuItemsViewErrorState(message: error.message),
+        (changedViewMode) => MenuItemsViewStateSet(
           pageViewMode: changedViewMode.pageViewMode,
           iconViewMode: changedViewMode.iconViewMode,
         ),
@@ -33,39 +34,14 @@ class UnitGroupsViewModeBloc extends Bloc<MenuItemsViewEvent, MenuItemsViewState
   }
 }
 
-class UnitsViewModeBloc extends Bloc<MenuItemsViewEvent, MenuItemsViewState> {
-  final ChangeItemsMenuViewUseCase changeItemsMenuViewUseCase;
+class UnitGroupsViewModeBloc extends MenuViewModeBloc {
+  UnitGroupsViewModeBloc({
+    required super.changeItemsMenuViewUseCase,
+  });
+}
 
+class UnitsViewModeBloc extends MenuViewModeBloc {
   UnitsViewModeBloc({
-    required this.changeItemsMenuViewUseCase,
-  }) : super(const MenuItemsViewStateSet(
-    pageViewMode: ItemsViewMode.grid,
-    iconViewMode: ItemsViewMode.list,
-  ));
-
-  @override
-  Stream<MenuItemsViewState> mapEventToState(MenuItemsViewEvent event) async* {
-    if (event is ChangeMenuItemsView) {
-      yield const MenuItemsViewStateSetting();
-
-      final result =
-      await changeItemsMenuViewUseCase.execute(event.targetViewMode);
-
-      yield result.fold(
-            (error) => MenuItemsViewErrorState(message: error.message),
-            (changedViewMode) => MenuItemsViewStateSet(
-          pageViewMode: changedViewMode.pageViewMode,
-          iconViewMode: changedViewMode.iconViewMode,
-        ),
-      );
-    }
-  }
+    required super.changeItemsMenuViewUseCase,
+  });
 }
-
-
-// Stream<MenuItemsViewState> _mapEventToState(
-//   MenuItemsViewEvent event,
-//   final ChangeItemsMenuViewUseCase changeItemsMenuViewUseCase,
-// ) async* {
-//
-// }
