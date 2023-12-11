@@ -1,21 +1,22 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/usecases/items_menu_view_mode/model/items_menu_view_mode_output.dart';
+import 'package:convertouch/domain/model/input/menu_items_view_event.dart';
+import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class ChangeItemsMenuViewUseCase
-    extends UseCase<ItemsViewMode, ItemsMenuViewModeOutput> {
+    extends UseCase<ChangeMenuItemsView, MenuItemsViewStateSet> {
   @override
-  Future<Either<Failure, ItemsMenuViewModeOutput>> execute(
-    ItemsViewMode input,
-  ) {
+  Future<Either<Failure, MenuItemsViewStateSet>> execute({
+    required ChangeMenuItemsView input,
+  }) {
     return Future(() {
       try {
-        ItemsViewMode pageViewMode = input;
-        ItemsViewMode iconViewMode = _nextMode(input);
+        ItemsViewMode pageViewMode = input.targetViewMode;
+        ItemsViewMode iconViewMode = _nextMode(input.targetViewMode);
         return Right(
-          ItemsMenuViewModeOutput(
+          MenuItemsViewStateSet(
             pageViewMode: pageViewMode,
             iconViewMode: iconViewMode,
           ),

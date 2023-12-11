@@ -1,0 +1,71 @@
+import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/domain/model/output/units_states.dart';
+import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
+import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
+import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
+import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
+  final GetUnitGroupUseCase getUnitGroupUseCase;
+  final AddUnitUseCase addUnitUseCase;
+  final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
+  final RemoveUnitsUseCase removeUnitsUseCase;
+
+  UnitsBloc({
+    required this.getUnitGroupUseCase,
+    required this.addUnitUseCase,
+    required this.fetchUnitsOfGroupUseCase,
+    required this.removeUnitsUseCase,
+  }) : super(const UnitsFetched(unitGroup: null));
+
+  @override
+  Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
+    yield const UnitsFetching();
+
+    if (event is FetchUnits) {
+      final result = await fetchUnitsOfGroupUseCase.execute(input: event);
+
+      yield result.fold(
+        (error) => UnitsErrorState(
+          message: error.message,
+        ),
+        (units) => UnitsFetched(
+          units: units,
+          unitGroup: event.unitGroup,
+        ),
+      );
+    } else if (event is AddUnit) {
+      final addUnitResult = await addUnitUseCase.execute(input: event);
+
+      if (addUnitResult.isLeft) {
+        yield UnitsErrorState(
+          message: addUnitResult.left.message,
+        );
+      } else {
+        bool unitAdded = addUnitResult.right;
+
+        if (unitAdded) {
+          add(
+            FetchUnits(
+              unitGroup: event.unitGroup,
+            ),
+          );
+        } else {
+          yield UnitExists(
+            unitName: event.newUnit.name,
+          );
+        }
+      }
+    } else if (event is RemoveUnits) {
+      final result = await removeUnitsUseCase.execute(input: event);
+      if (result.isLeft) {
+        yield UnitsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        add(FetchUnits(unitGroup: event.unitGroup));
+      }
+    }
+  }
+}

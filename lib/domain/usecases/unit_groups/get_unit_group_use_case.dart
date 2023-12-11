@@ -10,8 +10,9 @@ class GetUnitGroupUseCase extends UseCase<int, UnitGroupModel> {
   const GetUnitGroupUseCase(this.unitGroupRepository);
 
   @override
-  Future<Either<Failure, UnitGroupModel>> execute(int input) async {
+  Future<Either<Failure, UnitGroupModel>> execute({
+    required int input,
+  }) async {
     return await unitGroupRepository.getUnitGroup(input);
   }
-
 }

@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/default_units.dart';
-import 'package:convertouch/domain/usecases/units_conversion/model/formula.dart';
+import 'package:convertouch/domain/model/formula.dart';
 
 ConvertouchFormula getFormula(String unitGroupName, String unitName) {
   var formula = formulasMap[unitGroupName]?[unitName];

@@ -4,7 +4,7 @@ import 'package:either_dart/either.dart';
 abstract class UseCase<InputType, OutputType> {
   const UseCase();
 
-  Future<Either<Failure, OutputType>> execute(InputType input);
+  Future<Either<Failure, OutputType>> execute({required InputType input});
 }
 
 abstract class UseCaseNoInput<OutputType> {

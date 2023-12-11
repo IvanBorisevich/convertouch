@@ -1,41 +1,66 @@
 import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/input/units_conversion_events.dart';
+import 'package:convertouch/domain/model/output/units_conversion_states.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/domain/usecases/units_conversion/formulas_map.dart';
-import 'package:convertouch/domain/usecases/units_conversion/model/unit_conversion_input.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class ConvertUnitValueUseCase
-    extends UseCase<UnitConversionInput, UnitValueModel> {
+    extends UseCase<BuildConversion, ConversionBuilt> {
   @override
-  Future<Either<Failure, UnitValueModel>> execute(
-    UnitConversionInput input,
-  ) async {
+  Future<Either<Failure, ConversionBuilt>> execute({
+    required BuildConversion input,
+  }) async {
     return Future(() {
       try {
-        double? inputValue = input.inputUnitValue.value;
-        double? inputUnitCoefficient = input.inputUnitValue.unit.coefficient;
-        double? targetUnitCoefficient = input.targetUnit.coefficient;
-        double? targetValue;
-        if (inputUnitCoefficient != null && targetUnitCoefficient != null) {
-          targetValue = inputValue != null
-              ? inputValue * inputUnitCoefficient / targetUnitCoefficient
-              : null;
-        } else {
-          String group = input.unitGroup.name;
-          String srcUnit = input.inputUnitValue.unit.name;
-          String tgtUnit = input.targetUnit.name;
+        UnitValueModel? sourceConversionItem = input.sourceConversionItem;
+        List<UnitValueModel> convertedUnitValues = [];
 
-          var srcToSi = getFormula(group, srcUnit);
-          var siToTgt = getFormula(group, tgtUnit);
+        if (input.units != null && input.unitGroup != null) {
+          sourceConversionItem ??= UnitValueModel(
+            unit: input.units![0],
+            value: 1,
+          );
 
-          double? siValue = srcToSi.applyForward(inputValue);
-          targetValue = siToTgt.applyReverse(siValue);
+          double? inputValue = sourceConversionItem.value;
+          double? inputUnitCoefficient = sourceConversionItem.unit.coefficient;
+
+          for (UnitModel targetUnit in input.units!) {
+            double? targetUnitCoefficient = targetUnit.coefficient;
+            double? targetValue;
+
+            if (inputUnitCoefficient != null && targetUnitCoefficient != null) {
+              targetValue = inputValue != null
+                  ? inputValue * inputUnitCoefficient / targetUnitCoefficient
+                  : null;
+            } else {
+              String group = input.unitGroup!.name;
+              String srcUnit = sourceConversionItem.unit.name;
+              String tgtUnit = targetUnit.name;
+
+              var srcToSi = getFormula(group, srcUnit);
+              var siToTgt = getFormula(group, tgtUnit);
+
+              double? siValue = srcToSi.applyForward(inputValue);
+              targetValue = siToTgt.applyReverse(siValue);
+            }
+
+            convertedUnitValues.add(
+              UnitValueModel(
+                unit: targetUnit,
+                value: targetValue,
+              ),
+            );
+          }
         }
+
         return Right(
-          UnitValueModel(
-            unit: input.targetUnit,
-            value: targetValue,
+          ConversionBuilt(
+            unitGroup: input.unitGroup,
+            sourceConversionItem: sourceConversionItem,
+            conversionItems: convertedUnitValues,
           ),
         );
       } catch (e) {

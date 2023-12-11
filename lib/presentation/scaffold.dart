@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/app_bloc.dart';
+import 'package:convertouch/domain/model/input/app_event.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar_item_navigator.dart';
 import 'package:flutter/material.dart';

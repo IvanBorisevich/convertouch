@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
+import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
@@ -21,9 +21,7 @@ class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
     yield const UnitsFetching();
 
     if (event is FetchUnitsForUnitCreation) {
-      var unitGroup = event.unitGroup;
-
-      final result = await fetchUnitsOfGroupUseCase.execute(unitGroup.id!);
+      final result = await fetchUnitsOfGroupUseCase.execute(input: event);
 
       if (result.isLeft) {
         yield UnitsErrorState(
@@ -32,7 +30,7 @@ class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
       } else {
         yield UnitsFetchedForUnitCreation(
           units: result.right,
-          unitGroup: unitGroup,
+          unitGroup: event.unitGroup,
           currentSelectedBaseUnit: event.currentSelectedBaseUnit,
         );
       }

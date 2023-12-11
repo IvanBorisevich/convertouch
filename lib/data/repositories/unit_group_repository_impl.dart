@@ -11,7 +11,9 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups() async {
+  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups({
+    String? searchString,
+  }) async {
     try {
       final result = await unitGroupDao.getAll();
       return Right(

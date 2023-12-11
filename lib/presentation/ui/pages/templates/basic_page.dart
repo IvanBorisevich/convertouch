@@ -1,6 +1,6 @@
-import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/app/app_event.dart';
-import 'package:convertouch/presentation/bloc/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/app_bloc.dart';
+import 'package:convertouch/domain/model/input/app_event.dart';
+import 'package:convertouch/domain/model/output/app_state.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';

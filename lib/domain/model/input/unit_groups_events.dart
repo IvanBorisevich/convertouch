@@ -9,20 +9,32 @@ abstract class UnitGroupsEvent extends Equatable {
 }
 
 class FetchUnitGroups extends UnitGroupsEvent {
-  const FetchUnitGroups();
+  final String? searchString;
+
+  const FetchUnitGroups({
+    this.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    searchString,
+  ];
 
   @override
   String toString() {
-    return 'FetchUnitGroups{}';
+    return 'FetchUnitGroups{searchString: $searchString}';
   }
 }
 
 class FetchUnitGroupsForFirstAddingToConversion extends FetchUnitGroups {
-  const FetchUnitGroupsForFirstAddingToConversion();
+  const FetchUnitGroupsForFirstAddingToConversion({
+    super.searchString,
+  });
 
   @override
   String toString() {
-    return 'FetchUnitGroupsForFirstAddingToConversion{}';
+    return 'FetchUnitGroupsForFirstAddingToConversion{'
+        '${super.toString()}}';
   }
 }
 
@@ -31,17 +43,20 @@ class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
 
   const FetchUnitGroupsForChangeInConversion({
     required this.currentUnitGroupInConversion,
+    super.searchString,
   });
 
   @override
   List<Object?> get props => [
     currentUnitGroupInConversion,
+    super.props,
   ];
 
   @override
   String toString() {
     return 'FetchUnitGroupsForChangeInConversion{'
-        'currentUnitGroupInConversion: $currentUnitGroupInConversion}';
+        'currentUnitGroupInConversion: $currentUnitGroupInConversion,'
+        '${super.toString()}}';
   }
 }
 
@@ -50,17 +65,20 @@ class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
 
   const FetchUnitGroupsForUnitCreation({
     required this.currentUnitGroupInUnitCreation,
+    super.searchString,
   });
 
   @override
   List<Object?> get props => [
     currentUnitGroupInUnitCreation,
+    super.props,
   ];
 
   @override
   String toString() {
     return 'FetchUnitGroupsForUnitCreation{'
-        'currentUnitGroupInUnitCreation: $currentUnitGroupInUnitCreation}';
+        'currentUnitGroupInUnitCreation: $currentUnitGroupInUnitCreation,'
+        '${super.toString()}}';
   }
 }
 

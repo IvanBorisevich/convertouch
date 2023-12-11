@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
+import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBlocForConversion extends Bloc<UnitsEvent, UnitsState> {
@@ -25,9 +25,7 @@ class UnitsBlocForConversion extends Bloc<UnitsEvent, UnitsState> {
     yield const UnitsFetching();
 
     if (event is FetchUnits) {
-      final result = await fetchUnitsOfGroupUseCase.execute(
-        event.unitGroup.id!,
-      );
+      final result = await fetchUnitsOfGroupUseCase.execute(input: event);
 
       if (result.isLeft) {
         yield UnitsErrorState(message: result.left.message);

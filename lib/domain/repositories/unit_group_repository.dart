@@ -5,7 +5,9 @@ import 'package:either_dart/either.dart';
 abstract class UnitGroupRepository {
   const UnitGroupRepository();
 
-  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups();
+  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups({
+    String? searchString,
+  });
 
   Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup);
 

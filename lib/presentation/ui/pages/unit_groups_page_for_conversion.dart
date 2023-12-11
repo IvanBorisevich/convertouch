@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
+import 'package:convertouch/domain/model/output/unit_groups_states.dart';
+import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
+import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

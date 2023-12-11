@@ -12,20 +12,24 @@ abstract class UnitsEvent extends Equatable {
 
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
+  final String? searchString;
 
   const FetchUnits({
     required this.unitGroup,
+    this.searchString,
   });
 
   @override
   List<Object?> get props => [
     unitGroup,
+    searchString,
   ];
 
   @override
   String toString() {
     return 'FetchUnits{'
-        'unitGroup: $unitGroup}';
+        'unitGroup: $unitGroup,'
+        'searchString: $searchString}';
   }
 }
 
@@ -39,6 +43,7 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
     this.unitsAlreadyMarkedForConversion,
     this.unitNewlyMarkedForConversion,
     this.currentSourceConversionItem,
+    super.searchString,
   });
 
   @override
@@ -54,8 +59,8 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
     return 'FetchUnitsToMarkForConversion{'
         'unitNewlyMarkedForConversion: $unitNewlyMarkedForConversion, '
         'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion, '
-        'currentSourceConversionItem: $currentSourceConversionItem'
-        '}';
+        'currentSourceConversionItem: $currentSourceConversionItem, '
+        '${super.toString()}}';
   }
 }
 
@@ -65,6 +70,7 @@ class FetchUnitsForUnitCreation extends FetchUnits {
   const FetchUnitsForUnitCreation({
     required super.unitGroup,
     required this.currentSelectedBaseUnit,
+    super.searchString,
   });
 
   @override
@@ -76,7 +82,8 @@ class FetchUnitsForUnitCreation extends FetchUnits {
   @override
   String toString() {
     return 'FetchUnitsForUnitCreation{'
-        'currentSelectedBaseUnit: $currentSelectedBaseUnit}';
+        'currentSelectedBaseUnit: $currentSelectedBaseUnit,'
+        '${super.toString()}}';
   }
 }
 

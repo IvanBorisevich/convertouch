@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/bloc/app/app_event.dart';
-import 'package:convertouch/presentation/bloc/app/app_state.dart';
+import 'package:convertouch/domain/model/input/app_event.dart';
+import 'package:convertouch/domain/model/output/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchAppBloc

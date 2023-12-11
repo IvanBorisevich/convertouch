@@ -17,8 +17,9 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<Either<Failure, List<UnitModel>>> fetchUnitsOfGroup(
-    int unitGroupId,
-  ) async {
+    int unitGroupId, {
+    String? searchString,
+  }) async {
     try {
       final result = await unitDao.getAll(unitGroupId);
       return Right(
@@ -33,7 +34,8 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(int unitGroupId) async {
+  Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(
+      int unitGroupId) async {
     try {
       var result = await unitDao.getFirstUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result));
