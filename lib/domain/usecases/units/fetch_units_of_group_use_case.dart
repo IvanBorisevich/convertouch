@@ -12,9 +12,6 @@ class FetchUnitsOfGroupUseCase extends UseCase<FetchUnits, List<UnitModel>> {
 
   @override
   Future<Either<Failure, List<UnitModel>>> execute(FetchUnits input) async {
-    return await unitRepository.fetchUnitsOfGroup(
-      input.unitGroup.id!,
-      searchString: input.searchString,
-    );
+    return await unitRepository.fetchUnits(input.unitGroup.id!);
   }
 }

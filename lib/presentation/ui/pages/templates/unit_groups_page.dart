@@ -1,9 +1,7 @@
-import 'package:convertouch/domain/model/input/items_search_events.dart';
 import 'package:convertouch/domain/model/input/menu_items_view_event.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/ui/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
@@ -49,50 +47,40 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBloc((appState) {
       return unitGroupsViewModeBloc((viewModeState) {
-        return searchBloc((searchState) {
-          return ConvertouchPage(
-            appState: appState,
-            title: pageTitle,
-            appBarRightWidgets: appBarRightWidgets,
-            secondaryAppBar: ConvertouchSearchBar(
-              placeholder: "Search unit groups...",
-              theme: appState.theme,
-              iconViewMode: viewModeState.iconViewMode,
-              pageViewMode: viewModeState.pageViewMode,
-              onViewModeChange: () {
-                BlocProvider.of<UnitGroupsViewModeBloc>(context).add(
-                  ChangeMenuItemsView(
-                    targetViewMode: viewModeState.iconViewMode,
-                  ),
-                );
-              },
-              onSearchStringChanged: (text) {
-                BlocProvider.of<ItemsSearchBloc>(context).add(
-                  SearchUnitGroups(
-                    searchString: text,
-                  ),
-                );
-              },
-            ),
-            body: ConvertouchMenuItemsView(
-              searchState.foundItems.isNotEmpty
-                  ? searchState.foundItems
-                  : unitGroups,
-              selectedItemId: selectedUnitGroupId,
-              showSelectedItem: selectedUnitGroupVisible,
-              itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
-              removalModeEnabled: removalModeEnabled,
-              removalModeAllowed: removalModeAllowed,
-              onItemTap: onUnitGroupTap,
-              onItemTapForRemoval: onUnitGroupTapForRemoval,
-              onItemLongPress: onUnitGroupLongPress,
-              itemsViewMode: viewModeState.pageViewMode,
-              theme: appState.theme,
-            ),
-            floatingActionButton: floatingButton,
-            onItemsRemove: onUnitGroupsRemove,
-          );
-        });
+        return ConvertouchPage(
+          appState: appState,
+          title: pageTitle,
+          appBarRightWidgets: appBarRightWidgets,
+          secondaryAppBar: ConvertouchSearchBar(
+            placeholder: "Search unit groups...",
+            theme: appState.theme,
+            iconViewMode: viewModeState.iconViewMode,
+            pageViewMode: viewModeState.pageViewMode,
+            onViewModeChange: () {
+              BlocProvider.of<UnitGroupsViewModeBloc>(context).add(
+                ChangeMenuItemsView(
+                  targetViewMode: viewModeState.iconViewMode,
+                ),
+              );
+            },
+            onSearchStringChanged: onSearchStringChanged,
+          ),
+          body: ConvertouchMenuItemsView(
+            unitGroups,
+            selectedItemId: selectedUnitGroupId,
+            showSelectedItem: selectedUnitGroupVisible,
+            itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
+            removalModeEnabled: removalModeEnabled,
+            removalModeAllowed: removalModeAllowed,
+            onItemTap: onUnitGroupTap,
+            onItemTapForRemoval: onUnitGroupTapForRemoval,
+            onItemLongPress: onUnitGroupLongPress,
+            itemsViewMode: viewModeState.pageViewMode,
+            theme: appState.theme,
+          ),
+          floatingActionButton: floatingButton,
+          onItemsRemove: onUnitGroupsRemove,
+        );
       });
     });
   }

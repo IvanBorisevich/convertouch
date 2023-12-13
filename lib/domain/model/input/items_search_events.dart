@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ItemsSearchEvent extends Equatable {
@@ -26,8 +25,8 @@ abstract class SearchItems extends ItemsSearchEvent {
 
   @override
   List<Object> get props => [
-    searchString,
-  ];
+        searchString,
+      ];
 }
 
 class SearchUnitGroups extends SearchItems {
@@ -43,23 +42,23 @@ class SearchUnitGroups extends SearchItems {
 }
 
 class SearchUnits extends SearchItems {
-  final UnitGroupModel unitGroup;
+  final int unitGroupId;
 
   const SearchUnits({
     required super.searchString,
-    required this.unitGroup,
+    required this.unitGroupId,
   });
 
   @override
   List<Object> get props => [
-    searchString,
-    unitGroup,
-  ];
+        searchString,
+        unitGroupId,
+      ];
 
   @override
   String toString() {
     return 'SearchUnits{'
-        'unitGroup: $unitGroup, '
+        'unitGroupId: $unitGroupId, '
         'searchString: ${super.searchString}}';
   }
 }

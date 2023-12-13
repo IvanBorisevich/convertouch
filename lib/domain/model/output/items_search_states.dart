@@ -1,15 +1,17 @@
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class ItemsSearchState extends Equatable {
-  final List<IdNameItemModel> foundItems;
+abstract class ItemsSearchState<T extends IdNameItemModel> extends Equatable {
+  final List<T>? foundItems;
 
   const ItemsSearchState({
-    this.foundItems = const [],
+    this.foundItems,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     foundItems,
   ];
 }
@@ -23,7 +25,7 @@ class ItemsSearchInitState extends ItemsSearchState {
   }
 }
 
-class UnitGroupsFound extends ItemsSearchState {
+class UnitGroupsFound extends ItemsSearchState<UnitGroupModel> {
   const UnitGroupsFound({
     super.foundItems,
   });
@@ -35,7 +37,7 @@ class UnitGroupsFound extends ItemsSearchState {
   }
 }
 
-class UnitsFound extends ItemsSearchState {
+class UnitsFound extends ItemsSearchState<UnitModel> {
   const UnitsFound({
     super.foundItems,
   });
@@ -55,7 +57,7 @@ class ItemsSearchErrorState extends ItemsSearchState {
   });
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 
   @override
   String toString() {

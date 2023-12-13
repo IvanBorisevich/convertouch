@@ -1,10 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/app_event.dart';
+import 'package:convertouch/domain/model/input/items_search_events.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
@@ -24,57 +26,61 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           unitGroupsPageFloatingButtonColors[appState.theme]!;
 
       return unitGroupsBloc((pageState) {
-        return ConvertouchUnitGroupsPage(
-          pageTitle: "Unit Groups",
-          unitGroups: pageState.unitGroups,
-          onSearchStringChanged: (text) {
-
-          },
-          onUnitGroupTap: (unitGroup) {
-            BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnits(unitGroup: unitGroup as UnitGroupModel),
-            );
-            Navigator.of(context).pushNamed(unitsPageRegular);
-          },
-          onUnitGroupTapForRemoval: (unitGroup) {
-            BlocProvider.of<ConvertouchAppBloc>(context).add(
-              SelectMenuItemForRemoval(
-                itemId: unitGroup.id!,
-                selectedItemIdsForRemoval: appState.selectedItemIdsForRemoval,
-              ),
-            );
-          },
-          onUnitGroupLongPress: (unitGroup) {
-            if (!appState.removalMode) {
+        return unitGroupsSearchBloc((foundUnitGroups) {
+          return ConvertouchUnitGroupsPage(
+            pageTitle: "Unit Groups",
+            unitGroups: foundUnitGroups ?? pageState.unitGroups,
+            onSearchStringChanged: (text) {
+              BlocProvider.of<UnitGroupsSearchBloc>(context).add(
+                SearchUnitGroups(searchString: text),
+              );
+            },
+            onUnitGroupTap: (unitGroup) {
+              BlocProvider.of<UnitsBloc>(context).add(
+                FetchUnits(unitGroup: unitGroup as UnitGroupModel),
+              );
+              Navigator.of(context).pushNamed(unitsPageRegular);
+            },
+            onUnitGroupTapForRemoval: (unitGroup) {
               BlocProvider.of<ConvertouchAppBloc>(context).add(
                 SelectMenuItemForRemoval(
                   itemId: unitGroup.id!,
+                  selectedItemIdsForRemoval: appState.selectedItemIdsForRemoval,
                 ),
               );
-            }
-          },
-          onUnitGroupsRemove: () {
-            BlocProvider.of<UnitGroupsBloc>(context).add(
-              RemoveUnitGroups(
-                ids: appState.selectedItemIdsForRemoval,
-              ),
-            );
-          },
-          appBarRightWidgets: const [],
-          selectedUnitGroupVisible: false,
-          selectedUnitGroupId: null,
-          itemIdsSelectedForRemoval: appState.selectedItemIdsForRemoval,
-          removalModeEnabled: appState.removalMode,
-          removalModeAllowed: true,
-          floatingButton: ConvertouchFloatingActionButton.adding(
-            onClick: () {
-              Navigator.of(context).pushNamed(unitGroupCreationPage);
             },
-            visible: true,
-            background: floatingButtonColor.background,
-            foreground: floatingButtonColor.foreground,
-          ),
-        );
+            onUnitGroupLongPress: (unitGroup) {
+              if (!appState.removalMode) {
+                BlocProvider.of<ConvertouchAppBloc>(context).add(
+                  SelectMenuItemForRemoval(
+                    itemId: unitGroup.id!,
+                  ),
+                );
+              }
+            },
+            onUnitGroupsRemove: () {
+              BlocProvider.of<UnitGroupsBloc>(context).add(
+                RemoveUnitGroups(
+                  ids: appState.selectedItemIdsForRemoval,
+                ),
+              );
+            },
+            appBarRightWidgets: const [],
+            selectedUnitGroupVisible: false,
+            selectedUnitGroupId: null,
+            itemIdsSelectedForRemoval: appState.selectedItemIdsForRemoval,
+            removalModeEnabled: appState.removalMode,
+            removalModeAllowed: true,
+            floatingButton: ConvertouchFloatingActionButton.adding(
+              onClick: () {
+                Navigator.of(context).pushNamed(unitGroupCreationPage);
+              },
+              visible: true,
+              background: floatingButtonColor.background,
+              foreground: floatingButtonColor.foreground,
+            ),
+          );
+        });
       });
     });
   }

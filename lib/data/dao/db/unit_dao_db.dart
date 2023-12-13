@@ -9,6 +9,14 @@ abstract class UnitDaoDb extends UnitDao {
   Future<List<UnitEntity>> getAll(int unitGroupId);
 
   @override
+  @Query('select * from $unitsTableName where unit_group_id = :unitGroupId '
+      'and name like :searchString')
+  Future<List<UnitEntity>> getBySearchString(
+    int unitGroupId,
+    String searchString,
+  );
+
+  @override
   @Query('select * from $unitsTableName '
       'where unit_group_id = :unitGroupId '
       'and name = :name')

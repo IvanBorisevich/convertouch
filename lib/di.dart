@@ -16,6 +16,7 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
+import 'package:convertouch/domain/usecases/units/search_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
@@ -68,8 +69,38 @@ Future<void> init() async {
   // items search
 
   locator.registerLazySingleton(
-    () => ItemsSearchBloc(
+    () => UnitGroupsSearchBloc(
       searchUnitGroupsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitGroupsSearchBlocForConversion(
+      searchUnitGroupsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitGroupsSearchBlocForUnitCreation(
+      searchUnitGroupsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitsSearchBloc(
+      searchUnitsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitsSearchBlocForConversion(
+      searchUnitsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UnitsSearchBlocForUnitCreation(
+      searchUnitsUseCase: locator(),
     ),
   );
 
@@ -119,6 +150,10 @@ Future<void> init() async {
   );
 
   // units
+
+  locator.registerLazySingleton<SearchUnitsUseCase>(
+    () => SearchUnitsUseCase(locator()),
+  );
 
   locator.registerLazySingleton(
     () => UnitsBloc(

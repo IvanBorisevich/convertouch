@@ -1,6 +1,8 @@
+import 'package:convertouch/domain/model/input/items_search_events.dart';
 import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +13,20 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
-      return unitsBlocForUnitCreation((pageState) {
+    return unitsBlocForUnitCreation((pageState) {
+      return unitsSearchBlocForUnitCreation((foundUnits) {
         return ConvertouchUnitsPage(
           pageTitle: "Select Base Unit",
-          units: pageState.units,
+          units: foundUnits ?? pageState.units,
           appBarRightWidgets: const [],
-          onSearchStringChanged: (text) {},
+          onSearchStringChanged: (text) {
+            BlocProvider.of<UnitsSearchBlocForUnitCreation>(context).add(
+              SearchUnits(
+                searchString: text,
+                unitGroupId: pageState.unitGroup!.id!,
+              ),
+            );
+          },
           onUnitTap: (unit) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(

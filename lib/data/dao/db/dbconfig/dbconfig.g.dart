@@ -262,6 +262,22 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 
   @override
+  Future<List<UnitEntity>> getBySearchString(
+    int unitGroupId,
+    String searchString,
+  ) async {
+    return _queryAdapter.queryList(
+        'select * from units where unit_group_id = ?1 and name like ?2',
+        mapper: (Map<String, Object?> row) => UnitEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            abbreviation: row['abbreviation'] as String,
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int),
+        arguments: [unitGroupId, searchString]);
+  }
+
+  @override
   Future<UnitEntity?> getByName(
     int unitGroupId,
     String name,

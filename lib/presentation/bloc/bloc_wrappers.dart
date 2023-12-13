@@ -1,24 +1,28 @@
-import 'package:convertouch/domain/model/output/items_search_states.dart';
-import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
+import 'package:convertouch/domain/model/output/items_search_states.dart';
+import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
+import 'package:convertouch/domain/model/output/unit_creation_states.dart';
+import 'package:convertouch/domain/model/output/unit_groups_states.dart';
+import 'package:convertouch/domain/model/output/units_conversion_states.dart';
+import 'package:convertouch/domain/model/output/units_states.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
-import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
-import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
-import 'package:convertouch/domain/model/output/units_conversion_states.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/domain/model/output/unit_creation_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_unit_creation.dart';
-import 'package:convertouch/domain/model/output/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_unit_creation.dart';
-import 'package:convertouch/domain/model/output/units_states.dart';
+import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// TODO: refactor view mode blocs in order to avoid duplicates
 
 Widget appBloc(
   Widget Function(ConvertouchAppStateBuilt appState) builderFunc,
@@ -37,17 +41,95 @@ Widget appBloc(
   );
 }
 
-Widget searchBloc(
-    Widget Function(ItemsSearchState searchState) builderFunc,
-    ) {
-  return BlocBuilder<ItemsSearchBloc, ItemsSearchState>(
+Widget unitGroupsSearchBloc(
+  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
+) {
+  return BlocBuilder<UnitGroupsSearchBloc, ItemsSearchState>(
     builder: (_, searchState) {
-      return builderFunc.call(searchState);
+      List<UnitGroupModel>? result;
+
+      if (searchState is UnitGroupsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
     },
   );
 }
 
-// TODO: refactor view mode blocs in order to avoid duplicates
+Widget unitGroupsSearchBlocForConversion(
+  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
+) {
+  return BlocBuilder<UnitGroupsSearchBlocForConversion, ItemsSearchState>(
+    builder: (_, searchState) {
+      List<UnitGroupModel>? result;
+
+      if (searchState is UnitGroupsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
+    },
+  );
+}
+
+Widget unitGroupsSearchBlocForUnitCreation(
+  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
+) {
+  return BlocBuilder<UnitGroupsSearchBlocForUnitCreation, ItemsSearchState>(
+    builder: (_, searchState) {
+      List<UnitGroupModel>? result;
+
+      if (searchState is UnitGroupsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
+    },
+  );
+}
+
+Widget unitsSearchBloc(
+  Widget Function(List<UnitModel>? foundUnits) builderFunc,
+) {
+  return BlocBuilder<UnitsSearchBloc, ItemsSearchState>(
+    builder: (_, searchState) {
+      List<UnitModel>? result;
+
+      if (searchState is UnitsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
+    },
+  );
+}
+
+Widget unitsSearchBlocForConversion(
+  Widget Function(List<UnitModel>? foundUnits) builderFunc,
+) {
+  return BlocBuilder<UnitsSearchBlocForConversion, ItemsSearchState>(
+    builder: (_, searchState) {
+      List<UnitModel>? result;
+
+      if (searchState is UnitsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
+    },
+  );
+}
+
+Widget unitsSearchBlocForUnitCreation(
+  Widget Function(List<UnitModel>? foundUnits) builderFunc,
+) {
+  return BlocBuilder<UnitsSearchBlocForUnitCreation, ItemsSearchState>(
+    builder: (_, searchState) {
+      List<UnitModel>? result;
+
+      if (searchState is UnitsFound) {
+        result = searchState.foundItems;
+      }
+      return builderFunc.call(result);
+    },
+  );
+}
 
 Widget unitsViewModeBloc(
   Widget Function(MenuItemsViewStateSet viewModeState) builderFunc,
@@ -168,10 +250,9 @@ Widget unitGroupsBlocForConversion(
   );
 }
 
-
 Widget unitGroupsBlocForUnitCreation(
-    Widget Function(UnitGroupsFetchedForUnitCreation pageState) builderFunc,
-    ) {
+  Widget Function(UnitGroupsFetchedForUnitCreation pageState) builderFunc,
+) {
   return BlocBuilder<UnitGroupsBlocForUnitCreation, UnitGroupsState>(
     buildWhen: (prev, next) {
       return prev != next && next is UnitGroupsFetchedForUnitCreation;
@@ -185,7 +266,6 @@ Widget unitGroupsBlocForUnitCreation(
     },
   );
 }
-
 
 Widget unitCreationBloc(
   Widget Function(UnitCreationPrepared pageState) builderFunc,

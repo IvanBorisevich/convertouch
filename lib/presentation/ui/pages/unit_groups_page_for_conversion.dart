@@ -1,8 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/input/items_search_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/output/unit_groups_states.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,8 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
-      return unitGroupsBlocForConversion((pageState) {
+    return unitGroupsBlocForConversion((pageState) {
+      return unitGroupsSearchBlocForConversion((foundUnitGroups) {
         String pageTitle = "Unit Groups";
         bool selectedUnitGroupVisible = false;
         int? selectedUnitGroupId;
@@ -29,8 +31,12 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
 
         return ConvertouchUnitGroupsPage(
           pageTitle: pageTitle,
-          unitGroups: pageState.unitGroups,
-          onSearchStringChanged: (text) {},
+          unitGroups: foundUnitGroups ?? pageState.unitGroups,
+          onSearchStringChanged: (text) {
+            BlocProvider.of<UnitGroupsSearchBlocForConversion>(context).add(
+              SearchUnitGroups(searchString: text),
+            );
+          },
           onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
               FetchUnitsToMarkForConversion(

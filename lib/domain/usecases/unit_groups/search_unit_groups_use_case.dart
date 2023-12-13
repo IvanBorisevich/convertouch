@@ -6,15 +6,18 @@ import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class SearchUnitGroupsUseCase
-    extends UseCase<SearchUnitGroups, List<UnitGroupModel>> {
+    extends UseCase<SearchUnitGroups, List<UnitGroupModel>?> {
   final UnitGroupRepository unitGroupRepository;
 
   const SearchUnitGroupsUseCase(this.unitGroupRepository);
 
   @override
-  Future<Either<Failure, List<UnitGroupModel>>> execute(
+  Future<Either<Failure, List<UnitGroupModel>?>> execute(
     SearchUnitGroups input,
   ) async {
+    if (input.searchString.isEmpty) {
+      return const Right(null);
+    }
     return await unitGroupRepository.searchUnitGroups(input.searchString);
   }
 }
