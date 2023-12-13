@@ -38,6 +38,11 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 ),
               );
             },
+            onSearchReset: () {
+              BlocProvider.of<UnitsSearchBloc>(context).add(
+                const ResetSearch(),
+              );
+            },
             onUnitTap: (unit) {},
             onUnitTapForRemoval: (unit) {
               BlocProvider.of<ConvertouchAppBloc>(context).add(

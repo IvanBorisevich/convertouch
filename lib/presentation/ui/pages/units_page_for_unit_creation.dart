@@ -27,6 +27,11 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
               ),
             );
           },
+          onSearchReset: () {
+            BlocProvider.of<UnitsSearchBlocForUnitCreation>(context).add(
+              const ResetSearch(),
+            );
+          },
           onUnitTap: (unit) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(

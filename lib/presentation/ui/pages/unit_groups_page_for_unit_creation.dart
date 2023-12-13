@@ -23,6 +23,11 @@ class ConvertouchUnitGroupsPageForUnitCreation extends StatelessWidget {
               SearchUnitGroups(searchString: text),
             );
           },
+          onSearchReset: () {
+            BlocProvider.of<UnitGroupsSearchBlocForUnitCreation>(context).add(
+              const ResetSearch(),
+            );
+          },
           onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(

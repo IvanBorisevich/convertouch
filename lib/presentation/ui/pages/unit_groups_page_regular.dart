@@ -35,6 +35,11 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                 SearchUnitGroups(searchString: text),
               );
             },
+            onSearchReset: () {
+              BlocProvider.of<UnitGroupsSearchBloc>(context).add(
+                const ResetSearch(),
+              );
+            },
             onUnitGroupTap: (unitGroup) {
               BlocProvider.of<UnitsBloc>(context).add(
                 FetchUnits(unitGroup: unitGroup as UnitGroupModel),

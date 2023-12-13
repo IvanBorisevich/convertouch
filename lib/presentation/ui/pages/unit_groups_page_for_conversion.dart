@@ -37,6 +37,11 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
               SearchUnitGroups(searchString: text),
             );
           },
+          onSearchReset: () {
+            BlocProvider.of<UnitGroupsSearchBlocForConversion>(context).add(
+              const ResetSearch(),
+            );
+          },
           onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
               FetchUnitsToMarkForConversion(

@@ -4,18 +4,13 @@ import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchSearchBar extends StatelessWidget {
-  static const double searchTextFieldFontSize = 16;
-  static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
-    ItemsViewMode.list: Icons.list_outlined,
-    ItemsViewMode.grid: Icons.grid_view_outlined
-  };
-
+class ConvertouchSearchBar extends StatefulWidget {
   final String placeholder;
   final ItemsViewMode iconViewMode;
   final ItemsViewMode pageViewMode;
   final void Function()? onViewModeChange;
   final void Function(String)? onSearchStringChanged;
+  final void Function()? onSearchReset;
   final ConvertouchUITheme theme;
   final ConvertouchSearchBarColor? customColor;
 
@@ -25,14 +20,29 @@ class ConvertouchSearchBar extends StatelessWidget {
     required this.pageViewMode,
     this.onViewModeChange,
     this.onSearchStringChanged,
+    this.onSearchReset,
     required this.theme,
     this.customColor,
     super.key,
   });
 
   @override
+  State createState() => _ConvertouchSearchBarState();
+}
+
+class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
+  static const double searchTextFieldFontSize = 16;
+  static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
+    ItemsViewMode.list: Icons.list_outlined,
+    ItemsViewMode.grid: Icons.grid_view_outlined
+  };
+
+  final TextEditingController _searchFieldController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    ConvertouchSearchBarColor color = customColor ?? searchBarColors[theme]!;
+    ConvertouchSearchBarColor color =
+        widget.customColor ?? searchBarColors[widget.theme]!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,13 +62,27 @@ class ConvertouchSearchBar extends StatelessWidget {
       child: TextFormField(
         autofocus: false,
         obscureText: false,
-        onChanged: onSearchStringChanged,
+        controller: _searchFieldController,
+        onChanged: widget.onSearchStringChanged,
         decoration: InputDecoration(
-          suffixIcon: Icon(
-            Icons.search,
-            color: color.regular.searchBoxIconColor,
-          ),
-          hintText: placeholder,
+          suffixIcon: _searchFieldController.text.isEmpty
+              ? Icon(
+                  Icons.search,
+                  color: color.regular.searchBoxIconColor,
+                )
+              : IconButton(
+                  onPressed: () {
+                    widget.onSearchReset?.call();
+                    setState(() {
+                      _searchFieldController.clear();
+                    });
+                  },
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: color.regular.searchBoxIconColor,
+                  ),
+                ),
+          hintText: widget.placeholder,
           hintStyle: TextStyle(
             color: color.regular.hintColor,
             fontSize: searchTextFieldFontSize,
@@ -93,16 +117,22 @@ class ConvertouchSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: IconButton(
-            icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-              Icon(
-                itemViewModeIconMap[iconViewMode],
-                key: ValueKey(pageViewMode),
-              ),
+          icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+            Icon(
+              itemViewModeIconMap[widget.iconViewMode],
+              key: ValueKey(widget.pageViewMode),
             ),
-            onPressed: onViewModeChange,
-            color: color.regular.viewModeIconColor,
+          ),
+          onPressed: widget.onViewModeChange,
+          color: color.regular.viewModeIconColor,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchFieldController.dispose();
+    super.dispose();
   }
 }
