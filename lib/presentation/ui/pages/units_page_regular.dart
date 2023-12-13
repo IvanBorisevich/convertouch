@@ -27,6 +27,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           pageTitle: pageState.unitGroup!.name,
           units: pageState.units,
           appBarRightWidgets: const [],
+          onSearchStringChanged: (text) {
+
+          },
           onUnitTap: (unit) {},
           onUnitTapForRemoval: (unit) {
             BlocProvider.of<ConvertouchAppBloc>(context).add(

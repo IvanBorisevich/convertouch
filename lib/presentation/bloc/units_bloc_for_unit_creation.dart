@@ -21,7 +21,7 @@ class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
     yield const UnitsFetching();
 
     if (event is FetchUnitsForUnitCreation) {
-      final result = await fetchUnitsOfGroupUseCase.execute(input: event);
+      final result = await fetchUnitsOfGroupUseCase.execute(event);
 
       if (result.isLeft) {
         yield UnitsErrorState(

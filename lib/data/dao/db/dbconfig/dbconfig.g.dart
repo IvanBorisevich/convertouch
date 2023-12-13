@@ -155,6 +155,17 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   }
 
   @override
+  Future<List<UnitGroupEntity>> getBySearchString(String searchString) async {
+    return _queryAdapter.queryList(
+        'select * from unit_groups where name like ?1',
+        mapper: (Map<String, Object?> row) => UnitGroupEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            iconName: row['icon_name'] as String?),
+        arguments: [searchString]);
+  }
+
+  @override
   Future<UnitGroupEntity?> get(int id) async {
     return _queryAdapter.query(
         'select * from unit_groups where id = ?1 limit 1',

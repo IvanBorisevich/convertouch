@@ -34,6 +34,9 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
         return ConvertouchUnitsPage(
           pageTitle: 'Add units to conversion',
           units: pageState.units,
+          onSearchStringChanged: (text) {
+
+          },
           onUnitTap: (unit) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
               FetchUnitsToMarkForConversion(

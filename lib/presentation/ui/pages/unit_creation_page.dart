@@ -151,7 +151,6 @@ class _ConvertouchUnitCreationPageState
                                     });
                                   },
                                   onTap: () {
-                                    FocusScope.of(context).unfocus();
                                     BlocProvider.of<UnitsBlocForUnitCreation>(
                                       context,
                                     ).add(

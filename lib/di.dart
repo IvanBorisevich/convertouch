@@ -11,12 +11,14 @@ import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/remove_unit_groups_use_case.dart';
+import 'package:convertouch/domain/usecases/unit_groups/search_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
@@ -63,7 +65,19 @@ Future<void> init() async {
     () => ChangeItemsMenuViewUseCase(),
   );
 
+  // items search
+
+  locator.registerLazySingleton(
+    () => ItemsSearchBloc(
+      searchUnitGroupsUseCase: locator(),
+    ),
+  );
+
   // unit groups
+
+  locator.registerLazySingleton<SearchUnitGroupsUseCase>(
+    () => SearchUnitGroupsUseCase(locator()),
+  );
 
   locator.registerLazySingleton(
     () => UnitGroupsBloc(

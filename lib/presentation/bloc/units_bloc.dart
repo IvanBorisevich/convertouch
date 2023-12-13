@@ -24,7 +24,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
     yield const UnitsFetching();
 
     if (event is FetchUnits) {
-      final result = await fetchUnitsOfGroupUseCase.execute(input: event);
+      final result = await fetchUnitsOfGroupUseCase.execute(event);
 
       yield result.fold(
         (error) => UnitsErrorState(
@@ -36,7 +36,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         ),
       );
     } else if (event is AddUnit) {
-      final addUnitResult = await addUnitUseCase.execute(input: event);
+      final addUnitResult = await addUnitUseCase.execute(event);
 
       if (addUnitResult.isLeft) {
         yield UnitsErrorState(
@@ -58,7 +58,7 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         }
       }
     } else if (event is RemoveUnits) {
-      final result = await removeUnitsUseCase.execute(input: event);
+      final result = await removeUnitsUseCase.execute(event);
       if (result.isLeft) {
         yield UnitsErrorState(
           message: result.left.message,

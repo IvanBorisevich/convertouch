@@ -128,6 +128,7 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
               !widget.markOnTap && !widget.isMarkedToSelect;
           if (!widget.selected &&
               (widget.markOnTap || notMarkedAndCanBeSelected)) {
+            FocusScope.of(context).unfocus();
             widget.onTap?.call();
           }
         }

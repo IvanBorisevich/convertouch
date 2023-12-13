@@ -1,4 +1,5 @@
 import 'package:convertouch/data/dao/unit_group_dao.dart';
+import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -11,9 +12,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups({
-    String? searchString,
-  }) async {
+  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups() async {
     try {
       final result = await unitGroupDao.getAll();
       return Right(
@@ -22,6 +21,27 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e) {
       return Left(
         DatabaseFailure("Error when fetching unit groups: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UnitGroupModel>>> searchUnitGroups(
+    String searchString,
+  ) async {
+    try {
+      List<UnitGroupEntity> result;
+      if (searchString.isNotEmpty) {
+        result = await unitGroupDao.getBySearchString('%$searchString%');
+      } else {
+        result = [];
+      }
+      return Right(
+        result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
+      );
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when searching unit groups: $e"),
       );
     }
   }

@@ -15,6 +15,7 @@ class ConvertouchSearchBar extends StatelessWidget {
   final ItemsViewMode iconViewMode;
   final ItemsViewMode pageViewMode;
   final void Function()? onViewModeChange;
+  final void Function(String)? onSearchStringChanged;
   final ConvertouchUITheme theme;
   final ConvertouchSearchBarColor? customColor;
 
@@ -23,6 +24,7 @@ class ConvertouchSearchBar extends StatelessWidget {
     required this.iconViewMode,
     required this.pageViewMode,
     this.onViewModeChange,
+    this.onSearchStringChanged,
     required this.theme,
     this.customColor,
     super.key,
@@ -50,6 +52,7 @@ class ConvertouchSearchBar extends StatelessWidget {
       child: TextFormField(
         autofocus: false,
         obscureText: false,
+        onChanged: onSearchStringChanged,
         decoration: InputDecoration(
           suffixIcon: Icon(
             Icons.search,

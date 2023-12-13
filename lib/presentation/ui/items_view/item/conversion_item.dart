@@ -103,7 +103,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
           ),
           const SizedBox(width: 7),
           GestureDetector(
-            onTap: widget.onTap,
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              widget.onTap?.call();
+            },
             child: SizedBox(
               width: _unitButtonWidth,
               height: _unitButtonHeight,
@@ -143,5 +146,11 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _unitValueController.dispose();
+    super.dispose();
   }
 }

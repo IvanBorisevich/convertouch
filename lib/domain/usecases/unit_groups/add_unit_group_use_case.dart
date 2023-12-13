@@ -11,9 +11,7 @@ class AddUnitGroupUseCase extends UseCase<AddUnitGroup, bool> {
   const AddUnitGroupUseCase(this.unitGroupRepository);
 
   @override
-  Future<Either<Failure, bool>> execute({
-    required AddUnitGroup input,
-  }) async {
+  Future<Either<Failure, bool>> execute(AddUnitGroup input) async {
     UnitGroupModel unitGroupToBeAdded = UnitGroupModel(
       name: input.unitGroupName,
     );

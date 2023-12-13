@@ -17,9 +17,9 @@ class PrepareUnitCreationUseCase
   const PrepareUnitCreationUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, UnitCreationPrepared>> execute({
-    required PrepareUnitCreation input,
-  }) async {
+  Future<Either<Failure, UnitCreationPrepared>> execute(
+    PrepareUnitCreation input,
+  ) async {
     try {
       UnitModel? baseUnit;
       UnitGroupModel? unitGroup = input.unitGroup;

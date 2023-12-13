@@ -20,7 +20,7 @@ abstract class MenuViewModeBloc
     if (event is ChangeMenuItemsView) {
       yield const MenuItemsViewStateSetting();
 
-      final result = await changeItemsMenuViewUseCase.execute(input: event);
+      final result = await changeItemsMenuViewUseCase.execute(event);
 
       yield result.fold(
         (error) => MenuItemsViewErrorState(message: error.message),

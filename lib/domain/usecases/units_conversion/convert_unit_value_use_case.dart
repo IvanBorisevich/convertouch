@@ -10,9 +10,7 @@ import 'package:either_dart/either.dart';
 class ConvertUnitValueUseCase
     extends UseCase<BuildConversion, ConversionBuilt> {
   @override
-  Future<Either<Failure, ConversionBuilt>> execute({
-    required BuildConversion input,
-  }) async {
+  Future<Either<Failure, ConversionBuilt>> execute(BuildConversion input) async {
     return Future(() {
       try {
         UnitValueModel? sourceConversionItem = input.sourceConversionItem;

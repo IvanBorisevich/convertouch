@@ -10,9 +10,7 @@ class RemoveUnitsUseCase extends UseCase<RemoveUnits, void> {
   const RemoveUnitsUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, void>> execute({
-    required RemoveUnits input,
-  }) async {
+  Future<Either<Failure, void>> execute(RemoveUnits input) async {
     return await unitRepository.removeUnits(input.ids);
   }
 }

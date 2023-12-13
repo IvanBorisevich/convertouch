@@ -11,9 +11,7 @@ class AddUnitUseCase extends UseCase<AddUnit, bool> {
   const AddUnitUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, bool>> execute({
-    required AddUnit input,
-  }) async {
+  Future<Either<Failure, bool>> execute(AddUnit input) async {
     double newUnitValue = double.tryParse(input.newUnitValue ?? "") ?? 1;
     double baseUnitValue = double.tryParse(input.baseUnitValue ?? "") ?? 1;
     double baseUnitCoefficient = input.baseUnit?.coefficient ?? 1;

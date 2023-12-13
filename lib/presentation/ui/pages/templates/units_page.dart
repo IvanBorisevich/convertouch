@@ -15,6 +15,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final void Function(IdNameItemModel)? onUnitTap;
   final void Function(IdNameItemModel)? onUnitTapForRemoval;
   final void Function(IdNameItemModel)? onUnitLongPress;
+  final void Function(String)? onSearchStringChanged;
   final void Function()? onUnitsRemove;
   final List<int> itemIdsSelectedForRemoval;
   final List<Widget>? appBarRightWidgets;
@@ -33,6 +34,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
     required this.onUnitTap,
     required this.onUnitTapForRemoval,
     required this.onUnitLongPress,
+    required this.onSearchStringChanged,
     required this.onUnitsRemove,
     required this.itemIdsSelectedForRemoval,
     required this.appBarRightWidgets,
@@ -67,6 +69,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
                 ),
               );
             },
+            onSearchStringChanged: onSearchStringChanged,
           ),
           body: ConvertouchMenuItemsView(
             units,

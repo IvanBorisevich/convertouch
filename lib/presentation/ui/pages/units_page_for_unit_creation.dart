@@ -1,7 +1,7 @@
+import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +17,7 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
           pageTitle: "Select Base Unit",
           units: pageState.units,
           appBarRightWidgets: const [],
+          onSearchStringChanged: (text) {},
           onUnitTap: (unit) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(

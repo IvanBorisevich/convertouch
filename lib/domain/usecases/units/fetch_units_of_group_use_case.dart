@@ -11,9 +11,7 @@ class FetchUnitsOfGroupUseCase extends UseCase<FetchUnits, List<UnitModel>> {
   const FetchUnitsOfGroupUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, List<UnitModel>>> execute({
-    required FetchUnits input,
-  }) async {
+  Future<Either<Failure, List<UnitModel>>> execute(FetchUnits input) async {
     return await unitRepository.fetchUnitsOfGroup(
       input.unitGroup.id!,
       searchString: input.searchString,

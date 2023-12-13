@@ -10,10 +10,12 @@ class UnitsConversionBloc
 
   UnitsConversionBloc({
     required this.convertUnitValueUseCase,
-  }) : super(const ConversionBuilt(
-          unitGroup: null,
-          sourceConversionItem: null,
-        ));
+  }) : super(
+          const ConversionBuilt(
+            unitGroup: null,
+            sourceConversionItem: null,
+          ),
+        );
 
   @override
   Stream<UnitsConversionState> mapEventToState(
@@ -21,9 +23,7 @@ class UnitsConversionBloc
     if (event is BuildConversion) {
       yield const ConversionInBuilding();
 
-      final conversionResult = await convertUnitValueUseCase.execute(
-        input: event,
-      );
+      final conversionResult = await convertUnitValueUseCase.execute(event);
 
       yield conversionResult.fold(
         (error) => UnitsConversionErrorState(

@@ -8,9 +8,9 @@ import 'package:either_dart/either.dart';
 class ChangeItemsMenuViewUseCase
     extends UseCase<ChangeMenuItemsView, MenuItemsViewStateSet> {
   @override
-  Future<Either<Failure, MenuItemsViewStateSet>> execute({
-    required ChangeMenuItemsView input,
-  }) {
+  Future<Either<Failure, MenuItemsViewStateSet>> execute(
+    ChangeMenuItemsView input,
+  ) {
     return Future(() {
       try {
         ItemsViewMode pageViewMode = input.targetViewMode;

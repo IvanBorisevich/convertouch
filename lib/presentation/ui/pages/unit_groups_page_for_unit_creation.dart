@@ -1,7 +1,7 @@
+import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +16,7 @@ class ConvertouchUnitGroupsPageForUnitCreation extends StatelessWidget {
         return ConvertouchUnitGroupsPage(
           pageTitle: "Group of New Unit",
           unitGroups: pageState.unitGroups,
+          onSearchStringChanged: (text) {},
           onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitCreationBloc>(context).add(
               PrepareUnitCreation(

@@ -1,5 +1,7 @@
+import 'package:convertouch/domain/model/output/items_search_states.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
+import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
 import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
@@ -31,6 +33,16 @@ Widget appBloc(
       } else {
         return empty();
       }
+    },
+  );
+}
+
+Widget searchBloc(
+    Widget Function(ItemsSearchState searchState) builderFunc,
+    ) {
+  return BlocBuilder<ItemsSearchBloc, ItemsSearchState>(
+    builder: (_, searchState) {
+      return builderFunc.call(searchState);
     },
   );
 }

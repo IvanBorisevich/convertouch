@@ -9,6 +9,11 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
   Future<List<UnitGroupEntity>> getAll();
 
   @override
+  @Query('select * from $unitGroupsTableName '
+      'where name like :searchString')
+  Future<List<UnitGroupEntity>> getBySearchString(String searchString);
+
+  @override
   @Query('select * from $unitGroupsTableName where id = :id limit 1')
   Future<UnitGroupEntity?> get(int id);
 

@@ -32,7 +32,7 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
         ),
       );
     } else if (event is RemoveUnitGroups) {
-      final result = await removeUnitGroupsUseCase.execute(input: event.ids);
+      final result = await removeUnitGroupsUseCase.execute(event);
       if (result.isLeft) {
         yield UnitGroupsErrorState(
           message: result.left.message,
@@ -41,9 +41,7 @@ class UnitGroupsBloc extends Bloc<UnitGroupsEvent, UnitGroupsState> {
         add(const FetchUnitGroups());
       }
     } else if (event is AddUnitGroup) {
-      final addUnitGroupResult = await addUnitGroupUseCase.execute(
-        input: event,
-      );
+      final addUnitGroupResult = await addUnitGroupUseCase.execute(event);
 
       if (addUnitGroupResult.isLeft) {
         yield UnitGroupsErrorState(
