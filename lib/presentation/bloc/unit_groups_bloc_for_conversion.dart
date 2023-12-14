@@ -9,14 +9,19 @@ class UnitGroupsBlocForConversion
 
   UnitGroupsBlocForConversion({
     required this.fetchUnitGroupsUseCase,
-  }) : super(const UnitGroupsFetchedForFirstAddingToConversion(unitGroups: []));
+  }) : super(
+          const UnitGroupsFetchedForFirstAddingToConversion(
+            unitGroups: [],
+            searchString: null,
+          ),
+        );
 
   @override
   Stream<UnitGroupsState> mapEventToState(UnitGroupsEvent event) async* {
     yield const UnitGroupsFetching();
 
     if (event is FetchUnitGroups) {
-      final result = await fetchUnitGroupsUseCase.execute();
+      final result = await fetchUnitGroupsUseCase.execute(event);
 
       if (result.isLeft) {
         yield UnitGroupsErrorState(
@@ -26,11 +31,13 @@ class UnitGroupsBlocForConversion
         if (event is FetchUnitGroupsForFirstAddingToConversion) {
           yield UnitGroupsFetchedForFirstAddingToConversion(
             unitGroups: result.right,
+            searchString: event.searchString,
           );
         } else if (event is FetchUnitGroupsForChangeInConversion) {
           yield UnitGroupsFetchedForChangeInConversion(
             unitGroups: result.right,
             currentUnitGroupInConversion: event.currentUnitGroupInConversion,
+            searchString: event.searchString,
           );
         }
       }

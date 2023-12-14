@@ -1,14 +1,10 @@
 import 'package:convertouch/domain/model/output/app_state.dart';
-import 'package:convertouch/domain/model/output/items_search_states.dart';
 import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
 import 'package:convertouch/domain/model/output/unit_creation_states.dart';
 import 'package:convertouch/domain/model/output/unit_groups_states.dart';
 import 'package:convertouch/domain/model/output/units_conversion_states.dart';
 import 'package:convertouch/domain/model/output/units_states.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
@@ -37,96 +33,6 @@ Widget appBloc(
       } else {
         return empty();
       }
-    },
-  );
-}
-
-Widget unitGroupsSearchBloc(
-  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
-) {
-  return BlocBuilder<UnitGroupsSearchBloc, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitGroupModel>? result;
-
-      if (searchState is UnitGroupsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
-    },
-  );
-}
-
-Widget unitGroupsSearchBlocForConversion(
-  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
-) {
-  return BlocBuilder<UnitGroupsSearchBlocForConversion, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitGroupModel>? result;
-
-      if (searchState is UnitGroupsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
-    },
-  );
-}
-
-Widget unitGroupsSearchBlocForUnitCreation(
-  Widget Function(List<UnitGroupModel>? foundUnitGroups) builderFunc,
-) {
-  return BlocBuilder<UnitGroupsSearchBlocForUnitCreation, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitGroupModel>? result;
-
-      if (searchState is UnitGroupsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
-    },
-  );
-}
-
-Widget unitsSearchBloc(
-  Widget Function(List<UnitModel>? foundUnits) builderFunc,
-) {
-  return BlocBuilder<UnitsSearchBloc, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitModel>? result;
-
-      if (searchState is UnitsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
-    },
-  );
-}
-
-Widget unitsSearchBlocForConversion(
-  Widget Function(List<UnitModel>? foundUnits) builderFunc,
-) {
-  return BlocBuilder<UnitsSearchBlocForConversion, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitModel>? result;
-
-      if (searchState is UnitsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
-    },
-  );
-}
-
-Widget unitsSearchBlocForUnitCreation(
-  Widget Function(List<UnitModel>? foundUnits) builderFunc,
-) {
-  return BlocBuilder<UnitsSearchBlocForUnitCreation, ItemsSearchState>(
-    builder: (_, searchState) {
-      List<UnitModel>? result;
-
-      if (searchState is UnitsFound) {
-        result = searchState.foundItems;
-      }
-      return builderFunc.call(result);
     },
   );
 }

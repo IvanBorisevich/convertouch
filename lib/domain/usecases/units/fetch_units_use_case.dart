@@ -5,13 +5,20 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchUnitsOfGroupUseCase extends UseCase<FetchUnits, List<UnitModel>> {
+class FetchUnitsUseCase extends UseCase<FetchUnits, List<UnitModel>> {
   final UnitRepository unitRepository;
 
-  const FetchUnitsOfGroupUseCase(this.unitRepository);
+  const FetchUnitsUseCase(this.unitRepository);
 
   @override
   Future<Either<Failure, List<UnitModel>>> execute(FetchUnits input) async {
-    return await unitRepository.fetchUnits(input.unitGroup.id!);
+    if (input.searchString == null || input.searchString!.isEmpty) {
+      return await unitRepository.fetchUnits(input.unitGroup.id!);
+    } else {
+      return await unitRepository.searchUnits(
+        input.unitGroup.id!,
+        input.searchString!,
+      );
+    }
   }
 }

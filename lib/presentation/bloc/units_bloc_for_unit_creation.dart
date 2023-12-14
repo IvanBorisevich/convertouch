@@ -1,18 +1,19 @@
-import 'package:convertouch/domain/usecases/units/fetch_units_of_group_use_case.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/output/units_states.dart';
+import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
-  final FetchUnitsOfGroupUseCase fetchUnitsOfGroupUseCase;
+  final FetchUnitsUseCase fetchUnitsUseCase;
 
   UnitsBlocForUnitCreation({
-    required this.fetchUnitsOfGroupUseCase,
+    required this.fetchUnitsUseCase,
   }) : super(
           const UnitsFetchedForUnitCreation(
             units: [],
             unitGroup: null,
             currentSelectedBaseUnit: null,
+            searchString: null,
           ),
         );
 
@@ -21,7 +22,7 @@ class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
     yield const UnitsFetching();
 
     if (event is FetchUnitsForUnitCreation) {
-      final result = await fetchUnitsOfGroupUseCase.execute(event);
+      final result = await fetchUnitsUseCase.execute(event);
 
       if (result.isLeft) {
         yield UnitsErrorState(
@@ -32,6 +33,7 @@ class UnitsBlocForUnitCreation extends Bloc<UnitsEvent, UnitsState> {
           units: result.right,
           unitGroup: event.unitGroup,
           currentSelectedBaseUnit: event.currentSelectedBaseUnit,
+          searchString: event.searchString,
         );
       }
     }

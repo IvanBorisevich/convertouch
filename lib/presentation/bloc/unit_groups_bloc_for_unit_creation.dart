@@ -1,6 +1,6 @@
-import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/domain/model/output/unit_groups_states.dart';
+import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupsBlocForUnitCreation
@@ -9,12 +9,17 @@ class UnitGroupsBlocForUnitCreation
 
   UnitGroupsBlocForUnitCreation({
     required this.fetchUnitGroupsUseCase,
-  }) : super(const UnitGroupsFetchedForUnitCreation(unitGroups: []));
+  }) : super(
+          const UnitGroupsFetchedForUnitCreation(
+            unitGroups: [],
+            searchString: null,
+          ),
+        );
 
   @override
   Stream<UnitGroupsState> mapEventToState(UnitGroupsEvent event) async* {
     if (event is FetchUnitGroupsForUnitCreation) {
-      final result = await fetchUnitGroupsUseCase.execute();
+      final result = await fetchUnitGroupsUseCase.execute(event);
 
       if (result.isLeft) {
         yield UnitGroupsErrorState(
@@ -24,6 +29,7 @@ class UnitGroupsBlocForUnitCreation
         yield UnitGroupsFetchedForUnitCreation(
           unitGroups: result.right,
           unitGroupInUnitCreation: event.currentUnitGroupInUnitCreation,
+          searchString: event.searchString,
         );
       }
     }

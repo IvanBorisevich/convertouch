@@ -22,16 +22,19 @@ class UnitsFetching extends UnitsState {
 class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel? unitGroup;
+  final String? searchString;
 
   const UnitsFetched({
     this.units = const [],
     required this.unitGroup,
+    this.searchString,
   });
 
   @override
   List<Object?> get props => [
     units,
     unitGroup,
+    searchString,
   ];
 
   @override
@@ -56,6 +59,7 @@ class UnitsFetchedToMarkForConversion extends UnitsFetched {
     required this.unitIdsMarkedForConversion,
     required this.allowUnitsToBeAddedToConversion,
     this.currentSourceConversionItem,
+    required super.searchString,
   });
 
   @override
@@ -64,6 +68,7 @@ class UnitsFetchedToMarkForConversion extends UnitsFetched {
     unitIdsMarkedForConversion,
     allowUnitsToBeAddedToConversion,
     currentSourceConversionItem,
+    searchString,
     super.props,
   ];
 
@@ -73,7 +78,8 @@ class UnitsFetchedToMarkForConversion extends UnitsFetched {
         'unitsMarkedForConversion: $unitsMarkedForConversion, '
         'unitIdsMarkedForConversion: $unitIdsMarkedForConversion, '
         'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion, '
-        'currentSourceConversionItem: $currentSourceConversionItem}';
+        'currentSourceConversionItem: $currentSourceConversionItem, '
+        'searchString: $searchString}';
   }
 }
 
@@ -85,6 +91,7 @@ class UnitsFetchedForUnitCreation extends UnitsFetched {
     required super.units,
     required super.unitGroup,
     required this.currentSelectedBaseUnit,
+    required super.searchString,
   });
 
   @override

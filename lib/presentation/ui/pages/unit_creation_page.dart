@@ -65,6 +65,7 @@ class _ConvertouchUnitCreationPageState
                                 FetchUnitGroupsForUnitCreation(
                                   currentUnitGroupInUnitCreation:
                                       pageState.unitGroup!,
+                                  searchString: null,
                                 ),
                               );
                               Navigator.of(context)
@@ -158,6 +159,7 @@ class _ConvertouchUnitCreationPageState
                                         unitGroup: pageState.unitGroup!,
                                         currentSelectedBaseUnit:
                                             pageState.baseUnit,
+                                        searchString: null,
                                       ),
                                     );
                                     Navigator.of(context)

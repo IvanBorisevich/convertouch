@@ -19,14 +19,17 @@ class UnitGroupsFetching extends UnitGroupsState {
 
 class UnitGroupsFetched extends UnitGroupsState {
   final List<UnitGroupModel> unitGroups;
+  final String? searchString;
 
   const UnitGroupsFetched({
     required this.unitGroups,
+    this.searchString,
   });
 
   @override
   List<Object?> get props => [
     unitGroups,
+    searchString,
   ];
 
   @override
@@ -39,12 +42,14 @@ class UnitGroupsFetched extends UnitGroupsState {
 abstract class UnitGroupsFetchedForConversion extends UnitGroupsFetched {
   const UnitGroupsFetchedForConversion({
     required super.unitGroups,
+    required super.searchString,
   });
 }
 
 class UnitGroupsFetchedForFirstAddingToConversion extends UnitGroupsFetchedForConversion {
   const UnitGroupsFetchedForFirstAddingToConversion({
     required super.unitGroups,
+    required super.searchString,
   });
 
   @override
@@ -60,6 +65,7 @@ class UnitGroupsFetchedForChangeInConversion extends UnitGroupsFetchedForConvers
   const UnitGroupsFetchedForChangeInConversion({
     required super.unitGroups,
     required this.currentUnitGroupInConversion,
+    required super.searchString,
   });
 
   @override
@@ -81,6 +87,7 @@ class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
   const UnitGroupsFetchedForUnitCreation({
     required super.unitGroups,
     this.unitGroupInUnitCreation,
+    required super.searchString,
   });
 
   @override

@@ -1,10 +1,8 @@
-import 'package:convertouch/domain/model/input/items_search_events.dart';
 import 'package:convertouch/domain/model/input/units_conversion_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
@@ -26,74 +24,80 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
           unitsPageFloatingButtonColors[appState.theme]!;
 
       return unitsBlocForConversion((pageState) {
-        return unitsSearchBlocForConversion((foundUnits) {
-          bool allowUnitsToBeAddedToConversion =
-              pageState.allowUnitsToBeAddedToConversion;
-          List<int>? markedUnitIds = pageState.unitIdsMarkedForConversion;
-          List<UnitModel>? markedUnits = pageState.unitsMarkedForConversion;
-          UnitValueModel? sourceConversionItem =
-              pageState.currentSourceConversionItem;
+        bool allowUnitsToBeAddedToConversion =
+            pageState.allowUnitsToBeAddedToConversion;
+        List<int>? markedUnitIds = pageState.unitIdsMarkedForConversion;
+        List<UnitModel>? markedUnits = pageState.unitsMarkedForConversion;
+        UnitValueModel? sourceConversionItem =
+            pageState.currentSourceConversionItem;
 
-          return ConvertouchUnitsPage(
-            pageTitle: 'Add units to conversion',
-            units: foundUnits ?? pageState.units,
-            onSearchStringChanged: (text) {
-              BlocProvider.of<UnitsSearchBlocForConversion>(context).add(
-                SearchUnits(
-                  searchString: text,
-                  unitGroupId: pageState.unitGroup!.id!,
+        return ConvertouchUnitsPage(
+          pageTitle: 'Add units to conversion',
+          units: pageState.units,
+          onSearchStringChanged: (text) {
+            BlocProvider.of<UnitsBlocForConversion>(context).add(
+              FetchUnitsToMarkForConversion(
+                unitGroup: pageState.unitGroup!,
+                unitsAlreadyMarkedForConversion:
+                    pageState.unitsMarkedForConversion,
+                searchString: text,
+              ),
+            );
+          },
+          onSearchReset: () {
+            BlocProvider.of<UnitsBlocForConversion>(context).add(
+              FetchUnitsToMarkForConversion(
+                unitGroup: pageState.unitGroup!,
+                unitsAlreadyMarkedForConversion:
+                    pageState.unitsMarkedForConversion,
+                searchString: null,
+              ),
+            );
+          },
+          onUnitTap: (unit) {
+            BlocProvider.of<UnitsBlocForConversion>(context).add(
+              FetchUnitsToMarkForConversion(
+                unitGroup: pageState.unitGroup!,
+                unitsAlreadyMarkedForConversion:
+                    pageState.unitsMarkedForConversion,
+                unitNewlyMarkedForConversion: unit as UnitModel,
+                currentSourceConversionItem:
+                    pageState.currentSourceConversionItem,
+                searchString: pageState.searchString,
+              ),
+            );
+          },
+          onUnitTapForRemoval: null,
+          onUnitLongPress: null,
+          onUnitsRemove: null,
+          itemIdsSelectedForRemoval: const [],
+          removalModeAllowed: false,
+          removalModeEnabled: false,
+          appBarRightWidgets: const [],
+          markedUnitsForConversionVisible: true,
+          markUnitsOnTap: true,
+          markedUnitIdsForConversion: markedUnitIds,
+          selectedUnitVisible: false,
+          selectedUnitId: null,
+          floatingButton: ConvertouchFloatingActionButton(
+            icon: Icons.check_outlined,
+            visible: allowUnitsToBeAddedToConversion,
+            onClick: () {
+              BlocProvider.of<UnitsConversionBloc>(context).add(
+                BuildConversion(
+                  unitGroup: pageState.unitGroup,
+                  units: markedUnits,
+                  sourceConversionItem: sourceConversionItem,
                 ),
               );
-            },
-            onSearchReset: () {
-              BlocProvider.of<UnitsSearchBlocForConversion>(context).add(
-                const ResetSearch(),
+              Navigator.of(context).popUntil(
+                (route) => route.isFirst,
               );
             },
-            onUnitTap: (unit) {
-              BlocProvider.of<UnitsBlocForConversion>(context).add(
-                FetchUnitsToMarkForConversion(
-                  unitGroup: pageState.unitGroup!,
-                  unitsAlreadyMarkedForConversion:
-                      pageState.unitsMarkedForConversion,
-                  unitNewlyMarkedForConversion: unit as UnitModel,
-                  currentSourceConversionItem:
-                      pageState.currentSourceConversionItem,
-                ),
-              );
-            },
-            onUnitTapForRemoval: null,
-            onUnitLongPress: null,
-            onUnitsRemove: null,
-            itemIdsSelectedForRemoval: const [],
-            removalModeAllowed: false,
-            removalModeEnabled: false,
-            appBarRightWidgets: const [],
-            markedUnitsForConversionVisible: true,
-            markUnitsOnTap: true,
-            markedUnitIdsForConversion: markedUnitIds,
-            selectedUnitVisible: false,
-            selectedUnitId: null,
-            floatingButton: ConvertouchFloatingActionButton(
-              icon: Icons.check_outlined,
-              visible: allowUnitsToBeAddedToConversion,
-              onClick: () {
-                BlocProvider.of<UnitsConversionBloc>(context).add(
-                  BuildConversion(
-                    unitGroup: pageState.unitGroup,
-                    units: markedUnits,
-                    sourceConversionItem: sourceConversionItem,
-                  ),
-                );
-                Navigator.of(context).popUntil(
-                  (route) => route.isFirst,
-                );
-              },
-              background: floatingButtonColor.background,
-              foreground: floatingButtonColor.foreground,
-            ),
-          );
-        });
+            background: floatingButtonColor.background,
+            foreground: floatingButtonColor.foreground,
+          ),
+        );
       });
     });
   }

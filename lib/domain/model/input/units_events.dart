@@ -16,7 +16,7 @@ class FetchUnits extends UnitsEvent {
 
   const FetchUnits({
     required this.unitGroup,
-    this.searchString,
+    required this.searchString,
   });
 
   @override
@@ -43,7 +43,7 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
     this.unitsAlreadyMarkedForConversion,
     this.unitNewlyMarkedForConversion,
     this.currentSourceConversionItem,
-    super.searchString,
+    required super.searchString,
   });
 
   @override
@@ -70,7 +70,7 @@ class FetchUnitsForUnitCreation extends FetchUnits {
   const FetchUnitsForUnitCreation({
     required super.unitGroup,
     required this.currentSelectedBaseUnit,
-    super.searchString,
+    required super.searchString,
   });
 
   @override

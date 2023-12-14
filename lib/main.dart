@@ -5,7 +5,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
-import 'package:convertouch/presentation/bloc/items_search_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
@@ -38,18 +37,16 @@ class ConvertouchApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => di.locator<ConvertouchAppBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsSearchBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsSearchBlocForConversion>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsSearchBlocForUnitCreation>()),
-        BlocProvider(create: (context) => di.locator<UnitsSearchBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitsSearchBlocForConversion>()),
-        BlocProvider(create: (context) => di.locator<UnitsSearchBlocForUnitCreation>()),
         BlocProvider(create: (context) => di.locator<UnitGroupsViewModeBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsViewModeBloc>()),
         BlocProvider(create: (context) => di.locator<UnitsConversionBloc>()),
         BlocProvider(
-          create: (context) =>
-              di.locator<UnitGroupsBloc>()..add(const FetchUnitGroups()),
+          create: (context) => di.locator<UnitGroupsBloc>()
+            ..add(
+              const FetchUnitGroups(
+                searchString: null,
+              ),
+            ),
         ),
         BlocProvider(
             create: (context) => di.locator<UnitGroupsBlocForConversion>()),

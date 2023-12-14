@@ -39,6 +39,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
                       BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
                         FetchUnitGroupsForChangeInConversion(
                           currentUnitGroupInConversion: pageState.unitGroup!,
+                          searchString: null,
                         ),
                       );
                       Navigator.of(context)
@@ -84,7 +85,9 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
             onClick: () {
               if (pageState.unitGroup == null) {
                 BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-                  const FetchUnitGroupsForFirstAddingToConversion(),
+                  const FetchUnitGroupsForFirstAddingToConversion(
+                    searchString: null,
+                  ),
                 );
                 Navigator.of(context).pushNamed(unitGroupsPageForConversion);
               } else {
@@ -95,6 +98,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
                         .map((unitValue) => unitValue.unit)
                         .toList(),
                     currentSourceConversionItem: pageState.sourceConversionItem,
+                    searchString: null,
                   ),
                 );
                 Navigator.of(context).pushNamed(unitsPageForConversion);

@@ -12,7 +12,7 @@ class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
 
   const FetchUnitGroups({
-    this.searchString,
+    required this.searchString,
   });
 
   @override
@@ -28,7 +28,7 @@ class FetchUnitGroups extends UnitGroupsEvent {
 
 class FetchUnitGroupsForFirstAddingToConversion extends FetchUnitGroups {
   const FetchUnitGroupsForFirstAddingToConversion({
-    super.searchString,
+    required super.searchString,
   });
 
   @override
@@ -43,7 +43,7 @@ class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
 
   const FetchUnitGroupsForChangeInConversion({
     required this.currentUnitGroupInConversion,
-    super.searchString,
+    required super.searchString,
   });
 
   @override
@@ -65,7 +65,7 @@ class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
 
   const FetchUnitGroupsForUnitCreation({
     required this.currentUnitGroupInUnitCreation,
-    super.searchString,
+    required super.searchString,
   });
 
   @override

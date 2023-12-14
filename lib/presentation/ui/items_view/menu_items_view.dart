@@ -49,10 +49,10 @@ class ConvertouchMenuItemsView extends StatelessWidget {
           Widget? itemBuilder(context, index) {
             IdNameItemModel item = items[index];
             bool selected =
-                showSelectedItem && items[index].id == selectedItemId;
+                showSelectedItem && item.id == selectedItemId;
             bool isMarkedToSelect = showMarkedItems &&
                 markedItemIds != null &&
-                markedItemIds!.contains(items[index].id);
+                markedItemIds!.contains(item.id);
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchMenuItem(
                 item,
