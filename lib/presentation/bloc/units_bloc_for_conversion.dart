@@ -22,34 +22,32 @@ class UnitsBlocForConversion extends Bloc<UnitsEvent, UnitsState> {
 
   @override
   Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
-    yield const UnitsFetching();
+    if (event is FetchUnitsToMarkForConversion) {
+      yield const UnitsFetching();
 
-    if (event is FetchUnits) {
       final result = await fetchUnitsUseCase.execute(event);
 
       if (result.isLeft) {
         yield UnitsErrorState(message: result.left.message);
       } else {
-        if (event is FetchUnitsToMarkForConversion) {
-          List<UnitModel> allMarkedUnits = _updateMarkedUnits(
-            event.unitsAlreadyMarkedForConversion,
-            event.unitNewlyMarkedForConversion,
-          );
+        List<UnitModel> allMarkedUnits = _updateMarkedUnits(
+          event.unitsAlreadyMarkedForConversion,
+          event.unitNewlyMarkedForConversion,
+        );
 
-          List<int> allMarkedUnitIds =
-              allMarkedUnits.map((unit) => unit.id!).toList();
+        List<int> allMarkedUnitIds =
+            allMarkedUnits.map((unit) => unit.id!).toList();
 
-          yield UnitsFetchedToMarkForConversion(
-            units: result.right,
-            unitGroup: event.unitGroup,
-            unitIdsMarkedForConversion: allMarkedUnitIds,
-            unitsMarkedForConversion: allMarkedUnits,
-            allowUnitsToBeAddedToConversion:
-                allMarkedUnitIds.length >= _minUnitsNumForConversion,
-            currentSourceConversionItem: event.currentSourceConversionItem,
-            searchString: event.searchString,
-          );
-        }
+        yield UnitsFetchedToMarkForConversion(
+          units: result.right,
+          unitGroup: event.unitGroup,
+          unitIdsMarkedForConversion: allMarkedUnitIds,
+          unitsMarkedForConversion: allMarkedUnits,
+          allowUnitsToBeAddedToConversion:
+              allMarkedUnitIds.length >= _minUnitsNumForConversion,
+          currentSourceConversionItem: event.currentSourceConversionItem,
+          searchString: event.searchString,
+        );
       }
     }
   }

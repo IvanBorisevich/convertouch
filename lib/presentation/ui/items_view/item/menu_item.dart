@@ -9,7 +9,7 @@ import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuItem extends StatefulWidget {
+class ConvertouchMenuItem extends StatelessWidget {
   final IdNameItemModel item;
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
@@ -21,7 +21,7 @@ class ConvertouchMenuItem extends StatefulWidget {
   final bool selectedForRemoval;
   final bool markOnTap;
   final ConvertouchUITheme theme;
-  final ConvertouchMenuItemColor? color;
+  final ConvertouchMenuItemColor? customColors;
 
   const ConvertouchMenuItem(
     this.item, {
@@ -35,42 +35,29 @@ class ConvertouchMenuItem extends StatefulWidget {
     this.selectedForRemoval = false,
     this.markOnTap = false,
     required this.theme,
-    this.color,
+    this.customColors,
     super.key,
   });
 
   @override
-  State<ConvertouchMenuItem> createState() => _ConvertouchMenuItemState();
-}
-
-class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
-  late MenuItemColorVariation _color;
-  late bool _isMarkedToSelect;
-
-  @override
-  void initState() {
-    super.initState();
-    _isMarkedToSelect = widget.isMarkedToSelect;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    ConvertouchMenuItemColor itemColor;
+    ConvertouchMenuItemColor itemColors;
+    MenuItemColorVariation menuItemColor;
 
-    if (widget.color != null) {
-      itemColor = widget.color!;
-    } else if (widget.item.runtimeType == UnitGroupModel) {
-      itemColor = unitGroupItemColors[widget.theme]!;
+    if (customColors != null) {
+      itemColors = customColors!;
+    } else if (item.runtimeType == UnitGroupModel) {
+      itemColors = unitGroupItemColors[theme]!;
     } else {
-      itemColor = unitItemColors[widget.theme]!;
+      itemColors = unitItemColors[theme]!;
     }
 
-    if (widget.selected) {
-      _color = itemColor.selected;
-    } else if (_isMarkedToSelect) {
-      _color = itemColor.marked;
+    if (selected) {
+      menuItemColor = itemColors.selected;
+    } else if (isMarkedToSelect) {
+      menuItemColor = itemColors.marked;
     } else {
-      _color = itemColor.regular;
+      menuItemColor = itemColors.regular;
     }
 
     Widget logo = IconButton(
@@ -79,27 +66,27 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
         const AssetImage(
           "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
         ),
-        color: _color.content,
+        color: menuItemColor.content,
         size: 25,
       ),
     );
 
-    switch (widget.item.runtimeType) {
+    switch (item.runtimeType) {
       case UnitGroupModel:
-        UnitGroupModel unitGroup = widget.item as UnitGroupModel;
+        UnitGroupModel unitGroup = item as UnitGroupModel;
         logo = IconButton(
           onPressed: null,
           icon: ImageIcon(
             AssetImage(
               "$iconAssetsPathPrefix/${unitGroup.iconName}",
             ),
-            color: _color.content,
+            color: menuItemColor.content,
             size: 25,
           ),
         );
         break;
       case UnitModel:
-        UnitModel unit = widget.item as UnitModel;
+        UnitModel unit = item as UnitModel;
         logo = SizedBox(
           width: 65,
           child: Center(
@@ -113,47 +100,37 @@ class _ConvertouchMenuItemState extends State<ConvertouchMenuItem> {
 
     return GestureDetector(
       onTap: () {
-        if (widget.removalMode) {
-          widget.onTapForRemoval?.call();
+        if (removalMode) {
+          onTapForRemoval?.call();
         } else {
-          if (!widget.selected) {
-            if (widget.markOnTap) {
-              setState(() {
-                _isMarkedToSelect = !_isMarkedToSelect;
-              });
-            }
-          }
-
-          bool notMarkedAndCanBeSelected =
-              !widget.markOnTap && !widget.isMarkedToSelect;
-          if (!widget.selected &&
-              (widget.markOnTap || notMarkedAndCanBeSelected)) {
+          bool notMarkedAndCanBeSelected = !markOnTap && !isMarkedToSelect;
+          if (!selected && (markOnTap || notMarkedAndCanBeSelected)) {
             FocusScope.of(context).unfocus();
-            widget.onTap?.call();
+            onTap?.call();
           }
         }
       },
-      onLongPress: widget.onLongPress,
+      onLongPress: onLongPress,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          switch (widget.itemsViewMode) {
+          switch (itemsViewMode) {
             case ItemsViewMode.grid:
               return ConvertouchMenuGridItem(
-                widget.item,
-                removalMode: widget.removalMode,
-                selectedForRemoval: widget.selectedForRemoval,
-                selectedForConversion: widget.selected,
+                item,
+                removalMode: removalMode,
+                selectedForRemoval: selectedForRemoval,
+                selectedForConversion: selected,
                 logo: logo,
-                color: _color,
+                color: menuItemColor,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
-                widget.item,
-                removalMode: widget.removalMode,
-                selectedForRemoval: widget.selectedForRemoval,
-                selectedForConversion: widget.selected,
+                item,
+                removalMode: removalMode,
+                selectedForRemoval: selectedForRemoval,
+                selectedForConversion: selected,
                 logo: logo,
-                color: _color,
+                color: menuItemColor,
               );
           }
         },

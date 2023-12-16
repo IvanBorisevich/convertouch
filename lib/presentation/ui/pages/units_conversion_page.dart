@@ -34,7 +34,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 7),
                   child: ConvertouchMenuItem(
                     pageState.unitGroup!,
-                    color: appBarUnitGroupItemColors[appState.theme]!,
+                    customColors: appBarUnitGroupItemColors[appState.theme]!,
                     onTap: () {
                       BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
                         FetchUnitGroupsForChangeInConversion(
