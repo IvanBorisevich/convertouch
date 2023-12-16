@@ -43,12 +43,10 @@ class ConvertouchTextBox extends StatefulWidget {
 }
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
-  late final String _maxTextLengthStr;
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
-    _maxTextLengthStr = widget.maxTextLength.toString();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         widget.onFocusSelected?.call();
@@ -117,7 +115,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         counterText: "",
         suffixText: widget.textLengthCounterVisible
-            ? '${widget.controller?.text.length}/$_maxTextLengthStr'
+            ? '${widget.controller?.text.length}/${widget.maxTextLength}'
             : null,
       ),
       style: TextStyle(

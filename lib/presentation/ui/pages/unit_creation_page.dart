@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/input/unit_groups_events.dart';
+import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_unit_creation.dart';
-import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_unit_creation.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
@@ -119,7 +119,7 @@ class _ConvertouchUnitCreationPageState
                                 duration: const Duration(milliseconds: 150),
                                 reverse: !_unitName.isNotEmpty,
                                 child: ConvertouchConversionItem(
-                                  UnitValueModel(
+                                  UnitValueModel.fromStrValue(
                                     unit: UnitModel(
                                       name: _unitName,
                                       abbreviation: _unitAbbr.isNotEmpty
@@ -127,7 +127,7 @@ class _ConvertouchUnitCreationPageState
                                           : _unitAbbrHint,
                                       unitGroupId: pageState.unitGroup!.id!,
                                     ),
-                                    value: double.tryParse(_newUnitValue),
+                                    strValue: _newUnitValue,
                                   ),
                                   onValueChanged: (value) {
                                     setState(() {
@@ -142,9 +142,9 @@ class _ConvertouchUnitCreationPageState
                                 duration: const Duration(milliseconds: 150),
                                 reverse: !_unitName.isNotEmpty,
                                 child: ConvertouchConversionItem(
-                                  UnitValueModel(
+                                  UnitValueModel.fromStrValue(
                                     unit: pageState.baseUnit!,
-                                    value: double.tryParse(_baseUnitValue),
+                                    strValue: _baseUnitValue,
                                   ),
                                   onValueChanged: (value) {
                                     setState(() {

@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
-import 'package:convertouch/domain/utils/unit_value_util.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -12,14 +11,14 @@ class ConvertouchConversionItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final ConvertouchUITheme theme;
-  final ConvertouchConversionItemColor? color;
+  final ConvertouchConversionItemColor? customColors;
 
   const ConvertouchConversionItem(
     this.item, {
     this.onTap,
     this.onValueChanged,
     required this.theme,
-    this.color,
+    this.customColors,
     super.key,
   });
 
@@ -39,28 +38,23 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
 
   late bool _isFocused;
 
-  late ConvertouchTextBoxColor _textBoxColor;
-  late ConvertouchMenuItemColor _unitButtonColor;
-  late String _rawUnitValue;
-
   @override
   void initState() {
     super.initState();
     _isFocused = false;
-    _rawUnitValue = formatValue(widget.item.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    var itemColor = widget.color ?? conversionItemColors[widget.theme]!;
-    _textBoxColor = itemColor.textBox;
-    _unitButtonColor = itemColor.unitButton;
+    var itemColor = widget.customColors ?? conversionItemColors[widget.theme]!;
+    var textBoxColor = itemColor.textBox;
+    var unitButtonColor = itemColor.unitButton;
 
-    if (!_isFocused) {
-      _rawUnitValue = formatValue(widget.item.value);
-      _unitValueController.text = formatValueInScientificNotation(
-        widget.item.value,
-      );
+    if (_isFocused) {
+      _unitValueController.text = widget.item.value.strValue;
+    } else {
+      _unitValueController.text =
+          widget.item.value.scientificValue ?? widget.item.value.strValue;
     }
 
     return Container(
@@ -83,13 +77,11 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 decimal: true,
               ),
               onChanged: (value) {
-                _rawUnitValue = value;
                 widget.onValueChanged?.call(value);
               },
               onFocusSelected: () {
                 setState(() {
                   _isFocused = true;
-                  _unitValueController.text = _rawUnitValue;
                 });
               },
               onFocusLeft: () {
@@ -97,7 +89,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   _isFocused = false;
                 });
               },
-              customColor: _textBoxColor,
+              customColor: textBoxColor,
               theme: widget.theme,
             ),
           ),
@@ -114,15 +106,15 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                     _isFocused
-                        ? _unitButtonColor.focused.background
-                        : _unitButtonColor.regular.background,
+                        ? unitButtonColor.focused.background
+                        : unitButtonColor.regular.background,
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       side: BorderSide(
                         color: _isFocused
-                            ? _unitButtonColor.focused.border
-                            : _unitButtonColor.regular.border,
+                            ? unitButtonColor.focused.border
+                            : unitButtonColor.regular.border,
                         width: 1,
                       ),
                       borderRadius: _elementsBorderRadius,
@@ -134,8 +126,8 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   widget.item.unit.abbreviation,
                   style: TextStyle(
                     color: _isFocused
-                        ? _unitButtonColor.focused.content
-                        : _unitButtonColor.regular.content,
+                        ? unitButtonColor.focused.content
+                        : unitButtonColor.regular.content,
                     fontWeight: FontWeight.w700,
                   ),
                   maxLines: 1,
@@ -146,11 +138,5 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _unitValueController.dispose();
-    super.dispose();
   }
 }

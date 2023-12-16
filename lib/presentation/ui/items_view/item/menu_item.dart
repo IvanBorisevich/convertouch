@@ -41,23 +41,23 @@ class ConvertouchMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchMenuItemColor itemColors;
-    MenuItemColorVariation menuItemColor;
+    ConvertouchMenuItemColor itemColor;
+    MenuItemColorVariation itemColorVariation;
 
     if (customColors != null) {
-      itemColors = customColors!;
+      itemColor = customColors!;
     } else if (item.runtimeType == UnitGroupModel) {
-      itemColors = unitGroupItemColors[theme]!;
+      itemColor = unitGroupItemColors[theme]!;
     } else {
-      itemColors = unitItemColors[theme]!;
+      itemColor = unitItemColors[theme]!;
     }
 
     if (selected) {
-      menuItemColor = itemColors.selected;
+      itemColorVariation = itemColor.selected;
     } else if (isMarkedToSelect) {
-      menuItemColor = itemColors.marked;
+      itemColorVariation = itemColor.marked;
     } else {
-      menuItemColor = itemColors.regular;
+      itemColorVariation = itemColor.regular;
     }
 
     Widget logo = IconButton(
@@ -66,7 +66,7 @@ class ConvertouchMenuItem extends StatelessWidget {
         const AssetImage(
           "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
         ),
-        color: menuItemColor.content,
+        color: itemColorVariation.content,
         size: 25,
       ),
     );
@@ -80,7 +80,7 @@ class ConvertouchMenuItem extends StatelessWidget {
             AssetImage(
               "$iconAssetsPathPrefix/${unitGroup.iconName}",
             ),
-            color: menuItemColor.content,
+            color: itemColorVariation.content,
             size: 25,
           ),
         );
@@ -121,7 +121,7 @@ class ConvertouchMenuItem extends StatelessWidget {
                 selectedForRemoval: selectedForRemoval,
                 selectedForConversion: selected,
                 logo: logo,
-                color: menuItemColor,
+                color: itemColorVariation,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
@@ -130,7 +130,7 @@ class ConvertouchMenuItem extends StatelessWidget {
                 selectedForRemoval: selectedForRemoval,
                 selectedForConversion: selected,
                 logo: logo,
-                color: menuItemColor,
+                color: itemColorVariation,
               );
           }
         },

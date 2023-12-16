@@ -46,21 +46,12 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (items.isNotEmpty) {
-          if (markedItemIds != null && markedItemIds!.isNotEmpty) {
-            print("marked items ids: $markedItemIds");
-          }
-
           Widget? itemBuilder(context, index) {
             IdNameItemModel item = items[index];
-            bool selected =
-                showSelectedItem && item.id == selectedItemId;
+            bool selected = showSelectedItem && item.id == selectedItemId;
             bool isMarkedToSelect = showMarkedItems &&
                 markedItemIds != null &&
                 markedItemIds!.contains(item.id);
-
-            if (markedItemIds != null && markedItemIds!.isNotEmpty) {
-              print("item with name = ${item.name} is marked = $isMarkedToSelect");
-            }
 
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchMenuItem(

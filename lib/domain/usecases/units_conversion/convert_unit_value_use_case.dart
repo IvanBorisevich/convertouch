@@ -3,26 +3,30 @@ import 'package:convertouch/domain/model/input/units_conversion_events.dart';
 import 'package:convertouch/domain/model/output/units_conversion_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/usecases/units_conversion/formulas_map.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
+import 'package:convertouch/domain/utils/unit_value_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ConvertUnitValueUseCase
     extends UseCase<BuildConversion, ConversionBuilt> {
   @override
-  Future<Either<Failure, ConversionBuilt>> execute(BuildConversion input) async {
+  Future<Either<Failure, ConversionBuilt>> execute(
+      BuildConversion input) async {
     return Future(() {
       try {
         UnitValueModel? sourceConversionItem = input.sourceConversionItem;
         List<UnitValueModel> convertedUnitValues = [];
 
         if (input.units != null && input.unitGroup != null) {
-          sourceConversionItem ??= UnitValueModel(
+          sourceConversionItem ??= UnitValueModel.fromStrValue(
             unit: input.units![0],
-            value: 1,
+            strValue: "1",
           );
 
-          double? inputValue = sourceConversionItem.value;
+          double? inputValue =
+              double.tryParse(sourceConversionItem.value.strValue);
           double? inputUnitCoefficient = sourceConversionItem.unit.coefficient;
 
           for (UnitModel targetUnit in input.units!) {
@@ -48,7 +52,12 @@ class ConvertUnitValueUseCase
             convertedUnitValues.add(
               UnitValueModel(
                 unit: targetUnit,
-                value: targetValue,
+                value: ValueModel(
+                  strValue: UnitValueUtils.formatValue(targetValue),
+                  scientificValue:
+                      UnitValueUtils.formatValueInScientificNotation(
+                          targetValue),
+                ),
               ),
             );
           }

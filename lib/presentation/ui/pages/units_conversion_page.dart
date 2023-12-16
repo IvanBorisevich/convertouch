@@ -59,9 +59,9 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
                 BuildConversion(
-                  sourceConversionItem: UnitValueModel(
+                  sourceConversionItem: UnitValueModel.fromStrValue(
                     unit: item.unit,
-                    value: double.tryParse(value),
+                    strValue: value,
                   ),
                   units: pageState.conversionItems
                       .map((item) => item.unit)
