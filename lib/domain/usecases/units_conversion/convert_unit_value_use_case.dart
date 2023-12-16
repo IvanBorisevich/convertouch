@@ -2,7 +2,7 @@ import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/input/units_conversion_events.dart';
 import 'package:convertouch/domain/model/output/units_conversion_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/usecases/units_conversion/formulas_map.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
@@ -16,11 +16,11 @@ class ConvertUnitValueUseCase
       BuildConversion input) async {
     return Future(() {
       try {
-        UnitValueModel? sourceConversionItem = input.sourceConversionItem;
-        List<UnitValueModel> convertedUnitValues = [];
+        ConversionItemModel? sourceConversionItem = input.sourceConversionItem;
+        List<ConversionItemModel> convertedUnitValues = [];
 
         if (input.units != null && input.unitGroup != null) {
-          sourceConversionItem ??= UnitValueModel.fromStrValue(
+          sourceConversionItem ??= ConversionItemModel.fromStrValue(
             unit: input.units![0],
             strValue: "1",
           );
@@ -50,7 +50,7 @@ class ConvertUnitValueUseCase
             }
 
             convertedUnitValues.add(
-              UnitValueModel(
+              ConversionItemModel(
                 unit: targetUnit,
                 value: ValueModel(
                   strValue: UnitValueUtils.formatValue(targetValue),

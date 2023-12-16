@@ -3,18 +3,18 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-class UnitValueModel extends ItemModel {
+class ConversionItemModel extends ItemModel {
   final UnitModel unit;
   final ValueModel value;
 
-  const UnitValueModel({
+  const ConversionItemModel({
     required this.unit,
     required this.value,
   }) : super(
           itemType: ItemType.unitValue,
         );
 
-  UnitValueModel.fromStrValue({
+  ConversionItemModel.fromStrValue({
     required UnitModel unit,
     required String strValue,
   }) : this(
@@ -31,6 +31,6 @@ class UnitValueModel extends ItemModel {
 
   @override
   String toString() {
-    return 'UnitValueModel{$value ${unit.name}}';
+    return 'ConversionItemModel{$value ${unit.name}}';
   }
 }

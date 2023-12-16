@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitsConversionEvent extends Equatable {
@@ -12,7 +12,7 @@ abstract class UnitsConversionEvent extends Equatable {
 
 class BuildConversion extends UnitsConversionEvent {
   final UnitGroupModel? unitGroup;
-  final UnitValueModel? sourceConversionItem;
+  final ConversionItemModel? sourceConversionItem;
   final List<UnitModel>? units;
 
   const BuildConversion({
@@ -40,7 +40,7 @@ class BuildConversion extends UnitsConversionEvent {
 class RemoveConversionItem extends UnitsConversionEvent {
   final UnitGroupModel? unitGroupInConversion;
   final int itemUnitId;
-  final List<UnitValueModel> conversionItems;
+  final List<ConversionItemModel> conversionItems;
 
   const RemoveConversionItem({
     required this.unitGroupInConversion,

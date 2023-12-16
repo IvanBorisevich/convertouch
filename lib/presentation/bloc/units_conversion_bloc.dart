@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/input/units_conversion_events.dart';
 import 'package:convertouch/domain/model/output/units_conversion_states.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +34,7 @@ class UnitsConversionBloc
     } else if (event is RemoveConversionItem) {
       yield const ConversionInBuilding();
 
-      List<UnitValueModel> conversionItems = event.conversionItems;
+      List<ConversionItemModel> conversionItems = event.conversionItems;
       conversionItems.removeWhere((item) => event.itemUnitId == item.unit.id);
 
       yield ConversionBuilt(

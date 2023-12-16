@@ -1,17 +1,17 @@
 import 'dart:ui';
 
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
-  final List<UnitValueModel> convertedItems;
-  final void Function(UnitValueModel)? onItemTap;
-  final void Function(UnitValueModel, String)? onItemValueChanged;
-  final void Function(UnitValueModel)? onItemRemove;
+  final List<ConversionItemModel> convertedItems;
+  final void Function(ConversionItemModel)? onItemTap;
+  final void Function(ConversionItemModel, String)? onItemValueChanged;
+  final void Function(ConversionItemModel)? onItemRemove;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
@@ -153,7 +153,7 @@ class _ConvertouchConversionItemsViewState
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            final UnitValueModel item = widget.convertedItems.removeAt(
+            final ConversionItemModel item = widget.convertedItems.removeAt(
                 oldIndex);
             widget.convertedItems.insert(newIndex, item);
           });

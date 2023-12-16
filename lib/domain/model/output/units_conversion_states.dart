@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitsConversionState extends Equatable {
@@ -20,8 +20,8 @@ class ConversionInBuilding extends UnitsConversionState {
 
 class ConversionBuilt extends UnitsConversionState {
   final UnitGroupModel? unitGroup;
-  final UnitValueModel? sourceConversionItem;
-  final List<UnitValueModel> conversionItems;
+  final ConversionItemModel? sourceConversionItem;
+  final List<ConversionItemModel> conversionItems;
 
   const ConversionBuilt({
     required this.unitGroup,

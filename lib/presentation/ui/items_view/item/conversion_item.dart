@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
-  final UnitValueModel item;
+  final ConversionItemModel item;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final ConvertouchUITheme theme;

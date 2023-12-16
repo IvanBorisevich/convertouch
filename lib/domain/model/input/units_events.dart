@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UnitsEvent extends Equatable {
@@ -36,7 +36,7 @@ class FetchUnits extends UnitsEvent {
 class FetchUnitsToMarkForConversion extends FetchUnits {
   final List<UnitModel>? unitsAlreadyMarkedForConversion;
   final UnitModel? unitNewlyMarkedForConversion;
-  final UnitValueModel? currentSourceConversionItem;
+  final ConversionItemModel? currentSourceConversionItem;
 
   const FetchUnitsToMarkForConversion({
     required super.unitGroup,

@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/model/input/units_conversion_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
@@ -28,7 +28,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             pageState.allowUnitsToBeAddedToConversion;
         List<int>? markedUnitIds = pageState.unitIdsMarkedForConversion;
         List<UnitModel>? markedUnits = pageState.unitsMarkedForConversion;
-        UnitValueModel? sourceConversionItem =
+        ConversionItemModel? sourceConversionItem =
             pageState.currentSourceConversionItem;
 
         return ConvertouchUnitsPage(

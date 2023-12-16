@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_value_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/domain/model/input/units_conversion_events.dart';
@@ -59,7 +59,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
             onItemValueChanged: (item, value) {
               BlocProvider.of<UnitsConversionBloc>(context).add(
                 BuildConversion(
-                  sourceConversionItem: UnitValueModel.fromStrValue(
+                  sourceConversionItem: ConversionItemModel.fromStrValue(
                     unit: item.unit,
                     strValue: value,
                   ),
