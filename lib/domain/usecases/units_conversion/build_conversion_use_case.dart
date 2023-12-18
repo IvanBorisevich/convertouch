@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/units_conversion_events.dart';
-import 'package:convertouch/domain/model/output/units_conversion_states.dart';
+import 'package:convertouch/domain/model/input/conversion_events.dart';
+import 'package:convertouch/domain/model/output/conversion_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -9,8 +9,10 @@ import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:convertouch/domain/utils/unit_value_utils.dart';
 import 'package:either_dart/either.dart';
 
-class ConvertUnitValueUseCase
+class BuildConversionUseCase
     extends UseCase<BuildConversion, ConversionBuilt> {
+  const BuildConversionUseCase();
+
   @override
   Future<Either<Failure, ConversionBuilt>> execute(
       BuildConversion input) async {

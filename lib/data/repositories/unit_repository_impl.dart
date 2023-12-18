@@ -55,6 +55,32 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
+  Future<Either<Failure, UnitModel>> getUnit(int id) async {
+    try {
+      final result = await unitDao.getUnit(id);
+      return Right(UnitTranslator.I.toModel(result)!);
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when fetching unit by id = $id: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UnitModel>>> getUnits(List<int> ids) async {
+    try {
+      final result = await unitDao.getUnits(ids);
+      return Right(
+        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+      );
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when fetching units by ids = $ids: $e"),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(
       int unitGroupId) async {
     try {

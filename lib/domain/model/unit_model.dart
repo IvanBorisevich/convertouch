@@ -2,21 +2,30 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 
 class UnitModel extends IdNameItemModel {
+  final double? coefficient;
+  final String abbreviation;
+  final int unitGroupId;
+
   const UnitModel({
-    int? id,
-    required String name,
+    super.id,
+    required super.name,
     this.coefficient,
     required this.abbreviation,
     required this.unitGroupId,
   }) : super(
-          id: id,
-          name: name,
           itemType: ItemType.unit,
         );
 
-  final double? coefficient;
-  final String abbreviation;
-  final int unitGroupId;
+  const UnitModel.onlyId(
+    int id, {
+    this.coefficient,
+    this.abbreviation = '',
+    this.unitGroupId = -1,
+  }) : super(
+          id: id,
+          name: '',
+          itemType: ItemType.unit,
+        );
 
   @override
   List<Object?> get props => [

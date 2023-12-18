@@ -1,15 +1,15 @@
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class UnitsConversionState extends Equatable {
-  const UnitsConversionState();
+abstract class ConversionState extends Equatable {
+  const ConversionState();
 
   @override
   List<Object?> get props => [];
 }
 
-class ConversionInBuilding extends UnitsConversionState {
+class ConversionInBuilding extends ConversionState {
   const ConversionInBuilding();
 
   @override
@@ -18,7 +18,7 @@ class ConversionInBuilding extends UnitsConversionState {
   }
 }
 
-class ConversionBuilt extends UnitsConversionState {
+class ConversionBuilt extends ConversionState {
   final UnitGroupModel? unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<ConversionItemModel> conversionItems;
@@ -45,10 +45,10 @@ class ConversionBuilt extends UnitsConversionState {
   }
 }
 
-class UnitsConversionErrorState extends UnitsConversionState {
+class ConversionErrorState extends ConversionState {
   final String message;
 
-  const UnitsConversionErrorState({
+  const ConversionErrorState({
     required this.message,
   });
 
@@ -59,6 +59,6 @@ class UnitsConversionErrorState extends UnitsConversionState {
 
   @override
   String toString() {
-    return 'UnitsConversionErrorState{message: $message}';
+    return 'ConversionErrorState{message: $message}';
   }
 }

@@ -7,7 +7,12 @@ abstract class UnitRepository {
 
   Future<Either<Failure, List<UnitModel>>> fetchUnits(int unitGroupId);
 
-  Future<Either<Failure, List<UnitModel>>> searchUnits(int unitGroupId, String searchString);
+  Future<Either<Failure, List<UnitModel>>> searchUnits(
+      int unitGroupId, String searchString);
+
+  Future<Either<Failure, List<UnitModel>>> getUnits(List<int> ids);
+
+  Future<Either<Failure, UnitModel>> getUnit(int id);
 
   Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(int unitGroupId);
 

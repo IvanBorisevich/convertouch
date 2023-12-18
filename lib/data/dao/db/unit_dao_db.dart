@@ -29,6 +29,14 @@ abstract class UnitDaoDb extends UnitDao {
   Future<UnitEntity?> getFirstUnit(int unitGroupId);
 
   @override
+  @Query('select * from $unitsTableName where id = :id limit 1')
+  Future<UnitEntity?> getUnit(int id);
+
+  @override
+  @Query('select * from $unitsTableName where id in (:ids)')
+  Future<List<UnitEntity>> getUnits(List<int> ids);
+
+  @override
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<int> insert(UnitEntity unit);
 

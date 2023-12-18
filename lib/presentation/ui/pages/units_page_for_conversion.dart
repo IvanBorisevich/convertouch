@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/model/input/units_conversion_events.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/input/conversion_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
@@ -83,7 +83,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             icon: Icons.check_outlined,
             visible: allowUnitsToBeAddedToConversion,
             onClick: () {
-              BlocProvider.of<UnitsConversionBloc>(context).add(
+              BlocProvider.of<ConversionBloc>(context).add(
                 BuildConversion(
                   unitGroup: pageState.unitGroup,
                   units: markedUnits,

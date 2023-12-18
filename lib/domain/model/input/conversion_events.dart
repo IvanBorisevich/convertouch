@@ -1,16 +1,16 @@
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class UnitsConversionEvent extends Equatable {
-  const UnitsConversionEvent();
+abstract class ConversionEvent extends Equatable {
+  const ConversionEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class BuildConversion extends UnitsConversionEvent {
+class BuildConversion extends ConversionEvent {
   final UnitGroupModel? unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<UnitModel>? units;
@@ -23,10 +23,10 @@ class BuildConversion extends UnitsConversionEvent {
 
   @override
   List<Object?> get props => [
-    unitGroup,
-    sourceConversionItem,
-    units,
-  ];
+        unitGroup,
+        sourceConversionItem,
+        units,
+      ];
 
   @override
   String toString() {
@@ -37,7 +37,7 @@ class BuildConversion extends UnitsConversionEvent {
   }
 }
 
-class RemoveConversionItem extends UnitsConversionEvent {
+class RemoveConversionItem extends ConversionEvent {
   final UnitGroupModel? unitGroupInConversion;
   final int itemUnitId;
   final List<ConversionItemModel> conversionItems;
@@ -50,10 +50,10 @@ class RemoveConversionItem extends UnitsConversionEvent {
 
   @override
   List<Object?> get props => [
-    unitGroupInConversion,
-    itemUnitId,
-    conversionItems,
-  ];
+        unitGroupInConversion,
+        itemUnitId,
+        conversionItems,
+      ];
 
   @override
   String toString() {
@@ -61,5 +61,14 @@ class RemoveConversionItem extends UnitsConversionEvent {
         'unitGroupInConversion: $unitGroupInConversion, '
         'itemUnitId: $itemUnitId, '
         'conversionItems: $conversionItems}';
+  }
+}
+
+class RestoreLastConversion extends ConversionEvent {
+  const RestoreLastConversion();
+
+  @override
+  String toString() {
+    return 'RestoreLastConversion{}';
   }
 }

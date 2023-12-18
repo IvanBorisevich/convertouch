@@ -46,6 +46,7 @@ dependencies:
   collection: ^1.17.2
   path: ^1.8.3
   drag_and_drop_lists: ^0.3.3
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

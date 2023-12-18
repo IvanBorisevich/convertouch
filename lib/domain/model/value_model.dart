@@ -9,6 +9,6 @@ class ValueModel {
 
   @override
   String toString() {
-    return '$strValue';
+    return strValue;
   }
 }

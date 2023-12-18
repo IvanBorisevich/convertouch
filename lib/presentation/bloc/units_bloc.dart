@@ -1,19 +1,16 @@
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/output/units_states.dart';
-import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
-  final GetUnitGroupUseCase getUnitGroupUseCase;
   final AddUnitUseCase addUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
 
   UnitsBloc({
-    required this.getUnitGroupUseCase,
     required this.addUnitUseCase,
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,

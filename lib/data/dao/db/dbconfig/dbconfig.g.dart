@@ -307,6 +307,35 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 
   @override
+  Future<UnitEntity?> getUnit(int id) async {
+    return _queryAdapter.query('select * from units where id = ?1 limit 1',
+        mapper: (Map<String, Object?> row) => UnitEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            abbreviation: row['abbreviation'] as String,
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<UnitEntity>> getUnits(List<int> ids) async {
+    const offset = 1;
+    final _sqliteVariablesForIds =
+        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
+            .join(',');
+    return _queryAdapter.queryList(
+        'select * from units where id in (' + _sqliteVariablesForIds + ')',
+        mapper: (Map<String, Object?> row) => UnitEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            abbreviation: row['abbreviation'] as String,
+            coefficient: row['coefficient'] as double?,
+            unitGroupId: row['unit_group_id'] as int),
+        arguments: [...ids]);
+  }
+
+  @override
   Future<void> remove(List<int> ids) async {
     const offset = 1;
     final _sqliteVariablesForIds =

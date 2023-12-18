@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
-import 'package:convertouch/domain/model/input/units_conversion_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/domain/model/input/conversion_events.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/ui/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
@@ -16,19 +16,19 @@ import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchUnitsConversionPage extends StatelessWidget {
-  const ConvertouchUnitsConversionPage({super.key});
+class ConvertouchConversionPage extends StatelessWidget {
+  const ConvertouchConversionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return unitsConversionBloc((pageState) {
+    return conversionsBloc((pageState) {
       return appBloc((appState) {
         FloatingButtonColorVariation floatingButtonColor =
             conversionPageFloatingButtonColors[appState.theme]!;
 
         return ConvertouchPage(
           appState: appState,
-          title: "Conversions",
+          title: "Conversion",
           secondaryAppBar: pageState.unitGroup != null
               ? Padding(
                   padding: const EdgeInsets.only(top: 7),
@@ -54,10 +54,9 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
           secondaryAppBarColor: Colors.transparent,
           body: ConvertouchConversionItemsView(
             pageState.conversionItems,
-            onItemTap: (item) {
-            },
+            onItemTap: (item) {},
             onItemValueChanged: (item, value) {
-              BlocProvider.of<UnitsConversionBloc>(context).add(
+              BlocProvider.of<ConversionBloc>(context).add(
                 BuildConversion(
                   sourceConversionItem: ConversionItemModel.fromStrValue(
                     unit: item.unit,
@@ -71,7 +70,7 @@ class ConvertouchUnitsConversionPage extends StatelessWidget {
               );
             },
             onItemRemove: (item) {
-              BlocProvider.of<UnitsConversionBloc>(context).add(
+              BlocProvider.of<ConversionBloc>(context).add(
                 RemoveConversionItem(
                   itemUnitId: item.unit.id!,
                   conversionItems: pageState.conversionItems,

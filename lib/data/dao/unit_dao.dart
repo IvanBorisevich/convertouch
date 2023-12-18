@@ -11,6 +11,10 @@ abstract class UnitDao {
 
   Future<UnitEntity?> getFirstUnit(int unitGroupId);
 
+  Future<UnitEntity?> getUnit(int id);
+
+  Future<List<UnitEntity>> getUnits(List<int> ids);
+
   Future<int> insert(UnitEntity unit);
 
   Future<int> update(UnitEntity unit);

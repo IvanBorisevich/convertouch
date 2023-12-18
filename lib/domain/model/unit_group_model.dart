@@ -7,10 +7,19 @@ class UnitGroupModel extends IdNameItemModel {
     required String name,
     this.iconName,
   }) : super(
-    id: id,
-    name: name,
-    itemType: ItemType.unitGroup,
-  );
+          id: id,
+          name: name,
+          itemType: ItemType.unitGroup,
+        );
+
+  const UnitGroupModel.onlyId(
+    int? id, {
+    this.iconName,
+  }) : super(
+          id: id,
+          name: '',
+          itemType: ItemType.unitGroup,
+        );
 
   @override
   List<Object?> get props => [

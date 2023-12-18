@@ -1,9 +1,13 @@
+import 'package:convertouch/data/dao/conversion_dao.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
+import 'package:convertouch/data/dao/shared_preferences/conversion_dao_impl.dart';
+import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
+import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
@@ -15,8 +19,11 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
-import 'package:convertouch/domain/usecases/units_conversion/convert_unit_value_use_case.dart';
+import 'package:convertouch/domain/usecases/units_conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/units_conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/units_conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
@@ -25,7 +32,6 @@ import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_unit_creation
 import 'package:convertouch/presentation/bloc/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_bloc_for_unit_creation.dart';
-import 'package:convertouch/presentation/bloc/units_conversion_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.I;
@@ -108,7 +114,6 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => UnitsBloc(
-      getUnitGroupUseCase: locator(),
       addUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
@@ -162,12 +167,37 @@ Future<void> init() async {
   // units conversion
 
   locator.registerLazySingleton(
-    () => UnitsConversionBloc(
-      convertUnitValueUseCase: locator(),
+    () => ConversionBloc(
+      buildConversionUseCase: locator(),
+      saveConversionUseCase: locator(),
+      restoreLastConversionUseCase: locator(),
     ),
   );
 
-  locator.registerLazySingleton<ConvertUnitValueUseCase>(
-    () => ConvertUnitValueUseCase(),
+  locator.registerLazySingleton<BuildConversionUseCase>(
+    () => const BuildConversionUseCase(),
+  );
+
+  locator.registerLazySingleton<SaveConversionUseCase>(
+    () => SaveConversionUseCase(
+      conversionRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<RestoreLastConversionUseCase>(
+    () => RestoreLastConversionUseCase(
+      conversionRepository: locator(),
+      unitGroupRepository: locator(),
+      unitRepository: locator(),
+      buildConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ConversionRepository>(
+    () => ConversionRepositoryImpl(locator()),
+  );
+
+  locator.registerLazySingleton<ConversionDao>(
+    () => const ConversionDaoImpl(),
   );
 }
