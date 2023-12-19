@@ -78,8 +78,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           selectedUnitVisible: false,
           selectedUnitId: null,
           floatingButton: ConvertouchFloatingActionButton.adding(
-            visible:
-                !notExtendableUnitGroups.contains(pageState.unitGroup!.name),
+            visible: pageState.canNewUnitsBeAdded,
             onClick: () {
               BlocProvider.of<UnitCreationBloc>(context).add(
                 PrepareUnitCreation(

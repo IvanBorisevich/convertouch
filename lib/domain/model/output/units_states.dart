@@ -23,11 +23,13 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel? unitGroup;
   final String? searchString;
+  final bool canNewUnitsBeAdded;
 
   const UnitsFetched({
     this.units = const [],
     required this.unitGroup,
     this.searchString,
+    this.canNewUnitsBeAdded = true,
   });
 
   @override
@@ -35,6 +37,7 @@ class UnitsFetched extends UnitsState {
     units,
     unitGroup,
     searchString,
+    canNewUnitsBeAdded,
   ];
 
   @override

@@ -1,5 +1,3 @@
-import 'package:convertouch/domain/constants/default_units.dart';
-
 const String appName = "Convertouch";
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
@@ -42,8 +40,3 @@ class ConversionType {
   static const int dynamic = 1;
   static const int formula = 2;
 }
-
-const List<String> notExtendableUnitGroups = [
-  temperatureGroup,
-  currencyGroup,
-];
