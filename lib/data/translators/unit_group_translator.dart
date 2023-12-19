@@ -17,6 +17,7 @@ class UnitGroupTranslator
       id: entity.id!,
       name: entity.name,
       iconName: entity.iconName ?? unitGroupDefaultIconName,
+      conversionType: entity.conversionType ?? 0,
     );
   }
 
@@ -30,6 +31,7 @@ class UnitGroupTranslator
       name: model.name,
       iconName:
           model.iconName != unitGroupDefaultIconName ? model.iconName : null,
+      conversionType: model.conversionType != 0 ? model.conversionType : null,
     );
   }
 }

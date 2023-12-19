@@ -37,6 +37,12 @@ enum ConvertouchUITheme {
   dark,
 }
 
+class ConversionType {
+  static const int static = 0;
+  static const int dynamic = 1;
+  static const int formula = 2;
+}
+
 const List<String> notExtendableUnitGroups = [
   temperatureGroup,
   currencyGroup,

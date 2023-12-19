@@ -40,6 +40,7 @@ class ConvertouchDatabaseHelper {
         int groupId = await transaction.insert(unitGroupsTableName, {
           'name': entity['groupName'],
           'icon_name': entity['iconName'],
+          'conversion_type': entity['conversionType'],
         });
         for (Map<String, dynamic> unit in entity['units']) {
           transaction.insert(

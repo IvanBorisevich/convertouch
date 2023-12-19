@@ -2,10 +2,14 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 
 class UnitGroupModel extends IdNameItemModel {
+  final String? iconName;
+  final int? conversionType;
+
   const UnitGroupModel({
     int? id,
     required String name,
     this.iconName,
+    this.conversionType,
   }) : super(
           id: id,
           name: name,
@@ -15,6 +19,7 @@ class UnitGroupModel extends IdNameItemModel {
   const UnitGroupModel.onlyId(
     int? id, {
     this.iconName,
+    this.conversionType,
   }) : super(
           id: id,
           name: '',
@@ -27,9 +32,8 @@ class UnitGroupModel extends IdNameItemModel {
     name,
     itemType,
     iconName,
+    conversionType,
   ];
-
-  final String? iconName;
 
   @override
   String toString() {
