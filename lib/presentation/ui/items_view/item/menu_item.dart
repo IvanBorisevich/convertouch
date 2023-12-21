@@ -21,7 +21,7 @@ class ConvertouchMenuItem extends StatelessWidget {
   final bool selectedForRemoval;
   final bool markOnTap;
   final ConvertouchUITheme theme;
-  final ConvertouchMenuItemColor? customColors;
+  final ConvertouchListItemColor? customColors;
 
   const ConvertouchMenuItem(
     this.item, {
@@ -41,8 +41,8 @@ class ConvertouchMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchMenuItemColor itemColor;
-    MenuItemColorVariation itemColorVariation;
+    ConvertouchListItemColor itemColor;
+    ListItemColorVariation itemColorVariation;
 
     if (customColors != null) {
       itemColor = customColors!;
@@ -146,7 +146,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final double itemContainerHeight;
   final bool selectedForRemoval;
   final bool selectedForConversion;
-  final MenuItemColorVariation color;
+  final ListItemColorVariation color;
 
   const ConvertouchMenuListItem(
     this.item, {
@@ -242,7 +242,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final Widget logo;
   final bool selectedForRemoval;
   final bool selectedForConversion;
-  final MenuItemColorVariation color;
+  final ListItemColorVariation color;
 
   const ConvertouchMenuGridItem(
     this.item, {

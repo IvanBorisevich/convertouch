@@ -94,25 +94,25 @@ const sideMenuSwitcherColors = {
 };
 
 const unitGroupItemColors = {
-  ConvertouchUITheme.light: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.light: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFFC2CCFF),
       background: Color(0xFFF2F5FF),
       content: Color(0xFF3A3A88),
     ),
-    selected: MenuItemColorVariation(
+    selected: ListItemColorVariation(
       border: Color(0xFF9EADFA),
       background: Color(0xFFE5EAFF),
       content: Color(0xFF303073),
     ),
   ),
-  ConvertouchUITheme.dark: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.dark: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFF585A6C),
       background: Color(0xFF3E4754),
       content: Color(0xFFB1B5EA),
     ),
-    selected: MenuItemColorVariation(
+    selected: ListItemColorVariation(
       border: Color(0xFFA5B2FF),
       background: Color(0xFF3E4754),
       content: Color(0xFFB3B6DE),
@@ -121,14 +121,14 @@ const unitGroupItemColors = {
 };
 
 const appBarUnitGroupItemColors = {
-  ConvertouchUITheme.light: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.light: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFF426F99),
       content: Color(0xFF426F99),
     ),
   ),
-  ConvertouchUITheme.dark: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.dark: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFF60647E),
       content: Color(0xFFA1A4CE),
     ),
@@ -136,35 +136,35 @@ const appBarUnitGroupItemColors = {
 };
 
 const unitItemColors = {
-  ConvertouchUITheme.light: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.light: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFFB5DBFF),
       background: Color(0xFFDFEDFF),
       content: Color(0xFF366C9F),
     ),
-    marked: MenuItemColorVariation(
+    marked: ListItemColorVariation(
       border: Color(0xFF509CE0),
       background: Color(0xFFCCE1FF),
       content: Color(0xFF366C9F),
     ),
-    selected: MenuItemColorVariation(
+    selected: ListItemColorVariation(
       border: Color(0xFF2F7DC2),
       background: Color(0xFFCCE1FF),
       content: Color(0xFF366C9F),
     ),
   ),
-  ConvertouchUITheme.dark: ConvertouchMenuItemColor(
-    regular: MenuItemColorVariation(
+  ConvertouchUITheme.dark: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
       border: Color(0xFF54616C),
       background: Color(0xFF3E4754),
       content: Color(0xFF7DAAD3),
     ),
-    marked: MenuItemColorVariation(
+    marked: ListItemColorVariation(
       border: Color(0xFF7A9EBE),
       background: Color(0xE4415F7E),
       content: Color(0xFFA0CAF1),
     ),
-    selected: MenuItemColorVariation(
+    selected: ListItemColorVariation(
       border: Color(0xFF7A9EBE),
       background: Color(0xE4415F7E),
       content: Color(0xFFA0CAF1),
@@ -187,13 +187,13 @@ const conversionItemColors = {
         label: Color(0xFF7FA0BE),
       ),
     ),
-    unitButton: ConvertouchMenuItemColor(
-      regular: MenuItemColorVariation(
+    unitButton: ConvertouchListItemColor(
+      regular: ListItemColorVariation(
         border: Color(0xFF7FA0BE),
         background: Color(0xFFE2EEF8),
         content: Color(0xFF426F99),
       ),
-      focused: MenuItemColorVariation(
+      focused: ListItemColorVariation(
         border: Color(0xFF375067),
         background: Color(0xFFB9D7F1),
         content: Color(0xFF2D4B67),
@@ -214,17 +214,44 @@ const conversionItemColors = {
         label: Color(0xFF98BAD9),
       ),
     ),
-    unitButton: ConvertouchMenuItemColor(
-      regular: MenuItemColorVariation(
+    unitButton: ConvertouchListItemColor(
+      regular: ListItemColorVariation(
         border: Color(0xFF7FA0BE),
         background: Color(0xFF373F4B),
         content: Color(0xFF7FA0BE),
       ),
-      focused: MenuItemColorVariation(
+      focused: ListItemColorVariation(
         border: Color(0xFF8FB1D0),
         background: Color(0xDF49597A),
         content: Color(0xFF8FB1D0),
       ),
+    ),
+  ),
+};
+
+const refreshingJobsColors = {
+  ConvertouchUITheme.light: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
+      border: Color(0xFFC2CCFF),
+      background: Color(0xFFF2F5FF),
+      content: Color(0xFF3A3A88),
+    ),
+    selected: ListItemColorVariation(
+      border: Color(0xFF9EADFA),
+      background: Color(0xFFE5EAFF),
+      content: Color(0xFF303073),
+    ),
+  ),
+  ConvertouchUITheme.dark: ConvertouchListItemColor(
+    regular: ListItemColorVariation(
+      border: Color(0xFF585A6C),
+      background: Color(0xFF3E4754),
+      content: Color(0xFFB1B5EA),
+    ),
+    selected: ListItemColorVariation(
+      border: Color(0xFFA5B2FF),
+      background: Color(0xFF3E4754),
+      content: Color(0xFFB3B6DE),
     ),
   ),
 };

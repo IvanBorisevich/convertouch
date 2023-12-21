@@ -4,22 +4,22 @@ import 'package:convertouch/domain/model/item_model.dart';
 class UnitGroupModel extends IdNameItemModel {
   final String? iconName;
   final int? conversionType;
+  final bool refreshable;
 
   const UnitGroupModel({
-    int? id,
-    required String name,
+    super.id,
+    required super.name,
     this.iconName,
     this.conversionType,
-  }) : super(
-          id: id,
-          name: name,
-          itemType: ItemType.unitGroup,
-        );
+    this.refreshable = false,
+    super.itemType = ItemType.unitGroup,
+  });
 
   const UnitGroupModel.onlyId(
     int? id, {
     this.iconName,
     this.conversionType,
+    this.refreshable = false,
   }) : super(
           id: id,
           name: '',
@@ -33,6 +33,7 @@ class UnitGroupModel extends IdNameItemModel {
     itemType,
     iconName,
     conversionType,
+    refreshable,
   ];
 
   @override

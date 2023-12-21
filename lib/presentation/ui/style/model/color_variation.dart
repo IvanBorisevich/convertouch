@@ -1,7 +1,7 @@
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
-const MenuItemColorVariation defaultMenuItemColor = MenuItemColorVariation();
+const ListItemColorVariation defaultListItemColor = ListItemColorVariation();
 const TextBoxColorVariation defaultTextBoxColor = TextBoxColorVariation();
 const ScaffoldColorVariation defaultScaffoldColor = ScaffoldColorVariation();
 const SearchBarColorVariation defaultSearchBarColor = SearchBarColorVariation();
@@ -12,12 +12,12 @@ abstract class ConvertouchColorVariation {
   const ConvertouchColorVariation();
 }
 
-class MenuItemColorVariation extends ConvertouchColorVariation {
+class ListItemColorVariation extends ConvertouchColorVariation {
   final Color border;
   final Color background;
   final Color content;
 
-  const MenuItemColorVariation({
+  const ListItemColorVariation({
     this.border = noColor,
     this.background = noColor,
     this.content = noColor,

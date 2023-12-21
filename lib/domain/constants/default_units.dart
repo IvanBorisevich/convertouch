@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 
 const currencyGroup = "Currency";
-
 const temperatureGroup = "Temperature";
 const degreeCelsius = "Degree Celsius";
 const degreeFahrenheit = "Degree Fahrenheit";
@@ -80,6 +79,7 @@ const unitsV1 = [
   {
     "groupName": temperatureGroup,
     "conversionType": ConversionType.formula,
+    "refreshable": true,
     "units": [
       {"abbreviation": "°C", "name": degreeCelsius},
       {"abbreviation": "°F", "name": degreeFahrenheit},
@@ -94,6 +94,7 @@ const unitsV1 = [
   {
     "groupName": currencyGroup,
     "conversionType": ConversionType.dynamic,
+    "refreshable": true,
     "units": [
       {"abbreviation": "\$", "name": "Dollar USA (USD)"},
       {"abbreviation": "BYN", "name": "Ruble Belarus (BYN)"},

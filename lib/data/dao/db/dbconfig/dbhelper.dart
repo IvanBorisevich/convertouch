@@ -41,6 +41,7 @@ class ConvertouchDatabaseHelper {
           'name': entity['groupName'],
           'icon_name': entity['iconName'],
           'conversion_type': entity['conversionType'],
+          'refreshable': entity['refreshable'],
         });
         for (Map<String, dynamic> unit in entity['units']) {
           transaction.insert(

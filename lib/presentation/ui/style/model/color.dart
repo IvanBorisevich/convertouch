@@ -19,13 +19,13 @@ abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
   });
 }
 
-class ConvertouchMenuItemColor
-    extends ConvertouchColor<MenuItemColorVariation> {
-  const ConvertouchMenuItemColor({
+class ConvertouchListItemColor
+    extends ConvertouchColor<ListItemColorVariation> {
+  const ConvertouchListItemColor({
     required super.regular,
-    super.marked = defaultMenuItemColor,
-    super.selected = defaultMenuItemColor,
-    super.focused = defaultMenuItemColor,
+    super.marked = defaultListItemColor,
+    super.selected = defaultListItemColor,
+    super.focused = defaultListItemColor,
   });
 }
 
@@ -40,7 +40,7 @@ class ConvertouchTextBoxColor extends ConvertouchColor<TextBoxColorVariation> {
 
 class ConvertouchConversionItemColor {
   final ConvertouchTextBoxColor textBox;
-  final ConvertouchMenuItemColor unitButton;
+  final ConvertouchListItemColor unitButton;
   final Color handlersColor;
 
   const ConvertouchConversionItemColor({

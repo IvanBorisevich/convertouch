@@ -14,6 +14,10 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
   Future<List<UnitGroupEntity>> getBySearchString(String searchString);
 
   @override
+  @Query('select * from $unitGroupsTableName where refreshable is not null')
+  Future<List<UnitGroupEntity>> getRefreshableGroups();
+
+  @override
   @Query('select * from $unitGroupsTableName where id = :id limit 1')
   Future<UnitGroupEntity?> get(int id);
 

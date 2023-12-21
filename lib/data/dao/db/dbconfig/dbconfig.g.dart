@@ -87,7 +87,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -124,7 +124,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
-                  'conversion_type': item.conversionType
+                  'conversion_type': item.conversionType,
+                  'refreshable': item.refreshable
                 }),
         _unitGroupEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -134,7 +135,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
-                  'conversion_type': item.conversionType
+                  'conversion_type': item.conversionType,
+                  'refreshable': item.refreshable
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -154,7 +156,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?));
+            conversionType: row['conversion_type'] as int?,
+            refreshable: row['refreshable'] as int?));
   }
 
   @override
@@ -165,8 +168,21 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?),
+            conversionType: row['conversion_type'] as int?,
+            refreshable: row['refreshable'] as int?),
         arguments: [searchString]);
+  }
+
+  @override
+  Future<List<UnitGroupEntity>> getRefreshableGroups() async {
+    return _queryAdapter.queryList(
+        'select * from unit_groups where refreshable is not null',
+        mapper: (Map<String, Object?> row) => UnitGroupEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            iconName: row['icon_name'] as String?,
+            conversionType: row['conversion_type'] as int?,
+            refreshable: row['refreshable'] as int?));
   }
 
   @override
@@ -177,7 +193,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?),
+            conversionType: row['conversion_type'] as int?,
+            refreshable: row['refreshable'] as int?),
         arguments: [id]);
   }
 
@@ -189,7 +206,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?),
+            conversionType: row['conversion_type'] as int?,
+            refreshable: row['refreshable'] as int?),
         arguments: [name]);
   }
 

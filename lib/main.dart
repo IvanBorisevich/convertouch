@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/conversion_events.dart';
+import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
@@ -37,9 +39,15 @@ class ConvertouchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => di.locator<ConvertouchAppBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitGroupsViewModeBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitsViewModeBloc>()),
+        BlocProvider(
+          create: (context) => di.locator<ConvertouchAppBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitGroupsViewModeBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitsViewModeBloc>(),
+        ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>()
             ..add(
@@ -55,14 +63,29 @@ class ConvertouchApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-            create: (context) => di.locator<UnitGroupsBlocForConversion>()),
+          create: (context) => di.locator<UnitGroupsBlocForConversion>(),
+        ),
         BlocProvider(
-            create: (context) => di.locator<UnitGroupsBlocForUnitCreation>()),
-        BlocProvider(create: (context) => di.locator<UnitsBloc>()),
-        BlocProvider(create: (context) => di.locator<UnitsBlocForConversion>()),
+          create: (context) => di.locator<UnitGroupsBlocForUnitCreation>(),
+        ),
         BlocProvider(
-            create: (context) => di.locator<UnitsBlocForUnitCreation>()),
-        BlocProvider(create: (context) => di.locator<UnitCreationBloc>()),
+          create: (context) => di.locator<UnitsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitsBlocForConversion>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitsBlocForUnitCreation>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitCreationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RefreshingJobsBloc>()
+            ..add(
+              const FetchRefreshingJobs(),
+            ),
+        ),
       ],
       child: MaterialApp(
         title: appName,

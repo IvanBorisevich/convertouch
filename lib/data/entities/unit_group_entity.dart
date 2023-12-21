@@ -17,12 +17,14 @@ class UnitGroupEntity {
   final String? iconName;
   @ColumnInfo(name: 'conversion_type')
   final int? conversionType;
+  final int? refreshable;
 
   const UnitGroupEntity({
     this.id,
     required this.name,
     this.iconName,
     this.conversionType,
+    this.refreshable,
   });
 
   static UnitGroupEntity fromJson(Map<String, dynamic> data) {
@@ -32,6 +34,7 @@ class UnitGroupEntity {
       name: data['name'],
       iconName: iconName != unitGroupDefaultIconName ? iconName : null,
       conversionType: conversionType != 0 ? conversionType : null,
+      refreshable: data['refreshable'],
     );
   }
 
@@ -40,6 +43,7 @@ class UnitGroupEntity {
       'name': name,
       'iconName': iconName != unitGroupDefaultIconName ? iconName : null,
       'conversionType': conversionType != 0 ? conversionType : null,
+      'refreshable': refreshable,
     };
   }
 }

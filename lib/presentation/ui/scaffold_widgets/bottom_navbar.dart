@@ -8,16 +8,19 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
   static const _navBarIcons = {
     BottomNavbarItem.home: Icons.home_outlined,
     BottomNavbarItem.unitsMenu: Icons.dashboard_customize_outlined,
+    BottomNavbarItem.refreshableData: Icons.refresh_outlined,
   };
 
   static const _navBarIconsSelected = {
     BottomNavbarItem.home: Icons.home_rounded,
     BottomNavbarItem.unitsMenu: Icons.dashboard_customize_rounded,
+    BottomNavbarItem.refreshableData: Icons.refresh_rounded,
   };
 
   static const _navBarLabels = {
     BottomNavbarItem.home: "Home",
     BottomNavbarItem.unitsMenu: "Units Menu",
+    BottomNavbarItem.refreshableData: "Refresh Data",
   };
 
   final BottomNavbarItem selectedItem;
@@ -39,6 +42,9 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
         items: [
           _buildNavbarItem(BottomNavbarItem.home),
           _buildNavbarItem(BottomNavbarItem.unitsMenu),
+          _buildNavbarItem(
+            BottomNavbarItem.refreshableData,
+          )
         ],
         onTap: (index) {
           onItemSelect?.call(BottomNavbarItem.values[index]);

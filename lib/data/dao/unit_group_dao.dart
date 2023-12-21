@@ -7,6 +7,8 @@ abstract class UnitGroupDao {
 
   Future<List<UnitGroupEntity>> getBySearchString(String searchString);
 
+  Future<List<UnitGroupEntity>> getRefreshableGroups();
+
   Future<UnitGroupEntity?> get(int id);
 
   Future<UnitGroupEntity?> getByName(String name);
