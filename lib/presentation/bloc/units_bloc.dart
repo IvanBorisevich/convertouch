@@ -3,9 +3,9 @@ import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
+class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
   final AddUnitUseCase addUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;

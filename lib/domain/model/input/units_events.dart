@@ -1,13 +1,10 @@
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitsEvent extends Equatable {
+abstract class UnitsEvent extends ConvertouchEvent {
   const UnitsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class FetchUnits extends UnitsEvent {

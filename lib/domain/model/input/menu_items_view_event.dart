@@ -1,11 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:equatable/equatable.dart';
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 
-abstract class MenuItemsViewEvent extends Equatable {
+abstract class MenuItemsViewEvent extends ConvertouchEvent {
   const MenuItemsViewEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class ChangeMenuItemsView extends MenuItemsViewEvent {

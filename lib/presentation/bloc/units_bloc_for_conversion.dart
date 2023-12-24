@@ -2,9 +2,9 @@ import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class UnitsBlocForConversion extends Bloc<UnitsEvent, UnitsState> {
+class UnitsBlocForConversion extends ConvertouchBloc<UnitsEvent, UnitsState> {
   static const int _minUnitsNumForConversion = 2;
 
   final FetchUnitsUseCase fetchUnitsUseCase;

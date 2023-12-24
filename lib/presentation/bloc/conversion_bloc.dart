@@ -4,9 +4,10 @@ import 'package:convertouch/domain/model/output/conversion_states.dart';
 import 'package:convertouch/domain/usecases/units_conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/units_conversion/save_conversion_use_case.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConversionBloc extends Bloc<ConversionEvent, ConversionState> {
+class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final RestoreLastConversionUseCase restoreLastConversionUseCase;

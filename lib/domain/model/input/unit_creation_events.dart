@@ -1,8 +1,8 @@
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitCreationEvent extends Equatable {
+abstract class UnitCreationEvent extends ConvertouchEvent {
   const UnitCreationEvent();
 }
 

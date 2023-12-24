@@ -2,9 +2,9 @@ import 'package:convertouch/domain/model/input/unit_creation_events.dart';
 import 'package:convertouch/domain/model/output/unit_creation_states.dart';
 import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class UnitCreationBloc extends Bloc<UnitCreationEvent, UnitCreationState> {
+class UnitCreationBloc extends ConvertouchBloc<UnitCreationEvent, UnitCreationState> {
   final PrepareUnitCreationUseCase prepareUnitCreationUseCase;
   final AddUnitUseCase addUnitUseCase;
 

@@ -1,11 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:equatable/equatable.dart';
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 
-abstract class MenuItemsViewState extends Equatable {
+abstract class MenuItemsViewState extends ConvertouchState {
   const MenuItemsViewState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class MenuItemsViewStateSetting extends MenuItemsViewState {

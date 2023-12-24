@@ -1,12 +1,9 @@
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitCreationState extends Equatable {
+abstract class UnitCreationState extends ConvertouchState {
   const UnitCreationState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class UnitCreationPreparing extends UnitCreationState {

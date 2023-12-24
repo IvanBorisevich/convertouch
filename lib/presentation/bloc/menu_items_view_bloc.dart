@@ -2,10 +2,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/menu_items_view_event.dart';
 import 'package:convertouch/domain/model/output/menu_items_view_states.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
 abstract class MenuViewModeBloc
-    extends Bloc<MenuItemsViewEvent, MenuItemsViewState> {
+    extends ConvertouchBloc<MenuItemsViewEvent, MenuItemsViewState> {
   final ChangeItemsMenuViewUseCase changeItemsMenuViewUseCase;
 
   MenuViewModeBloc({
