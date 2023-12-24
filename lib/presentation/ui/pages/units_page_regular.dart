@@ -45,7 +45,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           },
           onUnitTap: (unit) {},
           onUnitTapForRemoval: (unit) {
-            BlocProvider.of<ConvertouchAppBloc>(context).add(
+            BlocProvider.of<AppBloc>(context).add(
               SelectMenuItemForRemoval(
                 itemId: unit.id!,
                 selectedItemIdsForRemoval: appState.selectedItemIdsForRemoval,
@@ -54,7 +54,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           },
           onUnitLongPress: (unit) {
             if (!appState.removalMode) {
-              BlocProvider.of<ConvertouchAppBloc>(context).add(
+              BlocProvider.of<AppBloc>(context).add(
                 SelectMenuItemForRemoval(
                   itemId: unit.id!,
                 ),

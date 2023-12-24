@@ -21,14 +21,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // TODO: refactor view mode blocs in order to avoid duplicates
 
 Widget appBloc(
-  Widget Function(ConvertouchAppStateBuilt appState) builderFunc,
+  Widget Function(AppStateBuilt appState) builderFunc,
 ) {
-  return BlocBuilder<ConvertouchAppBloc, ConvertouchAppState>(
+  return BlocBuilder<AppBloc, AppState>(
     buildWhen: (prev, next) {
-      return prev != next && next is ConvertouchAppStateBuilt;
+      return prev != next && next is AppStateBuilt;
     },
     builder: (_, appState) {
-      if (appState is ConvertouchAppStateBuilt) {
+      if (appState is AppStateBuilt) {
         return builderFunc.call(appState);
       } else {
         return empty();

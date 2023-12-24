@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
-class ConvertouchAppEvent extends Equatable {
+class AppEvent extends Equatable {
   final BottomNavbarItem activeNavbarItem;
   final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
 
-  const ConvertouchAppEvent({
+  const AppEvent({
     required this.activeNavbarItem,
     this.selectedItemIdsForRemoval = const [],
     this.theme = ConvertouchUITheme.light,
@@ -21,7 +21,7 @@ class ConvertouchAppEvent extends Equatable {
 
   @override
   String toString() {
-    return 'ConvertouchAppEvent{'
+    return 'AppEvent{'
         'activeNavbarItem: $activeNavbarItem, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
         'theme: $theme'
@@ -29,7 +29,7 @@ class ConvertouchAppEvent extends Equatable {
   }
 }
 
-class SelectMenuItemForRemoval extends ConvertouchAppEvent {
+class SelectMenuItemForRemoval extends AppEvent {
   final int itemId;
 
   const SelectMenuItemForRemoval({
@@ -52,7 +52,7 @@ class SelectMenuItemForRemoval extends ConvertouchAppEvent {
   }
 }
 
-class DisableRemovalMode extends ConvertouchAppEvent {
+class DisableRemovalMode extends AppEvent {
   const DisableRemovalMode({
     super.activeNavbarItem = BottomNavbarItem.unitsMenu,
   });

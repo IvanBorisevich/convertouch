@@ -1,29 +1,29 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class ConvertouchAppState extends Equatable {
-  const ConvertouchAppState();
+abstract class AppState extends Equatable {
+  const AppState();
 
   @override
   List<Object?> get props => [];
 }
 
-class ConvertouchAppStateInBuilding extends ConvertouchAppState {
-  const ConvertouchAppStateInBuilding();
+class AppStateInBuilding extends AppState {
+  const AppStateInBuilding();
 
   @override
   String toString() {
-    return 'ConvertouchAppStateInBuilding{}';
+    return 'AppStateInBuilding{}';
   }
 }
 
-class ConvertouchAppStateBuilt extends ConvertouchAppState {
+class AppStateBuilt extends AppState {
   final BottomNavbarItem activeNavbarItem;
   final bool removalMode;
   final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
 
-  const ConvertouchAppStateBuilt({
+  const AppStateBuilt({
     required this.activeNavbarItem,
     this.removalMode = false,
     this.selectedItemIdsForRemoval = const [],
@@ -40,7 +40,7 @@ class ConvertouchAppStateBuilt extends ConvertouchAppState {
 
   @override
   String toString() {
-    return 'ConvertouchAppStateBuilt{'
+    return 'AppStateBuilt{'
         'activeNavbarItem: $activeNavbarItem, '
         'removalMode: $removalMode, '
         'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '

@@ -30,8 +30,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     } else {
       setState(() => _selectedNavbarItem = bottomNavbarItem);
 
-      BlocProvider.of<ConvertouchAppBloc>(context).add(
-        ConvertouchAppEvent(activeNavbarItem: _selectedNavbarItem),
+      BlocProvider.of<AppBloc>(context).add(
+        AppEvent(activeNavbarItem: _selectedNavbarItem),
       );
     }
   }

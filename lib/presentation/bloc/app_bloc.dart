@@ -3,17 +3,17 @@ import 'package:convertouch/domain/model/input/app_event.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchAppBloc
-    extends Bloc<ConvertouchAppEvent, ConvertouchAppState> {
-  ConvertouchAppBloc() : super(const ConvertouchAppStateBuilt(
+class AppBloc
+    extends Bloc<AppEvent, AppState> {
+  AppBloc() : super(const AppStateBuilt(
     activeNavbarItem: BottomNavbarItem.home,
   ));
 
   @override
-  Stream<ConvertouchAppState> mapEventToState(
-    ConvertouchAppEvent event,
+  Stream<AppState> mapEventToState(
+    AppEvent event,
   ) async* {
-    yield const ConvertouchAppStateInBuilding();
+    yield const AppStateInBuilding();
 
     bool removalMode = false;
     List<int> selectedItemIdsForRemoval = [];
@@ -34,7 +34,7 @@ class ConvertouchAppBloc
       removalMode = false;
     }
 
-    yield ConvertouchAppStateBuilt(
+    yield AppStateBuilt(
       activeNavbarItem: event.activeNavbarItem,
       removalMode: removalMode,
       selectedItemIdsForRemoval: selectedItemIdsForRemoval,

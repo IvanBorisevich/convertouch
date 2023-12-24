@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchPage extends StatelessWidget {
-  final ConvertouchAppStateBuilt appState;
+  final AppStateBuilt appState;
   final Widget body;
   final String title;
   final List<Widget>? appBarRightWidgets;
@@ -51,7 +51,7 @@ class ConvertouchPage extends StatelessWidget {
                   icon: Icons.clear,
                   color: scaffoldColor.regular,
                   onClick: () {
-                    BlocProvider.of<ConvertouchAppBloc>(context).add(
+                    BlocProvider.of<AppBloc>(context).add(
                       const DisableRemovalMode(),
                     );
                   },
@@ -116,7 +116,7 @@ class ConvertouchPage extends StatelessWidget {
                 border: scaffoldColor.regular.backgroundColor,
                 onClick: () {
                   onItemsRemove?.call();
-                  BlocProvider.of<ConvertouchAppBloc>(context).add(
+                  BlocProvider.of<AppBloc>(context).add(
                     const DisableRemovalMode(),
                   );
                 },

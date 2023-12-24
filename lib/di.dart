@@ -50,7 +50,7 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton(
-    () => ConvertouchAppBloc(),
+    () => AppBloc(),
   );
 
   locator.registerLazySingleton(
