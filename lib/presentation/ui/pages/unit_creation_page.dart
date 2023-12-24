@@ -34,8 +34,8 @@ class _ConvertouchUnitCreationPageState
   String _unitAbbr = "";
   String _unitAbbrHint = "";
 
-  String _newUnitValue = "1";
-  String _baseUnitValue = "1";
+  String _newUnitValue = "";
+  String _baseUnitValue = "";
 
   @override
   Widget build(BuildContext context) {

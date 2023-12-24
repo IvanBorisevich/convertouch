@@ -25,9 +25,8 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
         List<ConversionItemModel> convertedUnitValues = [];
 
         if (input.units != null && input.unitGroup != null) {
-          srcConversionItem ??= ConversionItemModel.fromStrValue(
+          srcConversionItem ??= ConversionItemModel.fromUnit(
             unit: input.units![0],
-            strValue: "1",
           );
 
           double? srcValue = double.tryParse(srcConversionItem.value.strValue);

@@ -18,12 +18,31 @@ class ConversionItemModel extends ItemModel {
 
   ConversionItemModel.fromStrValue({
     required UnitModel unit,
-    required String strValue,
+    String strValue = "",
     String defaultValue = "1",
+    String defaultScientificValue = "1",
   }) : this(
           unit: unit,
-          value: ValueModel(strValue: strValue),
-          defaultValue: ValueModel(strValue: defaultValue),
+          value: ValueModel(
+            strValue: strValue,
+          ),
+          defaultValue: ValueModel(
+            strValue: defaultValue,
+            scientificValue: defaultScientificValue,
+          ),
+        );
+
+  const ConversionItemModel.fromUnit({
+    required UnitModel unit,
+  }) : this(
+          unit: unit,
+          value: const ValueModel(
+            strValue: "",
+          ),
+          defaultValue: const ValueModel(
+            strValue: "1",
+            scientificValue: "1",
+          ),
         );
 
   @override

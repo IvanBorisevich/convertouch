@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/input/conversion_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -13,9 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsPageForConversion extends StatelessWidget {
-  const ConvertouchUnitsPageForConversion({
-    super.key,
-  });
+  const ConvertouchUnitsPageForConversion({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +21,6 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
           unitsPageFloatingButtonColors[appState.theme]!;
 
       return unitsBlocForConversion((pageState) {
-        bool allowUnitsToBeAddedToConversion =
-            pageState.allowUnitsToBeAddedToConversion;
-        List<int>? markedUnitIds = pageState.unitIdsMarkedForConversion;
-        List<UnitModel>? markedUnits = pageState.unitsMarkedForConversion;
-        ConversionItemModel? sourceConversionItem =
-            pageState.currentSourceConversionItem;
-
         return ConvertouchUnitsPage(
           pageTitle: 'Add units to conversion',
           units: pageState.units,
@@ -76,18 +66,18 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
           appBarRightWidgets: const [],
           markedUnitsForConversionVisible: true,
           markUnitsOnTap: true,
-          markedUnitIdsForConversion: markedUnitIds,
+          markedUnitIdsForConversion: pageState.unitIdsMarkedForConversion,
           selectedUnitVisible: false,
           selectedUnitId: null,
           floatingButton: ConvertouchFloatingActionButton(
             icon: Icons.check_outlined,
-            visible: allowUnitsToBeAddedToConversion,
+            visible: pageState.allowUnitsToBeAddedToConversion,
             onClick: () {
               BlocProvider.of<ConversionBloc>(context).add(
                 BuildConversion(
                   unitGroup: pageState.unitGroup,
-                  units: markedUnits,
-                  sourceConversionItem: sourceConversionItem,
+                  units: pageState.unitsMarkedForConversion,
+                  sourceConversionItem: pageState.currentSourceConversionItem,
                 ),
               );
               Navigator.of(context).popUntil(
