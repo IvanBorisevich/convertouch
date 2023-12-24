@@ -103,7 +103,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelStyle: TextStyle(
-          color: color.regular.label,
+          color:
+              _focusNode.hasFocus ? color.focused.label : color.regular.label,
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(
@@ -119,9 +120,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
       ),
       style: TextStyle(
-        color: _focusNode.hasFocus
-            ? color.focused.content
-            : color.regular.content,
+        color:
+            _focusNode.hasFocus ? color.focused.content : color.regular.content,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

@@ -185,7 +185,7 @@ const conversionItemColors = {
       focused: TextBoxColorVariation(
         border: Color(0xFF375067),
         content: Color(0xFF426F99),
-        label: Color(0xFF7FA0BE),
+        label: Color(0xFF375067),
         hint: Color(0xFFA8C9E7),
       ),
     ),
