@@ -13,7 +13,7 @@ class ConvertouchUnitGroupsPageForUnitCreation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unitGroupsBlocForUnitCreation((pageState) {
+    return unitGroupsBlocBuilderForUnitCreation((pageState) {
       return ConvertouchUnitGroupsPage(
         pageTitle: "Group of New Unit",
         unitGroups: pageState.unitGroups,

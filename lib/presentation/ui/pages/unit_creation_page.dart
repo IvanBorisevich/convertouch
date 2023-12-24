@@ -39,13 +39,13 @@ class _ConvertouchUnitCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       FloatingButtonColorVariation floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
       return unitCreationListener(
         context,
-        child: unitCreationBloc((pageState) {
+        child: unitCreationBlocBuilder((pageState) {
           return ConvertouchPage(
             appState: appState,
             title: "Add Unit",

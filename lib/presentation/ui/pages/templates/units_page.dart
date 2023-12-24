@@ -53,8 +53,8 @@ class ConvertouchUnitsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
-      return unitsViewModeBloc((viewModeState) {
+    return appBlocBuilder((appState) {
+      return unitsViewModeBlocBuilder((viewModeState) {
         return ConvertouchPage(
           appState: appState,
           title: pageTitle,

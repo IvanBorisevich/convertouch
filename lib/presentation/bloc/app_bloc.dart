@@ -1,9 +1,8 @@
 import 'package:convertouch/domain/model/input/app_event.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class AppBloc
-    extends Bloc<AppEvent, AppState> {
+class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
   AppBloc() : super(const AppStateBuilt());
 
   @override

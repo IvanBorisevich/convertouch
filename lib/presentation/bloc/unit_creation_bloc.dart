@@ -4,7 +4,8 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class UnitCreationBloc extends ConvertouchBloc<UnitCreationEvent, UnitCreationState> {
+class UnitCreationBloc
+    extends ConvertouchBloc<UnitCreationEvent, UnitCreationState> {
   final PrepareUnitCreationUseCase prepareUnitCreationUseCase;
   final AddUnitUseCase addUnitUseCase;
 
@@ -12,9 +13,9 @@ class UnitCreationBloc extends ConvertouchBloc<UnitCreationEvent, UnitCreationSt
     required this.prepareUnitCreationUseCase,
     required this.addUnitUseCase,
   }) : super(const UnitCreationPrepared(
-    unitGroup: null,
-    baseUnit: null,
-  ));
+          unitGroup: null,
+          baseUnit: null,
+        ));
 
   @override
   Stream<UnitCreationState> mapEventToState(UnitCreationEvent event) async* {

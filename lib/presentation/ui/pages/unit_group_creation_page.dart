@@ -25,7 +25,7 @@ class _ConvertouchUnitGroupCreationPageState
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       ConvertouchTextBoxColor textBoxColor =
           unitGroupTextBoxColors[appState.theme]!;
       FloatingButtonColorVariation floatingButtonColor =

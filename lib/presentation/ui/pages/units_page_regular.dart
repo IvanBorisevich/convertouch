@@ -18,11 +18,11 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       FloatingButtonColorVariation floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
-      return unitsBloc((pageState) {
+      return unitsBlocBuilder((pageState) {
         return ConvertouchUnitsPage(
           pageTitle: pageState.unitGroup!.name,
           units: pageState.units,

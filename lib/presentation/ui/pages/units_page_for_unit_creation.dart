@@ -13,7 +13,7 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unitsBlocForUnitCreation((pageState) {
+    return unitsBlocBuilderForUnitCreation((pageState) {
       return ConvertouchUnitsPage(
         pageTitle: "Select Base Unit",
         units: pageState.units,

@@ -16,11 +16,11 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       FloatingButtonColorVariation floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
-      return unitsBlocForConversion((pageState) {
+      return unitsBlocBuilderForConversion((pageState) {
         return ConvertouchUnitsPage(
           pageTitle: 'Add units to conversion',
           units: pageState.units,

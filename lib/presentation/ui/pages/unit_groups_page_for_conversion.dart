@@ -15,7 +15,7 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unitGroupsBlocForConversion((pageState) {
+    return unitGroupsBlocBuilderForConversion((pageState) {
       String pageTitle = "Unit Groups";
       bool selectedUnitGroupVisible = false;
       int? selectedUnitGroupId;
