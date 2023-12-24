@@ -85,6 +85,9 @@ class RestoreLastConversionUseCase extends UseCaseNoInput<ConversionBuilt> {
           value: ValueModel(
             strValue: sourceValue,
           ),
+          defaultValue: const ValueModel(
+            strValue: "1",
+          )
         );
       }
 
