@@ -5,13 +5,13 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class AddUnitUseCase extends UseCase<AddUnit, bool> {
+class AddUnitUseCase extends UseCase<AddUnit, int> {
   final UnitRepository unitRepository;
 
   const AddUnitUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, bool>> execute(AddUnit input) async {
+  Future<Either<Failure, int>> execute(AddUnit input) async {
     double newUnitValue = double.tryParse(input.newUnitValue ?? "") ?? 1;
     double baseUnitValue = double.tryParse(input.baseUnitValue ?? "") ?? 1;
     double baseUnitCoefficient = input.baseUnit?.coefficient ?? 1;
@@ -32,8 +32,7 @@ class AddUnitUseCase extends UseCase<AddUnit, bool> {
     }
 
     int addedUnitId = result.right;
-    bool unitCreated = addedUnitId != -1;
 
-    return Right(unitCreated);
+    return Right(addedUnitId);
   }
 }

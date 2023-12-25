@@ -17,34 +17,36 @@ class UnitGroupsFetching extends UnitGroupsState {
 class UnitGroupsFetched extends UnitGroupsState {
   final List<UnitGroupModel> unitGroups;
   final String? searchString;
-  final bool afterRemoval;
   final bool removalMode;
   final List<int> markedIdsForRemoval;
   final List<int> removedIds;
+  final int? addedId;
 
   const UnitGroupsFetched({
     required this.unitGroups,
     this.searchString,
-    this.afterRemoval = false,
     this.removalMode = false,
     this.markedIdsForRemoval = const [],
     this.removedIds = const [],
+    this.addedId,
   });
 
   @override
   List<Object?> get props => [
     unitGroups,
     searchString,
-    afterRemoval,
     removalMode,
     markedIdsForRemoval,
     removedIds,
+    addedId,
   ];
 
   @override
   String toString() {
     return 'UnitGroupsFetched{'
-        'unitGroups: $unitGroups}';
+        'unitGroups: $unitGroups, '
+        'removedIds: $removedIds, '
+        'addedId: $addedId}';
   }
 }
 

@@ -36,7 +36,7 @@ class ConvertouchConversionPage extends StatelessWidget {
             BlocListener<UnitsBloc, UnitsState>(
               listener: (_, unitsState) {
                 if (unitsState is UnitsFetched &&
-                    unitsState.afterRemoval &&
+                    unitsState.removedIds.isNotEmpty &&
                     unitsState.unitGroup == pageState.unitGroup) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     BuildConversion(
@@ -55,7 +55,7 @@ class ConvertouchConversionPage extends StatelessWidget {
             BlocListener<UnitGroupsBloc, UnitGroupsState>(
               listener: (_, unitGroupsState) {
                 if (unitGroupsState is UnitGroupsFetched &&
-                    unitGroupsState.afterRemoval &&
+                    unitGroupsState.removedIds.isNotEmpty &&
                     pageState.unitGroup != null &&
                     unitGroupsState.removedIds
                         .contains(pageState.unitGroup!.id)) {

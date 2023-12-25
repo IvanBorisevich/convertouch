@@ -66,3 +66,34 @@ var unitCreationBlocBuilder =
 
 var conversionsBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
+
+Widget unitsChangeBlocListenerWrap({
+  required Function(UnitsFetched)? handler,
+  required Widget? child,
+}) {
+  return BlocListener<UnitsBloc, UnitsState>(
+    listener: (_, unitsState) {
+      if (unitsState is UnitsFetched &&
+          (unitsState.removedIds.isNotEmpty || unitsState.addedId != null)) {
+        handler?.call(unitsState);
+      }
+    },
+    child: child,
+  );
+}
+
+Widget unitGroupsChangeBlocListenerWrap({
+  required Function(UnitGroupsFetched)? handler,
+  required Widget? child,
+}) {
+  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
+    listener: (_, unitGroupsState) {
+      if (unitGroupsState is UnitGroupsFetched &&
+          (unitGroupsState.removedIds.isNotEmpty ||
+              unitGroupsState.addedId != null)) {
+        handler?.call(unitGroupsState);
+      }
+    },
+    child: child,
+  );
+}

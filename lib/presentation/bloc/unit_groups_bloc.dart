@@ -44,7 +44,6 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
           yield UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
-            afterRemoval: event.afterRemoval,
             removalMode: true,
             markedIdsForRemoval: markedIds,
           );
@@ -52,8 +51,8 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
           yield UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
-            afterRemoval: event.afterRemoval,
             removedIds: event.removedIds,
+            addedId: event.addedId,
           );
         }
       }
@@ -67,7 +66,6 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
         add(
           FetchUnitGroups(
             searchString: null,
-            afterRemoval: true,
             removedIds: event.ids,
           ),
         );
@@ -80,12 +78,13 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
           message: addUnitGroupResult.left.message,
         );
       } else {
-        bool unitGroupAdded = addUnitGroupResult.right;
+        int addedUnitGroupId = addUnitGroupResult.right;
 
-        if (unitGroupAdded) {
+        if (addedUnitGroupId != -1) {
           add(
-            const FetchUnitGroups(
+            FetchUnitGroups(
               searchString: null,
+              addedId: addedUnitGroupId,
             ),
           );
         } else {
@@ -98,7 +97,6 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
       add(
         const FetchUnitGroups(
           searchString: null,
-          afterRemoval: false,
         ),
       );
     }

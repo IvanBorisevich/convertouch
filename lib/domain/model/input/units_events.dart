@@ -10,30 +10,29 @@ abstract class UnitsEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
-  final bool afterRemoval;
   final List<int> removedIds;
+  final int? addedId;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
-    this.afterRemoval = false,
     this.removedIds = const [],
+    this.addedId,
   });
 
   @override
   List<Object?> get props => [
     unitGroup,
     searchString,
-    afterRemoval,
     removedIds,
+    addedId,
   ];
 
   @override
   String toString() {
     return 'FetchUnits{'
         'unitGroup: $unitGroup,'
-        'searchString: $searchString,'
-        'afterRemoval: $afterRemoval}';
+        'searchString: $searchString}';
   }
 }
 

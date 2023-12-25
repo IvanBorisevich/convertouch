@@ -7,20 +7,20 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
-  final bool afterRemoval;
   final List<int> removedIds;
+  final int? addedId;
 
   const FetchUnitGroups({
     required this.searchString,
-    this.afterRemoval = false,
     this.removedIds = const [],
+    this.addedId,
   });
 
   @override
   List<Object?> get props => [
     searchString,
-    afterRemoval,
     removedIds,
+    addedId,
   ];
 
   @override

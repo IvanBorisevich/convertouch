@@ -28,15 +28,12 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
         selectedUnitGroupId = pageState.currentUnitGroupInConversion.id;
       }
 
-      return ConvertouchUnitGroupsPage(
-        pageTitle: pageTitle,
-        customLeadingIcon: null,
-        unitGroups: pageState.unitGroups,
-        onSearchStringChanged: (text) {
+      return unitGroupsChangeBlocListenerWrap(
+        handler: (unitGroupsStateChange) {
           if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
             BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
               FetchUnitGroupsForFirstAddingToConversion(
-                searchString: text,
+                searchString: pageState.searchString,
               ),
             );
           } else if (pageState is UnitGroupsFetchedForChangeInConversion) {
@@ -44,47 +41,69 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
               FetchUnitGroupsForChangeInConversion(
                 currentUnitGroupInConversion:
                     pageState.currentUnitGroupInConversion,
-                searchString: text,
+                searchString: pageState.searchString,
               ),
             );
           }
         },
-        onSearchReset: () {
-          if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
-            BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-              const FetchUnitGroupsForFirstAddingToConversion(
+        child: ConvertouchUnitGroupsPage(
+          pageTitle: pageTitle,
+          customLeadingIcon: null,
+          unitGroups: pageState.unitGroups,
+          onSearchStringChanged: (text) {
+            if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
+              BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                FetchUnitGroupsForFirstAddingToConversion(
+                  searchString: text,
+                ),
+              );
+            } else if (pageState is UnitGroupsFetchedForChangeInConversion) {
+              BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                FetchUnitGroupsForChangeInConversion(
+                  currentUnitGroupInConversion:
+                      pageState.currentUnitGroupInConversion,
+                  searchString: text,
+                ),
+              );
+            }
+          },
+          onSearchReset: () {
+            if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
+              BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                const FetchUnitGroupsForFirstAddingToConversion(
+                  searchString: null,
+                ),
+              );
+            } else if (pageState is UnitGroupsFetchedForChangeInConversion) {
+              BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                FetchUnitGroupsForChangeInConversion(
+                  currentUnitGroupInConversion:
+                      pageState.currentUnitGroupInConversion,
+                  searchString: null,
+                ),
+              );
+            }
+          },
+          onUnitGroupTap: (unitGroup) {
+            BlocProvider.of<UnitsBlocForConversion>(context).add(
+              FetchUnitsToMarkForConversion(
+                unitGroup: unitGroup as UnitGroupModel,
                 searchString: null,
               ),
             );
-          } else if (pageState is UnitGroupsFetchedForChangeInConversion) {
-            BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-              FetchUnitGroupsForChangeInConversion(
-                currentUnitGroupInConversion:
-                    pageState.currentUnitGroupInConversion,
-                searchString: null,
-              ),
-            );
-          }
-        },
-        onUnitGroupTap: (unitGroup) {
-          BlocProvider.of<UnitsBlocForConversion>(context).add(
-            FetchUnitsToMarkForConversion(
-              unitGroup: unitGroup as UnitGroupModel,
-              searchString: null,
-            ),
-          );
-          Navigator.of(context).pushNamed(unitsPageForConversion);
-        },
-        onUnitGroupTapForRemoval: null,
-        onUnitGroupLongPress: null,
-        onUnitGroupsRemove: null,
-        itemIdsSelectedForRemoval: const [],
-        appBarRightWidgets: const [],
-        selectedUnitGroupVisible: selectedUnitGroupVisible,
-        selectedUnitGroupId: selectedUnitGroupId,
-        removalModeEnabled: false,
-        removalModeAllowed: false,
-        floatingButton: null,
+            Navigator.of(context).pushNamed(unitsPageForConversion);
+          },
+          onUnitGroupTapForRemoval: null,
+          onUnitGroupLongPress: null,
+          onUnitGroupsRemove: null,
+          itemIdsSelectedForRemoval: const [],
+          appBarRightWidgets: const [],
+          selectedUnitGroupVisible: selectedUnitGroupVisible,
+          selectedUnitGroupId: selectedUnitGroupId,
+          removalModeEnabled: false,
+          removalModeAllowed: false,
+          floatingButton: null,
+        ),
       );
     });
   }
