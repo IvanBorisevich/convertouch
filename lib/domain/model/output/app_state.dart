@@ -15,29 +15,20 @@ class AppStateInBuilding extends AppState {
 }
 
 class AppStateBuilt extends AppState {
-  final bool removalMode;
-  final List<int> selectedItemIdsForRemoval;
   final ConvertouchUITheme theme;
 
   const AppStateBuilt({
-    this.removalMode = false,
-    this.selectedItemIdsForRemoval = const [],
     this.theme = ConvertouchUITheme.light,
   });
 
   @override
   List<Object?> get props => [
-    removalMode,
-    selectedItemIdsForRemoval,
     theme,
   ];
 
   @override
   String toString() {
     return 'AppStateBuilt{'
-        'removalMode: $removalMode, '
-        'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
-        'theme: $theme'
-        '}';
+        'theme: $theme}';
   }
 }

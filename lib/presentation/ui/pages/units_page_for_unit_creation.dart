@@ -16,6 +16,7 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
     return unitsBlocBuilderForUnitCreation((pageState) {
       return ConvertouchUnitsPage(
         pageTitle: "Select Base Unit",
+        customLeadingIcon: null,
         units: pageState.units,
         appBarRightWidgets: const [],
         onSearchStringChanged: (text) {

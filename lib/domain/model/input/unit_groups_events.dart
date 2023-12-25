@@ -7,14 +7,20 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
+  final bool afterRemoval;
+  final List<int> removedIds;
 
   const FetchUnitGroups({
     required this.searchString,
+    this.afterRemoval = false,
+    this.removedIds = const [],
   });
 
   @override
   List<Object?> get props => [
     searchString,
+    afterRemoval,
+    removedIds,
   ];
 
   @override
@@ -79,6 +85,30 @@ class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
   }
 }
 
+class FetchUnitGroupsToMarkForRemoval extends FetchUnitGroups {
+  final List<int> alreadyMarkedIds;
+  final int newMarkedId;
+
+  const FetchUnitGroupsToMarkForRemoval({
+    this.alreadyMarkedIds = const [],
+    required this.newMarkedId,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    alreadyMarkedIds,
+    newMarkedId,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitGroupsToMarkForRemoval{'
+        'alreadyMarkedIds: $alreadyMarkedIds,'
+        'newMarkedId: $newMarkedId}';
+  }
+}
 
 class RemoveUnitGroups extends UnitGroupsEvent {
   final List<int> ids;
@@ -116,5 +146,14 @@ class AddUnitGroup extends UnitGroupsEvent {
   String toString() {
     return 'AddUnitGroup{'
         'unitGroupName: $unitGroupName}';
+  }
+}
+
+class DisableUnitGroupsRemovalMode extends UnitGroupsEvent {
+  const DisableUnitGroupsRemovalMode();
+
+  @override
+  String toString() {
+    return 'DisableUnitGroupsRemovalMode{}';
   }
 }

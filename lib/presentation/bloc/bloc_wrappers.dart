@@ -66,36 +66,3 @@ var unitCreationBlocBuilder =
 
 var conversionsBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
-
-Widget unitGroupCreationListener(
-  BuildContext context, {
-  required Widget child,
-}) {
-  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
-    listener: (_, unitGroupsState) {
-      if (unitGroupsState is UnitGroupExists) {
-        showAlertDialog(context,
-            "Unit group '${unitGroupsState.unitGroupName}' already exist");
-      } else if (unitGroupsState is UnitGroupsFetched) {
-        Navigator.of(context).pop();
-      }
-    },
-    child: child,
-  );
-}
-
-Widget unitCreationListener(
-  BuildContext context, {
-  required Widget child,
-}) {
-  return BlocListener<UnitsBloc, UnitsState>(
-    listener: (_, unitsState) {
-      if (unitsState is UnitExists) {
-        showAlertDialog(context, "Unit '${unitsState.unitName}' already exist");
-      } else if (unitsState is UnitsFetched) {
-        Navigator.of(context).pop();
-      }
-    },
-    child: child,
-  );
-}

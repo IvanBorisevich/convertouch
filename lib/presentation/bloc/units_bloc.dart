@@ -23,15 +23,42 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
     if (event is FetchUnits) {
       final result = await fetchUnitsUseCase.execute(event);
 
-      yield result.fold(
-        (error) => UnitsErrorState(
-          message: error.message,
-        ),
-        (units) => UnitsFetched(
-          units: units,
-          unitGroup: event.unitGroup,
-        ),
-      );
+      if (result.isLeft) {
+        yield UnitsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        if (event is FetchUnitsToMarkForRemoval) {
+          List<int> markedIds = [];
+
+          if (event.alreadyMarkedIds.isNotEmpty) {
+            markedIds = event.alreadyMarkedIds;
+          }
+
+          if (!markedIds.contains(event.newMarkedId)) {
+            markedIds.add(event.newMarkedId);
+          } else {
+            markedIds.remove(event.newMarkedId);
+          }
+
+          yield UnitsFetched(
+            units: result.right,
+            unitGroup: event.unitGroup,
+            searchString: event.searchString,
+            afterRemoval: event.afterRemoval,
+            removalMode: true,
+            markedIdsForRemoval: markedIds,
+          );
+        } else {
+          yield UnitsFetched(
+            units: result.right,
+            unitGroup: event.unitGroup,
+            searchString: event.searchString,
+            afterRemoval: event.afterRemoval,
+            removedIds: event.removedIds,
+          );
+        }
+      }
     } else if (event is AddUnit) {
       final addUnitResult = await addUnitUseCase.execute(event);
 
@@ -62,11 +89,23 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
           message: result.left.message,
         );
       } else {
-        add(FetchUnits(
+        add(
+          FetchUnits(
+            unitGroup: event.unitGroup,
+            searchString: null,
+            afterRemoval: true,
+            removedIds: event.ids,
+          ),
+        );
+      }
+    } else if (event is DisableUnitsRemovalMode) {
+      add(
+        FetchUnits(
           unitGroup: event.unitGroup,
           searchString: null,
-        ));
-      }
+          afterRemoval: false,
+        ),
+      );
     }
   }
 }

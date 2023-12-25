@@ -1,17 +1,14 @@
-import 'package:convertouch/domain/model/input/app_event.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
-import 'package:convertouch/presentation/bloc/app_bloc.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchPage extends StatelessWidget {
   final AppStateBuilt appState;
   final Widget body;
   final String title;
+  final Widget? customLeadingIcon;
   final List<Widget>? appBarRightWidgets;
   final Widget? secondaryAppBar;
   final Color? secondaryAppBarColor;
@@ -24,6 +21,7 @@ class ConvertouchPage extends StatelessWidget {
     required this.appState,
     required this.body,
     required this.title,
+    this.customLeadingIcon,
     this.appBarRightWidgets,
     this.secondaryAppBar,
     this.secondaryAppBarColor,
@@ -37,25 +35,14 @@ class ConvertouchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
-    FloatingButtonColorVariation removalButtonColor =
-        removalFloatingButtonColors[appState.theme]!;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: scaffoldColor.regular.backgroundColor,
         appBar: AppBar(
           leading: Builder(
             builder: (context) {
-              if (appState.removalMode) {
-                return leadingIcon(
-                  icon: Icons.clear,
-                  color: scaffoldColor.regular,
-                  onClick: () {
-                    BlocProvider.of<AppBloc>(context).add(
-                      const DisableRemovalMode(),
-                    );
-                  },
-                );
+              if (customLeadingIcon != null) {
+                return customLeadingIcon!;
               } else if (ModalRoute.of(context)?.canPop ?? true) {
                 return leadingIcon(
                   icon: Icons.arrow_back_rounded,
@@ -106,22 +93,7 @@ class ConvertouchPage extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: appState.removalMode
-            ? ConvertouchFloatingActionButton.removal(
-                visible: appState.selectedItemIdsForRemoval.isNotEmpty,
-                extraLabelText:
-                    appState.selectedItemIdsForRemoval.length.toString(),
-                background: removalButtonColor.background,
-                foreground: removalButtonColor.foreground,
-                border: scaffoldColor.regular.backgroundColor,
-                onClick: () {
-                  onItemsRemove?.call();
-                  BlocProvider.of<AppBloc>(context).add(
-                    const DisableRemovalMode(),
-                  );
-                },
-              )
-            : floatingActionButton,
+        floatingActionButton: floatingActionButton,
       ),
     );
   }

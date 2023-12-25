@@ -23,6 +23,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
       return unitsBlocBuilderForConversion((pageState) {
         return ConvertouchUnitsPage(
           pageTitle: 'Add units to conversion',
+          customLeadingIcon: null,
           units: pageState.units,
           onSearchStringChanged: (text) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(

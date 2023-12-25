@@ -16,6 +16,7 @@ class ConvertouchUnitGroupsPageForUnitCreation extends StatelessWidget {
     return unitGroupsBlocBuilderForUnitCreation((pageState) {
       return ConvertouchUnitGroupsPage(
         pageTitle: "Group of New Unit",
+        customLeadingIcon: null,
         unitGroups: pageState.unitGroups,
         onSearchStringChanged: (text) {
           BlocProvider.of<UnitGroupsBlocForUnitCreation>(context).add(

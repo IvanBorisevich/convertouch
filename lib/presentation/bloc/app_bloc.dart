@@ -11,29 +11,10 @@ class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
   ) async* {
     yield const AppStateInBuilding();
 
-    bool removalMode = false;
-    List<int> selectedItemIdsForRemoval = [];
-
-    if (event is SelectMenuItemForRemoval) {
-      if (event.selectedItemIdsForRemoval.isNotEmpty) {
-        selectedItemIdsForRemoval = event.selectedItemIdsForRemoval;
-      }
-
-      if (!selectedItemIdsForRemoval.contains(event.itemId)) {
-        selectedItemIdsForRemoval.add(event.itemId);
-      } else {
-        selectedItemIdsForRemoval.remove(event.itemId);
-      }
-
-      removalMode = true;
-    } else if (event is DisableRemovalMode) {
-      removalMode = false;
+    if (event is ChangeUITheme) {
+      yield AppStateBuilt(
+        theme: event.newTheme,
+      );
     }
-
-    yield AppStateBuilt(
-      removalMode: removalMode,
-      selectedItemIdsForRemoval: selectedItemIdsForRemoval,
-      theme: event.theme,
-    );
   }
 }

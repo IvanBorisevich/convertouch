@@ -20,11 +20,19 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel? unitGroup;
   final String? searchString;
+  final bool afterRemoval;
+  final bool removalMode;
+  final List<int> markedIdsForRemoval;
+  final List<int> removedIds;
 
   const UnitsFetched({
     this.units = const [],
     required this.unitGroup,
     this.searchString,
+    this.afterRemoval = false,
+    this.removalMode = false,
+    this.markedIdsForRemoval = const [],
+    this.removedIds = const [],
   });
 
   @override
@@ -32,6 +40,10 @@ class UnitsFetched extends UnitsState {
     units,
     unitGroup,
     searchString,
+    afterRemoval,
+    removalMode,
+    markedIdsForRemoval,
+    removedIds,
   ];
 
   @override

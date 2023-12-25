@@ -23,14 +23,40 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
     if (event is FetchUnitGroups) {
       final result = await fetchUnitGroupsUseCase.execute(event);
 
-      yield result.fold(
-        (error) => UnitGroupsErrorState(
-          message: error.message,
-        ),
-        (unitGroups) => UnitGroupsFetched(
-          unitGroups: unitGroups,
-        ),
-      );
+      if (result.isLeft) {
+        yield UnitGroupsErrorState(
+          message: result.left.message,
+        );
+      } else {
+        if (event is FetchUnitGroupsToMarkForRemoval) {
+          List<int> markedIds = [];
+
+          if (event.alreadyMarkedIds.isNotEmpty) {
+            markedIds = event.alreadyMarkedIds;
+          }
+
+          if (!markedIds.contains(event.newMarkedId)) {
+            markedIds.add(event.newMarkedId);
+          } else {
+            markedIds.remove(event.newMarkedId);
+          }
+
+          yield UnitGroupsFetched(
+            unitGroups: result.right,
+            searchString: event.searchString,
+            afterRemoval: event.afterRemoval,
+            removalMode: true,
+            markedIdsForRemoval: markedIds,
+          );
+        } else {
+          yield UnitGroupsFetched(
+            unitGroups: result.right,
+            searchString: event.searchString,
+            afterRemoval: event.afterRemoval,
+            removedIds: event.removedIds,
+          );
+        }
+      }
     } else if (event is RemoveUnitGroups) {
       final result = await removeUnitGroupsUseCase.execute(event);
       if (result.isLeft) {
@@ -38,7 +64,13 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
           message: result.left.message,
         );
       } else {
-        add(const FetchUnitGroups(searchString: null));
+        add(
+          FetchUnitGroups(
+            searchString: null,
+            afterRemoval: true,
+            removedIds: event.ids,
+          ),
+        );
       }
     } else if (event is AddUnitGroup) {
       final addUnitGroupResult = await addUnitGroupUseCase.execute(event);
@@ -51,13 +83,24 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
         bool unitGroupAdded = addUnitGroupResult.right;
 
         if (unitGroupAdded) {
-          add(const FetchUnitGroups(searchString: null));
+          add(
+            const FetchUnitGroups(
+              searchString: null,
+            ),
+          );
         } else {
           yield UnitGroupExists(
             unitGroupName: event.unitGroupName,
           );
         }
       }
+    } else if (event is DisableUnitGroupsRemovalMode) {
+      add(
+        const FetchUnitGroups(
+          searchString: null,
+          afterRemoval: false,
+        ),
+      );
     }
   }
 }

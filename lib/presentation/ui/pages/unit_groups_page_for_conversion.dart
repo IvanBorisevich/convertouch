@@ -30,6 +30,7 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
 
       return ConvertouchUnitGroupsPage(
         pageTitle: pageTitle,
+        customLeadingIcon: null,
         unitGroups: pageState.unitGroups,
         onSearchStringChanged: (text) {
           if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {

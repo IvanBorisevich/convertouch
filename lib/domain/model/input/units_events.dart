@@ -10,23 +10,30 @@ abstract class UnitsEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
+  final bool afterRemoval;
+  final List<int> removedIds;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
+    this.afterRemoval = false,
+    this.removedIds = const [],
   });
 
   @override
   List<Object?> get props => [
     unitGroup,
     searchString,
+    afterRemoval,
+    removedIds,
   ];
 
   @override
   String toString() {
     return 'FetchUnits{'
         'unitGroup: $unitGroup,'
-        'searchString: $searchString}';
+        'searchString: $searchString,'
+        'afterRemoval: $afterRemoval}';
   }
 }
 
@@ -84,6 +91,32 @@ class FetchUnitsForUnitCreation extends FetchUnits {
   }
 }
 
+class FetchUnitsToMarkForRemoval extends FetchUnits {
+  final List<int> alreadyMarkedIds;
+  final int newMarkedId;
+
+  const FetchUnitsToMarkForRemoval({
+    required super.unitGroup,
+    this.alreadyMarkedIds = const [],
+    required this.newMarkedId,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    alreadyMarkedIds,
+    newMarkedId,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitsToMarkForRemoval{'
+        'alreadyMarkedIds: $alreadyMarkedIds,'
+        'newMarkedId: $newMarkedId}';
+  }
+}
+
 class AddUnit extends UnitsEvent {
   final UnitModel newUnit;
   final String? newUnitValue;
@@ -129,7 +162,7 @@ class RemoveUnits extends UnitsEvent {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     ids,
     unitGroup,
   ];
@@ -139,5 +172,23 @@ class RemoveUnits extends UnitsEvent {
     return 'RemoveUnits{'
         'ids: $ids, '
         'unitGroup: $unitGroup}';
+  }
+}
+
+class DisableUnitsRemovalMode extends UnitsEvent {
+  final UnitGroupModel unitGroup;
+
+  const DisableUnitsRemovalMode({
+    required this.unitGroup,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'DisableUnitsRemovalMode{}';
   }
 }
