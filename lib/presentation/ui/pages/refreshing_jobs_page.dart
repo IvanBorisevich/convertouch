@@ -8,8 +8,8 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
-      return refreshingJobsBloc((pageState) {
+    return appBlocBuilder((appState) {
+      return refreshingJobsBlocBuilder((pageState) {
         return ConvertouchPage(
           appState: appState,
           title: "Refresh Data",

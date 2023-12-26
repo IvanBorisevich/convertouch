@@ -1,10 +1,11 @@
 import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
 import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
 import 'package:convertouch/domain/usecases/refreshable_data_items/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
-    extends Bloc<RefreshingJobsEvent, RefreshingJobsState> {
+    extends ConvertouchBloc<RefreshingJobsEvent, RefreshingJobsState> {
   final FetchRefreshingJobsUseCase fetchRefreshingJobsUseCase;
 
   RefreshingJobsBloc({

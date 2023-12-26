@@ -1,11 +1,8 @@
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class RefreshingJobsState extends Equatable {
+abstract class RefreshingJobsState extends ConvertouchState {
   const RefreshingJobsState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class RefreshingJobsFetching extends RefreshingJobsState {

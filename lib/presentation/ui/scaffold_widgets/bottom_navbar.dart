@@ -42,9 +42,7 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
         items: [
           _buildNavbarItem(BottomNavbarItem.home),
           _buildNavbarItem(BottomNavbarItem.unitsMenu),
-          _buildNavbarItem(
-            BottomNavbarItem.refreshableData,
-          )
+          _buildNavbarItem(BottomNavbarItem.refreshableData)
         ],
         onTap: (index) {
           onItemSelect?.call(BottomNavbarItem.values[index]);

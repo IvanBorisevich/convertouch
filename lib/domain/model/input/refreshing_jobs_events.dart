@@ -1,10 +1,7 @@
-import 'package:equatable/equatable.dart';
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 
-abstract class RefreshingJobsEvent extends Equatable {
+abstract class RefreshingJobsEvent extends ConvertouchEvent {
   const RefreshingJobsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class FetchRefreshingJobs extends RefreshingJobsEvent {

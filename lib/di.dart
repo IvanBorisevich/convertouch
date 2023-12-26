@@ -2,7 +2,6 @@ import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
 import 'package:convertouch/data/dao/local/refreshing_job_dao_impl.dart';
 import 'package:convertouch/data/dao/refreshing_job_dao.dart';
-import 'package:convertouch/data/dao/shared_preferences/conversion_dao_impl.dart';
 import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';

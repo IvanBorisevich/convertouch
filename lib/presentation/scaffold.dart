@@ -16,7 +16,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   final _bottomBarNavigatorKeys = {
     BottomNavbarItem.home: GlobalKey<NavigatorState>(),
     BottomNavbarItem.unitsMenu: GlobalKey<NavigatorState>(),
-    // BottomNavbarItem.more: GlobalKey<NavigatorState>(),
+    BottomNavbarItem.refreshableData: GlobalKey<NavigatorState>(),
   };
 
   void _selectNavbarItem(BottomNavbarItem bottomNavbarItem) {
