@@ -15,6 +15,11 @@ const String unitsPageForUnitCreation = "unitsPageForUnitCreation";
 const String unitGroupCreationPage = "unitGroupCreationPage";
 const String unitCreationPage = "unitCreationPage";
 
+const String sourceUnitIdKey = 'sourceUnitId';
+const String sourceValueKey = 'sourceValue';
+const String targetUnitIdsKey = 'targetUnitIds';
+const String conversionUnitGroupIdKey = 'conversionUnitGroupId';
+
 enum ItemType {
   unit,
   unitGroup,

@@ -1,7 +1,5 @@
-import 'package:convertouch/data/dao/conversion_dao.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
-import 'package:convertouch/data/dao/shared_preferences/conversion_dao_impl.dart';
 import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
@@ -19,9 +17,9 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
-import 'package:convertouch/domain/usecases/units_conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/units_conversion/restore_last_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/units_conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
@@ -194,10 +192,6 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<ConversionRepository>(
-    () => ConversionRepositoryImpl(locator()),
-  );
-
-  locator.registerLazySingleton<ConversionDao>(
-    () => const ConversionDaoImpl(),
+    () => const ConversionRepositoryImpl(),
   );
 }

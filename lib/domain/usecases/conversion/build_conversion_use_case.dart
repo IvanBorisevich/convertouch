@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/output/conversion_states.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/usecases/units_conversion/formulas_map.dart';
+import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:convertouch/domain/utils/unit_value_utils.dart';
 import 'package:either_dart/either.dart';
@@ -47,11 +47,11 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
             } else {
               String groupName = unitGroup!.name;
 
-              var srcToBase = getFormula(
+              var srcToBase = FormulaUtils.getFormula(
                 groupName,
                 srcConversionItem.unit.name,
               );
-              var baseToTgt = getFormula(groupName, tgtUnit.name);
+              var baseToTgt = FormulaUtils.getFormula(groupName, tgtUnit.name);
 
               double? baseValue = srcToBase.applyForward(srcValue);
               tgtValue = baseToTgt.applyReverse(baseValue);
