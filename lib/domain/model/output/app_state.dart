@@ -1,50 +1,34 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:equatable/equatable.dart';
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 
-abstract class ConvertouchAppState extends Equatable {
-  const ConvertouchAppState();
-
-  @override
-  List<Object?> get props => [];
+abstract class AppState extends ConvertouchState {
+  const AppState();
 }
 
-class ConvertouchAppStateInBuilding extends ConvertouchAppState {
-  const ConvertouchAppStateInBuilding();
+class AppStateInBuilding extends AppState {
+  const AppStateInBuilding();
 
   @override
   String toString() {
-    return 'ConvertouchAppStateInBuilding{}';
+    return 'AppStateInBuilding{}';
   }
 }
 
-class ConvertouchAppStateBuilt extends ConvertouchAppState {
-  final BottomNavbarItem activeNavbarItem;
-  final bool removalMode;
-  final List<int> selectedItemIdsForRemoval;
+class AppStateBuilt extends AppState {
   final ConvertouchUITheme theme;
 
-  const ConvertouchAppStateBuilt({
-    required this.activeNavbarItem,
-    this.removalMode = false,
-    this.selectedItemIdsForRemoval = const [],
+  const AppStateBuilt({
     this.theme = ConvertouchUITheme.light,
   });
 
   @override
   List<Object?> get props => [
-    activeNavbarItem,
-    removalMode,
-    selectedItemIdsForRemoval,
     theme,
   ];
 
   @override
   String toString() {
-    return 'ConvertouchAppStateBuilt{'
-        'activeNavbarItem: $activeNavbarItem, '
-        'removalMode: $removalMode, '
-        'selectedItemIdsForRemoval: $selectedItemIdsForRemoval, '
-        'theme: $theme'
-        '}';
+    return 'AppStateBuilt{'
+        'theme: $theme}';
   }
 }

@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsPage extends StatelessWidget {
   final String pageTitle;
+  final Widget? customLeadingIcon;
   final List<UnitModel> units;
   final void Function(IdNameItemModel)? onUnitTap;
   final void Function(IdNameItemModel)? onUnitTapForRemoval;
@@ -31,6 +32,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
 
   const ConvertouchUnitsPage({
     required this.pageTitle,
+    required this.customLeadingIcon,
     required this.units,
     required this.onUnitTap,
     required this.onUnitTapForRemoval,
@@ -53,11 +55,12 @@ class ConvertouchUnitsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
-      return unitsViewModeBloc((viewModeState) {
+    return appBlocBuilder((appState) {
+      return unitsViewModeBlocBuilder((viewModeState) {
         return ConvertouchPage(
           appState: appState,
           title: pageTitle,
+          customLeadingIcon: customLeadingIcon,
           appBarRightWidgets: appBarRightWidgets,
           secondaryAppBar: ConvertouchSearchBar(
             placeholder: "Search units...",

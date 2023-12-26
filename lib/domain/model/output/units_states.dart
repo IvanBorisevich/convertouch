@@ -1,13 +1,10 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitsState extends Equatable {
+abstract class UnitsState extends ConvertouchState {
   const UnitsState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class UnitsFetching extends UnitsState {
@@ -23,13 +20,19 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel? unitGroup;
   final String? searchString;
-  final bool canNewUnitsBeAdded;
+  final bool removalMode;
+  final List<int> markedIdsForRemoval;
+  final List<int> removedIds;
+  final int? addedId;
 
   const UnitsFetched({
     this.units = const [],
     required this.unitGroup,
     this.searchString,
-    this.canNewUnitsBeAdded = true,
+    this.removalMode = false,
+    this.markedIdsForRemoval = const [],
+    this.removedIds = const [],
+    this.addedId,
   });
 
   @override
@@ -37,7 +40,10 @@ class UnitsFetched extends UnitsState {
     units,
     unitGroup,
     searchString,
-    canNewUnitsBeAdded,
+    removalMode,
+    markedIdsForRemoval,
+    removedIds,
+    addedId,
   ];
 
   @override

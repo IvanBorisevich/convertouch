@@ -1,44 +1,20 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/app_event.dart';
 import 'package:convertouch/domain/model/output/app_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 
-class ConvertouchAppBloc
-    extends Bloc<ConvertouchAppEvent, ConvertouchAppState> {
-  ConvertouchAppBloc() : super(const ConvertouchAppStateBuilt(
-    activeNavbarItem: BottomNavbarItem.home,
-  ));
+class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
+  AppBloc() : super(const AppStateBuilt());
 
   @override
-  Stream<ConvertouchAppState> mapEventToState(
-    ConvertouchAppEvent event,
+  Stream<AppState> mapEventToState(
+    AppEvent event,
   ) async* {
-    yield const ConvertouchAppStateInBuilding();
+    yield const AppStateInBuilding();
 
-    bool removalMode = false;
-    List<int> selectedItemIdsForRemoval = [];
-
-    if (event is SelectMenuItemForRemoval) {
-      if (event.selectedItemIdsForRemoval.isNotEmpty) {
-        selectedItemIdsForRemoval = event.selectedItemIdsForRemoval;
-      }
-
-      if (!selectedItemIdsForRemoval.contains(event.itemId)) {
-        selectedItemIdsForRemoval.add(event.itemId);
-      } else {
-        selectedItemIdsForRemoval.remove(event.itemId);
-      }
-
-      removalMode = true;
-    } else if (event is DisableRemovalMode) {
-      removalMode = false;
+    if (event is ChangeUITheme) {
+      yield AppStateBuilt(
+        theme: event.newTheme,
+      );
     }
-
-    yield ConvertouchAppStateBuilt(
-      activeNavbarItem: event.activeNavbarItem,
-      removalMode: removalMode,
-      selectedItemIdsForRemoval: selectedItemIdsForRemoval,
-      theme: event.theme,
-    );
   }
 }

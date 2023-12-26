@@ -5,13 +5,13 @@ import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class AddUnitGroupUseCase extends UseCase<AddUnitGroup, bool> {
+class AddUnitGroupUseCase extends UseCase<AddUnitGroup, int> {
   final UnitGroupRepository unitGroupRepository;
 
   const AddUnitGroupUseCase(this.unitGroupRepository);
 
   @override
-  Future<Either<Failure, bool>> execute(AddUnitGroup input) async {
+  Future<Either<Failure, int>> execute(AddUnitGroup input) async {
     UnitGroupModel unitGroupToBeAdded = UnitGroupModel(
       name: input.unitGroupName,
     );
@@ -23,8 +23,7 @@ class AddUnitGroupUseCase extends UseCase<AddUnitGroup, bool> {
     }
 
     int addedUnitGroupId = result.right;
-    bool unitGroupCreated = addedUnitGroupId != -1;
 
-    return Right(unitGroupCreated);
+    return Right(addedUnitGroupId);
   }
 }

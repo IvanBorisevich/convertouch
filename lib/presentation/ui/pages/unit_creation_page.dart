@@ -1,8 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/input/unit_groups_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_unit_creation.dart';
 import 'package:convertouch/presentation/bloc/units_bloc.dart';
@@ -34,18 +35,25 @@ class _ConvertouchUnitCreationPageState
   String _unitAbbr = "";
   String _unitAbbrHint = "";
 
-  String _newUnitValue = "1";
-  String _baseUnitValue = "1";
+  String _newUnitValue = "";
+  String _baseUnitValue = "";
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       FloatingButtonColorVariation floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
-      return unitCreationListener(
-        context,
-        child: unitCreationBloc((pageState) {
+      return BlocListener<UnitsBloc, UnitsState>(
+        listener: (_, unitsState) {
+          if (unitsState is UnitExists) {
+            showAlertDialog(
+                context, "Unit '${unitsState.unitName}' already exist");
+          } else if (unitsState is UnitsFetched) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: unitCreationBlocBuilder((pageState) {
           return ConvertouchPage(
             appState: appState,
             title: "Add Unit",

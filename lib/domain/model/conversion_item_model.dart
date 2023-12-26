@@ -6,20 +6,43 @@ import 'package:convertouch/domain/model/value_model.dart';
 class ConversionItemModel extends ItemModel {
   final UnitModel unit;
   final ValueModel value;
+  final ValueModel defaultValue;
 
   const ConversionItemModel({
     required this.unit,
     required this.value,
+    required this.defaultValue,
   }) : super(
           itemType: ItemType.unitValue,
         );
 
   ConversionItemModel.fromStrValue({
     required UnitModel unit,
-    required String strValue,
+    String strValue = "",
+    String defaultValue = "1",
+    String defaultScientificValue = "1",
   }) : this(
           unit: unit,
-          value: ValueModel(strValue: strValue),
+          value: ValueModel(
+            strValue: strValue,
+          ),
+          defaultValue: ValueModel(
+            strValue: defaultValue,
+            scientificValue: defaultScientificValue,
+          ),
+        );
+
+  const ConversionItemModel.fromUnit({
+    required UnitModel unit,
+  }) : this(
+          unit: unit,
+          value: const ValueModel(
+            strValue: "",
+          ),
+          defaultValue: const ValueModel(
+            strValue: "1",
+            scientificValue: "1",
+          ),
         );
 
   @override
@@ -27,10 +50,12 @@ class ConversionItemModel extends ItemModel {
     itemType,
     unit,
     value,
+    defaultValue,
   ];
 
   @override
   String toString() {
-    return 'ConversionItemModel{$value ${unit.name}}';
+    return 'ConversionItemModel{$value ${unit.name}, '
+        'default: $defaultValue ${unit.name}';
   }
 }

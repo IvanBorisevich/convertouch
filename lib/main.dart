@@ -40,7 +40,7 @@ class ConvertouchApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => di.locator<ConvertouchAppBloc>(),
+          create: (context) => di.locator<AppBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsViewModeBloc>(),

@@ -1,12 +1,9 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/output/abstract_state.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class ConversionState extends Equatable {
+abstract class ConversionState extends ConvertouchState {
   const ConversionState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class ConversionInBuilding extends ConversionState {

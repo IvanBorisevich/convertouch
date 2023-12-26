@@ -1,28 +1,31 @@
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitsEvent extends Equatable {
+abstract class UnitsEvent extends ConvertouchEvent {
   const UnitsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
+  final List<int> removedIds;
+  final int? addedId;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
+    this.removedIds = const [],
+    this.addedId,
   });
 
   @override
   List<Object?> get props => [
     unitGroup,
     searchString,
+    removedIds,
+    addedId,
   ];
 
   @override
@@ -87,6 +90,32 @@ class FetchUnitsForUnitCreation extends FetchUnits {
   }
 }
 
+class FetchUnitsToMarkForRemoval extends FetchUnits {
+  final List<int> alreadyMarkedIds;
+  final int newMarkedId;
+
+  const FetchUnitsToMarkForRemoval({
+    required super.unitGroup,
+    this.alreadyMarkedIds = const [],
+    required this.newMarkedId,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    alreadyMarkedIds,
+    newMarkedId,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitsToMarkForRemoval{'
+        'alreadyMarkedIds: $alreadyMarkedIds,'
+        'newMarkedId: $newMarkedId}';
+  }
+}
+
 class AddUnit extends UnitsEvent {
   final UnitModel newUnit;
   final String? newUnitValue;
@@ -132,7 +161,7 @@ class RemoveUnits extends UnitsEvent {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     ids,
     unitGroup,
   ];
@@ -142,5 +171,23 @@ class RemoveUnits extends UnitsEvent {
     return 'RemoveUnits{'
         'ids: $ids, '
         'unitGroup: $unitGroup}';
+  }
+}
+
+class DisableUnitsRemovalMode extends UnitsEvent {
+  final UnitGroupModel unitGroup;
+
+  const DisableUnitsRemovalMode({
+    required this.unitGroup,
+  });
+
+  @override
+  List<Object?> get props => [
+    unitGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'DisableUnitsRemovalMode{}';
   }
 }

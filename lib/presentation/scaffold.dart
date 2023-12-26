@@ -1,10 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/input/app_event.dart';
-import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/bottom_navbar_item_navigator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
   const ConvertouchScaffold({super.key});
@@ -29,10 +26,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           );
     } else {
       setState(() => _selectedNavbarItem = bottomNavbarItem);
-
-      BlocProvider.of<ConvertouchAppBloc>(context).add(
-        ConvertouchAppEvent(activeNavbarItem: _selectedNavbarItem),
-      );
     }
   }
 

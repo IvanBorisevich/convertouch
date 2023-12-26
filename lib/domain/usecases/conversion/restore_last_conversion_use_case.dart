@@ -9,7 +9,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
-import 'package:convertouch/domain/usecases/units_conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
@@ -43,8 +43,6 @@ class RestoreLastConversionUseCase extends UseCaseNoInput<ConversionBuilt> {
       }
 
       ConversionModel conversion = conversionParamsResult.right;
-
-      sourceValue = conversion.sourceValue ?? "";
 
       if (conversion.conversionUnitGroupId != null) {
         var unitGroupResult = await unitGroupRepository
@@ -84,6 +82,9 @@ class RestoreLastConversionUseCase extends UseCaseNoInput<ConversionBuilt> {
           unit: sourceUnit,
           value: ValueModel(
             strValue: sourceValue,
+          ),
+          defaultValue: const ValueModel(
+            strValue: "1",
           ),
         );
       }

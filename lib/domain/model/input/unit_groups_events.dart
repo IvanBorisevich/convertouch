@@ -1,23 +1,26 @@
+import 'package:convertouch/domain/model/input/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class UnitGroupsEvent extends Equatable {
+abstract class UnitGroupsEvent extends ConvertouchEvent {
   const UnitGroupsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
+  final List<int> removedIds;
+  final int? addedId;
 
   const FetchUnitGroups({
     required this.searchString,
+    this.removedIds = const [],
+    this.addedId,
   });
 
   @override
   List<Object?> get props => [
     searchString,
+    removedIds,
+    addedId,
   ];
 
   @override
@@ -82,6 +85,30 @@ class FetchUnitGroupsForUnitCreation extends FetchUnitGroups {
   }
 }
 
+class FetchUnitGroupsToMarkForRemoval extends FetchUnitGroups {
+  final List<int> alreadyMarkedIds;
+  final int newMarkedId;
+
+  const FetchUnitGroupsToMarkForRemoval({
+    this.alreadyMarkedIds = const [],
+    required this.newMarkedId,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    alreadyMarkedIds,
+    newMarkedId,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitGroupsToMarkForRemoval{'
+        'alreadyMarkedIds: $alreadyMarkedIds,'
+        'newMarkedId: $newMarkedId}';
+  }
+}
 
 class RemoveUnitGroups extends UnitGroupsEvent {
   final List<int> ids;
@@ -119,5 +146,14 @@ class AddUnitGroup extends UnitGroupsEvent {
   String toString() {
     return 'AddUnitGroup{'
         'unitGroupName: $unitGroupName}';
+  }
+}
+
+class DisableUnitGroupsRemovalMode extends UnitGroupsEvent {
+  const DisableUnitGroupsRemovalMode();
+
+  @override
+  String toString() {
+    return 'DisableUnitGroupsRemovalMode{}';
   }
 }

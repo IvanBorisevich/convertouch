@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/input/conversion_events.dart';
 import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -13,89 +12,102 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitsPageForConversion extends StatelessWidget {
-  const ConvertouchUnitsPageForConversion({
-    super.key,
-  });
+  const ConvertouchUnitsPageForConversion({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return appBloc((appState) {
+    return appBlocBuilder((appState) {
       FloatingButtonColorVariation floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
-      return unitsBlocForConversion((pageState) {
-        bool allowUnitsToBeAddedToConversion =
-            pageState.allowUnitsToBeAddedToConversion;
-        List<int>? markedUnitIds = pageState.unitIdsMarkedForConversion;
-        List<UnitModel>? markedUnits = pageState.unitsMarkedForConversion;
-        ConversionItemModel? sourceConversionItem =
-            pageState.currentSourceConversionItem;
-
-        return ConvertouchUnitsPage(
-          pageTitle: 'Add units to conversion',
-          units: pageState.units,
-          onSearchStringChanged: (text) {
-            BlocProvider.of<UnitsBlocForConversion>(context).add(
-              FetchUnitsToMarkForConversion(
-                unitGroup: pageState.unitGroup!,
-                unitsAlreadyMarkedForConversion:
-                    pageState.unitsMarkedForConversion,
-                searchString: text,
-              ),
-            );
+      return unitsBlocBuilderForConversion((pageState) {
+        return unitGroupsChangeBlocListenerWrap(
+          handler: (unitGroupsStateChange) {
+            if (unitGroupsStateChange.removedIds
+                .contains(pageState.unitGroup!.id)) {
+              Navigator.of(context).pop();
+            }
           },
-          onSearchReset: () {
-            BlocProvider.of<UnitsBlocForConversion>(context).add(
-              FetchUnitsToMarkForConversion(
-                unitGroup: pageState.unitGroup!,
-                unitsAlreadyMarkedForConversion:
-                    pageState.unitsMarkedForConversion,
-                searchString: null,
-              ),
-            );
-          },
-          onUnitTap: (unit) {
-            BlocProvider.of<UnitsBlocForConversion>(context).add(
-              FetchUnitsToMarkForConversion(
-                unitGroup: pageState.unitGroup!,
-                unitsAlreadyMarkedForConversion:
-                    pageState.unitsMarkedForConversion,
-                unitNewlyMarkedForConversion: unit as UnitModel,
-                currentSourceConversionItem:
-                    pageState.currentSourceConversionItem,
-                searchString: pageState.searchString,
-              ),
-            );
-          },
-          onUnitTapForRemoval: null,
-          onUnitLongPress: null,
-          onUnitsRemove: null,
-          itemIdsSelectedForRemoval: const [],
-          removalModeAllowed: false,
-          removalModeEnabled: false,
-          appBarRightWidgets: const [],
-          markedUnitsForConversionVisible: true,
-          markUnitsOnTap: true,
-          markedUnitIdsForConversion: markedUnitIds,
-          selectedUnitVisible: false,
-          selectedUnitId: null,
-          floatingButton: ConvertouchFloatingActionButton(
-            icon: Icons.check_outlined,
-            visible: allowUnitsToBeAddedToConversion,
-            onClick: () {
-              BlocProvider.of<ConversionBloc>(context).add(
-                BuildConversion(
-                  unitGroup: pageState.unitGroup,
-                  units: markedUnits,
-                  sourceConversionItem: sourceConversionItem,
+          child: unitsChangeBlocListenerWrap(
+            handler: (unitsStateChange) {
+              BlocProvider.of<UnitsBlocForConversion>(context).add(
+                FetchUnitsToMarkForConversion(
+                  unitGroup: pageState.unitGroup!,
+                  unitsAlreadyMarkedForConversion:
+                      pageState.unitsMarkedForConversion,
+                  searchString: pageState.searchString,
                 ),
               );
-              Navigator.of(context).popUntil(
-                (route) => route.isFirst,
-              );
             },
-            background: floatingButtonColor.background,
-            foreground: floatingButtonColor.foreground,
+            child: ConvertouchUnitsPage(
+              pageTitle: 'Add units to conversion',
+              customLeadingIcon: null,
+              units: pageState.units,
+              onSearchStringChanged: (text) {
+                BlocProvider.of<UnitsBlocForConversion>(context).add(
+                  FetchUnitsToMarkForConversion(
+                    unitGroup: pageState.unitGroup!,
+                    unitsAlreadyMarkedForConversion:
+                        pageState.unitsMarkedForConversion,
+                    searchString: text,
+                  ),
+                );
+              },
+              onSearchReset: () {
+                BlocProvider.of<UnitsBlocForConversion>(context).add(
+                  FetchUnitsToMarkForConversion(
+                    unitGroup: pageState.unitGroup!,
+                    unitsAlreadyMarkedForConversion:
+                        pageState.unitsMarkedForConversion,
+                    searchString: null,
+                  ),
+                );
+              },
+              onUnitTap: (unit) {
+                BlocProvider.of<UnitsBlocForConversion>(context).add(
+                  FetchUnitsToMarkForConversion(
+                    unitGroup: pageState.unitGroup!,
+                    unitsAlreadyMarkedForConversion:
+                        pageState.unitsMarkedForConversion,
+                    unitNewlyMarkedForConversion: unit as UnitModel,
+                    currentSourceConversionItem:
+                        pageState.currentSourceConversionItem,
+                    searchString: pageState.searchString,
+                  ),
+                );
+              },
+              onUnitTapForRemoval: null,
+              onUnitLongPress: null,
+              onUnitsRemove: null,
+              itemIdsSelectedForRemoval: const [],
+              removalModeAllowed: false,
+              removalModeEnabled: false,
+              appBarRightWidgets: const [],
+              markedUnitsForConversionVisible: true,
+              markUnitsOnTap: true,
+              markedUnitIdsForConversion: pageState.unitIdsMarkedForConversion,
+              selectedUnitVisible: false,
+              selectedUnitId: null,
+              floatingButton: ConvertouchFloatingActionButton(
+                icon: Icons.check_outlined,
+                visible: pageState.allowUnitsToBeAddedToConversion,
+                onClick: () {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    BuildConversion(
+                      unitGroup: pageState.unitGroup,
+                      units: pageState.unitsMarkedForConversion,
+                      sourceConversionItem:
+                          pageState.currentSourceConversionItem,
+                    ),
+                  );
+                  Navigator.of(context).popUntil(
+                    (route) => route.isFirst,
+                  );
+                },
+                background: floatingButtonColor.background,
+                foreground: floatingButtonColor.foreground,
+              ),
+            ),
           ),
         );
       });

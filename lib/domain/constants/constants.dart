@@ -17,6 +17,11 @@ const String refreshingJobsPage = "refreshingJobsPage";
 const String defaultCron = "0 0 12 1/1 * ? *";
 const String defaultCronDescription = "Every day at 12:00 PM";
 
+const String sourceUnitIdKey = 'sourceUnitId';
+const String sourceValueKey = 'sourceValue';
+const String targetUnitIdsKey = 'targetUnitIds';
+const String conversionUnitGroupIdKey = 'conversionUnitGroupId';
+
 enum ItemType {
   unit,
   unitGroup,

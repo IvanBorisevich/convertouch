@@ -68,6 +68,9 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
           Expanded(
             child: ConvertouchTextBox(
               label: widget.item.unit.name,
+              hintText: _isFocused
+                  ? widget.item.defaultValue.strValue
+                  : widget.item.defaultValue.scientificValue,
               controller: _unitValueController,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)')),
