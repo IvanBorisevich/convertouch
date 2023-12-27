@@ -21,8 +21,6 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       final refreshingJobs = await refreshingJobDao.getAll();
       final unitGroups = await unitGroupDao.getRefreshableGroups();
 
-      print("Unit groups dynamic: $unitGroups");
-
       final resultRefreshingJobs = refreshingJobs
           .map(
             (entity) => RefreshingJobTranslator.I.toModel(

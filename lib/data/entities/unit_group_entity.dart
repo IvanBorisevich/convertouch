@@ -34,7 +34,7 @@ class UnitGroupEntity {
       name: data['name'],
       iconName: iconName != unitGroupDefaultIconName ? iconName : null,
       conversionType: conversionType != 0 ? conversionType : null,
-      refreshable: data['refreshable'],
+      refreshable: data['refreshable'] == true ? 1 : null,
     );
   }
 
@@ -43,7 +43,7 @@ class UnitGroupEntity {
       'name': name,
       'iconName': iconName != unitGroupDefaultIconName ? iconName : null,
       'conversionType': conversionType != 0 ? conversionType : null,
-      'refreshable': refreshable,
+      'refreshable': refreshable == 1,
     };
   }
 }

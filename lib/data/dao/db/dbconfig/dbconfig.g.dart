@@ -93,7 +93,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT NOT NULL, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -414,7 +414,7 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
         mapper: (Map<String, Object?> row) => RefreshableValueEntity(
             id: row['id'] as int?,
             unitId: row['unit_id'] as int,
-            value: row['value'] as String),
+            value: row['value'] as String?),
         arguments: [unitId]);
   }
 
@@ -431,7 +431,7 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
         mapper: (Map<String, Object?> row) => RefreshableValueEntity(
             id: row['id'] as int?,
             unitId: row['unit_id'] as int,
-            value: row['value'] as String),
+            value: row['value'] as String?),
         arguments: [...unitIds]);
   }
 }

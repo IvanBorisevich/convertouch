@@ -22,12 +22,12 @@ class RefreshableValueEntity {
   final int? id;
   @ColumnInfo(name: "unit_id")
   final int unitId;
-  final String value;
+  final String? value;
 
   const RefreshableValueEntity({
     this.id,
     required this.unitId,
-    required this.value,
+    this.value,
   });
 
   Map<String, dynamic> toJson() {

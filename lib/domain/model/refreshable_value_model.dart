@@ -1,6 +1,6 @@
 class RefreshableValueModel {
   final int unitId;
-  final String value;
+  final String? value;
 
   const RefreshableValueModel({
     required this.unitId,
