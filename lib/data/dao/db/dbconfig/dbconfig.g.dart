@@ -65,6 +65,8 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   UnitDaoDb? _unitDaoInstance;
 
+  RefreshableValueDaoDb? _refreshableValueDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -91,9 +93,13 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `abbreviation` TEXT NOT NULL, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `unit_id` INTEGER NOT NULL, `value` TEXT NOT NULL, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_units_name_unit_group_id` ON `units` (`name`, `unit_group_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_refreshable_values_unit_id` ON `refreshable_values` (`unit_id`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -109,6 +115,12 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   @override
   UnitDaoDb get unitDao {
     return _unitDaoInstance ??= _$UnitDaoDb(database, changeListener);
+  }
+
+  @override
+  RefreshableValueDaoDb get refreshableValueDao {
+    return _refreshableValueDaoInstance ??=
+        _$RefreshableValueDaoDb(database, changeListener);
   }
 }
 
@@ -380,5 +392,35 @@ class _$UnitDaoDb extends UnitDaoDb {
   Future<int> update(UnitEntity unit) {
     return _unitEntityUpdateAdapter.updateAndReturnChangedRows(
         unit, OnConflictStrategy.abort);
+  }
+}
+
+class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
+  _$RefreshableValueDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<RefreshableValueEntity>> getList(List<int> unitIds) async {
+    const offset = 1;
+    final _sqliteVariablesForUnitIds =
+        Iterable<String>.generate(unitIds.length, (i) => '?${i + offset}')
+            .join(',');
+    return _queryAdapter.queryList(
+        'select * from refreshable_values where unit_id in (' +
+            _sqliteVariablesForUnitIds +
+            ')',
+        mapper: (Map<String, Object?> row) => RefreshableValueEntity(
+            id: row['id'] as int,
+            unitId: row['unit_id'] as int,
+            value: row['value'] as String),
+        arguments: [...unitIds]);
   }
 }

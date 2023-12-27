@@ -1,8 +1,10 @@
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:floor/floor.dart';
 
+const String refreshableValuesTableName = 'refreshable_values';
+
 @Entity(
-  tableName: unitsTableName,
+  tableName: refreshableValuesTableName,
   indices: [
     Index(value: ['unit_id'], unique: true),
   ],
@@ -27,4 +29,12 @@ class RefreshableValueEntity {
     required this.unitId,
     required this.value,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'unit_id': unitId,
+      'value': value,
+    };
+  }
 }
