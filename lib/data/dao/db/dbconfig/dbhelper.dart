@@ -14,7 +14,9 @@ import 'package:sqflite/sqflite.dart';
 /// 1) Increase dbVersion
 /// 2) Add new units map (if needed) to the unitDataVersions list
 /// 3) Add new Migration to the migrations list
-/// 4) Run in the terminal 'flutter packages pub run build_runner build'
+/// 4) Run in the terminal any of the commands:
+///   - dart run build_runner build
+///   - flutter packages pub run build_runner build
 /// 5) Rebuild and start the app
 class ConvertouchDatabaseHelper {
   static final ConvertouchDatabaseHelper I =

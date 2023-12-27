@@ -24,7 +24,7 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
 
         List<ConversionItemModel> convertedUnitValues = [];
 
-        if (input.units != null && input.unitGroup != null) {
+        if (input.units != null && unitGroup != null) {
           srcConversionItem ??= ConversionItemModel.fromUnit(
             unit: input.units![0],
           );
@@ -45,7 +45,7 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
                   srcValue != null ? srcValue * normalizedBaseValue : null;
               tgtDefaultValue = srcDefaultValue * normalizedBaseValue;
             } else {
-              String groupName = unitGroup!.name;
+              String groupName = unitGroup.name;
 
               var srcToBase = FormulaUtils.getFormula(
                 groupName,

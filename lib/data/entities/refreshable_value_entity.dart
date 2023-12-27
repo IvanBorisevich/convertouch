@@ -19,13 +19,13 @@ const String refreshableValuesTableName = 'refreshable_values';
 )
 class RefreshableValueEntity {
   @PrimaryKey(autoGenerate: true)
-  final int id;
+  final int? id;
   @ColumnInfo(name: "unit_id")
   final int unitId;
   final String value;
 
   const RefreshableValueEntity({
-    required this.id,
+    this.id,
     required this.unitId,
     required this.value,
   });

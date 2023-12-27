@@ -4,6 +4,8 @@ import 'package:sqflite/sqflite.dart';
 abstract class RefreshableValueDao {
   const RefreshableValueDao();
 
+  Future<RefreshableValueEntity?> get(int unitId);
+
   Future<List<RefreshableValueEntity>> getList(List<int> unitIds);
 
   Future<void> bulkInsert(

@@ -3,16 +3,22 @@ import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
 import 'package:convertouch/data/dao/local/refreshing_job_dao_impl.dart';
 import 'package:convertouch/data/dao/refreshing_job_dao.dart';
 import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
+import 'package:convertouch/data/repositories/refreshable_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
+import 'package:convertouch/data/translators/refreshable_value_translator.dart';
 import 'package:convertouch/data/translators/refreshing_job_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
+import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshable_data_items/fetch_refreshing_jobs_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
@@ -23,9 +29,6 @@ import 'package:convertouch/domain/usecases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/usecases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/usecases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
-import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
@@ -202,7 +205,7 @@ Future<void> init() async {
     () => const ConversionRepositoryImpl(),
   );
 
-  // refreshable data items
+  // refreshing jobs
 
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
@@ -229,5 +232,15 @@ Future<void> init() async {
 
   locator.registerLazySingleton<RefreshingJobTranslator>(
     () => RefreshingJobTranslator(),
+  );
+
+  // refreshable values
+
+  locator.registerLazySingleton<RefreshableValueRepository>(
+    () => RefreshableValueRepositoryImpl(database.refreshableValueDao),
+  );
+
+  locator.registerLazySingleton<RefreshableValueTranslator>(
+    () => RefreshableValueTranslator(),
   );
 }
