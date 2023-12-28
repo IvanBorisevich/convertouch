@@ -183,7 +183,9 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<BuildConversionUseCase>(
-    () => const BuildConversionUseCase(),
+    () => BuildConversionUseCase(
+      refreshableValueRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<SaveConversionUseCase>(
