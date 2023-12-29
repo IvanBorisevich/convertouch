@@ -1,26 +1,100 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobItem extends StatelessWidget {
   final RefreshingJobModel item;
+  final bool enabled;
+  final void Function()? onItemClick;
+  final void Function()? onRefreshButtonClick;
+  final void Function()? onToggleButtonClick;
   final double itemContainerHeight;
   final double toggleButtonHeight;
   final double itemSpacing;
-  final ListItemColorVariation color;
+  final ConvertouchUITheme theme;
+  final RefreshingJobItemColor? customColors;
 
   const ConvertouchRefreshingJobItem(
     this.item, {
+    this.enabled = false,
+    this.onItemClick,
+    this.onRefreshButtonClick,
+    this.onToggleButtonClick,
     this.itemContainerHeight = 70,
     this.toggleButtonHeight = 50,
     this.itemSpacing = 7,
-    required this.color,
+    required this.theme,
+    this.customColors,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    RefreshingJobItemColor color =
+        customColors ?? refreshingJobItemsColors[theme]!;
+
+    Widget jobInfoLabel({
+      required String text,
+      required EdgeInsetsGeometry padding,
+      FontWeight fontWeight = FontWeight.w500,
+      double fontSize = 11,
+      required Color textColor,
+    }) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: padding,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: quicksandFontFamily,
+              fontWeight: fontWeight,
+              color: enabled ? textColor : textColor.withOpacity(0.5),
+              fontSize: fontSize,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      );
+    }
+
+    Widget controlButton({
+      required IconData icon,
+      Function()? onClick,
+      required ButtonColorVariation color,
+    }) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: itemSpacing),
+          child: Container(
+            width: toggleButtonHeight,
+            height: toggleButtonHeight,
+            decoration: BoxDecoration(
+              color: color.background,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: color.border,
+                width: 1,
+              ),
+            ),
+            child: IconButton(
+              icon: Icon(
+                icon,
+                color: color.foreground,
+                size: 25,
+              ),
+              onPressed: onClick,
+            ),
+          ),
+        ),
+      );
+    }
+
     return SizedBox(
       height: itemContainerHeight,
       child: Row(
@@ -28,10 +102,12 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: color.background,
+                color: color.jobItem.regular.background,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: color.border,
+                  color: enabled
+                      ? color.jobItem.selected.border
+                      : color.jobItem.regular.border,
                   width: 1,
                 ),
               ),
@@ -40,86 +116,52 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 12, top: 7),
-                            child: Text(
-                              item.name,
-                              style: TextStyle(
-                                fontFamily: quicksandFontFamily,
-                                fontWeight: FontWeight.w700,
-                                color: color.content,
-                                fontSize: 15,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
+                        jobInfoLabel(
+                          text: item.name,
+                          padding: const EdgeInsets.only(left: 12, top: 7),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          textColor: color.jobItem.regular.content,
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 3, left: 12),
-                            child: Text(
-                              'Last Refresh: ${item.lastRefreshTime}',
-                              style: TextStyle(
-                                fontFamily: quicksandFontFamily,
-                                fontWeight: FontWeight.w500,
-                                color: color.content,
-                                fontSize: 11,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
+                        jobInfoLabel(
+                          text: 'Last Refresh: ${item.lastRefreshTime}',
+                          padding: const EdgeInsets.only(top: 3, left: 12),
+                          textColor: color.jobItem.regular.content,
+                        ),
+                        jobInfoLabel(
+                          text: enabled ? 'ACTIVE' : 'NOT ACTIVE',
+                          padding: const EdgeInsets.only(top: 3, left: 12),
+                          fontWeight: FontWeight.w700,
+                          textColor: enabled
+                              ? color.activeStatusLabel
+                              : color.notActiveStatusLabel,
                         ),
                       ],
                     ),
                   ),
-                  _controlButton(
+                  controlButton(
                     icon: Icons.refresh_rounded,
+                    onClick: () {
+                      if (enabled) {
+                        onRefreshButtonClick?.call();
+                      }
+                    },
+                    color: enabled
+                        ? color.refreshButton.regular
+                        : color.refreshButton.inactive,
                   ),
-                  _controlButton(
+                  controlButton(
                     icon: Icons.power_settings_new_outlined,
+                    onClick: onToggleButtonClick,
+                    color: !enabled
+                        ? color.toggleButton.regular
+                        : color.toggleButton.clicked,
                   ),
                 ],
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _controlButton({
-    required IconData icon,
-    Function()? onClick,
-  }) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: EdgeInsets.only(right: itemSpacing),
-        child: Container(
-          width: toggleButtonHeight,
-          height: toggleButtonHeight,
-          decoration: BoxDecoration(
-            color: color.background,
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: color.border,
-              width: 1,
-            ),
-          ),
-          child: IconButton(
-            icon: Icon(
-              icon,
-              color: color.border,
-              size: 23,
-            ),
-            onPressed: onClick,
-          ),
-        ),
       ),
     );
   }

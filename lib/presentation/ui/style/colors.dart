@@ -49,50 +49,6 @@ const searchBarColors = {
   ),
 };
 
-const sideMenuColors = {
-  ConvertouchUITheme.light: ConvertouchSideMenuColor(
-    regular: SideMenuColorVariation(
-      backgroundColor: Color(0xFFDEEBFC),
-      headerColor: Color(0xFFB0D7FC),
-      contentColor: Color(0xFF134B80),
-      activeSwitcherColor: Color(0xFF3E8DD7),
-      footerDividerColor: Color(0xFF84ADD7),
-    ),
-  ),
-  ConvertouchUITheme.dark: ConvertouchSideMenuColor(
-    regular: SideMenuColorVariation(
-      backgroundColor: Color(0xFF404957),
-      headerColor: Color(0xFF333944),
-      contentColor: Color(0xFFDFEAEE),
-      activeSwitcherColor: Color(0xFFB2B2B2),
-      footerDividerColor: Color(0xFF6E7B8F),
-    ),
-  ),
-};
-
-const sideMenuSwitcherColors = {
-  ConvertouchUITheme.light: ConvertouchSwitcherColor(
-    regular: SwitcherColorVariation(
-      thumb: Color(0xFFABBCCE),
-      track: Color(0xFF5E6D7C),
-    ),
-    switchedOn: SwitcherColorVariation(
-      thumb: Color(0xFF134B80),
-      track: Color(0xFFB0D7FC),
-    ),
-  ),
-  ConvertouchUITheme.dark: ConvertouchSwitcherColor(
-    regular: SwitcherColorVariation(
-      thumb: Color(0xFFB2B2B2),
-      track: Color(0xFF333944),
-    ),
-    switchedOn: SwitcherColorVariation(
-      thumb: Color(0xFF78B7F1),
-      track: Color(0xFF347ABB),
-    ),
-  ),
-};
-
 const unitGroupItemColors = {
   ConvertouchUITheme.light: ConvertouchListItemColor(
     regular: ListItemColorVariation(
@@ -231,72 +187,128 @@ const conversionItemColors = {
   ),
 };
 
-const refreshingJobsColors = {
-  ConvertouchUITheme.light: ConvertouchListItemColor(
-    regular: ListItemColorVariation(
-      border: Color(0xFFC2CCFF),
-      background: Color(0xFFF2F5FF),
-      content: Color(0xFF3A3A88),
+const refreshingJobItemsColors = {
+  ConvertouchUITheme.light: RefreshingJobItemColor(
+    activeStatusLabel: Color(0xFF3BA93E),
+    notActiveStatusLabel: Color(0xFF3A3A88),
+    jobItem: ConvertouchListItemColor(
+      regular: ListItemColorVariation(
+        border: Color(0xFFC2CCFF),
+        background: Color(0xFFF2F5FF),
+        content: Color(0xFF3A3A88),
+      ),
+      selected: ListItemColorVariation(
+        border: Color(0xFF5262B9),
+        background: Color(0xFFE5EAFF),
+        content: Color(0xFF303073),
+      ),
     ),
-    selected: ListItemColorVariation(
-      border: Color(0xFF9EADFA),
-      background: Color(0xFFE5EAFF),
-      content: Color(0xFF303073),
+    refreshButton: ButtonColor(
+      regular: ButtonColorVariation(
+        border: Color(0xFF3A3A88),
+        background: Color(0xFFF2F5FF),
+        foreground: Color(0xFF3A3A88),
+      ),
+      inactive: ButtonColorVariation(
+        border: Color(0xFFC2CCFF),
+        background: Color(0xFFF2F5FF),
+        foreground: Color(0xFFC2CCFF),
+      ),
+    ),
+    toggleButton: ButtonColor(
+      regular: ButtonColorVariation(
+        border: Color(0xFF3A3A88),
+        background: Color(0xFFF2F5FF),
+        foreground: Color(0xFF3A3A88),
+      ),
+      clicked: ButtonColorVariation(
+        border: Color(0xFF3A3A88),
+        background: Color(0xFF3A3A88),
+        foreground: Color(0xFFF2F5FF),
+      ),
     ),
   ),
-  ConvertouchUITheme.dark: ConvertouchListItemColor(
-    regular: ListItemColorVariation(
-      border: Color(0xFF585A6C),
-      background: Color(0xFF3E4754),
-      content: Color(0xFFB1B5EA),
+  ConvertouchUITheme.dark: RefreshingJobItemColor(
+    activeStatusLabel: Color(0xFF4EAD51),
+    notActiveStatusLabel: Color(0xFFB1B5EA),
+    jobItem: ConvertouchListItemColor(
+      regular: ListItemColorVariation(
+        border: Color(0xFF585A6C),
+        background: Color(0xFF3E4754),
+        content: Color(0xFFB1B5EA),
+      ),
+      selected: ListItemColorVariation(
+        border: Color(0xFFA5B2FF),
+        background: Color(0xFF3E4754),
+        content: Color(0xFFB3B6DE),
+      ),
     ),
-    selected: ListItemColorVariation(
-      border: Color(0xFFA5B2FF),
-      background: Color(0xFF3E4754),
-      content: Color(0xFFB3B6DE),
+    refreshButton: ButtonColor(
+      regular: ButtonColorVariation(
+        border: Color(0xFF585A6C),
+        background: Color(0xFF3E4754),
+        foreground: Color(0xFFB1B5EA),
+      ),
+      inactive: ButtonColorVariation(
+        border: Color(0xFF585A6C),
+        background: Color(0xFF3E4754),
+        foreground: Color(0xFF7E82B4),
+      ),
+    ),
+    toggleButton: ButtonColor(
+      regular: ButtonColorVariation(
+        border: Color(0xFF585A6C),
+        background: Color(0xFF3E4754),
+        foreground: Color(0xFFB1B5EA),
+      ),
+      clicked: ButtonColorVariation(
+        border: Color(0xFFB1B5EA),
+        background: Color(0xFFB1B5EA),
+        foreground: Color(0xFF3E4754),
+      ),
     ),
   ),
 };
 
 const unitGroupsPageFloatingButtonColors = {
-  ConvertouchUITheme.light: FloatingButtonColorVariation(
+  ConvertouchUITheme.light: ButtonColorVariation(
     background: Color(0xFF7473FA),
     foreground: Color(0xFFDEE9FF),
   ),
-  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+  ConvertouchUITheme.dark: ButtonColorVariation(
     background: Color(0xFF616491),
     foreground: Color(0xFFD1CFD3),
   ),
 };
 
 const unitsPageFloatingButtonColors = {
-  ConvertouchUITheme.light: FloatingButtonColorVariation(
+  ConvertouchUITheme.light: ButtonColorVariation(
     background: Color(0xFF5499DA),
     foreground: Color(0xFFDEE9FF),
   ),
-  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+  ConvertouchUITheme.dark: ButtonColorVariation(
     background: Color(0xDB446F96),
     foreground: Color(0xFFD1CFD3),
   ),
 };
 
 const conversionPageFloatingButtonColors = {
-  ConvertouchUITheme.light: FloatingButtonColorVariation(
+  ConvertouchUITheme.light: ButtonColorVariation(
     background: Color(0xFF6793BE),
     foreground: Color(0xFFF5F7FF),
   ),
-  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+  ConvertouchUITheme.dark: ButtonColorVariation(
     background: Color(0xDB446F96),
     foreground: Color(0xFFD1CFD3),
   ),
 };
 
 const removalFloatingButtonColors = {
-  ConvertouchUITheme.light: FloatingButtonColorVariation(
+  ConvertouchUITheme.light: ButtonColorVariation(
     background: Color(0xFFD36422),
     foreground: Color(0xFFDEE9FF),
   ),
-  ConvertouchUITheme.dark: FloatingButtonColorVariation(
+  ConvertouchUITheme.dark: ButtonColorVariation(
     background: Color(0xFF9D5225),
     foreground: Color(0xFFDEE9FF),
   ),

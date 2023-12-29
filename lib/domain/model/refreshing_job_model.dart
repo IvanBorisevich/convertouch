@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -5,20 +7,22 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 class RefreshingJobModel extends IdNameItemModel {
   final UnitGroupModel? unitGroup;
   final RefreshableDataPart dataRefreshType;
-  final bool isEnabled;
+  final RefreshingStatus refreshingStatus;
   final String cron;
   final String cronDescription;
   final String lastRefreshTime;
+  final StreamSubscription<int>? progressStream;
 
   const RefreshingJobModel({
     required super.id,
     required super.name,
     required this.unitGroup,
     required this.dataRefreshType,
-    this.isEnabled = false,
+    this.refreshingStatus = RefreshingStatus.initial,
     this.cron = defaultCron,
     this.cronDescription = defaultCronDescription,
     this.lastRefreshTime = "-",
+    this.progressStream,
     super.itemType = ItemType.refreshingJob,
   });
 
@@ -28,7 +32,6 @@ class RefreshingJobModel extends IdNameItemModel {
     name,
     unitGroup,
     dataRefreshType,
-    isEnabled,
     cron,
     lastRefreshTime,
     itemType,
@@ -37,8 +40,10 @@ class RefreshingJobModel extends IdNameItemModel {
   @override
   String toString() {
     return 'RefreshingJobModel{'
-        'name: $name, '
         'unitGroup: $unitGroup, '
-        'dataRefreshType: $dataRefreshType}';
+        'dataRefreshType: $dataRefreshType, '
+        'refreshingStatus: $refreshingStatus, '
+        'cronDescription: $cronDescription, '
+        'lastRefreshTime: $lastRefreshTime}';
   }
 }

@@ -19,6 +19,18 @@ abstract class ConvertouchColor<T extends ConvertouchColorVariation> {
   });
 }
 
+class ButtonColor {
+  final ButtonColorVariation regular;
+  final ButtonColorVariation inactive;
+  final ButtonColorVariation clicked;
+
+  const ButtonColor({
+    required this.regular,
+    this.inactive = defaultButtonColorVariation,
+    this.clicked = defaultButtonColorVariation,
+  });
+}
+
 class ConvertouchListItemColor
     extends ConvertouchColor<ListItemColorVariation> {
   const ConvertouchListItemColor({
@@ -50,6 +62,22 @@ class ConvertouchConversionItemColor {
   });
 }
 
+class RefreshingJobItemColor {
+  final ConvertouchListItemColor jobItem;
+  final ButtonColor refreshButton;
+  final ButtonColor toggleButton;
+  final Color activeStatusLabel;
+  final Color notActiveStatusLabel;
+
+  const RefreshingJobItemColor({
+    required this.jobItem,
+    required this.refreshButton,
+    required this.toggleButton,
+    required this.activeStatusLabel,
+    required this.notActiveStatusLabel,
+  });
+}
+
 class ConvertouchScaffoldColor
     extends ConvertouchColor<ScaffoldColorVariation> {
   const ConvertouchScaffoldColor({
@@ -70,22 +98,4 @@ class ConvertouchSearchBarColor
   });
 }
 
-class ConvertouchSideMenuColor
-    extends ConvertouchColor<SideMenuColorVariation> {
-  const ConvertouchSideMenuColor({
-    required super.regular,
-    super.marked = defaultSideMenuColor,
-    super.selected = defaultSideMenuColor,
-    super.focused = defaultSideMenuColor,
-  });
-}
 
-class ConvertouchSwitcherColor extends ConvertouchColor<SwitcherColorVariation> {
-  const ConvertouchSwitcherColor({
-    required super.regular,
-    super.marked = defaultSwitcherColor,
-    super.selected = defaultSwitcherColor,
-    super.focused = defaultSwitcherColor,
-    super.switchedOn = defaultSwitcherColor,
-  });
-}

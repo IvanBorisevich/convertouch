@@ -27,7 +27,7 @@ class ConvertouchConversionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      FloatingButtonColorVariation floatingButtonColor =
+      ButtonColorVariation floatingButtonColor =
           conversionPageFloatingButtonColors[appState.theme]!;
 
       return conversionsBlocBuilder((pageState) {

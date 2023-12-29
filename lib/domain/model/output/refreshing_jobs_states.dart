@@ -16,14 +16,17 @@ class RefreshingJobsFetching extends RefreshingJobsState {
 
 class RefreshingJobsFetched extends RefreshingJobsState {
   final List<RefreshingJobModel> items;
+  final List<int> activeJobIds;
 
   const RefreshingJobsFetched({
     required this.items,
+    this.activeJobIds = const [],
   });
 
   @override
   List<Object?> get props => [
     items,
+    activeJobIds,
   ];
 
   @override

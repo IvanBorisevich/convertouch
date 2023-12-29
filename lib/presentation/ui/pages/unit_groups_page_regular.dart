@@ -20,9 +20,9 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      FloatingButtonColorVariation floatingButtonColor =
+      ButtonColorVariation floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
-      FloatingButtonColorVariation removalButtonColor =
+      ButtonColorVariation removalButtonColor =
           removalFloatingButtonColors[appState.theme]!;
       ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
 

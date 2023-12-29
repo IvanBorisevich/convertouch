@@ -20,7 +20,7 @@ import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case
 import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
-import 'package:convertouch/domain/usecases/refreshable_data_items/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';

@@ -5,8 +5,7 @@ const ListItemColorVariation defaultListItemColor = ListItemColorVariation();
 const TextBoxColorVariation defaultTextBoxColor = TextBoxColorVariation();
 const ScaffoldColorVariation defaultScaffoldColor = ScaffoldColorVariation();
 const SearchBarColorVariation defaultSearchBarColor = SearchBarColorVariation();
-const SideMenuColorVariation defaultSideMenuColor = SideMenuColorVariation();
-const SwitcherColorVariation defaultSwitcherColor = SwitcherColorVariation();
+const ButtonColorVariation defaultButtonColorVariation = ButtonColorVariation();
 
 abstract class ConvertouchColorVariation {
   const ConvertouchColorVariation();
@@ -72,38 +71,14 @@ class SearchBarColorVariation extends ConvertouchColorVariation {
   });
 }
 
-class SideMenuColorVariation extends ConvertouchColorVariation {
-  final Color backgroundColor;
-  final Color headerColor;
-  final Color contentColor;
-  final Color activeSwitcherColor;
-  final Color footerDividerColor;
-
-  const SideMenuColorVariation({
-    this.backgroundColor = noColor,
-    this.headerColor = noColor,
-    this.contentColor = noColor,
-    this.activeSwitcherColor = noColor,
-    this.footerDividerColor = noColor,
-  });
-}
-
-class FloatingButtonColorVariation extends ConvertouchColorVariation {
+class ButtonColorVariation extends ConvertouchColorVariation {
   final Color background;
   final Color foreground;
+  final Color border;
 
-  const FloatingButtonColorVariation({
+  const ButtonColorVariation({
     this.background = noColor,
     this.foreground = noColor,
-  });
-}
-
-class SwitcherColorVariation extends ConvertouchColorVariation {
-  final Color thumb;
-  final Color track;
-
-  const SwitcherColorVariation({
-    this.thumb = noColor,
-    this.track = noColor,
+    this.border = noColor,
   });
 }

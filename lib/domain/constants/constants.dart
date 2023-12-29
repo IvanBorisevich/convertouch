@@ -52,6 +52,12 @@ class ConversionType {
   static const int formula = 2;
 }
 
+enum RefreshingStatus {
+  initial,
+  inProgress,
+  refreshed,
+}
+
 enum RefreshableDataPart {
   value,
   coefficient;

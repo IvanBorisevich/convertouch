@@ -29,7 +29,7 @@ class _ConvertouchUnitGroupCreationPageState
     return appBlocBuilder((appState) {
       ConvertouchTextBoxColor textBoxColor =
           unitGroupTextBoxColors[appState.theme]!;
-      FloatingButtonColorVariation floatingButtonColor =
+      ButtonColorVariation floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
 
       return BlocListener<UnitGroupsBloc, UnitGroupsState>(

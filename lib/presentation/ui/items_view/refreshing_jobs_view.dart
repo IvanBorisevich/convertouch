@@ -2,19 +2,24 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/items_view/item/refreshing_job_item.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobsView extends StatelessWidget {
-  final List<RefreshingJobModel> items;
-  final void Function(RefreshingJobModel)? onItemTap;
+  final List<RefreshingJobModel> jobItems;
+  final List<int> activeJobIds;
+  final void Function(RefreshingJobModel)? onItemClick;
+  final void Function(RefreshingJobModel)? onItemRefreshButtonClick;
+  final void Function(RefreshingJobModel)? onItemToggleButtonClick;
   final double listTopSpacing;
   final double itemsSpacing;
   final ConvertouchUITheme theme;
 
   const ConvertouchRefreshingJobsView(
-    this.items, {
-    this.onItemTap,
+    this.jobItems, {
+    required this.activeJobIds,
+    this.onItemClick,
+    this.onItemRefreshButtonClick,
+    this.onItemToggleButtonClick,
     this.listTopSpacing = 2,
     this.itemsSpacing = 10,
     required this.theme,
@@ -28,12 +33,23 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
         padding: EdgeInsets.only(top: listTopSpacing),
         child: ListView.separated(
           padding: EdgeInsets.all(itemsSpacing),
-          itemCount: items.length,
+          itemCount: jobItems.length,
           itemBuilder: (context, index) {
+            var item = jobItems[index];
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchRefreshingJobItem(
-                items[index],
-                color: refreshingJobsColors[theme]!.regular,
+                item,
+                enabled: activeJobIds.contains(item.id),
+                onItemClick: () {
+                  onItemClick?.call(item);
+                },
+                onRefreshButtonClick: () {
+                  onItemRefreshButtonClick?.call(item);
+                },
+                onToggleButtonClick: () {
+                  onItemToggleButtonClick?.call(item);
+                },
+                theme: theme,
               ),
             );
           },
@@ -42,7 +58,7 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
               itemsSpacing,
               itemsSpacing,
               itemsSpacing,
-              index == items.length - 1 ? itemsSpacing : 0,
+              index == jobItems.length - 1 ? itemsSpacing : 0,
             ),
           ),
         ),

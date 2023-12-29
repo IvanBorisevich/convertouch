@@ -1,11 +1,11 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class FetchRefreshingJobsUseCase
-    extends UseCaseNoInput<RefreshingJobsFetched> {
+    extends UseCaseNoInput<List<RefreshingJobModel>> {
   final RefreshingJobRepository refreshingJobRepository;
 
   const FetchRefreshingJobsUseCase({
@@ -13,19 +13,9 @@ class FetchRefreshingJobsUseCase
   });
 
   @override
-  Future<Either<Failure, RefreshingJobsFetched>> execute() async {
+  Future<Either<Failure, List<RefreshingJobModel>>> execute() async {
     try {
-      var result = await refreshingJobRepository.fetchAll();
-
-      if (result.isLeft) {
-        throw result.left;
-      }
-
-      return Right(
-        RefreshingJobsFetched(
-          items: result.right,
-        ),
-      );
+      return await refreshingJobRepository.fetchAll();
     } catch (e) {
       return Left(
         InternalFailure("Error when fetching refreshing jobs: $e"),
