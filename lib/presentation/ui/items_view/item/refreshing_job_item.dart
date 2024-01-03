@@ -2,29 +2,24 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobItem extends StatelessWidget {
   final RefreshingJobModel item;
-  final bool enabled;
   final void Function()? onItemClick;
   final void Function()? onRefreshButtonClick;
-  final void Function()? onToggleButtonClick;
   final double itemContainerHeight;
-  final double toggleButtonHeight;
+  final double itemButtonHeight;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
 
   const ConvertouchRefreshingJobItem(
     this.item, {
-    this.enabled = false,
     this.onItemClick,
     this.onRefreshButtonClick,
-    this.onToggleButtonClick,
     this.itemContainerHeight = 70,
-    this.toggleButtonHeight = 50,
+    this.itemButtonHeight = 50,
     this.itemSpacing = 7,
     required this.theme,
     this.customColors,
@@ -52,44 +47,11 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
             style: TextStyle(
               fontFamily: quicksandFontFamily,
               fontWeight: fontWeight,
-              color: enabled ? textColor : textColor.withOpacity(0.5),
+              color: textColor,
               fontSize: fontSize,
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-          ),
-        ),
-      );
-    }
-
-    Widget controlButton({
-      required IconData icon,
-      Function()? onClick,
-      required ButtonColorVariation color,
-    }) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Padding(
-          padding: EdgeInsets.only(right: itemSpacing),
-          child: Container(
-            width: toggleButtonHeight,
-            height: toggleButtonHeight,
-            decoration: BoxDecoration(
-              color: color.background,
-              borderRadius: BorderRadius.circular(25),
-              border: Border.all(
-                color: color.border,
-                width: 1,
-              ),
-            ),
-            child: IconButton(
-              icon: Icon(
-                icon,
-                color: color.foreground,
-                size: 25,
-              ),
-              onPressed: onClick,
-            ),
           ),
         ),
       );
@@ -105,9 +67,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                 color: color.jobItem.regular.background,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: enabled
-                      ? color.jobItem.selected.border
-                      : color.jobItem.regular.border,
+                  color: color.jobItem.regular.border,
                   width: 1,
                 ),
               ),
@@ -124,38 +84,93 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                           textColor: color.jobItem.regular.content,
                         ),
                         jobInfoLabel(
-                          text: 'Last Refresh: ${item.lastRefreshTime}',
+                          text: 'Last executed: '
+                              '${item.lastExecutionTime ?? '-'}',
                           padding: const EdgeInsets.only(top: 3, left: 12),
                           textColor: color.jobItem.regular.content,
-                        ),
-                        jobInfoLabel(
-                          text: enabled ? 'ACTIVE' : 'NOT ACTIVE',
-                          padding: const EdgeInsets.only(top: 3, left: 12),
-                          fontWeight: FontWeight.w700,
-                          textColor: enabled
-                              ? color.activeStatusLabel
-                              : color.notActiveStatusLabel,
                         ),
                       ],
                     ),
                   ),
-                  controlButton(
-                    icon: Icons.refresh_rounded,
-                    onClick: () {
-                      if (enabled) {
-                        onRefreshButtonClick?.call();
-                      }
-                    },
-                    color: enabled
-                        ? color.refreshButton.regular
-                        : color.refreshButton.inactive,
-                  ),
-                  controlButton(
-                    icon: Icons.power_settings_new_outlined,
-                    onClick: onToggleButtonClick,
-                    color: !enabled
-                        ? color.toggleButton.regular
-                        : color.toggleButton.clicked,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: itemSpacing),
+                      child: Container(
+                        width: itemButtonHeight,
+                        height: itemButtonHeight,
+                        decoration: BoxDecoration(
+                          color: color.refreshButton.regular.background,
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: color.refreshButton.regular.border,
+                            width: 1,
+                          ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            onRefreshButtonClick?.call();
+                          },
+                          child: item.dataRefreshingStatus ==
+                                  DataRefreshingStatus.on
+                              ? Container(
+                                  width: 17,
+                                  height: 17,
+                                  padding: const EdgeInsets.all(10),
+                                  child: CircularProgressIndicator(
+                                    color:
+                                        color.refreshButton.regular.foreground,
+                                  ),
+                                )
+                              // StreamBuilder<int>(
+                              //   stream: item.progressStream,
+                              //   builder: (context, snapshot) {
+                              //     Widget result;
+                              //     if (snapshot.hasError) {
+                              //       result = const Icon(
+                              //         Icons.error_outline,
+                              //         color: Colors.red,
+                              //         size: 25,
+                              //       );
+                              //     } else {
+                              //       switch (snapshot.connectionState) {
+                              //         case ConnectionState.none:
+                              //           result = const Icon(
+                              //             Icons.info,
+                              //             color: Colors.blue,
+                              //             size: 25,
+                              //           );
+                              //         case ConnectionState.waiting:
+                              //           result = const SizedBox(
+                              //             width: 25,
+                              //             height: 25,
+                              //             child: CircularProgressIndicator(),
+                              //           );
+                              //         case ConnectionState.active:
+                              //           result = const Icon(
+                              //             Icons.check_circle_outline,
+                              //             color: Colors.green,
+                              //             size: 25,
+                              //           );
+                              //         case ConnectionState.done:
+                              //           result = const Icon(
+                              //             Icons.info,
+                              //             color: Colors.blue,
+                              //             size: 25,
+                              //           );
+                              //       }
+                              //     }
+                              //     return result;
+                              //   },
+                              // )
+                              : Icon(
+                                  Icons.refresh_rounded,
+                                  color: color.refreshButton.regular.foreground,
+                                  size: 25,
+                                ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

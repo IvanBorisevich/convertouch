@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/input/abstract_event.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 
 abstract class RefreshingJobsEvent extends ConvertouchEvent {
   const RefreshingJobsEvent();
@@ -14,41 +15,35 @@ class FetchRefreshingJobs extends RefreshingJobsEvent {
 }
 
 abstract class SingleJobEvent extends RefreshingJobsEvent {
-  final int jobId;
-  final List<int> activeJobIds;
+  final RefreshingJobModel job;
 
   const SingleJobEvent({
-    required this.jobId,
-    this.activeJobIds = const [],
+    required this.job,
   });
 
   @override
   List<Object?> get props => [
-    jobId,
-    activeJobIds,
+        job,
+      ];
+}
+
+class ToggleDataRefreshing extends SingleJobEvent {
+  final Map<int, Stream<int>> dataRefreshingProgress;
+
+  const ToggleDataRefreshing({
+    required super.job,
+    this.dataRefreshingProgress = const {},
+  });
+
+  @override
+  List<Object?> get props => [
+    job,
+    dataRefreshingProgress,
   ];
-}
-
-class ToggleRefreshingJob extends SingleJobEvent {
-  const ToggleRefreshingJob({
-    required super.jobId,
-    super.activeJobIds,
-  });
 
   @override
   String toString() {
-    return 'ToggleRefreshingJob{jobId: $jobId}';
-  }
-}
-
-class StartRefreshingData extends SingleJobEvent {
-  const StartRefreshingData({
-    required super.jobId,
-    super.activeJobIds,
-  });
-
-  @override
-  String toString() {
-    return 'StartRefreshingData{jobId: $jobId}';
+    return 'ToggleDataRefreshing{'
+        'dataRefreshingProgress: $dataRefreshingProgress}';
   }
 }

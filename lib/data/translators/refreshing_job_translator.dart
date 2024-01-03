@@ -16,21 +16,29 @@ class RefreshingJobTranslator
     return RefreshingJobEntity(
       id: model.id!,
       name: model.name,
-      unitGroupName: model.unitGroup!.name,
-      dataRefreshTypeNum: model.dataRefreshType.index,
+      unitGroupId: model.unitGroup!.id!,
+      dataRefreshingStatusNum: model.dataRefreshingStatus.value,
+      refreshableDataPartNum: model.refreshableDataPart.val,
+      lastExecutionTime: model.lastExecutionTime,
+      cronId: model.cronId,
     );
   }
 
   @override
   RefreshingJobModel toModel(
     RefreshingJobEntity entity, {
-    UnitGroupEntity? unitGroup,
+    UnitGroupEntity? unitGroupEntity,
   }) {
     return RefreshingJobModel(
       id: entity.id,
       name: entity.name,
-      unitGroup: UnitGroupTranslator.I.toModel(unitGroup),
-      dataRefreshType: RefreshableDataPart.values[entity.dataRefreshTypeNum],
+      unitGroup: UnitGroupTranslator.I.toModel(unitGroupEntity),
+      dataRefreshingStatus:
+          DataRefreshingStatus.values[entity.dataRefreshingStatusNum],
+      refreshableDataPart:
+          RefreshableDataPart.values[entity.refreshableDataPartNum],
+      lastExecutionTime: entity.lastExecutionTime,
+      cronId: entity.cronId,
     );
   }
 }

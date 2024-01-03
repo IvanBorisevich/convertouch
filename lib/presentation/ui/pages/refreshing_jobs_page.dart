@@ -18,21 +18,12 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
           title: "Refresh Data",
           body: ConvertouchRefreshingJobsView(
             pageState.items,
-            activeJobIds: pageState.activeJobIds,
             onItemClick: (item) {},
             onItemRefreshButtonClick: (item) {
               BlocProvider.of<RefreshingJobsBloc>(context).add(
-                StartRefreshingData(
-                  jobId: item.id!,
-                  activeJobIds: pageState.activeJobIds,
-                ),
-              );
-            },
-            onItemToggleButtonClick: (item) {
-              BlocProvider.of<RefreshingJobsBloc>(context).add(
-                ToggleRefreshingJob(
-                  jobId: item.id!,
-                  activeJobIds: pageState.activeJobIds,
+                ToggleDataRefreshing(
+                  job: item,
+                  dataRefreshingProgress: pageState.dataRefreshingProgress,
                 ),
               );
             },

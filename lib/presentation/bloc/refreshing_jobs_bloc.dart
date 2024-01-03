@@ -1,18 +1,21 @@
 import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
 import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/toggle_data_refreshing_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
     extends ConvertouchBloc<RefreshingJobsEvent, RefreshingJobsState> {
   final FetchRefreshingJobsUseCase fetchRefreshingJobsUseCase;
+  final ToggleDataRefreshingUseCase toggleDataRefreshingUseCase;
 
   RefreshingJobsBloc({
     required this.fetchRefreshingJobsUseCase,
+    required this.toggleDataRefreshingUseCase,
   }) : super(const RefreshingJobsFetched(items: [])) {
     on<FetchRefreshingJobs>(_onJobsFetch);
-    on<ToggleRefreshingJob>(_onJobToggle);
+    on<ToggleDataRefreshing>(_onDataRefreshingToggle);
   }
 
   _onJobsFetch(
@@ -36,37 +39,21 @@ class RefreshingJobsBloc
     }
   }
 
-  _onJobToggle(
-    ToggleRefreshingJob event,
+  _onDataRefreshingToggle(
+    ToggleDataRefreshing event,
     Emitter<RefreshingJobsState> emit,
   ) async {
     emit(const RefreshingJobsFetching());
 
-    final refreshJobsResult = await fetchRefreshingJobsUseCase.execute();
-
-    if (refreshJobsResult.isLeft) {
-      emit(RefreshingJobsErrorState(
-        message: refreshJobsResult.left.message,
-      ));
-    } else {
-      List<int> activeJobIds = [];
-
-      if (event.activeJobIds.isNotEmpty) {
-        activeJobIds = event.activeJobIds;
-      }
-
-      if (activeJobIds.contains(event.jobId)) {
-        activeJobIds.remove(event.jobId);
-      } else {
-        activeJobIds.add(event.jobId);
-      }
-
+    final result = await toggleDataRefreshingUseCase.execute(event);
+    if (result.isLeft) {
       emit(
-        RefreshingJobsFetched(
-          items: refreshJobsResult.right,
-          activeJobIds: activeJobIds,
+        RefreshingJobsErrorState(
+          message: result.left.message,
         ),
       );
+    } else {
+      emit(result.right);
     }
   }
 }

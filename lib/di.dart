@@ -1,7 +1,5 @@
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
-import 'package:convertouch/data/dao/local/refreshing_job_dao_impl.dart';
-import 'package:convertouch/data/dao/refreshing_job_dao.dart';
 import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/refreshable_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
@@ -21,6 +19,7 @@ import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_u
 import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/toggle_data_refreshing_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
@@ -212,6 +211,7 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
       fetchRefreshingJobsUseCase: locator(),
+      toggleDataRefreshingUseCase: locator(),
     ),
   );
 
@@ -221,15 +221,17 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<RefreshingJobRepository>(
-    () => RefreshingJobRepositoryImpl(
-      unitGroupDao: database.unitGroupDao,
-      refreshingJobDao: locator(),
+  locator.registerLazySingleton<ToggleDataRefreshingUseCase>(
+    () => ToggleDataRefreshingUseCase(
+      refreshingJobRepository: locator(),
     ),
   );
 
-  locator.registerLazySingleton<RefreshingJobDao>(
-    () => const RefreshingJobDaoImpl(),
+  locator.registerLazySingleton<RefreshingJobRepository>(
+    () => RefreshingJobRepositoryImpl(
+      unitGroupDao: database.unitGroupDao,
+      refreshingJobDao: database.refreshingJobDao,
+    ),
   );
 
   locator.registerLazySingleton<RefreshingJobTranslator>(

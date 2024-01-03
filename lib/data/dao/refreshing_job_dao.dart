@@ -4,4 +4,8 @@ abstract class RefreshingJobDao {
   const RefreshingJobDao();
 
   Future<List<RefreshingJobEntity>> getAll();
+
+  Future<RefreshingJobEntity?> get(int id);
+
+  Future<void> update(RefreshingJobEntity entity);
 }

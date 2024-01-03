@@ -6,20 +6,16 @@ import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobsView extends StatelessWidget {
   final List<RefreshingJobModel> jobItems;
-  final List<int> activeJobIds;
   final void Function(RefreshingJobModel)? onItemClick;
   final void Function(RefreshingJobModel)? onItemRefreshButtonClick;
-  final void Function(RefreshingJobModel)? onItemToggleButtonClick;
   final double listTopSpacing;
   final double itemsSpacing;
   final ConvertouchUITheme theme;
 
   const ConvertouchRefreshingJobsView(
     this.jobItems, {
-    required this.activeJobIds,
     this.onItemClick,
     this.onItemRefreshButtonClick,
-    this.onItemToggleButtonClick,
     this.listTopSpacing = 2,
     this.itemsSpacing = 10,
     required this.theme,
@@ -39,15 +35,11 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchRefreshingJobItem(
                 item,
-                enabled: activeJobIds.contains(item.id),
                 onItemClick: () {
                   onItemClick?.call(item);
                 },
                 onRefreshButtonClick: () {
                   onItemRefreshButtonClick?.call(item);
-                },
-                onToggleButtonClick: () {
-                  onItemToggleButtonClick?.call(item);
                 },
                 theme: theme,
               ),

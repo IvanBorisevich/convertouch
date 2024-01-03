@@ -46,21 +46,29 @@ enum ConvertouchUITheme {
   dark,
 }
 
-class ConversionType {
-  static const int static = 0;
-  static const int dynamic = 1;
-  static const int formula = 2;
+enum ConversionType {
+  static(0),
+  dynamic(1),
+  formula(2);
+
+  final int value;
+  const ConversionType(this.value);
 }
 
-enum RefreshingStatus {
-  initial,
-  inProgress,
-  refreshed,
+enum DataRefreshingStatus {
+  off(0),
+  on(1);
+
+  final int value;
+  const DataRefreshingStatus(this.value);
 }
 
 enum RefreshableDataPart {
-  value,
-  coefficient;
+  value(0),
+  coefficient(1);
+
+  final int val;
+  const RefreshableDataPart(this.val);
 
   @override
   String toString() {
