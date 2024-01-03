@@ -1,21 +1,17 @@
-import 'dart:async';
-
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ConvertouchRefreshingJobItem extends StatelessWidget {
   static const double itemContainerHeight = 70;
   static const double itemButtonHeight = 50;
   static const double itemButtonIconHeight = 25;
 
-  // static final Stream<double> _stream =
-  //     Stream.periodic(const Duration(seconds: 1), (i) => i * 10.0).take(10);
-
   final RefreshingJobModel item;
-  final Stream<double>? dataRefreshingProgress;
+  final Stream<double>? progressValue;
   final void Function()? onItemClick;
   final void Function()? onRefreshButtonClick;
   final double itemSpacing;
@@ -24,7 +20,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
 
   const ConvertouchRefreshingJobItem(
     this.item, {
-    this.dataRefreshingProgress,
+    this.progressValue,
     this.onItemClick,
     this.onRefreshButtonClick,
     this.itemSpacing = 7,
@@ -60,6 +56,19 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
+        ),
+      );
+    }
+
+    Widget refreshDataButton() {
+      return IconButton(
+        onPressed: () {
+          onRefreshButtonClick?.call();
+        },
+        icon: Icon(
+          Icons.refresh_rounded,
+          color: color.refreshButton.regular.foreground,
+          size: itemButtonIconHeight,
         ),
       );
     }
@@ -103,69 +112,64 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: EdgeInsets.only(right: itemSpacing),
-                      child: Container(
-                        width: itemButtonHeight,
-                        height: itemButtonHeight,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: color.refreshButton.regular.background,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: color.refreshButton.regular.border,
-                            width: 1,
-                          ),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            onRefreshButtonClick?.call();
-                          },
-                          child: dataRefreshingProgress != null
-                              ? StreamBuilder<double>(
-                                  stream: dataRefreshingProgress,
-                                  builder: (context, snapshot) {
-                                    print("There is progress");
-                                    Widget result;
-                                    if (snapshot.hasError) {
-                                      result = const Icon(
-                                        Icons.error_outline,
-                                        color: Colors.red,
-                                        size: itemButtonIconHeight,
-                                      );
-                                    } else {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          result = const Icon(
-                                            Icons.info,
-                                            color: Colors.blue,
-                                            size: itemButtonIconHeight,
-                                          );
-
-                                        case ConnectionState.waiting:
-                                        case ConnectionState.active:
-                                          result = CircularProgressIndicator(
-                                            value: snapshot.data,
-                                            color: color.refreshButton.regular
-                                                .foreground,
-                                          );
-                                        case ConnectionState.done:
-                                          result = const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
-                                            size: itemButtonIconHeight,
-                                          );
-
-                                      }
-                                    }
-                                    return result;
-                                  },
-                                )
-                              : Icon(
-                                  Icons.refresh_rounded,
-                                  color: color.refreshButton.regular.foreground,
-                                  size: itemButtonIconHeight,
+                      child: progressValue == null
+                          ? Container(
+                              width: itemButtonHeight,
+                              height: itemButtonHeight,
+                              decoration: BoxDecoration(
+                                color: color.refreshButton.regular.background,
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                  color: color.refreshButton.regular.border,
+                                  width: 1,
                                 ),
-                        ),
-                      ),
+                              ),
+                              child: refreshDataButton(),
+                            )
+                          : StreamBuilder<double>(
+                              stream: progressValue,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                    size: itemButtonIconHeight,
+                                  );
+                                } else if (snapshot.data == null) {
+                                  return refreshDataButton();
+                                } else {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done ||
+                                      snapshot.data == 1) {
+                                    onRefreshButtonClick?.call();
+                                  }
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onRefreshButtonClick?.call();
+                                    },
+                                    child: CircularPercentIndicator(
+                                      radius: itemButtonIconHeight,
+                                      lineWidth: 5.0,
+                                      percent: snapshot.data!,
+                                      center: Text(
+                                        "${snapshot.data! * 100}%",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                      circularStrokeCap:
+                                          CircularStrokeCap.round,
+                                      progressColor: color
+                                          .refreshButton.regular.foreground,
+                                      animation: true,
+                                      animateFromLastPercent: true,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                     ),
                   ),
                 ],

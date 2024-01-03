@@ -49,7 +49,6 @@ class RefreshingJobEntity {
   RefreshingJobEntity.coalesce(
     RefreshingJobEntity entity, {
     bool replaceWithNull = false,
-    int? dataRefreshingStatusNum,
     String? lastRefreshTime,
     int? cronId,
   }) : this(

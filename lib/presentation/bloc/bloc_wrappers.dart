@@ -12,6 +12,7 @@ import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_progress_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
@@ -71,6 +72,10 @@ var conversionsBlocBuilder =
 
 var refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
+var refreshingJobsProgressBlocBuilder = blocBuilderWrap<
+    RefreshingJobsProgressBloc,
+    RefreshingJobsState,
+    RefreshingJobsProgressUpdated>;
 
 Widget unitsChangeBlocListenerWrap({
   required Function(UnitsFetched)? handler,

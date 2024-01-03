@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_progress_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
@@ -85,6 +86,9 @@ class ConvertouchApp extends StatelessWidget {
             ..add(
               const FetchRefreshingJobs(),
             ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RefreshingJobsProgressBloc>(),
         ),
       ],
       child: MaterialApp(

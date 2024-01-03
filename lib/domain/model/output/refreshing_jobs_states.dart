@@ -37,6 +37,34 @@ class RefreshingJobsFetched extends RefreshingJobsState {
   }
 }
 
+class RefreshingJobsProgressUpdating extends RefreshingJobsState {
+  const RefreshingJobsProgressUpdating();
+
+  @override
+  String toString() {
+    return 'RefreshingJobsProgressUpdating{}';
+  }
+}
+
+class RefreshingJobsProgressUpdated extends RefreshingJobsState {
+  final Map<int, Stream<double>?> progressValues;
+
+  const RefreshingJobsProgressUpdated({
+    required this.progressValues,
+  });
+
+  @override
+  List<Object?> get props => [
+    progressValues,
+  ];
+
+  @override
+  String toString() {
+    return 'RefreshingJobsProgressUpdated{'
+        'progressValues: $progressValues}';
+  }
+}
+
 class RefreshingJobsErrorState extends RefreshingJobsState {
   final String message;
 
