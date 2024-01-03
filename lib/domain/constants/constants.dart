@@ -55,14 +55,6 @@ enum ConversionType {
   const ConversionType(this.value);
 }
 
-enum DataRefreshingStatus {
-  off(0),
-  on(1);
-
-  final int value;
-  const DataRefreshingStatus(this.value);
-}
-
 enum RefreshableDataPart {
   value(0),
   coefficient(1);

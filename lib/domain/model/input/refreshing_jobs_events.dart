@@ -14,36 +14,44 @@ class FetchRefreshingJobs extends RefreshingJobsEvent {
   }
 }
 
-abstract class SingleJobEvent extends RefreshingJobsEvent {
+abstract class RefreshDataEvent extends RefreshingJobsEvent {
   final RefreshingJobModel job;
+  final Map<int, Stream<double>> allJobsDataRefreshingProgress;
 
-  const SingleJobEvent({
+  const RefreshDataEvent({
     required this.job,
-  });
-
-  @override
-  List<Object?> get props => [
-        job,
-      ];
-}
-
-class ToggleDataRefreshing extends SingleJobEvent {
-  final Map<int, Stream<int>> dataRefreshingProgress;
-
-  const ToggleDataRefreshing({
-    required super.job,
-    this.dataRefreshingProgress = const {},
+    this.allJobsDataRefreshingProgress = const {},
   });
 
   @override
   List<Object?> get props => [
     job,
-    dataRefreshingProgress,
+    allJobsDataRefreshingProgress,
   ];
+}
+
+class StartRefreshingData extends RefreshDataEvent {
+  const StartRefreshingData({
+    required super.job,
+    super.allJobsDataRefreshingProgress,
+  });
 
   @override
   String toString() {
-    return 'ToggleDataRefreshing{'
-        'dataRefreshingProgress: $dataRefreshingProgress}';
+    return 'StartRefreshingData{'
+        'allJobsDataRefreshingProgress: $allJobsDataRefreshingProgress}';
+  }
+}
+
+class StopRefreshingData extends RefreshDataEvent {
+  const StopRefreshingData({
+    required super.job,
+    super.allJobsDataRefreshingProgress,
+  });
+
+  @override
+  String toString() {
+    return 'StopRefreshingData{'
+        'allJobsDataRefreshingProgress: $allJobsDataRefreshingProgress}';
   }
 }

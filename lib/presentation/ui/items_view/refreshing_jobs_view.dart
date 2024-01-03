@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobsView extends StatelessWidget {
   final List<RefreshingJobModel> jobItems;
+  final Map<int, Stream<double>> dataRefreshingProgress;
   final void Function(RefreshingJobModel)? onItemClick;
   final void Function(RefreshingJobModel)? onItemRefreshButtonClick;
   final double listTopSpacing;
@@ -14,6 +15,7 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
 
   const ConvertouchRefreshingJobsView(
     this.jobItems, {
+    this.dataRefreshingProgress = const {},
     this.onItemClick,
     this.onItemRefreshButtonClick,
     this.listTopSpacing = 2,
@@ -24,37 +26,36 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Padding(
-        padding: EdgeInsets.only(top: listTopSpacing),
-        child: ListView.separated(
-          padding: EdgeInsets.all(itemsSpacing),
-          itemCount: jobItems.length,
-          itemBuilder: (context, index) {
-            var item = jobItems[index];
-            return ConvertouchFadeScaleAnimation(
-              child: ConvertouchRefreshingJobItem(
-                item,
-                onItemClick: () {
-                  onItemClick?.call(item);
-                },
-                onRefreshButtonClick: () {
-                  onItemRefreshButtonClick?.call(item);
-                },
-                theme: theme,
-              ),
-            );
-          },
-          separatorBuilder: (context, index) => Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              itemsSpacing,
-              itemsSpacing,
-              itemsSpacing,
-              index == jobItems.length - 1 ? itemsSpacing : 0,
+    return Padding(
+      padding: EdgeInsets.only(top: listTopSpacing),
+      child: ListView.separated(
+        padding: EdgeInsets.all(itemsSpacing),
+        itemCount: jobItems.length,
+        itemBuilder: (context, index) {
+          var item = jobItems[index];
+          return ConvertouchFadeScaleAnimation(
+            child: ConvertouchRefreshingJobItem(
+              item,
+              dataRefreshingProgress: dataRefreshingProgress[item.id!],
+              onItemClick: () {
+                onItemClick?.call(item);
+              },
+              onRefreshButtonClick: () {
+                onItemRefreshButtonClick?.call(item);
+              },
+              theme: theme,
             ),
+          );
+        },
+        separatorBuilder: (context, index) => Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(
+            itemsSpacing,
+            itemsSpacing,
+            itemsSpacing,
+            index == jobItems.length - 1 ? itemsSpacing : 0,
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

@@ -52,7 +52,7 @@ class InitialMigration extends ConvertouchDbMigration {
           List<int> unitIds = await _insertUnits(txn, unitGroupId, entity);
 
           bool valuesAreRefreshable = entity['refreshable'] == true &&
-              entity['conversionType'] == ConversionType.formula.value;
+              entity['conversionType'] == ConversionType.formula;
           if (valuesAreRefreshable) {
             _insertRefreshableValuesUnits(txn, unitIds);
           }
@@ -88,7 +88,6 @@ class InitialMigration extends ConvertouchDbMigration {
       'unit_group_id': unitGroupId,
       'refreshable_data_part':
           (entity['refreshableDataPart'] as RefreshableDataPart).val,
-      'data_refreshing_status': DataRefreshingStatus.off.value,
     });
   }
 

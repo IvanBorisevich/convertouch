@@ -32,10 +32,8 @@ class RefreshingJobEntity {
   final int unitGroupId;
   @ColumnInfo(name: 'refreshable_data_part')
   final int refreshableDataPartNum;
-  @ColumnInfo(name: 'data_refreshing_status')
-  final int dataRefreshingStatusNum;
-  @ColumnInfo(name: 'last_execution_time')
-  final String? lastExecutionTime;
+  @ColumnInfo(name: 'last_refresh_time')
+  final String? lastRefreshTime;
   @ColumnInfo(name: 'cron_id')
   final int? cronId;
 
@@ -44,8 +42,7 @@ class RefreshingJobEntity {
     required this.name,
     required this.unitGroupId,
     required this.refreshableDataPartNum,
-    required this.dataRefreshingStatusNum,
-    required this.lastExecutionTime,
+    required this.lastRefreshTime,
     required this.cronId,
   });
 
@@ -53,21 +50,16 @@ class RefreshingJobEntity {
     RefreshingJobEntity entity, {
     bool replaceWithNull = false,
     int? dataRefreshingStatusNum,
-    String? lastExecutionTime,
+    String? lastRefreshTime,
     int? cronId,
   }) : this(
           id: entity.id,
           name: entity.name,
           unitGroupId: entity.unitGroupId,
           refreshableDataPartNum: entity.refreshableDataPartNum,
-          dataRefreshingStatusNum: _coalesce(
-            what: entity.dataRefreshingStatusNum,
-            patchWith: dataRefreshingStatusNum,
-            replaceWithNull: replaceWithNull,
-          ),
-          lastExecutionTime: _coalesce(
-            what: entity.lastExecutionTime,
-            patchWith: lastExecutionTime,
+          lastRefreshTime: _coalesce(
+            what: entity.lastRefreshTime,
+            patchWith: lastRefreshTime,
             replaceWithNull: replaceWithNull,
           ),
           cronId: _coalesce(

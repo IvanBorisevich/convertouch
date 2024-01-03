@@ -16,23 +16,24 @@ class RefreshingJobsFetching extends RefreshingJobsState {
 
 class RefreshingJobsFetched extends RefreshingJobsState {
   final List<RefreshingJobModel> items;
-  final Map<int, Stream<int>> dataRefreshingProgress;
+  final Map<int, Stream<double>> allJobsDataRefreshingProgress;
 
   const RefreshingJobsFetched({
     required this.items,
-    this.dataRefreshingProgress = const {},
+    this.allJobsDataRefreshingProgress = const {},
   });
 
   @override
   List<Object?> get props => [
     items,
-    dataRefreshingProgress,
+    allJobsDataRefreshingProgress,
   ];
 
   @override
   String toString() {
     return 'RefreshingJobsFetched{'
-        'items: $items}';
+        'items: $items, '
+        'allJobsDataRefreshingProgress: $allJobsDataRefreshingProgress}';
   }
 }
 

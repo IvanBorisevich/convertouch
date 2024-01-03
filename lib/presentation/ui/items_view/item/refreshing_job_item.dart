@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
@@ -5,21 +7,26 @@ import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobItem extends StatelessWidget {
+  static const double itemContainerHeight = 70;
+  static const double itemButtonHeight = 50;
+  static const double itemButtonIconHeight = 25;
+
+  // static final Stream<double> _stream =
+  //     Stream.periodic(const Duration(seconds: 1), (i) => i * 10.0).take(10);
+
   final RefreshingJobModel item;
+  final Stream<double>? dataRefreshingProgress;
   final void Function()? onItemClick;
   final void Function()? onRefreshButtonClick;
-  final double itemContainerHeight;
-  final double itemButtonHeight;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
 
   const ConvertouchRefreshingJobItem(
     this.item, {
+    this.dataRefreshingProgress,
     this.onItemClick,
     this.onRefreshButtonClick,
-    this.itemContainerHeight = 70,
-    this.itemButtonHeight = 50,
     this.itemSpacing = 7,
     required this.theme,
     this.customColors,
@@ -84,8 +91,8 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                           textColor: color.jobItem.regular.content,
                         ),
                         jobInfoLabel(
-                          text: 'Last executed: '
-                              '${item.lastExecutionTime ?? '-'}',
+                          text: 'Last refreshed: '
+                              '${item.lastRefreshTime ?? '-'}',
                           padding: const EdgeInsets.only(top: 3, left: 12),
                           textColor: color.jobItem.regular.content,
                         ),
@@ -99,6 +106,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                       child: Container(
                         width: itemButtonHeight,
                         height: itemButtonHeight,
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: color.refreshButton.regular.background,
                           borderRadius: BorderRadius.circular(25),
@@ -111,62 +119,50 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                           onTap: () {
                             onRefreshButtonClick?.call();
                           },
-                          child: item.dataRefreshingStatus ==
-                                  DataRefreshingStatus.on
-                              ? Container(
-                                  width: 17,
-                                  height: 17,
-                                  padding: const EdgeInsets.all(10),
-                                  child: CircularProgressIndicator(
-                                    color:
-                                        color.refreshButton.regular.foreground,
-                                  ),
+                          child: dataRefreshingProgress != null
+                              ? StreamBuilder<double>(
+                                  stream: dataRefreshingProgress,
+                                  builder: (context, snapshot) {
+                                    print("There is progress");
+                                    Widget result;
+                                    if (snapshot.hasError) {
+                                      result = const Icon(
+                                        Icons.error_outline,
+                                        color: Colors.red,
+                                        size: itemButtonIconHeight,
+                                      );
+                                    } else {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                          result = const Icon(
+                                            Icons.info,
+                                            color: Colors.blue,
+                                            size: itemButtonIconHeight,
+                                          );
+
+                                        case ConnectionState.waiting:
+                                        case ConnectionState.active:
+                                          result = CircularProgressIndicator(
+                                            value: snapshot.data,
+                                            color: color.refreshButton.regular
+                                                .foreground,
+                                          );
+                                        case ConnectionState.done:
+                                          result = const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                            size: itemButtonIconHeight,
+                                          );
+
+                                      }
+                                    }
+                                    return result;
+                                  },
                                 )
-                              // StreamBuilder<int>(
-                              //   stream: item.progressStream,
-                              //   builder: (context, snapshot) {
-                              //     Widget result;
-                              //     if (snapshot.hasError) {
-                              //       result = const Icon(
-                              //         Icons.error_outline,
-                              //         color: Colors.red,
-                              //         size: 25,
-                              //       );
-                              //     } else {
-                              //       switch (snapshot.connectionState) {
-                              //         case ConnectionState.none:
-                              //           result = const Icon(
-                              //             Icons.info,
-                              //             color: Colors.blue,
-                              //             size: 25,
-                              //           );
-                              //         case ConnectionState.waiting:
-                              //           result = const SizedBox(
-                              //             width: 25,
-                              //             height: 25,
-                              //             child: CircularProgressIndicator(),
-                              //           );
-                              //         case ConnectionState.active:
-                              //           result = const Icon(
-                              //             Icons.check_circle_outline,
-                              //             color: Colors.green,
-                              //             size: 25,
-                              //           );
-                              //         case ConnectionState.done:
-                              //           result = const Icon(
-                              //             Icons.info,
-                              //             color: Colors.blue,
-                              //             size: 25,
-                              //           );
-                              //       }
-                              //     }
-                              //     return result;
-                              //   },
-                              // )
                               : Icon(
                                   Icons.refresh_rounded,
                                   color: color.refreshButton.regular.foreground,
-                                  size: 25,
+                                  size: itemButtonIconHeight,
                                 ),
                         ),
                       ),

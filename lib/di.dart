@@ -19,7 +19,7 @@ import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_u
 import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/toggle_data_refreshing_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/start_refreshing_data_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/get_unit_group_use_case.dart';
@@ -211,7 +211,7 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
       fetchRefreshingJobsUseCase: locator(),
-      toggleDataRefreshingUseCase: locator(),
+      startRefreshingDataUseCase: locator(),
     ),
   );
 
@@ -221,8 +221,8 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<ToggleDataRefreshingUseCase>(
-    () => ToggleDataRefreshingUseCase(
+  locator.registerLazySingleton<StartRefreshingDataUseCase>(
+    () => StartRefreshingDataUseCase(
       refreshingJobRepository: locator(),
     ),
   );

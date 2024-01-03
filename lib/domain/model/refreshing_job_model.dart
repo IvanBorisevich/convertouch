@@ -5,18 +5,16 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 class RefreshingJobModel extends IdNameItemModel {
   final UnitGroupModel? unitGroup;
   final RefreshableDataPart refreshableDataPart;
-  final DataRefreshingStatus dataRefreshingStatus;
   final int? cronId;
-  final String? lastExecutionTime;
+  final String? lastRefreshTime;
 
   const RefreshingJobModel({
     required super.id,
     required super.name,
     required this.unitGroup,
     required this.refreshableDataPart,
-    this.dataRefreshingStatus = DataRefreshingStatus.off,
     this.cronId,
-    this.lastExecutionTime,
+    this.lastRefreshTime,
     super.itemType = ItemType.refreshingJob,
   });
 
@@ -27,7 +25,7 @@ class RefreshingJobModel extends IdNameItemModel {
     unitGroup,
     refreshableDataPart,
     cronId,
-    lastExecutionTime,
+    lastRefreshTime,
     itemType,
   ];
 
@@ -38,8 +36,7 @@ class RefreshingJobModel extends IdNameItemModel {
         'name: $name, '
         'unitGroup: $unitGroup, '
         'refreshableDataPart: $refreshableDataPart, '
-        'dataRefreshingStatus: $dataRefreshingStatus, '
         'cronId: $cronId, '
-        'lastExecutionTime: $lastExecutionTime}';
+        'lastRefreshTime: $lastRefreshTime}';
   }
 }

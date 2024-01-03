@@ -97,7 +97,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `data_refreshing_status` INTEGER NOT NULL, `last_execution_time` TEXT, `cron_id` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`cron_id`) REFERENCES `cron` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
+            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `cron_id` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`cron_id`) REFERENCES `cron` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `cron` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `expression` TEXT NOT NULL)');
         await database.execute(
@@ -464,8 +464,7 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
                   'name': item.name,
                   'unit_group_id': item.unitGroupId,
                   'refreshable_data_part': item.refreshableDataPartNum,
-                  'data_refreshing_status': item.dataRefreshingStatusNum,
-                  'last_execution_time': item.lastExecutionTime,
+                  'last_refresh_time': item.lastRefreshTime,
                   'cron_id': item.cronId
                 });
 
@@ -485,8 +484,7 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             name: row['name'] as String,
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
-            dataRefreshingStatusNum: row['data_refreshing_status'] as int,
-            lastExecutionTime: row['last_execution_time'] as String?,
+            lastRefreshTime: row['last_refresh_time'] as String?,
             cronId: row['cron_id'] as int?));
   }
 
@@ -498,8 +496,7 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             name: row['name'] as String,
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
-            dataRefreshingStatusNum: row['data_refreshing_status'] as int,
-            lastExecutionTime: row['last_execution_time'] as String?,
+            lastRefreshTime: row['last_refresh_time'] as String?,
             cronId: row['cron_id'] as int?),
         arguments: [id]);
   }
