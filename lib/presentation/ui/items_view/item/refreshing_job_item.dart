@@ -154,9 +154,11 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                                       percent: snapshot.data!,
                                       center: Text(
                                         "${snapshot.data! * 100}%",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 10,
+                                          color: color
+                                              .refreshButton.regular.foreground,
                                         ),
                                       ),
                                       circularStrokeCap:
