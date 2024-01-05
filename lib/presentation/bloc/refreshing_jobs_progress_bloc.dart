@@ -3,21 +3,26 @@ import 'dart:async';
 import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
 import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/refresh_data_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/update_data_refreshing_time_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsProgressBloc
     extends ConvertouchBloc<RefreshingJobsEvent, RefreshingJobsState> {
   final RefreshDataUseCase refreshDataUseCase;
+  final UpdateDataRefreshingTimeUseCase updateDataRefreshingTimeUseCase;
 
   RefreshingJobsProgressBloc({
     required this.refreshDataUseCase,
+    required this.updateDataRefreshingTimeUseCase,
   }) : super(const RefreshingJobsProgressUpdated(progressValues: {})) {
-    on<RefreshData>(_onDataRefresh);
+    on<StartDataRefreshing>(_onDataRefreshingStart);
+    on<StopDataRefreshing>(_onDataRefreshingStop);
+    on<CompleteDataRefreshing>(_onDataRefreshingComplete);
   }
 
-  _onDataRefresh(
-    RefreshData event,
+  _onDataRefreshingStart(
+    StartDataRefreshing event,
     Emitter<RefreshingJobsState> emit,
   ) async {
     Map<int, Stream<double>?> progressValues = {};
@@ -26,26 +31,70 @@ class RefreshingJobsProgressBloc
       progressValues = event.progressValues;
     }
 
+    emit(const RefreshingJobsProgressUpdating());
+
+    var stream = _refreshData();
+
+    progressValues.putIfAbsent(event.job.id!, () => stream);
+
+    emit(
+      RefreshingJobsProgressUpdated(
+        progressValues: progressValues,
+      ),
+    );
+  }
+
+  _onDataRefreshingStop(
+    StopDataRefreshing event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    emit(const RefreshingJobsProgressUpdating());
+
+    Map<int, Stream<double>?> progressValues = {};
+
+    if (event.progressValues.isNotEmpty) {
+      progressValues = event.progressValues;
+    }
+
+    progressValues.remove(event.job.id!);
+
+    emit(
+      RefreshingJobsProgressUpdated(
+        progressValues: progressValues,
+      ),
+    );
+  }
+
+  _onDataRefreshingComplete(
+    CompleteDataRefreshing event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    emit(const RefreshingJobsProgressUpdating());
+
+    Map<int, Stream<double>?> progressValues = {};
     int jobId = event.job.id!;
 
-    if (progressValues.containsKey(jobId)) {
-      progressValues.remove(jobId);
-      emit(const RefreshingJobsProgressUpdating());
+    if (event.progressValues.isNotEmpty) {
+      progressValues = event.progressValues;
+    }
+
+    progressValues.remove(jobId);
+
+    final result = await updateDataRefreshingTimeUseCase.execute(
+      event.job,
+    );
+
+    if (result.isLeft) {
       emit(
-        RefreshingJobsProgressUpdated(
-          progressValues: progressValues,
+        RefreshingJobsErrorState(
+          message: result.left.message,
         ),
       );
     } else {
-      emit(const RefreshingJobsProgressUpdating());
-
-      var stream = _refreshData();
-
-      progressValues.putIfAbsent(jobId, () => stream);
-
       emit(
         RefreshingJobsProgressUpdated(
           progressValues: progressValues,
+          completedJobId: jobId,
         ),
       );
     }

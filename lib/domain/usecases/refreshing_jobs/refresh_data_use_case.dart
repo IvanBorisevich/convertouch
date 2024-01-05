@@ -5,12 +5,12 @@ import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class RefreshDataUseCase
-    extends UseCase<RefreshData, RefreshingJobsProgressUpdated> {
+    extends UseCase<StartDataRefreshing, RefreshingJobsProgressUpdated> {
   const RefreshDataUseCase();
 
   @override
   Future<Either<Failure, RefreshingJobsProgressUpdated>> execute(
-    RefreshData input,
+    StartDataRefreshing input,
   ) async {
     int jobId = input.job.id!;
     try {

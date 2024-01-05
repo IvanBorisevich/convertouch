@@ -13,7 +13,9 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
   final RefreshingJobModel item;
   final Stream<double>? progressValue;
   final void Function()? onItemClick;
-  final void Function()? onRefreshButtonClick;
+  final void Function()? onDataRefreshStart;
+  final void Function()? onDataRefreshStop;
+  final void Function()? onDataRefreshComplete;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
@@ -22,7 +24,9 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
     this.item, {
     this.progressValue,
     this.onItemClick,
-    this.onRefreshButtonClick,
+    this.onDataRefreshStart,
+    this.onDataRefreshStop,
+    this.onDataRefreshComplete,
     this.itemSpacing = 7,
     required this.theme,
     this.customColors,
@@ -61,14 +65,26 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
     }
 
     Widget refreshDataButton() {
-      return IconButton(
-        onPressed: () {
-          onRefreshButtonClick?.call();
-        },
-        icon: Icon(
-          Icons.refresh_rounded,
-          color: color.refreshButton.regular.foreground,
-          size: itemButtonIconHeight,
+      return Container(
+        width: itemButtonHeight,
+        height: itemButtonHeight,
+        decoration: BoxDecoration(
+          color: color.refreshButton.regular.background,
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: color.refreshButton.regular.border,
+            width: 1,
+          ),
+        ),
+        child: IconButton(
+          onPressed: () {
+            onDataRefreshStart?.call();
+          },
+          icon: Icon(
+            Icons.refresh_rounded,
+            color: color.refreshButton.regular.foreground,
+            size: itemButtonIconHeight,
+          ),
         ),
       );
     }
@@ -113,19 +129,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.only(right: itemSpacing),
                       child: progressValue == null
-                          ? Container(
-                              width: itemButtonHeight,
-                              height: itemButtonHeight,
-                              decoration: BoxDecoration(
-                                color: color.refreshButton.regular.background,
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                  color: color.refreshButton.regular.border,
-                                  width: 1,
-                                ),
-                              ),
-                              child: refreshDataButton(),
-                            )
+                          ? refreshDataButton()
                           : StreamBuilder<double>(
                               stream: progressValue,
                               builder: (context, snapshot) {
@@ -137,16 +141,14 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                                   );
                                 } else if (snapshot.data == null) {
                                   return refreshDataButton();
+                                } else if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                  onDataRefreshComplete?.call();
+                                  return refreshDataButton();
                                 } else {
-                                  if (snapshot.connectionState ==
-                                          ConnectionState.done ||
-                                      snapshot.data == 1) {
-                                    onRefreshButtonClick?.call();
-                                  }
-
                                   return GestureDetector(
                                     onTap: () {
-                                      onRefreshButtonClick?.call();
+                                      onDataRefreshStop?.call();
                                     },
                                     child: CircularPercentIndicator(
                                       radius: itemButtonIconHeight,

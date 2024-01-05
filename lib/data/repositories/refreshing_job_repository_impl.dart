@@ -26,7 +26,7 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       return Right(_join(refreshingJobs, refreshableGroups));
     } catch (e) {
       return Left(
-        InternalFailure("Error when fetching refreshing jobs: $e"),
+        DatabaseFailure("Error when fetching refreshing jobs: $e"),
       );
     }
   }
@@ -45,7 +45,7 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       return Right(RefreshingJobTranslator.I.toModel(entity));
     } catch (e) {
       return Left(
-        InternalFailure("Error when fetching refreshing job by id = $id: $e"),
+        DatabaseFailure("Error when fetching refreshing job by id = $id: $e"),
       );
     }
   }
@@ -57,7 +57,7 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       return const Right(null);
     } catch (e) {
       return Left(
-        InternalFailure("Error when updating refreshing job "
+        DatabaseFailure("Error when updating refreshing job "
             "by id = ${model.id}: $e"),
       );
     }
@@ -69,8 +69,6 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
     bool patchWithNulls = false,
   }) async {
     try {
-      RefreshingJobEntity entityPatch =
-          RefreshingJobTranslator.I.fromModel(model);
       RefreshingJobEntity? entitySaved = await refreshingJobDao.get(model.id!);
 
       if (entitySaved == null) {
@@ -81,16 +79,20 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
         );
       }
 
+      RefreshingJobEntity entityPatch =
+          RefreshingJobTranslator.I.fromModel(model);
+
       RefreshingJobEntity entityResult = RefreshingJobEntity.coalesce(
         entitySaved,
-        cronId: entityPatch.cronId,
+        entityPatch,
       );
+
       await refreshingJobDao.update(entityResult);
 
       return const Right(null);
     } catch (e) {
       return Left(
-        InternalFailure("Error when updating refreshing job cron: $e"),
+        DatabaseFailure("Error when updating refreshing job cron: $e"),
       );
     }
   }

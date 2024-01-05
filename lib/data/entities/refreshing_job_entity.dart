@@ -47,23 +47,22 @@ class RefreshingJobEntity {
   });
 
   RefreshingJobEntity.coalesce(
-    RefreshingJobEntity entity, {
+    RefreshingJobEntity entitySaved,
+    RefreshingJobEntity entityPatch, {
     bool replaceWithNull = false,
-    String? lastRefreshTime,
-    int? cronId,
   }) : this(
-          id: entity.id,
-          name: entity.name,
-          unitGroupId: entity.unitGroupId,
-          refreshableDataPartNum: entity.refreshableDataPartNum,
+          id: entitySaved.id,
+          name: entitySaved.name,
+          unitGroupId: entitySaved.unitGroupId,
+          refreshableDataPartNum: entitySaved.refreshableDataPartNum,
           lastRefreshTime: _coalesce(
-            what: entity.lastRefreshTime,
-            patchWith: lastRefreshTime,
+            what: entitySaved.lastRefreshTime,
+            patchWith: entityPatch.lastRefreshTime,
             replaceWithNull: replaceWithNull,
           ),
           cronId: _coalesce(
-            what: entity.cronId,
-            patchWith: cronId,
+            what: entitySaved.cronId,
+            patchWith: entityPatch.cronId,
             replaceWithNull: replaceWithNull,
           ),
         );
@@ -78,5 +77,10 @@ class RefreshingJobEntity {
     } else {
       return patchWith ?? what;
     }
+  }
+
+  @override
+  String toString() {
+    return 'RefreshingJobEntity{id: $id, name: $name, unitGroupId: $unitGroupId, refreshableDataPartNum: $refreshableDataPartNum, lastRefreshTime: $lastRefreshTime, cronId: $cronId}';
   }
 }

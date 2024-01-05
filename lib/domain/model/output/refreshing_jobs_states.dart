@@ -48,20 +48,24 @@ class RefreshingJobsProgressUpdating extends RefreshingJobsState {
 
 class RefreshingJobsProgressUpdated extends RefreshingJobsState {
   final Map<int, Stream<double>?> progressValues;
+  final int? completedJobId;
 
   const RefreshingJobsProgressUpdated({
     required this.progressValues,
+    this.completedJobId,
   });
 
   @override
   List<Object?> get props => [
     progressValues,
+    completedJobId,
   ];
 
   @override
   String toString() {
     return 'RefreshingJobsProgressUpdated{'
-        'progressValues: $progressValues}';
+        'progressValues: $progressValues, '
+        'completedJobId: $completedJobId}';
   }
 }
 
