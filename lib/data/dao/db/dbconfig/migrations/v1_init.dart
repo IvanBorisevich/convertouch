@@ -34,7 +34,7 @@ class InitialMigration extends ConvertouchDbMigration {
             'name': cron['name'],
             'expression': cron['expression'],
           },
-          conflictAlgorithm: ConflictAlgorithm.ignore,
+          conflictAlgorithm: ConflictAlgorithm.fail,
         );
       }
 
@@ -107,7 +107,7 @@ class InitialMigration extends ConvertouchDbMigration {
           'coefficient': unit['coefficient'],
           'unit_group_id': unitGroupId,
         },
-        conflictAlgorithm: ConflictAlgorithm.ignore,
+        conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
 

@@ -121,6 +121,12 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 3, left: 12),
                           textColor: color.jobItem.regular.content,
                         ),
+                        jobInfoLabel(
+                          text: 'Auto refresh: '
+                              '${item.cron != null ? item.cron!.name : 'Off'}',
+                          padding: const EdgeInsets.only(top: 3, left: 12),
+                          textColor: color.jobItem.regular.content,
+                        ),
                       ],
                     ),
                   ),
@@ -142,7 +148,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                                 } else if (snapshot.data == null) {
                                   return refreshDataButton();
                                 } else if (snapshot.connectionState ==
-                                        ConnectionState.done) {
+                                    ConnectionState.done) {
                                   onDataRefreshComplete?.call();
                                   return refreshDataButton();
                                 } else {

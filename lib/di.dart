@@ -5,6 +5,7 @@ import 'package:convertouch/data/repositories/refreshable_value_repository_impl.
 import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
+import 'package:convertouch/data/translators/cron_translator.dart';
 import 'package:convertouch/data/translators/refreshable_value_translator.dart';
 import 'package:convertouch/data/translators/refreshing_job_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -243,11 +244,18 @@ Future<void> init() async {
     () => RefreshingJobRepositoryImpl(
       unitGroupDao: database.unitGroupDao,
       refreshingJobDao: database.refreshingJobDao,
+      cronDao: database.cronDao,
     ),
   );
 
   locator.registerLazySingleton<RefreshingJobTranslator>(
     () => RefreshingJobTranslator(),
+  );
+
+  // cron
+
+  locator.registerLazySingleton<CronTranslator>(
+    () => CronTranslator(),
   );
 
   // refreshable values

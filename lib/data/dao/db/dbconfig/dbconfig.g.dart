@@ -69,6 +69,8 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   RefreshingJobDaoDb? _refreshingJobDaoInstance;
 
+  CronDaoDb? _cronDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -135,6 +137,11 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   RefreshingJobDaoDb get refreshingJobDao {
     return _refreshingJobDaoInstance ??=
         _$RefreshingJobDaoDb(database, changeListener);
+  }
+
+  @override
+  CronDaoDb get cronDao {
+    return _cronDaoInstance ??= _$CronDaoDb(database, changeListener);
   }
 }
 
@@ -505,5 +512,37 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
   Future<void> update(RefreshingJobEntity entity) async {
     await _refreshingJobEntityUpdateAdapter.update(
         entity, OnConflictStrategy.fail);
+  }
+}
+
+class _$CronDaoDb extends CronDaoDb {
+  _$CronDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<CronEntity>> getAll() async {
+    return _queryAdapter.queryList('select * from cron',
+        mapper: (Map<String, Object?> row) => CronEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            expression: row['expression'] as String));
+  }
+
+  @override
+  Future<CronEntity?> get(int id) async {
+    return _queryAdapter.query('select * from cron where id = ?1',
+        mapper: (Map<String, Object?> row) => CronEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            expression: row['expression'] as String),
+        arguments: [id]);
   }
 }

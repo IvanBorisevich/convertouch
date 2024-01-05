@@ -1,5 +1,7 @@
+import 'package:convertouch/data/entities/cron_entity.dart';
 import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
+import 'package:convertouch/data/translators/cron_translator.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/di.dart' as di;
@@ -19,7 +21,7 @@ class RefreshingJobTranslator
       unitGroupId: model.unitGroup!.id!,
       refreshableDataPartNum: model.refreshableDataPart.val,
       lastRefreshTime: model.lastRefreshTime,
-      cronId: model.cronId,
+      cronId: model.cron?.id,
     );
   }
 
@@ -27,6 +29,7 @@ class RefreshingJobTranslator
   RefreshingJobModel toModel(
     RefreshingJobEntity entity, {
     UnitGroupEntity? unitGroupEntity,
+    CronEntity? cronEntity,
   }) {
     return RefreshingJobModel(
       id: entity.id,
@@ -35,7 +38,7 @@ class RefreshingJobTranslator
       refreshableDataPart:
           RefreshableDataPart.values[entity.refreshableDataPartNum],
       lastRefreshTime: entity.lastRefreshTime,
-      cronId: entity.cronId,
+      cron: CronTranslator.I.toModel(cronEntity),
     );
   }
 }
