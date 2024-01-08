@@ -28,6 +28,7 @@ enum ItemType {
   unitValue,
   refreshingJob,
   cron,
+  jobDataSource,
 }
 
 enum BottomNavbarItem {

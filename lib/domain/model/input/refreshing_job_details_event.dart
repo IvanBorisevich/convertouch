@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/abstract_event.dart';
+import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 
 abstract class RefreshingJobDetailsEvent extends ConvertouchEvent {
@@ -75,13 +76,24 @@ class SelectAutoRefreshCron extends RefreshingJobDetailsEvent {
 }
 
 class SelectDataSource extends RefreshingJobDetailsEvent {
+  final JobDataSourceModel newDataSource;
+
   const SelectDataSource({
+    required this.newDataSource,
     required super.job,
     required super.progressValue,
   });
 
   @override
+  List<Object?> get props => [
+    newDataSource,
+    super.props,
+  ];
+
+  @override
   String toString() {
-    return 'SelectDataSource{job: $job}';
+    return 'SelectDataSource{'
+        'newDataSource: $newDataSource, '
+        'job: $job}';
   }
 }

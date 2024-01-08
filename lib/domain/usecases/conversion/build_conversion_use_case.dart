@@ -8,7 +8,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
-import 'package:convertouch/domain/utils/unit_value_utils.dart';
+import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
@@ -82,14 +82,14 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
             tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
           }
 
-          String tgtStrValue = UnitValueUtils.formatValue(tgtValue);
+          String tgtStrValue = NumberValueUtils.formatValue(tgtValue);
           String tgtScientificValue =
-              UnitValueUtils.formatValueInScientificNotation(tgtValue);
+              NumberValueUtils.formatValueInScientificNotation(tgtValue);
 
           String tgtDefaultStrValue =
-              UnitValueUtils.formatValue(tgtDefaultValue);
+              NumberValueUtils.formatValue(tgtDefaultValue);
           String tgtDefaultScientificValue =
-              UnitValueUtils.formatValueInScientificNotation(tgtDefaultValue);
+              NumberValueUtils.formatValueInScientificNotation(tgtDefaultValue);
 
           convertedUnitValues.add(
             ConversionItemModel(

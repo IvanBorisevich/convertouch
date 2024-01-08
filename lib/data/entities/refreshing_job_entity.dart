@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/job_data_source_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';
 
@@ -7,6 +8,7 @@ const String refreshingJobsTableName = 'refreshing_jobs';
   tableName: refreshingJobsTableName,
   indices: [
     Index(value: ['unit_group_id'], unique: true),
+    Index(value: ['data_source_id'], unique: true),
   ],
   foreignKeys: [
     ForeignKey(
@@ -14,6 +16,12 @@ const String refreshingJobsTableName = 'refreshing_jobs';
       parentColumns: ['id'],
       entity: UnitGroupEntity,
       onDelete: ForeignKeyAction.cascade,
+    ),
+    ForeignKey(
+      childColumns: ['data_source_id'],
+      parentColumns: ['id'],
+      entity: JobDataSourceEntity,
+      onDelete: ForeignKeyAction.setNull,
     ),
   ],
 )
@@ -29,6 +37,8 @@ class RefreshingJobEntity {
   final String? lastRefreshTime;
   @ColumnInfo(name: 'auto_refresh')
   final int autoRefresh;
+  @ColumnInfo(name: 'data_source_id')
+  final int? selectedDataSourceId;
   @ColumnInfo(name: 'cron_name')
   final String? cronName;
 
@@ -39,6 +49,7 @@ class RefreshingJobEntity {
     required this.refreshableDataPartNum,
     required this.lastRefreshTime,
     required this.autoRefresh,
+    required this.selectedDataSourceId,
     required this.cronName,
   });
 }

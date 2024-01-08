@@ -1,5 +1,7 @@
+import 'package:convertouch/data/entities/job_data_source_entity.dart';
 import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
+import 'package:convertouch/data/translators/job_data_source_translator.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/di.dart' as di;
@@ -21,6 +23,7 @@ class RefreshingJobTranslator
       lastRefreshTime: model.lastRefreshTime,
       autoRefresh: model.autoRefresh.value,
       cronName: model.cron?.name,
+      selectedDataSourceId: model.selectedDataSource?.id,
     );
   }
 
@@ -28,6 +31,7 @@ class RefreshingJobTranslator
   RefreshingJobModel toModel(
     RefreshingJobEntity entity, {
     UnitGroupEntity? unitGroupEntity,
+        JobDataSourceEntity? selectedDataSource,
   }) {
     return RefreshingJobModel(
       id: entity.id,
@@ -38,6 +42,7 @@ class RefreshingJobTranslator
       lastRefreshTime: entity.lastRefreshTime,
       autoRefresh: JobAutoRefresh.valueOf(entity.autoRefresh),
       cron: Cron.valueOf(entity.cronName),
+      selectedDataSource: JobDataSourceTranslator.I.toModel(selectedDataSource),
     );
   }
 }

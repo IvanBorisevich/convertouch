@@ -15,8 +15,8 @@ const _exponentSuperscripts = {
   '-': '¯',
 };
 
-class UnitValueUtils {
-  const UnitValueUtils._();
+class NumberValueUtils {
+  const NumberValueUtils._();
 
   static String formatValueInScientificNotation(
       double? value, {

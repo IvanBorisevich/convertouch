@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
 class RefreshingJobModel extends IdNameItemModel {
@@ -7,6 +8,7 @@ class RefreshingJobModel extends IdNameItemModel {
   final RefreshableDataPart refreshableDataPart;
   final Cron? cron;
   final JobAutoRefresh autoRefresh;
+  final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
 
   const RefreshingJobModel({
@@ -16,6 +18,7 @@ class RefreshingJobModel extends IdNameItemModel {
     required this.refreshableDataPart,
     this.cron,
     this.autoRefresh = JobAutoRefresh.off,
+    this.selectedDataSource,
     this.lastRefreshTime,
     super.itemType = ItemType.refreshingJob,
   });
@@ -25,6 +28,7 @@ class RefreshingJobModel extends IdNameItemModel {
     String? lastRefreshTime,
     JobAutoRefresh? autoRefresh,
     Cron? cron,
+    JobDataSourceModel? selectedDataSource,
     bool replaceWithNull = false,
   }) : this(
           id: savedModel.id,
@@ -46,6 +50,11 @@ class RefreshingJobModel extends IdNameItemModel {
             patchWith: cron,
             replaceWithNull: replaceWithNull,
           ),
+          selectedDataSource: _coalesce(
+            what: savedModel.selectedDataSource,
+            patchWith: selectedDataSource,
+            replaceWithNull: replaceWithNull,
+          ),
         );
 
   static dynamic _coalesce({
@@ -62,15 +71,16 @@ class RefreshingJobModel extends IdNameItemModel {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        unitGroup,
-        refreshableDataPart,
-        cron,
-        autoRefresh,
-        lastRefreshTime,
-        itemType,
-      ];
+    id,
+    name,
+    unitGroup,
+    refreshableDataPart,
+    cron,
+    autoRefresh,
+    lastRefreshTime,
+    selectedDataSource,
+    itemType,
+  ];
 
   @override
   String toString() {

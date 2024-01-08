@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/input/refreshing_job_details_event.dart';
+import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/ui/items_view/item/refreshing_job_item.dart';
@@ -83,11 +84,32 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                _buildRadioList<JobDataSourceModel>(
+                  listHeaderText: "Data Sources",
+                  visible: pageState.jobDataSources.isNotEmpty,
+                  values: pageState.jobDataSources,
+                  titleMapper: (value) => value.name,
+                  subtitleMapper: (value) => value.url,
+                  selectedValue: pageState.job.selectedDataSource,
+                  listHeaderContentColor: color.jobItem.regular.content,
+                  listHeaderBackgroundColor: color.jobItem.regular.background,
+                  listItemContentColor: color.jobItem.regular.content,
+                  onItemChanged: (JobDataSourceModel? newValue) {
+                    if (newValue != null) {
+                      BlocProvider.of<RefreshingJobDetailsBloc>(context).add(
+                        SelectDataSource(
+                          newDataSource: newValue,
+                          job: pageState.job,
+                          progressValue: pageState.progressValue,
+                        ),
+                      );
+                    }
+                  },
+                ),
                 _buildRadioList<JobAutoRefresh>(
                   listHeaderText: "Auto-Refresh Data",
-                  entries: JobAutoRefresh.values
-                      .map((e) => MapEntry(e, e.name))
-                      .toList(),
+                  values: JobAutoRefresh.values,
+                  titleMapper: (value) => value.name,
                   selectedValue: pageState.job.autoRefresh,
                   listHeaderContentColor: color.jobItem.regular.content,
                   listHeaderBackgroundColor: color.jobItem.regular.background,
@@ -107,7 +129,8 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
                 _buildRadioList<Cron>(
                   listHeaderText: "Data Auto-Refreshing Frequency",
                   enabled: pageState.job.autoRefresh == JobAutoRefresh.on,
-                  entries: Cron.values.map((e) => MapEntry(e, e.name)).toList(),
+                  values: Cron.values,
+                  titleMapper: (value) => value.name,
                   selectedValue: pageState.job.cron,
                   listHeaderContentColor: color.jobItem.regular.content,
                   listHeaderBackgroundColor: color.jobItem.regular.background,
@@ -134,7 +157,9 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
   }
 
   Widget _buildRadioList<T>({
-    required List<MapEntry<T, String>> entries,
+    required List<T> values,
+    required String Function(T) titleMapper,
+    String Function(T)? subtitleMapper,
     T? selectedValue,
     required String listHeaderText,
     required Color listHeaderContentColor,
@@ -142,54 +167,66 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
     required Color listItemContentColor,
     required void Function(T?)? onItemChanged,
     bool enabled = true,
+    bool visible = true,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 7),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-              left: 10,
-              top: 7,
-              right: 10,
-              bottom: 7,
-            ),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              color: listHeaderBackgroundColor,
-            ),
-            child: Text(
-              listHeaderText,
-              style: TextStyle(
-                color: listHeaderContentColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+    return Visibility(
+      visible: visible,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 7),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                left: 10,
+                top: 7,
+                right: 10,
+                bottom: 7,
               ),
-            ),
-          ),
-          for (MapEntry<T, String> itemEntry in entries)
-            RadioListTile(
-              title: Text(
-                itemEntry.value,
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: listHeaderBackgroundColor,
+              ),
+              child: Text(
+                listHeaderText,
                 style: TextStyle(
-                  color: listItemContentColor,
+                  color: listHeaderContentColor,
                   fontWeight: FontWeight.w600,
+                  fontSize: 16,
                 ),
               ),
-              value: itemEntry.key,
-              groupValue: selectedValue,
-              onChanged: enabled ? onItemChanged : null,
-              contentPadding: const EdgeInsets.only(left: 7),
-              fillColor: MaterialStateColor.resolveWith(
-                (states) {
-                  if (!enabled) {
-                    return listItemContentColor.withOpacity(0.5);
-                  }
-                  return listItemContentColor;
-                },
-              ),
             ),
-        ],
+            for (T value in values)
+              RadioListTile(
+                title: Text(
+                  titleMapper(value),
+                  style: TextStyle(
+                    color: listItemContentColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: subtitleMapper != null ? Text(
+                  subtitleMapper(value),
+                  style: TextStyle(
+                    color: listItemContentColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ) : null,
+                value: value,
+                groupValue: selectedValue,
+                onChanged: enabled ? onItemChanged : null,
+                contentPadding: const EdgeInsets.only(left: 7),
+                fillColor: MaterialStateColor.resolveWith(
+                  (states) {
+                    if (!enabled) {
+                      return listItemContentColor.withOpacity(0.5);
+                    }
+                    return listItemContentColor;
+                  },
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

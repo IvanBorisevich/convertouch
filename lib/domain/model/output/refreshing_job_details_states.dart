@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/output/abstract_state.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 
@@ -26,21 +27,26 @@ class RefreshingJobDetailsInProgress extends RefreshingJobDetailsState {
 class RefreshingJobDetailsReady extends RefreshingJobDetailsState {
   final RefreshingJobModel job;
   final Stream<double>? progressValue;
+  final List<JobDataSourceModel> jobDataSources;
 
   const RefreshingJobDetailsReady({
     required this.job,
     required this.progressValue,
+    this.jobDataSources = const [],
   });
 
   @override
   List<Object?> get props => [
     job,
     progressValue,
+    jobDataSources,
   ];
 
   @override
   String toString() {
-    return 'RefreshingJobDetailsReady{job: $job}';
+    return 'RefreshingJobDetailsReady{'
+        'job: $job, '
+        'jobDataSources: $jobDataSources}';
   }
 }
 

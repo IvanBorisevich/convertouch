@@ -11,20 +11,20 @@ const jobsV1 = {
     "refreshableDataPart": RefreshableDataPart.coefficient,
     "cronName": Cron.everyDay,
     "dataSources": [
-
+      {
+        "name": "FloatRates",
+        "url": "https://www.floatrates.com/daily/usd.json",
+        "responseTransformerClassName": "FloatRatesResponseTransformer",
+      },
     ],
   },
   temperatureGroup: {
     "name": "Temperature",
     "refreshableDataPart": RefreshableDataPart.value,
     "cronName": Cron.everyHour,
-    "dataSources": [
-
-    ],
+    "dataSources": [],
   }
 };
-
-
 
 const cronVersions = [
   cronV1,
