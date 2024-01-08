@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_jobs_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_creation_page.dart';
@@ -69,6 +70,10 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
           refreshingJobsPage,
           const ConvertouchRefreshingJobsPage(),
         ),
+      route(
+          refreshingJobDetailsPage,
+        const ConvertouchRefreshingJobDetailsPage(),
+      ),
       ]);
   }
 

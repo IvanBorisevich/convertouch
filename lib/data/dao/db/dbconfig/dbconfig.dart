@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:convertouch/data/dao/db/cron_dao_db.dart';
 import 'package:convertouch/data/dao/db/refreshable_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/refreshing_job_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_group_dao_db.dart';
-import 'package:convertouch/data/entities/cron_entity.dart';
 import 'package:convertouch/data/entities/refreshable_value_entity.dart';
 import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
@@ -24,7 +22,6 @@ const int dbVersion = 1;
     UnitEntity,
     RefreshableValueEntity,
     RefreshingJobEntity,
-    CronEntity,
   ],
 )
 abstract class ConvertouchDatabase extends FloorDatabase {
@@ -37,6 +34,4 @@ abstract class ConvertouchDatabase extends FloorDatabase {
   RefreshableValueDaoDb get refreshableValueDao;
 
   RefreshingJobDaoDb get refreshingJobDao;
-
-  CronDaoDb get cronDao;
 }

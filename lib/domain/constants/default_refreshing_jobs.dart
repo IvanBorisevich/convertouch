@@ -9,6 +9,7 @@ const jobsV1 = {
   currencyGroup: {
     "name": "Currency Rates",
     "refreshableDataPart": RefreshableDataPart.coefficient,
+    "cronName": Cron.everyDay,
     "dataSources": [
 
     ],
@@ -16,6 +17,7 @@ const jobsV1 = {
   temperatureGroup: {
     "name": "Temperature",
     "refreshableDataPart": RefreshableDataPart.value,
+    "cronName": Cron.everyHour,
     "dataSources": [
 
     ],

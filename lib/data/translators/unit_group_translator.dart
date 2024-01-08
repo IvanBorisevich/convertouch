@@ -17,7 +17,7 @@ class UnitGroupTranslator
       id: entity.id!,
       name: entity.name,
       iconName: entity.iconName ?? unitGroupDefaultIconName,
-      conversionType: entity.conversionType ?? 0,
+      conversionType: ConversionType.valueOf(entity.conversionType),
       refreshable: entity.refreshable == 1,
     );
   }
@@ -32,7 +32,7 @@ class UnitGroupTranslator
       name: model.name,
       iconName:
           model.iconName != unitGroupDefaultIconName ? model.iconName : null,
-      conversionType: model.conversionType != 0 ? model.conversionType : null,
+      conversionType: model.conversionType.value,
       refreshable: model.refreshable == true ? 1 : null,
     );
   }

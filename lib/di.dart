@@ -5,7 +5,6 @@ import 'package:convertouch/data/repositories/refreshable_value_repository_impl.
 import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/unit_repository_impl.dart';
-import 'package:convertouch/data/translators/cron_translator.dart';
 import 'package:convertouch/data/translators/refreshable_value_translator.dart';
 import 'package:convertouch/data/translators/refreshing_job_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -20,7 +19,10 @@ import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_u
 import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/get_job_details_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/refresh_data_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/select_auto_refresh_cron_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/toggle_auto_refresh_mode_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/update_data_refreshing_time_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
@@ -33,6 +35,7 @@ import 'package:convertouch/domain/usecases/units/remove_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_progress_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
@@ -218,9 +221,33 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton(
+    () => RefreshingJobDetailsBloc(
+      getJobDetailsUseCase: locator(),
+      toggleAutoRefreshModeUseCase: locator(),
+      selectAutoRefreshCronUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
     () => RefreshingJobsProgressBloc(
       refreshDataUseCase: locator(),
       updateDataRefreshingTimeUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetJobDetailsUseCase>(
+    () => const GetJobDetailsUseCase(),
+  );
+
+  locator.registerLazySingleton<ToggleAutoRefreshModeUseCase>(
+    () => ToggleAutoRefreshModeUseCase(
+      refreshingJobRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SelectAutoRefreshCronUseCase>(
+    () => SelectAutoRefreshCronUseCase(
+      refreshingJobRepository: locator(),
     ),
   );
 
@@ -244,18 +271,11 @@ Future<void> init() async {
     () => RefreshingJobRepositoryImpl(
       unitGroupDao: database.unitGroupDao,
       refreshingJobDao: database.refreshingJobDao,
-      cronDao: database.cronDao,
     ),
   );
 
   locator.registerLazySingleton<RefreshingJobTranslator>(
     () => RefreshingJobTranslator(),
-  );
-
-  // cron
-
-  locator.registerLazySingleton<CronTranslator>(
-    () => CronTranslator(),
   );
 
   // refreshable values

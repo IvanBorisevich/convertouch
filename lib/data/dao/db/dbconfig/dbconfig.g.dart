@@ -69,8 +69,6 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   RefreshingJobDaoDb? _refreshingJobDaoInstance;
 
-  CronDaoDb? _cronDaoInstance;
-
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -99,9 +97,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `cron_id` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`cron_id`) REFERENCES `cron` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
-        await database.execute(
-            'CREATE TABLE IF NOT EXISTS `cron` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `expression` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `auto_refresh` INTEGER NOT NULL, `cron_name` TEXT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -137,11 +133,6 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   RefreshingJobDaoDb get refreshingJobDao {
     return _refreshingJobDaoInstance ??=
         _$RefreshingJobDaoDb(database, changeListener);
-  }
-
-  @override
-  CronDaoDb get cronDao {
-    return _cronDaoInstance ??= _$CronDaoDb(database, changeListener);
   }
 }
 
@@ -472,7 +463,8 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
                   'unit_group_id': item.unitGroupId,
                   'refreshable_data_part': item.refreshableDataPartNum,
                   'last_refresh_time': item.lastRefreshTime,
-                  'cron_id': item.cronId
+                  'auto_refresh': item.autoRefresh,
+                  'cron_name': item.cronName
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -492,7 +484,8 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
             lastRefreshTime: row['last_refresh_time'] as String?,
-            cronId: row['cron_id'] as int?));
+            autoRefresh: row['auto_refresh'] as int,
+            cronName: row['cron_name'] as String?));
   }
 
   @override
@@ -504,7 +497,8 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
             lastRefreshTime: row['last_refresh_time'] as String?,
-            cronId: row['cron_id'] as int?),
+            autoRefresh: row['auto_refresh'] as int,
+            cronName: row['cron_name'] as String?),
         arguments: [id]);
   }
 
@@ -512,37 +506,5 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
   Future<void> update(RefreshingJobEntity entity) async {
     await _refreshingJobEntityUpdateAdapter.update(
         entity, OnConflictStrategy.fail);
-  }
-}
-
-class _$CronDaoDb extends CronDaoDb {
-  _$CronDaoDb(
-    this.database,
-    this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
-
-  final sqflite.DatabaseExecutor database;
-
-  final StreamController<String> changeListener;
-
-  final QueryAdapter _queryAdapter;
-
-  @override
-  Future<List<CronEntity>> getAll() async {
-    return _queryAdapter.queryList('select * from cron',
-        mapper: (Map<String, Object?> row) => CronEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            expression: row['expression'] as String));
-  }
-
-  @override
-  Future<CronEntity?> get(int id) async {
-    return _queryAdapter.query('select * from cron where id = ?1',
-        mapper: (Map<String, Object?> row) => CronEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            expression: row['expression'] as String),
-        arguments: [id]);
   }
 }

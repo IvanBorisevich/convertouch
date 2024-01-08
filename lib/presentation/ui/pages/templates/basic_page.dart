@@ -13,7 +13,7 @@ class ConvertouchPage extends StatelessWidget {
   final Widget? secondaryAppBar;
   final Color? secondaryAppBarColor;
   final double secondaryAppBarHeight;
-  final double secondaryAppBarPadding;
+  final EdgeInsetsGeometry secondaryAppBarPadding;
   final Widget? floatingActionButton;
   final void Function()? onItemsRemove;
 
@@ -26,7 +26,12 @@ class ConvertouchPage extends StatelessWidget {
     this.secondaryAppBar,
     this.secondaryAppBarColor,
     this.secondaryAppBarHeight = 53,
-    this.secondaryAppBarPadding = 7,
+    this.secondaryAppBarPadding = const EdgeInsets.only(
+      left: 7,
+      top: 0,
+      right: 7,
+      bottom: 7,
+    ),
     this.floatingActionButton,
     this.onItemsRemove,
     super.key,
@@ -79,12 +84,7 @@ class ConvertouchPage extends StatelessWidget {
                   color:
                       secondaryAppBarColor ?? scaffoldColor.regular.appBarColor,
                 ),
-                padding: EdgeInsetsDirectional.fromSTEB(
-                  secondaryAppBarPadding,
-                  0,
-                  secondaryAppBarPadding,
-                  secondaryAppBarPadding,
-                ),
+                padding: secondaryAppBarPadding,
                 child: secondaryAppBar,
               ),
             ),

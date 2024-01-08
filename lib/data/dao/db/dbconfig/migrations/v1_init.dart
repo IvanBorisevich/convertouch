@@ -1,5 +1,4 @@
 import 'package:convertouch/data/dao/db/dbconfig/migrations/migration.dart';
-import 'package:convertouch/data/entities/cron_entity.dart';
 import 'package:convertouch/data/entities/refreshable_value_entity.dart';
 import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
@@ -15,32 +14,13 @@ class InitialMigration extends ConvertouchDbMigration {
     _fillDbV1(
       database,
       defaultUnitEntities: unitDataVersions[0],
-      defaultCron: cronVersions[0],
     );
   }
 
   Future<void> _fillDbV1(
     Database database, {
     required List<dynamic> defaultUnitEntities,
-    required List<dynamic> defaultCron,
   }) async {
-    database.transaction((txn) async {
-      Batch batch = txn.batch();
-
-      for (Map<String, dynamic> cron in defaultCron) {
-        batch.insert(
-          cronTableName,
-          {
-            'name': cron['name'],
-            'expression': cron['expression'],
-          },
-          conflictAlgorithm: ConflictAlgorithm.fail,
-        );
-      }
-
-      await batch.commit(noResult: true, continueOnError: false);
-    });
-
     for (Map<String, dynamic> entity in defaultUnitEntities) {
       database.transaction(
         (txn) async {
@@ -86,6 +66,8 @@ class InitialMigration extends ConvertouchDbMigration {
     await txn.insert(refreshingJobsTableName, {
       'name': entity['name'],
       'unit_group_id': unitGroupId,
+      'cron_name': (entity['cronName'] as Cron).name,
+      'auto_refresh': JobAutoRefresh.off.value,
       'refreshable_data_part':
           (entity['refreshableDataPart'] as RefreshableDataPart).val,
     });

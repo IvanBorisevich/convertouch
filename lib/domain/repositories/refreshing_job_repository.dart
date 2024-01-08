@@ -10,9 +10,4 @@ abstract class RefreshingJobRepository {
   Future<Either<Failure, RefreshingJobModel>> fetch(int id);
 
   Future<Either<Failure, void>> update(RefreshingJobModel model);
-
-  Future<Either<Failure, void>> updatePatch(
-    RefreshingJobModel model, {
-    bool patchWithNulls = false,
-  });
 }

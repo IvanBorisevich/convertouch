@@ -14,14 +14,11 @@ class UpdateDataRefreshingTimeUseCase
 
   @override
   Future<Either<Failure, void>> execute(RefreshingJobModel input) async {
-    RefreshingJobModel model = RefreshingJobModel(
-      id: input.id,
-      name: input.name,
-      unitGroup: input.unitGroup,
-      refreshableDataPart: input.refreshableDataPart,
+    RefreshingJobModel model = RefreshingJobModel.coalesce(
+      input,
       lastRefreshTime: DateTime.now().toString(),
     );
 
-    return await refreshingJobRepository.updatePatch(model);
+    return await refreshingJobRepository.update(model);
   }
 }
