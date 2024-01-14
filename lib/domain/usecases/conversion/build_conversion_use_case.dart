@@ -36,7 +36,7 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
         } else {
           String? defaultSourceValue;
           var refreshableValueResult =
-              await refreshableValueRepository.get(srcConversionItem.unit.id!);
+              await refreshableValueRepository.getFromDb(srcConversionItem.unit.id!);
 
           if (refreshableValueResult.isRight) {
             defaultSourceValue = refreshableValueResult.right?.value;

@@ -7,6 +7,12 @@ abstract class UseCase<InputType, OutputType> {
   Future<Either<Failure, OutputType>> execute(InputType input);
 }
 
+abstract class ReactiveUseCase<InputType, OutputType> {
+  const ReactiveUseCase();
+
+  Either<Failure, Stream<OutputType>> execute(InputType input);
+}
+
 abstract class UseCaseNoInput<OutputType> {
   const UseCaseNoInput();
 

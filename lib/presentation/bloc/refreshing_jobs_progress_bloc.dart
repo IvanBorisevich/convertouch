@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
 import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/refresh_data_use_case.dart';
+import 'package:convertouch/domain/usecases/refresh_data/refresh_data_use_case.dart';
 import 'package:convertouch/domain/usecases/refreshing_jobs/update_data_refreshing_time_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
