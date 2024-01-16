@@ -1,5 +1,5 @@
-import 'package:convertouch/domain/model/input/abstract_event.dart';
-import 'package:convertouch/domain/model/output/abstract_state.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class ConvertouchBloc<E extends ConvertouchEvent,

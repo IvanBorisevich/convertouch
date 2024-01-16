@@ -1,32 +1,35 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
+import 'package:convertouch/domain/repositories/preferences_repository.dart';
+import 'package:convertouch/domain/repositories/unit_group_repository.dart';
+import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:either_dart/either.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConversionRepositoryImpl extends ConversionRepository {
-  const ConversionRepositoryImpl();
+  final PreferencesRepository preferencesRepository;
+  final UnitGroupRepository unitGroupRepository;
+  final UnitRepository unitRepository;
+
+  const ConversionRepositoryImpl({
+    required this.preferencesRepository,
+    required this.unitGroupRepository,
+    required this.unitRepository,
+  });
 
   @override
-  Future<Either<Failure, ConversionModel>> fetchLastConversion() async {
+  Future<Either<Failure, InputConversionModel?>> getLastConversion() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      int? sourceUnitId = prefs.getInt(sourceUnitIdKey);
-      String? sourceValue = prefs.getString(sourceValueKey);
-      List<int>? targetUnitIds = prefs
-          .getStringList(targetUnitIdsKey)
-          ?.map((str) => int.parse(str))
-          .toList();
-      int? conversionUnitGroupId = prefs.getInt(conversionUnitGroupIdKey);
-
       return Right(
-        ConversionModel(
-          sourceUnitId: sourceUnitId,
-          sourceValue: sourceValue,
-          targetUnitIds: targetUnitIds,
-          conversionUnitGroupId: conversionUnitGroupId,
+        InputConversionModel(
+          unitGroup: await _getUnitGroup(),
+          sourceConversionItem: await _getSourceConversionItem(),
+          targetUnits: await _getTargetUnits(),
         ),
       );
     } catch (e) {
@@ -38,40 +41,108 @@ class ConversionRepositoryImpl extends ConversionRepository {
     }
   }
 
+  Future<UnitGroupModel?> _getUnitGroup() async {
+    final conversionUnitGroupResult =
+        await preferencesRepository.get(conversionUnitGroupIdKey, int);
+
+    if (conversionUnitGroupResult.isLeft) {
+      throw conversionUnitGroupResult.left;
+    }
+
+    final unitGroupResult =
+        await unitGroupRepository.getUnitGroup(conversionUnitGroupResult.right);
+
+    if (unitGroupResult.isLeft) {
+      throw unitGroupResult.left;
+    }
+
+    return unitGroupResult.right;
+  }
+
+  Future<ConversionItemModel?> _getSourceConversionItem() async {
+    final sourceUnitResult =
+        await preferencesRepository.get(sourceUnitIdKey, int);
+
+    if (sourceUnitResult.isLeft) {
+      throw sourceUnitResult.left;
+    }
+
+    var unitResult = await unitRepository.getUnit(sourceUnitResult.right);
+
+    if (unitResult.isLeft) {
+      throw unitResult.left;
+    }
+
+    if (unitResult.right == null) {
+      return null;
+    }
+
+    final sourceValueResult =
+        await preferencesRepository.get(sourceValueKey, String);
+
+    if (sourceValueResult.isLeft) {
+      throw sourceValueResult.left;
+    }
+
+    return ConversionItemModel.fromStrValue(
+      unit: unitResult.right!,
+      strValue: sourceValueResult.right ?? "",
+    );
+  }
+
+  Future<List<UnitModel>?> _getTargetUnits() async {
+    final targetUnitIdsResult =
+        await preferencesRepository.getList(targetUnitIdsKey, int);
+
+    if (targetUnitIdsResult.isLeft) {
+      throw targetUnitIdsResult.left;
+    }
+
+    var targetUnitsResult =
+        await unitRepository.getUnits(targetUnitIdsResult.right);
+
+    if (targetUnitsResult.isLeft) {
+      throw targetUnitsResult.left;
+    }
+
+    return targetUnitsResult.right;
+  }
+
   @override
   Future<Either<Failure, void>> saveConversion(
-    ConversionModel conversion,
+    InputConversionModel conversion,
   ) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      if (conversion.sourceUnitId != null) {
-        prefs.setInt(
-          sourceUnitIdKey,
-          conversion.sourceUnitId!,
-        );
-      }
-
-      if (conversion.sourceValue != null) {
-        prefs.setString(
-          sourceValueKey,
-          conversion.sourceValue!,
-        );
-      }
-
-      if (conversion.targetUnitIds != null) {
-        prefs.setStringList(
-          targetUnitIdsKey,
-          conversion.targetUnitIds!.map((id) => id.toString()).toList(),
-        );
-      }
-
-      if (conversion.conversionUnitGroupId != null) {
+      if (conversion.unitGroup != null) {
         prefs.setInt(
           conversionUnitGroupIdKey,
-          conversion.conversionUnitGroupId!,
+          conversion.unitGroup!.id!,
+        );
+      } else {
+        return const Right(null);
+      }
+
+      if (conversion.sourceConversionItem != null) {
+        prefs.setInt(
+          sourceUnitIdKey,
+          conversion.sourceConversionItem!.unit.id!,
+        );
+
+        prefs.setString(
+          sourceValueKey,
+          conversion.sourceConversionItem!.value.strValue,
         );
       }
+
+      if (conversion.targetUnits != null) {
+        prefs.setStringList(
+          targetUnitIdsKey,
+          conversion.targetUnits!.map((id) => id.toString()).toList(),
+        );
+      }
+
       return const Right(null);
     } catch (e) {
       return Left(

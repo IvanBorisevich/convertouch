@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/output/app_state.dart';
+import 'package:convertouch/presentation/bloc/app/app_state.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';

@@ -1,11 +1,11 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/input/refreshing_job_details_event.dart';
-import 'package:convertouch/domain/model/input/refreshing_jobs_events.dart';
-import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
+import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_progress_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_progress_bloc.dart';
 import 'package:convertouch/presentation/ui/items_view/refreshing_jobs_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,6 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   BlocProvider.of<RefreshingJobDetailsBloc>(context).add(
                     OpenJobDetails(
                       job: item,
-                      progressValue: jobsProgressState.progressValues[item.id],
                     ),
                   );
                   Navigator.of(context).pushNamed(refreshingJobDetailsPage);

@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/input/unit_creation_events.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
@@ -27,7 +27,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
 
       return unitsBlocBuilder((pageState) {
         return ConvertouchUnitsPage(
-          pageTitle: pageState.unitGroup!.name,
+          pageTitle: pageState.unitGroup.name,
           units: pageState.units,
           customLeadingIcon: pageState.removalMode
               ? leadingIcon(
@@ -36,7 +36,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   onClick: () {
                     BlocProvider.of<UnitsBloc>(context).add(
                       DisableUnitsRemovalMode(
-                        unitGroup: pageState.unitGroup!,
+                        unitGroup: pageState.unitGroup,
                       ),
                     );
                   },
@@ -46,7 +46,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           onSearchStringChanged: (text) {
             BlocProvider.of<UnitsBloc>(context).add(
               FetchUnits(
-                unitGroup: pageState.unitGroup!,
+                unitGroup: pageState.unitGroup,
                 searchString: text,
               ),
             );
@@ -54,7 +54,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           onSearchReset: () {
             BlocProvider.of<UnitsBloc>(context).add(
               FetchUnits(
-                unitGroup: pageState.unitGroup!,
+                unitGroup: pageState.unitGroup,
                 searchString: null,
               ),
             );
@@ -63,7 +63,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           onUnitTapForRemoval: (unit) {
             BlocProvider.of<UnitsBloc>(context).add(
               FetchUnitsToMarkForRemoval(
-                unitGroup: pageState.unitGroup!,
+                unitGroup: pageState.unitGroup,
                 searchString: pageState.searchString,
                 newMarkedId: unit.id!,
                 alreadyMarkedIds: pageState.markedIdsForRemoval,
@@ -74,7 +74,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
             if (!pageState.removalMode) {
               BlocProvider.of<UnitsBloc>(context).add(
                 FetchUnitsToMarkForRemoval(
-                  unitGroup: pageState.unitGroup!,
+                  unitGroup: pageState.unitGroup,
                   searchString: pageState.searchString,
                   newMarkedId: unit.id!,
                   alreadyMarkedIds: pageState.markedIdsForRemoval,
@@ -103,13 +103,13 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                     BlocProvider.of<UnitsBloc>(context).add(
                       RemoveUnits(
                         ids: pageState.markedIdsForRemoval,
-                        unitGroup: pageState.unitGroup!,
+                        unitGroup: pageState.unitGroup,
                       ),
                     );
                   },
                 )
               : ConvertouchFloatingActionButton.adding(
-                  visible: !pageState.unitGroup!.refreshable,
+                  visible: !pageState.unitGroup.refreshable,
                   onClick: () {
                     BlocProvider.of<UnitCreationBloc>(context).add(
                       PrepareUnitCreation(

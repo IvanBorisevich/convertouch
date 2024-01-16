@@ -1,9 +1,9 @@
-import 'package:convertouch/domain/model/input/unit_creation_events.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +22,7 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
         onSearchStringChanged: (text) {
           BlocProvider.of<UnitsBlocForUnitCreation>(context).add(
             FetchUnitsForUnitCreation(
-              unitGroup: pageState.unitGroup!,
+              unitGroup: pageState.unitGroup,
               currentSelectedBaseUnit: pageState.currentSelectedBaseUnit,
               searchString: text,
             ),
@@ -31,7 +31,7 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
         onSearchReset: () {
           BlocProvider.of<UnitsBlocForUnitCreation>(context).add(
             FetchUnitsForUnitCreation(
-              unitGroup: pageState.unitGroup!,
+              unitGroup: pageState.unitGroup,
               currentSelectedBaseUnit: pageState.currentSelectedBaseUnit,
               searchString: null,
             ),

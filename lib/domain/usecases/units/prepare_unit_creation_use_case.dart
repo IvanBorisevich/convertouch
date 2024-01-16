@@ -1,14 +1,14 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/unit_creation_events.dart';
-import 'package:convertouch/domain/model/output/unit_creation_states.dart';
+import 'package:convertouch/domain/model/usecases/input/input_unit_preparation_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/output/output_unit_preparation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class PrepareUnitCreationUseCase
-    extends UseCase<PrepareUnitCreation, UnitCreationPrepared> {
+    extends UseCase<InputUnitPreparationModel, OutputUnitPreparationModel> {
   static const String _firstUnitNote = "It's a first unit being added. "
       "Its coefficient will be set as 1 by default.";
 
@@ -17,8 +17,8 @@ class PrepareUnitCreationUseCase
   const PrepareUnitCreationUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, UnitCreationPrepared>> execute(
-    PrepareUnitCreation input,
+  Future<Either<Failure, OutputUnitPreparationModel>> execute(
+    InputUnitPreparationModel input,
   ) async {
     try {
       UnitModel? baseUnit;
@@ -39,7 +39,7 @@ class PrepareUnitCreationUseCase
       }
 
       return Right(
-        UnitCreationPrepared(
+        OutputUnitPreparationModel(
           baseUnit: baseUnit,
           unitGroup: unitGroup,
           comment: comment,

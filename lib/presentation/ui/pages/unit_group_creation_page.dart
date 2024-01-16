@@ -1,7 +1,7 @@
-import 'package:convertouch/domain/model/input/unit_groups_events.dart';
-import 'package:convertouch/domain/model/output/unit_groups_states.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';

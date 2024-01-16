@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/menu_items_view_bloc.dart';
-import 'package:convertouch/domain/model/input/menu_items_view_event.dart';
+import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
+import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.dart';
 import 'package:convertouch/presentation/ui/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';

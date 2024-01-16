@@ -1,57 +1,55 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/refreshing_job_details_event.dart';
-import 'package:convertouch/domain/model/output/refreshing_job_details_states.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/usecases/input/input_data_source_change_model.dart';
+import 'package:convertouch/domain/model/usecases/output/output_job_details_model.dart';
 import 'package:convertouch/domain/repositories/job_data_source_repository.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/select_job_data_source_use_case.dart';
+import 'package:convertouch/domain/usecases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class GetJobDetailsUseCase
-    extends UseCase<OpenJobDetails, RefreshingJobDetailsReady> {
-  final SelectJobDataSourceUseCase selectJobDataSourceUseCase;
+    extends UseCase<RefreshingJobModel, OutputJobDetailsModel> {
+  final ChangeJobDataSourceUseCase changeJobDataSourceUseCase;
   final JobDataSourceRepository jobDataSourceRepository;
 
   const GetJobDetailsUseCase({
-    required this.selectJobDataSourceUseCase,
+    required this.changeJobDataSourceUseCase,
     required this.jobDataSourceRepository,
   });
 
   @override
-  Future<Either<Failure, RefreshingJobDetailsReady>> execute(
-    OpenJobDetails input,
+  Future<Either<Failure, OutputJobDetailsModel>> execute(
+    RefreshingJobModel input,
   ) async {
     try {
       final dataSourcesResult =
-          await jobDataSourceRepository.getByJobId(input.job.id!);
+          await jobDataSourceRepository.getByJobId(input.id!);
 
       if (dataSourcesResult.isLeft) {
         throw dataSourcesResult.left;
       }
 
       RefreshingJobModel? updatedJob;
-      if (input.job.selectedDataSource == null &&
+      if (input.selectedDataSource == null &&
           dataSourcesResult.right.isNotEmpty) {
-        final selectDataSourceResult = await selectJobDataSourceUseCase.execute(
-          SelectDataSource(
+        final changeDataSourceResult = await changeJobDataSourceUseCase.execute(
+          InputDataSourceChangeModel(
+            job: input,
             newDataSource: dataSourcesResult.right.first,
-            job: input.job,
-            progressValue: input.progressValue,
           ),
         );
 
-        if (selectDataSourceResult.isLeft) {
-          throw selectDataSourceResult.left;
+        if (changeDataSourceResult.isLeft) {
+          throw changeDataSourceResult.left;
         }
 
-        updatedJob = selectDataSourceResult.right.job;
+        updatedJob = changeDataSourceResult.right;
       }
 
       return Right(
-        RefreshingJobDetailsReady(
-          job: updatedJob ?? input.job,
-          progressValue: input.progressValue,
-          jobDataSources: dataSourcesResult.right,
+        OutputJobDetailsModel(
+          job: updatedJob ?? input,
+          dataSources: dataSourcesResult.right,
         ),
       );
     } catch (e) {

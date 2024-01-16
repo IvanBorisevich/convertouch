@@ -11,7 +11,7 @@ class ConversionItemModel extends ItemModel {
   const ConversionItemModel({
     required this.unit,
     required this.value,
-    required this.defaultValue,
+    this.defaultValue = defaultValueModel,
   }) : super(
           itemType: ItemType.unitValue,
         );

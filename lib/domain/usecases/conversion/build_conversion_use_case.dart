@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/conversion_events.dart';
-import 'package:convertouch/domain/model/output/conversion_states.dart';
+import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
@@ -11,7 +11,8 @@ import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:either_dart/either.dart';
 
-class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
+class BuildConversionUseCase
+    extends UseCase<InputConversionModel, OutputConversionModel> {
   final RefreshableValueRepository refreshableValueRepository;
 
   const BuildConversionUseCase({
@@ -19,8 +20,8 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
   });
 
   @override
-  Future<Either<Failure, ConversionBuilt>> execute(
-    BuildConversion input,
+  Future<Either<Failure, OutputConversionModel>> execute(
+    InputConversionModel input,
   ) async {
     try {
       ConversionItemModel? srcConversionItem = input.sourceConversionItem;
@@ -28,15 +29,15 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
 
       List<ConversionItemModel> convertedUnitValues = [];
 
-      if (input.units != null && unitGroup != null) {
+      if (input.targetUnits != null && unitGroup != null) {
         if (srcConversionItem == null) {
           srcConversionItem = ConversionItemModel.fromUnit(
-            unit: input.units![0],
+            unit: input.targetUnits![0],
           );
         } else {
           String? defaultSourceValue;
-          var refreshableValueResult =
-              await refreshableValueRepository.getFromDb(srcConversionItem.unit.id!);
+          var refreshableValueResult = await refreshableValueRepository
+              .getFromDb(srcConversionItem.unit.id!);
 
           if (refreshableValueResult.isRight) {
             defaultSourceValue = refreshableValueResult.right?.value;
@@ -56,7 +57,7 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
             double.parse(srcConversionItem.defaultValue.strValue);
         double? srcCoefficient = srcConversionItem.unit.coefficient;
 
-        for (UnitModel tgtUnit in input.units!) {
+        for (UnitModel tgtUnit in input.targetUnits!) {
           double? tgtCoefficient = tgtUnit.coefficient;
           double? tgtValue;
           double tgtDefaultValue;
@@ -108,10 +109,10 @@ class BuildConversionUseCase extends UseCase<BuildConversion, ConversionBuilt> {
       }
 
       return Right(
-        ConversionBuilt(
+        OutputConversionModel(
           unitGroup: unitGroup,
           sourceConversionItem: srcConversionItem,
-          conversionItems: convertedUnitValues,
+          targetConversionItems: convertedUnitValues,
         ),
       );
     } catch (e) {

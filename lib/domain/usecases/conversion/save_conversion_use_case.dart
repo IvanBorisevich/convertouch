@@ -1,11 +1,11 @@
-import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/output/conversion_states.dart';
+import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class SaveConversionUseCase extends UseCase<ConversionBuilt, void> {
+class SaveConversionUseCase extends UseCase<OutputConversionModel, void> {
   final ConversionRepository conversionRepository;
 
   const SaveConversionUseCase({
@@ -13,20 +13,19 @@ class SaveConversionUseCase extends UseCase<ConversionBuilt, void> {
   });
 
   @override
-  Future<Either<Failure, void>> execute(ConversionBuilt input) async {
+  Future<Either<Failure, void>> execute(OutputConversionModel input) async {
     try {
-      ConversionModel conversion = ConversionModel(
-        sourceUnitId: input.sourceConversionItem?.unit.id,
-        sourceValue: input.sourceConversionItem?.value.strValue,
-        targetUnitIds:
-            input.conversionItems.map((item) => item.unit.id!).toList(),
-        conversionUnitGroupId: input.unitGroup?.id,
+      InputConversionModel conversionToBeSaved = InputConversionModel(
+        unitGroup: input.unitGroup,
+        sourceConversionItem: input.sourceConversionItem,
+        targetUnits:
+            input.targetConversionItems.map((item) => item.unit).toList(),
       );
 
-      return await conversionRepository.saveConversion(conversion);
+      return await conversionRepository.saveConversion(conversionToBeSaved);
     } catch (e) {
       return Left(
-        InternalFailure("Error when restoring the last conversion: $e"),
+        InternalFailure("Error when saving the current conversion: $e"),
       );
     }
   }

@@ -1,17 +1,17 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/input/input_unit_creation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class AddUnitUseCase extends UseCase<AddUnit, int> {
+class AddUnitUseCase extends UseCase<InputUnitCreationModel, int> {
   final UnitRepository unitRepository;
 
   const AddUnitUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, int>> execute(AddUnit input) async {
+  Future<Either<Failure, int>> execute(InputUnitCreationModel input) async {
     double newUnitValue = double.tryParse(input.newUnitValue ?? "") ?? 1;
     double baseUnitValue = double.tryParse(input.baseUnitValue ?? "") ?? 1;
     double baseUnitCoefficient = input.baseUnit?.coefficient ?? 1;
@@ -20,10 +20,10 @@ class AddUnitUseCase extends UseCase<AddUnit, int> {
 
     var result = await unitRepository.addUnit(
       UnitModel(
-        name: input.newUnit.name,
+        name: input.newUnitName,
+        abbreviation: input.newUnitAbbreviation,
         coefficient: newUnitCoefficient,
-        abbreviation: input.newUnit.abbreviation,
-        unitGroupId: input.newUnit.unitGroupId,
+        unitGroupId: input.unitGroup.id!,
       ),
     );
 

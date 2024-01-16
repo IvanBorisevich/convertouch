@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/output/refreshing_jobs_states.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/usecases/output/output_job_result_model.dart';
 import 'package:convertouch/domain/repositories/network_data_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class RefreshUnitCoefficientsUseCase
-    extends ReactiveUseCase<RefreshingJobModel, RefreshingJobsProgressUpdated> {
+class RefreshUnitCoefficientsUseCase extends ReactiveUseCase<RefreshingJobModel,
+    OutputUnitCoefficientRefreshingResult> {
   final NetworkDataRepository networkDataRepository;
 
   const RefreshUnitCoefficientsUseCase({
@@ -14,7 +14,7 @@ class RefreshUnitCoefficientsUseCase
   });
 
   @override
-  Either<Failure, Stream<RefreshingJobsProgressUpdated>> execute(
+  Either<Failure, Stream<OutputUnitCoefficientRefreshingResult>> execute(
     RefreshingJobModel input,
   ) {
     if (input.selectedDataSource == null) {
@@ -30,9 +30,7 @@ class RefreshUnitCoefficientsUseCase
 
     return Right(
       Stream.value(
-        const RefreshingJobsProgressUpdated(
-          progressValues: {},
-        ),
+        const OutputUnitCoefficientRefreshingResult(),
       ),
     );
   }

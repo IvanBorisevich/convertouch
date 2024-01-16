@@ -12,3 +12,7 @@ class ValueModel {
     return strValue;
   }
 }
+
+const ValueModel defaultValueModel = ValueModel(
+  strValue: "1",
+);

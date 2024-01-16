@@ -1,22 +1,24 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
+import 'package:convertouch/domain/model/usecases/input/input_unit_fetch_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/usecases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchUnitsUseCase extends UseCase<FetchUnits, List<UnitModel>> {
+class FetchUnitsUseCase extends UseCase<InputUnitFetchModel, List<UnitModel>> {
   final UnitRepository unitRepository;
 
   const FetchUnitsUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, List<UnitModel>>> execute(FetchUnits input) async {
+  Future<Either<Failure, List<UnitModel>>> execute(
+    InputUnitFetchModel input,
+  ) async {
     if (input.searchString == null || input.searchString!.isEmpty) {
-      return await unitRepository.fetchUnits(input.unitGroup.id!);
+      return await unitRepository.fetchUnits(input.unitGroupId);
     } else {
       return await unitRepository.searchUnits(
-        input.unitGroup.id!,
+        input.unitGroupId,
         input.searchString!,
       );
     }

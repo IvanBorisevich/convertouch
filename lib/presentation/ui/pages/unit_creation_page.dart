@@ -1,13 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/input/unit_groups_events.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
-import 'package:convertouch/domain/model/output/units_states.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/input/input_unit_creation_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_unit_creation.dart';
-import 'package:convertouch/presentation/bloc/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
@@ -194,16 +195,15 @@ class _ConvertouchUnitCreationPageState
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitsBloc>(context).add(
                   AddUnit(
-                    newUnit: UnitModel(
-                      name: _unitName,
-                      abbreviation:
+                    unitCreationParams: InputUnitCreationModel(
+                      unitGroup: pageState.unitGroup!,
+                      newUnitName: _unitName,
+                      newUnitAbbreviation:
                           _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
-                      unitGroupId: pageState.unitGroup!.id!,
+                      newUnitValue: _newUnitValue,
+                      baseUnit: pageState.baseUnit,
+                      baseUnitValue: _baseUnitValue,
                     ),
-                    newUnitValue: _newUnitValue,
-                    baseUnit: pageState.baseUnit,
-                    baseUnitValue: _baseUnitValue,
-                    unitGroup: pageState.unitGroup!,
                   ),
                 );
               },

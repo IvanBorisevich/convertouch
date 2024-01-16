@@ -9,9 +9,13 @@ abstract class Failure extends Equatable {
 }
 
 class DatabaseFailure extends Failure {
-  const DatabaseFailure(String message) : super(message);
+  const DatabaseFailure(super.message);
+}
+
+class PreferencesFailure extends Failure {
+  const PreferencesFailure(super.message);
 }
 
 class InternalFailure extends Failure {
-  const InternalFailure(String message) : super(message);
+  const InternalFailure(super.message);
 }

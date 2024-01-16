@@ -1,17 +1,18 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/input/conversion_events.dart';
-import 'package:convertouch/domain/model/input/unit_groups_events.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
-import 'package:convertouch/domain/model/output/unit_groups_states.dart';
-import 'package:convertouch/domain/model/output/units_states.dart';
+import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
@@ -31,22 +32,25 @@ class ConvertouchConversionPage extends StatelessWidget {
           conversionPageFloatingButtonColors[appState.theme]!;
 
       return conversionsBlocBuilder((pageState) {
+        final conversion = pageState.conversion;
+
         return MultiBlocListener(
           listeners: [
             BlocListener<UnitsBloc, UnitsState>(
               listener: (_, unitsState) {
                 if (unitsState is UnitsFetched &&
                     unitsState.removedIds.isNotEmpty &&
-                    unitsState.unitGroup == pageState.unitGroup) {
+                    unitsState.unitGroup == conversion.unitGroup) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     BuildConversion(
-                      sourceConversionItem: pageState.sourceConversionItem,
-                      units: pageState.conversionItems
-                          .map((item) => item.unit)
-                          .whereNot(
-                              (unit) => unitsState.removedIds.contains(unit.id))
-                          .toList(),
-                      unitGroup: pageState.unitGroup,
+                      conversionParams: InputConversionModel(
+                          unitGroup: unitsState.unitGroup,
+                          sourceConversionItem: conversion.sourceConversionItem,
+                          targetUnits: conversion.targetConversionItems
+                              .map((item) => item.unit)
+                              .whereNot((unit) =>
+                                  unitsState.removedIds.contains(unit.id))
+                              .toList()),
                     ),
                   );
                 }
@@ -56,14 +60,16 @@ class ConvertouchConversionPage extends StatelessWidget {
               listener: (_, unitGroupsState) {
                 if (unitGroupsState is UnitGroupsFetched &&
                     unitGroupsState.removedIds.isNotEmpty &&
-                    pageState.unitGroup != null &&
+                    conversion.unitGroup != null &&
                     unitGroupsState.removedIds
-                        .contains(pageState.unitGroup!.id)) {
+                        .contains(conversion.unitGroup!.id)) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     const BuildConversion(
-                      sourceConversionItem: null,
-                      units: null,
-                      unitGroup: null,
+                      conversionParams: InputConversionModel(
+                        unitGroup: null,
+                        sourceConversionItem: null,
+                        targetUnits: null,
+                      ),
                     ),
                   );
                 }
@@ -73,17 +79,17 @@ class ConvertouchConversionPage extends StatelessWidget {
           child: ConvertouchPage(
             appState: appState,
             title: "Conversion",
-            secondaryAppBar: pageState.unitGroup != null
+            secondaryAppBar: conversion.unitGroup != null
                 ? Padding(
                     padding: const EdgeInsets.only(top: 7),
                     child: ConvertouchMenuItem(
-                      pageState.unitGroup!,
+                      conversion.unitGroup!,
                       customColors: appBarUnitGroupItemColors[appState.theme]!,
                       onTap: () {
                         BlocProvider.of<UnitGroupsBlocForConversion>(context)
                             .add(
                           FetchUnitGroupsForChangeInConversion(
-                            currentUnitGroupInConversion: pageState.unitGroup!,
+                            currentUnitGroupInConversion: conversion.unitGroup!,
                             searchString: null,
                           ),
                         );
@@ -95,22 +101,24 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                   )
                 : empty(),
-            secondaryAppBarHeight: pageState.unitGroup != null ? 60 : 0,
+            secondaryAppBarHeight: conversion.unitGroup != null ? 60 : 0,
             secondaryAppBarColor: Colors.transparent,
             body: ConvertouchConversionItemsView(
-              pageState.conversionItems,
+              conversion.targetConversionItems,
               onItemTap: (item) {},
               onItemValueChanged: (item, value) {
                 BlocProvider.of<ConversionBloc>(context).add(
                   BuildConversion(
-                    sourceConversionItem: ConversionItemModel.fromStrValue(
-                      unit: item.unit,
-                      strValue: value,
+                    conversionParams: InputConversionModel(
+                      sourceConversionItem: ConversionItemModel.fromStrValue(
+                        unit: item.unit,
+                        strValue: value,
+                      ),
+                      targetUnits: conversion.targetConversionItems
+                          .map((item) => item.unit)
+                          .toList(),
+                      unitGroup: conversion.unitGroup,
                     ),
-                    units: pageState.conversionItems
-                        .map((item) => item.unit)
-                        .toList(),
-                    unitGroup: pageState.unitGroup,
                   ),
                 );
               },
@@ -118,8 +126,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                 BlocProvider.of<ConversionBloc>(context).add(
                   RemoveConversionItem(
                     itemUnitId: item.unit.id!,
-                    conversionItems: pageState.conversionItems,
-                    unitGroupInConversion: pageState.unitGroup,
+                    conversionItems: conversion.targetConversionItems,
+                    unitGroupInConversion: conversion.unitGroup,
                   ),
                 );
               },
@@ -127,7 +135,7 @@ class ConvertouchConversionPage extends StatelessWidget {
             ),
             floatingActionButton: ConvertouchFloatingActionButton.adding(
               onClick: () {
-                if (pageState.unitGroup == null) {
+                if (conversion.unitGroup == null) {
                   BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
                     const FetchUnitGroupsForFirstAddingToConversion(
                       searchString: null,
@@ -137,12 +145,13 @@ class ConvertouchConversionPage extends StatelessWidget {
                 } else {
                   BlocProvider.of<UnitsBlocForConversion>(context).add(
                     FetchUnitsToMarkForConversion(
-                      unitGroup: pageState.unitGroup!,
-                      unitsAlreadyMarkedForConversion: pageState.conversionItems
+                      unitGroup: conversion.unitGroup!,
+                      unitsAlreadyMarkedForConversion: conversion
+                          .targetConversionItems
                           .map((unitValue) => unitValue.unit)
                           .toList(),
                       currentSourceConversionItem:
-                          pageState.sourceConversionItem,
+                          conversion.sourceConversionItem,
                       searchString: null,
                     ),
                   );

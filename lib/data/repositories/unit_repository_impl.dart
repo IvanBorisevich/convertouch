@@ -55,7 +55,10 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel>> getUnit(int id) async {
+  Future<Either<Failure, UnitModel?>> getUnit(int? id) async {
+    if (id == null) {
+      return const Right(null);
+    }
     try {
       final result = await unitDao.getUnit(id);
       return Right(UnitTranslator.I.toModel(result)!);
@@ -67,7 +70,10 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitModel>>> getUnits(List<int> ids) async {
+  Future<Either<Failure, List<UnitModel>?>> getUnits(List<int>? ids) async {
+    if (ids == null || ids.isEmpty) {
+      return const Right([]);
+    }
     try {
       final result = await unitDao.getUnits(ids);
       return Right(

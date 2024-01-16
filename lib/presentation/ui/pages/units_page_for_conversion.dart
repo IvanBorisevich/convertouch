@@ -1,9 +1,10 @@
-import 'package:convertouch/domain/model/input/conversion_events.dart';
-import 'package:convertouch/domain/model/input/units_events.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
@@ -24,7 +25,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
         return unitGroupsChangeBlocListenerWrap(
           handler: (unitGroupsStateChange) {
             if (unitGroupsStateChange.removedIds
-                .contains(pageState.unitGroup!.id)) {
+                .contains(pageState.unitGroup.id)) {
               Navigator.of(context).pop();
             }
           },
@@ -32,7 +33,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             handler: (unitsStateChange) {
               BlocProvider.of<UnitsBlocForConversion>(context).add(
                 FetchUnitsToMarkForConversion(
-                  unitGroup: pageState.unitGroup!,
+                  unitGroup: pageState.unitGroup,
                   unitsAlreadyMarkedForConversion:
                       pageState.unitsMarkedForConversion,
                   searchString: pageState.searchString,
@@ -46,7 +47,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
               onSearchStringChanged: (text) {
                 BlocProvider.of<UnitsBlocForConversion>(context).add(
                   FetchUnitsToMarkForConversion(
-                    unitGroup: pageState.unitGroup!,
+                    unitGroup: pageState.unitGroup,
                     unitsAlreadyMarkedForConversion:
                         pageState.unitsMarkedForConversion,
                     searchString: text,
@@ -56,7 +57,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
               onSearchReset: () {
                 BlocProvider.of<UnitsBlocForConversion>(context).add(
                   FetchUnitsToMarkForConversion(
-                    unitGroup: pageState.unitGroup!,
+                    unitGroup: pageState.unitGroup,
                     unitsAlreadyMarkedForConversion:
                         pageState.unitsMarkedForConversion,
                     searchString: null,
@@ -66,7 +67,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
               onUnitTap: (unit) {
                 BlocProvider.of<UnitsBlocForConversion>(context).add(
                   FetchUnitsToMarkForConversion(
-                    unitGroup: pageState.unitGroup!,
+                    unitGroup: pageState.unitGroup,
                     unitsAlreadyMarkedForConversion:
                         pageState.unitsMarkedForConversion,
                     unitNewlyMarkedForConversion: unit as UnitModel,
@@ -94,10 +95,12 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                 onClick: () {
                   BlocProvider.of<ConversionBloc>(context).add(
                     BuildConversion(
-                      unitGroup: pageState.unitGroup,
-                      units: pageState.unitsMarkedForConversion,
-                      sourceConversionItem:
-                          pageState.currentSourceConversionItem,
+                      conversionParams: InputConversionModel(
+                        unitGroup: pageState.unitGroup,
+                        sourceConversionItem:
+                            pageState.currentSourceConversionItem,
+                        targetUnits: pageState.unitsMarkedForConversion,
+                      ),
                     ),
                   );
                   Navigator.of(context).popUntil(
