@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';

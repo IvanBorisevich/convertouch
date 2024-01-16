@@ -1,6 +1,6 @@
-import 'package:convertouch/domain/usecases/unit_groups/add_unit_group_use_case.dart';
-import 'package:convertouch/domain/usecases/unit_groups/fetch_unit_groups_use_case.dart';
-import 'package:convertouch/domain/usecases/unit_groups/remove_unit_groups_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';

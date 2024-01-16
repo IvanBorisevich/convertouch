@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/usecases/input/input_unit_creation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_creation_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';

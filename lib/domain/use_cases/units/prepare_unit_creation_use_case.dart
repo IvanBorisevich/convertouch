@@ -1,10 +1,10 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/usecases/input/input_unit_preparation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_preparation_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/usecases/output/output_unit_preparation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_unit_preparation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
-import 'package:convertouch/domain/usecases/use_case.dart';
+import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class PrepareUnitCreationUseCase

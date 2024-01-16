@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
-import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class RestoreLastConversionUseCase

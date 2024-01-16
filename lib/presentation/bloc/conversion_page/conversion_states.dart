@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ConversionState extends ConvertouchState {

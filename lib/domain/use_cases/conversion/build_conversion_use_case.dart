@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
-import 'package:convertouch/domain/usecases/use_case.dart';
+import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:either_dart/either.dart';

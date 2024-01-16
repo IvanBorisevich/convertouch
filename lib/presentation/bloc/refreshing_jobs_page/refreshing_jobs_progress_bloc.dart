@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:convertouch/domain/usecases/refreshing_jobs/update_job_finish_time_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:convertouch/domain/usecases/refresh_data/refresh_data_use_case.dart';
+import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

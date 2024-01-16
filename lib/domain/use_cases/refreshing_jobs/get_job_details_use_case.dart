@@ -1,10 +1,10 @@
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
-import 'package:convertouch/domain/model/usecases/input/input_data_source_change_model.dart';
-import 'package:convertouch/domain/model/usecases/output/output_job_details_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_data_source_change_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_job_details_model.dart';
 import 'package:convertouch/domain/repositories/job_data_source_repository.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/change_job_data_source_use_case.dart';
-import 'package:convertouch/domain/usecases/use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
+import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class GetJobDetailsUseCase

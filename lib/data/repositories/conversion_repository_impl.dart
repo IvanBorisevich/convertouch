@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/usecases/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/preferences_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';

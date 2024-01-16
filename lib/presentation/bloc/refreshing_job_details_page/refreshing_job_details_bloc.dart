@@ -1,8 +1,8 @@
-import 'package:convertouch/domain/model/usecases/input/input_auto_refresh_flag_change_model.dart';
-import 'package:convertouch/domain/model/usecases/input/input_cron_change_model.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/change_job_auto_refresh_flag_use_case.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/change_job_cron_use_case.dart';
-import 'package:convertouch/domain/usecases/refreshing_jobs/get_job_details_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_auto_refresh_flag_change_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_cron_change_model.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_auto_refresh_flag_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_states.dart';

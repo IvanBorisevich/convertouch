@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/usecases/output/output_conversion_model.dart';
-import 'package:convertouch/domain/usecases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/conversion/restore_last_conversion_use_case.dart';
-import 'package:convertouch/domain/usecases/conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';

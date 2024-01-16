@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/usecases/items_menu_view_mode/change_items_menu_view_use_case.dart';
+import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.dart';
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_states.dart';
