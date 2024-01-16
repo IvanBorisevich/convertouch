@@ -1,81 +1,75 @@
 import 'dart:async';
 
-import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_events.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RefreshingJobsProgressBloc
-    extends ConvertouchBloc<RefreshingJobsEvent, RefreshingJobsState> {
+class RefreshingJobsControlBloc extends ConvertouchBloc<
+    RefreshingJobsControlEvent, RefreshingJobsControlState> {
   final RefreshDataUseCase refreshDataUseCase;
   final UpdateJobFinishTimeUseCase updateJobFinishTimeUseCase;
 
-  RefreshingJobsProgressBloc({
+  RefreshingJobsControlBloc({
     required this.refreshDataUseCase,
     required this.updateJobFinishTimeUseCase,
-  }) : super(const RefreshingJobsProgressUpdated(progressValues: {})) {
-    on<StartDataRefreshing>(_onDataRefreshingStart);
-    on<StopDataRefreshing>(_onDataRefreshingStop);
-    on<CompleteDataRefreshing>(_onDataRefreshingComplete);
+  }) : super(const RefreshingJobsProgressUpdated(jobsProgress: {})) {
+    on<StartJob>(_onJobStart);
+    on<StopJob>(_onJobStop);
+    on<FinishJob>(_onJobFinish);
   }
 
-  _onDataRefreshingStart(
-    StartDataRefreshing event,
-    Emitter<RefreshingJobsState> emit,
+  _onJobStart(
+    StartJob event,
+    Emitter<RefreshingJobsControlState> emit,
   ) async {
-    Map<int, Stream<double>?> progressValues = {};
-
-    if (event.progressValues.isNotEmpty) {
-      progressValues = event.progressValues;
-    }
+    Map<int, Stream<double>?> jobsProgress =
+        event.jobsProgress.isNotEmpty ? event.jobsProgress : {};
 
     emit(const RefreshingJobsProgressUpdating());
 
     var stream = _refreshData();
 
-    progressValues.putIfAbsent(event.job.id!, () => stream);
+    jobsProgress.putIfAbsent(event.job.id!, () => stream);
 
     emit(
       RefreshingJobsProgressUpdated(
-        progressValues: progressValues,
+        jobsProgress: jobsProgress,
       ),
     );
   }
 
-  _onDataRefreshingStop(
-    StopDataRefreshing event,
-    Emitter<RefreshingJobsState> emit,
+  _onJobStop(
+    StopJob event,
+    Emitter<RefreshingJobsControlState> emit,
   ) async {
     emit(const RefreshingJobsProgressUpdating());
 
-    Map<int, Stream<double>?> progressValues = {};
+    Map<int, Stream<double>?> jobsProgress =
+        event.jobsProgress.isNotEmpty ? event.jobsProgress : {};
 
-    if (event.progressValues.isNotEmpty) {
-      progressValues = event.progressValues;
-    }
-
-    progressValues.remove(event.job.id!);
+    jobsProgress.remove(event.job.id!);
 
     emit(
       RefreshingJobsProgressUpdated(
-        progressValues: progressValues,
+        jobsProgress: jobsProgress,
       ),
     );
   }
 
-  _onDataRefreshingComplete(
-    CompleteDataRefreshing event,
-    Emitter<RefreshingJobsState> emit,
+  _onJobFinish(
+    FinishJob event,
+    Emitter<RefreshingJobsControlState> emit,
   ) async {
     emit(const RefreshingJobsProgressUpdating());
 
     Map<int, Stream<double>?> progressValues = {};
     int jobId = event.job.id!;
 
-    if (event.progressValues.isNotEmpty) {
-      progressValues = event.progressValues;
+    if (event.jobsProgress.isNotEmpty) {
+      progressValues = event.jobsProgress;
     }
 
     progressValues.remove(jobId);
@@ -86,14 +80,14 @@ class RefreshingJobsProgressBloc
 
     if (result.isLeft) {
       emit(
-        RefreshingJobsErrorState(
+        RefreshingJobsControlErrorState(
           message: result.left.message,
         ),
       );
     } else {
       emit(
         RefreshingJobsProgressUpdated(
-          progressValues: progressValues,
+          jobsProgress: progressValues,
           completedJobId: jobId,
         ),
       );

@@ -17,9 +17,9 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      return refreshingJobsProgressBlocBuilder((jobsProgressState) {
+      return refreshingJobsControlBlocBuilder((jobsProgressState) {
         return refreshingJobDetailsBlocBuilder((pageState) {
-          Stream<double>? jobProgress = jobsProgressState.progressValues[pageState.job.id];
+          Stream<double>? jobProgress = jobsProgressState.jobsProgress[pageState.job.id];
 
           ConvertouchScaffoldColor scaffoldColor =
           scaffoldColors[appState.theme]!;

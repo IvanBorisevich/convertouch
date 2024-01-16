@@ -8,9 +8,9 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
   final List<RefreshingJobModel> jobItems;
   final Map<int, Stream<double>?> progressValues;
   final void Function(RefreshingJobModel)? onItemClick;
-  final void Function(RefreshingJobModel)? onDataRefreshStart;
-  final void Function(RefreshingJobModel)? onDataRefreshStop;
-  final void Function(RefreshingJobModel)? onDataRefreshComplete;
+  final void Function(RefreshingJobModel)? onJobStartClick;
+  final void Function(RefreshingJobModel)? onJobStopClick;
+  final void Function(RefreshingJobModel)? onJobFinishClick;
   final double listTopSpacing;
   final double itemsSpacing;
   final ConvertouchUITheme theme;
@@ -19,9 +19,9 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
     this.jobItems, {
     this.progressValues = const {},
     this.onItemClick,
-    this.onDataRefreshStart,
-    this.onDataRefreshStop,
-    this.onDataRefreshComplete,
+    this.onJobStartClick,
+    this.onJobStopClick,
+    this.onJobFinishClick,
     this.listTopSpacing = 2,
     this.itemsSpacing = 10,
     required this.theme,
@@ -44,14 +44,14 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
               onItemClick: () {
                 onItemClick?.call(item);
               },
-              onDataRefreshStart: () {
-                onDataRefreshStart?.call(item);
+              onStartClick: () {
+                onJobStartClick?.call(item);
               },
-              onDataRefreshStop: () {
-                onDataRefreshStop?.call(item);
+              onStopClick: () {
+                onJobStopClick?.call(item);
               },
-              onDataRefreshComplete: () {
-                onDataRefreshComplete?.call(item);
+              onFinishClick: () {
+                onJobFinishClick?.call(item);
               },
               theme: theme,
             ),

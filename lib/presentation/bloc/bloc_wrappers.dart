@@ -6,8 +6,9 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_states.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_progress_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
@@ -75,9 +76,9 @@ var conversionsBlocBuilder =
 var refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
 
-var refreshingJobsProgressBlocBuilder = blocBuilderWrap<
-    RefreshingJobsProgressBloc,
-    RefreshingJobsState,
+var refreshingJobsControlBlocBuilder = blocBuilderWrap<
+    RefreshingJobsControlBloc,
+    RefreshingJobsControlState,
     RefreshingJobsProgressUpdated>;
 
 var refreshingJobDetailsBlocBuilder = blocBuilderWrap<RefreshingJobDetailsBloc,

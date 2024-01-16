@@ -13,9 +13,9 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
   final RefreshingJobModel item;
   final Stream<double>? progressValue;
   final void Function()? onItemClick;
-  final void Function()? onDataRefreshStart;
-  final void Function()? onDataRefreshStop;
-  final void Function()? onDataRefreshComplete;
+  final void Function()? onStartClick;
+  final void Function()? onStopClick;
+  final void Function()? onFinishClick;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
@@ -24,9 +24,9 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
     this.item, {
     this.progressValue,
     this.onItemClick,
-    this.onDataRefreshStart,
-    this.onDataRefreshStop,
-    this.onDataRefreshComplete,
+    this.onStartClick,
+    this.onStopClick,
+    this.onFinishClick,
     this.itemSpacing = 7,
     required this.theme,
     this.customColors,
@@ -51,7 +51,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
           ),
         ),
         child: IconButton(
-          onPressed: onDataRefreshStart,
+          onPressed: onStartClick,
           icon: Icon(
             Icons.refresh_rounded,
             color: color.refreshButton.regular.foreground,
@@ -123,11 +123,11 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                                     return refreshDataButton();
                                   } else if (snapshot.connectionState ==
                                       ConnectionState.done) {
-                                    onDataRefreshComplete?.call();
+                                    onFinishClick?.call();
                                     return refreshDataButton();
                                   } else {
                                     return GestureDetector(
-                                      onTap: onDataRefreshStop,
+                                      onTap: onStopClick,
                                       child: CircularPercentIndicator(
                                         radius: itemButtonIconHeight,
                                         lineWidth: 5.0,

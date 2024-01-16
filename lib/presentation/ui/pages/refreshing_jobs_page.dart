@@ -1,11 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_events.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_progress_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/ui/items_view/refreshing_jobs_view.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
       return refreshingJobsBlocBuilder((jobsState) {
-        return BlocListener<RefreshingJobsProgressBloc, RefreshingJobsState>(
+        return BlocListener<RefreshingJobsControlBloc,
+            RefreshingJobsControlState>(
           listener: (_, state) {
             if (state is RefreshingJobsProgressUpdated &&
                 state.completedJobId != null) {
@@ -27,13 +29,13 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
               );
             }
           },
-          child: refreshingJobsProgressBlocBuilder((jobsProgressState) {
+          child: refreshingJobsControlBlocBuilder((jobsProgressState) {
             return ConvertouchPage(
               appState: appState,
               title: "Refresh Data",
               body: ConvertouchRefreshingJobsView(
                 jobsState.items,
-                progressValues: jobsProgressState.progressValues,
+                progressValues: jobsProgressState.jobsProgress,
                 onItemClick: (item) {
                   BlocProvider.of<RefreshingJobDetailsBloc>(context).add(
                     OpenJobDetails(
@@ -42,27 +44,27 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   );
                   Navigator.of(context).pushNamed(refreshingJobDetailsPage);
                 },
-                onDataRefreshStart: (item) {
-                  BlocProvider.of<RefreshingJobsProgressBloc>(context).add(
-                    StartDataRefreshing(
+                onJobStartClick: (item) {
+                  BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                    StartJob(
                       job: item,
-                      progressValues: jobsProgressState.progressValues,
+                      jobsProgress: jobsProgressState.jobsProgress,
                     ),
                   );
                 },
-                onDataRefreshStop: (item) {
-                  BlocProvider.of<RefreshingJobsProgressBloc>(context).add(
-                    StopDataRefreshing(
+                onJobStopClick: (item) {
+                  BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                    StopJob(
                       job: item,
-                      progressValues: jobsProgressState.progressValues,
+                      jobsProgress: jobsProgressState.jobsProgress,
                     ),
                   );
                 },
-                onDataRefreshComplete: (item) {
-                  BlocProvider.of<RefreshingJobsProgressBloc>(context).add(
-                    CompleteDataRefreshing(
+                onJobFinishClick: (item) {
+                  BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                    FinishJob(
                       job: item,
-                      progressValues: jobsProgressState.progressValues,
+                      jobsProgress: jobsProgressState.jobsProgress,
                     ),
                   );
                 },
