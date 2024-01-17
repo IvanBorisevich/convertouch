@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
@@ -10,6 +12,7 @@ class RefreshingJobModel extends IdNameItemModel {
   final JobAutoRefresh autoRefresh;
   final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
+  final StreamController<double>? progressController;
 
   const RefreshingJobModel({
     required super.id,
@@ -20,6 +23,7 @@ class RefreshingJobModel extends IdNameItemModel {
     this.autoRefresh = JobAutoRefresh.off,
     this.selectedDataSource,
     this.lastRefreshTime,
+    this.progressController,
     super.itemType = ItemType.refreshingJob,
   });
 
@@ -29,6 +33,7 @@ class RefreshingJobModel extends IdNameItemModel {
     JobAutoRefresh? autoRefresh,
     Cron? cron,
     JobDataSourceModel? selectedDataSource,
+    StreamController<double>? progressController,
     bool replaceWithNull = false,
   }) : this(
           id: savedModel.id,
@@ -55,6 +60,11 @@ class RefreshingJobModel extends IdNameItemModel {
             patchWith: selectedDataSource,
             replaceWithNull: replaceWithNull,
           ),
+          progressController: _coalesce(
+            what: savedModel.progressController,
+            patchWith: progressController,
+            replaceWithNull: replaceWithNull,
+          ),
         );
 
   static dynamic _coalesce({
@@ -79,6 +89,7 @@ class RefreshingJobModel extends IdNameItemModel {
     autoRefresh,
     lastRefreshTime,
     selectedDataSource,
+    progressController,
     itemType,
   ];
 
@@ -86,11 +97,6 @@ class RefreshingJobModel extends IdNameItemModel {
   String toString() {
     return 'RefreshingJobModel{'
         'id: $id, '
-        'name: $name, '
-        'unitGroup: $unitGroup, '
-        'refreshableDataPart: $refreshableDataPart, '
-        'cron: $cron, '
-        'autoRefresh: $autoRefresh, '
-        'lastRefreshTime: $lastRefreshTime}';
+        'name: $name';
   }
 }

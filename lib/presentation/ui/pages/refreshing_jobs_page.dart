@@ -35,7 +35,7 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
               title: "Refresh Data",
               body: ConvertouchRefreshingJobsView(
                 jobsState.items,
-                progressValues: jobsProgressState.jobsProgress,
+                jobsInProgress: jobsProgressState.jobsInProgress,
                 onItemClick: (item) {
                   BlocProvider.of<RefreshingJobDetailsBloc>(context).add(
                     OpenJobDetails(
@@ -48,7 +48,7 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   BlocProvider.of<RefreshingJobsControlBloc>(context).add(
                     StartJob(
                       job: item,
-                      jobsProgress: jobsProgressState.jobsProgress,
+                      jobsInProgress: jobsProgressState.jobsInProgress,
                     ),
                   );
                 },
@@ -56,7 +56,7 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   BlocProvider.of<RefreshingJobsControlBloc>(context).add(
                     StopJob(
                       job: item,
-                      jobsProgress: jobsProgressState.jobsProgress,
+                      jobsInProgress: jobsProgressState.jobsInProgress,
                     ),
                   );
                 },
@@ -64,7 +64,7 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   BlocProvider.of<RefreshingJobsControlBloc>(context).add(
                     FinishJob(
                       job: item,
-                      jobsProgress: jobsProgressState.jobsProgress,
+                      jobsInProgress: jobsProgressState.jobsInProgress,
                     ),
                   );
                 },

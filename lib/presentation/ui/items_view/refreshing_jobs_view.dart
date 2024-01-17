@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobsView extends StatelessWidget {
   final List<RefreshingJobModel> jobItems;
-  final Map<int, Stream<double>?> progressValues;
+  final Map<int, RefreshingJobModel> jobsInProgress;
   final void Function(RefreshingJobModel)? onItemClick;
   final void Function(RefreshingJobModel)? onJobStartClick;
   final void Function(RefreshingJobModel)? onJobStopClick;
@@ -17,7 +17,7 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
 
   const ConvertouchRefreshingJobsView(
     this.jobItems, {
-    this.progressValues = const {},
+    this.jobsInProgress = const {},
     this.onItemClick,
     this.onJobStartClick,
     this.onJobStopClick,
@@ -36,22 +36,21 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
         padding: EdgeInsets.all(itemsSpacing),
         itemCount: jobItems.length,
         itemBuilder: (context, index) {
-          var item = jobItems[index];
+          var jobItem = jobItems[index];
           return ConvertouchFadeScaleAnimation(
             child: ConvertouchRefreshingJobItem(
-              item,
-              progressValue: progressValues[item.id],
+              jobsInProgress[jobItem.id] ?? jobItem,
               onItemClick: () {
-                onItemClick?.call(item);
+                onItemClick?.call(jobItem);
               },
               onStartClick: () {
-                onJobStartClick?.call(item);
+                onJobStartClick?.call(jobItem);
               },
               onStopClick: () {
-                onJobStopClick?.call(item);
+                onJobStopClick?.call(jobItem);
               },
-              onFinishClick: () {
-                onJobFinishClick?.call(item);
+              onFinish: () {
+                onJobFinishClick?.call(jobItem);
               },
               theme: theme,
             ),

@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class RefreshingJobsControlState extends ConvertouchState {
@@ -14,24 +15,24 @@ class RefreshingJobsProgressUpdating extends RefreshingJobsControlState {
 }
 
 class RefreshingJobsProgressUpdated extends RefreshingJobsControlState {
-  final Map<int, Stream<double>?> jobsProgress;
+  final Map<int, RefreshingJobModel> jobsInProgress;
   final int? completedJobId;
 
   const RefreshingJobsProgressUpdated({
-    required this.jobsProgress,
+    required this.jobsInProgress,
     this.completedJobId,
   });
 
   @override
   List<Object?> get props => [
-    jobsProgress,
+    jobsInProgress,
     completedJobId,
   ];
 
   @override
   String toString() {
     return 'RefreshingJobsProgressUpdated{'
-        'jobsProgress: $jobsProgress, '
+        'jobsInProgress: $jobsInProgress, '
         'completedJobId: $completedJobId}';
   }
 }

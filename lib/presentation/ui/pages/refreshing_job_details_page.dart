@@ -1,8 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/job_data_source_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
-import 'package:convertouch/domain/model/job_data_source_model.dart';
-import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/ui/items_view/item/refreshing_job_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
@@ -19,12 +20,13 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
     return appBlocBuilder((appState) {
       return refreshingJobsControlBlocBuilder((jobsProgressState) {
         return refreshingJobDetailsBlocBuilder((pageState) {
-          Stream<double>? jobProgress = jobsProgressState.jobsProgress[pageState.job.id];
+          RefreshingJobModel? jobInProgress =
+              jobsProgressState.jobsInProgress[pageState.job.id];
 
           ConvertouchScaffoldColor scaffoldColor =
-          scaffoldColors[appState.theme]!;
+              scaffoldColors[appState.theme]!;
           RefreshingJobItemColor color =
-          refreshingJobItemsColors[appState.theme]!;
+              refreshingJobItemsColors[appState.theme]!;
 
           Widget lastRefreshedInfoBox = jobInfoLabel(
             visible: pageState.job.lastRefreshTime != null,
@@ -45,44 +47,45 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
             secondaryAppBarPadding: const EdgeInsets.all(5),
             secondaryAppBar: pageState.job.lastRefreshTime != null
                 ? Container(
-              decoration: BoxDecoration(
-                color: color.jobItem.regular.background,
-                border: Border.all(
-                  color: color.jobItem.regular.border,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: jobProgress == null
-                  ? lastRefreshedInfoBox
-                  : StreamBuilder<double>(
-                stream: jobProgress,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 20,
-                    );
-                  } else if (snapshot.data == null) {
-                    return lastRefreshedInfoBox;
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.done) {
-                    return lastRefreshedInfoBox;
-                  } else {
-                    return LinearPercentIndicator(
-                      width: MediaQuery.of(context).size.width,
-                      animation: true,
-                      animateFromLastPercent: true,
-                      lineHeight: 20,
-                      percent: snapshot.data!,
-                      center: Text("${snapshot.data}%"),
-                      barRadius: const Radius.circular(10),
-                      progressColor: color.jobItem.regular.content,
-                    );
-                  }
-                },
-              ),
-            )
+                    decoration: BoxDecoration(
+                      color: color.jobItem.regular.background,
+                      border: Border.all(
+                        color: color.jobItem.regular.border,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: jobInProgress == null ||
+                            jobInProgress.progressController?.stream == null
+                        ? lastRefreshedInfoBox
+                        : StreamBuilder<double>(
+                            stream: jobInProgress.progressController?.stream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 20,
+                                );
+                              } else if (snapshot.data == null) {
+                                return lastRefreshedInfoBox;
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return lastRefreshedInfoBox;
+                              } else {
+                                return LinearPercentIndicator(
+                                  width: MediaQuery.of(context).size.width,
+                                  animation: true,
+                                  animateFromLastPercent: true,
+                                  lineHeight: 20,
+                                  percent: snapshot.data!,
+                                  center: Text("${snapshot.data}%"),
+                                  barRadius: const Radius.circular(10),
+                                  progressColor: color.jobItem.regular.content,
+                                );
+                              }
+                            },
+                          ),
+                  )
                 : null,
             body: SingleChildScrollView(
               child: Column(
@@ -205,14 +208,16 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                subtitle: subtitleMapper != null ? Text(
-                  subtitleMapper(value),
-                  style: TextStyle(
-                    color: listItemContentColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ) : null,
+                subtitle: subtitleMapper != null
+                    ? Text(
+                        subtitleMapper(value),
+                        style: TextStyle(
+                          color: listItemContentColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : null,
                 value: value,
                 groupValue: selectedValue,
                 onChanged: enabled ? onItemChanged : null,

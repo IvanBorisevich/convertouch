@@ -3,58 +3,58 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class RefreshingJobsControlEvent extends ConvertouchEvent {
   final RefreshingJobModel job;
-  final Map<int, Stream<double>?> jobsProgress;
+  final Map<int, RefreshingJobModel> jobsInProgress;
 
   const RefreshingJobsControlEvent({
     required this.job,
-    this.jobsProgress = const {},
+    this.jobsInProgress = const {},
   });
 
   @override
   List<Object?> get props => [
     job,
-    jobsProgress,
+    jobsInProgress,
   ];
 }
 
 class StartJob extends RefreshingJobsControlEvent {
   const StartJob({
     required super.job,
-    super.jobsProgress,
+    super.jobsInProgress,
   });
 
   @override
   String toString() {
     return 'StartJob{'
         'job: $job, '
-        'jobsProgress: $jobsProgress}';
+        'jobsInProgress: $jobsInProgress}';
   }
 }
 
 class StopJob extends RefreshingJobsControlEvent {
   const StopJob({
     required super.job,
-    super.jobsProgress,
+    super.jobsInProgress,
   });
 
   @override
   String toString() {
     return 'StopJob{'
         'job: $job, '
-        'jobsProgress: $jobsProgress}';
+        'jobsProgress: $jobsInProgress}';
   }
 }
 
 class FinishJob extends RefreshingJobsControlEvent {
   const FinishJob({
     required super.job,
-    super.jobsProgress,
+    super.jobsInProgress,
   });
 
   @override
   String toString() {
     return 'FinishJob{'
         'job: $job, '
-        'jobsProgress: $jobsProgress}';
+        'jobsInProgress: $jobsInProgress}';
   }
 }

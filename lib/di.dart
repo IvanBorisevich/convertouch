@@ -38,6 +38,7 @@ import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_sou
 import 'package:convertouch/domain/use_cases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs_control/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
@@ -165,7 +166,7 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => RefreshingJobsControlBloc(
-      refreshDataUseCase: locator(),
+      startJobUseCase: locator(),
       updateJobFinishTimeUseCase: locator(),
     ),
   );
@@ -273,6 +274,10 @@ Future<void> init() async {
     () => UpdateJobFinishTimeUseCase(
       refreshingJobRepository: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<StartJobUseCase>(
+    () => const StartJobUseCase(),
   );
 
   // repositories

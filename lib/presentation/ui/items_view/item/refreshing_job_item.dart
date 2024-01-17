@@ -11,22 +11,20 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
   static const double itemButtonIconHeight = 25;
 
   final RefreshingJobModel item;
-  final Stream<double>? progressValue;
   final void Function()? onItemClick;
   final void Function()? onStartClick;
   final void Function()? onStopClick;
-  final void Function()? onFinishClick;
+  final void Function()? onFinish;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
 
   const ConvertouchRefreshingJobItem(
     this.item, {
-    this.progressValue,
     this.onItemClick,
     this.onStartClick,
     this.onStopClick,
-    this.onFinishClick,
+    this.onFinish,
     this.itemSpacing = 7,
     required this.theme,
     this.customColors,
@@ -108,10 +106,10 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: EdgeInsets.only(right: itemSpacing),
-                        child: progressValue == null
+                        child: item.progressController?.stream == null
                             ? refreshDataButton()
                             : StreamBuilder<double>(
-                                stream: progressValue,
+                                stream: item.progressController?.stream,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return const Icon(
@@ -123,7 +121,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                                     return refreshDataButton();
                                   } else if (snapshot.connectionState ==
                                       ConnectionState.done) {
-                                    onFinishClick?.call();
+                                    onFinish?.call();
                                     return refreshDataButton();
                                   } else {
                                     return GestureDetector(
