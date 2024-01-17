@@ -111,28 +111,9 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
                       }
                     },
                   ),
-                  _buildRadioList<JobAutoRefresh>(
-                    listHeaderText: "Auto-Refresh Data",
-                    values: JobAutoRefresh.values,
-                    titleMapper: (value) => value.name,
-                    selectedValue: pageState.job.autoRefresh,
-                    listHeaderContentColor: color.jobItem.regular.content,
-                    listHeaderBackgroundColor: color.jobItem.regular.background,
-                    listItemContentColor: color.jobItem.regular.content,
-                    onItemChanged: (JobAutoRefresh? newValue) {
-                      if (newValue != null) {
-                        BlocProvider.of<RefreshingJobDetailsBloc>(context).add(
-                          ToggleAutoRefreshMode(
-                            mode: newValue,
-                            job: pageState.job,
-                          ),
-                        );
-                      }
-                    },
-                  ),
                   _buildRadioList<Cron>(
-                    listHeaderText: "Data Auto-Refreshing Frequency",
-                    enabled: pageState.job.autoRefresh == JobAutoRefresh.on,
+                    listHeaderText: "Auto Refresh",
+                    enabled: pageState.job.cron != Cron.never,
                     values: Cron.values,
                     titleMapper: (value) => value.name,
                     selectedValue: pageState.job.cron,

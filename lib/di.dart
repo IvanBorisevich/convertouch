@@ -32,7 +32,6 @@ import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_m
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_auto_refresh_flag_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
@@ -159,7 +158,6 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => RefreshingJobDetailsBloc(
       getJobDetailsUseCase: locator(),
-      changeJobAutoRefreshFlagUseCase: locator(),
       changeJobCronUseCase: locator(),
     ),
   );
@@ -231,12 +229,6 @@ Future<void> init() async {
 
   locator.registerLazySingleton<ChangeJobDataSourceUseCase>(
     () => ChangeJobDataSourceUseCase(
-      refreshingJobRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ChangeJobAutoRefreshFlagUseCase>(
-    () => ChangeJobAutoRefreshFlagUseCase(
       refreshingJobRepository: locator(),
     ),
   );

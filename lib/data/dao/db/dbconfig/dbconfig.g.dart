@@ -99,7 +99,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `auto_refresh` INTEGER NOT NULL, `data_source_id` INTEGER, `cron_name` TEXT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`data_source_id`) REFERENCES `job_data_sources` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
+            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `data_source_id` INTEGER, `cron_name` TEXT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`data_source_id`) REFERENCES `job_data_sources` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `job_data_sources` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `url` TEXT NOT NULL, `response_transformer_name` TEXT NOT NULL, `job_id` INTEGER NOT NULL, FOREIGN KEY (`job_id`) REFERENCES `refreshing_jobs` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -477,7 +477,6 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
                   'unit_group_id': item.unitGroupId,
                   'refreshable_data_part': item.refreshableDataPartNum,
                   'last_refresh_time': item.lastRefreshTime,
-                  'auto_refresh': item.autoRefresh,
                   'data_source_id': item.selectedDataSourceId,
                   'cron_name': item.cronName
                 });
@@ -499,7 +498,6 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
             lastRefreshTime: row['last_refresh_time'] as String?,
-            autoRefresh: row['auto_refresh'] as int,
             selectedDataSourceId: row['data_source_id'] as int?,
             cronName: row['cron_name'] as String?));
   }
@@ -513,7 +511,6 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
             unitGroupId: row['unit_group_id'] as int,
             refreshableDataPartNum: row['refreshable_data_part'] as int,
             lastRefreshTime: row['last_refresh_time'] as String?,
-            autoRefresh: row['auto_refresh'] as int,
             selectedDataSourceId: row['data_source_id'] as int?,
             cronName: row['cron_name'] as String?),
         arguments: [id]);

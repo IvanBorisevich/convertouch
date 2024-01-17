@@ -8,8 +8,7 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 class RefreshingJobModel extends IdNameItemModel {
   final UnitGroupModel? unitGroup;
   final RefreshableDataPart refreshableDataPart;
-  final Cron? cron;
-  final JobAutoRefresh autoRefresh;
+  final Cron cron;
   final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
   final StreamController<double>? progressController;
@@ -19,8 +18,7 @@ class RefreshingJobModel extends IdNameItemModel {
     required super.name,
     required this.unitGroup,
     required this.refreshableDataPart,
-    this.cron,
-    this.autoRefresh = JobAutoRefresh.off,
+    this.cron = Cron.never,
     this.selectedDataSource,
     this.lastRefreshTime,
     this.progressController,
@@ -30,7 +28,6 @@ class RefreshingJobModel extends IdNameItemModel {
   RefreshingJobModel.coalesce(
     RefreshingJobModel savedModel, {
     String? lastRefreshTime,
-    JobAutoRefresh? autoRefresh,
     Cron? cron,
     JobDataSourceModel? selectedDataSource,
     StreamController<double>? progressController,
@@ -43,11 +40,6 @@ class RefreshingJobModel extends IdNameItemModel {
           lastRefreshTime: _coalesce(
             what: savedModel.lastRefreshTime,
             patchWith: lastRefreshTime,
-            replaceWithNull: replaceWithNull,
-          ),
-          autoRefresh: _coalesce(
-            what: savedModel.autoRefresh,
-            patchWith: autoRefresh,
             replaceWithNull: replaceWithNull,
           ),
           cron: _coalesce(
@@ -86,7 +78,6 @@ class RefreshingJobModel extends IdNameItemModel {
     unitGroup,
     refreshableDataPart,
     cron,
-    autoRefresh,
     lastRefreshTime,
     selectedDataSource,
     progressController,

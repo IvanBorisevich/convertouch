@@ -27,28 +27,6 @@ class OpenJobDetails extends RefreshingJobDetailsEvent {
   }
 }
 
-class ToggleAutoRefreshMode extends RefreshingJobDetailsEvent {
-  final JobAutoRefresh mode;
-
-  const ToggleAutoRefreshMode({
-    required this.mode,
-    required super.job,
-  });
-
-  @override
-  List<Object?> get props => [
-    mode,
-    super.props,
-  ];
-
-  @override
-  String toString() {
-    return 'ToggleAutoRefreshMode{'
-        'mode: $mode, '
-        'job: $job}';
-  }
-}
-
 class SelectAutoRefreshCron extends RefreshingJobDetailsEvent {
   final Cron newCron;
 

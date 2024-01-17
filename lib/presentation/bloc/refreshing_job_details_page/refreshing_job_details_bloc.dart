@@ -1,6 +1,4 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_auto_refresh_flag_change_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_cron_change_model.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_auto_refresh_flag_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -11,16 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RefreshingJobDetailsBloc extends ConvertouchBloc<
     RefreshingJobDetailsEvent, RefreshingJobDetailsState> {
   final GetJobDetailsUseCase getJobDetailsUseCase;
-  final ChangeJobAutoRefreshFlagUseCase changeJobAutoRefreshFlagUseCase;
   final ChangeJobCronUseCase changeJobCronUseCase;
 
   RefreshingJobDetailsBloc({
     required this.getJobDetailsUseCase,
-    required this.changeJobAutoRefreshFlagUseCase,
     required this.changeJobCronUseCase,
   }) : super(const RefreshingJobDetailsInitialState()) {
     on<OpenJobDetails>(_onJobDetailsOpen);
-    on<ToggleAutoRefreshMode>(_onAutoRefreshToggle);
     on<SelectAutoRefreshCron>(_onAutoRefreshCronSelect);
     on<SelectDataSource>(_onDataSourceSelect);
   }
@@ -38,29 +33,6 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
         ),
         (jobDetails) => RefreshingJobDetailsReady(
           job: jobDetails.job,
-        ),
-      ),
-    );
-  }
-
-  _onAutoRefreshToggle(
-    ToggleAutoRefreshMode event,
-    Emitter<RefreshingJobDetailsState> emit,
-  ) async {
-    final result = await changeJobAutoRefreshFlagUseCase.execute(
-      InputAutoRefreshFlagChangeModel(
-        job: event.job,
-        newFlag: event.mode,
-      ),
-    );
-
-    emit(
-      result.fold(
-        (left) => RefreshingJobDetailsErrorState(
-          message: left.message,
-        ),
-        (job) => RefreshingJobDetailsReady(
-          job: job,
         ),
       ),
     );

@@ -70,8 +70,6 @@ class InitialMigration extends ConvertouchDbMigration {
     return await txn.insert(refreshingJobsTableName, {
       'name': entity['name'],
       'unit_group_id': unitGroupId,
-      'cron_name': (entity['cronName'] as Cron).name,
-      'auto_refresh': JobAutoRefresh.off.value,
       'refreshable_data_part':
           (entity['refreshableDataPart'] as RefreshableDataPart).val,
     });

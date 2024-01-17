@@ -21,8 +21,7 @@ class RefreshingJobTranslator
       unitGroupId: model.unitGroup!.id!,
       refreshableDataPartNum: model.refreshableDataPart.val,
       lastRefreshTime: model.lastRefreshTime,
-      autoRefresh: model.autoRefresh.value,
-      cronName: model.cron?.name,
+      cronName: model.cron != Cron.never ? model.cron.name : null,
       selectedDataSourceId: model.selectedDataSource?.id,
     );
   }
@@ -40,7 +39,6 @@ class RefreshingJobTranslator
       refreshableDataPart:
           RefreshableDataPart.valueOf(entity.refreshableDataPartNum),
       lastRefreshTime: entity.lastRefreshTime,
-      autoRefresh: JobAutoRefresh.valueOf(entity.autoRefresh),
       cron: Cron.valueOf(entity.cronName),
       selectedDataSource: JobDataSourceTranslator.I.toModel(selectedDataSource),
     );

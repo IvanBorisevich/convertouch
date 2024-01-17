@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-
 const String appName = "Convertouch";
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
@@ -83,32 +81,23 @@ enum RefreshableDataPart {
   }
 }
 
-enum JobAutoRefresh {
-  off(0),
-  on(1);
-
-  final int value;
-
-  const JobAutoRefresh(this.value);
-
-  static JobAutoRefresh valueOf(int value) {
-    return values.firstWhere((element) => value == element.value);
-  }
-}
-
 enum Cron {
+  never(name: "Never", expression: null),
   everyHour(name: "Every hour", expression: "0 0 0/1 1/1 * ? *"),
   everyDay(name: "Every day", expression: "0 0 12 1/1 * ? *");
 
   final String name;
-  final String expression;
+  final String? expression;
 
   const Cron({
     required this.name,
     required this.expression,
   });
 
-  static Cron? valueOf(String? name) {
-    return values.firstWhereOrNull((element) => name == element.name);
+  static Cron valueOf(String? name) {
+    return values.firstWhere(
+      (element) => name == element.name,
+      orElse: () => Cron.never,
+    );
   }
 }

@@ -35,8 +35,6 @@ class RefreshingJobEntity {
   final int refreshableDataPartNum;
   @ColumnInfo(name: 'last_refresh_time')
   final String? lastRefreshTime;
-  @ColumnInfo(name: 'auto_refresh')
-  final int autoRefresh;
   @ColumnInfo(name: 'data_source_id')
   final int? selectedDataSourceId;
   @ColumnInfo(name: 'cron_name')
@@ -48,7 +46,6 @@ class RefreshingJobEntity {
     required this.unitGroupId,
     required this.refreshableDataPartNum,
     required this.lastRefreshTime,
-    required this.autoRefresh,
     required this.selectedDataSourceId,
     required this.cronName,
   });
