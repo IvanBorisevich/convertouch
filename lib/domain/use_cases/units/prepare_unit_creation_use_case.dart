@@ -27,7 +27,7 @@ class PrepareUnitCreationUseCase
 
       if (unitGroup != null) {
         var defaultBaseUnitResult =
-            await unitRepository.getDefaultBaseUnit(unitGroup.id!);
+            await unitRepository.getFirst(unitGroup.id!);
 
         if (defaultBaseUnitResult.isLeft) {
           throw defaultBaseUnitResult.left;

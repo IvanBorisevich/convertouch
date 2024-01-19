@@ -14,6 +14,10 @@ abstract class RefreshingJobDaoDb extends RefreshingJobDao {
   Future<RefreshingJobEntity?> get(int id);
 
   @override
+  @Query('select * from $refreshingJobsTableName where unit_group_id = :unitGroupId')
+  Future<RefreshingJobEntity?> getByGroupId(int unitGroupId);
+
+  @override
   @Update(onConflict: OnConflictStrategy.fail)
   Future<void> update(RefreshingJobEntity entity);
 }

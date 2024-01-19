@@ -34,8 +34,9 @@ import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_coefficie
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs_control/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
@@ -146,12 +147,13 @@ Future<void> init() async {
       buildConversionUseCase: locator(),
       saveConversionUseCase: locator(),
       restoreLastConversionUseCase: locator(),
+      getJobDetailsByGroupUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
-      fetchRefreshingJobsUseCase: locator(),
+      getJobsListUseCase: locator(),
     ),
   );
 
@@ -227,6 +229,12 @@ Future<void> init() async {
     ),
   );
 
+  locator.registerLazySingleton<GetJobDetailsByGroupUseCase>(
+    () => GetJobDetailsByGroupUseCase(
+      refreshingJobRepository: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<ChangeJobDataSourceUseCase>(
     () => ChangeJobDataSourceUseCase(
       refreshingJobRepository: locator(),
@@ -239,8 +247,8 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<FetchRefreshingJobsUseCase>(
-    () => FetchRefreshingJobsUseCase(
+  locator.registerLazySingleton<GetJobsListUseCase>(
+    () => GetJobsListUseCase(
       refreshingJobRepository: locator(),
     ),
   );

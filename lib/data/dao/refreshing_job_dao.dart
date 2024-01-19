@@ -7,5 +7,7 @@ abstract class RefreshingJobDao {
 
   Future<RefreshingJobEntity?> get(int id);
 
+  Future<RefreshingJobEntity?> getByGroupId(int unitGroupId);
+
   Future<void> update(RefreshingJobEntity entity);
 }

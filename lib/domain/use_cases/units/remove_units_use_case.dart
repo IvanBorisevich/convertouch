@@ -10,6 +10,6 @@ class RemoveUnitsUseCase extends UseCase<List<int>, void> {
 
   @override
   Future<Either<Failure, void>> execute(List<int> input) async {
-    return await unitRepository.removeUnits(input);
+    return await unitRepository.remove(input);
   }
 }

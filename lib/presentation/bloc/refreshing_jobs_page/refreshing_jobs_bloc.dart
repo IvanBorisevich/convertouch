@@ -1,15 +1,15 @@
+import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/fetch_refreshing_jobs_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
     extends ConvertouchBloc<RefreshingJobsEvent, RefreshingJobsState> {
-  final FetchRefreshingJobsUseCase fetchRefreshingJobsUseCase;
+  final GetJobsListUseCase getJobsListUseCase;
 
   RefreshingJobsBloc({
-    required this.fetchRefreshingJobsUseCase,
+    required this.getJobsListUseCase,
   }) : super(const RefreshingJobsFetched(items: [])) {
     on<FetchRefreshingJobs>(_onJobsFetch);
   }
@@ -20,7 +20,7 @@ class RefreshingJobsBloc
   ) async {
     emit(const RefreshingJobsFetching());
 
-    final refreshJobsResult = await fetchRefreshingJobsUseCase.execute();
+    final refreshJobsResult = await getJobsListUseCase.execute();
 
     if (refreshJobsResult.isLeft) {
       emit(RefreshingJobsErrorState(

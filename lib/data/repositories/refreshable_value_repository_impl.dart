@@ -11,7 +11,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
   const RefreshableValueRepositoryImpl(this.refreshableValueDao);
 
   @override
-  Future<Either<Failure, RefreshableValueModel?>> getFromDb(int unitId) async {
+  Future<Either<Failure, RefreshableValueModel?>> get(int unitId) async {
     try {
       final result = await refreshableValueDao.get(unitId);
       return Right(RefreshableValueTranslator.I.toModel(result));
@@ -25,7 +25,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
   }
 
   @override
-  Future<Either<Failure, List<RefreshableValueModel>>> getListFromDb(
+  Future<Either<Failure, List<RefreshableValueModel>>> getList(
     List<int> unitIds,
   ) async {
     // TODO: implement getOfGroupFromDb

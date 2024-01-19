@@ -17,7 +17,7 @@ class UnitRepositoryImpl extends UnitRepository {
   });
 
   @override
-  Future<Either<Failure, List<UnitModel>>> fetchUnits(int unitGroupId) async {
+  Future<Either<Failure, List<UnitModel>>> getByGroupId(int unitGroupId) async {
     try {
       final result = await unitDao.getAll(unitGroupId);
       return Right(
@@ -32,7 +32,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitModel>>> searchUnits(
+  Future<Either<Failure, List<UnitModel>>> search(
       int unitGroupId, String searchString) async {
     try {
       List<UnitEntity> result;
@@ -55,7 +55,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> getUnit(int? id) async {
+  Future<Either<Failure, UnitModel?>> get(int? id) async {
     if (id == null) {
       return const Right(null);
     }
@@ -70,7 +70,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitModel>?>> getUnits(List<int>? ids) async {
+  Future<Either<Failure, List<UnitModel>?>> getByIds(List<int>? ids) async {
     if (ids == null || ids.isEmpty) {
       return const Right([]);
     }
@@ -87,8 +87,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> getDefaultBaseUnit(
-      int unitGroupId) async {
+  Future<Either<Failure, UnitModel?>> getFirst(int unitGroupId) async {
     try {
       var result = await unitDao.getFirstUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result));
@@ -101,7 +100,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, int>> addUnit(UnitModel unit) async {
+  Future<Either<Failure, int>> add(UnitModel unit) async {
     try {
       final existingUnit = await unitDao.getByName(unit.unitGroupId, unit.name);
       if (existingUnit == null) {
@@ -118,7 +117,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, void>> removeUnits(List<int> unitIds) async {
+  Future<Either<Failure, void>> remove(List<int> unitIds) async {
     try {
       await unitDao.remove(unitIds);
       return const Right(null);

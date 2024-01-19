@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
@@ -16,15 +17,21 @@ class ConversionInBuilding extends ConversionState {
 
 class ConversionBuilt extends ConversionState {
   final OutputConversionModel conversion;
+  final bool showRefreshButton;
+  final RefreshingJobModel? job;
 
   const ConversionBuilt({
     required this.conversion,
+    this.showRefreshButton = false,
+    this.job,
   });
 
   @override
   List<Object?> get props => [
-        conversion,
-      ];
+    conversion,
+    showRefreshButton,
+    job,
+  ];
 
   @override
   String toString() {

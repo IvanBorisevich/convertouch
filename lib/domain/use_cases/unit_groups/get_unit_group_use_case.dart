@@ -11,6 +11,6 @@ class GetUnitGroupUseCase extends UseCase<int, UnitGroupModel?> {
 
   @override
   Future<Either<Failure, UnitGroupModel?>> execute(int input) async {
-    return await unitGroupRepository.getUnitGroup(input);
+    return await unitGroupRepository.get(input);
   }
 }

@@ -1,25 +1,26 @@
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchRefreshingJobsUseCase
-    extends UseCaseNoInput<List<RefreshingJobModel>> {
+class GetJobDetailsByGroupUseCase
+    extends UseCase<UnitGroupModel?, RefreshingJobModel?> {
   final RefreshingJobRepository refreshingJobRepository;
 
-  const FetchRefreshingJobsUseCase({
+  const GetJobDetailsByGroupUseCase({
     required this.refreshingJobRepository,
   });
 
   @override
-  Future<Either<Failure, List<RefreshingJobModel>>> execute() async {
-    try {
-      return await refreshingJobRepository.fetchAll();
-    } catch (e) {
-      return Left(
-        InternalFailure("Error when fetching refreshing jobs: $e"),
-      );
+  Future<Either<Failure, RefreshingJobModel?>> execute(
+    UnitGroupModel? input,
+  ) async {
+    if (input == null) {
+      return const Right(null);
     }
+
+    return await refreshingJobRepository.getByGroupId(input.id!);
   }
 }

@@ -11,7 +11,7 @@ class AddUnitGroupUseCase extends UseCase<String, int> {
 
   @override
   Future<Either<Failure, int>> execute(String input) async {
-    final result = await unitGroupRepository.addUnitGroup(
+    final result = await unitGroupRepository.add(
       UnitGroupModel(
         name: input,
       ),

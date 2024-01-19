@@ -12,7 +12,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups() async {
+  Future<Either<Failure, List<UnitGroupModel>>> getAll() async {
     try {
       final result = await unitGroupDao.getAll();
       return Right(
@@ -26,7 +26,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitGroupModel>>> searchUnitGroups(
+  Future<Either<Failure, List<UnitGroupModel>>> search(
     String searchString,
   ) async {
     try {
@@ -47,7 +47,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup) async {
+  Future<Either<Failure, int>> add(UnitGroupModel unitGroup) async {
     try {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
       if (existingGroup == null) {
@@ -65,7 +65,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<Failure, UnitGroupModel?>> getUnitGroup(
+  Future<Either<Failure, UnitGroupModel?>> get(
     int? unitGroupId,
   ) async {
     if (unitGroupId == null) {
@@ -91,7 +91,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<Failure, void>> removeUnitGroups(List<int> unitGroupIds) async {
+  Future<Either<Failure, void>> remove(List<int> unitGroupIds) async {
     try {
       await unitGroupDao.remove(unitGroupIds);
       return const Right(null);

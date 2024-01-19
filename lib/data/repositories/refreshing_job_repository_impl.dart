@@ -23,7 +23,7 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
   });
 
   @override
-  Future<Either<Failure, List<RefreshingJobModel>>> fetchAll() async {
+  Future<Either<Failure, List<RefreshingJobModel>>> getAll() async {
     try {
       final refreshingJobs = await refreshingJobDao.getAll();
       final refreshableGroups = await unitGroupDao.getRefreshableGroups();
@@ -51,15 +51,11 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
   }
 
   @override
-  Future<Either<Failure, RefreshingJobModel>> fetch(int id) async {
+  Future<Either<Failure, RefreshingJobModel?>> get(int id) async {
     try {
       final jobEntity = await refreshingJobDao.get(id);
       if (jobEntity == null) {
-        return Left(
-          DatabaseFailure(
-            "Refreshing job with id = $id not found",
-          ),
-        );
+        return const Right(null);
       }
 
       final groupEntity = await unitGroupDao.get(jobEntity.unitGroupId);
@@ -67,10 +63,36 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
           await jobDataSourceDao.get(jobEntity.selectedDataSourceId ?? -1);
 
       return Right(
-          _joinSingle(jobEntity, groupEntity, selectedDataSourceEntity));
+        _joinSingle(jobEntity, groupEntity, selectedDataSourceEntity),
+      );
     } catch (e) {
       return Left(
         DatabaseFailure("Error when fetching refreshing job by id = $id: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, RefreshingJobModel?>> getByGroupId(
+    int unitGroupId,
+  ) async {
+    try {
+      final jobEntity = await refreshingJobDao.getByGroupId(unitGroupId);
+      if (jobEntity == null) {
+        return const Right(null);
+      }
+
+      final groupEntity = await unitGroupDao.get(jobEntity.unitGroupId);
+      final selectedDataSourceEntity =
+          await jobDataSourceDao.get(jobEntity.selectedDataSourceId ?? -1);
+
+      return Right(
+        _joinSingle(jobEntity, groupEntity, selectedDataSourceEntity),
+      );
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when fetching refreshing job "
+            "by unit group id = $unitGroupId: $e"),
       );
     }
   }

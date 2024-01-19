@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/use_case_model/output/output_conversion
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
@@ -12,11 +13,13 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final RestoreLastConversionUseCase restoreLastConversionUseCase;
+  final GetJobDetailsByGroupUseCase getJobDetailsByGroupUseCase;
 
   ConversionBloc({
     required this.buildConversionUseCase,
     required this.saveConversionUseCase,
     required this.restoreLastConversionUseCase,
+    required this.getJobDetailsByGroupUseCase,
   }) : super(
           const ConversionBuilt(
             conversion: OutputConversionModel(),
@@ -44,9 +47,19 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
       );
     } else {
       await saveConversionUseCase.execute(conversionResult.right);
+
+      final jobOfConversion = await getJobDetailsByGroupUseCase.execute(
+        event.conversionParams.unitGroup,
+      );
+
       emit(
         ConversionBuilt(
           conversion: conversionResult.right,
+          showRefreshButton:
+              conversionResult.right.unitGroup?.refreshable == true &&
+                  jobOfConversion.isRight &&
+                  jobOfConversion.right != null,
+          job: jobOfConversion.isRight ? jobOfConversion.right : null,
         ),
       );
     }
@@ -84,15 +97,25 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
 
     var result = await restoreLastConversionUseCase.execute();
 
-    emit(
-      result.fold(
-        (error) => ConversionErrorState(
-          message: error.message,
+    if (result.isLeft) {
+      emit(
+        ConversionErrorState(
+          message: result.left.message,
         ),
-        (conversion) => ConversionBuilt(
-          conversion: conversion,
+      );
+    } else {
+      final jobOfConversion = await getJobDetailsByGroupUseCase.execute(
+        result.right.unitGroup,
+      );
+
+      emit(
+        ConversionBuilt(
+          conversion: result.right,
+          showRefreshButton: result.right.unitGroup?.refreshable == true &&
+              jobOfConversion.right != null,
+          job: jobOfConversion.right,
         ),
-      ),
-    );
+      );
+    }
   }
 }

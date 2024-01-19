@@ -5,6 +5,8 @@ import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
+import 'package:rxdart/rxdart.dart';
+
 class StartJobUseCase extends UseCase<RefreshingJobModel, RefreshingJobModel> {
   const StartJobUseCase();
 
@@ -50,14 +52,15 @@ class StartJobUseCase extends UseCase<RefreshingJobModel, RefreshingJobModel> {
   StreamController<double> createJobProgressStream(
     Future<void> Function(StreamController) jobLogic,
   ) {
-    late final StreamController<double> controller;
-    controller = StreamController<double>(
+    late final BehaviorSubject<double> jobProgressController;
+    jobProgressController = BehaviorSubject<double>(
       onListen: () async {
-        await jobLogic.call(controller);
+        await jobLogic.call(jobProgressController);
 
-        await controller.close();
-      },
+        await jobProgressController.close();
+      }
     );
-    return controller;
+
+    return jobProgressController;
   }
 }

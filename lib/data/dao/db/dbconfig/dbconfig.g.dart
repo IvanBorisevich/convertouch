@@ -517,6 +517,21 @@ class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
   }
 
   @override
+  Future<RefreshingJobEntity?> getByGroupId(int unitGroupId) async {
+    return _queryAdapter.query(
+        'select * from refreshing_jobs where unit_group_id = ?1',
+        mapper: (Map<String, Object?> row) => RefreshingJobEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            unitGroupId: row['unit_group_id'] as int,
+            refreshableDataPartNum: row['refreshable_data_part'] as int,
+            lastRefreshTime: row['last_refresh_time'] as String?,
+            selectedDataSourceId: row['data_source_id'] as int?,
+            cronName: row['cron_name'] as String?),
+        arguments: [unitGroupId]);
+  }
+
+  @override
   Future<void> update(RefreshingJobEntity entity) async {
     await _refreshingJobEntityUpdateAdapter.update(
         entity, OnConflictStrategy.fail);

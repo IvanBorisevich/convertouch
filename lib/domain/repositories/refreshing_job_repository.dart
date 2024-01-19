@@ -5,9 +5,11 @@ import 'package:either_dart/either.dart';
 abstract class RefreshingJobRepository {
   const RefreshingJobRepository();
 
-  Future<Either<Failure, List<RefreshingJobModel>>> fetchAll();
+  Future<Either<Failure, List<RefreshingJobModel>>> getAll();
 
-  Future<Either<Failure, RefreshingJobModel>> fetch(int id);
+  Future<Either<Failure, RefreshingJobModel?>> get(int id);
+
+  Future<Either<Failure, RefreshingJobModel?>> getByGroupId(int unitGroupId);
 
   Future<Either<Failure, void>> update(RefreshingJobModel model);
 }

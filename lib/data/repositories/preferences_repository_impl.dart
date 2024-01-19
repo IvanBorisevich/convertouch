@@ -9,14 +9,19 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   const PreferencesRepositoryImpl(this.preferencesDao);
 
   @override
-  Future<Either<Failure, dynamic>> get(String key, Type type) async {
+  Future<Either<Failure, T?>> get<T>(String key) async {
     try {
-      switch (type) {
+      switch (T) {
         case int:
-          return Right(await preferencesDao.getInt(key));
+          return Right((await preferencesDao.getInt(key)) as T?);
+        case double:
+          return Right((await preferencesDao.getDouble(key)) as T?);
+        case bool:
+          return Right((await preferencesDao.getBool(key)) as T?);
         case String:
+          return Right((await preferencesDao.getString(key)) as T?);
         default:
-          return Right(await preferencesDao.getString(key));
+          return const Right(null);
       }
     } catch (e) {
       return Left(
@@ -26,17 +31,22 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> getList(String key, Type itemType) async {
+  Future<Either<Failure, List<T>?>> getList<T>(String key) async {
     try {
       final strList = await preferencesDao.getStringList(key);
-      switch (itemType) {
+      switch (T) {
         case int:
           return Right(
-            strList?.map((str) => int.parse(str)).toList(),
+            strList?.map((str) => int.parse(str) as T).toList(),
+          );
+        case double:
+          return Right(
+            strList?.map((str) => double.parse(str) as T).toList(),
           );
         case String:
+          return Right(strList?.cast<T>());
         default:
-          return Right(strList);
+          return const Right(null);
       }
     } catch (e) {
       return Left(
@@ -47,14 +57,19 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> save(String key, dynamic value) async {
+  Future<Either<Failure, bool>> save<T>(String key, T value) async {
     try {
-      switch (value.runtimeType) {
+      switch (T) {
         case int:
-          return Right(await preferencesDao.saveInt(key, value));
+          return Right(await preferencesDao.saveInt(key, value as int));
+        case double:
+          return Right(await preferencesDao.saveDouble(key, value as double));
+        case bool:
+          return Right(await preferencesDao.saveBool(key, value as bool));
         case String:
+          return Right(await preferencesDao.saveString(key, value as String));
         default:
-          return Right(await preferencesDao.saveString(key, value));
+          return const Right(false);
       }
     } catch (e) {
       return Left(
@@ -64,28 +79,18 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> saveList(
-    String key,
-    List<dynamic> value,
-    Type itemType,
-  ) async {
+  Future<Either<Failure, bool>> saveList<T>(String key, List<T> value) async {
     try {
-      switch (itemType) {
-        case int:
-          return Right(
-            await preferencesDao.saveStringList(
-              key,
-              value.map((item) => item.toString()).toList(),
-            ),
-          );
-        case String:
-        default:
-          return Right(
-              await preferencesDao.saveStringList(key, value as List<String>));
-      }
+      return Right(
+        await preferencesDao.saveStringList(
+          key,
+          value.map((item) => item.toString()).toList(),
+        ),
+      );
     } catch (e) {
       return Left(
-        PreferencesFailure("Error when saving preference with key $key: $e"),
+        PreferencesFailure("Error when saving preference as list "
+            "with key $key: $e"),
       );
     }
   }

@@ -94,27 +94,21 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                             textColor: color.jobItem.regular.content,
                           ),
                           jobInfoLabel(
-                            text: 'Auto refresh: '
-                                '${item.cron != null ? item.cron!.name : 'Off'}',
+                            text: 'Auto refresh: ${item.cron.name}',
                             padding: const EdgeInsets.only(top: 3, left: 12),
                             textColor: color.jobItem.regular.content,
                           ),
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: itemSpacing),
-                        child: ConvertouchProgressButton(
-                          button: refreshDataButton(),
-                          progressStream: item.progressController?.stream,
-                          onProgressIndicatorFinish: onFinish,
-                          onProgressIndicatorClick: onStopClick,
-                          progressIndicatorColor:
-                              color.refreshButton.regular.foreground,
-                        ),
-                      ),
+                    ConvertouchProgressButton(
+                      buttonWidget: refreshDataButton(),
+                      margin: EdgeInsets.only(right: itemSpacing),
+                      progressStream: item.progressController?.stream,
+                      onProgressIndicatorFinish: onFinish,
+                      onProgressIndicatorClick: onStopClick,
+                      progressIndicatorColor:
+                          color.refreshButton.regular.foreground,
                     ),
                   ],
                 ),

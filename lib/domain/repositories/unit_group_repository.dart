@@ -5,15 +5,15 @@ import 'package:either_dart/either.dart';
 abstract class UnitGroupRepository {
   const UnitGroupRepository();
 
-  Future<Either<Failure, List<UnitGroupModel>>> fetchUnitGroups();
+  Future<Either<Failure, List<UnitGroupModel>>> getAll();
 
-  Future<Either<Failure, List<UnitGroupModel>>> searchUnitGroups(
+  Future<Either<Failure, List<UnitGroupModel>>> search(
     String searchString,
   );
 
-  Future<Either<Failure, int>> addUnitGroup(UnitGroupModel unitGroup);
+  Future<Either<Failure, int>> add(UnitGroupModel unitGroup);
 
-  Future<Either<Failure, UnitGroupModel?>> getUnitGroup(int? unitGroupId);
+  Future<Either<Failure, UnitGroupModel?>> get(int? unitGroupId);
 
-  Future<Either<Failure, void>> removeUnitGroups(List<int> unitGroupIds);
+  Future<Either<Failure, void>> remove(List<int> unitGroupIds);
 }

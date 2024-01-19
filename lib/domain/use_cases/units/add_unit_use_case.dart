@@ -18,7 +18,7 @@ class AddUnitUseCase extends UseCase<InputUnitCreationModel, int> {
     double newUnitCoefficient =
         baseUnitValue / newUnitValue * baseUnitCoefficient;
 
-    var result = await unitRepository.addUnit(
+    var result = await unitRepository.add(
       UnitModel(
         name: input.newUnitName,
         abbreviation: input.newUnitAbbreviation,

@@ -39,4 +39,28 @@ class PreferencesDaoImpl extends PreferencesDao {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setStringList(key, value);
   }
+
+  @override
+  Future<double?> getDouble(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble(key);
+  }
+
+  @override
+  Future<bool> saveDouble(String key, double value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setDouble(key, value);
+  }
+
+  @override
+  Future<bool?> getBool(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key);
+  }
+
+  @override
+  Future<bool> saveBool(String key, bool value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(key, value);
+  }
 }

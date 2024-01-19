@@ -5,9 +5,9 @@ import 'package:either_dart/either.dart';
 abstract class RefreshableValueRepository {
   const RefreshableValueRepository();
 
-  Future<Either<Failure, RefreshableValueModel?>> getFromDb(int unitId);
+  Future<Either<Failure, RefreshableValueModel?>> get(int unitId);
 
-  Future<Either<Failure, List<RefreshableValueModel>>> getListFromDb(
+  Future<Either<Failure, List<RefreshableValueModel>>> getList(
     List<int> unitIds,
   );
 

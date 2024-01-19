@@ -14,9 +14,9 @@ class FetchUnitGroupsUseCase extends UseCase<String?, List<UnitGroupModel>> {
     String? input,
   ) async {
     if (input == null || input.isEmpty) {
-      return await unitGroupRepository.fetchUnitGroups();
+      return await unitGroupRepository.getAll();
     } else {
-      return await unitGroupRepository.searchUnitGroups(input);
+      return await unitGroupRepository.search(input);
     }
   }
 }
