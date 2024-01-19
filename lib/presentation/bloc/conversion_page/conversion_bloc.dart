@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
@@ -26,6 +27,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
           ),
         ) {
     on<BuildConversion>(_onBuildConversion);
+    on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
     on<RemoveConversionItem>(_onRemoveConversion);
     on<RestoreLastConversion>(_onRestoreConversion);
   }
@@ -48,21 +50,45 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     } else {
       await saveConversionUseCase.execute(conversionResult.right);
 
-      final jobOfConversion = await getJobDetailsByGroupUseCase.execute(
-        event.conversionParams.unitGroup,
-      );
+      RefreshingJobModel? jobOfConversion = event.job;
+
+      if (jobOfConversion == null) {
+        final jobOfConversionResult = await getJobDetailsByGroupUseCase.execute(
+          event.conversionParams.unitGroup,
+        );
+
+        if (jobOfConversionResult.isLeft) {
+          emit(
+            ConversionErrorState(
+              message: jobOfConversionResult.left.message,
+            ),
+          );
+        } else {
+          jobOfConversion = jobOfConversionResult.right;
+        }
+      }
 
       emit(
         ConversionBuilt(
           conversion: conversionResult.right,
           showRefreshButton:
               conversionResult.right.unitGroup?.refreshable == true &&
-                  jobOfConversion.isRight &&
-                  jobOfConversion.right != null,
-          job: jobOfConversion.isRight ? jobOfConversion.right : null,
+                  jobOfConversion != null,
+          job: jobOfConversion,
         ),
       );
     }
+  }
+
+  _onConversionItemUnitChange(
+    RebuildConversionAfterUnitReplacement event,
+    Emitter<ConversionState> emit,
+  ) async {
+    int oldUnitIndex = event.conversionParams.targetUnits!
+        .indexWhere((unit) => event.oldUnit.id! == unit.id!);
+    event.conversionParams.targetUnits![oldUnitIndex] = event.newUnit;
+
+    await _onBuildConversion(event, emit);
   }
 
   _onRemoveConversion(

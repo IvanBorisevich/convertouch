@@ -55,7 +55,9 @@ class ConversionItemModel extends ItemModel {
 
   @override
   String toString() {
-    return 'ConversionItemModel{$value ${unit.name}, '
-        'default: $defaultValue ${unit.name}';
+    return 'ConversionItemModel{'
+        'name: ${unit.name}, '
+        'value: $value, '
+        'default: $defaultValue';
   }
 }

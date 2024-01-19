@@ -53,7 +53,6 @@ class ConvertouchUnitsPageForUnitCreation extends StatelessWidget {
         removalModeAllowed: false,
         removalModeEnabled: false,
         markedUnitsForConversionVisible: false,
-        markUnitsOnTap: false,
         markedUnitIdsForConversion: null,
         selectedUnitVisible: true,
         selectedUnitId: pageState.currentSelectedBaseUnit?.id,

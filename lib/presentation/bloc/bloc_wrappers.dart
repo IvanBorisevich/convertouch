@@ -64,7 +64,7 @@ var unitsViewModeBlocBuilder = blocBuilderWrap<UnitsViewModeBloc,
     MenuItemsViewState, MenuItemsViewStateSet>;
 var unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
 var unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
-    UnitsState, UnitsFetchedToMarkForConversion>;
+    UnitsState, UnitsFetchedForConversion>;
 var unitsBlocBuilderForUnitCreation = blocBuilderWrap<UnitsBlocForUnitCreation,
     UnitsState, UnitsFetchedForUnitCreation>;
 var unitCreationBlocBuilder =

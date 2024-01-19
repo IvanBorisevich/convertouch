@@ -1,5 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
@@ -9,19 +11,49 @@ abstract class ConversionEvent extends ConvertouchEvent {
 
 class BuildConversion extends ConversionEvent {
   final InputConversionModel conversionParams;
+  final RefreshingJobModel? job;
 
   const BuildConversion({
     required this.conversionParams,
+    this.job,
   });
 
   @override
   List<Object?> get props => [
-        conversionParams,
-      ];
+    conversionParams,
+    job,
+  ];
 
   @override
   String toString() {
     return 'BuildConversion{'
+        'conversionParams: $conversionParams}';
+  }
+}
+
+class RebuildConversionAfterUnitReplacement extends BuildConversion {
+  final UnitModel newUnit;
+  final UnitModel oldUnit;
+
+  const RebuildConversionAfterUnitReplacement({
+    required this.newUnit,
+    required this.oldUnit,
+    required super.conversionParams,
+    super.job,
+  });
+
+  @override
+  List<Object?> get props => [
+    newUnit,
+    oldUnit,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'RebuildConversionAfterUnitReplacement{'
+        'newUnit: $newUnit, '
+        'oldUnit: $oldUnit, '
         'conversionParams: $conversionParams}';
   }
 }

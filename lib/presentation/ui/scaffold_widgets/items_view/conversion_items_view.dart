@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 

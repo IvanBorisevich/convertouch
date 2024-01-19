@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
-import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItemsView extends StatelessWidget {
@@ -17,7 +17,6 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final bool showSelectedItem;
   final bool removalModeAllowed;
   final bool removalModeEnabled;
-  final bool markItemsOnTap;
   final double itemsSpacing;
   final ItemsViewMode itemsViewMode;
   final ConvertouchUITheme theme;
@@ -34,7 +33,6 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.showSelectedItem = false,
     this.removalModeAllowed = false,
     this.removalModeEnabled = false,
-    this.markItemsOnTap = false,
     this.itemsSpacing = 7,
     required this.itemsViewMode,
     required this.theme,
@@ -71,7 +69,6 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                 removalMode: removalModeAllowed && removalModeEnabled,
                 selectedForRemoval:
                     itemIdsSelectedForRemoval.contains(item.id!),
-                markOnTap: markItemsOnTap,
                 theme: theme,
               ),
             );

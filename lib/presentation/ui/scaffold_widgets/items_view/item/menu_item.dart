@@ -19,7 +19,6 @@ class ConvertouchMenuItem extends StatelessWidget {
   final bool selected;
   final bool removalMode;
   final bool selectedForRemoval;
-  final bool markOnTap;
   final ConvertouchUITheme theme;
   final ConvertouchListItemColor? customColors;
 
@@ -33,7 +32,6 @@ class ConvertouchMenuItem extends StatelessWidget {
     this.selected = false,
     this.removalMode = false,
     this.selectedForRemoval = false,
-    this.markOnTap = false,
     required this.theme,
     this.customColors,
     super.key,
@@ -103,8 +101,8 @@ class ConvertouchMenuItem extends StatelessWidget {
         if (removalMode) {
           onTapForRemoval?.call();
         } else {
-          bool notMarkedAndCanBeSelected = !markOnTap && !isMarkedToSelect;
-          if (!selected && (markOnTap || notMarkedAndCanBeSelected)) {
+          bool notMarkedAndCanBeSelected = !isMarkedToSelect;
+          if (!selected && (notMarkedAndCanBeSelected)) {
             FocusScope.of(context).unfocus();
             onTap?.call();
           }

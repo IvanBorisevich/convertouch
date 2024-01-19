@@ -68,6 +68,36 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
   }
 }
 
+class FetchUnitsForChangeInConversion extends FetchUnits {
+  final UnitModel currentSelectedUnit;
+  final List<UnitModel> unitsInConversion;
+  final ConversionItemModel? currentSourceConversionItem;
+
+  const FetchUnitsForChangeInConversion({
+    required this.currentSelectedUnit,
+    required this.unitsInConversion,
+    required super.unitGroup,
+    this.currentSourceConversionItem,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    currentSelectedUnit,
+    unitsInConversion,
+    currentSourceConversionItem,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'FetchUnitsForChangeInConversion{'
+        'currentSelectedUnit: $currentSelectedUnit, '
+        'unitsInConversion: $unitsInConversion, '
+        'currentSourceConversionItem: $currentSourceConversionItem}';
+  }
+}
+
 class FetchUnitsForUnitCreation extends FetchUnits {
   final UnitModel? currentSelectedBaseUnit;
 

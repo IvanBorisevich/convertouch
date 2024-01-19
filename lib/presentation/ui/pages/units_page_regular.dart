@@ -87,7 +87,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           removalModeAllowed: true,
           removalModeEnabled: pageState.removalMode,
           markedUnitsForConversionVisible: false,
-          markUnitsOnTap: false,
           markedUnitIdsForConversion: null,
           selectedUnitVisible: false,
           selectedUnitId: null,

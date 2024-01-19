@@ -10,10 +10,10 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_cre
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
-import 'package:convertouch/presentation/ui/items_view/item/conversion_item.dart';
-import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';

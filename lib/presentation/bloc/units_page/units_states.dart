@@ -63,30 +63,43 @@ class UnitsFetched extends UnitsState {
   }
 }
 
-
-class UnitsFetchedToMarkForConversion extends UnitsFetched {
+abstract class UnitsFetchedForConversion extends UnitsFetched {
   final List<UnitModel> unitsMarkedForConversion;
-  final List<int> unitIdsMarkedForConversion;
-  final bool allowUnitsToBeAddedToConversion;
   final ConversionItemModel? currentSourceConversionItem;
+
+  const UnitsFetchedForConversion({
+    required super.units,
+    required super.unitGroup,
+    required this.unitsMarkedForConversion,
+    this.currentSourceConversionItem,
+    required super.searchString
+  });
+
+  @override
+  List<Object?> get props => [
+    units,
+    unitGroup,
+    unitsMarkedForConversion,
+    currentSourceConversionItem,
+    searchString,
+  ];
+}
+
+class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
+  final bool allowUnitsToBeAddedToConversion;
 
   const UnitsFetchedToMarkForConversion({
     required super.units,
     required super.unitGroup,
-    required this.unitsMarkedForConversion,
-    required this.unitIdsMarkedForConversion,
+    required super.unitsMarkedForConversion,
     required this.allowUnitsToBeAddedToConversion,
-    this.currentSourceConversionItem,
+    super.currentSourceConversionItem,
     required super.searchString,
   });
 
   @override
   List<Object?> get props => [
-    unitsMarkedForConversion,
-    unitIdsMarkedForConversion,
     allowUnitsToBeAddedToConversion,
-    currentSourceConversionItem,
-    searchString,
     super.props,
   ];
 
@@ -94,10 +107,35 @@ class UnitsFetchedToMarkForConversion extends UnitsFetched {
   String toString() {
     return 'UnitsFetchedToMarkForConversion{'
         'unitsMarkedForConversion: $unitsMarkedForConversion, '
-        'unitIdsMarkedForConversion: $unitIdsMarkedForConversion, '
         'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion, '
         'currentSourceConversionItem: $currentSourceConversionItem, '
         'searchString: $searchString}';
+  }
+}
+
+class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
+  final UnitModel selectedUnit;
+
+  const UnitsFetchedForChangeInConversion({
+    required this.selectedUnit,
+    required super.units,
+    required super.unitGroup,
+    required super.unitsMarkedForConversion,
+    super.currentSourceConversionItem,
+    required super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    selectedUnit,
+    super.props,
+  ];
+
+  @override
+  String toString() {
+    return 'UnitsFetchedForChangeInConversion{'
+        'selectedUnit: $selectedUnit, '
+        'unitsMarkedForConversion: $unitsMarkedForConversion}';
   }
 }
 

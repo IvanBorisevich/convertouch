@@ -15,10 +15,10 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:convertouch/presentation/ui/items_view/conversion_items_view.dart';
-import 'package:convertouch/presentation/ui/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversion_items_view.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -118,7 +118,20 @@ class ConvertouchConversionPage extends StatelessWidget {
               secondaryAppBarColor: Colors.transparent,
               body: ConvertouchConversionItemsView(
                 conversion.targetConversionItems,
-                onItemTap: (item) {},
+                onItemTap: (item) {
+                  BlocProvider.of<UnitsBlocForConversion>(context).add(
+                    FetchUnitsForChangeInConversion(
+                      currentSelectedUnit: item.unit,
+                      unitGroup: conversion.unitGroup!,
+                      unitsInConversion: conversion.targetConversionItems
+                          .map((convItem) => convItem.unit)
+                          .toList(),
+                      currentSourceConversionItem: conversion.sourceConversionItem,
+                      searchString: null,
+                    ),
+                  );
+                  Navigator.of(context).pushNamed(unitsPageForConversion);
+                },
                 onItemValueChanged: (item, value) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     BuildConversion(
