@@ -66,11 +66,8 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
 
   @override
   Future<Either<Failure, UnitGroupModel?>> get(
-    int? unitGroupId,
+    int unitGroupId,
   ) async {
-    if (unitGroupId == null) {
-      return const Right(null);
-    }
     try {
       final result = await unitGroupDao.get(unitGroupId);
       if (result == null) {

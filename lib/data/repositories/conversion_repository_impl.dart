@@ -48,8 +48,12 @@ class ConversionRepositoryImpl extends ConversionRepository {
       throw conversionUnitGroupResult.left;
     }
 
+    if (conversionUnitGroupResult.right == null) {
+      return null;
+    }
+
     final unitGroupResult =
-        await unitGroupRepository.get(conversionUnitGroupResult.right);
+        await unitGroupRepository.get(conversionUnitGroupResult.right!);
 
     if (unitGroupResult.isLeft) {
       throw unitGroupResult.left;
@@ -66,7 +70,11 @@ class ConversionRepositoryImpl extends ConversionRepository {
       throw sourceUnitResult.left;
     }
 
-    var unitResult = await unitRepository.get(sourceUnitResult.right);
+    if (sourceUnitResult.right == null) {
+      return null;
+    }
+
+    var unitResult = await unitRepository.get(sourceUnitResult.right!);
 
     if (unitResult.isLeft) {
       throw unitResult.left;

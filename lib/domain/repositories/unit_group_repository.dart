@@ -13,7 +13,7 @@ abstract class UnitGroupRepository {
 
   Future<Either<Failure, int>> add(UnitGroupModel unitGroup);
 
-  Future<Either<Failure, UnitGroupModel?>> get(int? unitGroupId);
+  Future<Either<Failure, UnitGroupModel?>> get(int unitGroupId);
 
   Future<Either<Failure, void>> remove(List<int> unitGroupIds);
 }

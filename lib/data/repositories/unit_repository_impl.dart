@@ -55,10 +55,7 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> get(int? id) async {
-    if (id == null) {
-      return const Right(null);
-    }
+  Future<Either<Failure, UnitModel?>> get(int id) async {
     try {
       final result = await unitDao.getUnit(id);
       return Right(UnitTranslator.I.toModel(result)!);

@@ -12,7 +12,7 @@ abstract class UnitRepository {
 
   Future<Either<Failure, List<UnitModel>?>> getByIds(List<int>? ids);
 
-  Future<Either<Failure, UnitModel?>> get(int? id);
+  Future<Either<Failure, UnitModel?>> get(int id);
 
   Future<Either<Failure, UnitModel?>> getFirst(int unitGroupId);
 

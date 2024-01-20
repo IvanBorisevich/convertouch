@@ -3,7 +3,7 @@ class ValueModel {
   final String? scientificValue;
 
   const ValueModel({
-    this.strValue = "",
+    required this.strValue,
     this.scientificValue,
   });
 
@@ -15,4 +15,10 @@ class ValueModel {
 
 const ValueModel defaultValueModel = ValueModel(
   strValue: "1",
+  scientificValue: "1",
+);
+
+const ValueModel emptyValueModel = ValueModel(
+  strValue: "",
+  scientificValue: "",
 );
