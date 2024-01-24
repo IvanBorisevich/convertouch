@@ -6,14 +6,17 @@ import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:either_dart/either.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
 class UnitRepositoryImpl extends UnitRepository {
   final UnitDao unitDao;
   final UnitGroupDao unitGroupDao;
+  final sqlite.Database database;
 
   const UnitRepositoryImpl({
     required this.unitDao,
     required this.unitGroupDao,
+    required this.database,
   });
 
   @override
@@ -67,12 +70,12 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitModel>?>> getByIds(List<int>? ids) async {
+  Future<Either<Failure, List<UnitModel>>> getByIds(List<int>? ids) async {
     if (ids == null || ids.isEmpty) {
       return const Right([]);
     }
     try {
-      final result = await unitDao.getUnits(ids);
+      final result = await unitDao.getUnitsByIds(ids);
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
@@ -84,9 +87,28 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, UnitModel?>> getFirst(int unitGroupId) async {
+  Future<Either<Failure, Map<int, UnitModel>>> getByCodesAsMap(
+    int unitGroupId,
+    List<String> codes,
+  ) async {
     try {
-      var result = await unitDao.getFirstUnit(unitGroupId);
+      final result = await unitDao.getUnitsByCodes(unitGroupId, codes);
+      return Right(
+        {for (var v in result) v.id!: UnitTranslator.I.toModel(v)!},
+      );
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when fetching units "
+            "of the group with id = $unitGroupId "
+            "by codes = $codes: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, UnitModel?>> getBaseUnit(int unitGroupId) async {
+    try {
+      var result = await unitDao.getBaseUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result));
     } catch (e) {
       return Left(
@@ -99,7 +121,7 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<Failure, int>> add(UnitModel unit) async {
     try {
-      final existingUnit = await unitDao.getByName(unit.unitGroupId, unit.name);
+      final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.name);
       if (existingUnit == null) {
         final result = await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
         return Right(result);
@@ -109,6 +131,35 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e) {
       return Left(
         DatabaseFailure("Error when adding a unit: $e"),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UnitModel>>> updateCoefficientsByCodes(
+    int unitGroupId,
+    Map<String, double> codeToCoefficient,
+  ) async {
+    try {
+      List<UnitEntity> savedEntities = await unitDao.getUnitsByCodes(
+        unitGroupId,
+        codeToCoefficient.keys.toList(),
+      );
+
+      List<UnitEntity> patchEntities = savedEntities
+          .map((entity) => UnitEntity.coalesce(
+              savedEntity: entity, coefficient: codeToCoefficient[entity.code]))
+          .toList();
+
+      await unitDao.updateBatch(database, patchEntities);
+      return Right(
+        patchEntities
+            .map((entity) => UnitTranslator.I.toModel(entity)!)
+            .toList(),
+      );
+    } catch (e) {
+      return Left(
+        DatabaseFailure("Error when batch-updating units: $e"),
       );
     }
   }

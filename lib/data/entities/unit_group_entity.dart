@@ -27,17 +27,6 @@ class UnitGroupEntity {
     this.refreshable,
   });
 
-  static UnitGroupEntity fromJson(Map<String, dynamic> data) {
-    String? iconName = data['iconName'];
-    int? conversionType = data['conversionType'];
-    return UnitGroupEntity(
-      name: data['name'],
-      iconName: iconName != unitGroupDefaultIconName ? iconName : null,
-      conversionType: conversionType != 0 ? conversionType : null,
-      refreshable: data['refreshable'] == true ? 1 : null,
-    );
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'name': name,

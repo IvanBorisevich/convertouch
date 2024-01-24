@@ -75,7 +75,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                       conversionParams: InputConversionModel(
                         unitGroup: null,
                         sourceConversionItem: null,
-                        targetUnits: null,
                       ),
                     ),
                   );
@@ -170,6 +169,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                           StartJob(
                             job: pageState.job!,
                             jobsInProgress: jobsControlState.jobsInProgress,
+                            conversionToRebuild: pageState.conversion,
                           ),
                         );
                       },

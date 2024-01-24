@@ -4,5 +4,5 @@ import 'package:either_dart/either.dart';
 abstract class NetworkDataRepository {
   const NetworkDataRepository();
 
-  Either<Failure, Stream<Object>> fetch(String url);
+  Future<Either<Failure, String>> fetch(String url);
 }

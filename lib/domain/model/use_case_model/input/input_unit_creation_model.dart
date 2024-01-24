@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 class InputUnitCreationModel {
   final UnitGroupModel unitGroup;
   final String newUnitName;
-  final String newUnitAbbreviation;
+  final String newUnitCode;
   final String? newUnitValue;
   final String? baseUnitValue;
   final UnitModel? baseUnit;
@@ -12,7 +12,7 @@ class InputUnitCreationModel {
   const InputUnitCreationModel({
     required this.unitGroup,
     required this.newUnitName,
-    required this.newUnitAbbreviation,
+    required this.newUnitCode,
     this.newUnitValue,
     this.baseUnitValue,
     this.baseUnit,
@@ -23,7 +23,7 @@ class InputUnitCreationModel {
     return 'InputUnitCreationModel{'
         'unitGroup: $unitGroup, '
         'newUnitName: $newUnitName, '
-        'newUnitAbbreviation: $newUnitAbbreviation, '
+        'newUnitCode: $newUnitCode, '
         'newUnitValue: $newUnitValue, '
         'baseUnitValue: $baseUnitValue, '
         'baseUnit: $baseUnit}';

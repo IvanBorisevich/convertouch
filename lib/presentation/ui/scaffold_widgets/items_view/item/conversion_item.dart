@@ -126,7 +126,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 ),
                 onPressed: null,
                 child: Text(
-                  widget.item.unit.abbreviation,
+                  widget.item.unit.code,
                   style: TextStyle(
                     color: _isFocused
                         ? unitButtonColor.focused.content

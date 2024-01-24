@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/use_case_model/output/output_conversion
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/prepare_source_conversion_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/either_utils.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:either_dart/either.dart';
@@ -26,8 +26,7 @@ class BuildConversionUseCase
   ) async {
     try {
       if (input.unitGroup == null ||
-          input.targetUnits == null ||
-          input.targetUnits!.isEmpty) {
+          input.targetUnits.isEmpty) {
         return Right(
           OutputConversionModel(
             unitGroup: input.unitGroup,
@@ -37,9 +36,9 @@ class BuildConversionUseCase
       }
 
       ConversionItemModel srcConversionItem = input.sourceConversionItem ??
-          EitherUtils.tryGet(
+          ObjectUtils.tryGet(
             await prepareSourceConversionItemUseCase
-                .execute(input.targetUnits![0]),
+                .execute(input.targetUnits[0]),
           );
 
       List<ConversionItemModel> convertedUnitValues = [];
@@ -49,7 +48,7 @@ class BuildConversionUseCase
           double.tryParse(srcConversionItem.defaultValue.strValue);
       double? srcCoefficient = srcConversionItem.unit.coefficient;
 
-      for (UnitModel tgtUnit in input.targetUnits!) {
+      for (UnitModel tgtUnit in input.targetUnits) {
         if (tgtUnit.id! == srcConversionItem.unit.id!) {
           convertedUnitValues.add(srcConversionItem);
           continue;

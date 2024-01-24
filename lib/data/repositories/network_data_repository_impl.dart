@@ -9,14 +9,15 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
   const NetworkDataRepositoryImpl(this.networkDao);
 
   @override
-  Either<Failure, Stream<Object>> fetch(String url) {
+  Future<Either<Failure, String>> fetch(String url) async {
     try {
-      return Right(networkDao.fetch(url));
+      return Right(
+        await networkDao.fetch(url),
+      );
     } catch (e) {
       return Left(
         DatabaseFailure("Error when fetching data from network: $e"),
       );
     }
   }
-
 }

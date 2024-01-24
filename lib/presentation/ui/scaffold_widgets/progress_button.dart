@@ -5,6 +5,7 @@ class ConvertouchProgressButton extends StatelessWidget {
   final Widget buttonWidget;
   final Stream<double>? progressStream;
   final double radius;
+  final bool determinate;
   final void Function()? onProgressIndicatorFinish;
   final void Function()? onProgressIndicatorClick;
   final void Function()? onProgressIndicatorErrorIconClick;
@@ -16,6 +17,7 @@ class ConvertouchProgressButton extends StatelessWidget {
     required this.buttonWidget,
     required this.progressStream,
     this.radius = 25,
+    this.determinate = false,
     this.onProgressIndicatorFinish,
     this.onProgressIndicatorClick,
     this.onProgressIndicatorErrorIconClick,
@@ -54,23 +56,29 @@ class ConvertouchProgressButton extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onTap: onProgressIndicatorClick,
-                    child: CircularPercentIndicator(
-                      radius: radius,
-                      lineWidth: 5.0,
-                      percent: snapshot.data!,
-                      center: Text(
-                        "${snapshot.data! * 100}%",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          color: progressIndicatorColor,
-                        ),
-                      ),
-                      circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: progressIndicatorColor,
-                      animation: true,
-                      animateFromLastPercent: true,
-                    ),
+                    child: determinate
+                        ? CircularPercentIndicator(
+                            radius: radius,
+                            lineWidth: 5.0,
+                            percent: snapshot.data!,
+                            center: Text(
+                              "${snapshot.data! * 100}%",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                                color: progressIndicatorColor,
+                              ),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: progressIndicatorColor,
+                            animation: true,
+                            animateFromLastPercent: true,
+                          )
+                        : CircularProgressIndicator(
+                            value: null,
+                            strokeWidth: 5.0,
+                            color: progressIndicatorColor,
+                          ),
                   );
                 }
               },

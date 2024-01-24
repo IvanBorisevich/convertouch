@@ -8,6 +8,7 @@ import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/preferences_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ConversionRepositoryImpl extends ConversionRepository {
@@ -97,16 +98,12 @@ class ConversionRepositoryImpl extends ConversionRepository {
     );
   }
 
-  Future<List<UnitModel>?> _getTargetUnits() async {
-    final targetUnitIdsResult =
-        await preferencesRepository.getList<int>(targetUnitIdsKey);
+  Future<List<UnitModel>> _getTargetUnits() async {
+    final targetUnitIds = ObjectUtils.tryGet(
+            await preferencesRepository.getList<int>(targetUnitIdsKey)) ??
+        [];
 
-    if (targetUnitIdsResult.isLeft) {
-      throw targetUnitIdsResult.left;
-    }
-
-    var targetUnitsResult =
-        await unitRepository.getByIds(targetUnitIdsResult.right);
+    var targetUnitsResult = await unitRepository.getByIds(targetUnitIds);
 
     if (targetUnitsResult.isLeft) {
       throw targetUnitsResult.left;
@@ -140,10 +137,10 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
-      if (conversion.targetUnits != null) {
+      if (conversion.targetUnits.isNotEmpty) {
         await preferencesRepository.saveList<int>(
           targetUnitIdsKey,
-          conversion.targetUnits!.map((unit) => unit.id!).toList(),
+          conversion.targetUnits.map((unit) => unit.id!).toList(),
         );
       }
 

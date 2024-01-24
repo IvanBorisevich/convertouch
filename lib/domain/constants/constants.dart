@@ -23,8 +23,9 @@ const String conversionUnitGroupIdKey = 'conversionUnitGroupId';
 enum ItemType {
   unit,
   unitGroup,
-  unitValue,
+  conversionItem,
   refreshingJob,
+  refreshableValue,
   cron,
   jobDataSource,
 }

@@ -1,4 +1,5 @@
 import 'package:convertouch/data/entities/unit_entity.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
 abstract class UnitDao {
   const UnitDao();
@@ -7,15 +8,19 @@ abstract class UnitDao {
 
   Future<List<UnitEntity>> getBySearchString(int unitGroupId, String searchString);
 
-  Future<UnitEntity?> getByName(int unitGroupId, String name);
+  Future<UnitEntity?> getByCode(int unitGroupId, String code);
 
-  Future<UnitEntity?> getFirstUnit(int unitGroupId);
+  Future<UnitEntity?> getBaseUnit(int unitGroupId);
 
   Future<UnitEntity?> getUnit(int id);
 
-  Future<List<UnitEntity>> getUnits(List<int> ids);
+  Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
+
+  Future<List<UnitEntity>> getUnitsByCodes(int unitGroupId, List<String> codes);
 
   Future<int> insert(UnitEntity unit);
+
+  Future<void> updateBatch(sqlite.Database db, List<UnitEntity> units);
 
   Future<int> update(UnitEntity unit);
 

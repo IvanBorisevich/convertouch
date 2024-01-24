@@ -10,7 +10,7 @@ import 'package:convertouch/domain/repositories/refreshable_value_repository.dar
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/either_utils.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class PrepareSourceConversionItemUseCase
@@ -30,7 +30,7 @@ class PrepareSourceConversionItemUseCase
     UnitModel sourceUnit = input;
 
     try {
-      UnitGroupModel? unitGroup = EitherUtils.tryGet(
+      UnitGroupModel? unitGroup = ObjectUtils.tryGet(
         await unitGroupRepository.get(sourceUnit.unitGroupId),
       );
 
@@ -62,7 +62,7 @@ class PrepareSourceConversionItemUseCase
       return defaultValueModel;
     }
 
-    RefreshingJobModel? job = EitherUtils.tryGet(
+    RefreshingJobModel? job = ObjectUtils.tryGet(
         await refreshingJobRepository.getByGroupId(unitGroup.id!));
 
     if (job == null) {
@@ -75,7 +75,7 @@ class PrepareSourceConversionItemUseCase
       return defaultValueModel;
     }
 
-    RefreshableValueModel? refreshableValue = EitherUtils.tryGet(
+    RefreshableValueModel? refreshableValue = ObjectUtils.tryGet(
       await refreshableValueRepository.get(sourceUnitId),
     );
 

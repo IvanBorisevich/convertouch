@@ -4,9 +4,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 class RefreshingJobModel extends IdNameItemModel {
-  final UnitGroupModel? unitGroup;
+  final UnitGroupModel unitGroup;
   final RefreshableDataPart refreshableDataPart;
   final Cron cron;
   final JobDataSourceModel? selectedDataSource;
@@ -37,39 +38,27 @@ class RefreshingJobModel extends IdNameItemModel {
           name: savedModel.name,
           unitGroup: savedModel.unitGroup,
           refreshableDataPart: savedModel.refreshableDataPart,
-          lastRefreshTime: _coalesce(
+          lastRefreshTime: ObjectUtils.coalesce(
             what: savedModel.lastRefreshTime,
             patchWith: lastRefreshTime,
             replaceWithNull: replaceWithNull,
           ),
-          cron: _coalesce(
+          cron: ObjectUtils.coalesce(
             what: savedModel.cron,
-            patchWith: cron,
+            patchWith: cron ?? Cron.never,
             replaceWithNull: replaceWithNull,
-          ),
-          selectedDataSource: _coalesce(
+          )!,
+          selectedDataSource: ObjectUtils.coalesce(
             what: savedModel.selectedDataSource,
             patchWith: selectedDataSource,
             replaceWithNull: replaceWithNull,
           ),
-          progressController: _coalesce(
+          progressController: ObjectUtils.coalesce(
             what: savedModel.progressController,
             patchWith: progressController,
             replaceWithNull: replaceWithNull,
           ),
         );
-
-  static dynamic _coalesce({
-    required dynamic what,
-    required dynamic patchWith,
-    required bool replaceWithNull,
-  }) {
-    if (replaceWithNull) {
-      return patchWith;
-    } else {
-      return patchWith ?? what;
-    }
-  }
 
   @override
   List<Object?> get props => [

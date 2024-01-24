@@ -21,7 +21,7 @@ class AddUnitUseCase extends UseCase<InputUnitCreationModel, int> {
     var result = await unitRepository.add(
       UnitModel(
         name: input.newUnitName,
-        abbreviation: input.newUnitAbbreviation,
+        code: input.newUnitCode,
         coefficient: newUnitCoefficient,
         unitGroupId: input.unitGroup.id!,
       ),

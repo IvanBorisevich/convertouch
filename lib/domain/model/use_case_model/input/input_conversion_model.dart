@@ -5,12 +5,12 @@ import 'package:convertouch/domain/model/unit_model.dart';
 class InputConversionModel {
   final UnitGroupModel? unitGroup;
   final ConversionItemModel? sourceConversionItem;
-  final List<UnitModel>? targetUnits;
+  final List<UnitModel> targetUnits;
 
   const InputConversionModel({
     required this.unitGroup,
     required this.sourceConversionItem,
-    required this.targetUnits,
+    this.targetUnits = const [],
   });
 
   @override

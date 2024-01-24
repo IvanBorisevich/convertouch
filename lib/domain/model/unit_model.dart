@@ -3,14 +3,16 @@ import 'package:convertouch/domain/model/item_model.dart';
 
 class UnitModel extends IdNameItemModel {
   final double? coefficient;
-  final String abbreviation;
+  final String code;
+  final String? symbol;
   final int unitGroupId;
 
   const UnitModel({
     super.id,
     required super.name,
     this.coefficient,
-    required this.abbreviation,
+    required this.code,
+    this.symbol,
     required this.unitGroupId,
   }) : super(
           itemType: ItemType.unit,
@@ -19,7 +21,8 @@ class UnitModel extends IdNameItemModel {
   const UnitModel.onlyId(
     int id, {
     this.coefficient,
-    this.abbreviation = '',
+    this.code = '',
+    this.symbol,
     this.unitGroupId = -1,
   }) : super(
           id: id,
@@ -33,7 +36,8 @@ class UnitModel extends IdNameItemModel {
     name,
     itemType,
     coefficient,
-    abbreviation,
+    code,
+    symbol,
     unitGroupId,
   ];
 

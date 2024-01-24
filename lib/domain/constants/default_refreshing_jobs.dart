@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/default_units.dart';
+import 'package:convertouch/domain/utils/response_transformers/response_transformer.dart';
 
 const refreshingJobVersions = [
   jobsV1,
@@ -14,7 +15,7 @@ const jobsV1 = {
       {
         "name": "FloatRates",
         "url": "https://www.floatrates.com/daily/usd.json",
-        "responseTransformerClassName": "FloatRatesResponseTransformer",
+        "responseTransformerClassName": floatRatesResponseTransformer,
       },
     ],
   },

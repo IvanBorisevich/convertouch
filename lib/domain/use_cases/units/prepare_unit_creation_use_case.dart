@@ -1,10 +1,11 @@
 import 'package:convertouch/domain/model/failure.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_preparation_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_preparation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_unit_preparation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class PrepareUnitCreationUseCase
@@ -26,15 +27,8 @@ class PrepareUnitCreationUseCase
       String? comment;
 
       if (unitGroup != null) {
-        var defaultBaseUnitResult =
-            await unitRepository.getFirst(unitGroup.id!);
-
-        if (defaultBaseUnitResult.isLeft) {
-          throw defaultBaseUnitResult.left;
-        }
-
-        UnitModel? defaultBaseUnit = defaultBaseUnitResult.right;
-        baseUnit = input.baseUnit ?? defaultBaseUnit;
+        UnitModel? baseUnit = input.baseUnit ??
+            ObjectUtils.tryGet(await unitRepository.getBaseUnit(unitGroup.id!));
         comment = baseUnit == null ? _firstUnitNote : null;
       }
 

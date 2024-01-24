@@ -14,7 +14,8 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
     return UnitEntity(
       id: model.id,
       name: model.name,
-      abbreviation: model.abbreviation,
+      code: model.code,
+      symbol: model.symbol,
       coefficient: model.coefficient,
       unitGroupId: model.unitGroupId,
     );
@@ -28,7 +29,8 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
     return UnitModel(
       id: entity.id,
       name: entity.name,
-      abbreviation: entity.abbreviation,
+      code: entity.code,
+      symbol: entity.symbol,
       coefficient: entity.coefficient,
       unitGroupId: entity.unitGroupId,
     );

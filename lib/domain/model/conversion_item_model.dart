@@ -13,7 +13,7 @@ class ConversionItemModel extends ItemModel {
     required this.value,
     this.defaultValue = defaultValueModel,
   }) : super(
-          itemType: ItemType.unitValue,
+          itemType: ItemType.conversionItem,
         );
 
   ConversionItemModel.fromStrValue({

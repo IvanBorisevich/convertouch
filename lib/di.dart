@@ -31,8 +31,6 @@ import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_menu_view_use_case.dart';
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
-import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/refresh_data/refresh_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
@@ -264,18 +262,9 @@ Future<void> init() async {
 
   locator.registerLazySingleton<RefreshDataUseCase>(
     () => RefreshDataUseCase(
-      refreshUnitCoefficientsUseCase: locator(),
-      refreshUnitValuesUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<RefreshUnitValuesUseCase>(
-    () => const RefreshUnitValuesUseCase(),
-  );
-
-  locator.registerLazySingleton<RefreshUnitCoefficientsUseCase>(
-    () => RefreshUnitCoefficientsUseCase(
       networkDataRepository: locator(),
+      refreshableValueRepository: locator(),
+      unitRepository: locator(),
     ),
   );
 
@@ -286,7 +275,10 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<StartJobUseCase>(
-    () => const StartJobUseCase(),
+    () => StartJobUseCase(
+      refreshDataUseCase: locator(),
+      buildConversionUseCase: locator(),
+    ),
   );
 
   // repositories
@@ -299,6 +291,7 @@ Future<void> init() async {
     () => UnitRepositoryImpl(
       unitDao: database.unitDao,
       unitGroupDao: database.unitGroupDao,
+      database: database.database.database,
     ),
   );
 
@@ -327,7 +320,11 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<RefreshableValueRepository>(
-    () => RefreshableValueRepositoryImpl(database.refreshableValueDao),
+    () => RefreshableValueRepositoryImpl(
+      refreshableValueDao: database.refreshableValueDao,
+      unitDao: database.unitDao,
+      database: database.database.database,
+    ),
   );
 
   locator.registerLazySingleton<PreferencesRepository>(

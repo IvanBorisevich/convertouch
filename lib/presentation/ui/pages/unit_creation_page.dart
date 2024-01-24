@@ -30,11 +30,11 @@ class ConvertouchUnitCreationPage extends StatefulWidget {
 class _ConvertouchUnitCreationPageState
     extends State<ConvertouchUnitCreationPage> {
   final _unitNameFieldController = TextEditingController();
-  final _unitAbbrFieldController = TextEditingController();
+  final _unitCodeFieldController = TextEditingController();
 
   String _unitName = "";
-  String _unitAbbr = "";
-  String _unitAbbrHint = "";
+  String _unitCode = "";
+  String _unitCodeHint = "";
 
   String _newUnitValue = "";
   String _baseUnitValue = "";
@@ -91,24 +91,24 @@ class _ConvertouchUnitCreationPageState
                       onChanged: (String value) async {
                         setState(() {
                           _unitName = value;
-                          _unitAbbrHint =
-                              _getInitialUnitAbbreviationFromName(value);
+                          _unitCodeHint =
+                              _getInitialUnitCodeByName(value);
                         });
                       },
                       theme: appState.theme,
                     ),
                     const SizedBox(height: 12),
                     ConvertouchTextBox(
-                      label: 'Unit Abbreviation',
-                      controller: _unitAbbrFieldController,
+                      label: 'Unit Code',
+                      controller: _unitCodeFieldController,
                       onChanged: (String value) async {
                         setState(() {
-                          _unitAbbr = value;
+                          _unitCode = value;
                         });
                       },
-                      maxTextLength: _unitAbbreviationMaxLength,
+                      maxTextLength: _unitCodeMaxLength,
                       textLengthCounterVisible: true,
-                      hintText: _unitAbbrHint,
+                      hintText: _unitCodeHint,
                       theme: appState.theme,
                     ),
                     const SizedBox(height: 25),
@@ -131,9 +131,9 @@ class _ConvertouchUnitCreationPageState
                                   ConversionItemModel.fromStrValue(
                                     unit: UnitModel(
                                       name: _unitName,
-                                      abbreviation: _unitAbbr.isNotEmpty
-                                          ? _unitAbbr
-                                          : _unitAbbrHint,
+                                      code: _unitCode.isNotEmpty
+                                          ? _unitCode
+                                          : _unitCodeHint,
                                       unitGroupId: pageState.unitGroup!.id!,
                                     ),
                                     strValue: _newUnitValue,
@@ -198,8 +198,8 @@ class _ConvertouchUnitCreationPageState
                     unitCreationParams: InputUnitCreationModel(
                       unitGroup: pageState.unitGroup!,
                       newUnitName: _unitName,
-                      newUnitAbbreviation:
-                          _unitAbbr.isNotEmpty ? _unitAbbr : _unitAbbrHint,
+                      newUnitCode:
+                          _unitCode.isNotEmpty ? _unitCode : _unitCodeHint,
                       newUnitValue: _newUnitValue,
                       baseUnit: pageState.baseUnit,
                       baseUnitValue: _baseUnitValue,
@@ -219,7 +219,7 @@ class _ConvertouchUnitCreationPageState
   @override
   void dispose() {
     _unitNameFieldController.dispose();
-    _unitAbbrFieldController.dispose();
+    _unitCodeFieldController.dispose();
     super.dispose();
   }
 }
@@ -301,10 +301,10 @@ Widget _infoBox(String comment) {
   );
 }
 
-const int _unitAbbreviationMaxLength = 4;
+const int _unitCodeMaxLength = 4;
 
-String _getInitialUnitAbbreviationFromName(String unitName) {
-  return unitName.length > _unitAbbreviationMaxLength
-      ? unitName.substring(0, _unitAbbreviationMaxLength)
+String _getInitialUnitCodeByName(String unitName) {
+  return unitName.length > _unitCodeMaxLength
+      ? unitName.substring(0, _unitCodeMaxLength)
       : unitName;
 }

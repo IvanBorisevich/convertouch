@@ -1,5 +1,5 @@
 import 'package:convertouch/data/entities/refreshable_value_entity.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
 abstract class RefreshableValueDao {
   const RefreshableValueDao();
@@ -8,13 +8,13 @@ abstract class RefreshableValueDao {
 
   Future<List<RefreshableValueEntity>> getList(List<int> unitIds);
 
-  Future<void> bulkInsert(
-    DatabaseExecutor db,
+  Future<void> insertBatch(
+    sqlite.Database db,
     List<RefreshableValueEntity> entities,
   );
 
-  Future<void> bulkUpdate(
-    DatabaseExecutor db,
+  Future<void> updateBatch(
+    sqlite.Database db,
     List<RefreshableValueEntity> entities,
   );
 }

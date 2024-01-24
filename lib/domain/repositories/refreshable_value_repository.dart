@@ -11,5 +11,8 @@ abstract class RefreshableValueRepository {
     List<int> unitIds,
   );
 
-  Future<Either<Failure, void>> updateAll(List<RefreshableValueModel> values);
+  Future<Either<Failure, List<RefreshableValueModel>>> updateValuesByCodes(
+    int unitGroupId,
+    Map<String, String> codeToValue,
+  );
 }

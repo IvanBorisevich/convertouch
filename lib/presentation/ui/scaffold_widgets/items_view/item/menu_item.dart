@@ -58,21 +58,14 @@ class ConvertouchMenuItem extends StatelessWidget {
       itemColorVariation = itemColor.regular;
     }
 
-    Widget logo = IconButton(
-      onPressed: null,
-      icon: ImageIcon(
-        const AssetImage(
-          "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
-        ),
-        color: itemColorVariation.content,
-        size: 25,
-      ),
-    );
+    Widget itemLogo;
+
+    String itemName;
 
     switch (item.runtimeType) {
       case UnitGroupModel:
         UnitGroupModel unitGroup = item as UnitGroupModel;
-        logo = IconButton(
+        itemLogo = IconButton(
           onPressed: null,
           icon: ImageIcon(
             AssetImage(
@@ -82,17 +75,31 @@ class ConvertouchMenuItem extends StatelessWidget {
             size: 25,
           ),
         );
+        itemName = unitGroup.name;
         break;
       case UnitModel:
         UnitModel unit = item as UnitModel;
-        logo = SizedBox(
+        itemLogo = SizedBox(
           width: 65,
           child: Center(
-            child: Text(
-              unit.abbreviation,
-            ),
+            child: Text(unit.code),
           ),
         );
+        itemName =
+            unit.symbol != null ? "${unit.name} (${unit.symbol})" : unit.name;
+        break;
+      default:
+        itemLogo = IconButton(
+          onPressed: null,
+          icon: ImageIcon(
+            const AssetImage(
+              "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
+            ),
+            color: itemColorVariation.content,
+            size: 25,
+          ),
+        );
+        itemName = item.name;
         break;
     }
 
@@ -115,19 +122,21 @@ class ConvertouchMenuItem extends StatelessWidget {
             case ItemsViewMode.grid:
               return ConvertouchMenuGridItem(
                 item,
+                itemName: itemName,
                 removalMode: removalMode,
                 selectedForRemoval: selectedForRemoval,
                 selectedForConversion: selected,
-                logo: logo,
+                logo: itemLogo,
                 color: itemColorVariation,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
                 item,
+                itemName: itemName,
                 removalMode: removalMode,
                 selectedForRemoval: selectedForRemoval,
                 selectedForConversion: selected,
-                logo: logo,
+                logo: itemLogo,
                 color: itemColorVariation,
               );
           }
@@ -139,6 +148,7 @@ class ConvertouchMenuItem extends StatelessWidget {
 
 class ConvertouchMenuListItem extends StatelessWidget {
   final IdNameItemModel item;
+  final String itemName;
   final bool removalMode;
   final Widget logo;
   final double itemContainerHeight;
@@ -148,6 +158,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
 
   const ConvertouchMenuListItem(
     this.item, {
+    required this.itemName,
     required this.removalMode,
     required this.logo,
     this.itemContainerHeight = 50,
@@ -212,7 +223,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
                         child: Text(
-                          item.name,
+                          itemName,
                           style: TextStyle(
                             fontFamily: quicksandFontFamily,
                             fontWeight: FontWeight.w600,
@@ -236,6 +247,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
 
 class ConvertouchMenuGridItem extends StatelessWidget {
   final IdNameItemModel item;
+  final String itemName;
   final bool removalMode;
   final Widget logo;
   final bool selectedForRemoval;
@@ -244,6 +256,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
 
   const ConvertouchMenuGridItem(
     this.item, {
+    required this.itemName,
     required this.removalMode,
     required this.logo,
     required this.color,
@@ -305,7 +318,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
               child: Text(
-                item.name,
+                itemName,
                 style: TextStyle(
                   fontFamily: quicksandFontFamily,
                   fontSize: 11,
@@ -314,7 +327,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                maxLines: _getGridItemNameLinesNumToWrap(item.name),
+                maxLines: _getGridItemNameLinesNumToWrap(itemName),
               ),
             ),
           ),

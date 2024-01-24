@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs_control/start_job_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -31,7 +33,24 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
 
     emit(const RefreshingJobsProgressUpdating());
 
-    final startedJobResult = await startJobUseCase.execute(event.job);
+    InputConversionModel? conversionToRebuild;
+
+    if (event.conversionToRebuild != null) {
+      conversionToRebuild = InputConversionModel(
+        unitGroup: event.conversionToRebuild!.unitGroup,
+        sourceConversionItem: event.conversionToRebuild!.sourceConversionItem,
+        targetUnits: event.conversionToRebuild!.targetConversionItems
+            .map((item) => item.unit)
+            .toList(),
+      );
+    }
+
+    final startedJobResult = await startJobUseCase.execute(
+      InputStartJobModel(
+        job: event.job,
+        conversionToRebuild: conversionToRebuild,
+      ),
+    );
 
     if (startedJobResult.isLeft) {
       emit(

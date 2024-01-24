@@ -18,7 +18,7 @@ class RefreshingJobTranslator
     return RefreshingJobEntity(
       id: model.id!,
       name: model.name,
-      unitGroupId: model.unitGroup!.id!,
+      unitGroupId: model.unitGroup.id!,
       refreshableDataPartNum: model.refreshableDataPart.val,
       lastRefreshTime: model.lastRefreshTime,
       cronName: model.cron != Cron.never ? model.cron.name : null,
@@ -35,7 +35,7 @@ class RefreshingJobTranslator
     return RefreshingJobModel(
       id: entity.id,
       name: entity.name,
-      unitGroup: UnitGroupTranslator.I.toModel(unitGroupEntity),
+      unitGroup: UnitGroupTranslator.I.toModel(unitGroupEntity)!,
       refreshableDataPart:
           RefreshableDataPart.valueOf(entity.refreshableDataPartNum),
       lastRefreshTime: entity.lastRefreshTime,

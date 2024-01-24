@@ -31,7 +31,18 @@ class InitialMigration extends ConvertouchDbMigration {
             final jobEntity = jobsV1[groupName]!;
             int jobId = await _insertRefreshingJob(txn, unitGroupId, jobEntity);
 
-            await _insertJobDataSources(txn, jobId, jobEntity);
+            int? preselectedDataSourceId =
+                await _insertJobDataSources(txn, jobId, jobEntity);
+
+            await txn.update(
+              refreshingJobsTableName,
+              {
+                'data_source_id': preselectedDataSourceId,
+              },
+              where: "id = ?",
+              whereArgs: [jobId],
+              conflictAlgorithm: ConflictAlgorithm.fail,
+            );
           }
           List<int> unitIds = await _insertUnits(txn, unitGroupId, entity);
 
@@ -67,36 +78,65 @@ class InitialMigration extends ConvertouchDbMigration {
     int unitGroupId,
     Map<String, dynamic> entity,
   ) async {
-    return await txn.insert(refreshingJobsTableName, {
-      'name': entity['name'],
-      'unit_group_id': unitGroupId,
-      'refreshable_data_part':
-          (entity['refreshableDataPart'] as RefreshableDataPart).val,
-    });
+    return await txn.insert(
+      refreshingJobsTableName,
+      {
+        'name': entity['name'],
+        'unit_group_id': unitGroupId,
+        'refreshable_data_part':
+            (entity['refreshableDataPart'] as RefreshableDataPart).val,
+      },
+    );
   }
 
-  Future<void> _insertJobDataSources(
+  Future<int?> _insertJobDataSources(
     Transaction txn,
     int jobId,
     Map<String, dynamic> jobEntity,
   ) async {
+    List<dynamic> dataSources = jobEntity['dataSources'];
+    if (dataSources.isEmpty) {
+      return null;
+    }
+
+    Map<String, dynamic> dataSourceRow = getDataSourceRow(
+      dataSources[0],
+      jobId,
+    );
+
+    int? preselectedDataSourceId = await txn.insert(
+      jobDataSourcesTableName,
+      dataSourceRow,
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
     Batch batch = txn.batch();
 
-    for (Map<String, dynamic> dataSource in jobEntity['dataSources']) {
+    for (int i = 1; i < dataSources.length; i++) {
+      Map<String, dynamic> dataSource = dataSources[i];
+      Map<String, Object> dataSourceRow = getDataSourceRow(dataSource, jobId);
+
       batch.insert(
         jobDataSourcesTableName,
-        {
-          'name': dataSource['name'],
-          'url': dataSource['url'],
-          'response_transformer_name':
-              dataSource['responseTransformerClassName'],
-          'job_id': jobId,
-        },
+        dataSourceRow,
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
 
     await batch.commit(noResult: true, continueOnError: false);
+    return preselectedDataSourceId;
+  }
+
+  Map<String, Object> getDataSourceRow(
+    Map<String, dynamic> dataSource,
+    int jobId,
+  ) {
+    return {
+      'name': dataSource['name'],
+      'url': dataSource['url'],
+      'response_transformer_name': dataSource['responseTransformerClassName'],
+      'job_id': jobId,
+    };
   }
 
   Future<List<int>> _insertUnits(
@@ -111,7 +151,8 @@ class InitialMigration extends ConvertouchDbMigration {
         unitsTableName,
         {
           'name': unit['name'],
-          'abbreviation': unit['abbreviation'],
+          'code': unit['code'],
+          'symbol': unit['symbol'],
           'coefficient': unit['coefficient'],
           'unit_group_id': unitGroupId,
         },

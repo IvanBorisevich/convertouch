@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:convertouch/domain/utils/response_transformers/response_transformer.dart';
 
-class FloatRatesResponseTransformer extends ResponseTransformer<Map<String, double>> {
-
+class FloatRatesCurrencyRatesResponseTransformer
+    extends UnitCoefficientsResponseTransformer {
   @override
   Map<String, double> transform(String jsonResponse) {
-    // TODO: implement transform
-    throw UnimplementedError();
+    Map<String, dynamic> responseMap = json.decode(jsonResponse);
+    return {
+      for (MapEntry<String, dynamic> entry in responseMap.entries)
+        entry.value["code"]: entry.value["rate"] as double
+    };
   }
-
 }

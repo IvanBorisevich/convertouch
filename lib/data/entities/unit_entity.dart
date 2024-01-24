@@ -1,4 +1,5 @@
 import 'package:convertouch/data/entities/unit_group_entity.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:floor/floor.dart';
 
 const String unitsTableName = 'units';
@@ -6,7 +7,7 @@ const String unitsTableName = 'units';
 @Entity(
   tableName: unitsTableName,
   indices: [
-    Index(value: ['name', 'unit_group_id'], unique: true),
+    Index(value: ['code', 'unit_group_id'], unique: true),
   ],
   foreignKeys: [
     ForeignKey(
@@ -21,7 +22,8 @@ class UnitEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final String name;
-  final String abbreviation;
+  final String code;
+  final String? symbol;
   final double? coefficient;
   @ColumnInfo(name: 'unit_group_id')
   final int unitGroupId;
@@ -29,28 +31,31 @@ class UnitEntity {
   const UnitEntity({
     this.id,
     required this.name,
-    required this.abbreviation,
-    required this.coefficient,
+    required this.code,
+    this.symbol,
+    this.coefficient,
     required this.unitGroupId,
   });
 
-  static UnitEntity fromJson(
-    Map<String, dynamic> data, {
-    required int unitGroupId,
-  }) {
-    return UnitEntity(
-      name: data['name'],
-      abbreviation: data['abbreviation'],
-      coefficient: double.tryParse(data['coefficient'].toString()),
-      unitGroupId: unitGroupId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'abbreviation': abbreviation,
-      'coefficient': coefficient,
-    };
-  }
+  UnitEntity.coalesce({
+    required UnitEntity savedEntity,
+    double? coefficient,
+    String? symbol,
+    bool replaceWithNull = false,
+  }) : this(
+          id: savedEntity.id,
+          name: savedEntity.name,
+          code: savedEntity.code,
+          unitGroupId: savedEntity.unitGroupId,
+          coefficient: ObjectUtils.coalesce(
+            what: savedEntity.coefficient,
+            patchWith: coefficient,
+            replaceWithNull: replaceWithNull,
+          ),
+          symbol: ObjectUtils.coalesce(
+            what: savedEntity.symbol,
+            patchWith: symbol,
+            replaceWithNull: replaceWithNull,
+          ),
+        );
 }

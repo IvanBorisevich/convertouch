@@ -1,5 +1,5 @@
 abstract class NetworkDao {
   const NetworkDao();
 
-  Stream<Object> fetch(String url);
+  Future<String> fetch(String url);
 }

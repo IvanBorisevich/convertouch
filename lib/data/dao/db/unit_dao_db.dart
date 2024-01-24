@@ -1,6 +1,7 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
 @dao
 abstract class UnitDaoDb extends UnitDao {
@@ -19,14 +20,15 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select * from $unitsTableName '
       'where unit_group_id = :unitGroupId '
-      'and name = :name')
-  Future<UnitEntity?> getByName(int unitGroupId, String name);
+      'and code = :code')
+  Future<UnitEntity?> getByCode(int unitGroupId, String code);
 
   @override
   @Query('select * from $unitsTableName '
       'where unit_group_id = :unitGroupId '
+      'and coefficient = 1 '
       'limit 1')
-  Future<UnitEntity?> getFirstUnit(int unitGroupId);
+  Future<UnitEntity?> getBaseUnit(int unitGroupId);
 
   @override
   @Query('select * from $unitsTableName where id = :id limit 1')
@@ -34,11 +36,37 @@ abstract class UnitDaoDb extends UnitDao {
 
   @override
   @Query('select * from $unitsTableName where id in (:ids)')
-  Future<List<UnitEntity>> getUnits(List<int> ids);
+  Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
+
+  @override
+  @Query('select * from $unitsTableName '
+      'where unit_group_id = :unitGroupId '
+      'and code in (:codes)')
+  Future<List<UnitEntity>> getUnitsByCodes(int unitGroupId, List<String> codes);
 
   @override
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<int> insert(UnitEntity unit);
+
+  @override
+  Future<void> updateBatch(sqlite.Database db, List<UnitEntity> units) async {
+    var batch = db.batch();
+    for (UnitEntity entity in units) {
+      db.update(
+        unitsTableName,
+        {
+          'coefficient': entity.coefficient,
+        },
+        where: 'unit_group_id = ? and code = ?',
+        whereArgs: [
+          entity.unitGroupId,
+          entity.code,
+        ],
+        conflictAlgorithm: sqlite.ConflictAlgorithm.fail,
+      );
+    }
+    batch.commit(noResult: true);
+  }
 
   @override
   @Update()

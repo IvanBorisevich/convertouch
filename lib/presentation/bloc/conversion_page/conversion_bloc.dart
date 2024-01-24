@@ -84,9 +84,9 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     RebuildConversionAfterUnitReplacement event,
     Emitter<ConversionState> emit,
   ) async {
-    int oldUnitIndex = event.conversionParams.targetUnits!
+    int oldUnitIndex = event.conversionParams.targetUnits
         .indexWhere((unit) => event.oldUnit.id! == unit.id!);
-    event.conversionParams.targetUnits![oldUnitIndex] = event.newUnit;
+    event.conversionParams.targetUnits[oldUnitIndex] = event.newUnit;
 
     await _onBuildConversion(event, emit);
   }
