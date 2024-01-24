@@ -1,13 +1,17 @@
+import 'dart:developer';
+
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ConvertouchProgressButton extends StatelessWidget {
   final Widget buttonWidget;
-  final Stream<double>? progressStream;
+  final Stream<RefreshingJobResultModel>? progressStream;
   final double radius;
   final bool determinate;
-  final void Function()? onProgressIndicatorFinish;
+  final void Function(RefreshingJobResultModel)? onProgressIndicatorFinish;
   final void Function()? onProgressIndicatorClick;
+  final void Function()? onProgressIndicatorInterrupt;
   final void Function()? onProgressIndicatorErrorIconClick;
   final EdgeInsets? margin;
   final Color? progressIndicatorColor;
@@ -20,6 +24,7 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.onProgressIndicatorFinish,
     this.onProgressIndicatorClick,
+    this.onProgressIndicatorInterrupt,
     this.onProgressIndicatorErrorIconClick,
     this.margin,
     this.progressIndicatorColor,
@@ -36,10 +41,13 @@ class ConvertouchProgressButton extends StatelessWidget {
       margin: margin,
       child: progressStream == null
           ? buttonWidget
-          : StreamBuilder<double>(
+          : StreamBuilder<RefreshingJobResultModel>(
               stream: progressStream,
               builder: (context, snapshot) {
+                log("snapshot connection: ${snapshot.connectionState}");
+
                 if (snapshot.hasError) {
+                  log("Snapshot contains an error");
                   return IconButton(
                     onPressed: onProgressIndicatorErrorIconClick,
                     icon: Icon(
@@ -48,21 +56,28 @@ class ConvertouchProgressButton extends StatelessWidget {
                       size: radius,
                     ),
                   );
-                } else if (snapshot.data == null) {
-                  return buttonWidget;
                 } else if (snapshot.connectionState == ConnectionState.done) {
-                  onProgressIndicatorFinish?.call();
+                  if (snapshot.data == null) {
+                    log("Snapshot does not contain data");
+                    return buttonWidget;
+                  }
+                  if (snapshot.data!.progressPercent == 1.0) {
+                    onProgressIndicatorFinish?.call(snapshot.data!);
+                  } else {
+                    onProgressIndicatorInterrupt?.call();
+                  }
                   return buttonWidget;
                 } else {
+                  log("Showing progress indicator");
                   return GestureDetector(
                     onTap: onProgressIndicatorClick,
                     child: determinate
                         ? CircularPercentIndicator(
                             radius: radius,
                             lineWidth: 5.0,
-                            percent: snapshot.data!,
+                            percent: snapshot.data!.progressPercent,
                             center: Text(
-                              "${snapshot.data! * 100}%",
+                              "${snapshot.data!.progressPercent * 100}%",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 10,

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/refreshing_job_item.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,10 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
   final void Function(RefreshingJobModel)? onItemClick;
   final void Function(RefreshingJobModel)? onJobStartClick;
   final void Function(RefreshingJobModel)? onJobStopClick;
-  final void Function(RefreshingJobModel)? onJobFinishClick;
+  final void Function(
+    RefreshingJobModel,
+    RefreshingJobResultModel,
+  )? onJobFinish;
   final double listTopSpacing;
   final double itemsSpacing;
   final ConvertouchUITheme theme;
@@ -21,7 +25,7 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
     this.onItemClick,
     this.onJobStartClick,
     this.onJobStopClick,
-    this.onJobFinishClick,
+    this.onJobFinish,
     this.listTopSpacing = 2,
     this.itemsSpacing = 10,
     required this.theme,
@@ -49,8 +53,8 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
               onStopClick: () {
                 onJobStopClick?.call(jobItem);
               },
-              onFinish: () {
-                onJobFinishClick?.call(jobItem);
+              onFinish: (jobResult) {
+                onJobFinish?.call(jobItem, jobResult);
               },
               theme: theme,
             ),

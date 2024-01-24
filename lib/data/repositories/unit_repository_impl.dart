@@ -138,7 +138,7 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<Failure, List<UnitModel>>> updateCoefficientsByCodes(
     int unitGroupId,
-    Map<String, double> codeToCoefficient,
+    Map<String, double?> codeToCoefficient,
   ) async {
     try {
       List<UnitEntity> savedEntities = await unitDao.getUnitsByCodes(

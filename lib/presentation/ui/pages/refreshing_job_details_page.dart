@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
@@ -57,7 +58,7 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
                     child: jobInProgress == null ||
                             jobInProgress.progressController?.stream == null
                         ? lastRefreshedInfoBox
-                        : StreamBuilder<double>(
+                        : StreamBuilder<RefreshingJobResultModel>(
                             stream: jobInProgress.progressController?.stream,
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
@@ -77,7 +78,7 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
                                   animation: true,
                                   animateFromLastPercent: true,
                                   lineHeight: 20,
-                                  percent: snapshot.data!,
+                                  percent: snapshot.data!.progressPercent,
                                   center: Text("${snapshot.data}%"),
                                   barRadius: const Radius.circular(10),
                                   progressColor: color.jobItem.regular.content,

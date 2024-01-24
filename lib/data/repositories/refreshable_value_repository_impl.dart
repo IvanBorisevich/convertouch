@@ -55,7 +55,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
   @override
   Future<Either<Failure, List<RefreshableValueModel>>> updateValuesByCodes(
     int unitGroupId,
-    Map<String, String> codeToValue,
+    Map<String, String?> codeToValue,
   ) async {
     try {
       List<UnitEntity> savedUnits = await unitDao.getUnitsByCodes(

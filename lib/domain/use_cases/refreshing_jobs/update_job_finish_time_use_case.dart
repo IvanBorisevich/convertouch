@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
@@ -17,6 +19,8 @@ class UpdateJobFinishTimeUseCase extends UseCase<RefreshingJobModel, void> {
       input,
       lastRefreshTime: DateTime.now().toString(),
     );
+
+    log("Model with changed last refresh time: $model");
 
     return await refreshingJobRepository.update(model);
   }

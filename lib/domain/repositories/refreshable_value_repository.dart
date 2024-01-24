@@ -13,6 +13,6 @@ abstract class RefreshableValueRepository {
 
   Future<Either<Failure, List<RefreshableValueModel>>> updateValuesByCodes(
     int unitGroupId,
-    Map<String, String> codeToValue,
+    Map<String, String?> codeToValue,
   );
 }

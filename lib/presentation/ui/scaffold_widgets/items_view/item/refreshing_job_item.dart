@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
   final void Function()? onItemClick;
   final void Function()? onStartClick;
   final void Function()? onStopClick;
-  final void Function()? onFinish;
+  final void Function(RefreshingJobResultModel)? onFinish;
   final double itemSpacing;
   final ConvertouchUITheme theme;
   final RefreshingJobItemColor? customColors;
@@ -101,15 +101,16 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ConvertouchProgressButton(
-                      buttonWidget: refreshDataButton(),
-                      margin: EdgeInsets.only(right: itemSpacing),
-                      progressStream: item.progressController?.stream,
-                      onProgressIndicatorFinish: onFinish,
-                      onProgressIndicatorClick: onStopClick,
-                      progressIndicatorColor:
-                          color.refreshButton.regular.foreground,
-                    ),
+                    // ConvertouchProgressButton(
+                    //   buttonWidget: refreshDataButton(),
+                    //   margin: EdgeInsets.only(right: itemSpacing),
+                    //   progressStream: item.progressController?.stream,
+                    //   onProgressIndicatorFinish: onFinish,
+                    //   onProgressIndicatorClick: onStopClick,
+                    //   onProgressIndicatorInterrupt: onStopClick,
+                    //   progressIndicatorColor:
+                    //       color.refreshButton.regular.foreground,
+                    // ),
                   ],
                 ),
               ),

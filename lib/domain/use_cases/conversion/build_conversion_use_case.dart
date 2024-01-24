@@ -25,8 +25,7 @@ class BuildConversionUseCase
     InputConversionModel input,
   ) async {
     try {
-      if (input.unitGroup == null ||
-          input.targetUnits.isEmpty) {
+      if (input.unitGroup == null || input.targetUnits.isEmpty) {
         return Right(
           OutputConversionModel(
             unitGroup: input.unitGroup,

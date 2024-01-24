@@ -19,3 +19,7 @@ class PreferencesFailure extends Failure {
 class InternalFailure extends Failure {
   const InternalFailure(super.message);
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}

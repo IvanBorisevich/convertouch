@@ -12,7 +12,7 @@ abstract class ResponseTransformer<V> {
     }
   }
 
-  Map<String, V> transform(String jsonResponse);
+  Map<String, V?> transform(String jsonResponse);
 }
 
 abstract class UnitCoefficientsResponseTransformer

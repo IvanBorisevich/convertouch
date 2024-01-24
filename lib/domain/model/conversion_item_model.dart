@@ -57,6 +57,7 @@ class ConversionItemModel extends ItemModel {
   String toString() {
     return 'ConversionItemModel{'
         'name: ${unit.name}, '
+        'coefficient: ${unit.coefficient}, '
         'value: $value, '
         'default: $defaultValue';
   }

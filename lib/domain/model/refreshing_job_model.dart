@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
@@ -12,7 +13,7 @@ class RefreshingJobModel extends IdNameItemModel {
   final Cron cron;
   final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
-  final StreamController<double>? progressController;
+  final StreamController<RefreshingJobResultModel>? progressController;
 
   const RefreshingJobModel({
     required super.id,
@@ -31,7 +32,7 @@ class RefreshingJobModel extends IdNameItemModel {
     String? lastRefreshTime,
     Cron? cron,
     JobDataSourceModel? selectedDataSource,
-    StreamController<double>? progressController,
+    StreamController<RefreshingJobResultModel>? progressController,
     bool replaceWithNull = false,
   }) : this(
           id: savedModel.id,

@@ -51,9 +51,9 @@ class RefreshDataUseCase<T> extends UseCase<RefreshingJobModel, List<T>> {
           );
           return Right(values as List<T>);
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
       return Left(
-        InternalFailure("Error when refreshing data: $e"),
+        InternalFailure("Error when refreshing data: $e,\n$stacktrace"),
       );
     }
   }
@@ -63,7 +63,7 @@ class RefreshDataUseCase<T> extends UseCase<RefreshingJobModel, List<T>> {
     String transformerName,
     int unitGroupId,
   ) async {
-    Map<String, double> codeToCoefficient =
+    Map<String, double?> codeToCoefficient =
         ResponseTransformer.getInstance<UnitCoefficientsResponseTransformer>(
       transformerName,
     ).transform(response);
@@ -81,7 +81,7 @@ class RefreshDataUseCase<T> extends UseCase<RefreshingJobModel, List<T>> {
     String transformerName,
     int unitGroupId,
   ) async {
-    Map<String, String> codeToValue =
+    Map<String, String?> codeToValue =
         ResponseTransformer.getInstance<UnitValuesResponseTransformer>(
       transformerName,
     ).transform(response);

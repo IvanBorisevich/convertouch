@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/refreshable_value_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
@@ -12,6 +14,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -29,25 +32,34 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
     InputStartJobModel input,
   ) async {
     int jobId = input.job.id!;
-    StreamController<double>? jobProgressController;
+    StreamController<RefreshingJobResultModel>? jobProgressController;
 
     try {
-      jobProgressController =
-          createJobProgressStream((jobProgressController) async {
-        final jobResult = await refreshDataUseCase.execute(input.job);
+      jobProgressController = createJobProgressStream(
+        jobFunc: (jobProgressController) async {
+          final refreshedData = ObjectUtils.tryGet(
+            await refreshDataUseCase.execute(input.job),
+          );
 
-        if (jobResult.isLeft) {
-          jobProgressController.close();
-          throw jobResult.left;
-        }
+          InputConversionModel? refreshedConversionParams;
 
-        if (input.conversionToRebuild != null) {
-          await buildConversionUseCase.execute(input.conversionToRebuild!);
-        }
-        if (!jobProgressController.isClosed) {
-          jobProgressController.add(1.0);
-        }
-      });
+          if (input.conversionParamsToRefresh != null) {
+            log("Start refreshing conversion params");
+            refreshedConversionParams = await _refreshConversionParams(
+              input.conversionParamsToRefresh!,
+              input.job.refreshableDataPart,
+              refreshedData,
+            );
+            log("Finish refreshing conversion params");
+          }
+
+          jobProgressController.add(
+            RefreshingJobResultModel.finish(
+              refreshedConversionParams: refreshedConversionParams,
+            ),
+          );
+        },
+      );
 
       return Right(
         RefreshingJobModel.coalesce(
@@ -56,6 +68,7 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
         ),
       );
     } catch (e) {
+      log("Close the stream");
       jobProgressController?.close();
 
       return Left(
@@ -65,51 +78,62 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
     }
   }
 
-  StreamController<double> createJobProgressStream(
-    Future<void> Function(StreamController<double>) jobFunc,
-  ) {
-    late final BehaviorSubject<double> jobProgressController;
-    jobProgressController = BehaviorSubject<double>(onListen: () async {
-      await jobFunc.call(jobProgressController);
-
-      await jobProgressController.close();
-    });
+  StreamController<RefreshingJobResultModel> createJobProgressStream({
+    required Future<void> Function(StreamController<RefreshingJobResultModel>)
+        jobFunc,
+  }) {
+    late final BehaviorSubject<RefreshingJobResultModel> jobProgressController;
+    jobProgressController = BehaviorSubject<RefreshingJobResultModel>(
+      onListen: () async {
+        try {
+          jobProgressController.add(const RefreshingJobResultModel.start());
+          await jobFunc.call(jobProgressController);
+        } finally {
+          log("Close the stream");
+          await jobProgressController.close();
+        }
+      },
+    );
 
     return jobProgressController;
   }
 
-  InputConversionModel refreshInputConversion(
-    InputConversionModel inputConversion,
+  Future<InputConversionModel> _refreshConversionParams(
+    InputConversionModel conversionParams,
     RefreshableDataPart refreshableDataPart,
     List<dynamic> refreshedData,
-  ) {
+  ) async {
     ConversionItemModel? srcConversionItem;
     List<UnitModel> targetUnits = [];
     if (refreshableDataPart == RefreshableDataPart.value) {
-      srcConversionItem = refreshSourceConversionItem(
-        inputConversion.sourceConversionItem,
+      srcConversionItem = await _refreshSourceConversionItemFromValues(
+        conversionParams.sourceConversionItem,
         refreshedData as List<RefreshableValueModel>,
       );
-      targetUnits = inputConversion.targetUnits;
+      targetUnits = conversionParams.targetUnits;
     } else {
-      srcConversionItem = inputConversion.sourceConversionItem;
-      targetUnits = refreshTargetUnits(
-        inputConversion.targetUnits,
+      srcConversionItem = await _refreshSourceConversionItemFromCoefficients(
+        conversionParams.sourceConversionItem,
         refreshedData as List<UnitModel>,
+      );
+
+      targetUnits = await _refreshTargetUnits(
+        conversionParams.targetUnits,
+        refreshedData,
       );
     }
 
     return InputConversionModel(
-      unitGroup: inputConversion.unitGroup,
+      unitGroup: conversionParams.unitGroup,
       sourceConversionItem: srcConversionItem,
       targetUnits: targetUnits,
     );
   }
 
-  ConversionItemModel? refreshSourceConversionItem(
+  Future<ConversionItemModel?> _refreshSourceConversionItemFromValues(
     ConversionItemModel? srcConversionItem,
     List<RefreshableValueModel> refreshedValues,
-  ) {
+  ) async {
     if (srcConversionItem == null) {
       return null;
     }
@@ -126,10 +150,28 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
         ));
   }
 
-  List<UnitModel> refreshTargetUnits(
+  Future<ConversionItemModel?> _refreshSourceConversionItemFromCoefficients(
+    ConversionItemModel? srcConversionItem,
+    List<UnitModel> refreshedTargetUnits,
+  ) async {
+    if (srcConversionItem == null) {
+      return null;
+    }
+
+    UnitModel srcUnit = refreshedTargetUnits
+        .firstWhere((unit) => srcConversionItem.unit.id! == unit.id!);
+
+    return ConversionItemModel(
+      unit: srcUnit,
+      value: srcConversionItem.value,
+      defaultValue: srcConversionItem.defaultValue,
+    );
+  }
+
+  Future<List<UnitModel>> _refreshTargetUnits(
     List<UnitModel> currentTargetUnits,
     List<UnitModel> refreshedTargetUnits,
-  ) {
+  ) async {
     Map<int, UnitModel> refreshedTargetUnitsMap = {
       for (var v in refreshedTargetUnits) v.id!: v
     };

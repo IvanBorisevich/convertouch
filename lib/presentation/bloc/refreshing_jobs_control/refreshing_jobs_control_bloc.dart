@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
@@ -33,6 +31,15 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
 
     emit(const RefreshingJobsProgressUpdating());
 
+    if (jobsMap.containsKey(event.job.id)) {
+      emit(
+        RefreshingJobsControlErrorState(
+          message: "Job with id = ${event.job.id} is running at the moment",
+        ),
+      );
+      return;
+    }
+
     InputConversionModel? conversionToRebuild;
 
     if (event.conversionToRebuild != null) {
@@ -48,7 +55,7 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     final startedJobResult = await startJobUseCase.execute(
       InputStartJobModel(
         job: event.job,
-        conversionToRebuild: conversionToRebuild,
+        conversionParamsToRefresh: conversionToRebuild,
       ),
     );
 
@@ -79,10 +86,7 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
         event.jobsInProgress.isNotEmpty ? event.jobsInProgress : {};
 
     int jobId = event.job.id!;
-
-    StreamController<double>? jobProgressController =
-        jobsMap.remove(jobId)?.progressController;
-    jobProgressController?.close();
+    jobsMap.remove(jobId);
 
     emit(
       RefreshingJobsProgressUpdated(
@@ -101,10 +105,7 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
         event.jobsInProgress.isNotEmpty ? event.jobsInProgress : {};
 
     int jobId = event.job.id!;
-
-    StreamController<double>? jobProgressController =
-        jobsMap.remove(jobId)?.progressController;
-    jobProgressController?.close();
+    jobsMap.remove(jobId);
 
     final result = await updateJobFinishTimeUseCase.execute(
       event.job,

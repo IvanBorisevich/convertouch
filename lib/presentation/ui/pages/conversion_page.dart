@@ -125,7 +125,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                       unitsInConversion: conversion.targetConversionItems
                           .map((convItem) => convItem.unit)
                           .toList(),
-                      currentSourceConversionItem: conversion.sourceConversionItem,
+                      currentSourceConversionItem:
+                          conversion.sourceConversionItem,
                       searchString: null,
                     ),
                   );
@@ -186,13 +187,29 @@ class ConvertouchConversionPage extends StatelessWidget {
                         ),
                       );
                     },
-                    onProgressIndicatorFinish: () {
+                    onProgressIndicatorInterrupt: () {
+                      BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                        StopJob(
+                          job: pageState.job!,
+                          jobsInProgress: jobsControlState.jobsInProgress,
+                        ),
+                      );
+                    },
+                    onProgressIndicatorFinish: (jobResult) {
                       BlocProvider.of<RefreshingJobsControlBloc>(context).add(
                         FinishJob(
                           job: pageState.job!,
                           jobsInProgress: jobsControlState.jobsInProgress,
                         ),
                       );
+                      if (jobResult.refreshedConversionParams != null) {
+                        BlocProvider.of<ConversionBloc>(context).add(
+                          BuildConversion(
+                            conversionParams:
+                                jobResult.refreshedConversionParams!,
+                          ),
+                        );
+                      }
                     },
                     margin: const EdgeInsets.only(right: 7),
                     progressStream: jobInProgress?.progressController?.stream,
