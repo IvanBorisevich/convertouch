@@ -3,10 +3,10 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 
 class InputStartJobModel {
   final RefreshingJobModel job;
-  final InputConversionModel? conversionParamsToRefresh;
+  final InputConversionModel? conversionParamsToBeRefreshed;
 
   const InputStartJobModel({
     required this.job,
-    this.conversionParamsToRefresh,
+    this.conversionParamsToBeRefreshed,
   });
 }

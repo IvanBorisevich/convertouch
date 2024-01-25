@@ -6,7 +6,8 @@ abstract class UnitDao {
 
   Future<List<UnitEntity>> getAll(int unitGroupId);
 
-  Future<List<UnitEntity>> getBySearchString(int unitGroupId, String searchString);
+  Future<List<UnitEntity>> getBySearchString(
+      int unitGroupId, String searchString);
 
   Future<UnitEntity?> getByCode(int unitGroupId, String code);
 
@@ -17,6 +18,12 @@ abstract class UnitDao {
   Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
 
   Future<List<UnitEntity>> getUnitsByCodes(int unitGroupId, List<String> codes);
+
+  Future<List<UnitEntity>> updateUnitsCoefficients(
+    sqlite.Database db,
+    int unitGroupId,
+    Map<String, double?> codeToCoefficient,
+  );
 
   Future<int> insert(UnitEntity unit);
 

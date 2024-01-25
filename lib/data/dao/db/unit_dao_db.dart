@@ -45,6 +45,26 @@ abstract class UnitDaoDb extends UnitDao {
   Future<List<UnitEntity>> getUnitsByCodes(int unitGroupId, List<String> codes);
 
   @override
+  Future<List<UnitEntity>> updateUnitsCoefficients(
+    sqlite.Database db,
+    int unitGroupId,
+    Map<String, double?> codeToCoefficient,
+  ) async {
+    List<UnitEntity> savedEntities = await getUnitsByCodes(
+      unitGroupId,
+      codeToCoefficient.keys.toList(),
+    );
+
+    List<UnitEntity> patchEntities = savedEntities
+        .map((entity) => UnitEntity.coalesce(
+            savedEntity: entity, coefficient: codeToCoefficient[entity.code]))
+        .toList();
+
+    await updateBatch(db, patchEntities);
+    return patchEntities;
+  }
+
+  @override
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<int> insert(UnitEntity unit);
 

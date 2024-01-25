@@ -27,10 +27,10 @@ import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/prepare_source_conversion_item_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/refresh_conversion_params_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_menu_view_use_case.dart';
-import 'package:convertouch/domain/use_cases/refresh_data/refresh_data_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
@@ -260,14 +260,6 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<RefreshDataUseCase>(
-    () => RefreshDataUseCase(
-      networkDataRepository: locator(),
-      refreshableValueRepository: locator(),
-      unitRepository: locator(),
-    ),
-  );
-
   locator.registerLazySingleton<UpdateJobFinishTimeUseCase>(
     () => UpdateJobFinishTimeUseCase(
       refreshingJobRepository: locator(),
@@ -276,9 +268,13 @@ Future<void> init() async {
 
   locator.registerLazySingleton<StartJobUseCase>(
     () => StartJobUseCase(
-      refreshDataUseCase: locator(),
-      buildConversionUseCase: locator(),
+      networkDataRepository: locator(),
+      refreshConversionParamsUseCase: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<RefreshConversionParamsUseCase>(
+    () => const RefreshConversionParamsUseCase(),
   );
 
   // repositories
@@ -316,7 +312,12 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<NetworkDataRepository>(
-    () => NetworkDataRepositoryImpl(locator()),
+    () => NetworkDataRepositoryImpl(
+      networkDao: locator(),
+      unitDao: database.unitDao,
+      refreshableValueDao: database.refreshableValueDao,
+      database: database.database.database,
+    ),
   );
 
   locator.registerLazySingleton<RefreshableValueRepository>(

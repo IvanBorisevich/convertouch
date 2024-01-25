@@ -15,7 +15,7 @@ class RefreshingJobResultModel {
         );
 
   const RefreshingJobResultModel.finish({
-    required InputConversionModel? refreshedConversionParams,
+    InputConversionModel? refreshedConversionParams,
   }) : this(
           progressPercent: 1.0,
           refreshedConversionParams: refreshedConversionParams,

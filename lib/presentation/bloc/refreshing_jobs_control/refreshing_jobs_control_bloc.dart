@@ -55,7 +55,7 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     final startedJobResult = await startJobUseCase.execute(
       InputStartJobModel(
         job: event.job,
-        conversionParamsToRefresh: conversionToRebuild,
+        conversionParamsToBeRefreshed: conversionToRebuild,
       ),
     );
 

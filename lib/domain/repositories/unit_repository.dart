@@ -25,10 +25,5 @@ abstract class UnitRepository {
 
   Future<Either<Failure, int>> add(UnitModel unit);
 
-  Future<Either<Failure, List<UnitModel>>> updateCoefficientsByCodes(
-    int unitGroupId,
-    Map<String, double?> codeToCoefficient,
-  );
-
   Future<Either<Failure, void>> remove(List<int> unitIds);
 }

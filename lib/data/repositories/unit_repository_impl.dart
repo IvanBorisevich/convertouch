@@ -136,35 +136,6 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<Failure, List<UnitModel>>> updateCoefficientsByCodes(
-    int unitGroupId,
-    Map<String, double?> codeToCoefficient,
-  ) async {
-    try {
-      List<UnitEntity> savedEntities = await unitDao.getUnitsByCodes(
-        unitGroupId,
-        codeToCoefficient.keys.toList(),
-      );
-
-      List<UnitEntity> patchEntities = savedEntities
-          .map((entity) => UnitEntity.coalesce(
-              savedEntity: entity, coefficient: codeToCoefficient[entity.code]))
-          .toList();
-
-      await unitDao.updateBatch(database, patchEntities);
-      return Right(
-        patchEntities
-            .map((entity) => UnitTranslator.I.toModel(entity)!)
-            .toList(),
-      );
-    } catch (e) {
-      return Left(
-        DatabaseFailure("Error when batch-updating units: $e"),
-      );
-    }
-  }
-
-  @override
   Future<Either<Failure, void>> remove(List<int> unitIds) async {
     try {
       await unitDao.remove(unitIds);

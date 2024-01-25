@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart' as sqlite;
 
 @dao
 abstract class RefreshableValueDaoDb extends RefreshableValueDao {
-
   @override
   @Query('select * from $refreshableValuesTableName '
       'where unit_id = :unitId '
