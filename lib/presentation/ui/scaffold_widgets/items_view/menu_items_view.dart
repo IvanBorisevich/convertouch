@@ -47,7 +47,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
           Widget? itemBuilder(context, index) {
             IdNameItemModel item = items[index];
             bool selected = showSelectedItem && item.id == selectedItemId;
-            bool isMarkedToSelect = showMarkedItems &&
+            bool marked = showMarkedItems &&
                 markedItemIds != null &&
                 markedItemIds!.contains(item.id);
 
@@ -64,7 +64,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                 onTapForRemoval: () {
                   onItemTapForRemoval?.call(item);
                 },
-                isMarkedToSelect: isMarkedToSelect,
+                marked: marked,
                 selected: selected,
                 removalMode: removalModeAllowed && removalModeEnabled,
                 selectedForRemoval:

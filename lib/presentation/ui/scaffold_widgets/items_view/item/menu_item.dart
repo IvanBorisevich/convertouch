@@ -15,7 +15,7 @@ class ConvertouchMenuItem extends StatelessWidget {
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function()? onTapForRemoval;
-  final bool isMarkedToSelect;
+  final bool marked;
   final bool selected;
   final bool removalMode;
   final bool selectedForRemoval;
@@ -28,7 +28,7 @@ class ConvertouchMenuItem extends StatelessWidget {
     this.onTap,
     this.onLongPress,
     this.onTapForRemoval,
-    this.isMarkedToSelect = false,
+    this.marked = false,
     this.selected = false,
     this.removalMode = false,
     this.selectedForRemoval = false,
@@ -52,14 +52,13 @@ class ConvertouchMenuItem extends StatelessWidget {
 
     if (selected) {
       itemColorVariation = itemColor.selected;
-    } else if (isMarkedToSelect) {
+    } else if (marked) {
       itemColorVariation = itemColor.marked;
     } else {
       itemColorVariation = itemColor.regular;
     }
 
     Widget itemLogo;
-
     String itemName;
 
     switch (item.runtimeType) {
@@ -108,8 +107,7 @@ class ConvertouchMenuItem extends StatelessWidget {
         if (removalMode) {
           onTapForRemoval?.call();
         } else {
-          bool notMarkedAndCanBeSelected = !isMarkedToSelect;
-          if (!selected && (notMarkedAndCanBeSelected)) {
+          if (!selected) {
             FocusScope.of(context).unfocus();
             onTap?.call();
           }
