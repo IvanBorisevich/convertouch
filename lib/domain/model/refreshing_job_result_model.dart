@@ -1,12 +1,12 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 
 class RefreshingJobResultModel {
   final double progressPercent;
-  final InputConversionModel? refreshedConversionParams;
+  final OutputConversionModel? rebuiltConversion;
 
   const RefreshingJobResultModel({
     required this.progressPercent,
-    this.refreshedConversionParams,
+    this.rebuiltConversion,
   });
 
   const RefreshingJobResultModel.start()
@@ -15,9 +15,9 @@ class RefreshingJobResultModel {
         );
 
   const RefreshingJobResultModel.finish({
-    InputConversionModel? refreshedConversionParams,
+    OutputConversionModel? rebuiltConversion,
   }) : this(
           progressPercent: 1.0,
-          refreshedConversionParams: refreshedConversionParams,
+          rebuiltConversion: rebuiltConversion,
         );
 }

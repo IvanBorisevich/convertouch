@@ -116,7 +116,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                         baseUnit: null,
                       ),
                     );
-                    Navigator.of(context).pushNamed(unitCreationPage);
+                    Navigator.of(context).pushNamed(
+                      PageName.unitCreationPage.name,
+                    );
                   },
                   background: floatingButtonColor.background,
                   foreground: floatingButtonColor.foreground,

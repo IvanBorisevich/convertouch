@@ -78,6 +78,6 @@ class RefreshingJobModel extends IdNameItemModel {
   String toString() {
     return 'RefreshingJobModel{'
         'id: $id, '
-        'name: $name';
+        'name: $name}';
   }
 }

@@ -26,8 +26,7 @@ import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/prepare_source_conversion_item_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/refresh_conversion_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_menu_view_use_case.dart';
@@ -37,7 +36,7 @@ import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs_control/start_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs_control/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
@@ -165,7 +164,7 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => RefreshingJobsControlBloc(
-      startJobUseCase: locator(),
+      executeJobUseCase: locator(),
       updateJobFinishTimeUseCase: locator(),
     ),
   );
@@ -202,17 +201,17 @@ Future<void> init() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
-  locator.registerLazySingleton<PrepareSourceConversionItemUseCase>(
-    () => PrepareSourceConversionItemUseCase(
-      unitGroupRepository: locator(),
-      refreshingJobRepository: locator(),
-      refreshableValueRepository: locator(),
+  locator.registerLazySingleton<RebuildConversionUseCase>(
+    () => RebuildConversionUseCase(
+      buildConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<BuildConversionUseCase>(
     () => BuildConversionUseCase(
-      prepareSourceConversionItemUseCase: locator(),
+      unitGroupRepository: locator(),
+      refreshingJobRepository: locator(),
+      refreshableValueRepository: locator(),
     ),
   );
 
@@ -266,15 +265,11 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<StartJobUseCase>(
-    () => StartJobUseCase(
+  locator.registerLazySingleton<ExecuteJobUseCase>(
+    () => ExecuteJobUseCase(
       networkDataRepository: locator(),
-      refreshConversionParamsUseCase: locator(),
+      rebuildConversionUseCase: locator(),
     ),
-  );
-
-  locator.registerLazySingleton<RefreshConversionParamsUseCase>(
-    () => const RefreshConversionParamsUseCase(),
   );
 
   // repositories

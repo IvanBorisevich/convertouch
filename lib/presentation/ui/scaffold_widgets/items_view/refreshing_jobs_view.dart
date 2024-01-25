@@ -47,10 +47,10 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
               onItemClick: () {
                 onItemClick?.call(jobItem);
               },
-              onStartClick: () {
+              onRefreshButtonClick: () {
                 onJobStartClick?.call(jobItem);
               },
-              onStopClick: () {
+              onOngoingRefreshButtonClick: () {
                 onJobStopClick?.call(jobItem);
               },
               onFinish: (jobResult) {

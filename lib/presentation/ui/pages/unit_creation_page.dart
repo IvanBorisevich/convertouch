@@ -77,8 +77,9 @@ class _ConvertouchUnitCreationPageState
                                   searchString: null,
                                 ),
                               );
-                              Navigator.of(context)
-                                  .pushNamed(unitGroupsPageForUnitCreation);
+                              Navigator.of(context).pushNamed(
+                                PageName.unitGroupsPageForUnitCreation.name,
+                              );
                             },
                             theme: appState.theme,
                             itemsViewMode: ItemsViewMode.list,
@@ -91,8 +92,7 @@ class _ConvertouchUnitCreationPageState
                       onChanged: (String value) async {
                         setState(() {
                           _unitName = value;
-                          _unitCodeHint =
-                              _getInitialUnitCodeByName(value);
+                          _unitCodeHint = _getInitialUnitCodeByName(value);
                         });
                       },
                       theme: appState.theme,
@@ -171,8 +171,9 @@ class _ConvertouchUnitCreationPageState
                                         searchString: null,
                                       ),
                                     );
-                                    Navigator.of(context)
-                                        .pushNamed(unitsPageForUnitCreation);
+                                    Navigator.of(context).pushNamed(
+                                      PageName.unitsPageForUnitCreation.name,
+                                    );
                                   },
                                   theme: appState.theme,
                                 ),

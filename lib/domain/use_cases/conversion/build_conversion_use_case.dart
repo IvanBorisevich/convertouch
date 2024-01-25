@@ -1,23 +1,32 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/refreshable_value_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/prepare_source_conversion_item_use_case.dart';
+import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
+import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
+import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/domain/utils/number_value_utils.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildConversionUseCase
     extends UseCase<InputConversionModel, OutputConversionModel> {
-  final PrepareSourceConversionItemUseCase prepareSourceConversionItemUseCase;
+  final UnitGroupRepository unitGroupRepository;
+  final RefreshingJobRepository refreshingJobRepository;
+  final RefreshableValueRepository refreshableValueRepository;
 
   const BuildConversionUseCase({
-    required this.prepareSourceConversionItemUseCase,
+    required this.unitGroupRepository,
+    required this.refreshingJobRepository,
+    required this.refreshableValueRepository,
   });
 
   @override
@@ -35,10 +44,7 @@ class BuildConversionUseCase
       }
 
       ConversionItemModel srcConversionItem = input.sourceConversionItem ??
-          ObjectUtils.tryGet(
-            await prepareSourceConversionItemUseCase
-                .execute(input.targetUnits[0]),
-          );
+          await _prepareSourceConversionItem(input.targetUnits.first);
 
       List<ConversionItemModel> convertedUnitValues = [];
 
@@ -120,5 +126,56 @@ class BuildConversionUseCase
         InternalFailure("Error when converting unit value: $e"),
       );
     }
+  }
+
+  Future<ConversionItemModel> _prepareSourceConversionItem(
+    UnitModel sourceUnit,
+  ) async {
+    UnitGroupModel? unitGroup = ObjectUtils.tryGet(
+      await unitGroupRepository.get(sourceUnit.unitGroupId),
+    );
+
+    if (!unitGroup!.refreshable) {
+      return ConversionItemModel(
+        unit: sourceUnit,
+        value: emptyValueModel,
+        defaultValue: defaultValueModel,
+      );
+    }
+
+    RefreshingJobModel? job = ObjectUtils.tryGet(
+        await refreshingJobRepository.getByGroupId(unitGroup.id!));
+
+    if (job == null) {
+      return ConversionItemModel(
+        unit: sourceUnit,
+        value: emptyValueModel,
+        defaultValue: emptyValueModel,
+      );
+    }
+
+    RefreshableDataPart refreshableDataPart = job.refreshableDataPart;
+
+    if (refreshableDataPart != RefreshableDataPart.value) {
+      return ConversionItemModel(
+        unit: sourceUnit,
+        value: emptyValueModel,
+        defaultValue: defaultValueModel,
+      );
+    }
+
+    RefreshableValueModel? refreshableValue = ObjectUtils.tryGet(
+      await refreshableValueRepository.get(sourceUnit.id!),
+    );
+
+    return ConversionItemModel(
+      unit: sourceUnit,
+      value: emptyValueModel,
+      defaultValue: refreshableValue != null && refreshableValue.value != null
+          ? ValueModel(
+              strValue: refreshableValue.value!,
+            )
+          : emptyValueModel,
+    );
   }
 }

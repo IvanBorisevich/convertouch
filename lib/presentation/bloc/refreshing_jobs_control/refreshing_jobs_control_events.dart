@@ -13,23 +13,23 @@ abstract class RefreshingJobsControlEvent extends ConvertouchEvent {
 
   @override
   List<Object?> get props => [
-        job,
-        jobsInProgress,
-      ];
+    job,
+    jobsInProgress,
+  ];
 }
 
-class StartJob extends RefreshingJobsControlEvent {
-  final OutputConversionModel? conversionToRebuild;
+class ExecuteJob extends RefreshingJobsControlEvent {
+  final OutputConversionModel? conversionToBeRebuilt;
 
-  const StartJob({
+  const ExecuteJob({
     required super.job,
-    this.conversionToRebuild,
+    this.conversionToBeRebuilt,
     super.jobsInProgress,
   });
 
   @override
   String toString() {
-    return 'StartJob{'
+    return 'ExecuteJob{'
         'job: $job, '
         'jobsInProgress: $jobsInProgress}';
   }

@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,8 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
 
   final RefreshingJobModel item;
   final void Function()? onItemClick;
-  final void Function()? onStartClick;
-  final void Function()? onStopClick;
+  final void Function()? onRefreshButtonClick;
+  final void Function()? onOngoingRefreshButtonClick;
   final void Function(RefreshingJobResultModel)? onFinish;
   final double itemSpacing;
   final ConvertouchUITheme theme;
@@ -22,8 +23,8 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
   const ConvertouchRefreshingJobItem(
     this.item, {
     this.onItemClick,
-    this.onStartClick,
-    this.onStopClick,
+    this.onRefreshButtonClick,
+    this.onOngoingRefreshButtonClick,
     this.onFinish,
     this.itemSpacing = 7,
     required this.theme,
@@ -49,7 +50,7 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
           ),
         ),
         child: IconButton(
-          onPressed: onStartClick,
+          onPressed: onRefreshButtonClick,
           icon: Icon(
             Icons.refresh_rounded,
             color: color.refreshButton.regular.foreground,
@@ -101,16 +102,15 @@ class ConvertouchRefreshingJobItem extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // ConvertouchProgressButton(
-                    //   buttonWidget: refreshDataButton(),
-                    //   margin: EdgeInsets.only(right: itemSpacing),
-                    //   progressStream: item.progressController?.stream,
-                    //   onProgressIndicatorFinish: onFinish,
-                    //   onProgressIndicatorClick: onStopClick,
-                    //   onProgressIndicatorInterrupt: onStopClick,
-                    //   progressIndicatorColor:
-                    //       color.refreshButton.regular.foreground,
-                    // ),
+                    ConvertouchProgressButton(
+                      buttonWidget: refreshDataButton(),
+                      margin: EdgeInsets.only(right: itemSpacing),
+                      progressStream: item.progressController?.stream,
+                      onProgressIndicatorClick: onOngoingRefreshButtonClick,
+                      onOngoingProgressIndicatorClick: onOngoingRefreshButtonClick,
+                      progressIndicatorColor:
+                          color.refreshButton.regular.foreground,
+                    ),
                   ],
                 ),
               ),

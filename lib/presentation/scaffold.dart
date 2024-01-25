@@ -50,11 +50,17 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           body: Stack(
             children: [
               _buildOffstageNavigator(
-                  BottomNavbarItem.home, unitsConversionPage),
+                BottomNavbarItem.home,
+                PageName.unitsConversionPage,
+              ),
               _buildOffstageNavigator(
-                  BottomNavbarItem.unitsMenu, unitGroupsPageRegular),
+                BottomNavbarItem.unitsMenu,
+                PageName.unitGroupsPageRegular,
+              ),
               _buildOffstageNavigator(
-                  BottomNavbarItem.refreshableData, refreshingJobsPage),
+                BottomNavbarItem.refreshableData,
+                PageName.refreshingJobsPage,
+              ),
               // _buildOffstageNavigator(BottomNavbarItem.more),
             ],
           ),
@@ -69,7 +75,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
 
   Widget _buildOffstageNavigator(
     BottomNavbarItem bottomNavbarItem,
-    String rootPageId,
+    PageName rootPageId,
   ) {
     return Offstage(
       offstage: bottomNavbarItem != _selectedNavbarItem,

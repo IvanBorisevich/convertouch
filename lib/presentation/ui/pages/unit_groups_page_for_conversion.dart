@@ -91,7 +91,9 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
                 searchString: null,
               ),
             );
-            Navigator.of(context).pushNamed(unitsPageForConversion);
+            Navigator.of(context).pushNamed(
+              PageName.unitsPageForConversion.name,
+            );
           },
           onUnitGroupTapForRemoval: null,
           onUnitGroupLongPress: null,

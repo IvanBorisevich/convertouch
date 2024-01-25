@@ -4,36 +4,37 @@ import 'dart:developer';
 import 'package:convertouch/domain/model/failure.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_params_refreshing_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_rebuild_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/repositories/network_data_repository.dart';
-import 'package:convertouch/domain/use_cases/conversion/refresh_conversion_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 
-class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
+class ExecuteJobUseCase
+    extends UseCase<InputExecuteJobModel, RefreshingJobModel> {
   final NetworkDataRepository networkDataRepository;
-  final RefreshConversionParamsUseCase refreshConversionParamsUseCase;
+  final RebuildConversionUseCase rebuildConversionUseCase;
 
-  const StartJobUseCase({
+  const ExecuteJobUseCase({
     required this.networkDataRepository,
-    required this.refreshConversionParamsUseCase,
+    required this.rebuildConversionUseCase,
   });
 
   @override
   Future<Either<Failure, RefreshingJobModel>> execute(
-    InputStartJobModel input,
+    InputExecuteJobModel input,
   ) async {
-    int jobId = input.job.id!;
     StreamController<RefreshingJobResultModel>? jobProgressController;
 
     try {
       jobProgressController = createJobProgressStream(
         jobFunc: (jobProgressController) async {
           if (input.job.selectedDataSource == null) {
+            log("No data source found for the job ${input.job.name}");
             jobProgressController.add(
               const RefreshingJobResultModel.finish(),
             );
@@ -48,14 +49,13 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
             ),
           );
 
-          InputConversionModel? refreshedConversionParams;
+          OutputConversionModel? rebuiltConversion;
 
-          if (input.conversionParamsToBeRefreshed != null) {
-            refreshedConversionParams = ObjectUtils.tryGet(
-              await refreshConversionParamsUseCase.execute(
-                InputConversionParamsRefreshingModel(
-                  conversionParamsToBeRefreshed:
-                      input.conversionParamsToBeRefreshed!,
+          if (input.conversionToBeRebuilt != null) {
+            rebuiltConversion = ObjectUtils.tryGet(
+              await rebuildConversionUseCase.execute(
+                InputConversionRebuildModel(
+                  conversionToBeRebuilt: input.conversionToBeRebuilt!,
                   refreshableDataPart: input.job.refreshableDataPart,
                   refreshedData: refreshedData,
                 ),
@@ -65,7 +65,7 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
 
           jobProgressController.add(
             RefreshingJobResultModel.finish(
-              refreshedConversionParams: refreshedConversionParams,
+              rebuiltConversion: rebuiltConversion,
             ),
           );
         },
@@ -83,7 +83,7 @@ class StartJobUseCase extends UseCase<InputStartJobModel, RefreshingJobModel> {
 
       return Left(
         InternalFailure("Error when starting the refreshing job "
-            "with id = $jobId: $e"),
+            "'${input.job.name}': $e"),
       );
     }
   }

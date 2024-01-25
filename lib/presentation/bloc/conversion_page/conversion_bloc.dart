@@ -28,6 +28,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
         ) {
     on<BuildConversion>(_onBuildConversion);
     on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
+    on<ShowNewConversionAfterRefresh>(_onNewConversionShow);
     on<RemoveConversionItem>(_onRemoveConversion);
     on<RestoreLastConversion>(_onRestoreConversion);
   }
@@ -89,6 +90,20 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     event.conversionParams.targetUnits[oldUnitIndex] = event.newUnit;
 
     await _onBuildConversion(event, emit);
+  }
+
+  _onNewConversionShow(
+    ShowNewConversionAfterRefresh event,
+    Emitter<ConversionState> emit,
+  ) async {
+    emit(const ConversionInBuilding());
+    emit(
+      ConversionBuilt(
+        conversion: event.newConversion,
+        showRefreshButton: true,
+        job: event.job,
+      ),
+    );
   }
 
   _onRemoveConversion(

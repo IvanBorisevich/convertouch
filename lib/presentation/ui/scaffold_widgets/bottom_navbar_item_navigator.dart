@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final BottomNavbarItem bottomNavbarItem;
-  final String rootPageId;
+  final PageName rootPageId;
 
   const ConvertouchBottomNavbarItemNavigator({
     required this.navigatorKey,
@@ -31,49 +31,49 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
 
     return {}..addEntries([
         route(
-          unitsConversionPage,
+          PageName.unitsConversionPage.name,
           const ConvertouchConversionPage(),
         ),
         route(
-          unitGroupsPageRegular,
+          PageName.unitGroupsPageRegular.name,
           const ConvertouchUnitGroupsPageRegular(),
         ),
         route(
-          unitGroupsPageForConversion,
+          PageName.unitGroupsPageForConversion.name,
           const ConvertouchUnitGroupsPageForConversion(),
         ),
         route(
-          unitGroupsPageForUnitCreation,
+          PageName.unitGroupsPageForUnitCreation.name,
           const ConvertouchUnitGroupsPageForUnitCreation(),
         ),
         route(
-          unitsPageRegular,
+          PageName.unitsPageRegular.name,
           const ConvertouchUnitsPageRegular(),
         ),
         route(
-          unitsPageForConversion,
+          PageName.unitsPageForConversion.name,
           const ConvertouchUnitsPageForConversion(),
         ),
         route(
-          unitsPageForUnitCreation,
+          PageName.unitsPageForUnitCreation.name,
           const ConvertouchUnitsPageForUnitCreation(),
         ),
         route(
-          unitGroupCreationPage,
+          PageName.unitGroupCreationPage.name,
           const ConvertouchUnitGroupCreationPage(),
         ),
         route(
-          unitCreationPage,
+          PageName.unitCreationPage.name,
           const ConvertouchUnitCreationPage(),
         ),
         route(
-          refreshingJobsPage,
+          PageName.refreshingJobsPage.name,
           const ConvertouchRefreshingJobsPage(),
         ),
-      route(
-          refreshingJobDetailsPage,
-        const ConvertouchRefreshingJobDetailsPage(),
-      ),
+        route(
+          PageName.refreshingJobDetailsPage.name,
+          const ConvertouchRefreshingJobDetailsPage(),
+        ),
       ]);
   }
 
@@ -83,7 +83,7 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
 
     return Navigator(
       key: navigatorKey,
-      initialRoute: rootPageId,
+      initialRoute: rootPageId.name,
       onGenerateRoute: (routeSettings) {
         return MaterialPageRoute(
           builder: (context) => routeBuilders[routeSettings.name]!(context),

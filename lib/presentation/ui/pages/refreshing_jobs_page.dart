@@ -1,9 +1,5 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
@@ -46,11 +42,13 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                       job: item,
                     ),
                   );
-                  Navigator.of(context).pushNamed(refreshingJobDetailsPage);
+                  Navigator.of(context).pushNamed(
+                    PageName.refreshingJobDetailsPage.name,
+                  );
                 },
                 onJobStartClick: (item) {
                   BlocProvider.of<RefreshingJobsControlBloc>(context).add(
-                    StartJob(
+                    ExecuteJob(
                       job: item,
                       jobsInProgress: jobsProgressState.jobsInProgress,
                     ),
@@ -65,20 +63,20 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                   );
                 },
                 onJobFinish: (item, jobResult) {
-                  BlocProvider.of<RefreshingJobsControlBloc>(context).add(
-                    FinishJob(
-                      job: item,
-                      jobsInProgress: jobsProgressState.jobsInProgress,
-                    ),
-                  );
-                  if (jobResult.refreshedConversionParams != null) {
-                    log("Rebuild conversion (on jobs page)");
-                    BlocProvider.of<ConversionBloc>(context).add(
-                      BuildConversion(
-                        conversionParams: jobResult.refreshedConversionParams!,
-                      ),
-                    );
-                  }
+                  // BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                  //   FinishJob(
+                  //     job: item,
+                  //     jobsInProgress: jobsProgressState.jobsInProgress,
+                  //   ),
+                  // );
+                  // if (jobResult.refreshedConversionParams != null) {
+                  //   log("Rebuild conversion (on jobs page)");
+                  //   BlocProvider.of<ConversionBloc>(context).add(
+                  //     BuildConversion(
+                  //       conversionParams: jobResult.refreshedConversionParams!,
+                  //     ),
+                  //   );
+                  // }
                 },
                 theme: appState.theme,
               ),

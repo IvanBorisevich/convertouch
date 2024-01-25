@@ -1,13 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 
-class InputConversionParamsRefreshingModel {
-  final InputConversionModel conversionParamsToBeRefreshed;
+class InputConversionRebuildModel {
+  final OutputConversionModel conversionToBeRebuilt;
   final RefreshableDataPart refreshableDataPart;
   final List<dynamic> refreshedData;
 
-  const InputConversionParamsRefreshingModel({
-    required this.conversionParamsToBeRefreshed,
+  const InputConversionRebuildModel({
+    required this.conversionToBeRebuilt,
     required this.refreshableDataPart,
     required this.refreshedData,
   });
@@ -15,7 +15,7 @@ class InputConversionParamsRefreshingModel {
   @override
   String toString() {
     return 'InputConversionParamsRefreshingModel{'
-        'conversionParamsToBeRefreshed: $conversionParamsToBeRefreshed, '
+        'conversionToBeRebuilt: $conversionToBeRebuilt, '
         'refreshableDataPart: $refreshableDataPart, '
         'refreshedData: $refreshedData}';
   }

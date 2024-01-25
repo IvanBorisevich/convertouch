@@ -9,9 +9,8 @@ class ConvertouchProgressButton extends StatelessWidget {
   final Stream<RefreshingJobResultModel>? progressStream;
   final double radius;
   final bool determinate;
-  final void Function(RefreshingJobResultModel)? onProgressIndicatorFinish;
   final void Function()? onProgressIndicatorClick;
-  final void Function()? onProgressIndicatorInterrupt;
+  final void Function()? onOngoingProgressIndicatorClick;
   final void Function()? onProgressIndicatorErrorIconClick;
   final EdgeInsets? margin;
   final Color? progressIndicatorColor;
@@ -22,9 +21,8 @@ class ConvertouchProgressButton extends StatelessWidget {
     required this.progressStream,
     this.radius = 25,
     this.determinate = false,
-    this.onProgressIndicatorFinish,
     this.onProgressIndicatorClick,
-    this.onProgressIndicatorInterrupt,
+    this.onOngoingProgressIndicatorClick,
     this.onProgressIndicatorErrorIconClick,
     this.margin,
     this.progressIndicatorColor,
@@ -44,8 +42,6 @@ class ConvertouchProgressButton extends StatelessWidget {
           : StreamBuilder<RefreshingJobResultModel>(
               stream: progressStream,
               builder: (context, snapshot) {
-                log("snapshot connection: ${snapshot.connectionState}");
-
                 if (snapshot.hasError) {
                   log("Snapshot contains an error");
                   return IconButton(
@@ -61,14 +57,11 @@ class ConvertouchProgressButton extends StatelessWidget {
                     log("Snapshot does not contain data");
                     return buttonWidget;
                   }
-                  if (snapshot.data!.progressPercent == 1.0) {
-                    onProgressIndicatorFinish?.call(snapshot.data!);
-                  } else {
-                    onProgressIndicatorInterrupt?.call();
+                  if (snapshot.data!.progressPercent != 1.0) {
+                    onOngoingProgressIndicatorClick?.call();
                   }
                   return buttonWidget;
                 } else {
-                  log("Showing progress indicator");
                   return GestureDetector(
                     onTap: onProgressIndicatorClick,
                     child: determinate

@@ -2,23 +2,25 @@ const String appName = "Convertouch";
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
-
-const String unitsConversionPage = "unitsConversionPage";
-const String unitGroupsPageRegular = "unitGroupsPageRegular";
-const String unitGroupsPageForConversion = "unitGroupsPageForConversion";
-const String unitGroupsPageForUnitCreation = "unitGroupsPageForUnitCreation";
-const String unitsPageRegular = "unitsPageRegular";
-const String unitsPageForConversion = "unitsPageForConversion";
-const String unitsPageForUnitCreation = "unitsPageForUnitCreation";
-const String unitGroupCreationPage = "unitGroupCreationPage";
-const String unitCreationPage = "unitCreationPage";
-const String refreshingJobsPage = "refreshingJobsPage";
-const String refreshingJobDetailsPage = "refreshingJobDetailsPage";
-
 const String sourceUnitIdKey = 'sourceUnitId';
 const String sourceValueKey = 'sourceValue';
 const String targetUnitIdsKey = 'targetUnitIds';
 const String conversionUnitGroupIdKey = 'conversionUnitGroupId';
+
+
+enum PageName {
+  unitsConversionPage,
+  unitGroupsPageRegular,
+  unitGroupsPageForConversion,
+  unitGroupsPageForUnitCreation,
+  unitsPageRegular,
+  unitsPageForConversion,
+  unitsPageForUnitCreation,
+  unitGroupCreationPage,
+  unitCreationPage,
+  refreshingJobsPage,
+  refreshingJobDetailsPage,
+}
 
 enum ItemType {
   unit,

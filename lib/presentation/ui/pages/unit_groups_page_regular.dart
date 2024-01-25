@@ -58,7 +58,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                 searchString: null,
               ),
             );
-            Navigator.of(context).pushNamed(unitsPageRegular);
+            Navigator.of(context).pushNamed(PageName.unitsPageRegular.name);
           },
           onUnitGroupTapForRemoval: (unitGroup) {
             BlocProvider.of<UnitGroupsBloc>(context).add(
@@ -105,7 +105,9 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                 )
               : ConvertouchFloatingActionButton.adding(
                   onClick: () {
-                    Navigator.of(context).pushNamed(unitGroupCreationPage);
+                    Navigator.of(context).pushNamed(
+                      PageName.unitGroupCreationPage.name,
+                    );
                   },
                   visible: true,
                   background: floatingButtonColor.background,
