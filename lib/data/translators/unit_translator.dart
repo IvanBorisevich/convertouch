@@ -18,6 +18,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       symbol: model.symbol,
       coefficient: model.coefficient,
       unitGroupId: model.unitGroupId,
+      oob: model.oob == true ? 1 : null,
     );
   }
 
@@ -33,6 +34,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       symbol: entity.symbol,
       coefficient: entity.coefficient,
       unitGroupId: entity.unitGroupId,
+      oob: entity.oob == 1,
     );
   }
 }

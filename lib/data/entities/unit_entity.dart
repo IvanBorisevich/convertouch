@@ -27,6 +27,7 @@ class UnitEntity {
   final double? coefficient;
   @ColumnInfo(name: 'unit_group_id')
   final int unitGroupId;
+  final int? oob;
 
   const UnitEntity({
     this.id,
@@ -35,6 +36,7 @@ class UnitEntity {
     this.symbol,
     this.coefficient,
     required this.unitGroupId,
+    this.oob,
   });
 
   UnitEntity.coalesce({

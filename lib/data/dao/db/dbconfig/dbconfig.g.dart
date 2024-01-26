@@ -93,9 +93,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `oob` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `oob` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -163,7 +163,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
-                  'refreshable': item.refreshable
+                  'refreshable': item.refreshable,
+                  'oob': item.oob
                 }),
         _unitGroupEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -174,7 +175,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
-                  'refreshable': item.refreshable
+                  'refreshable': item.refreshable,
+                  'oob': item.oob
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -195,7 +197,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?));
+            refreshable: row['refreshable'] as int?,
+            oob: row['oob'] as int?));
   }
 
   @override
@@ -207,7 +210,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?),
+            refreshable: row['refreshable'] as int?,
+            oob: row['oob'] as int?),
         arguments: [searchString]);
   }
 
@@ -220,7 +224,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?));
+            refreshable: row['refreshable'] as int?,
+            oob: row['oob'] as int?));
   }
 
   @override
@@ -232,7 +237,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?),
+            refreshable: row['refreshable'] as int?,
+            oob: row['oob'] as int?),
         arguments: [id]);
   }
 
@@ -245,7 +251,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             name: row['name'] as String,
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?),
+            refreshable: row['refreshable'] as int?,
+            oob: row['oob'] as int?),
         arguments: [name]);
   }
 
@@ -287,7 +294,8 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'code': item.code,
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
-                  'unit_group_id': item.unitGroupId
+                  'unit_group_id': item.unitGroupId,
+                  'oob': item.oob
                 }),
         _unitEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -299,7 +307,8 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'code': item.code,
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
-                  'unit_group_id': item.unitGroupId
+                  'unit_group_id': item.unitGroupId,
+                  'oob': item.oob
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -322,7 +331,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
 
@@ -339,7 +349,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [unitGroupId, searchString]);
   }
 
@@ -356,7 +367,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [unitGroupId, code]);
   }
 
@@ -364,7 +376,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   Future<UnitEntity?> getBaseUnit(int unitGroupId) async {
     return _queryAdapter.query(
         'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 1',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int),
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
 
@@ -377,7 +389,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [id]);
   }
 
@@ -395,7 +408,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [...ids]);
   }
 
@@ -418,7 +432,8 @@ class _$UnitDaoDb extends UnitDaoDb {
             code: row['code'] as String,
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int),
+            unitGroupId: row['unit_group_id'] as int,
+            oob: row['oob'] as int?),
         arguments: [unitGroupId, ...codes]);
   }
 

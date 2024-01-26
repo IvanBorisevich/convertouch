@@ -5,6 +5,7 @@ class UnitGroupModel extends IdNameItemModel {
   final String? iconName;
   final ConversionType conversionType;
   final bool refreshable;
+  final bool oob;
 
   const UnitGroupModel({
     super.id,
@@ -12,6 +13,7 @@ class UnitGroupModel extends IdNameItemModel {
     this.iconName,
     this.conversionType = ConversionType.static,
     this.refreshable = false,
+    this.oob = false,
     super.itemType = ItemType.unitGroup,
   });
 
@@ -20,6 +22,7 @@ class UnitGroupModel extends IdNameItemModel {
     this.iconName,
     this.conversionType = ConversionType.static,
     this.refreshable = false,
+    this.oob = false,
   }) : super(
           id: id,
           name: '',
@@ -34,6 +37,7 @@ class UnitGroupModel extends IdNameItemModel {
     iconName,
     conversionType,
     refreshable,
+    oob,
   ];
 
   @override

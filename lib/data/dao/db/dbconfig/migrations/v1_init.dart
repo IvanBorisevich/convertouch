@@ -68,6 +68,7 @@ class InitialMigration extends ConvertouchDbMigration {
           ? (entity['conversionType'] as ConversionType).value
           : null,
       'refreshable': entity['refreshable'] == true ? 1 : null,
+      'oob': 1,
     });
 
     return groupId;
@@ -155,6 +156,7 @@ class InitialMigration extends ConvertouchDbMigration {
           'symbol': unit['symbol'],
           'coefficient': unit['coefficient'],
           'unit_group_id': unitGroupId,
+          'oob': 1,
         },
         conflictAlgorithm: ConflictAlgorithm.fail,
       );

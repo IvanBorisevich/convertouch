@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:floor/floor.dart';
 
 const String unitGroupsTableName = 'unit_groups';
@@ -18,6 +17,7 @@ class UnitGroupEntity {
   @ColumnInfo(name: 'conversion_type')
   final int? conversionType;
   final int? refreshable;
+  final int? oob;
 
   const UnitGroupEntity({
     this.id,
@@ -25,14 +25,6 @@ class UnitGroupEntity {
     this.iconName,
     this.conversionType,
     this.refreshable,
+    this.oob,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'iconName': iconName != unitGroupDefaultIconName ? iconName : null,
-      'conversionType': conversionType != 0 ? conversionType : null,
-      'refreshable': refreshable == 1,
-    };
-  }
 }
