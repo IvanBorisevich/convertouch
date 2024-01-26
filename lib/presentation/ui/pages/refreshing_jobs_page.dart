@@ -27,6 +27,19 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
               BlocProvider.of<RefreshingJobsBloc>(context).add(
                 const FetchRefreshingJobs(),
               );
+            } else if (state is RefreshingJobsControlNotificationState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(
+                        fontFamily: quicksandFontFamily,
+                      ),
+                    ),
+                  ),
+                ),
+              );
             }
           },
           child: refreshingJobsControlBlocBuilder((jobsProgressState) {

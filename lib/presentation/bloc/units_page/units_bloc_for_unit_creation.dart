@@ -3,38 +3,46 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBlocForUnitCreation extends ConvertouchBloc<UnitsEvent, UnitsState> {
   final FetchUnitsUseCase fetchUnitsUseCase;
 
   UnitsBlocForUnitCreation({
     required this.fetchUnitsUseCase,
-  }) : super(const UnitsInitialState());
+  }) : super(const UnitsInitialState()) {
+    on<FetchUnitsForUnitCreation>(_onUnitsFetchForUnitCreation);
+  }
 
-  @override
-  Stream<UnitsState> mapEventToState(UnitsEvent event) async* {
-    yield const UnitsFetching();
+  _onUnitsFetchForUnitCreation(
+    FetchUnitsForUnitCreation event,
+    Emitter<UnitsState> emit,
+  ) async {
+    emit(const UnitsFetching());
 
-    if (event is FetchUnitsForUnitCreation) {
-      final result = await fetchUnitsUseCase.execute(
-        InputUnitFetchModel(
-          searchString: event.searchString,
-          unitGroupId: event.unitGroup.id!,
+    final result = await fetchUnitsUseCase.execute(
+      InputUnitFetchModel(
+        searchString: event.searchString,
+        unitGroupId: event.unitGroup.id!,
+      ),
+    );
+
+    if (result.isLeft) {
+      emit(
+        UnitsErrorState(
+          exception: result.left,
+          lastSuccessfulState: state,
         ),
       );
-
-      if (result.isLeft) {
-        yield UnitsErrorState(
-          message: result.left.message,
-        );
-      } else {
-        yield UnitsFetchedForUnitCreation(
+    } else {
+      emit(
+        UnitsFetchedForUnitCreation(
           units: result.right,
           unitGroup: event.unitGroup,
           currentSelectedBaseUnit: event.currentSelectedBaseUnit,
           searchString: event.searchString,
-        );
-      }
+        ),
+      );
     }
   }
 }

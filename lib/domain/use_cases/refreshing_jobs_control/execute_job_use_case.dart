@@ -32,16 +32,31 @@ class ExecuteJobUseCase
 
     try {
       if (input.job.selectedDataSource == null) {
-        log("No data source found for the job ${input.job.name}");
-        return Right(
-          RefreshingJobModel.coalesce(
-            input.job,
+        return Left(
+          InternalException(
+            message: "No data source found for the job '${input.job.name}'",
+            severity: ExceptionSeverity.info,
+          ),
+        );
+      }
+
+      final isConnectionAvailable = ObjectUtils.tryGet(
+        await networkDataRepository.isConnectionAvailable(),
+      );
+
+      if (!isConnectionAvailable) {
+        return const Left(
+          InternalException(
+            message: "Please check an internet connection",
+            severity: ExceptionSeverity.info,
           ),
         );
       }
 
       jobProgressController = createJobProgressStream(
         jobFunc: (jobProgressController) async {
+          jobProgressController.add(const RefreshingJobResultModel.start());
+
           final refreshedData = ObjectUtils.tryGet(
             await networkDataRepository.refreshForGroup(
               unitGroupId: input.job.unitGroup.id!,
@@ -79,7 +94,7 @@ class ExecuteJobUseCase
         ),
       );
     } catch (e) {
-      log("Close the stream");
+      log("Close the stream from use case");
       jobProgressController?.close();
 
       return Left(
@@ -99,10 +114,9 @@ class ExecuteJobUseCase
     jobProgressController = BehaviorSubject<RefreshingJobResultModel>(
       onListen: () async {
         try {
-          jobProgressController.add(const RefreshingJobResultModel.start());
           await jobFunc.call(jobProgressController);
         } finally {
-          log("Close the stream");
+          log("Close the stream from onListen() callback");
           await jobProgressController.close();
         }
       },

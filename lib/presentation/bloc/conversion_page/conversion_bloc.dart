@@ -6,11 +6,13 @@ import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
+class ConversionBloc
+    extends ConvertouchBloc<ConvertouchEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final RestoreLastConversionUseCase restoreLastConversionUseCase;
@@ -37,7 +39,6 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     BuildConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    emit(const ConversionInBuilding());
     final conversionResult = await buildConversionUseCase.execute(
       event.conversionParams,
     );
@@ -46,6 +47,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
       emit(
         ConversionErrorState(
           exception: conversionResult.left,
+          lastSuccessfulState: state,
         ),
       );
     } else {
@@ -62,6 +64,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
           emit(
             ConversionErrorState(
               exception: jobOfConversionResult.left,
+              lastSuccessfulState: state,
             ),
           );
         } else {
@@ -96,7 +99,6 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     ShowNewConversionAfterRefresh event,
     Emitter<ConversionState> emit,
   ) async {
-    emit(const ConversionInBuilding());
     emit(
       ConversionBuilt(
         conversion: event.newConversion,
@@ -110,8 +112,6 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     RemoveConversionItem event,
     Emitter<ConversionState> emit,
   ) async {
-    emit(const ConversionInBuilding());
-
     List<ConversionItemModel> conversionItems = event.conversionItems;
     conversionItems.removeWhere((item) => event.itemUnitId == item.unit.id);
 
@@ -134,14 +134,13 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     RestoreLastConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    emit(const ConversionInBuilding());
-
     var result = await restoreLastConversionUseCase.execute();
 
     if (result.isLeft) {
       emit(
         ConversionErrorState(
           exception: result.left,
+          lastSuccessfulState: state,
         ),
       );
     } else {

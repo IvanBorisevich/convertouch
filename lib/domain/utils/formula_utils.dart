@@ -4,11 +4,15 @@ import 'package:convertouch/domain/model/formula.dart';
 class FormulaUtils {
   const FormulaUtils._();
 
-  static ConvertouchFormula getFormula(String unitGroupName, String unitName) {
-    var formula = _formulasMap[unitGroupName]?[unitName];
+  static ConvertouchFormula getFormula({
+    required String unitGroupName,
+    required String unitCode,
+  }) {
+    var formula = _formulasMap[unitGroupName]?[unitCode];
     if (formula == null) {
       throw Exception(
-        "Formula not found for unit group $unitGroupName and unit $unitName",
+        "Formula not found for unit group $unitGroupName "
+        "and unit code = $unitCode",
       );
     }
     return formula;

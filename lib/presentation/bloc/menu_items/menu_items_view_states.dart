@@ -37,19 +37,17 @@ class MenuItemsViewStateSet extends MenuItemsViewState {
   }
 }
 
-class MenuItemsViewErrorState extends MenuItemsViewState {
-  final String message;
-
+class MenuItemsViewErrorState extends ConvertouchErrorState
+    implements MenuItemsViewState {
   const MenuItemsViewErrorState({
-    required this.message,
+    required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
-  List<Object> get props => [message];
-
-  @override
   String toString() {
-    return 'MenuItemsViewErrorState{message: $message}';
+    return 'MenuItemsViewErrorState{'
+        'exception: $exception}';
   }
 }
 

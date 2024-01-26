@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class UnitsState extends ConvertouchState {
   const UnitsState();
@@ -46,14 +46,14 @@ class UnitsFetched extends UnitsState {
 
   @override
   List<Object?> get props => [
-    units,
-    unitGroup,
-    searchString,
-    removalMode,
-    markedIdsForRemoval,
-    removedIds,
-    addedId,
-  ];
+        units,
+        unitGroup,
+        searchString,
+        removalMode,
+        markedIdsForRemoval,
+        removedIds,
+        addedId,
+      ];
 
   @override
   String toString() {
@@ -67,22 +67,21 @@ abstract class UnitsFetchedForConversion extends UnitsFetched {
   final List<UnitModel> unitsMarkedForConversion;
   final ConversionItemModel? currentSourceConversionItem;
 
-  const UnitsFetchedForConversion({
-    required super.units,
-    required super.unitGroup,
-    required this.unitsMarkedForConversion,
-    this.currentSourceConversionItem,
-    required super.searchString
-  });
+  const UnitsFetchedForConversion(
+      {required super.units,
+      required super.unitGroup,
+      required this.unitsMarkedForConversion,
+      this.currentSourceConversionItem,
+      required super.searchString});
 
   @override
   List<Object?> get props => [
-    units,
-    unitGroup,
-    unitsMarkedForConversion,
-    currentSourceConversionItem,
-    searchString,
-  ];
+        units,
+        unitGroup,
+        unitsMarkedForConversion,
+        currentSourceConversionItem,
+        searchString,
+      ];
 }
 
 class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
@@ -99,9 +98,9 @@ class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
 
   @override
   List<Object?> get props => [
-    allowUnitsToBeAddedToConversion,
-    super.props,
-  ];
+        allowUnitsToBeAddedToConversion,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -127,9 +126,9 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
 
   @override
   List<Object?> get props => [
-    selectedUnit,
-    super.props,
-  ];
+        selectedUnit,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -138,7 +137,6 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
         'unitsMarkedForConversion: $unitsMarkedForConversion}';
   }
 }
-
 
 class UnitsFetchedForUnitCreation extends UnitsFetched {
   final UnitModel? currentSelectedBaseUnit;
@@ -152,9 +150,9 @@ class UnitsFetchedForUnitCreation extends UnitsFetched {
 
   @override
   List<Object?> get props => [
-    currentSelectedBaseUnit,
-    super.props,
-  ];
+        currentSelectedBaseUnit,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -172,8 +170,8 @@ class UnitExists extends UnitsState {
 
   @override
   List<Object?> get props => [
-    unitName,
-  ];
+        unitName,
+      ];
 
   @override
   String toString() {
@@ -182,18 +180,15 @@ class UnitExists extends UnitsState {
   }
 }
 
-class UnitsErrorState extends UnitsState {
-  final String message;
-
+class UnitsErrorState extends ConvertouchErrorState implements UnitsState {
   const UnitsErrorState({
-    required this.message,
+    required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
-  List<Object> get props => [message];
-
-  @override
   String toString() {
-    return 'UnitsErrorState{message: $message}';
+    return 'UnitsErrorState{'
+        'exception: $exception}';
   }
 }

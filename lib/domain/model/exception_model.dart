@@ -20,6 +20,13 @@ abstract class ConvertouchException extends Equatable {
     message,
     severity,
   ];
+
+  @override
+  String toString() {
+    return 'ConvertouchException{'
+        'message: $message, '
+        'severity: $severity}';
+  }
 }
 
 class DatabaseException extends ConvertouchException {

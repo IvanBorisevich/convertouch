@@ -4,6 +4,7 @@ import 'package:convertouch/domain/use_cases/units/prepare_unit_creation_use_cas
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_events.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitCreationBloc
     extends ConvertouchBloc<UnitCreationEvent, UnitCreationState> {
@@ -18,29 +19,34 @@ class UnitCreationBloc
             unitGroup: null,
             baseUnit: null,
           ),
-        );
+        ) {
+    on<PrepareUnitCreation>(_onUnitCreationPrepare);
+  }
 
-  @override
-  Stream<UnitCreationState> mapEventToState(UnitCreationEvent event) async* {
-    if (event is PrepareUnitCreation) {
-      yield const UnitCreationPreparing();
+  _onUnitCreationPrepare(
+    PrepareUnitCreation event,
+    Emitter<UnitCreationState> emit,
+  ) async {
+    emit(const UnitCreationPreparing());
 
-      final result = await prepareUnitCreationUseCase.execute(
-        InputUnitPreparationModel(
-          baseUnit: event.baseUnit,
-          unitGroup: event.unitGroup,
-        ),
-      );
+    final result = await prepareUnitCreationUseCase.execute(
+      InputUnitPreparationModel(
+        baseUnit: event.baseUnit,
+        unitGroup: event.unitGroup,
+      ),
+    );
 
-      yield result.fold(
+    emit(
+      result.fold(
         (error) => UnitCreationErrorState(
-          message: error.message,
+          exception: error,
+          lastSuccessfulState: state,
         ),
         (outputUnitPreparationModel) => UnitCreationPrepared(
           unitGroup: outputUnitPreparationModel.unitGroup,
           baseUnit: outputUnitPreparationModel.baseUnit,
         ),
-      );
-    }
+      ),
+    );
   }
 }

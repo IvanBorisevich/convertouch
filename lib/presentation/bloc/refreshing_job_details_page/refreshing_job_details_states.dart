@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/job_data_source_model.dart';
-import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class RefreshingJobDetailsState extends ConvertouchState {
   const RefreshingJobDetailsState();
@@ -35,9 +35,9 @@ class RefreshingJobDetailsReady extends RefreshingJobDetailsState {
 
   @override
   List<Object?> get props => [
-    job,
-    jobDataSources,
-  ];
+        job,
+        jobDataSources,
+      ];
 
   @override
   String toString() {
@@ -47,18 +47,17 @@ class RefreshingJobDetailsReady extends RefreshingJobDetailsState {
   }
 }
 
-class RefreshingJobDetailsErrorState extends RefreshingJobDetailsState {
-  final String message;
-
+class RefreshingJobDetailsErrorState extends ConvertouchErrorState
+    implements RefreshingJobDetailsState {
   const RefreshingJobDetailsErrorState({
-    required this.message,
+    required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
-  List<Object> get props => [message];
-
-  @override
   String toString() {
-    return 'RefreshingJobDetailsErrorState{message: $message}';
+    return 'RefreshingJobDetailsErrorState{'
+        'exception: $exception, '
+        'lastSuccessfulState: $lastSuccessfulState}';
   }
 }

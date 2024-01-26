@@ -28,24 +28,28 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
   });
 
   @override
+  Future<Either<ConvertouchException, bool>> isConnectionAvailable() async {
+    try {
+      final Connectivity connectivity = Connectivity();
+      final ConnectivityResult status = await connectivity.checkConnectivity();
+
+      return Right(status != ConnectivityResult.none);
+    } catch (e) {
+      return Left(
+        NetworkException(
+          message: "Error when checking connectivity: $e",
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<ConvertouchException, List<T>>> refreshForGroup<T>({
     required int unitGroupId,
     required JobDataSourceModel dataSource,
     required RefreshableDataPart refreshableDataPart,
   }) async {
     try {
-      final Connectivity connectivity = Connectivity();
-      final ConnectivityResult status = await connectivity.checkConnectivity();
-
-      if (status == ConnectivityResult.none) {
-        return const Left(
-          NetworkException(
-            message: "Please check an internet connection",
-            severity: ExceptionSeverity.warning,
-          ),
-        );
-      }
-
       String responseStr = await networkDao.fetch(dataSource.url);
 
       switch (refreshableDataPart) {

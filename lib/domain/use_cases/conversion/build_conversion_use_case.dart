@@ -79,16 +79,19 @@ class BuildConversionUseCase
           String groupName = input.unitGroup!.name;
 
           var srcToBase = FormulaUtils.getFormula(
-            groupName,
-            srcConversionItem.unit.name,
+            unitGroupName: groupName,
+            unitCode: srcConversionItem.unit.code,
           );
-          var baseToTgt = FormulaUtils.getFormula(groupName, tgtUnit.name);
+          var baseToTgt = FormulaUtils.getFormula(
+            unitGroupName: groupName,
+            unitCode: tgtUnit.code,
+          );
 
           double? baseValue = srcToBase.applyForward(srcValue);
           double? normalizedBaseValue = srcToBase.applyForward(srcDefaultValue);
 
           tgtValue = baseToTgt.applyReverse(baseValue);
-          tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
+          tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue);
         }
 
         convertedUnitValues.add(
@@ -121,9 +124,11 @@ class BuildConversionUseCase
           targetConversionItems: convertedUnitValues,
         ),
       );
-    } catch (e) {
+    } catch (e, stacktrace) {
       return Left(
-        InternalException(message: "Error when converting unit value: $e",),
+        InternalException(
+          message: "Error when converting unit value: $e,\n$stacktrace",
+        ),
       );
     }
   }
@@ -171,11 +176,11 @@ class BuildConversionUseCase
     return ConversionItemModel(
       unit: sourceUnit,
       value: emptyValueModel,
-      defaultValue: refreshableValue != null && refreshableValue.value != null
+      defaultValue: refreshableValue?.value != null
           ? ValueModel(
-              strValue: refreshableValue.value!,
+              strValue: refreshableValue!.value!,
             )
-          : emptyValueModel,
+          : defaultValueModel,
     );
   }
 }

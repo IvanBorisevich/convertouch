@@ -34,7 +34,8 @@ class UnitsBlocForConversion extends ConvertouchBloc<UnitsEvent, UnitsState> {
     if (result.isLeft) {
       emit(
         UnitsErrorState(
-          message: result.left.message,
+          exception: result.left,
+          lastSuccessfulState: state,
         ),
       );
     } else {
@@ -73,7 +74,8 @@ class UnitsBlocForConversion extends ConvertouchBloc<UnitsEvent, UnitsState> {
     if (result.isLeft) {
       emit(
         UnitsErrorState(
-          message: result.left.message,
+          exception: result.left,
+          lastSuccessfulState: state,
         ),
       );
     } else {

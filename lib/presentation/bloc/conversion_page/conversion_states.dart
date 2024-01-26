@@ -6,15 +6,6 @@ abstract class ConversionState extends ConvertouchState {
   const ConversionState();
 }
 
-class ConversionInBuilding extends ConversionState {
-  const ConversionInBuilding();
-
-  @override
-  String toString() {
-    return 'ConversionInBuilding{}';
-  }
-}
-
 class ConversionBuilt extends ConversionState {
   final OutputConversionModel conversion;
   final bool showRefreshButton;
@@ -44,10 +35,12 @@ class ConversionErrorState extends ConvertouchErrorState
     implements ConversionState {
   const ConversionErrorState({
     required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
   String toString() {
-    return 'ConversionErrorState{exception: $exception}';
+    return 'ConversionErrorState{'
+        'exception: $exception}';
   }
 }

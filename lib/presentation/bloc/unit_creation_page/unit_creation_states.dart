@@ -42,18 +42,16 @@ class UnitCreationPrepared extends UnitCreationState {
   }
 }
 
-class UnitCreationErrorState extends UnitCreationState {
-  final String message;
-
+class UnitCreationErrorState extends ConvertouchErrorState
+    implements UnitCreationState {
   const UnitCreationErrorState({
-    required this.message,
+    required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
-  List<Object> get props => [message];
-
-  @override
   String toString() {
-    return 'UnitCreationErrorState{message: $message}';
+    return 'UnitCreationErrorState{'
+        'exception: $exception}';
   }
 }

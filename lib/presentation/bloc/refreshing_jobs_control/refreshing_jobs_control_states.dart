@@ -5,15 +5,6 @@ abstract class RefreshingJobsControlState extends ConvertouchState {
   const RefreshingJobsControlState();
 }
 
-class RefreshingJobsProgressUpdating extends RefreshingJobsControlState {
-  const RefreshingJobsProgressUpdating();
-
-  @override
-  String toString() {
-    return 'RefreshingJobsProgressUpdating{}';
-  }
-}
-
 class RefreshingJobsProgressUpdated extends RefreshingJobsControlState {
   final Map<int, RefreshingJobModel> jobsInProgress;
   final int? completedJobId;
@@ -37,18 +28,30 @@ class RefreshingJobsProgressUpdated extends RefreshingJobsControlState {
   }
 }
 
-class RefreshingJobsControlErrorState extends RefreshingJobsControlState {
-  final String message;
-
-  const RefreshingJobsControlErrorState({
-    required this.message,
+class RefreshingJobsControlNotificationState
+    extends ConvertouchNotificationState implements RefreshingJobsControlState {
+  const RefreshingJobsControlNotificationState({
+    required super.message,
   });
 
   @override
-  List<Object> get props => [message];
+  String toString() {
+    return 'RefreshingJobsControlNotificationState{'
+        'message: $message}';
+  }
+}
+
+class RefreshingJobsControlErrorState extends ConvertouchErrorState
+    implements RefreshingJobsControlState {
+  const RefreshingJobsControlErrorState({
+    required super.exception,
+    required super.lastSuccessfulState,
+  });
 
   @override
   String toString() {
-    return 'RefreshingJobsControlErrorState{message: $message}';
+    return 'RefreshingJobsControlErrorState{'
+        'exception: $exception, '
+        'lastSuccessfulState: $lastSuccessfulState}';
   }
 }

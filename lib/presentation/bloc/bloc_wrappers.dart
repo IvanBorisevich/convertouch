@@ -24,23 +24,32 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversi
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/templates/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget blocBuilderWrap<B extends ConvertouchBloc<ConvertouchEvent, S>,
-    S extends ConvertouchState, PS extends S>(
-  Widget Function(PS pageState) builderFunc,
+Widget blocBuilderWrap<
+    BlocType extends ConvertouchBloc<ConvertouchEvent, AbstractStateType>,
+    AbstractStateType extends ConvertouchState,
+    PageStateType extends AbstractStateType>(
+  Widget Function(PageStateType pageState) builderFunc,
 ) {
-  return BlocBuilder<B, S>(
+  return BlocBuilder<BlocType, AbstractStateType>(
     buildWhen: (prev, next) {
-      return prev != next && (next is PS || next is ConvertouchErrorState);
+      return prev != next &&
+          (next is PageStateType || next is ConvertouchErrorState);
     },
     builder: (_, state) {
-      if (state is PS) {
-        return builderFunc.call(state);
-      } else {
-        return empty();
+      if (state is ConvertouchErrorState) {
+        return ConvertouchErrorPage<BlocType, AbstractStateType>(
+          errorState: state,
+          lastSuccessfulState: state.lastSuccessfulState as AbstractStateType,
+        );
       }
+      if (state is PageStateType) {
+        return builderFunc.call(state);
+      }
+      return empty();
     },
   );
 }
@@ -70,7 +79,7 @@ var unitsBlocBuilderForUnitCreation = blocBuilderWrap<UnitsBlocForUnitCreation,
 var unitCreationBlocBuilder =
     blocBuilderWrap<UnitCreationBloc, UnitCreationState, UnitCreationPrepared>;
 
-var conversionsBlocBuilder =
+var conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
 
 var refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,

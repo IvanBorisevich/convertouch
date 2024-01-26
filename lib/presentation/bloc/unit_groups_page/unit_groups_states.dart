@@ -133,20 +133,16 @@ class UnitGroupExists extends UnitGroupsState {
   }
 }
 
-class UnitGroupsErrorState extends UnitGroupsState {
-  final String message;
-
+class UnitGroupsErrorState extends ConvertouchErrorState
+    implements UnitGroupsState {
   const UnitGroupsErrorState({
-    required this.message,
+    required super.exception,
+    required super.lastSuccessfulState,
   });
 
   @override
-  List<Object> get props => [
-    message,
-  ];
-
-  @override
   String toString() {
-    return 'UnitGroupsErrorState{message: $message}';
+    return 'UnitGroupsErrorState{'
+        'exception: $exception}';
   }
 }

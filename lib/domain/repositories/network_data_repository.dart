@@ -6,6 +6,8 @@ import 'package:either_dart/either.dart';
 abstract class NetworkDataRepository {
   const NetworkDataRepository();
 
+  Future<Either<ConvertouchException, bool>> isConnectionAvailable();
+
   Future<Either<ConvertouchException, List<T>>> refreshForGroup<T>({
     required int unitGroupId,
     required JobDataSourceModel dataSource,

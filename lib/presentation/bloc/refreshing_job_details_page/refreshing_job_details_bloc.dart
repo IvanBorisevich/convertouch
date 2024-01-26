@@ -29,7 +29,8 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
     emit(
       result.fold(
         (left) => RefreshingJobDetailsErrorState(
-          message: left.message,
+          exception: left,
+          lastSuccessfulState: state
         ),
         (jobDetails) => RefreshingJobDetailsReady(
           job: jobDetails.job,
@@ -52,7 +53,8 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
     emit(
       result.fold(
         (left) => RefreshingJobDetailsErrorState(
-          message: left.message,
+          exception: left,
+          lastSuccessfulState: state,
         ),
         (job) => RefreshingJobDetailsReady(
           job: job,

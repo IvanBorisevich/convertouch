@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
+import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
@@ -23,9 +23,12 @@ class RefreshingJobsBloc
     final refreshJobsResult = await getJobsListUseCase.execute();
 
     if (refreshJobsResult.isLeft) {
-      emit(RefreshingJobsErrorState(
-        message: refreshJobsResult.left.message,
-      ));
+      emit(
+        RefreshingJobsErrorState(
+          exception: refreshJobsResult.left,
+          lastSuccessfulState: state,
+        ),
+      );
     } else {
       emit(
         RefreshingJobsFetched(

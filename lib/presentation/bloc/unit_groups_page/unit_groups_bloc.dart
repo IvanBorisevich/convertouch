@@ -4,6 +4,7 @@ import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
@@ -14,92 +15,130 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
     required this.fetchUnitGroupsUseCase,
     required this.addUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
-  }) : super(const UnitGroupsFetched(unitGroups: []));
+  }) : super(const UnitGroupsFetched(unitGroups: [])) {
+    on<FetchUnitGroups>(_onUnitGroupsFetch);
+    on<RemoveUnitGroups>(_onUnitGroupsRemove);
+    on<AddUnitGroup>(_onUnitGroupAdd);
+    on<DisableUnitGroupsRemovalMode>(_onUnitGroupsRemovalModeDisable);
+  }
 
-  @override
-  Stream<UnitGroupsState> mapEventToState(UnitGroupsEvent event) async* {
-    yield const UnitGroupsFetching();
+  _onUnitGroupsFetch(
+    FetchUnitGroups event,
+    Emitter<UnitGroupsState> emit,
+  ) async {
+    emit(const UnitGroupsFetching());
+    final result = await fetchUnitGroupsUseCase.execute(event.searchString);
 
-    if (event is FetchUnitGroups) {
-      final result = await fetchUnitGroupsUseCase.execute(event.searchString);
+    if (result.isLeft) {
+      emit(
+        UnitGroupsErrorState(
+          exception: result.left,
+          lastSuccessfulState: state,
+        ),
+      );
+    } else {
+      if (event is FetchUnitGroupsToMarkForRemoval) {
+        List<int> markedIds = [];
 
-      if (result.isLeft) {
-        yield UnitGroupsErrorState(
-          message: result.left.message,
-        );
-      } else {
-        if (event is FetchUnitGroupsToMarkForRemoval) {
-          List<int> markedIds = [];
+        if (event.alreadyMarkedIds.isNotEmpty) {
+          markedIds = event.alreadyMarkedIds;
+        }
 
-          if (event.alreadyMarkedIds.isNotEmpty) {
-            markedIds = event.alreadyMarkedIds;
-          }
+        if (!markedIds.contains(event.newMarkedId)) {
+          markedIds.add(event.newMarkedId);
+        } else {
+          markedIds.remove(event.newMarkedId);
+        }
 
-          if (!markedIds.contains(event.newMarkedId)) {
-            markedIds.add(event.newMarkedId);
-          } else {
-            markedIds.remove(event.newMarkedId);
-          }
-
-          yield UnitGroupsFetched(
+        emit(
+          UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
             removalMode: true,
             markedIdsForRemoval: markedIds,
-          );
-        } else {
-          yield UnitGroupsFetched(
+          ),
+        );
+      } else {
+        emit(
+          UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
             removedIds: event.removedIds,
             addedId: event.addedId,
-          );
-        }
-      }
-    } else if (event is RemoveUnitGroups) {
-      final result = await removeUnitGroupsUseCase.execute(event.ids);
-      if (result.isLeft) {
-        yield UnitGroupsErrorState(
-          message: result.left.message,
-        );
-      } else {
-        add(
-          FetchUnitGroups(
-            searchString: null,
-            removedIds: event.ids,
           ),
         );
       }
-    } else if (event is AddUnitGroup) {
-      final addUnitGroupResult =
-          await addUnitGroupUseCase.execute(event.unitGroupName);
+    }
+  }
 
-      if (addUnitGroupResult.isLeft) {
-        yield UnitGroupsErrorState(
-          message: addUnitGroupResult.left.message,
-        );
-      } else {
-        int addedUnitGroupId = addUnitGroupResult.right;
+  _onUnitGroupsRemove(
+    RemoveUnitGroups event,
+    Emitter<UnitGroupsState> emit,
+  ) async {
+    emit(const UnitGroupsFetching());
 
-        if (addedUnitGroupId != -1) {
-          add(
-            FetchUnitGroups(
-              searchString: null,
-              addedId: addedUnitGroupId,
-            ),
-          );
-        } else {
-          yield UnitGroupExists(
-            unitGroupName: event.unitGroupName,
-          );
-        }
-      }
-    } else if (event is DisableUnitGroupsRemovalMode) {
+    final result = await removeUnitGroupsUseCase.execute(event.ids);
+    if (result.isLeft) {
+      emit(
+        UnitGroupsErrorState(
+          exception: result.left,
+          lastSuccessfulState: state,
+        ),
+      );
+    } else {
       add(
-        const FetchUnitGroups(
+        FetchUnitGroups(
           searchString: null,
+          removedIds: event.ids,
         ),
       );
     }
+  }
+
+  _onUnitGroupAdd(
+    AddUnitGroup event,
+    Emitter<UnitGroupsState> emit,
+  ) async {
+    emit(const UnitGroupsFetching());
+
+    final addUnitGroupResult =
+        await addUnitGroupUseCase.execute(event.unitGroupName);
+
+    if (addUnitGroupResult.isLeft) {
+      emit(
+        UnitGroupsErrorState(
+          exception: addUnitGroupResult.left,
+          lastSuccessfulState: state,
+        ),
+      );
+    } else {
+      int addedUnitGroupId = addUnitGroupResult.right;
+
+      if (addedUnitGroupId != -1) {
+        add(
+          FetchUnitGroups(
+            searchString: null,
+            addedId: addedUnitGroupId,
+          ),
+        );
+      } else {
+        emit(
+          UnitGroupExists(
+            unitGroupName: event.unitGroupName,
+          ),
+        );
+      }
+    }
+  }
+
+  _onUnitGroupsRemovalModeDisable(
+    DisableUnitGroupsRemovalMode event,
+    Emitter<UnitGroupsState> emit,
+  ) async {
+    add(
+      const FetchUnitGroups(
+        searchString: null,
+      ),
+    );
   }
 }

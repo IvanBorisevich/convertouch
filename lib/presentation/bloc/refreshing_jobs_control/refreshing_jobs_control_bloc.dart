@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
@@ -28,12 +29,15 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     Map<int, RefreshingJobModel> jobsMap =
         event.jobsInProgress.isNotEmpty ? event.jobsInProgress : {};
 
-    emit(const RefreshingJobsProgressUpdating());
-
     if (jobsMap.containsKey(event.job.id)) {
       emit(
-        RefreshingJobsControlErrorState(
+        RefreshingJobsControlNotificationState(
           message: "Job '${event.job.name}' is running at the moment",
+        ),
+      );
+      emit(
+        RefreshingJobsProgressUpdated(
+          jobsInProgress: event.jobsInProgress,
         ),
       );
       return;
@@ -47,11 +51,26 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     );
 
     if (startedJobResult.isLeft) {
-      emit(
-        RefreshingJobsControlErrorState(
-          message: startedJobResult.left.message,
-        ),
-      );
+      ConvertouchException exception = startedJobResult.left;
+      if (exception.severity == ExceptionSeverity.error) {
+        emit(
+          RefreshingJobsControlErrorState(
+            exception: exception,
+            lastSuccessfulState: state,
+          ),
+        );
+      } else {
+        emit(
+          RefreshingJobsControlNotificationState(
+            message: exception.message,
+          ),
+        );
+        emit(
+          RefreshingJobsProgressUpdated(
+            jobsInProgress: event.jobsInProgress,
+          ),
+        );
+      }
     } else {
       jobsMap.putIfAbsent(event.job.id!, () => startedJobResult.right);
 
@@ -67,8 +86,6 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     StopJob event,
     Emitter<RefreshingJobsControlState> emit,
   ) async {
-    emit(const RefreshingJobsProgressUpdating());
-
     Map<int, RefreshingJobModel> jobsMap =
         event.jobsInProgress.isNotEmpty ? event.jobsInProgress : {};
 
@@ -86,8 +103,6 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     FinishJob event,
     Emitter<RefreshingJobsControlState> emit,
   ) async {
-    emit(const RefreshingJobsProgressUpdating());
-
     Map<int, RefreshingJobModel> jobsMap =
         event.jobsInProgress.isNotEmpty ? event.jobsInProgress : {};
 
@@ -101,7 +116,8 @@ class RefreshingJobsControlBloc extends ConvertouchBloc<
     if (result.isLeft) {
       emit(
         RefreshingJobsControlErrorState(
-          message: result.left.message,
+          exception: result.left,
+          lastSuccessfulState: state,
         ),
       );
     } else {

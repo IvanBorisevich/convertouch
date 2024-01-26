@@ -3,6 +3,7 @@ import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_m
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.dart';
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class MenuViewModeBloc
     extends ConvertouchBloc<MenuItemsViewEvent, MenuItemsViewState> {
@@ -10,27 +11,36 @@ abstract class MenuViewModeBloc
 
   MenuViewModeBloc({
     required this.changeItemsMenuViewUseCase,
-  }) : super(const MenuItemsViewStateSet(
-          pageViewMode: ItemsViewMode.grid,
-          iconViewMode: ItemsViewMode.list,
-        ));
+  }) : super(
+          const MenuItemsViewStateSet(
+            pageViewMode: ItemsViewMode.grid,
+            iconViewMode: ItemsViewMode.list,
+          ),
+        ) {
+    on<ChangeMenuItemsView>(_onMenuItemViewChange);
+  }
 
-  @override
-  Stream<MenuItemsViewState> mapEventToState(MenuItemsViewEvent event) async* {
-    if (event is ChangeMenuItemsView) {
-      yield const MenuItemsViewStateSetting();
+  _onMenuItemViewChange(
+    ChangeMenuItemsView event,
+    Emitter<MenuItemsViewState> emit,
+  ) async {
+    emit(const MenuItemsViewStateSetting());
 
-      final result =
-          await changeItemsMenuViewUseCase.execute(event.targetViewMode);
+    final result =
+        await changeItemsMenuViewUseCase.execute(event.targetViewMode);
 
-      yield result.fold(
-        (error) => MenuItemsViewErrorState(message: error.message),
+    emit(
+      result.fold(
+        (error) => MenuItemsViewErrorState(
+          exception: error,
+          lastSuccessfulState: state,
+        ),
         (changedViewMode) => MenuItemsViewStateSet(
           pageViewMode: changedViewMode.currentMode,
           iconViewMode: changedViewMode.nextMode,
         ),
-      );
-    }
+      ),
+    );
   }
 }
 

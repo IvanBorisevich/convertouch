@@ -41,7 +41,7 @@ class ConvertouchConversionPage extends StatelessWidget {
       ButtonColor refreshButtonColor =
           refreshingJobItemsColors[appState.theme]!.refreshButton;
 
-      return conversionsBlocBuilder((pageState) {
+      return conversionBlocBuilder((pageState) {
         final conversion = pageState.conversion;
 
         return MultiBlocListener(
