@@ -10,8 +10,8 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final void Function(IdNameItemModel)? onItemTap;
   final void Function(IdNameItemModel)? onItemTapForRemoval;
   final void Function(IdNameItemModel)? onItemLongPress;
-  final List<int>? markedItemIds;
-  final List<int> itemIdsSelectedForRemoval;
+  final List<int>? itemIdsMarkedForConversion;
+  final List<int> itemIdsMarkedForRemoval;
   final bool showMarkedItems;
   final int? selectedItemId;
   final bool showSelectedItem;
@@ -26,8 +26,8 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,
-    this.markedItemIds,
-    this.itemIdsSelectedForRemoval = const [],
+    this.itemIdsMarkedForConversion,
+    this.itemIdsMarkedForRemoval = const [],
     this.showMarkedItems = false,
     this.selectedItemId,
     this.showSelectedItem = false,
@@ -48,8 +48,8 @@ class ConvertouchMenuItemsView extends StatelessWidget {
             IdNameItemModel item = items[index];
             bool selected = showSelectedItem && item.id == selectedItemId;
             bool marked = showMarkedItems &&
-                markedItemIds != null &&
-                markedItemIds!.contains(item.id);
+                itemIdsMarkedForConversion != null &&
+                itemIdsMarkedForConversion!.contains(item.id);
 
             return ConvertouchFadeScaleAnimation(
               child: ConvertouchMenuItem(
@@ -67,8 +67,8 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                 marked: marked,
                 selected: selected,
                 removalMode: removalModeAllowed && removalModeEnabled,
-                selectedForRemoval:
-                    itemIdsSelectedForRemoval.contains(item.id!),
+                markedForRemoval:
+                    itemIdsMarkedForRemoval.contains(item.id!),
                 theme: theme,
               ),
             );

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
@@ -49,6 +50,15 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
         } else {
           markedIds.remove(event.newMarkedId);
         }
+
+        List<int> oobUnitGroupIds = result.right
+            .where((unitGroup) => unitGroup.oob)
+            .map((unitGroup) => unitGroup.id!)
+            .toList();
+
+        markedIds = markedIds
+            .whereNot((unitGroupId) => oobUnitGroupIds.contains(unitGroupId))
+            .toList();
 
         emit(
           UnitGroupsFetched(

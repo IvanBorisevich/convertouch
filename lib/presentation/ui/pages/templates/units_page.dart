@@ -77,8 +77,8 @@ class ConvertouchUnitsPage extends StatelessWidget {
           ),
           body: ConvertouchMenuItemsView(
             units,
-            markedItemIds: markedUnitIdsForConversion,
-            itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
+            itemIdsMarkedForConversion: markedUnitIdsForConversion,
+            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
             showMarkedItems: markedUnitsForConversionVisible,
             selectedItemId: selectedUnitId,
             showSelectedItem: selectedUnitVisible,

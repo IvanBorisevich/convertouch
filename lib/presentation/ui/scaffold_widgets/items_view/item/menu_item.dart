@@ -18,7 +18,7 @@ class ConvertouchMenuItem extends StatelessWidget {
   final bool marked;
   final bool selected;
   final bool removalMode;
-  final bool selectedForRemoval;
+  final bool markedForRemoval;
   final ConvertouchUITheme theme;
   final ConvertouchListItemColor? customColors;
 
@@ -31,7 +31,7 @@ class ConvertouchMenuItem extends StatelessWidget {
     this.marked = false,
     this.selected = false,
     this.removalMode = false,
-    this.selectedForRemoval = false,
+    this.markedForRemoval = false,
     required this.theme,
     this.customColors,
     super.key,
@@ -122,8 +122,8 @@ class ConvertouchMenuItem extends StatelessWidget {
                 item,
                 itemName: itemName,
                 removalMode: removalMode,
-                selectedForRemoval: selectedForRemoval,
-                selectedForConversion: selected,
+                markedForRemoval: markedForRemoval,
+                markedForConversion: selected,
                 logo: itemLogo,
                 color: itemColorVariation,
               );
@@ -132,7 +132,7 @@ class ConvertouchMenuItem extends StatelessWidget {
                 item,
                 itemName: itemName,
                 removalMode: removalMode,
-                selectedForRemoval: selectedForRemoval,
+                selectedForRemoval: markedForRemoval,
                 selectedForConversion: selected,
                 logo: itemLogo,
                 color: itemColorVariation,
@@ -248,8 +248,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final String itemName;
   final bool removalMode;
   final Widget logo;
-  final bool selectedForRemoval;
-  final bool selectedForConversion;
+  final bool markedForRemoval;
+  final bool markedForConversion;
   final ListItemColorVariation color;
 
   const ConvertouchMenuGridItem(
@@ -258,8 +258,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.removalMode,
     required this.logo,
     required this.color,
-    this.selectedForRemoval = false,
-    this.selectedForConversion = false,
+    this.markedForRemoval = false,
+    this.markedForConversion = false,
     super.key,
   });
 
@@ -270,11 +270,11 @@ class ConvertouchMenuGridItem extends StatelessWidget {
         color: color.background,
         borderRadius: BorderRadius.circular(7),
         border: Border.all(
-          strokeAlign: selectedForConversion
+          strokeAlign: markedForConversion
               ? BorderSide.strokeAlignOutside
               : BorderSide.strokeAlignInside,
           color: color.border,
-          width: selectedForConversion ? 2 : 1,
+          width: markedForConversion ? 2 : 1,
         ),
       ),
       child: Column(
@@ -297,13 +297,13 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                     child: logo,
                   ),
                 ),
-                removalMode
+                removalMode && !item.oob
                     ? Padding(
                         padding: const EdgeInsets.only(left: 3, top: 3),
                         child: ConvertouchCheckbox(
-                          selectedForRemoval,
+                          markedForRemoval,
                           size: 12,
-                          color: color.border,
+                          color: color.content,
                           colorChecked: color.content,
                         ),
                       )

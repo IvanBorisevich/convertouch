@@ -6,7 +6,6 @@ class UnitModel extends IdNameItemModel {
   final String code;
   final String? symbol;
   final int unitGroupId;
-  final bool oob;
 
   const UnitModel({
     super.id,
@@ -15,7 +14,7 @@ class UnitModel extends IdNameItemModel {
     required this.code,
     this.symbol,
     required this.unitGroupId,
-    this.oob = false,
+    super.oob,
   }) : super(
           itemType: ItemType.unit,
         );
@@ -26,7 +25,7 @@ class UnitModel extends IdNameItemModel {
     this.code = '',
     this.symbol,
     this.unitGroupId = -1,
-    this.oob = false,
+    super.oob,
   }) : super(
           id: id,
           name: '',

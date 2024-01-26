@@ -75,7 +75,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
             unitGroups,
             selectedItemId: selectedUnitGroupId,
             showSelectedItem: selectedUnitGroupVisible,
-            itemIdsSelectedForRemoval: itemIdsSelectedForRemoval,
+            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
             removalModeEnabled: removalModeEnabled,
             removalModeAllowed: removalModeAllowed,
             onItemTap: onUnitGroupTap,
