@@ -19,17 +19,17 @@ class NumberValueUtils {
   const NumberValueUtils._();
 
   static String formatValueInScientificNotation(
-      double? value, {
-        int fractionDigits = maxFractionDigits,
-        int fractionDigitsInScientificNotation = 4,
-        int noFormatExponentMin = -7,
-        int noFormatExponentMax = 10,
-      }) {
+    double? value, {
+    int fractionDigits = maxFractionDigits,
+    int fractionDigitsInScientificNotation = 4,
+    int noFormatExponentMin = -7,
+    int noFormatExponentMax = 10,
+  }) {
     if (value == null) {
       return "";
     }
     String valueStr =
-    value.toStringAsExponential(fractionDigitsInScientificNotation);
+        value.toStringAsExponential(fractionDigitsInScientificNotation);
     RegExpMatch? match = _scientificNotationRegexp.firstMatch(valueStr);
 
     if (match != null) {
@@ -73,9 +73,9 @@ class NumberValueUtils {
   }
 
   static String formatValue(
-      double? value, {
-        int fractionDigits = maxFractionDigits,
-      }) {
+    double? value, {
+    int fractionDigits = maxFractionDigits,
+  }) {
     if (value == null) {
       return "";
     }

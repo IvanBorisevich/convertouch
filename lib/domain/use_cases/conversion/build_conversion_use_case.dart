@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshable_value_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -30,7 +30,7 @@ class BuildConversionUseCase
   });
 
   @override
-  Future<Either<Failure, OutputConversionModel>> execute(
+  Future<Either<ConvertouchException, OutputConversionModel>> execute(
     InputConversionModel input,
   ) async {
     try {
@@ -123,7 +123,7 @@ class BuildConversionUseCase
       );
     } catch (e) {
       return Left(
-        InternalFailure("Error when converting unit value: $e"),
+        InternalException(message: "Error when converting unit value: $e",),
       );
     }
   }

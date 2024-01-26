@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
@@ -10,7 +10,7 @@ class AddUnitGroupUseCase extends UseCase<String, int> {
   const AddUnitGroupUseCase(this.unitGroupRepository);
 
   @override
-  Future<Either<Failure, int>> execute(String input) async {
+  Future<Either<ConvertouchException, int>> execute(String input) async {
     final result = await unitGroupRepository.add(
       UnitGroupModel(
         name: input,

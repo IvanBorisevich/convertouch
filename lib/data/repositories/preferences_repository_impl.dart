@@ -1,5 +1,5 @@
 import 'package:convertouch/data/dao/preferences_dao.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/preferences_repository.dart';
 import 'package:either_dart/either.dart';
 
@@ -9,7 +9,7 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   const PreferencesRepositoryImpl(this.preferencesDao);
 
   @override
-  Future<Either<Failure, T?>> get<T>(String key) async {
+  Future<Either<ConvertouchException, T?>> get<T>(String key) async {
     try {
       switch (T) {
         case int:
@@ -25,13 +25,15 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
       }
     } catch (e) {
       return Left(
-        PreferencesFailure("Error when getting preference by key $key: $e"),
+        PreferencesException(
+          message: "Error when getting preference by key $key: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, List<T>?>> getList<T>(String key) async {
+  Future<Either<ConvertouchException, List<T>?>> getList<T>(String key) async {
     try {
       final strList = await preferencesDao.getStringList(key);
       switch (T) {
@@ -50,14 +52,16 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
       }
     } catch (e) {
       return Left(
-        PreferencesFailure("Error when getting preference as list "
-            "by key $key: $e"),
+        PreferencesException(
+          message: "Error when getting preference as list by key = $key: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, bool>> save<T>(String key, T value) async {
+  Future<Either<ConvertouchException, bool>> save<T>(
+      String key, T value) async {
     try {
       switch (T) {
         case int:
@@ -73,13 +77,16 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
       }
     } catch (e) {
       return Left(
-        PreferencesFailure("Error when saving preference with key $key: $e"),
+        PreferencesException(
+          message: "Error when saving preference with key $key: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, bool>> saveList<T>(String key, List<T> value) async {
+  Future<Either<ConvertouchException, bool>> saveList<T>(
+      String key, List<T> value) async {
     try {
       return Right(
         await preferencesDao.saveStringList(
@@ -89,8 +96,9 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
       );
     } catch (e) {
       return Left(
-        PreferencesFailure("Error when saving preference as list "
-            "with key $key: $e"),
+        PreferencesException(
+          message: "Error when saving preference as list with key = $key: $e",
+        ),
       );
     }
   }

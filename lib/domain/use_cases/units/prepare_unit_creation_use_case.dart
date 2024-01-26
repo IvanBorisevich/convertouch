@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_preparation_model.dart';
@@ -18,7 +18,7 @@ class PrepareUnitCreationUseCase
   const PrepareUnitCreationUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, OutputUnitPreparationModel>> execute(
+  Future<Either<ConvertouchException, OutputUnitPreparationModel>> execute(
     InputUnitPreparationModel input,
   ) async {
     try {
@@ -27,8 +27,10 @@ class PrepareUnitCreationUseCase
       String? comment;
 
       if (unitGroup != null) {
-        UnitModel? baseUnit = input.baseUnit ??
-            ObjectUtils.tryGet(await unitRepository.getBaseUnit(unitGroup.id!));
+        baseUnit = input.baseUnit ??
+            ObjectUtils.tryGet(
+              await unitRepository.getBaseUnit(unitGroup.id!),
+            );
         comment = baseUnit == null ? _firstUnitNote : null;
       }
 
@@ -41,7 +43,9 @@ class PrepareUnitCreationUseCase
       );
     } catch (e) {
       return Left(
-        InternalFailure("Error when preparing unit for creation: $e"),
+        InternalException(
+          message: "Error when preparing unit for creation: $e",
+        ),
       );
     }
   }

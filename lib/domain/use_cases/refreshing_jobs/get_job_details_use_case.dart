@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_data_source_change_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_job_details_model.dart';
@@ -18,7 +18,7 @@ class GetJobDetailsUseCase
   });
 
   @override
-  Future<Either<Failure, OutputJobDetailsModel>> execute(
+  Future<Either<ConvertouchException, OutputJobDetailsModel>> execute(
     RefreshingJobModel input,
   ) async {
     try {
@@ -54,7 +54,9 @@ class GetJobDetailsUseCase
       );
     } catch (e) {
       return Left(
-        InternalFailure("Error when fetching refreshing job details: $e"),
+        InternalException(
+          message: "Error when fetching refreshing job details: $e",
+        ),
       );
     }
   }

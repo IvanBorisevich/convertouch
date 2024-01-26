@@ -28,10 +28,10 @@ class ConversionBuilt extends ConversionState {
 
   @override
   List<Object?> get props => [
-    conversion,
-    showRefreshButton,
-    job,
-  ];
+        conversion,
+        showRefreshButton,
+        job,
+      ];
 
   @override
   String toString() {
@@ -40,20 +40,14 @@ class ConversionBuilt extends ConversionState {
   }
 }
 
-class ConversionErrorState extends ConversionState {
-  final String message;
-
+class ConversionErrorState extends ConvertouchErrorState
+    implements ConversionState {
   const ConversionErrorState({
-    required this.message,
+    required super.exception,
   });
 
   @override
-  List<Object> get props => [
-        message,
-      ];
-
-  @override
   String toString() {
-    return 'ConversionErrorState{message: $message}';
+    return 'ConversionErrorState{exception: $exception}';
   }
 }

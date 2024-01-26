@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:either_dart/either.dart';
 
 class ObjectUtils {
   const ObjectUtils._();
 
-  static R tryGet<R>(Either<Failure, R> either) {
+  static R tryGet<R>(Either<ConvertouchException, R> either) {
     if (either.isLeft) {
       throw either.left;
     }

@@ -7,7 +7,7 @@ import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/refreshable_value_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/repositories/network_data_repository.dart';
 import 'package:convertouch/domain/utils/response_transformers/response_transformer.dart';
@@ -28,7 +28,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
   });
 
   @override
-  Future<Either<Failure, List<T>>> refreshForGroup<T>({
+  Future<Either<ConvertouchException, List<T>>> refreshForGroup<T>({
     required int unitGroupId,
     required JobDataSourceModel dataSource,
     required RefreshableDataPart refreshableDataPart,
@@ -39,7 +39,10 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
 
       if (status == ConnectivityResult.none) {
         return const Left(
-          NetworkFailure("Please check an internet connection"),
+          NetworkException(
+            message: "Please check an internet connection",
+            severity: ExceptionSeverity.warning,
+          ),
         );
       }
 
@@ -58,9 +61,11 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
             codeToCoefficient,
           );
           return Right(
-            units.map(
-              (unit) => UnitTranslator.I.toModel(unit)!,
-            ).toList() as List<T>,
+            units
+                .map(
+                  (unit) => UnitTranslator.I.toModel(unit)!,
+                )
+                .toList() as List<T>,
           );
         case RefreshableDataPart.value:
           Map<String, String?> codeToValue =
@@ -84,14 +89,18 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
 
           await refreshableValueDao.updateBatch(database, patchEntities);
           return Right(
-            patchEntities.map(
-              (entity) => RefreshableValueTranslator.I.toModel(entity)!,
-            ).toList() as List<T>,
+            patchEntities
+                .map(
+                  (entity) => RefreshableValueTranslator.I.toModel(entity)!,
+                )
+                .toList() as List<T>,
           );
       }
     } catch (e) {
       return Left(
-        NetworkFailure("Error when refreshing data from network: $e"),
+        NetworkException(
+          message: "Error when refreshing data from network: $e",
+        ),
       );
     }
   }

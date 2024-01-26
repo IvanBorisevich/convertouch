@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
@@ -16,7 +16,7 @@ class RestoreLastConversionUseCase
   });
 
   @override
-  Future<Either<Failure, OutputConversionModel>> execute() async {
+  Future<Either<ConvertouchException, OutputConversionModel>> execute() async {
     try {
       var lastConversionResult = await conversionRepository.getLastConversion();
 
@@ -33,7 +33,9 @@ class RestoreLastConversionUseCase
       return await buildConversionUseCase.execute(lastConversionResult.right!);
     } catch (e) {
       return Left(
-        InternalFailure("Error when restoring the last conversion: $e"),
+        InternalException(
+          message: "Error when restoring the last conversion: $e",
+        ),
       );
     }
   }

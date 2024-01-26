@@ -45,7 +45,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     if (conversionResult.isLeft) {
       emit(
         ConversionErrorState(
-          message: conversionResult.left.message,
+          exception: conversionResult.left,
         ),
       );
     } else {
@@ -61,7 +61,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
         if (jobOfConversionResult.isLeft) {
           emit(
             ConversionErrorState(
-              message: jobOfConversionResult.left.message,
+              exception: jobOfConversionResult.left,
             ),
           );
         } else {
@@ -141,7 +141,7 @@ class ConversionBloc extends ConvertouchBloc<ConversionEvent, ConversionState> {
     if (result.isLeft) {
       emit(
         ConversionErrorState(
-          message: result.left.message,
+          exception: result.left,
         ),
       );
     } else {

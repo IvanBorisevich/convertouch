@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshable_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -20,7 +20,7 @@ class RebuildConversionUseCase
   });
 
   @override
-  Future<Either<Failure, OutputConversionModel>> execute(
+  Future<Either<ConvertouchException, OutputConversionModel>> execute(
     InputConversionRebuildModel input,
   ) async {
     try {
@@ -34,8 +34,9 @@ class RebuildConversionUseCase
       return buildConversionUseCase.execute(refreshedConversionParams);
     } catch (e, stacktrace) {
       return Left(
-        InternalFailure(
-          "Error when rebuilding conversion after data refresh: $e,$stacktrace",
+        InternalException(
+          message: "Error when rebuilding conversion after data refresh: $e,"
+              "\n$stacktrace",
         ),
       );
     }

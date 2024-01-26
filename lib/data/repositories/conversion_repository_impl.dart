@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -23,7 +23,8 @@ class ConversionRepositoryImpl extends ConversionRepository {
   });
 
   @override
-  Future<Either<Failure, InputConversionModel?>> getLastConversion() async {
+  Future<Either<ConvertouchException, InputConversionModel?>>
+      getLastConversion() async {
     try {
       return Right(
         InputConversionModel(
@@ -34,8 +35,8 @@ class ConversionRepositoryImpl extends ConversionRepository {
       );
     } catch (e) {
       return Left(
-        InternalFailure(
-          "Error when fetching conversion properties: $e",
+        InternalException(
+          message: "Error when fetching conversion properties: $e",
         ),
       );
     }
@@ -113,7 +114,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
   }
 
   @override
-  Future<Either<Failure, void>> saveConversion(
+  Future<Either<ConvertouchException, void>> saveConversion(
     InputConversionModel conversion,
   ) async {
     try {
@@ -147,7 +148,9 @@ class ConversionRepositoryImpl extends ConversionRepository {
       return const Right(null);
     } catch (e) {
       return Left(
-        InternalFailure("Error when saving conversion properties: $e"),
+        InternalException(
+          message: "Error when saving conversion properties: $e",
+        ),
       );
     }
   }

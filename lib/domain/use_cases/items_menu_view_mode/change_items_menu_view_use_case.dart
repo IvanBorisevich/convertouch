@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_menu_items_view_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
@@ -7,7 +7,7 @@ import 'package:either_dart/either.dart';
 class ChangeItemsMenuViewUseCase
     extends UseCase<ItemsViewMode, OutputMenuItemsViewModel> {
   @override
-  Future<Either<Failure, OutputMenuItemsViewModel>> execute(
+  Future<Either<ConvertouchException, OutputMenuItemsViewModel>> execute(
     ItemsViewMode input,
   ) async {
     try {
@@ -19,7 +19,9 @@ class ChangeItemsMenuViewUseCase
       );
     } catch (e) {
       return Left(
-        InternalFailure("Error during switching items menu view mode: $e"),
+        InternalException(
+          message: "Error during switching items menu view mode: $e",
+        ),
       );
     }
   }

@@ -6,7 +6,7 @@ import 'package:convertouch/data/entities/job_data_source_entity.dart';
 import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/refreshing_job_translator.dart';
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:either_dart/either.dart';
@@ -23,7 +23,8 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
   });
 
   @override
-  Future<Either<Failure, List<RefreshingJobModel>>> getAll() async {
+  Future<Either<ConvertouchException, List<RefreshingJobModel>>>
+      getAll() async {
     try {
       final refreshingJobs = await refreshingJobDao.getAll();
       final refreshableGroups = await unitGroupDao.getRefreshableGroups();
@@ -45,13 +46,15 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       );
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when fetching refreshing jobs: $e"),
+        DatabaseException(
+          message: "Error when fetching refreshing jobs: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, RefreshingJobModel?>> get(int id) async {
+  Future<Either<ConvertouchException, RefreshingJobModel?>> get(int id) async {
     try {
       final jobEntity = await refreshingJobDao.get(id);
       if (jobEntity == null) {
@@ -67,13 +70,15 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       );
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when fetching refreshing job by id = $id: $e"),
+        DatabaseException(
+          message: "Error when fetching refreshing job by id = $id: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, RefreshingJobModel?>> getByGroupId(
+  Future<Either<ConvertouchException, RefreshingJobModel?>> getByGroupId(
     int unitGroupId,
   ) async {
     try {
@@ -91,21 +96,25 @@ class RefreshingJobRepositoryImpl extends RefreshingJobRepository {
       );
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when fetching refreshing job "
-            "by unit group id = $unitGroupId: $e"),
+        DatabaseException(
+          message: "Error when fetching refreshing job "
+              "by unit group id = $unitGroupId: $e",
+        ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, void>> update(RefreshingJobModel model) async {
+  Future<Either<ConvertouchException, void>> update(
+      RefreshingJobModel model) async {
     try {
       await refreshingJobDao.update(RefreshingJobTranslator.I.fromModel(model));
       return const Right(null);
     } catch (e) {
       return Left(
-        DatabaseFailure("Error when updating refreshing job "
-            "by id = ${model.id}: $e"),
+        DatabaseException(
+          message: "Error when updating job '${model.name}': $e",
+        ),
       );
     }
   }

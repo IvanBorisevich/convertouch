@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
@@ -14,7 +14,7 @@ class UpdateJobFinishTimeUseCase extends UseCase<RefreshingJobModel, void> {
   });
 
   @override
-  Future<Either<Failure, void>> execute(RefreshingJobModel input) async {
+  Future<Either<ConvertouchException, void>> execute(RefreshingJobModel input) async {
     RefreshingJobModel model = RefreshingJobModel.coalesce(
       input,
       lastRefreshTime: DateTime.now().toString(),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_rebuild_model.dart';
@@ -25,22 +25,23 @@ class ExecuteJobUseCase
   });
 
   @override
-  Future<Either<Failure, RefreshingJobModel>> execute(
+  Future<Either<ConvertouchException, RefreshingJobModel>> execute(
     InputExecuteJobModel input,
   ) async {
     StreamController<RefreshingJobResultModel>? jobProgressController;
 
     try {
+      if (input.job.selectedDataSource == null) {
+        log("No data source found for the job ${input.job.name}");
+        return Right(
+          RefreshingJobModel.coalesce(
+            input.job,
+          ),
+        );
+      }
+
       jobProgressController = createJobProgressStream(
         jobFunc: (jobProgressController) async {
-          if (input.job.selectedDataSource == null) {
-            log("No data source found for the job ${input.job.name}");
-            jobProgressController.add(
-              const RefreshingJobResultModel.finish(),
-            );
-            return;
-          }
-
           final refreshedData = ObjectUtils.tryGet(
             await networkDataRepository.refreshForGroup(
               unitGroupId: input.job.unitGroup.id!,
@@ -82,8 +83,10 @@ class ExecuteJobUseCase
       jobProgressController?.close();
 
       return Left(
-        InternalFailure("Error when starting the refreshing job "
-            "'${input.job.name}': $e"),
+        InternalException(
+          message: "Error when starting the refreshing job "
+              "'${input.job.name}': $e",
+        ),
       );
     }
   }

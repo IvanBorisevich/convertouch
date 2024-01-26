@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
@@ -14,7 +14,7 @@ class GetJobDetailsByGroupUseCase
   });
 
   @override
-  Future<Either<Failure, RefreshingJobModel?>> execute(
+  Future<Either<ConvertouchException, RefreshingJobModel?>> execute(
     UnitGroupModel? input,
   ) async {
     if (input == null) {

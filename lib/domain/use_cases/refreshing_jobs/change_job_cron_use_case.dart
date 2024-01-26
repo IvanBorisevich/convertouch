@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_cron_change_model.dart';
 import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
@@ -14,7 +14,7 @@ class ChangeJobCronUseCase
   });
 
   @override
-  Future<Either<Failure, RefreshingJobModel>> execute(
+  Future<Either<ConvertouchException, RefreshingJobModel>> execute(
     InputCronChangeModel input,
   ) async {
     try {
@@ -31,8 +31,10 @@ class ChangeJobCronUseCase
       return Right(jobUpdate);
     } catch (e) {
       return Left(
-        InternalFailure("Error when toggling auto refresh mode "
-            "in job with id = ${input.job.id}: $e"),
+        InternalException(
+          message: "Error when toggling auto refresh mode "
+              "in job '${input.job.name}': $e",
+        ),
       );
     }
   }

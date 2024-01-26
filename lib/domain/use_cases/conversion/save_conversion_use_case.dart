@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
@@ -13,7 +13,8 @@ class SaveConversionUseCase extends UseCase<OutputConversionModel, void> {
   });
 
   @override
-  Future<Either<Failure, void>> execute(OutputConversionModel input) async {
+  Future<Either<ConvertouchException, void>> execute(
+      OutputConversionModel input) async {
     try {
       InputConversionModel conversionToBeSaved = InputConversionModel(
         unitGroup: input.unitGroup,
@@ -25,7 +26,9 @@ class SaveConversionUseCase extends UseCase<OutputConversionModel, void> {
       return await conversionRepository.saveConversion(conversionToBeSaved);
     } catch (e) {
       return Left(
-        InternalFailure("Error when saving the current conversion: $e"),
+        InternalException(
+          message: "Error when saving the current conversion: $e",
+        ),
       );
     }
   }

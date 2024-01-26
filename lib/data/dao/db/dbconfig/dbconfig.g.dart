@@ -363,7 +363,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   @override
   Future<UnitEntity?> getBaseUnit(int unitGroupId) async {
     return _queryAdapter.query(
-        'select * from units where unit_group_id = ?1 and coefficient = 1 limit 1',
+        'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 1',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int),
         arguments: [unitGroupId]);
   }

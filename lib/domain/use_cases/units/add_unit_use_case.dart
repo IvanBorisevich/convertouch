@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/failure.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_creation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
@@ -11,7 +11,7 @@ class AddUnitUseCase extends UseCase<InputUnitCreationModel, int> {
   const AddUnitUseCase(this.unitRepository);
 
   @override
-  Future<Either<Failure, int>> execute(InputUnitCreationModel input) async {
+  Future<Either<ConvertouchException, int>> execute(InputUnitCreationModel input) async {
     double newUnitValue = double.tryParse(input.newUnitValue ?? "") ?? 1;
     double baseUnitValue = double.tryParse(input.baseUnitValue ?? "") ?? 1;
     double baseUnitCoefficient = input.baseUnit?.coefficient ?? 1;

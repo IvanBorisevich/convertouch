@@ -112,7 +112,7 @@ class _ConvertouchUnitCreationPageState
                       theme: appState.theme,
                     ),
                     const SizedBox(height: 25),
-                    pageState.comment == null
+                    pageState.baseUnit != null
                         ? Column(
                             children: [
                               ConvertouchFadeScaleAnimation(
