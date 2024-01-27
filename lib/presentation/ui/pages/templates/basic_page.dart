@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/app/app_state.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -113,7 +114,10 @@ Widget leadingIcon({
   );
 }
 
-void showAlertDialog(BuildContext context, String message) {
+void showAlertDialog(
+  BuildContext context, {
+  required String message,
+}) {
   showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -129,6 +133,28 @@ void showAlertDialog(BuildContext context, String message) {
         ],
       );
     },
+  );
+}
+
+void showSnackBar(
+  BuildContext context, {
+  required String message,
+  required Color contentColor,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      showCloseIcon: true,
+      closeIconColor: contentColor,
+      content: Center(
+        child: Text(
+          message,
+          style: TextStyle(
+            color: contentColor,
+            fontFamily: quicksandFontFamily,
+          ),
+        ),
+      ),
+    ),
   );
 }
 

@@ -97,31 +97,23 @@ class BuildConversionUseCase
         convertedUnitValues.add(
           ConversionItemModel(
             unit: tgtUnit,
-            value: ValueModel(
-              strValue: NumberValueUtils.formatValue(
-                tgtValue,
-              ),
-              scientificValue: NumberValueUtils.formatValueInScientificNotation(
-                tgtValue,
-              ),
-            ),
-            defaultValue: ValueModel(
-              strValue: NumberValueUtils.formatValue(
-                tgtDefaultValue,
-              ),
-              scientificValue: NumberValueUtils.formatValueInScientificNotation(
-                tgtDefaultValue,
-              ),
-            ),
+            value: NumberValueUtils.buildValueModel(tgtValue),
+            defaultValue: NumberValueUtils.buildValueModel(tgtDefaultValue),
           ),
         );
       }
+
+      bool emptyConversionItemsExist = convertedUnitValues.any(
+        (unitValue) =>
+            !unitValue.value.hasValue() && !unitValue.defaultValue.hasValue(),
+      );
 
       return Right(
         OutputConversionModel(
           unitGroup: input.unitGroup,
           sourceConversionItem: srcConversionItem,
           targetConversionItems: convertedUnitValues,
+          emptyConversionItemsExist: emptyConversionItemsExist,
         ),
       );
     } catch (e, stacktrace) {

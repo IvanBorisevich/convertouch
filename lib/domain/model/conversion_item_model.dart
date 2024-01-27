@@ -45,6 +45,10 @@ class ConversionItemModel extends ItemModel {
           ),
         );
 
+  bool hasValue() {
+    return value.hasValue() || defaultValue.hasValue();
+  }
+
   @override
   List<Object?> get props => [
     itemType,

@@ -72,6 +72,15 @@ class ConversionBloc
         }
       }
 
+      if (event.runtimeType != RebuildConversionOnValueChange &&
+          conversionResult.right.emptyConversionItemsExist) {
+        emit(
+          const ConversionNotificationState(
+            message: 'Some dynamic values are empty. Please refresh them',
+          ),
+        );
+      }
+
       emit(
         ConversionBuilt(
           conversion: conversionResult.right,

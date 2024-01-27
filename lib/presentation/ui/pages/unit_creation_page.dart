@@ -49,7 +49,9 @@ class _ConvertouchUnitCreationPageState
         listener: (_, unitsState) {
           if (unitsState is UnitExists) {
             showAlertDialog(
-                context, "Unit '${unitsState.unitName}' already exist");
+              context,
+              message: "Unit '${unitsState.unitName}' already exist",
+            );
           } else if (unitsState is UnitsFetched) {
             Navigator.of(context).pop();
           }

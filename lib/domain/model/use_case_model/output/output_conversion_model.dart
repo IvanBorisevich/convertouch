@@ -5,11 +5,13 @@ class OutputConversionModel {
   final UnitGroupModel? unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<ConversionItemModel> targetConversionItems;
+  final bool emptyConversionItemsExist;
 
   const OutputConversionModel({
     this.unitGroup,
     this.sourceConversionItem,
     this.targetConversionItems = const [],
+    this.emptyConversionItemsExist = false,
   });
 
   @override

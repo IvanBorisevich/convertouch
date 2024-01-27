@@ -31,6 +31,19 @@ class ConversionBuilt extends ConversionState {
   }
 }
 
+class ConversionNotificationState
+    extends ConvertouchNotificationState implements ConversionState {
+  const ConversionNotificationState({
+    required super.message,
+  });
+
+  @override
+  String toString() {
+    return 'ConversionNotificationState{'
+        'message: $message}';
+  }
+}
+
 class ConversionErrorState extends ConvertouchErrorState
     implements ConversionState {
   const ConversionErrorState({

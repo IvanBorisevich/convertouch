@@ -32,6 +32,13 @@ class BuildConversion extends ConversionEvent {
   }
 }
 
+class RebuildConversionOnValueChange extends BuildConversion {
+  const RebuildConversionOnValueChange({
+    required super.conversionParams,
+    super.job,
+  });
+}
+
 class RebuildConversionAfterUnitReplacement extends BuildConversion {
   final UnitModel newUnit;
   final UnitModel oldUnit;

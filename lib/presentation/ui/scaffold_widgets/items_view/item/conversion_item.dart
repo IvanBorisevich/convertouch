@@ -67,6 +67,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
         children: [
           Expanded(
             child: ConvertouchTextBox(
+              disabled: !widget.item.hasValue(),
               label: widget.item.unit.name,
               hintText: _isFocused
                   ? widget.item.defaultValue.strValue

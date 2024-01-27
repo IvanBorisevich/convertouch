@@ -9,6 +9,8 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/refreshing_jobs_view.dart';
+import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +20,9 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
+      ScaffoldColorVariation scaffoldColor =
+          scaffoldColors[appState.theme]!.regular;
+
       return refreshingJobsBlocBuilder((jobsState) {
         return BlocListener<RefreshingJobsControlBloc,
             RefreshingJobsControlState>(
@@ -28,17 +33,10 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
                 const FetchRefreshingJobs(),
               );
             } else if (state is RefreshingJobsControlNotificationState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(
-                        fontFamily: quicksandFontFamily,
-                      ),
-                    ),
-                  ),
-                ),
+              showSnackBar(
+                context,
+                message: state.message,
+                contentColor: scaffoldColor.backgroundColor,
               );
             }
           },

@@ -1,7 +1,7 @@
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
@@ -35,8 +35,11 @@ class _ConvertouchUnitGroupCreationPageState
       return BlocListener<UnitGroupsBloc, UnitGroupsState>(
         listener: (_, unitGroupsState) {
           if (unitGroupsState is UnitGroupExists) {
-            showAlertDialog(context,
-                "Unit group '${unitGroupsState.unitGroupName}' already exist");
+            showAlertDialog(
+              context,
+              message:
+                  "Unit group '${unitGroupsState.unitGroupName}' already exist",
+            );
           } else if (unitGroupsState is UnitGroupsFetched) {
             Navigator.of(context).pop();
           }

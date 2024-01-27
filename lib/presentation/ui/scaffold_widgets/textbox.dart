@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 class ConvertouchTextBox extends StatefulWidget {
   final String label;
   final bool autofocus;
+  final bool disabled;
   final void Function(String)? onChanged;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
@@ -23,6 +24,7 @@ class ConvertouchTextBox extends StatefulWidget {
   const ConvertouchTextBox({
     this.label = "",
     this.autofocus = false,
+    this.disabled = false,
     this.onChanged,
     this.onFocusSelected,
     this.onFocusLeft,
@@ -63,6 +65,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         widget.customColor ?? textBoxColors[widget.theme]!;
 
     return TextField(
+      readOnly: widget.disabled,
       maxLength: widget.maxTextLength,
       obscureText: false,
       keyboardType: widget.keyboardType,

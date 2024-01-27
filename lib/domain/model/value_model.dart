@@ -7,6 +7,10 @@ class ValueModel {
     this.scientificValue,
   });
 
+  bool hasValue() {
+    return strValue.isNotEmpty;
+  }
+
   @override
   String toString() {
     return strValue;

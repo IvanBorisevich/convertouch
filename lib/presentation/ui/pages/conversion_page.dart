@@ -7,6 +7,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
@@ -40,6 +41,9 @@ class ConvertouchConversionPage extends StatelessWidget {
 
       ButtonColor refreshButtonColor =
           refreshingJobItemsColors[appState.theme]!.refreshButton;
+
+      ScaffoldColorVariation scaffoldColor =
+          scaffoldColors[appState.theme]!.regular;
 
       return conversionBlocBuilder((pageState) {
         final conversion = pageState.conversion;
@@ -115,6 +119,17 @@ class ConvertouchConversionPage extends StatelessWidget {
                 }
               },
             ),
+            BlocListener<ConversionBloc, ConversionState>(
+              listener: (_, state) {
+                if (state is ConversionNotificationState) {
+                  showSnackBar(
+                    context,
+                    message: state.message,
+                    contentColor: scaffoldColor.backgroundColor,
+                  );
+                }
+              },
+            ),
           ],
           child: refreshingJobsControlBlocBuilder((jobsControlState) {
             final jobInProgress =
@@ -171,7 +186,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                 },
                 onItemValueChanged: (item, value) {
                   BlocProvider.of<ConversionBloc>(context).add(
-                    BuildConversion(
+                    RebuildConversionOnValueChange(
                       conversionParams: InputConversionModel(
                         sourceConversionItem: ConversionItemModel.fromStrValue(
                           unit: item.unit,
