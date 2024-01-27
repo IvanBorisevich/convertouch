@@ -56,7 +56,6 @@ class ConvertouchUnitsPage extends StatelessWidget {
     return appBlocBuilder((appState) {
       return unitsViewModeBlocBuilder((viewModeState) {
         return ConvertouchPage(
-          appState: appState,
           title: pageTitle,
           customLeadingIcon: customLeadingIcon,
           appBarRightWidgets: appBarRightWidgets,

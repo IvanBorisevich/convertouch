@@ -42,7 +42,6 @@ class ConvertouchRefreshingJobsPage extends StatelessWidget {
           },
           child: refreshingJobsControlBlocBuilder((jobsProgressState) {
             return ConvertouchPage(
-              appState: appState,
               title: "Refresh Data",
               body: ConvertouchRefreshingJobsView(
                 jobsState.items,

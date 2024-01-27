@@ -27,7 +27,6 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
       ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
 
       return ConvertouchPage(
-        appState: appState,
         title: pageTitle,
         body: Center(
           child: Column(

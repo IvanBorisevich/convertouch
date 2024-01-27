@@ -74,10 +74,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   : widget.item.defaultValue.scientificValue,
               controller: _unitValueController,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)')),
+                FilteringTextInputFormatter.allow(RegExp(r'(^-?\d+\.?\d*)')),
               ],
               keyboardType: const TextInputType.numberWithOptions(
-                signed: false,
+                signed: true,
                 decimal: true,
               ),
               onChanged: (value) {

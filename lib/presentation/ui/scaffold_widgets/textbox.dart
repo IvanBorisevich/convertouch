@@ -15,7 +15,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool textLengthCounterVisible;
   final String? hintText;
   final double borderRadius;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final ConvertouchUITheme theme;
@@ -32,7 +32,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.textLengthCounterVisible = false,
     this.hintText,
     this.borderRadius = 8,
-    this.controller,
+    required this.controller,
     this.inputFormatters,
     this.keyboardType,
     required this.theme,
@@ -72,8 +72,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       autofocus: widget.autofocus,
       focusNode: _focusNode,
       controller: widget.controller
-        ?..selection = TextSelection.collapsed(
-          offset: widget.controller?.text.length ?? 0,
+        ..selection = TextSelection.collapsed(
+          offset: widget.controller.text.length,
         ),
       inputFormatters: widget.inputFormatters,
       onChanged: widget.onChanged,
@@ -119,7 +119,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         counterText: "",
         suffixText: widget.textLengthCounterVisible
-            ? '${widget.controller?.text.length}/${widget.maxTextLength}'
+            ? '${widget.controller.text.length}/${widget.maxTextLength}'
             : null,
       ),
       style: TextStyle(

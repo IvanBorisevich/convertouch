@@ -45,7 +45,6 @@ class _ConvertouchUnitGroupCreationPageState
           }
         },
         child: ConvertouchPage(
-          appState: appState,
           title: "New Unit Group",
           body: Container(
             padding: const EdgeInsetsDirectional.fromSTEB(7, 15, 7, 0),

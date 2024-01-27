@@ -136,7 +136,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                 jobsControlState.jobsInProgress[pageState.job?.id];
 
             return ConvertouchPage(
-              appState: appState,
               title: "Conversion",
               secondaryAppBar: conversion.unitGroup != null
                   ? Padding(

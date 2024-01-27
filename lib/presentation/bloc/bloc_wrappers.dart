@@ -54,7 +54,7 @@ Widget blocBuilderWrap<
   );
 }
 
-var appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppStateBuilt>;
+var appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppState>;
 
 var unitGroupsViewModeBlocBuilder = blocBuilderWrap<UnitGroupsViewModeBloc,
     MenuItemsViewState, MenuItemsViewStateSet>;

@@ -1,34 +1,28 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
+import 'package:flutter/material.dart';
 
-abstract class AppState extends ConvertouchState {
-  const AppState();
-}
-
-class AppStateInBuilding extends AppState {
-  const AppStateInBuilding();
-
-  @override
-  String toString() {
-    return 'AppStateInBuilding{}';
-  }
-}
-
-class AppStateBuilt extends AppState {
+class AppState extends ConvertouchState {
   final ConvertouchUITheme theme;
+  final ValueNotifier<bool>? focusNotifier;
+  final FocusNode? focusNode;
 
-  const AppStateBuilt({
+  const AppState({
     this.theme = ConvertouchUITheme.light,
+    this.focusNotifier,
+    this.focusNode,
   });
 
   @override
   List<Object?> get props => [
     theme,
+    focusNotifier,
+    focusNode,
   ];
 
   @override
   String toString() {
-    return 'AppStateBuilt{'
+    return 'AppState{'
         'theme: $theme}';
   }
 }

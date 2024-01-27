@@ -40,7 +40,6 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
           );
 
           return ConvertouchPage(
-            appState: appState,
             title: pageState.job.name,
             customLeadingIcon: null,
             appBarRightWidgets: null,

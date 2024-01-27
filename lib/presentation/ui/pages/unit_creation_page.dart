@@ -58,7 +58,6 @@ class _ConvertouchUnitCreationPageState
         },
         child: unitCreationBlocBuilder((pageState) {
           return ConvertouchPage(
-            appState: appState,
             title: "Add Unit",
             body: SingleChildScrollView(
               child: Container(
