@@ -34,38 +34,41 @@ class ConvertouchRefreshingJobsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: listTopSpacing),
-      child: ListView.separated(
-        padding: EdgeInsets.all(itemsSpacing),
-        itemCount: jobItems.length,
-        itemBuilder: (context, index) {
-          var jobItem = jobItems[index];
-          return ConvertouchFadeScaleAnimation(
-            child: ConvertouchRefreshingJobItem(
-              jobsInProgress[jobItem.id] ?? jobItem,
-              onItemClick: () {
-                onItemClick?.call(jobItem);
-              },
-              onRefreshButtonClick: () {
-                onJobStartClick?.call(jobItem);
-              },
-              onOngoingRefreshButtonClick: () {
-                onJobStopClick?.call(jobItem);
-              },
-              onFinish: (jobResult) {
-                onJobFinish?.call(jobItem, jobResult);
-              },
-              theme: theme,
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Padding(
+        padding: EdgeInsets.only(top: listTopSpacing),
+        child: ListView.separated(
+          padding: EdgeInsets.all(itemsSpacing),
+          itemCount: jobItems.length,
+          itemBuilder: (context, index) {
+            var jobItem = jobItems[index];
+            return ConvertouchFadeScaleAnimation(
+              child: ConvertouchRefreshingJobItem(
+                jobsInProgress[jobItem.id] ?? jobItem,
+                onItemClick: () {
+                  onItemClick?.call(jobItem);
+                },
+                onRefreshButtonClick: () {
+                  onJobStartClick?.call(jobItem);
+                },
+                onOngoingRefreshButtonClick: () {
+                  onJobStopClick?.call(jobItem);
+                },
+                onFinish: (jobResult) {
+                  onJobFinish?.call(jobItem, jobResult);
+                },
+                theme: theme,
+              ),
+            );
+          },
+          separatorBuilder: (context, index) => Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(
+              itemsSpacing,
+              itemsSpacing,
+              itemsSpacing,
+              index == jobItems.length - 1 ? itemsSpacing : 0,
             ),
-          );
-        },
-        separatorBuilder: (context, index) => Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(
-            itemsSpacing,
-            itemsSpacing,
-            itemsSpacing,
-            index == jobItems.length - 1 ? itemsSpacing : 0,
           ),
         ),
       ),

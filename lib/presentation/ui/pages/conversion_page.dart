@@ -24,6 +24,7 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_but
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
@@ -138,8 +139,9 @@ class ConvertouchConversionPage extends StatelessWidget {
             return ConvertouchPage(
               title: "Conversion",
               secondaryAppBar: conversion.unitGroup != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 7),
+                  ? SecondaryAppBar(
+                      theme: appState.theme,
+                      color: Colors.transparent,
                       child: ConvertouchMenuItem(
                         conversion.unitGroup!,
                         customColors:
@@ -161,9 +163,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                         theme: appState.theme,
                       ),
                     )
-                  : empty(),
-              secondaryAppBarHeight: conversion.unitGroup != null ? 60 : 0,
-              secondaryAppBarColor: Colors.transparent,
+                  : null,
               body: ConvertouchConversionItemsView(
                 conversion.targetConversionItems,
                 onItemTap: (item) {

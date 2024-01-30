@@ -3,6 +3,8 @@ import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
+  static const double buttonHeight = 70;
+
   final IconData icon;
   final void Function()? onClick;
   final bool visible;
@@ -53,7 +55,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     return Visibility(
       visible: visible,
       child: SizedBox(
-        height: 70,
+        height: buttonHeight,
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [

@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.d
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,20 +60,23 @@ class ConvertouchUnitsPage extends StatelessWidget {
           title: pageTitle,
           customLeadingIcon: customLeadingIcon,
           appBarRightWidgets: appBarRightWidgets,
-          secondaryAppBar: ConvertouchSearchBar(
-            placeholder: "Search units...",
+          secondaryAppBar: SecondaryAppBar(
             theme: appState.theme,
-            iconViewMode: viewModeState.iconViewMode,
-            pageViewMode: viewModeState.pageViewMode,
-            onViewModeChange: () {
-              BlocProvider.of<UnitsViewModeBloc>(context).add(
-                ChangeMenuItemsView(
-                  targetViewMode: viewModeState.iconViewMode,
-                ),
-              );
-            },
-            onSearchStringChanged: onSearchStringChanged,
-            onSearchReset: onSearchReset,
+            child: ConvertouchSearchBar(
+              placeholder: "Search units...",
+              theme: appState.theme,
+              iconViewMode: viewModeState.iconViewMode,
+              pageViewMode: viewModeState.pageViewMode,
+              onViewModeChange: () {
+                BlocProvider.of<UnitsViewModeBloc>(context).add(
+                  ChangeMenuItemsView(
+                    targetViewMode: viewModeState.iconViewMode,
+                  ),
+                );
+              },
+              onSearchStringChanged: onSearchStringChanged,
+              onSearchReset: onSearchReset,
+            ),
           ),
           body: ConvertouchMenuItemsView(
             units,

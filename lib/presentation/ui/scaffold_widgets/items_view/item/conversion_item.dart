@@ -1,10 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
   final ConversionItemModel item;
@@ -34,14 +34,15 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   static const BorderRadius _elementsBorderRadius =
       BorderRadius.all(Radius.circular(8));
 
-  final _unitValueController = TextEditingController();
+  late final TextEditingController _unitValueController;
 
   late bool _isFocused;
 
   @override
   void initState() {
-    super.initState();
+    _unitValueController = TextEditingController();
     _isFocused = false;
+    super.initState();
   }
 
   @override
@@ -67,21 +68,20 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
         children: [
           Expanded(
             child: ConvertouchTextBox(
+              controller: _unitValueController,
               disabled: !widget.item.hasValue(),
               label: widget.item.unit.name,
               hintText: _isFocused
                   ? widget.item.defaultValue.strValue
                   : widget.item.defaultValue.scientificValue,
-              controller: _unitValueController,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'(^-?\d+\.?\d*)')),
+                decimalNegativeNumbersFormatter,
               ],
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: true,
-                decimal: true,
-              ),
+              textInputType: decimalNegativeNumbersType,
               onChanged: (value) {
-                widget.onValueChanged?.call(value);
+                if (value != '.' && value != '-') {
+                  widget.onValueChanged?.call(value);
+                }
               },
               onFocusSelected: () {
                 setState(() {
@@ -142,5 +142,11 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _unitValueController.dispose();
+    super.dispose();
   }
 }

@@ -10,10 +10,7 @@ class ConvertouchPage extends StatelessWidget {
   final String title;
   final Widget? customLeadingIcon;
   final List<Widget>? appBarRightWidgets;
-  final Widget? secondaryAppBar;
-  final Color? secondaryAppBarColor;
-  final double secondaryAppBarHeight;
-  final EdgeInsetsGeometry secondaryAppBarPadding;
+  final PreferredSizeWidget? secondaryAppBar;
   final Widget? floatingActionButton;
   final void Function()? onItemsRemove;
 
@@ -23,14 +20,6 @@ class ConvertouchPage extends StatelessWidget {
     this.customLeadingIcon,
     this.appBarRightWidgets,
     this.secondaryAppBar,
-    this.secondaryAppBarColor,
-    this.secondaryAppBarHeight = 53,
-    this.secondaryAppBarPadding = const EdgeInsets.only(
-      left: 7,
-      top: 0,
-      right: 7,
-      bottom: 7,
-    ),
     this.floatingActionButton,
     this.onItemsRemove,
     super.key,
@@ -61,6 +50,7 @@ class ConvertouchPage extends StatelessWidget {
                 }
               },
             ),
+            bottom: secondaryAppBar,
             centerTitle: true,
             title: Text(
               title,
@@ -74,25 +64,7 @@ class ConvertouchPage extends StatelessWidget {
             elevation: 0,
             actions: appBarRightWidgets,
           ),
-          body: Column(
-            children: [
-              Visibility(
-                visible: secondaryAppBar != null,
-                child: Container(
-                  height: secondaryAppBarHeight,
-                  decoration: BoxDecoration(
-                    color: secondaryAppBarColor ??
-                        scaffoldColor.regular.appBarColor,
-                  ),
-                  padding: secondaryAppBarPadding,
-                  child: secondaryAppBar,
-                ),
-              ),
-              Expanded(
-                child: body,
-              ),
-            ],
-          ),
+          body: body,
           floatingActionButton: floatingActionButton,
         ),
       );

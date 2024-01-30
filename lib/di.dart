@@ -45,7 +45,7 @@ import 'package:convertouch/domain/use_cases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/prepare_unit_creation_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
-import 'package:convertouch/presentation/bloc/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';

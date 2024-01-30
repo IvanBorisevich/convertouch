@@ -4,6 +4,7 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_event
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -20,9 +21,15 @@ class ConvertouchUnitGroupCreationPage extends StatefulWidget {
 
 class _ConvertouchUnitGroupCreationPageState
     extends State<ConvertouchUnitGroupCreationPage> {
-  final _controller = TextEditingController();
+  late final TextEditingController _controller;
 
   bool _isApplyButtonEnabled = false;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +56,17 @@ class _ConvertouchUnitGroupCreationPageState
           body: Container(
             padding: const EdgeInsetsDirectional.fromSTEB(7, 15, 7, 0),
             child: ConvertouchTextBox(
-              onChanged: (String value) async {
+              controller: _controller,
+              onChanged: (value) {
                 setState(() {
                   _isApplyButtonEnabled = value.isNotEmpty;
                 });
               },
+              inputFormatters: [
+                decimalNegativeNumbersFormatter,
+              ],
+              textInputType: decimalNegativeNumbersType,
               label: "Unit Group Name",
-              controller: _controller,
               theme: appState.theme,
               customColor: textBoxColor,
             ),

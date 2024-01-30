@@ -41,69 +41,71 @@ class ConvertouchMenuItemsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (items.isNotEmpty) {
-          Widget? itemBuilder(context, index) {
-            IdNameItemModel item = items[index];
-            bool selected = showSelectedItem && item.id == selectedItemId;
-            bool marked = showMarkedItems &&
-                itemIdsMarkedForConversion != null &&
-                itemIdsMarkedForConversion!.contains(item.id);
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (items.isNotEmpty) {
+            Widget? itemBuilder(context, index) {
+              IdNameItemModel item = items[index];
+              bool selected = showSelectedItem && item.id == selectedItemId;
+              bool marked = showMarkedItems &&
+                  itemIdsMarkedForConversion != null &&
+                  itemIdsMarkedForConversion!.contains(item.id);
 
-            return ConvertouchFadeScaleAnimation(
-              child: ConvertouchMenuItem(
-                item,
-                itemsViewMode: itemsViewMode,
-                onTap: () {
-                  onItemTap?.call(item);
-                },
-                onLongPress: () {
-                  onItemLongPress?.call(item);
-                },
-                onTapForRemoval: () {
-                  onItemTapForRemoval?.call(item);
-                },
-                marked: marked,
-                selected: selected,
-                removalMode: removalModeAllowed && removalModeEnabled,
-                markedForRemoval:
-                    itemIdsMarkedForRemoval.contains(item.id!),
-                theme: theme,
-              ),
-            );
-          }
-
-          switch (itemsViewMode) {
-            case ItemsViewMode.grid:
-              return GridView.builder(
-                itemCount: items.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: itemsSpacing,
-                  crossAxisSpacing: itemsSpacing,
+              return ConvertouchFadeScaleAnimation(
+                child: ConvertouchMenuItem(
+                  item,
+                  itemsViewMode: itemsViewMode,
+                  onTap: () {
+                    onItemTap?.call(item);
+                  },
+                  onLongPress: () {
+                    onItemLongPress?.call(item);
+                  },
+                  onTapForRemoval: () {
+                    onItemTapForRemoval?.call(item);
+                  },
+                  marked: marked,
+                  selected: selected,
+                  removalMode: removalModeAllowed && removalModeEnabled,
+                  markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
+                  theme: theme,
                 ),
-                padding: EdgeInsets.all(itemsSpacing),
-                itemBuilder: itemBuilder,
               );
-            case ItemsViewMode.list:
-              return ListView.separated(
-                padding: EdgeInsets.all(itemsSpacing),
-                itemCount: items.length,
-                itemBuilder: itemBuilder,
-                separatorBuilder: (context, index) => Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(
-                    itemsSpacing,
-                    itemsSpacing,
-                    itemsSpacing,
-                    index == items.length - 1 ? itemsSpacing : 0,
+            }
+
+            switch (itemsViewMode) {
+              case ItemsViewMode.grid:
+                return GridView.builder(
+                  itemCount: items.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: itemsSpacing,
+                    crossAxisSpacing: itemsSpacing,
                   ),
-                ),
-              );
+                  padding: EdgeInsets.all(itemsSpacing),
+                  itemBuilder: itemBuilder,
+                );
+              case ItemsViewMode.list:
+                return ListView.separated(
+                  padding: EdgeInsets.all(itemsSpacing),
+                  itemCount: items.length,
+                  itemBuilder: itemBuilder,
+                  separatorBuilder: (context, index) => Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                      itemsSpacing,
+                      itemsSpacing,
+                      itemsSpacing,
+                      index == items.length - 1 ? itemsSpacing : 0,
+                    ),
+                  ),
+                );
+            }
           }
-        }
-        return noItemsView("No menu items found");
-      },
+          return noItemsView("No menu items found");
+        },
+      ),
     );
   }
 }

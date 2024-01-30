@@ -7,6 +7,7 @@ import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refres
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/refreshing_job_item.dart';
+import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,6 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
           RefreshingJobModel? jobInProgress =
               jobsProgressState.jobsInProgress[pageState.job.id];
 
-          ConvertouchScaffoldColor scaffoldColor =
-              scaffoldColors[appState.theme]!;
           RefreshingJobItemColor color =
               refreshingJobItemsColors[appState.theme]!;
 
@@ -43,50 +42,50 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
             title: pageState.job.name,
             customLeadingIcon: null,
             appBarRightWidgets: null,
-            secondaryAppBarColor: scaffoldColor.regular.backgroundColor,
-            secondaryAppBarPadding: const EdgeInsets.all(5),
-            secondaryAppBar: pageState.job.lastRefreshTime != null
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: color.jobItem.regular.background,
-                      border: Border.all(
-                        color: color.jobItem.regular.border,
+            secondaryAppBar: SecondaryAppBar(
+              visible: pageState.job.lastRefreshTime != null,
+              theme: appState.theme,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color.jobItem.regular.background,
+                  border: Border.all(
+                    color: color.jobItem.regular.border,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: jobInProgress == null ||
+                        jobInProgress.progressController?.stream == null
+                    ? lastRefreshedInfoBox
+                    : StreamBuilder<RefreshingJobResultModel>(
+                        stream: jobInProgress.progressController?.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 20,
+                            );
+                          } else if (snapshot.data == null) {
+                            return lastRefreshedInfoBox;
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return lastRefreshedInfoBox;
+                          } else {
+                            return LinearPercentIndicator(
+                              width: MediaQuery.of(context).size.width,
+                              animation: true,
+                              animateFromLastPercent: true,
+                              lineHeight: 20,
+                              percent: snapshot.data!.progressPercent,
+                              center: Text("${snapshot.data}%"),
+                              barRadius: const Radius.circular(10),
+                              progressColor: color.jobItem.regular.content,
+                            );
+                          }
+                        },
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: jobInProgress == null ||
-                            jobInProgress.progressController?.stream == null
-                        ? lastRefreshedInfoBox
-                        : StreamBuilder<RefreshingJobResultModel>(
-                            stream: jobInProgress.progressController?.stream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const Icon(
-                                  Icons.error_outline,
-                                  color: Colors.red,
-                                  size: 20,
-                                );
-                              } else if (snapshot.data == null) {
-                                return lastRefreshedInfoBox;
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return lastRefreshedInfoBox;
-                              } else {
-                                return LinearPercentIndicator(
-                                  width: MediaQuery.of(context).size.width,
-                                  animation: true,
-                                  animateFromLastPercent: true,
-                                  lineHeight: 20,
-                                  percent: snapshot.data!.progressPercent,
-                                  center: Text("${snapshot.data}%"),
-                                  barRadius: const Radius.circular(10),
-                                  progressColor: color.jobItem.regular.content,
-                                );
-                              }
-                            },
-                          ),
-                  )
-                : null,
+              ),
+            ),
             body: SingleChildScrollView(
               child: Column(
                 children: [
