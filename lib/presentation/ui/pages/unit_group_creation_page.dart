@@ -4,7 +4,6 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_event
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/colors.dart';
 import 'package:convertouch/presentation/ui/style/model/color.dart';
@@ -62,10 +61,6 @@ class _ConvertouchUnitGroupCreationPageState
                   _isApplyButtonEnabled = value.isNotEmpty;
                 });
               },
-              inputFormatters: [
-                decimalNegativeNumbersFormatter,
-              ],
-              textInputType: decimalNegativeNumbersType,
               label: "Unit Group Name",
               theme: appState.theme,
               customColor: textBoxColor,
