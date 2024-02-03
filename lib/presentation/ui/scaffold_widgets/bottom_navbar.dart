@@ -1,26 +1,26 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchBottomNavigationBar extends StatelessWidget {
   static const _navBarIcons = {
     BottomNavbarItem.home: Icons.home_outlined,
     BottomNavbarItem.unitsMenu: Icons.dashboard_customize_outlined,
-    BottomNavbarItem.refreshableData: Icons.refresh_outlined,
+    BottomNavbarItem.settings: Icons.settings_outlined,
   };
 
   static const _navBarIconsSelected = {
     BottomNavbarItem.home: Icons.home_rounded,
     BottomNavbarItem.unitsMenu: Icons.dashboard_customize_rounded,
-    BottomNavbarItem.refreshableData: Icons.refresh_rounded,
+    BottomNavbarItem.settings: Icons.settings_rounded,
   };
 
   static const _navBarLabels = {
     BottomNavbarItem.home: "Home",
     BottomNavbarItem.unitsMenu: "Units Menu",
-    BottomNavbarItem.refreshableData: "Refresh Data",
+    BottomNavbarItem.settings: "Settings",
   };
 
   final BottomNavbarItem selectedItem;
@@ -35,22 +35,23 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ConvertouchScaffoldColor color = scaffoldColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
 
       return BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
           _buildNavbarItem(BottomNavbarItem.home),
           _buildNavbarItem(BottomNavbarItem.unitsMenu),
-          _buildNavbarItem(BottomNavbarItem.refreshableData)
+          _buildNavbarItem(BottomNavbarItem.settings)
         ],
         onTap: (index) {
           onItemSelect?.call(BottomNavbarItem.values[index]);
         },
         currentIndex: selectedItem.index,
         elevation: 0,
-        backgroundColor: color.regular.appBarColor,
-        unselectedItemColor: color.regular.appBarFontColor,
+        backgroundColor: pageColorScheme.bottomBar.regular.background,
+        unselectedItemColor: pageColorScheme.bottomBar.regular.foreground,
+        selectedItemColor: pageColorScheme.bottomBar.selected?.foreground,
       );
     });
   }

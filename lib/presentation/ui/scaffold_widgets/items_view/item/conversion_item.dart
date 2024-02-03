@@ -2,8 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
@@ -11,7 +11,7 @@ class ConvertouchConversionItem extends StatefulWidget {
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final ConvertouchUITheme theme;
-  final ConvertouchConversionItemColor? customColors;
+  final ConversionItemColorScheme? customColors;
 
   const ConvertouchConversionItem(
     this.item, {
@@ -110,14 +110,14 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                     _isFocused
-                        ? unitButtonColor.focused.background
+                        ? unitButtonColor.focused?.background
                         : unitButtonColor.regular.background,
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       side: BorderSide(
                         color: _isFocused
-                            ? unitButtonColor.focused.border
+                            ? (unitButtonColor.focused?.border ?? noColor)
                             : unitButtonColor.regular.border,
                         width: 1,
                       ),
@@ -130,8 +130,8 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   widget.item.unit.code,
                   style: TextStyle(
                     color: _isFocused
-                        ? unitButtonColor.focused.content
-                        : unitButtonColor.regular.content,
+                        ? unitButtonColor.focused?.foreground
+                        : unitButtonColor.regular.foreground,
                     fontWeight: FontWeight.w700,
                   ),
                   maxLines: 1,

@@ -16,7 +16,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   final _bottomBarNavigatorKeys = {
     BottomNavbarItem.home: GlobalKey<NavigatorState>(),
     BottomNavbarItem.unitsMenu: GlobalKey<NavigatorState>(),
-    BottomNavbarItem.refreshableData: GlobalKey<NavigatorState>(),
+    BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
   void _selectNavbarItem(BottomNavbarItem bottomNavbarItem) {
@@ -58,8 +58,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                 PageName.unitGroupsPageRegular,
               ),
               _buildOffstageNavigator(
-                BottomNavbarItem.refreshableData,
-                PageName.refreshingJobsPage,
+                BottomNavbarItem.settings,
+                PageName.settingsPage,
               ),
               // _buildOffstageNavigator(BottomNavbarItem.more),
             ],

@@ -25,9 +25,10 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversi
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,14 +38,16 @@ class ConvertouchConversionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorVariation floatingButtonColor =
+      ButtonColorSet floatingButtonColor =
           conversionPageFloatingButtonColors[appState.theme]!;
 
-      ButtonColor refreshButtonColor =
-          refreshingJobItemsColors[appState.theme]!.refreshButton;
+      ColorStateVariation<BaseColorSet> refreshButtonColor =
+          refreshButtonColors[appState.theme]!;
 
-      ScaffoldColorVariation scaffoldColor =
-          scaffoldColors[appState.theme]!.regular;
+      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+
+      ColorStateVariation<BaseColorSet> unitGroupInAppBarColor =
+          unitGroupItemInAppBarColors[appState.theme]!;
 
       return conversionBlocBuilder((pageState) {
         final conversion = pageState.conversion;
@@ -126,7 +129,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                   showSnackBar(
                     context,
                     message: state.message,
-                    contentColor: scaffoldColor.backgroundColor,
+                    colorSet: pageColorScheme.snackBar,
                   );
                 }
               },
@@ -144,8 +147,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                       color: Colors.transparent,
                       child: ConvertouchMenuItem(
                         conversion.unitGroup!,
-                        customColors:
-                            appBarUnitGroupItemColors[appState.theme]!,
+                        customColors: unitGroupInAppBarColor,
                         onTap: () {
                           BlocProvider.of<UnitGroupsBlocForConversion>(context)
                               .add(

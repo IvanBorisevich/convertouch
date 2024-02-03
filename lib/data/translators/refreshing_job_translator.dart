@@ -30,7 +30,7 @@ class RefreshingJobTranslator
   RefreshingJobModel toModel(
     RefreshingJobEntity entity, {
     UnitGroupEntity? unitGroupEntity,
-        JobDataSourceEntity? selectedDataSource,
+    JobDataSourceEntity? selectedDataSource,
   }) {
     return RefreshingJobModel(
       id: entity.id,

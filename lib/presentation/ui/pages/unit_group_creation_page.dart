@@ -5,9 +5,9 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_state
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,9 +33,9 @@ class _ConvertouchUnitGroupCreationPageState
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ConvertouchTextBoxColor textBoxColor =
+      ColorStateVariation<TextBoxColorSet> textBoxColor =
           unitGroupTextBoxColors[appState.theme]!;
-      ButtonColorVariation floatingButtonColor =
+      ButtonColorSet floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
 
       return BlocListener<UnitGroupsBloc, UnitGroupsState>(

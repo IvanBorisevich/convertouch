@@ -44,7 +44,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
   Future<UnitGroupModel?> _getUnitGroup() async {
     final conversionUnitGroupResult =
-        await preferencesRepository.get<int>(conversionUnitGroupIdKey);
+        await preferencesRepository.get<int>(SettingKeys.conversionUnitGroupId);
 
     if (conversionUnitGroupResult.isLeft) {
       throw conversionUnitGroupResult.left;
@@ -66,7 +66,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
   Future<ConversionItemModel?> _getSourceConversionItem() async {
     final sourceUnitResult =
-        await preferencesRepository.get<int>(sourceUnitIdKey);
+        await preferencesRepository.get<int>(SettingKeys.sourceUnitId);
 
     if (sourceUnitResult.isLeft) {
       throw sourceUnitResult.left;
@@ -87,7 +87,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
     }
 
     final sourceValueResult =
-        await preferencesRepository.get<String>(sourceValueKey);
+        await preferencesRepository.get<String>(SettingKeys.sourceValue);
 
     if (sourceValueResult.isLeft) {
       throw sourceValueResult.left;
@@ -101,7 +101,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
   Future<List<UnitModel>> _getTargetUnits() async {
     final targetUnitIds = ObjectUtils.tryGet(
-            await preferencesRepository.getList<int>(targetUnitIdsKey)) ??
+            await preferencesRepository.getList<int>(SettingKeys.targetUnitIds)) ??
         [];
 
     var targetUnitsResult = await unitRepository.getByIds(targetUnitIds);
@@ -120,7 +120,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
     try {
       if (conversion.unitGroup != null) {
         await preferencesRepository.save<int>(
-          conversionUnitGroupIdKey,
+          SettingKeys.conversionUnitGroupId,
           conversion.unitGroup!.id!,
         );
       } else {
@@ -129,18 +129,18 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
       if (conversion.sourceConversionItem != null) {
         await preferencesRepository.save<int>(
-          sourceUnitIdKey,
+          SettingKeys.sourceUnitId,
           conversion.sourceConversionItem!.unit.id!,
         );
         await preferencesRepository.save<String>(
-          sourceValueKey,
+          SettingKeys.sourceValue,
           conversion.sourceConversionItem!.value.strValue,
         );
       }
 
       if (conversion.targetUnits.isNotEmpty) {
         await preferencesRepository.saveList<int>(
-          targetUnitIdsKey,
+          SettingKeys.targetUnitIds,
           conversion.targetUnits.map((unit) => unit.id!).toList(),
         );
       }

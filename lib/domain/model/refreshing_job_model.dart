@@ -11,6 +11,7 @@ class RefreshingJobModel extends IdNameItemModel {
   final UnitGroupModel unitGroup;
   final RefreshableDataPart refreshableDataPart;
   final Cron cron;
+  final List<JobDataSourceModel> dataSources;
   final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
   final StreamController<RefreshingJobResultModel>? progressController;
@@ -21,6 +22,7 @@ class RefreshingJobModel extends IdNameItemModel {
     required this.unitGroup,
     required this.refreshableDataPart,
     this.cron = Cron.never,
+    this.dataSources = const [],
     this.selectedDataSource,
     this.lastRefreshTime,
     this.progressController,
@@ -29,6 +31,7 @@ class RefreshingJobModel extends IdNameItemModel {
 
   RefreshingJobModel.coalesce(
     RefreshingJobModel savedModel, {
+    List<JobDataSourceModel>? dataSources,
     String? lastRefreshTime,
     Cron? cron,
     JobDataSourceModel? selectedDataSource,
@@ -39,6 +42,12 @@ class RefreshingJobModel extends IdNameItemModel {
           name: savedModel.name,
           unitGroup: savedModel.unitGroup,
           refreshableDataPart: savedModel.refreshableDataPart,
+          dataSources: ObjectUtils.coalesce(
+                what: savedModel.dataSources,
+                patchWith: dataSources,
+                replaceWithNull: replaceWithNull,
+              ) ??
+              [],
           lastRefreshTime: ObjectUtils.coalesce(
             what: savedModel.lastRefreshTime,
             patchWith: lastRefreshTime,
@@ -63,16 +72,16 @@ class RefreshingJobModel extends IdNameItemModel {
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    unitGroup,
-    refreshableDataPart,
-    cron,
-    lastRefreshTime,
-    selectedDataSource,
-    progressController,
-    itemType,
-  ];
+        id,
+        name,
+        unitGroup,
+        refreshableDataPart,
+        cron,
+        lastRefreshTime,
+        selectedDataSource,
+        progressController,
+        itemType,
+      ];
 
   @override
   String toString() {

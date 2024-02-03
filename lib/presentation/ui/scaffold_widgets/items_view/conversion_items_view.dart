@@ -4,7 +4,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
@@ -40,6 +41,9 @@ class _ConvertouchConversionItemsViewState
 
   @override
   Widget build(BuildContext context) {
+    ConversionItemColorScheme conversionItemColorScheme =
+        conversionItemColors[widget.theme]!;
+
     final List<Card> cards = <Card>[
       for (int index = 0; index < widget.convertedItems.length; index += 1)
         Card(
@@ -63,7 +67,7 @@ class _ConvertouchConversionItemsViewState
                       shadowColor: Colors.transparent,
                       child: Icon(
                         Icons.drag_indicator_outlined,
-                        color: conversionItemColors[widget.theme]!.handlersColor,
+                        color: conversionItemColorScheme.handler,
                       ),
                     ),
                   ),
@@ -98,7 +102,7 @@ class _ConvertouchConversionItemsViewState
                     },
                     icon: Icon(
                       Icons.remove_circle_outline,
-                      color: conversionItemColors[widget.theme]!.handlersColor,
+                      color: conversionItemColorScheme.handler,
                     ),
                   ),
                 ),
@@ -153,8 +157,8 @@ class _ConvertouchConversionItemsViewState
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            final ConversionItemModel item = widget.convertedItems.removeAt(
-                oldIndex);
+            final ConversionItemModel item =
+                widget.convertedItems.removeAt(oldIndex);
             widget.convertedItems.insert(newIndex, item);
           });
         },

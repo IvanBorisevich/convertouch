@@ -1,6 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
 import 'package:flutter/material.dart';
 
 class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -9,7 +7,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? child;
   final bool visible;
   final EdgeInsetsGeometry? padding;
-  final Color? color;
+  final Color color;
   final ConvertouchUITheme theme;
 
   const SecondaryAppBar({
@@ -21,20 +19,18 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       right: 7,
       bottom: 7,
     ),
-    this.color,
+    this.color = Colors.transparent,
     required this.theme,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchScaffoldColor scaffoldColor = scaffoldColors[theme]!;
-
     return Visibility(
       visible: visible,
       child: Container(
         decoration: BoxDecoration(
-          color: color ?? scaffoldColor.regular.appBarColor,
+          color: color,
         ),
         padding: padding,
         child: child,
@@ -43,5 +39,6 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(_appBarHeight);
+  Size get preferredSize =>
+      visible ? const Size.fromHeight(_appBarHeight) : Size.zero;
 }

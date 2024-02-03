@@ -4,9 +4,9 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/checkbox.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem extends StatelessWidget {
@@ -20,7 +20,7 @@ class ConvertouchMenuItem extends StatelessWidget {
   final bool removalMode;
   final bool markedForRemoval;
   final ConvertouchUITheme theme;
-  final ConvertouchListItemColor? customColors;
+  final ColorStateVariation<BaseColorSet>? customColors;
 
   const ConvertouchMenuItem(
     this.item, {
@@ -39,8 +39,8 @@ class ConvertouchMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchListItemColor itemColor;
-    ListItemColorVariation itemColorVariation;
+    ColorStateVariation<BaseColorSet> itemColor;
+    BaseColorSet itemColorSet;
 
     if (customColors != null) {
       itemColor = customColors!;
@@ -51,11 +51,11 @@ class ConvertouchMenuItem extends StatelessWidget {
     }
 
     if (selected) {
-      itemColorVariation = itemColor.selected;
+      itemColorSet = itemColor.selected!;
     } else if (marked) {
-      itemColorVariation = itemColor.marked;
+      itemColorSet = itemColor.marked!;
     } else {
-      itemColorVariation = itemColor.regular;
+      itemColorSet = itemColor.regular;
     }
 
     Widget itemLogo;
@@ -70,7 +70,7 @@ class ConvertouchMenuItem extends StatelessWidget {
             AssetImage(
               "$iconAssetsPathPrefix/${unitGroup.iconName}",
             ),
-            color: itemColorVariation.content,
+            color: itemColorSet.foreground,
             size: 25,
           ),
         );
@@ -94,7 +94,7 @@ class ConvertouchMenuItem extends StatelessWidget {
             const AssetImage(
               "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
             ),
-            color: itemColorVariation.content,
+            color: itemColorSet.foreground,
             size: 25,
           ),
         );
@@ -125,7 +125,7 @@ class ConvertouchMenuItem extends StatelessWidget {
                 markedForRemoval: markedForRemoval,
                 markedForConversion: selected,
                 logo: itemLogo,
-                color: itemColorVariation,
+                color: itemColorSet,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
@@ -135,7 +135,7 @@ class ConvertouchMenuItem extends StatelessWidget {
                 selectedForRemoval: markedForRemoval,
                 selectedForConversion: selected,
                 logo: itemLogo,
-                color: itemColorVariation,
+                color: itemColorSet,
               );
           }
         },
@@ -152,7 +152,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final double itemContainerHeight;
   final bool selectedForRemoval;
   final bool selectedForConversion;
-  final ListItemColorVariation color;
+  final BaseColorSet color;
 
   const ConvertouchMenuListItem(
     this.item, {
@@ -194,13 +194,13 @@ class ConvertouchMenuListItem extends StatelessWidget {
                           child: ConvertouchCheckbox(
                             selectedForRemoval,
                             color: color.border,
-                            colorChecked: color.content,
+                            colorChecked: color.foreground,
                           ),
                         )
                       : empty(),
                   DefaultTextStyle(
                     style: TextStyle(
-                      color: color.content,
+                      color: color.foreground,
                       fontWeight: FontWeight.w700,
                       fontFamily: quicksandFontFamily,
                       fontSize: 16,
@@ -225,7 +225,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: quicksandFontFamily,
                             fontWeight: FontWeight.w600,
-                            color: color.content,
+                            color: color.foreground,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -250,7 +250,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final Widget logo;
   final bool markedForRemoval;
   final bool markedForConversion;
-  final ListItemColorVariation color;
+  final BaseColorSet color;
 
   const ConvertouchMenuGridItem(
     this.item, {
@@ -285,7 +285,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               children: [
                 DefaultTextStyle(
                   style: TextStyle(
-                    color: color.content,
+                    color: color.foreground,
                     fontWeight: FontWeight.w700,
                     fontFamily: quicksandFontFamily,
                     fontSize: 16,
@@ -303,8 +303,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                         child: ConvertouchCheckbox(
                           markedForRemoval,
                           size: 12,
-                          color: color.content,
-                          colorChecked: color.content,
+                          color: color.foreground,
+                          colorChecked: color.foreground,
                         ),
                       )
                     : empty(),
@@ -321,7 +321,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                   fontFamily: quicksandFontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: color.content,
+                  color: color.foreground,
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,

@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchPage extends StatelessWidget {
@@ -28,10 +28,10 @@ class ConvertouchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
       return SafeArea(
         child: Scaffold(
-          backgroundColor: scaffoldColor.regular.backgroundColor,
+          backgroundColor: pageColorScheme.page.background,
           appBar: AppBar(
             leading: Builder(
               builder: (context) {
@@ -40,7 +40,7 @@ class ConvertouchPage extends StatelessWidget {
                 } else if (ModalRoute.of(context)?.canPop ?? true) {
                   return leadingIcon(
                     icon: Icons.arrow_back_rounded,
-                    color: scaffoldColor.regular,
+                    color: pageColorScheme.appBar.regular,
                     onClick: () {
                       Navigator.of(context).pop();
                     },
@@ -55,12 +55,12 @@ class ConvertouchPage extends StatelessWidget {
             title: Text(
               title,
               style: TextStyle(
-                color: scaffoldColor.regular.appBarFontColor,
+                color: pageColorScheme.appBar.regular.foreground,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: scaffoldColor.regular.appBarColor,
+            backgroundColor: pageColorScheme.appBar.regular.background,
             elevation: 0,
             actions: appBarRightWidgets,
           ),
@@ -75,12 +75,12 @@ class ConvertouchPage extends StatelessWidget {
 Widget leadingIcon({
   required IconData icon,
   void Function()? onClick,
-  ScaffoldColorVariation? color,
+  AppBarColorSet? color,
 }) {
   return IconButton(
     icon: Icon(
       icon,
-      color: color?.appBarIconColor,
+      color: color?.foreground,
     ),
     onPressed: onClick,
   );
@@ -111,17 +111,18 @@ void showAlertDialog(
 void showSnackBar(
   BuildContext context, {
   required String message,
-  required Color contentColor,
+  required BaseColorSet colorSet,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       showCloseIcon: true,
-      closeIconColor: contentColor,
+      closeIconColor: colorSet.foreground,
+      backgroundColor: colorSet.background,
       content: Center(
         child: Text(
           message,
           style: TextStyle(
-            color: contentColor,
+            color: colorSet.foreground,
             fontFamily: quicksandFontFamily,
           ),
         ),

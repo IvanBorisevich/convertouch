@@ -8,9 +8,9 @@ import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,11 +20,12 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorVariation floatingButtonColor =
+      ButtonColorSet floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
-      ButtonColorVariation removalButtonColor =
+      ButtonColorSet removalButtonColor =
           removalFloatingButtonColors[appState.theme]!;
-      ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
+
+      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
 
       return unitGroupsBlocBuilder((pageState) {
         return ConvertouchUnitGroupsPage(
@@ -32,7 +33,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           customLeadingIcon: pageState.removalMode
               ? leadingIcon(
                   icon: Icons.clear,
-                  color: scaffoldColor.regular,
+                  color: pageColorScheme.appBar.regular,
                   onClick: () {
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       const DisableUnitGroupsRemovalMode(),
@@ -94,7 +95,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                       pageState.markedIdsForRemoval.length.toString(),
                   background: removalButtonColor.background,
                   foreground: removalButtonColor.foreground,
-                  border: scaffoldColor.regular.backgroundColor,
+                  border: pageColorScheme.page.background,
                   onClick: () {
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       RemoveUnitGroups(

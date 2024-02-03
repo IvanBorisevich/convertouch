@@ -1,7 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
@@ -12,7 +13,7 @@ class ConvertouchSearchBar extends StatefulWidget {
   final void Function(String)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final ConvertouchUITheme theme;
-  final ConvertouchSearchBarColor? customColor;
+  final SearchBarColorScheme? customColor;
 
   const ConvertouchSearchBar({
     required this.placeholder,
@@ -41,22 +42,22 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchSearchBarColor color =
+    SearchBarColorScheme searchBarColorScheme =
         widget.customColor ?? searchBarColors[widget.theme]!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSearchTextBox(context, color),
+        _buildSearchTextBox(context, searchBarColorScheme.searchBox),
         const SizedBox(width: 7),
-        _buildViewModeButton(context, color),
+        _buildViewModeButton(context, searchBarColorScheme.viewModeButton),
       ],
     );
   }
 
   Widget _buildSearchTextBox(
     BuildContext context,
-    ConvertouchSearchBarColor color,
+    TextBoxColorSet color,
   ) {
     return Expanded(
       child: TextFormField(
@@ -68,7 +69,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
           suffixIcon: _searchFieldController.text.isEmpty
               ? Icon(
                   Icons.search,
-                  color: color.regular.searchBoxIconColor,
+                  color: color.foreground,
                 )
               : IconButton(
                   onPressed: () {
@@ -79,23 +80,23 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                   },
                   icon: Icon(
                     Icons.close_rounded,
-                    color: color.regular.searchBoxIconColor,
+                    color: color.foreground,
                   ),
                 ),
           hintText: widget.placeholder,
           hintStyle: TextStyle(
-            color: color.regular.hintColor,
+            color: color.hint,
             fontSize: searchTextFieldFontSize,
           ),
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               borderSide: BorderSide.none),
           filled: true,
-          fillColor: color.regular.searchBoxFillColor,
+          fillColor: color.background,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
         ),
         style: TextStyle(
-          color: color.regular.textColor,
+          color: color.foreground,
           fontSize: searchTextFieldFontSize,
           fontWeight: FontWeight.w500,
         ),
@@ -106,14 +107,14 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   Widget _buildViewModeButton(
     BuildContext context,
-    ConvertouchSearchBarColor color,
+    ButtonColorSet color,
   ) {
     return SizedBox(
       width: 46,
       height: 46,
       child: Container(
         decoration: BoxDecoration(
-          color: color.regular.viewModeButtonColor,
+          color: color.background,
           borderRadius: BorderRadius.circular(8),
         ),
         child: IconButton(
@@ -124,7 +125,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
             ),
           ),
           onPressed: widget.onViewModeChange,
-          color: color.regular.viewModeIconColor,
+          color: color.foreground,
         ),
       ),
     );

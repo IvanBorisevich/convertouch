@@ -32,8 +32,8 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
           exception: left,
           lastSuccessfulState: state
         ),
-        (jobDetails) => RefreshingJobDetailsReady(
-          job: jobDetails.job,
+        (job) => RefreshingJobDetailsReady(
+          job: job,
         ),
       ),
     );

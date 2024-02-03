@@ -3,8 +3,8 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +24,7 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ConvertouchScaffoldColor scaffoldColor = scaffoldColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
 
       return ConvertouchPage(
         title: pageTitle,
@@ -38,7 +38,7 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
                   child: Icon(
                     Icons.troubleshoot_outlined,
                     size: 140,
-                    color: scaffoldColor.regular.appBarFontColor,
+                    color: pageColorScheme.page.foreground,
                   ),
                 ),
               ),
@@ -54,14 +54,14 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
                     height: MediaQuery.of(context).size.height,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: scaffoldColor.regular.appBarColor,
+                      color: pageColorScheme.page.background,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       errorState.exception.toString(),
                       style: TextStyle(
                         fontSize: 16,
-                        color: scaffoldColor.regular.appBarFontColor,
+                        color: pageColorScheme.page.foreground,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -86,14 +86,14 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: scaffoldColor.regular.appBarFontColor,
+                          color: pageColorScheme.page.foreground,
                           width: 2,
                         ),
                       ),
                       child: Text(
                         'Go Back',
                         style: TextStyle(
-                          color: scaffoldColor.regular.appBarFontColor,
+                          color: pageColorScheme.page.foreground,
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                         ),

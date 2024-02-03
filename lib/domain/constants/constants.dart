@@ -2,11 +2,17 @@ const String appName = "Convertouch";
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
-const String sourceUnitIdKey = 'sourceUnitId';
-const String sourceValueKey = 'sourceValue';
-const String targetUnitIdsKey = 'targetUnitIds';
-const String conversionUnitGroupIdKey = 'conversionUnitGroupId';
 
+
+abstract class SettingKeys {
+  const SettingKeys._();
+
+  static const String sourceUnitId = 'sourceUnitId';
+  static const String sourceValue = 'sourceValue';
+  static const String targetUnitIds = 'targetUnitIds';
+  static const String conversionUnitGroupId = 'conversionUnitGroupId';
+  static const String theme = "theme";
+}
 
 enum PageName {
   unitsConversionPage,
@@ -18,7 +24,7 @@ enum PageName {
   unitsPageForUnitCreation,
   unitGroupCreationPage,
   unitCreationPage,
-  refreshingJobsPage,
+  settingsPage,
   refreshingJobDetailsPage,
 }
 
@@ -35,7 +41,7 @@ enum ItemType {
 enum BottomNavbarItem {
   home,
   unitsMenu,
-  refreshableData,
+  settings,
   more,
 }
 
@@ -45,8 +51,12 @@ enum ItemsViewMode {
 }
 
 enum ConvertouchUITheme {
-  light,
-  dark,
+  light("Light"),
+  dark("Dark");
+
+  final String value;
+
+  const ConvertouchUITheme(this.value);
 }
 
 enum ConversionType {

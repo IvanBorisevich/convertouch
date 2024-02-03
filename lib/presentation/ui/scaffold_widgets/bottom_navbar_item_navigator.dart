@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
-import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
-import 'package:convertouch/presentation/ui/pages/refreshing_jobs_page.dart';
+import 'package:convertouch/presentation/ui/pages/settings_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_conversion.dart';
@@ -67,13 +66,13 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
           const ConvertouchUnitCreationPage(),
         ),
         route(
-          PageName.refreshingJobsPage.name,
-          const ConvertouchRefreshingJobsPage(),
+          PageName.settingsPage.name,
+          const ConvertouchSettingsPage(),
         ),
-        route(
-          PageName.refreshingJobDetailsPage.name,
-          const ConvertouchRefreshingJobDetailsPage(),
-        ),
+        // route(
+        //   PageName.refreshingJobDetailsPage.name,
+        //   const ConvertouchRefreshingJobDetailsPage(),
+        // ),
       ]);
   }
 

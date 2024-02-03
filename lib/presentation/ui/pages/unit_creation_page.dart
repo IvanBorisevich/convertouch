@@ -15,8 +15,8 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_but
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
-import 'package:convertouch/presentation/ui/style/model/color_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +42,7 @@ class _ConvertouchUnitCreationPageState
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorVariation floatingButtonColor =
+      ButtonColorSet floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
       return BlocListener<UnitsBloc, UnitsState>(

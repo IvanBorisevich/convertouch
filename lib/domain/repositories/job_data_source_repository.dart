@@ -5,5 +5,7 @@ import 'package:either_dart/either.dart';
 abstract class JobDataSourceRepository {
   const JobDataSourceRepository();
 
-  Future<Either<ConvertouchException, List<JobDataSourceModel>>> getByJobId(int jobId);
+  Future<Either<ConvertouchException, List<JobDataSourceModel>>> getByJobId(
+    int jobId,
+  );
 }

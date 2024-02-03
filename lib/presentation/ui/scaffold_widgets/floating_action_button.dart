@@ -1,5 +1,5 @@
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
