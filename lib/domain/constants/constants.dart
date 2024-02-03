@@ -1,8 +1,9 @@
+import 'package:collection/collection.dart';
+
 const String appName = "Convertouch";
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
-
 
 abstract class SettingKeys {
   const SettingKeys._();
@@ -12,6 +13,10 @@ abstract class SettingKeys {
   static const String targetUnitIds = 'targetUnitIds';
   static const String conversionUnitGroupId = 'conversionUnitGroupId';
   static const String theme = "theme";
+  static const String unitGroupsPageViewMode = "unitGroupsPageViewMode";
+  static const String unitGroupsIconViewMode = "unitGroupsIconViewMode";
+  static const String unitsPageViewMode = "unitsPageViewMode";
+  static const String unitsIconViewMode = "unitsIconViewMode";
 }
 
 enum PageName {
@@ -46,8 +51,16 @@ enum BottomNavbarItem {
 }
 
 enum ItemsViewMode {
-  list,
-  grid,
+  list("List"),
+  grid("Grid");
+
+  final String value;
+
+  const ItemsViewMode(this.value);
+
+  static ItemsViewMode? valueOf(String? value) {
+    return values.firstWhereOrNull((element) => value == element.value);
+  }
 }
 
 enum ConvertouchUITheme {
@@ -57,6 +70,11 @@ enum ConvertouchUITheme {
   final String value;
 
   const ConvertouchUITheme(this.value);
+
+  static ConvertouchUITheme valueOf(String? value) {
+    return values.firstWhereOrNull((element) => value == element.value) ??
+        ConvertouchUITheme.light;
+  }
 }
 
 enum ConversionType {
@@ -69,10 +87,8 @@ enum ConversionType {
   const ConversionType(this.value);
 
   static ConversionType valueOf(int? value) {
-    if (value == null) {
-      return ConversionType.static;
-    }
-    return values.firstWhere((element) => value == element.value);
+    return values.firstWhereOrNull((element) => value == element.value) ??
+        ConversionType.static;
   }
 }
 

@@ -24,7 +24,7 @@ class ConvertouchErrorPage<B extends ConvertouchBloc,
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       return ConvertouchPage(
         title: pageTitle,

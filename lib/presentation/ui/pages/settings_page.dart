@@ -1,9 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/setting_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/settings_group.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSettingsPage extends StatelessWidget {
   const ConvertouchSettingsPage({
@@ -70,36 +73,23 @@ class ConvertouchSettingsPage extends StatelessWidget {
               ConvertouchSettingsGroup(
                 name: "UI Theme",
                 items: [
-                      for (final value in ConvertouchUITheme.values)
-                        SettingItem<ConvertouchUITheme>.radio(
-                          value: value,
-                          titleMapper: (value) => value.value,
-                          selectedValue: appState.theme,
-                          theme: appState.theme,
-                          onChanged: (ConvertouchUITheme? newValue) {
-                            // if (newValue != null) {
-                            //   BlocProvider.of<RefreshingJobDetailsBloc>(context)
-                            //       .add(
-                            //     SelectAutoRefreshCron(
-                            //       newCron: newValue,
-                            //       job: pageState.job,
-                            //     ),
-                            //   );
-                            // }
-                          },
-                        ),
-
-                  // SettingItem.regular(
-                  //   settingKey: "example1",
-                  //   title: "Option 1",
-                  //   theme: appState.theme,
-                  // ),
-                  // SettingItem.switcher(
-                  //   settingKey: "example2",
-                  //   selected: false,
-                  //   title: "Option 2",
-                  //   theme: appState.theme,
-                  // ),
+                  for (final value in ConvertouchUITheme.values)
+                    SettingItem<ConvertouchUITheme>.radio(
+                      value: value,
+                      titleMapper: (value) => value.value,
+                      selectedValue: appState.theme,
+                      theme: appState.theme,
+                      onChanged: (ConvertouchUITheme? newValue) {
+                        if (newValue != null) {
+                          BlocProvider.of<AppBloc>(context).add(
+                            SaveSetting(
+                              settingKey: SettingKeys.theme,
+                              settingValue: newValue.value,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                 ],
                 theme: appState.theme,
               ),

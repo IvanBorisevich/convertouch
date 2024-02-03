@@ -44,7 +44,7 @@ class ConvertouchConversionPage extends StatelessWidget {
       ColorStateVariation<BaseColorSet> refreshButtonColor =
           refreshButtonColors[appState.theme]!;
 
-      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       ColorStateVariation<BaseColorSet> unitGroupInAppBarColor =
           unitGroupItemInAppBarColors[appState.theme]!;

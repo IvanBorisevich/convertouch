@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/use_case_model/output/output_menu_items
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class ChangeItemsMenuViewUseCase
+class GetNextItemViewModeUseCase
     extends UseCase<ItemsViewMode, OutputMenuItemsViewModel> {
   @override
   Future<Either<ConvertouchException, OutputMenuItemsViewModel>> execute(

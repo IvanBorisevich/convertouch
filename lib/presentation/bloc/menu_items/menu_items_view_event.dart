@@ -5,6 +5,15 @@ abstract class MenuItemsViewEvent extends ConvertouchEvent {
   const MenuItemsViewEvent();
 }
 
+class RestoreViewModeSettings extends MenuItemsViewEvent {
+  const RestoreViewModeSettings();
+
+  @override
+  String toString() {
+    return 'RestoreViewModeSettings{}';
+  }
+}
+
 class ChangeMenuItemsView extends MenuItemsViewEvent {
   final ItemsViewMode targetViewMode;
 

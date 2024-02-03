@@ -5,6 +5,12 @@ class PreferencesDaoImpl extends PreferencesDao {
   const PreferencesDaoImpl();
 
   @override
+  Future<dynamic> get(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.get(key);
+  }
+
+  @override
   Future<int?> getInt(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(key);

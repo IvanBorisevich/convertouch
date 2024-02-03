@@ -1,19 +1,31 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class AppEvent extends ConvertouchEvent {
   const AppEvent();
 }
 
-class ChangeUITheme extends AppEvent {
-  final ConvertouchUITheme newTheme;
+class RestoreAppSettings extends AppEvent {
+  const RestoreAppSettings();
 
-  const ChangeUITheme({
-    required this.newTheme,
+  @override
+  String toString() {
+    return 'RestoreAppSettings{}';
+  }
+}
+
+class SaveSetting<T> extends AppEvent {
+  final String settingKey;
+  final T settingValue;
+
+  const SaveSetting({
+    required this.settingKey,
+    required this.settingValue,
   });
 
   @override
   String toString() {
-    return 'ChangeUITheme{newTheme: $newTheme}';
+    return 'SaveSetting{'
+        'settingKey: $settingKey, '
+        'settingValue: $settingValue}';
   }
 }

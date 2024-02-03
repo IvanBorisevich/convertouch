@@ -35,7 +35,7 @@ class ConvertouchBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       return BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

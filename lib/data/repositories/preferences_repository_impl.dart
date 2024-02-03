@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/data/dao/preferences_dao.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/preferences_repository.dart';
@@ -60,10 +62,29 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, bool>> save<T>(
-      String key, T value) async {
+  Future<Either<ConvertouchException, Map<String, dynamic>>> getMap(
+    List<String> keys,
+  ) async {
     try {
-      switch (T) {
+      return Right(
+        {for (var k in keys) k: await preferencesDao.get(k)},
+      );
+    } catch (e) {
+      return Left(
+        PreferencesException(
+          message: "Error when getting preferences map: $e",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, bool>> save(
+    String key,
+    dynamic value,
+  ) async {
+    try {
+      switch (value.runtimeType) {
         case int:
           return Right(await preferencesDao.saveInt(key, value as int));
         case double:
@@ -73,6 +94,7 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
         case String:
           return Right(await preferencesDao.saveString(key, value as String));
         default:
+          log("Cannot save value of type ${value.runtimeType}");
           return const Right(false);
       }
     } catch (e) {
@@ -85,8 +107,10 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, bool>> saveList<T>(
-      String key, List<T> value) async {
+  Future<Either<ConvertouchException, bool>> saveList(
+    String key,
+    List<dynamic> value,
+  ) async {
     try {
       return Right(
         await preferencesDao.saveStringList(
@@ -98,6 +122,24 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
       return Left(
         PreferencesException(
           message: "Error when saving preference as list with key = $key: $e",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, void>> saveMap(
+    Map<String, dynamic> prefsMap,
+  ) async {
+    try {
+      for (MapEntry entry in prefsMap.entries) {
+        await save(entry.key, entry.value);
+      }
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        PreferencesException(
+          message: "Error when saving preferences map: $e",
         ),
       );
     }

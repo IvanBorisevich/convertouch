@@ -119,7 +119,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
   ) async {
     try {
       if (conversion.unitGroup != null) {
-        await preferencesRepository.save<int>(
+        await preferencesRepository.save(
           SettingKeys.conversionUnitGroupId,
           conversion.unitGroup!.id!,
         );
@@ -128,18 +128,18 @@ class ConversionRepositoryImpl extends ConversionRepository {
       }
 
       if (conversion.sourceConversionItem != null) {
-        await preferencesRepository.save<int>(
+        await preferencesRepository.save(
           SettingKeys.sourceUnitId,
           conversion.sourceConversionItem!.unit.id!,
         );
-        await preferencesRepository.save<String>(
+        await preferencesRepository.save(
           SettingKeys.sourceValue,
           conversion.sourceConversionItem!.value.strValue,
         );
       }
 
       if (conversion.targetUnits.isNotEmpty) {
-        await preferencesRepository.saveList<int>(
+        await preferencesRepository.saveList(
           SettingKeys.targetUnitIds,
           conversion.targetUnits.map((unit) => unit.id!).toList(),
         );

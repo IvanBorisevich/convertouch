@@ -8,7 +8,18 @@ abstract class PreferencesRepository {
 
   Future<Either<ConvertouchException, List<T>?>> getList<T>(String key);
 
-  Future<Either<ConvertouchException, bool>> save<T>(String key, T value);
+  Future<Either<ConvertouchException, Map<String, dynamic>>> getMap(
+    List<String> keys,
+  );
 
-  Future<Either<ConvertouchException, bool>> saveList<T>(String key, List<T> value);
+  Future<Either<ConvertouchException, bool>> save(String key, dynamic value);
+
+  Future<Either<ConvertouchException, bool>> saveList(
+    String key,
+    List<dynamic> value,
+  );
+
+  Future<Either<ConvertouchException, void>> saveMap(
+    Map<String, dynamic> prefsMap,
+  );
 }

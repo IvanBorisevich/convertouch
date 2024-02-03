@@ -5,6 +5,15 @@ abstract class MenuItemsViewState extends ConvertouchState {
   const MenuItemsViewState();
 }
 
+class MenuItemsViewInitialState extends MenuItemsViewState {
+  const MenuItemsViewInitialState();
+
+  @override
+  String toString() {
+    return 'MenuItemsViewInitialState{}';
+  }
+}
+
 class MenuItemsViewStateSetting extends MenuItemsViewState {
   const MenuItemsViewStateSetting();
 

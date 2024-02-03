@@ -115,3 +115,99 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
   ),
   handler: Color(0xFF7FA0BE),
 );
+
+const unitGroupsPageFloatingButtonColorSchemeDark = ButtonColorSet(
+  background: Color(0xFF616491),
+  foreground: Color(0xFFD1CFD3),
+);
+
+const unitsPageFloatingButtonColorSchemeDark = ButtonColorSet(
+  background: Color(0xDB446F96),
+  foreground: Color(0xFFD1CFD3),
+);
+
+const conversionPageFloatingButtonColorSchemeDark = ButtonColorSet(
+  background: Color(0xDB446F96),
+  foreground: Color(0xFFD1CFD3),
+);
+
+const refreshButtonColorSchemeDark = ColorStateVariation(
+  regular: BaseColorSet(
+    border: Color(0xFF585A6C),
+    background: Color(0xFF3E4754),
+    foreground: Color(0xFFB1B5EA),
+  ),
+  disabled: BaseColorSet(
+    border: Color(0xFF585A6C),
+    background: Color(0xFF3E4754),
+    foreground: Color(0xFF7E82B4),
+  ),
+);
+
+const removalFloatingButtonColorDark = ButtonColorSet(
+  background: Color(0xFF9D5225),
+  foreground: Color(0xFFDEE9FF),
+);
+
+const textBoxColorDark = ColorStateVariation(
+  regular: TextBoxColorSet(
+    border: Color(0xFF709FCB),
+    foreground: Color(0xFF709FCB),
+    label: Color(0xFF709FCB),
+    hint: Color(0xFF709FCB),
+  ),
+  focused: TextBoxColorSet(
+    border: Color(0xFF709FCB),
+    foreground: Color(0xFF709FCB),
+    label: Color(0xFF709FCB),
+    hint: Color(0xFF709FCB),
+  ),
+);
+
+const unitGroupTextBoxColorDark = ColorStateVariation(
+  regular: TextBoxColorSet(
+    border: Color(0xFFA1A4CE),
+    foreground: Color(0xFFA1A4CE),
+    label: Color(0xFFA1A4CE),
+  ),
+  focused: TextBoxColorSet(
+    border: Color(0xFFC1C3E5),
+    foreground: Color(0xFFC1C3E5),
+    label: Color(0xFFC1C3E5),
+  ),
+);
+
+const settingItemColorDark = ColorStateVariation(
+  regular: SettingItemColorSet(
+    background: Color(0xFF3A4E60),
+    foreground: Color(0xFFB1D2F1),
+    divider: Color(0xFF596A93),
+    switcher: SwitcherColorSet(
+      track: BaseColorSet(
+        border: Color(0xFF88A3BD),
+      ),
+    ),
+  ),
+  selected: SettingItemColorSet(
+    background: Color(0xFF506394),
+    foreground: Color(0xFF88A3BD),
+    divider: Color(0xFF4D5D83),
+    switcher: SwitcherColorSet(
+      track: BaseColorSet(
+        background: Color(0xFF7FA1C0),
+        border: Color(0xFF7FA1C0),
+      ),
+    ),
+  ),
+  disabled: SettingItemColorSet(
+    background: Color(0xFF506394),
+    foreground: Color(0xFF6F9ECB),
+    divider: Color(0xFF4D5D83),
+    switcher: SwitcherColorSet(
+      track: BaseColorSet(
+        background: Color(0xFF94B4D2),
+        border: Color(0xFF94B4D2),
+      ),
+    ),
+  ),
+);

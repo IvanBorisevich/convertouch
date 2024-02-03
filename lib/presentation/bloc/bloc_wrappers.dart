@@ -54,44 +54,46 @@ Widget blocBuilderWrap<
   );
 }
 
-var appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppState>;
+const appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppStateReady>;
 
-var unitGroupsViewModeBlocBuilder = blocBuilderWrap<UnitGroupsViewModeBloc,
+const unitGroupsViewModeBlocBuilder = blocBuilderWrap<UnitGroupsViewModeBloc,
     MenuItemsViewState, MenuItemsViewStateSet>;
-var unitGroupsBlocBuilder =
+const unitGroupsBlocBuilder =
     blocBuilderWrap<UnitGroupsBloc, UnitGroupsState, UnitGroupsFetched>;
-var unitGroupsBlocBuilderForConversion = blocBuilderWrap<
+const unitGroupsBlocBuilderForConversion = blocBuilderWrap<
     UnitGroupsBlocForConversion,
     UnitGroupsState,
     UnitGroupsFetchedForConversion>;
-var unitGroupsBlocBuilderForUnitCreation = blocBuilderWrap<
+const unitGroupsBlocBuilderForUnitCreation = blocBuilderWrap<
     UnitGroupsBlocForUnitCreation,
     UnitGroupsState,
     UnitGroupsFetchedForUnitCreation>;
 
-var unitsViewModeBlocBuilder = blocBuilderWrap<UnitsViewModeBloc,
+const unitsViewModeBlocBuilder = blocBuilderWrap<UnitsViewModeBloc,
     MenuItemsViewState, MenuItemsViewStateSet>;
-var unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
-var unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
+const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
+const unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
     UnitsState, UnitsFetchedForConversion>;
-var unitsBlocBuilderForUnitCreation = blocBuilderWrap<UnitsBlocForUnitCreation,
-    UnitsState, UnitsFetchedForUnitCreation>;
-var unitCreationBlocBuilder =
+const unitsBlocBuilderForUnitCreation = blocBuilderWrap<
+    UnitsBlocForUnitCreation, UnitsState, UnitsFetchedForUnitCreation>;
+const unitCreationBlocBuilder =
     blocBuilderWrap<UnitCreationBloc, UnitCreationState, UnitCreationPrepared>;
 
-var conversionBlocBuilder =
+const conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
 
-var refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
+const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
 
-var refreshingJobsControlBlocBuilder = blocBuilderWrap<
+const refreshingJobsControlBlocBuilder = blocBuilderWrap<
     RefreshingJobsControlBloc,
     RefreshingJobsControlState,
     RefreshingJobsProgressUpdated>;
 
-var refreshingJobDetailsBlocBuilder = blocBuilderWrap<RefreshingJobDetailsBloc,
-    RefreshingJobDetailsState, RefreshingJobDetailsReady>;
+const refreshingJobDetailsBlocBuilder = blocBuilderWrap<
+    RefreshingJobDetailsBloc,
+    RefreshingJobDetailsState,
+    RefreshingJobDetailsReady>;
 
 Widget unitsChangeBlocListenerWrap({
   required Function(UnitsFetched)? handler,

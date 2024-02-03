@@ -7,6 +7,12 @@ abstract class UseCase<InputType, OutputType> {
   Future<Either<ConvertouchException, OutputType>> execute(InputType input);
 }
 
+abstract class UseCaseGeneric<InputType, OutputType> {
+  const UseCaseGeneric();
+
+  Future<Either<ConvertouchException, OutputType>> execute<T>(InputType input);
+}
+
 abstract class ReactiveUseCase<InputType, OutputType> {
   const ReactiveUseCase();
 

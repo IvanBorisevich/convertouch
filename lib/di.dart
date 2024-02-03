@@ -29,7 +29,7 @@ import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_cas
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/items_menu_view_mode/change_items_menu_view_use_case.dart';
+import 'package:convertouch/domain/use_cases/item_view_mode/get_next_item_view_mode_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
@@ -37,6 +37,8 @@ import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs_control/execute_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/settings/get_settings_use_case.dart';
+import 'package:convertouch/domain/use_cases/settings/save_settings_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
@@ -78,18 +80,25 @@ Future<void> init() async {
   // bloc
 
   locator.registerLazySingleton(
-    () => AppBloc(),
+    () => AppBloc(
+      getSettingsUseCase: locator(),
+      saveSettingsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton(
     () => UnitGroupsViewModeBloc(
-      changeItemsMenuViewUseCase: locator(),
+      getNextItemViewModeUseCase: locator(),
+      getSettingsUseCase: locator(),
+      saveSettingsUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => UnitsViewModeBloc(
-      changeItemsMenuViewUseCase: locator(),
+      getNextItemViewModeUseCase: locator(),
+      getSettingsUseCase: locator(),
+      saveSettingsUseCase: locator(),
     ),
   );
 
@@ -171,8 +180,20 @@ Future<void> init() async {
 
   // use cases
 
-  locator.registerLazySingleton<ChangeItemsMenuViewUseCase>(
-    () => ChangeItemsMenuViewUseCase(),
+  locator.registerLazySingleton<GetSettingsUseCase>(
+    () => GetSettingsUseCase(
+      preferencesRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SaveSettingsUseCase>(
+    () => SaveSettingsUseCase(
+      preferencesRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetNextItemViewModeUseCase>(
+    () => GetNextItemViewModeUseCase(),
   );
 
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(

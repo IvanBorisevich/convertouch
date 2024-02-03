@@ -1,21 +1,48 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
-class AppState extends ConvertouchState {
+abstract class AppState extends ConvertouchState {
+  const AppState();
+}
+
+class AppStateInProgress extends AppState {
+  const AppStateInProgress();
+
+  @override
+  String toString() {
+    return 'AppStateInProgress{}';
+  }
+}
+
+class AppStateReady extends AppState {
   final ConvertouchUITheme theme;
 
-  const AppState({
+  const AppStateReady({
     this.theme = ConvertouchUITheme.light,
   });
 
   @override
   List<Object?> get props => [
-        theme,
-      ];
+    theme,
+  ];
 
   @override
   String toString() {
-    return 'AppState{'
+    return 'AppStateReady{'
         'theme: $theme}';
+  }
+}
+
+class AppErrorState extends ConvertouchErrorState implements AppState {
+  const AppErrorState({
+    required super.exception,
+    required super.lastSuccessfulState,
+  });
+
+  @override
+  String toString() {
+    return 'AppErrorState{'
+        'exception: $exception, '
+        'lastSuccessfulState: $lastSuccessfulState}';
   }
 }

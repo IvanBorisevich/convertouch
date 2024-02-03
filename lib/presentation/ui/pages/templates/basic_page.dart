@@ -28,7 +28,7 @@ class ConvertouchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
       return SafeArea(
         child: Scaffold(
           backgroundColor: pageColorScheme.page.background,

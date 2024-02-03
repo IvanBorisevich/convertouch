@@ -25,7 +25,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
       ButtonColorSet removalButtonColor =
           removalFloatingButtonColors[appState.theme]!;
 
-      PageColorScheme pageColorScheme = pageCommonColors[appState.theme]!;
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       return unitGroupsBlocBuilder((pageState) {
         return ConvertouchUnitGroupsPage(

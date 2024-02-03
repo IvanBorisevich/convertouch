@@ -1,6 +1,8 @@
 abstract class PreferencesDao {
   const PreferencesDao();
 
+  Future<dynamic> get(String key);
+
   Future<int?> getInt(String key);
   Future<bool> saveInt(String key, int value);
 
