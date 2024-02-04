@@ -209,8 +209,7 @@ class _ConvertouchUnitCreationPageState
                   ),
                 );
               },
-              background: floatingButtonColor.background,
-              foreground: floatingButtonColor.foreground,
+              colorSet: floatingButtonColor,
             ),
           );
         }),

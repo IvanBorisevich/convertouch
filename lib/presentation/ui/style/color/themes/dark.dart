@@ -134,8 +134,8 @@ const conversionPageFloatingButtonColorSchemeDark = ButtonColorSet(
 const refreshButtonColorSchemeDark = ColorStateVariation(
   regular: BaseColorSet(
     border: Color(0xFF585A6C),
-    background: Color(0xFF3E4754),
-    foreground: Color(0xFFB1B5EA),
+    background: Color(0xFF596473),
+    foreground: Color(0xFFBFC3F6),
   ),
   disabled: BaseColorSet(
     border: Color(0xFF585A6C),
@@ -147,6 +147,7 @@ const refreshButtonColorSchemeDark = ColorStateVariation(
 const removalFloatingButtonColorDark = ButtonColorSet(
   background: Color(0xFF9D5225),
   foreground: Color(0xFFDEE9FF),
+  border: Color(0xFF373F4B),
 );
 
 const textBoxColorDark = ColorStateVariation(

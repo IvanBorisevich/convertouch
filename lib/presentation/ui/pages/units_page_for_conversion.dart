@@ -172,8 +172,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                     (route) => route.isFirst,
                   );
                 },
-                background: floatingButtonColor.background,
-                foreground: floatingButtonColor.foreground,
+                colorSet: floatingButtonColor,
               ),
             ),
           ),

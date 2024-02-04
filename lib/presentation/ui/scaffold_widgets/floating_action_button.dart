@@ -1,5 +1,5 @@
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
@@ -10,9 +10,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final bool visible;
   final bool extraLabelVisible;
   final String extraLabelText;
-  final Color background;
-  final Color foreground;
-  final Color border;
+  final BaseColorSet colorSet;
 
   const ConvertouchFloatingActionButton({
     required this.icon,
@@ -20,9 +18,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.visible = true,
     this.extraLabelVisible = false,
     this.extraLabelText = "",
-    this.background = noColor,
-    this.foreground = noColor,
-    this.border = noColor,
+    required this.colorSet,
     super.key,
   });
 
@@ -32,9 +28,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.visible = true,
     this.extraLabelVisible = false,
     this.extraLabelText = "",
-    this.background = noColor,
-    this.foreground = noColor,
-    this.border = noColor,
+    required this.colorSet,
     super.key,
   });
 
@@ -44,9 +38,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.visible = true,
     this.extraLabelVisible = true,
     required this.extraLabelText,
-    this.background = noColor,
-    this.foreground = noColor,
-    this.border = noColor,
+    required this.colorSet,
     super.key,
   });
 
@@ -62,13 +54,13 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
             FittedBox(
               child: FloatingActionButton(
                 onPressed: onClick,
-                backgroundColor: background,
-                foregroundColor: foreground,
+                backgroundColor: colorSet.background,
+                foregroundColor: colorSet.foreground,
                 disabledElevation: 0,
                 elevation: 0,
                 child: Icon(
                   icon,
-                  color: foreground,
+                  color: colorSet.foreground,
                 ),
               ),
             ),
@@ -80,10 +72,10 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                         horizontal: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: background,
+                        color: colorSet.background,
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
-                          color: border,
+                          color: colorSet.border,
                           width: 1,
                           strokeAlign: BorderSide.strokeAlignOutside,
                         ),
@@ -91,7 +83,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                       child: Text(
                         extraLabelText,
                         style: TextStyle(
-                          color: foreground,
+                          color: colorSet.foreground,
                           fontSize: 14,
                         ),
                       ),

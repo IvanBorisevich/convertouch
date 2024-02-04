@@ -135,13 +135,12 @@ const conversionPageFloatingButtonColorSchemeLight = ButtonColorSet(
 
 const refreshButtonColorSchemeLight = ColorStateVariation(
   regular: BaseColorSet(
-    border: Color(0xFF3A3A88),
-    background: Color(0xFFF2F5FF),
-    foreground: Color(0xFF3A3A88),
+    border: Color(0xFF484898),
+    foreground: Color(0xFF484898),
+    background: Color(0xFFC9C9F8),
   ),
   disabled: BaseColorSet(
     border: Color(0xFFC2CCFF),
-    background: Color(0xFFF2F5FF),
     foreground: Color(0xFFC2CCFF),
   ),
 );
@@ -149,6 +148,7 @@ const refreshButtonColorSchemeLight = ColorStateVariation(
 const removalFloatingButtonColorLight = ButtonColorSet(
   background: Color(0xFFD36422),
   foreground: Color(0xFFDEE9FF),
+  border: Color(0xFFFCFEFF),
 );
 
 const textBoxColorLight = ColorStateVariation(

@@ -93,9 +93,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                   visible: pageState.markedIdsForRemoval.isNotEmpty,
                   extraLabelText:
                       pageState.markedIdsForRemoval.length.toString(),
-                  background: removalButtonColor.background,
-                  foreground: removalButtonColor.foreground,
-                  border: pageColorScheme.page.background,
+                  colorSet: removalButtonColor,
                   onClick: () {
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       RemoveUnitGroups(
@@ -111,8 +109,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                     );
                   },
                   visible: true,
-                  background: floatingButtonColor.background,
-                  foreground: floatingButtonColor.foreground,
+                  colorSet: floatingButtonColor,
                 ),
         );
       });
