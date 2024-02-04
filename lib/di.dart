@@ -36,8 +36,6 @@ import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs_control/execute_job_use_case.dart';
-import 'package:convertouch/domain/use_cases/settings/get_settings_use_case.dart';
-import 'package:convertouch/domain/use_cases/settings/save_settings_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
@@ -84,10 +82,7 @@ Future<void> init() async {
   // bloc
 
   locator.registerLazySingleton(
-    () => AppBloc(
-      getSettingsUseCase: locator(),
-      saveSettingsUseCase: locator(),
-    ),
+    () => AppBloc(),
   );
 
   locator.registerLazySingleton(
@@ -167,18 +162,6 @@ Future<void> init() async {
   );
 
   // use cases
-
-  locator.registerLazySingleton<GetSettingsUseCase>(
-    () => GetSettingsUseCase(
-      preferencesRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<SaveSettingsUseCase>(
-    () => SaveSettingsUseCase(
-      preferencesRepository: locator(),
-    ),
-  );
 
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
     () => FetchUnitGroupsUseCase(locator()),

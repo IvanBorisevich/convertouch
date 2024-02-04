@@ -1,34 +1,20 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/use_cases/settings/get_settings_use_case.dart';
-import 'package:convertouch/domain/use_cases/settings/save_settings_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
-  final GetSettingsUseCase getSettingsUseCase;
-  final SaveSettingsUseCase saveSettingsUseCase;
-
-  AppBloc({
-    required this.getSettingsUseCase,
-    required this.saveSettingsUseCase,
-  }) : super(
+  AppBloc()
+      : super(
           const AppStateReady(
             theme: ConvertouchUITheme.light,
             unitGroupsViewMode: ItemsViewMode.grid,
             unitsViewMode: ItemsViewMode.grid,
           ),
         ) {
-    on<GetAppSettings>(_onAppSettingsGet);
+    on<GetAppSettings>((event, emit) => emit(state));
     on<ChangeSetting>(_onSettingSave);
-  }
-
-  _onAppSettingsGet(
-    GetAppSettings event,
-    Emitter<AppState> emit,
-  ) async {
-    emit(state);
   }
 
   _onSettingSave(
