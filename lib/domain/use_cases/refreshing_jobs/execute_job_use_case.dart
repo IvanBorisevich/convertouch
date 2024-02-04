@@ -32,9 +32,9 @@ class ExecuteJobUseCase
 
     try {
       if (input.job.selectedDataSource == null) {
-        return Left(
+        return const Left(
           InternalException(
-            message: "No data source found for the job '${input.job.name}'",
+            message: "No data source found for the job",
             severity: ExceptionSeverity.info,
           ),
         );
@@ -59,7 +59,7 @@ class ExecuteJobUseCase
 
           final refreshedData = ObjectUtils.tryGet(
             await networkDataRepository.refreshForGroup(
-              unitGroupId: input.job.unitGroup.id!,
+              unitGroupName: input.job.unitGroupName,
               dataSource: input.job.selectedDataSource!,
               refreshableDataPart: input.job.refreshableDataPart,
             ),

@@ -5,7 +5,8 @@ import 'package:either_dart/either.dart';
 abstract class UnitRepository {
   const UnitRepository();
 
-  Future<Either<ConvertouchException, List<UnitModel>>> getByGroupId(int unitGroupId);
+  Future<Either<ConvertouchException, List<UnitModel>>> getByGroupId(
+      int unitGroupId);
 
   Future<Either<ConvertouchException, List<UnitModel>>> search(
     int unitGroupId,
@@ -15,7 +16,7 @@ abstract class UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(List<int> ids);
 
   Future<Either<ConvertouchException, Map<int, UnitModel>>> getByCodesAsMap(
-    int unitGroupId,
+    String unitGroupName,
     List<String> codes,
   );
 

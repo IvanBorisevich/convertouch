@@ -1,11 +1,8 @@
 import 'package:convertouch/data/dao/db/dbconfig/migrations/migration.dart';
-import 'package:convertouch/data/entities/job_data_source_entity.dart';
 import 'package:convertouch/data/entities/refreshable_value_entity.dart';
-import 'package:convertouch/data/entities/refreshing_job_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/default_refreshing_jobs.dart';
 import 'package:convertouch/domain/constants/default_units.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -26,24 +23,6 @@ class InitialMigration extends ConvertouchDbMigration {
       database.transaction(
         (txn) async {
           int unitGroupId = await _insertGroup(txn, entity);
-          String groupName = entity['groupName'];
-          if (jobsV1.containsKey(groupName)) {
-            final jobEntity = jobsV1[groupName]!;
-            int jobId = await _insertRefreshingJob(txn, unitGroupId, jobEntity);
-
-            int? preselectedDataSourceId =
-                await _insertJobDataSources(txn, jobId, jobEntity);
-
-            await txn.update(
-              refreshingJobsTableName,
-              {
-                'data_source_id': preselectedDataSourceId,
-              },
-              where: "id = ?",
-              whereArgs: [jobId],
-              conflictAlgorithm: ConflictAlgorithm.fail,
-            );
-          }
           List<int> unitIds = await _insertUnits(txn, unitGroupId, entity);
 
           bool valuesAreRefreshable = entity['refreshable'] == true &&
@@ -72,72 +51,6 @@ class InitialMigration extends ConvertouchDbMigration {
     });
 
     return groupId;
-  }
-
-  Future<int> _insertRefreshingJob(
-    Transaction txn,
-    int unitGroupId,
-    Map<String, dynamic> entity,
-  ) async {
-    return await txn.insert(
-      refreshingJobsTableName,
-      {
-        'name': entity['name'],
-        'unit_group_id': unitGroupId,
-        'refreshable_data_part':
-            (entity['refreshableDataPart'] as RefreshableDataPart).val,
-      },
-    );
-  }
-
-  Future<int?> _insertJobDataSources(
-    Transaction txn,
-    int jobId,
-    Map<String, dynamic> jobEntity,
-  ) async {
-    List<dynamic> dataSources = jobEntity['dataSources'];
-    if (dataSources.isEmpty) {
-      return null;
-    }
-
-    Map<String, dynamic> dataSourceRow = getDataSourceRow(
-      dataSources[0],
-      jobId,
-    );
-
-    int? preselectedDataSourceId = await txn.insert(
-      jobDataSourcesTableName,
-      dataSourceRow,
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
-
-    Batch batch = txn.batch();
-
-    for (int i = 1; i < dataSources.length; i++) {
-      Map<String, dynamic> dataSource = dataSources[i];
-      Map<String, Object> dataSourceRow = getDataSourceRow(dataSource, jobId);
-
-      batch.insert(
-        jobDataSourcesTableName,
-        dataSourceRow,
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
-    }
-
-    await batch.commit(noResult: true, continueOnError: false);
-    return preselectedDataSourceId;
-  }
-
-  Map<String, Object> getDataSourceRow(
-    Map<String, dynamic> dataSource,
-    int jobId,
-  ) {
-    return {
-      'name': dataSource['name'],
-      'url': dataSource['url'],
-      'response_transformer_name': dataSource['responseTransformerClassName'],
-      'job_id': jobId,
-    };
   }
 
   Future<List<int>> _insertUnits(

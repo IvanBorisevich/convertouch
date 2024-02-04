@@ -1,10 +1,10 @@
+import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
@@ -16,13 +16,11 @@ class ConversionBloc
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final GetLastSavedConversionUseCase getLastSavedConversionUseCase;
-  final GetJobDetailsByGroupUseCase getJobDetailsByGroupUseCase;
 
   ConversionBloc({
     required this.buildConversionUseCase,
     required this.saveConversionUseCase,
     required this.getLastSavedConversionUseCase,
-    required this.getJobDetailsByGroupUseCase,
   }) : super(
           const ConversionBuilt(
             conversion: OutputConversionModel(),
@@ -53,24 +51,8 @@ class ConversionBloc
     } else {
       await saveConversionUseCase.execute(conversionResult.right);
 
-      RefreshingJobModel? jobOfConversion = event.job;
-
-      if (jobOfConversion == null) {
-        final jobOfConversionResult = await getJobDetailsByGroupUseCase.execute(
-          event.conversionParams.unitGroup,
-        );
-
-        if (jobOfConversionResult.isLeft) {
-          emit(
-            ConversionErrorState(
-              exception: jobOfConversionResult.left,
-              lastSuccessfulState: state,
-            ),
-          );
-        } else {
-          jobOfConversion = jobOfConversionResult.right;
-        }
-      }
+      RefreshingJobModel? jobOfConversion = RefreshingJobModel.fromJson(
+          refreshingJobsMap[event.conversionParams.unitGroup]);
 
       if (event.runtimeType != RebuildConversionOnValueChange &&
           conversionResult.right.emptyConversionItemsExist) {
@@ -84,9 +66,8 @@ class ConversionBloc
       emit(
         ConversionBuilt(
           conversion: conversionResult.right,
-          showRefreshButton:
-              conversionResult.right.unitGroup?.refreshable == true &&
-                  jobOfConversion != null,
+          showRefreshButton: conversionResult.right.unitGroup != null &&
+              conversionResult.right.unitGroup!.refreshable,
           job: jobOfConversion,
         ),
       );
@@ -153,16 +134,15 @@ class ConversionBloc
         ),
       );
     } else {
-      final jobOfConversion = await getJobDetailsByGroupUseCase.execute(
-        result.right.unitGroup,
-      );
+      RefreshingJobModel? jobOfConversion = RefreshingJobModel.fromJson(
+          refreshingJobsMap[result.right.unitGroup?.name]);
 
       emit(
         ConversionBuilt(
           conversion: result.right,
           showRefreshButton: result.right.unitGroup?.refreshable == true &&
-              jobOfConversion.right != null,
-          job: jobOfConversion.right,
+              jobOfConversion != null,
+          job: jobOfConversion,
         ),
       );
     }

@@ -5,31 +5,60 @@ abstract class RefreshingJobsState extends ConvertouchState {
   const RefreshingJobsState();
 }
 
-class RefreshingJobsFetching extends RefreshingJobsState {
-  const RefreshingJobsFetching();
-
-  @override
-  String toString() {
-    return 'RefreshingJobsFetching{}';
-  }
-}
-
 class RefreshingJobsFetched extends RefreshingJobsState {
-  final List<RefreshingJobModel> items;
+  final Map<String, RefreshingJobModel> jobs;
+  final List<String> namesOfRefreshedGroups;
 
   const RefreshingJobsFetched({
-    required this.items,
+    required this.jobs,
+    this.namesOfRefreshedGroups = const [],
   });
 
   @override
   List<Object?> get props => [
-        items,
-      ];
+    jobs,
+    namesOfRefreshedGroups,
+  ];
 
   @override
   String toString() {
     return 'RefreshingJobsFetched{'
-        'items: $items}';
+        'items: $jobs, '
+        'namesOfRefreshedGroups: $namesOfRefreshedGroups}';
+  }
+}
+
+class RefreshingJobDetailsOpened extends RefreshingJobsFetched {
+  final RefreshingJobModel openedJob;
+
+  const RefreshingJobDetailsOpened({
+    required this.openedJob,
+    required super.jobs,
+    super.namesOfRefreshedGroups,
+  });
+
+  @override
+  List<Object?> get props => [
+    openedJob,
+    namesOfRefreshedGroups,
+  ];
+
+  @override
+  String toString() {
+    return 'RefreshingJobDetailsOpened{openedJob: $openedJob}';
+  }
+}
+
+class RefreshingJobsNotificationState
+    extends ConvertouchNotificationState implements RefreshingJobsState {
+  const RefreshingJobsNotificationState({
+    required super.message,
+  });
+
+  @override
+  String toString() {
+    return 'RefreshingJobsNotificationState{'
+        'message: $message}';
   }
 }
 

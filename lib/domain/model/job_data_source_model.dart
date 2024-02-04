@@ -4,26 +4,41 @@ import 'package:convertouch/domain/model/item_model.dart';
 class JobDataSourceModel extends IdNameItemModel {
   final String url;
   final String responseTransformerClassName;
-  final int jobId;
 
   const JobDataSourceModel({
-    super.id,
     required super.name,
     required this.url,
     required this.responseTransformerClassName,
-    required this.jobId,
     super.itemType = ItemType.jobDataSource,
+    super.oob = true,
   });
 
   @override
   List<Object?> get props => [
-    id,
     name,
     url,
     responseTransformerClassName,
-    jobId,
     itemType,
   ];
+
+  static JobDataSourceModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return JobDataSourceModel(
+        name: json["name"],
+        url: json["url"],
+        responseTransformerClassName: json["responseTransformerClassName"],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "url": url,
+      "responseTransformerClassName": responseTransformerClassName,
+    };
+  }
 
   @override
   String toString() {

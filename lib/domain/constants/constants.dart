@@ -100,15 +100,14 @@ enum ConversionType {
 }
 
 enum RefreshableDataPart {
-  value(0),
-  coefficient(1);
+  value,
+  coefficient;
 
-  final int val;
-
-  const RefreshableDataPart(this.val);
-
-  static RefreshableDataPart valueOf(int value) {
-    return values.firstWhere((element) => value == element.val);
+  static RefreshableDataPart valueOf(dynamic value) {
+    if (value is RefreshableDataPart) {
+      return value;
+    }
+    return values.firstWhere((element) => value == element.name);
   }
 
   @override
@@ -130,9 +129,13 @@ enum Cron {
     required this.expression,
   });
 
-  static Cron valueOf(String? name) {
+  static Cron valueOf(dynamic value) {
+    if (value is Cron) {
+      return value;
+    }
+
     return values.firstWhere(
-      (element) => name == element.name,
+      (element) => value == element.name,
       orElse: () => Cron.never,
     );
   }

@@ -9,6 +9,7 @@ class ConvertouchProgressButton extends StatelessWidget {
   final Stream<RefreshingJobResultModel>? progressStream;
   final double radius;
   final bool determinate;
+  final bool visible;
   final void Function()? onProgressIndicatorClick;
   final void Function()? onOngoingProgressIndicatorClick;
   final void Function()? onProgressIndicatorErrorIconClick;
@@ -21,6 +22,7 @@ class ConvertouchProgressButton extends StatelessWidget {
     required this.progressStream,
     this.radius = 25,
     this.determinate = false,
+    this.visible = true,
     this.onProgressIndicatorClick,
     this.onOngoingProgressIndicatorClick,
     this.onProgressIndicatorErrorIconClick,
@@ -32,65 +34,68 @@ class ConvertouchProgressButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: radius * 2,
-      height: radius * 2,
-      alignment: Alignment.center,
-      margin: margin,
-      child: progressStream == null
-          ? buttonWidget
-          : StreamBuilder<RefreshingJobResultModel>(
-              stream: progressStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  log("Snapshot contains an error");
-                  return IconButton(
-                    onPressed: onProgressIndicatorErrorIconClick,
-                    icon: Icon(
-                      Icons.error_outline,
-                      color: progressIndicatorErrorIconColor,
-                      size: radius,
-                    ),
-                  );
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data == null) {
-                    log("Snapshot does not contain data");
+    return Visibility(
+      visible: visible,
+      child: Container(
+        width: radius * 2,
+        height: radius * 2,
+        alignment: Alignment.center,
+        margin: margin,
+        child: progressStream == null
+            ? buttonWidget
+            : StreamBuilder<RefreshingJobResultModel>(
+                stream: progressStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    log("Snapshot contains an error");
+                    return IconButton(
+                      onPressed: onProgressIndicatorErrorIconClick,
+                      icon: Icon(
+                        Icons.error_outline,
+                        color: progressIndicatorErrorIconColor,
+                        size: radius,
+                      ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      log("Snapshot does not contain data");
+                      return buttonWidget;
+                    }
+                    if (snapshot.data!.progressPercent != 1.0) {
+                      onOngoingProgressIndicatorClick?.call();
+                    }
                     return buttonWidget;
-                  }
-                  if (snapshot.data!.progressPercent != 1.0) {
-                    onOngoingProgressIndicatorClick?.call();
-                  }
-                  return buttonWidget;
-                } else {
-                  return GestureDetector(
-                    onTap: onProgressIndicatorClick,
-                    child: determinate
-                        ? CircularPercentIndicator(
-                            radius: radius,
-                            lineWidth: 5.0,
-                            percent: snapshot.data!.progressPercent,
-                            center: Text(
-                              "${snapshot.data!.progressPercent * 100}%",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                                color: progressIndicatorColor,
+                  } else {
+                    return GestureDetector(
+                      onTap: onProgressIndicatorClick,
+                      child: determinate
+                          ? CircularPercentIndicator(
+                              radius: radius,
+                              lineWidth: 5.0,
+                              percent: snapshot.data!.progressPercent,
+                              center: Text(
+                                "${snapshot.data!.progressPercent * 100}%",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                  color: progressIndicatorColor,
+                                ),
                               ),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              progressColor: progressIndicatorColor,
+                              animation: true,
+                              animateFromLastPercent: true,
+                            )
+                          : CircularProgressIndicator(
+                              value: null,
+                              strokeWidth: 5.0,
+                              color: progressIndicatorColor,
                             ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            progressColor: progressIndicatorColor,
-                            animation: true,
-                            animateFromLastPercent: true,
-                          )
-                        : CircularProgressIndicator(
-                            value: null,
-                            strokeWidth: 5.0,
-                            color: progressIndicatorColor,
-                          ),
-                  );
-                }
-              },
-            ),
+                    );
+                  }
+                },
+              ),
+      ),
     );
   }
 }

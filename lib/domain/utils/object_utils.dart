@@ -15,12 +15,7 @@ class ObjectUtils {
   static T? coalesce<T>({
     required T? what,
     required T? patchWith,
-    required bool replaceWithNull,
   }) {
-    if (replaceWithNull) {
-      return patchWith;
-    } else {
-      return patchWith ?? what;
-    }
+    return patchWith ?? what;
   }
 }

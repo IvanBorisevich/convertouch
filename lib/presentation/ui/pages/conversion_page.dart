@@ -8,9 +8,9 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_events.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
@@ -89,10 +89,10 @@ class ConvertouchConversionPage extends StatelessWidget {
                 }
               },
             ),
-            BlocListener<RefreshingJobsControlBloc, RefreshingJobsControlState>(
+            BlocListener<RefreshingJobsBloc, RefreshingJobsState>(
               listener: (_, state) {
-                if (state is RefreshingJobsProgressUpdated) {
-                  for (var job in state.jobsInProgress.values) {
+                if (state is RefreshingJobsFetched) {
+                  for (var job in state.jobs.values) {
                     job.progressController?.stream.lastWhere(
                       (jobResult) {
                         return jobResult.progressPercent == 1.0;
@@ -100,10 +100,9 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ).then(
                       (jobResult) {
                         log("Finalizing the job '${job.name}'");
-                        BlocProvider.of<RefreshingJobsControlBloc>(context).add(
+                        BlocProvider.of<RefreshingJobsBloc>(context).add(
                           FinishJob(
-                            job: job,
-                            jobsInProgress: state.jobsInProgress,
+                            unitGroupName: job.unitGroupName,
                           ),
                         );
                         if (jobResult.rebuiltConversion != null) {
@@ -117,6 +116,12 @@ class ConvertouchConversionPage extends StatelessWidget {
                       },
                     );
                   }
+                } else if (state is RefreshingJobsNotificationState) {
+                  showSnackBar(
+                    context,
+                    message: state.message,
+                    colorSet: pageColorScheme.snackBar,
+                  );
                 }
               },
             ),

@@ -27,6 +27,7 @@ class ConversionBuilt extends ConversionState {
   @override
   String toString() {
     return 'ConversionBuilt{'
+        'showRefreshButton: $showRefreshButton, '
         'conversion: $conversion}';
   }
 }

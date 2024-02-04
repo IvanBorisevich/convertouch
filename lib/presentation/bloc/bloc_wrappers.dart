@@ -4,10 +4,6 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_states.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
@@ -77,16 +73,6 @@ const conversionBlocBuilder =
 
 const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
-
-const refreshingJobsControlBlocBuilder = blocBuilderWrap<
-    RefreshingJobsControlBloc,
-    RefreshingJobsControlState,
-    RefreshingJobsProgressUpdated>;
-
-const refreshingJobDetailsBlocBuilder = blocBuilderWrap<
-    RefreshingJobDetailsBloc,
-    RefreshingJobDetailsState,
-    RefreshingJobDetailsReady>;
 
 Widget unitsChangeBlocListenerWrap({
   required Function(UnitsFetched)? handler,

@@ -1,5 +1,6 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
+import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqlite;
 
@@ -39,19 +40,26 @@ abstract class UnitDaoDb extends UnitDao {
   Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
 
   @override
-  @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId '
-      'and code in (:codes)')
-  Future<List<UnitEntity>> getUnitsByCodes(int unitGroupId, List<String> codes);
+  @Query('select u.* '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g '
+      'where 1=1 '
+      'and g.name = :unitGroupName '
+      'and u.unit_group_id = g.id '
+      'and u.code in (:codes)')
+  Future<List<UnitEntity>> getUnitsByCodes(
+    String unitGroupName,
+    List<String> codes,
+  );
 
   @override
   Future<List<UnitEntity>> updateUnitsCoefficients(
     sqlite.Database db,
-    int unitGroupId,
+    String unitGroupName,
     Map<String, double?> codeToCoefficient,
   ) async {
     List<UnitEntity> savedEntities = await getUnitsByCodes(
-      unitGroupId,
+      unitGroupName,
       codeToCoefficient.keys.toList(),
     );
 

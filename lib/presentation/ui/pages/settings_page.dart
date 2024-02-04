@@ -2,8 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_event.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/setting_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/settings_group.dart';
@@ -50,15 +50,14 @@ class ConvertouchSettingsPage extends StatelessWidget {
                 return ConvertouchSettingsGroup(
                   name: "Data Refreshing",
                   items: [
-                    for (final item in jobState.items)
+                    for (final item in jobState.jobs.values)
                       SettingItem.regular(
                         title: item.name,
                         theme: appState.theme,
                         onTap: () {
-                          BlocProvider.of<RefreshingJobDetailsBloc>(context)
-                              .add(
+                          BlocProvider.of<RefreshingJobsBloc>(context).add(
                             OpenJobDetails(
-                              job: item,
+                              unitGroupName: item.unitGroupName,
                             ),
                           );
                           Navigator.of(context).pushNamed(

@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshable_value_model.dart';
@@ -9,7 +10,6 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
-import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
@@ -20,12 +20,10 @@ import 'package:either_dart/either.dart';
 class BuildConversionUseCase
     extends UseCase<InputConversionModel, OutputConversionModel> {
   final UnitGroupRepository unitGroupRepository;
-  final RefreshingJobRepository refreshingJobRepository;
   final RefreshableValueRepository refreshableValueRepository;
 
   const BuildConversionUseCase({
     required this.unitGroupRepository,
-    required this.refreshingJobRepository,
     required this.refreshableValueRepository,
   });
 
@@ -140,8 +138,7 @@ class BuildConversionUseCase
       );
     }
 
-    RefreshingJobModel? job = ObjectUtils.tryGet(
-        await refreshingJobRepository.getByGroupId(unitGroup.id!));
+    RefreshingJobModel? job = RefreshingJobModel.fromJson(refreshingJobsMap[unitGroup.name]);
 
     if (job == null) {
       return ConversionItemModel(
@@ -151,9 +148,7 @@ class BuildConversionUseCase
       );
     }
 
-    RefreshableDataPart refreshableDataPart = job.refreshableDataPart;
-
-    if (refreshableDataPart != RefreshableDataPart.value) {
+    if (job.refreshableDataPart != RefreshableDataPart.value) {
       return ConversionItemModel(
         unit: sourceUnit,
         value: emptyValueModel,

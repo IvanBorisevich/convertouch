@@ -9,7 +9,7 @@ abstract class NetworkDataRepository {
   Future<Either<ConvertouchException, bool>> isConnectionAvailable();
 
   Future<Either<ConvertouchException, List<T>>> refreshForGroup<T>({
-    required int unitGroupId,
+    required String unitGroupName,
     required JobDataSourceModel dataSource,
     required RefreshableDataPart refreshableDataPart,
   });

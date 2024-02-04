@@ -4,69 +4,61 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_data_source_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class RefreshingJobModel extends IdNameItemModel {
-  final UnitGroupModel unitGroup;
+  final String unitGroupName;
   final RefreshableDataPart refreshableDataPart;
-  final Cron cron;
-  final List<JobDataSourceModel> dataSources;
+  final Cron selectedCron;
+  final Map<String, JobDataSourceModel> dataSources;
   final JobDataSourceModel? selectedDataSource;
   final String? lastRefreshTime;
   final StreamController<RefreshingJobResultModel>? progressController;
 
   const RefreshingJobModel({
-    required super.id,
     required super.name,
-    required this.unitGroup,
+    required this.unitGroupName,
     required this.refreshableDataPart,
-    this.cron = Cron.never,
-    this.dataSources = const [],
+    required this.selectedCron,
+    this.dataSources = const {},
     this.selectedDataSource,
     this.lastRefreshTime,
     this.progressController,
     super.itemType = ItemType.refreshingJob,
+    super.oob = true,
   });
 
   RefreshingJobModel.coalesce(
     RefreshingJobModel savedModel, {
-    List<JobDataSourceModel>? dataSources,
+    Map<String, JobDataSourceModel>? dataSources,
     String? lastRefreshTime,
     Cron? cron,
     JobDataSourceModel? selectedDataSource,
     StreamController<RefreshingJobResultModel>? progressController,
-    bool replaceWithNull = false,
   }) : this(
-          id: savedModel.id,
           name: savedModel.name,
-          unitGroup: savedModel.unitGroup,
+          unitGroupName: savedModel.unitGroupName,
           refreshableDataPart: savedModel.refreshableDataPart,
           dataSources: ObjectUtils.coalesce(
                 what: savedModel.dataSources,
                 patchWith: dataSources,
-                replaceWithNull: replaceWithNull,
               ) ??
-              [],
+              {},
           lastRefreshTime: ObjectUtils.coalesce(
             what: savedModel.lastRefreshTime,
             patchWith: lastRefreshTime,
-            replaceWithNull: replaceWithNull,
           ),
-          cron: ObjectUtils.coalesce(
-            what: savedModel.cron,
+          selectedCron: ObjectUtils.coalesce(
+            what: savedModel.selectedCron,
             patchWith: cron,
-            replaceWithNull: replaceWithNull,
           )!,
           selectedDataSource: ObjectUtils.coalesce(
             what: savedModel.selectedDataSource,
             patchWith: selectedDataSource,
-            replaceWithNull: replaceWithNull,
           ),
           progressController: ObjectUtils.coalesce(
             what: savedModel.progressController,
             patchWith: progressController,
-            replaceWithNull: replaceWithNull,
           ),
         );
 
@@ -74,21 +66,55 @@ class RefreshingJobModel extends IdNameItemModel {
   List<Object?> get props => [
         id,
         name,
-        unitGroup,
+        unitGroupName,
         refreshableDataPart,
-        cron,
+        selectedCron,
         lastRefreshTime,
         selectedDataSource,
         progressController,
         itemType,
       ];
 
+  static RefreshingJobModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    Map<String, JobDataSourceModel> dataSourceMap =
+        (json["dataSources"] as Map).map(
+      (key, value) => MapEntry(key, JobDataSourceModel.fromJson(value)!),
+    );
+
+    return RefreshingJobModel(
+      name: json["name"],
+      unitGroupName: json["group"],
+      refreshableDataPart: RefreshableDataPart.valueOf(json["refreshableDataPart"]),
+      dataSources: dataSourceMap,
+      selectedCron: Cron.valueOf(json["selectedCron"]),
+      selectedDataSource: dataSourceMap[json["selectedDataSource"]],
+      lastRefreshTime: json["lastRefreshTime"],
+
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "group": unitGroupName,
+      "refreshableDataPart": refreshableDataPart.name,
+      "dataSources": dataSources.map((key, value) => MapEntry(key, value.toJson())),
+      "selectedCron": selectedCron.name,
+      "selectedDataSource": selectedDataSource?.name,
+      "lastRefreshTime": lastRefreshTime,
+    };
+  }
+
   @override
   String toString() {
     return 'RefreshingJobModel{'
         'id: $id, '
         'name: $name, '
-        'cron: $cron, '
+        'selectedCron: $selectedCron, '
         'selectedDataSource: $selectedDataSource, '
         'lastRefreshTime: $lastRefreshTime}';
   }

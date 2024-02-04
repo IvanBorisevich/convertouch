@@ -12,7 +12,7 @@ abstract class RefreshableValueRepository {
   );
 
   Future<Either<ConvertouchException, List<RefreshableValueModel>>> updateValuesByCodes(
-    int unitGroupId,
+    String unitGroupName,
     Map<String, String?> codeToValue,
   );
 }

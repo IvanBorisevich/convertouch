@@ -4,38 +4,26 @@ import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/preferences_dao.dart';
 import 'package:convertouch/data/dao/shared_prefs/preferences_dao_impl.dart';
-import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
-import 'package:convertouch/data/repositories/job_data_source_repository_impl.dart';
-import 'package:convertouch/data/repositories/network_data_repository_impl.dart';
-import 'package:convertouch/data/repositories/preferences_repository_impl.dart';
-import 'package:convertouch/data/repositories/refreshable_value_repository_impl.dart';
-import 'package:convertouch/data/repositories/refreshing_job_repository_impl.dart';
-import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
-import 'package:convertouch/data/repositories/unit_repository_impl.dart';
-import 'package:convertouch/data/translators/job_data_source_translator.dart';
+import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
+import 'package:convertouch/data/repositories/net/network_data_repository_impl.dart';
+import 'package:convertouch/data/repositories/shared_prefs/preferences_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/refreshable_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/translators/refreshable_value_translator.dart';
-import 'package:convertouch/data/translators/refreshing_job_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
-import 'package:convertouch/domain/repositories/job_data_source_repository.dart';
 import 'package:convertouch/domain/repositories/network_data_repository.dart';
 import 'package:convertouch/domain/repositories/preferences_repository.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
-import 'package:convertouch/domain/repositories/refreshing_job_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/get_jobs_list_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/update_job_finish_time_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs_control/execute_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
@@ -46,8 +34,6 @@ import 'package:convertouch/domain/use_cases/units/prepare_unit_creation_use_cas
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -137,27 +123,12 @@ Future<void> init() async {
       buildConversionUseCase: locator(),
       saveConversionUseCase: locator(),
       getLastSavedConversionUseCase: locator(),
-      getJobDetailsByGroupUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
-      getJobsListUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton(
-    () => RefreshingJobDetailsBloc(
-      getJobDetailsUseCase: locator(),
-      changeJobCronUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton(
-    () => RefreshingJobsControlBloc(
       executeJobUseCase: locator(),
-      updateJobFinishTimeUseCase: locator(),
     ),
   );
 
@@ -198,7 +169,6 @@ Future<void> init() async {
   locator.registerLazySingleton<BuildConversionUseCase>(
     () => BuildConversionUseCase(
       unitGroupRepository: locator(),
-      refreshingJobRepository: locator(),
       refreshableValueRepository: locator(),
     ),
   );
@@ -213,43 +183,6 @@ Future<void> init() async {
     () => GetLastSavedConversionUseCase(
       conversionRepository: locator(),
       buildConversionUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<GetJobDetailsUseCase>(
-    () => GetJobDetailsUseCase(
-      changeJobDataSourceUseCase: locator(),
-      jobDataSourceRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<GetJobDetailsByGroupUseCase>(
-    () => GetJobDetailsByGroupUseCase(
-      refreshingJobRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ChangeJobDataSourceUseCase>(
-    () => ChangeJobDataSourceUseCase(
-      refreshingJobRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ChangeJobCronUseCase>(
-    () => ChangeJobCronUseCase(
-      refreshingJobRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<GetJobsListUseCase>(
-    () => GetJobsListUseCase(
-      refreshingJobRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<UpdateJobFinishTimeUseCase>(
-    () => UpdateJobFinishTimeUseCase(
-      refreshingJobRepository: locator(),
     ),
   );
 
@@ -280,18 +213,6 @@ Future<void> init() async {
       unitGroupRepository: locator(),
       unitRepository: locator(),
     ),
-  );
-
-  locator.registerLazySingleton<RefreshingJobRepository>(
-    () => RefreshingJobRepositoryImpl(
-      unitGroupDao: database.unitGroupDao,
-      refreshingJobDao: database.refreshingJobDao,
-      jobDataSourceDao: database.jobDataSourceDao,
-    ),
-  );
-
-  locator.registerLazySingleton<JobDataSourceRepository>(
-    () => JobDataSourceRepositoryImpl(database.jobDataSourceDao),
   );
 
   locator.registerLazySingleton<NetworkDataRepository>(
@@ -333,14 +254,6 @@ Future<void> init() async {
 
   locator.registerLazySingleton<UnitTranslator>(
     () => UnitTranslator(),
-  );
-
-  locator.registerLazySingleton<RefreshingJobTranslator>(
-    () => RefreshingJobTranslator(),
-  );
-
-  locator.registerLazySingleton<JobDataSourceTranslator>(
-    () => JobDataSourceTranslator(),
   );
 
   locator.registerLazySingleton<RefreshableValueTranslator>(

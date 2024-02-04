@@ -12,17 +12,14 @@ abstract class ConversionEvent extends ConvertouchEvent {
 
 class BuildConversion extends ConversionEvent {
   final InputConversionModel conversionParams;
-  final RefreshingJobModel? job;
 
   const BuildConversion({
     required this.conversionParams,
-    this.job,
   });
 
   @override
   List<Object?> get props => [
     conversionParams,
-    job,
   ];
 
   @override
@@ -35,7 +32,6 @@ class BuildConversion extends ConversionEvent {
 class RebuildConversionOnValueChange extends BuildConversion {
   const RebuildConversionOnValueChange({
     required super.conversionParams,
-    super.job,
   });
 }
 
@@ -47,7 +43,6 @@ class RebuildConversionAfterUnitReplacement extends BuildConversion {
     required this.newUnit,
     required this.oldUnit,
     required super.conversionParams,
-    super.job,
   });
 
   @override

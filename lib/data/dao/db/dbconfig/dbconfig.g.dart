@@ -67,10 +67,6 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   RefreshableValueDaoDb? _refreshableValueDaoInstance;
 
-  RefreshingJobDaoDb? _refreshingJobDaoInstance;
-
-  JobDataSourceDaoDb? _jobDataSourceDaoInstance;
-
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -99,21 +95,11 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshing_jobs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `unit_group_id` INTEGER NOT NULL, `refreshable_data_part` INTEGER NOT NULL, `last_refresh_time` TEXT, `data_source_id` INTEGER, `cron_name` TEXT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`data_source_id`) REFERENCES `job_data_sources` (`id`) ON UPDATE NO ACTION ON DELETE SET NULL)');
-        await database.execute(
-            'CREATE TABLE IF NOT EXISTS `job_data_sources` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `url` TEXT NOT NULL, `response_transformer_name` TEXT NOT NULL, `job_id` INTEGER NOT NULL, FOREIGN KEY (`job_id`) REFERENCES `refreshing_jobs` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
-        await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_units_code_unit_group_id` ON `units` (`code`, `unit_group_id`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_refreshable_values_unit_id` ON `refreshable_values` (`unit_id`)');
-        await database.execute(
-            'CREATE UNIQUE INDEX `index_refreshing_jobs_unit_group_id` ON `refreshing_jobs` (`unit_group_id`)');
-        await database.execute(
-            'CREATE UNIQUE INDEX `index_refreshing_jobs_data_source_id` ON `refreshing_jobs` (`data_source_id`)');
-        await database.execute(
-            'CREATE INDEX `index_job_data_sources_job_id` ON `job_data_sources` (`job_id`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -135,18 +121,6 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   RefreshableValueDaoDb get refreshableValueDao {
     return _refreshableValueDaoInstance ??=
         _$RefreshableValueDaoDb(database, changeListener);
-  }
-
-  @override
-  RefreshingJobDaoDb get refreshingJobDao {
-    return _refreshingJobDaoInstance ??=
-        _$RefreshingJobDaoDb(database, changeListener);
-  }
-
-  @override
-  JobDataSourceDaoDb get jobDataSourceDao {
-    return _jobDataSourceDaoInstance ??=
-        _$JobDataSourceDaoDb(database, changeListener);
   }
 }
 
@@ -415,7 +389,7 @@ class _$UnitDaoDb extends UnitDaoDb {
 
   @override
   Future<List<UnitEntity>> getUnitsByCodes(
-    int unitGroupId,
+    String unitGroupName,
     List<String> codes,
   ) async {
     const offset = 2;
@@ -423,18 +397,11 @@ class _$UnitDaoDb extends UnitDaoDb {
         Iterable<String>.generate(codes.length, (i) => '?${i + offset}')
             .join(',');
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 and code in (' +
+        'select u.* from units u inner join unit_groups g where 1=1 and g.name = ?1 and u.unit_group_id = g.id and u.code in (' +
             _sqliteVariablesForCodes +
             ')',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            oob: row['oob'] as int?),
-        arguments: [unitGroupId, ...codes]);
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
+        arguments: [unitGroupName, ...codes]);
   }
 
   @override
@@ -499,141 +466,5 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
             unitId: row['unit_id'] as int,
             value: row['value'] as String?),
         arguments: [...unitIds]);
-  }
-}
-
-class _$RefreshingJobDaoDb extends RefreshingJobDaoDb {
-  _$RefreshingJobDaoDb(
-    this.database,
-    this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database),
-        _refreshingJobEntityUpdateAdapter = UpdateAdapter(
-            database,
-            'refreshing_jobs',
-            ['id'],
-            (RefreshingJobEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'unit_group_id': item.unitGroupId,
-                  'refreshable_data_part': item.refreshableDataPartNum,
-                  'last_refresh_time': item.lastRefreshTime,
-                  'data_source_id': item.selectedDataSourceId,
-                  'cron_name': item.cronName
-                });
-
-  final sqflite.DatabaseExecutor database;
-
-  final StreamController<String> changeListener;
-
-  final QueryAdapter _queryAdapter;
-
-  final UpdateAdapter<RefreshingJobEntity> _refreshingJobEntityUpdateAdapter;
-
-  @override
-  Future<List<RefreshingJobEntity>> getAll() async {
-    return _queryAdapter.queryList('select * from refreshing_jobs',
-        mapper: (Map<String, Object?> row) => RefreshingJobEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            unitGroupId: row['unit_group_id'] as int,
-            refreshableDataPartNum: row['refreshable_data_part'] as int,
-            lastRefreshTime: row['last_refresh_time'] as String?,
-            selectedDataSourceId: row['data_source_id'] as int?,
-            cronName: row['cron_name'] as String?));
-  }
-
-  @override
-  Future<RefreshingJobEntity?> get(int id) async {
-    return _queryAdapter.query('select * from refreshing_jobs where id = ?1',
-        mapper: (Map<String, Object?> row) => RefreshingJobEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            unitGroupId: row['unit_group_id'] as int,
-            refreshableDataPartNum: row['refreshable_data_part'] as int,
-            lastRefreshTime: row['last_refresh_time'] as String?,
-            selectedDataSourceId: row['data_source_id'] as int?,
-            cronName: row['cron_name'] as String?),
-        arguments: [id]);
-  }
-
-  @override
-  Future<RefreshingJobEntity?> getByGroupId(int unitGroupId) async {
-    return _queryAdapter.query(
-        'select * from refreshing_jobs where unit_group_id = ?1',
-        mapper: (Map<String, Object?> row) => RefreshingJobEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            unitGroupId: row['unit_group_id'] as int,
-            refreshableDataPartNum: row['refreshable_data_part'] as int,
-            lastRefreshTime: row['last_refresh_time'] as String?,
-            selectedDataSourceId: row['data_source_id'] as int?,
-            cronName: row['cron_name'] as String?),
-        arguments: [unitGroupId]);
-  }
-
-  @override
-  Future<void> update(RefreshingJobEntity entity) async {
-    await _refreshingJobEntityUpdateAdapter.update(
-        entity, OnConflictStrategy.fail);
-  }
-}
-
-class _$JobDataSourceDaoDb extends JobDataSourceDaoDb {
-  _$JobDataSourceDaoDb(
-    this.database,
-    this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
-
-  final sqflite.DatabaseExecutor database;
-
-  final StreamController<String> changeListener;
-
-  final QueryAdapter _queryAdapter;
-
-  @override
-  Future<JobDataSourceEntity?> get(int id) async {
-    return _queryAdapter.query('select * from job_data_sources where id = ?1',
-        mapper: (Map<String, Object?> row) => JobDataSourceEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            url: row['url'] as String,
-            responseTransformerClassName:
-                row['response_transformer_name'] as String,
-            jobId: row['job_id'] as int),
-        arguments: [id]);
-  }
-
-  @override
-  Future<List<JobDataSourceEntity>> getByIds(List<int> ids) async {
-    const offset = 1;
-    final _sqliteVariablesForIds =
-        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
-            .join(',');
-    return _queryAdapter.queryList(
-        'select * from job_data_sources where id in (' +
-            _sqliteVariablesForIds +
-            ')',
-        mapper: (Map<String, Object?> row) => JobDataSourceEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            url: row['url'] as String,
-            responseTransformerClassName:
-                row['response_transformer_name'] as String,
-            jobId: row['job_id'] as int),
-        arguments: [...ids]);
-  }
-
-  @override
-  Future<List<JobDataSourceEntity>> getByJobId(int jobId) async {
-    return _queryAdapter.queryList(
-        'select * from job_data_sources where job_id = ?1',
-        mapper: (Map<String, Object?> row) => JobDataSourceEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            url: row['url'] as String,
-            responseTransformerClassName:
-                row['response_transformer_name'] as String,
-            jobId: row['job_id'] as int),
-        arguments: [jobId]);
   }
 }

@@ -43,7 +43,6 @@ class UnitEntity {
     required UnitEntity savedEntity,
     double? coefficient,
     String? symbol,
-    bool replaceWithNull = false,
   }) : this(
           id: savedEntity.id,
           name: savedEntity.name,
@@ -52,12 +51,10 @@ class UnitEntity {
           coefficient: ObjectUtils.coalesce(
             what: savedEntity.coefficient,
             patchWith: coefficient,
-            replaceWithNull: replaceWithNull,
           ),
           symbol: ObjectUtils.coalesce(
             what: savedEntity.symbol,
             patchWith: symbol,
-            replaceWithNull: replaceWithNull,
           ),
         );
 }
