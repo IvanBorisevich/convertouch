@@ -5,12 +5,12 @@ abstract class AppState extends ConvertouchState {
   const AppState();
 }
 
-class AppStateInProgress extends AppState {
-  const AppStateInProgress();
+class AppInitialState extends AppState {
+  const AppInitialState();
 
   @override
   String toString() {
-    return 'AppStateInProgress{}';
+    return 'AppInitialState{}';
   }
 }
 

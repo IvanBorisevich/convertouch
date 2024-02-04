@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/settings_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_creation_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_creation_page.dart';
@@ -28,52 +29,54 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
       return MapEntry(pageId, (context) => page);
     }
 
-    return {}..addEntries([
-        route(
-          PageName.unitsConversionPage.name,
-          const ConvertouchConversionPage(),
-        ),
-        route(
-          PageName.unitGroupsPageRegular.name,
-          const ConvertouchUnitGroupsPageRegular(),
-        ),
-        route(
-          PageName.unitGroupsPageForConversion.name,
-          const ConvertouchUnitGroupsPageForConversion(),
-        ),
-        route(
-          PageName.unitGroupsPageForUnitCreation.name,
-          const ConvertouchUnitGroupsPageForUnitCreation(),
-        ),
-        route(
-          PageName.unitsPageRegular.name,
-          const ConvertouchUnitsPageRegular(),
-        ),
-        route(
-          PageName.unitsPageForConversion.name,
-          const ConvertouchUnitsPageForConversion(),
-        ),
-        route(
-          PageName.unitsPageForUnitCreation.name,
-          const ConvertouchUnitsPageForUnitCreation(),
-        ),
-        route(
-          PageName.unitGroupCreationPage.name,
-          const ConvertouchUnitGroupCreationPage(),
-        ),
-        route(
-          PageName.unitCreationPage.name,
-          const ConvertouchUnitCreationPage(),
-        ),
-        route(
-          PageName.settingsPage.name,
-          const ConvertouchSettingsPage(),
-        ),
-        // route(
-        //   PageName.refreshingJobDetailsPage.name,
-        //   const ConvertouchRefreshingJobDetailsPage(),
-        // ),
-      ]);
+    return {}..addEntries(
+        [
+          route(
+            PageName.unitsConversionPage.name,
+            const ConvertouchConversionPage(),
+          ),
+          route(
+            PageName.unitGroupsPageRegular.name,
+            const ConvertouchUnitGroupsPageRegular(),
+          ),
+          route(
+            PageName.unitGroupsPageForConversion.name,
+            const ConvertouchUnitGroupsPageForConversion(),
+          ),
+          route(
+            PageName.unitGroupsPageForUnitCreation.name,
+            const ConvertouchUnitGroupsPageForUnitCreation(),
+          ),
+          route(
+            PageName.unitsPageRegular.name,
+            const ConvertouchUnitsPageRegular(),
+          ),
+          route(
+            PageName.unitsPageForConversion.name,
+            const ConvertouchUnitsPageForConversion(),
+          ),
+          route(
+            PageName.unitsPageForUnitCreation.name,
+            const ConvertouchUnitsPageForUnitCreation(),
+          ),
+          route(
+            PageName.unitGroupCreationPage.name,
+            const ConvertouchUnitGroupCreationPage(),
+          ),
+          route(
+            PageName.unitCreationPage.name,
+            const ConvertouchUnitCreationPage(),
+          ),
+          route(
+            PageName.settingsPage.name,
+            const ConvertouchSettingsPage(),
+          ),
+          route(
+            PageName.refreshingJobDetailsPage.name,
+            const ConvertouchRefreshingJobDetailsPage(),
+          ),
+        ],
+      );
   }
 
   @override

@@ -27,10 +27,10 @@ class OpenJobDetails extends RefreshingJobDetailsEvent {
   }
 }
 
-class SelectAutoRefreshCron extends RefreshingJobDetailsEvent {
+class SelectJobCron extends RefreshingJobDetailsEvent {
   final Cron newCron;
 
-  const SelectAutoRefreshCron({
+  const SelectJobCron({
     required this.newCron,
     required super.job,
   });
@@ -43,7 +43,7 @@ class SelectAutoRefreshCron extends RefreshingJobDetailsEvent {
 
   @override
   String toString() {
-    return 'SelectAutoRefreshCron{newCron: $newCron}';
+    return 'SelectJobCron{newCron: $newCron}';
   }
 }
 

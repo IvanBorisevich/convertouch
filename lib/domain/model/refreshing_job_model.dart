@@ -55,7 +55,7 @@ class RefreshingJobModel extends IdNameItemModel {
           ),
           cron: ObjectUtils.coalesce(
             what: savedModel.cron,
-            patchWith: cron ?? Cron.never,
+            patchWith: cron,
             replaceWithNull: replaceWithNull,
           )!,
           selectedDataSource: ObjectUtils.coalesce(
@@ -87,6 +87,9 @@ class RefreshingJobModel extends IdNameItemModel {
   String toString() {
     return 'RefreshingJobModel{'
         'id: $id, '
-        'name: $name}';
+        'name: $name, '
+        'cron: $cron, '
+        'selectedDataSource: $selectedDataSource, '
+        'lastRefreshTime: $lastRefreshTime}';
   }
 }
