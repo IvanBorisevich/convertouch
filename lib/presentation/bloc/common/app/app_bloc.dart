@@ -6,14 +6,20 @@ import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
+class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
   final GetSettingsUseCase getSettingsUseCase;
   final SaveSettingsUseCase saveSettingsUseCase;
 
   AppBloc({
     required this.getSettingsUseCase,
     required this.saveSettingsUseCase,
-  }) : super(const AppInitialState()) {
+  }) : super(
+          const AppStateReady(
+            theme: ConvertouchUITheme.light,
+            unitGroupsViewMode: ItemsViewMode.grid,
+            unitsViewMode: ItemsViewMode.grid,
+          ),
+        ) {
     on<GetAppSettings>(_onAppSettingsGet);
     on<ChangeSetting>(_onSettingSave);
   }
@@ -22,46 +28,43 @@ class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
     GetAppSettings event,
     Emitter<AppState> emit,
   ) async {
-    final result = await getSettingsUseCase.execute([
-      SettingKeys.theme,
-      SettingKeys.unitGroupsViewMode,
-      SettingKeys.unitsViewMode,
-    ]);
-
-    emit(
-      result.fold(
-        (error) => AppErrorState(
-          exception: error,
-          lastSuccessfulState: state,
-        ),
-        (settings) => AppStateReady(
-          theme: ConvertouchUITheme.valueOf(settings[SettingKeys.theme]),
-          unitGroupsViewMode:
-              ItemsViewMode.valueOf(settings[SettingKeys.unitGroupsViewMode]),
-          unitsViewMode:
-              ItemsViewMode.valueOf(settings[SettingKeys.unitsViewMode]),
-        ),
-      ),
-    );
+    emit(state);
   }
 
   _onSettingSave(
     ChangeSetting event,
     Emitter<AppState> emit,
   ) async {
-    final result = await saveSettingsUseCase.execute({
-      event.settingKey: event.settingValue,
-    });
+    Map<String, dynamic> currentStateMap = toJson(state);
 
-    if (result.isLeft) {
-      emit(
-        AppErrorState(
-          exception: result.left,
-          lastSuccessfulState: state,
-        ),
-      );
-    } else {
-      add(const GetAppSettings());
+    currentStateMap.update(
+      event.settingKey,
+      (value) => event.settingValue,
+      ifAbsent: () => event.settingValue,
+    );
+
+    emit(fromJson(currentStateMap));
+  }
+
+  @override
+  AppState fromJson(Map<String, dynamic> json) {
+    return AppStateReady(
+      theme: ConvertouchUITheme.valueOf(json[SettingKeys.theme]),
+      unitGroupsViewMode:
+          ItemsViewMode.valueOf(json[SettingKeys.unitGroupsViewMode]),
+      unitsViewMode: ItemsViewMode.valueOf(json[SettingKeys.unitsViewMode]),
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(AppState state) {
+    if (state is AppStateReady) {
+      return {
+        SettingKeys.theme: state.theme.value,
+        SettingKeys.unitGroupsViewMode: state.unitGroupsViewMode.value,
+        SettingKeys.unitsViewMode: state.unitsViewMode.value,
+      };
     }
+    return const {};
   }
 }

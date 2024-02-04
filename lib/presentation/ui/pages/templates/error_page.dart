@@ -1,4 +1,3 @@
-import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
@@ -8,8 +7,8 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchErrorPage<B extends ConvertouchBloc,
-    S extends ConvertouchState> extends StatelessWidget {
+class ConvertouchErrorPage<B extends Bloc, S extends ConvertouchState>
+    extends StatelessWidget {
   final String pageTitle;
   final ConvertouchErrorState errorState;
   final S lastSuccessfulState;

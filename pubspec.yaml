@@ -1,5 +1,5 @@
 name: convertouch
-description: A new Flutter project.
+description: A handy app to convert values from one unit to another with no efforts.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -51,6 +51,8 @@ dependencies:
   http: ^1.1.0
   connectivity_plus: ^5.0.2
   keyboard_actions: ^4.2.0
+  hydrated_bloc: ^7.1.0
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

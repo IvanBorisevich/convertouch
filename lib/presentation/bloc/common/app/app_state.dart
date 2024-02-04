@@ -5,24 +5,15 @@ abstract class AppState extends ConvertouchState {
   const AppState();
 }
 
-class AppInitialState extends AppState {
-  const AppInitialState();
-
-  @override
-  String toString() {
-    return 'AppInitialState{}';
-  }
-}
-
 class AppStateReady extends AppState {
   final ConvertouchUITheme theme;
   final ItemsViewMode unitGroupsViewMode;
   final ItemsViewMode unitsViewMode;
 
   const AppStateReady({
-    this.theme = ConvertouchUITheme.light,
-    this.unitGroupsViewMode = ItemsViewMode.grid,
-    this.unitsViewMode = ItemsViewMode.grid,
+    required this.theme,
+    required this.unitGroupsViewMode,
+    required this.unitsViewMode,
   });
 
   @override

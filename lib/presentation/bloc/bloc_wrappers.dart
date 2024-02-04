@@ -1,4 +1,3 @@
-import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
@@ -27,7 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget blocBuilderWrap<
-    BlocType extends ConvertouchBloc<ConvertouchEvent, AbstractStateType>,
+    BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
     AbstractStateType extends ConvertouchState,
     PageStateType extends AbstractStateType>(
   Widget Function(PageStateType pageState) builderFunc,
