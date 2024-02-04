@@ -5,8 +5,6 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
@@ -56,8 +54,6 @@ Widget blocBuilderWrap<
 
 const appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppStateReady>;
 
-const unitGroupsViewModeBlocBuilder = blocBuilderWrap<UnitGroupsViewModeBloc,
-    MenuItemsViewState, MenuItemsViewStateSet>;
 const unitGroupsBlocBuilder =
     blocBuilderWrap<UnitGroupsBloc, UnitGroupsState, UnitGroupsFetched>;
 const unitGroupsBlocBuilderForConversion = blocBuilderWrap<
@@ -69,8 +65,6 @@ const unitGroupsBlocBuilderForUnitCreation = blocBuilderWrap<
     UnitGroupsState,
     UnitGroupsFetchedForUnitCreation>;
 
-const unitsViewModeBlocBuilder = blocBuilderWrap<UnitsViewModeBloc,
-    MenuItemsViewState, MenuItemsViewStateSet>;
 const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
 const unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
     UnitsState, UnitsFetchedForConversion>;

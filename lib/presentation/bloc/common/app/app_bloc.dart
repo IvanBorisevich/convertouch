@@ -14,18 +14,20 @@ class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
     required this.getSettingsUseCase,
     required this.saveSettingsUseCase,
   }) : super(const AppStateReady()) {
-    on<RestoreAppSettings>(_onSettingsRestore);
-    on<SaveSetting>(_onSettingSave);
+    on<GetAppSettings>(_onAppSettingsGet);
+    on<ChangeSetting>(_onSettingSave);
   }
 
-  _onSettingsRestore(
-    RestoreAppSettings event,
+  _onAppSettingsGet(
+    GetAppSettings event,
     Emitter<AppState> emit,
   ) async {
     emit(const AppStateInProgress());
 
     final result = await getSettingsUseCase.execute([
       SettingKeys.theme,
+      SettingKeys.unitGroupsViewMode,
+      SettingKeys.unitsViewMode,
     ]);
 
     emit(
@@ -36,13 +38,17 @@ class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
         ),
         (settings) => AppStateReady(
           theme: ConvertouchUITheme.valueOf(settings[SettingKeys.theme]),
+          unitGroupsViewMode:
+              ItemsViewMode.valueOf(settings[SettingKeys.unitGroupsViewMode]),
+          unitsViewMode:
+              ItemsViewMode.valueOf(settings[SettingKeys.unitsViewMode]),
         ),
       ),
     );
   }
 
   _onSettingSave(
-    SaveSetting event,
+    ChangeSetting event,
     Emitter<AppState> emit,
   ) async {
     final result = await saveSettingsUseCase.execute({
@@ -57,7 +63,7 @@ class AppBloc extends ConvertouchBloc<AppEvent, AppState> {
         ),
       );
     } else {
-      add(const RestoreAppSettings());
+      add(const GetAppSettings());
     }
   }
 }

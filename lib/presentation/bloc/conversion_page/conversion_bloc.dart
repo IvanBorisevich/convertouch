@@ -2,7 +2,7 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -15,13 +15,13 @@ class ConversionBloc
     extends ConvertouchBloc<ConvertouchEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
-  final RestoreLastConversionUseCase restoreLastConversionUseCase;
+  final GetLastSavedConversionUseCase getLastSavedConversionUseCase;
   final GetJobDetailsByGroupUseCase getJobDetailsByGroupUseCase;
 
   ConversionBloc({
     required this.buildConversionUseCase,
     required this.saveConversionUseCase,
-    required this.restoreLastConversionUseCase,
+    required this.getLastSavedConversionUseCase,
     required this.getJobDetailsByGroupUseCase,
   }) : super(
           const ConversionBuilt(
@@ -32,7 +32,7 @@ class ConversionBloc
     on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
     on<ShowNewConversionAfterRefresh>(_onNewConversionShow);
     on<RemoveConversionItem>(_onRemoveConversion);
-    on<RestoreLastConversion>(_onRestoreConversion);
+    on<GetLastSavedConversion>(_onLastSavedConversionGet);
   }
 
   _onBuildConversion(
@@ -139,11 +139,11 @@ class ConversionBloc
     );
   }
 
-  _onRestoreConversion(
-    RestoreLastConversion event,
+  _onLastSavedConversionGet(
+    GetLastSavedConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    var result = await restoreLastConversionUseCase.execute();
+    var result = await getLastSavedConversionUseCase.execute();
 
     if (result.isLeft) {
       emit(

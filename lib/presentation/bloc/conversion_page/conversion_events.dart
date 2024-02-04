@@ -116,11 +116,11 @@ class RemoveConversionItem extends ConversionEvent {
   }
 }
 
-class RestoreLastConversion extends ConversionEvent {
-  const RestoreLastConversion();
+class GetLastSavedConversion extends ConversionEvent {
+  const GetLastSavedConversion();
 
   @override
   String toString() {
-    return 'RestoreLastConversion{}';
+    return 'GetLastSavedConversion{}';
   }
 }

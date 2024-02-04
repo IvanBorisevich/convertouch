@@ -16,20 +16,28 @@ class AppStateInProgress extends AppState {
 
 class AppStateReady extends AppState {
   final ConvertouchUITheme theme;
+  final ItemsViewMode unitGroupsViewMode;
+  final ItemsViewMode unitsViewMode;
 
   const AppStateReady({
     this.theme = ConvertouchUITheme.light,
+    this.unitGroupsViewMode = ItemsViewMode.grid,
+    this.unitsViewMode = ItemsViewMode.grid,
   });
 
   @override
   List<Object?> get props => [
     theme,
+    unitGroupsViewMode,
+    unitsViewMode,
   ];
 
   @override
   String toString() {
     return 'AppStateReady{'
-        'theme: $theme}';
+        'theme: $theme, '
+        'unitGroupsViewMode: $unitGroupsViewMode, '
+        'unitsViewMode: $unitsViewMode}';
   }
 }
 

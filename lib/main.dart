@@ -7,8 +7,6 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
@@ -46,25 +44,13 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.locator<AppBloc>()
             ..add(
-              const RestoreAppSettings(),
-            ),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitGroupsViewModeBloc>()
-            ..add(
-              const RestoreViewModeSettings(),
-            ),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitsViewModeBloc>()
-            ..add(
-              const RestoreViewModeSettings(),
+              const GetAppSettings(),
             ),
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>()
             ..add(
-              const RestoreLastConversion(),
+              const GetLastSavedConversion(),
             ),
         ),
         BlocProvider(

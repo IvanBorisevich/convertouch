@@ -1,8 +1,9 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_event.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';
@@ -55,48 +56,46 @@ class ConvertouchUnitsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      return unitsViewModeBlocBuilder((viewModeState) {
-        return ConvertouchPage(
-          title: pageTitle,
-          customLeadingIcon: customLeadingIcon,
-          appBarRightWidgets: appBarRightWidgets,
-          secondaryAppBar: SecondaryAppBar(
+      return ConvertouchPage(
+        title: pageTitle,
+        customLeadingIcon: customLeadingIcon,
+        appBarRightWidgets: appBarRightWidgets,
+        secondaryAppBar: SecondaryAppBar(
+          theme: appState.theme,
+          child: ConvertouchSearchBar(
+            placeholder: "Search units...",
             theme: appState.theme,
-            child: ConvertouchSearchBar(
-              placeholder: "Search units...",
-              theme: appState.theme,
-              iconViewMode: viewModeState.iconViewMode,
-              pageViewMode: viewModeState.pageViewMode,
-              onViewModeChange: () {
-                BlocProvider.of<UnitsViewModeBloc>(context).add(
-                  ChangeMenuItemsView(
-                    targetViewMode: viewModeState.iconViewMode,
-                  ),
-                );
-              },
-              onSearchStringChanged: onSearchStringChanged,
-              onSearchReset: onSearchReset,
-            ),
+            pageViewMode: appState.unitsViewMode,
+            onViewModeChange: () {
+              BlocProvider.of<AppBloc>(context).add(
+                ChangeSetting(
+                  settingKey: SettingKeys.unitsViewMode,
+                  settingValue: appState.unitsViewMode.next.value,
+                ),
+              );
+            },
+            onSearchStringChanged: onSearchStringChanged,
+            onSearchReset: onSearchReset,
           ),
-          body: ConvertouchMenuItemsView(
-            units,
-            itemIdsMarkedForConversion: markedUnitIdsForConversion,
-            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
-            showMarkedItems: markedUnitsForConversionVisible,
-            selectedItemId: selectedUnitId,
-            showSelectedItem: selectedUnitVisible,
-            removalModeAllowed: removalModeAllowed,
-            removalModeEnabled: removalModeEnabled,
-            onItemTap: onUnitTap,
-            onItemTapForRemoval: onUnitTapForRemoval,
-            onItemLongPress: onUnitLongPress,
-            itemsViewMode: viewModeState.pageViewMode,
-            theme: appState.theme,
-          ),
-          floatingActionButton: floatingButton,
-          onItemsRemove: onUnitsRemove,
-        );
-      });
+        ),
+        body: ConvertouchMenuItemsView(
+          units,
+          itemIdsMarkedForConversion: markedUnitIdsForConversion,
+          itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
+          showMarkedItems: markedUnitsForConversionVisible,
+          selectedItemId: selectedUnitId,
+          showSelectedItem: selectedUnitVisible,
+          removalModeAllowed: removalModeAllowed,
+          removalModeEnabled: removalModeEnabled,
+          onItemTap: onUnitTap,
+          onItemTapForRemoval: onUnitTapForRemoval,
+          onItemLongPress: onUnitLongPress,
+          itemsViewMode: appState.unitsViewMode,
+          theme: appState.theme,
+        ),
+        floatingActionButton: floatingButton,
+        onItemsRemove: onUnitsRemove,
+      );
     });
   }
 }

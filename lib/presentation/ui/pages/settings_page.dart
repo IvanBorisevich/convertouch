@@ -82,7 +82,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                       onChanged: (ConvertouchUITheme? newValue) {
                         if (newValue != null) {
                           BlocProvider.of<AppBloc>(context).add(
-                            SaveSetting(
+                            ChangeSetting(
                               settingKey: SettingKeys.theme,
                               settingValue: newValue.value,
                             ),

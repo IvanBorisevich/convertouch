@@ -27,9 +27,8 @@ import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/restore_last_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/item_view_mode/get_next_item_view_mode_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_cron_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/change_job_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/get_job_details_by_group_use_case.dart';
@@ -49,7 +48,6 @@ import 'package:convertouch/domain/use_cases/units/prepare_unit_creation_use_cas
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/menu_items/menu_items_view_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_job_details_page/refreshing_job_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_control/refreshing_jobs_control_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
@@ -81,22 +79,6 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => AppBloc(
-      getSettingsUseCase: locator(),
-      saveSettingsUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton(
-    () => UnitGroupsViewModeBloc(
-      getNextItemViewModeUseCase: locator(),
-      getSettingsUseCase: locator(),
-      saveSettingsUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton(
-    () => UnitsViewModeBloc(
-      getNextItemViewModeUseCase: locator(),
       getSettingsUseCase: locator(),
       saveSettingsUseCase: locator(),
     ),
@@ -153,7 +135,7 @@ Future<void> init() async {
     () => ConversionBloc(
       buildConversionUseCase: locator(),
       saveConversionUseCase: locator(),
-      restoreLastConversionUseCase: locator(),
+      getLastSavedConversionUseCase: locator(),
       getJobDetailsByGroupUseCase: locator(),
     ),
   );
@@ -190,10 +172,6 @@ Future<void> init() async {
     () => SaveSettingsUseCase(
       preferencesRepository: locator(),
     ),
-  );
-
-  locator.registerLazySingleton<GetNextItemViewModeUseCase>(
-    () => GetNextItemViewModeUseCase(),
   );
 
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
@@ -242,8 +220,8 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<RestoreLastConversionUseCase>(
-    () => RestoreLastConversionUseCase(
+  locator.registerLazySingleton<GetLastSavedConversionUseCase>(
+    () => GetLastSavedConversionUseCase(
       conversionRepository: locator(),
       buildConversionUseCase: locator(),
     ),

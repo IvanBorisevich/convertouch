@@ -13,10 +13,8 @@ abstract class SettingKeys {
   static const String targetUnitIds = 'targetUnitIds';
   static const String conversionUnitGroupId = 'conversionUnitGroupId';
   static const String theme = "theme";
-  static const String unitGroupsPageViewMode = "unitGroupsPageViewMode";
-  static const String unitGroupsIconViewMode = "unitGroupsIconViewMode";
-  static const String unitsPageViewMode = "unitsPageViewMode";
-  static const String unitsIconViewMode = "unitsIconViewMode";
+  static const String unitGroupsViewMode = "unitGroupsViewMode";
+  static const String unitsViewMode = "unitsViewMode";
 }
 
 enum PageName {
@@ -58,8 +56,17 @@ enum ItemsViewMode {
 
   const ItemsViewMode(this.value);
 
-  static ItemsViewMode? valueOf(String? value) {
-    return values.firstWhereOrNull((element) => value == element.value);
+  static ItemsViewMode valueOf(String? value) {
+    return values.firstWhereOrNull((element) => value == element.value) ?? grid;
+  }
+
+  ItemsViewMode get next {
+    switch (this) {
+      case list:
+        return grid;
+      case grid:
+        return list;
+    }
   }
 }
 

@@ -4,27 +4,27 @@ abstract class AppEvent extends ConvertouchEvent {
   const AppEvent();
 }
 
-class RestoreAppSettings extends AppEvent {
-  const RestoreAppSettings();
+class GetAppSettings extends AppEvent {
+  const GetAppSettings();
 
   @override
   String toString() {
-    return 'RestoreAppSettings{}';
+    return 'GetAppSettings{}';
   }
 }
 
-class SaveSetting<T> extends AppEvent {
+class ChangeSetting<T> extends AppEvent {
   final String settingKey;
   final T settingValue;
 
-  const SaveSetting({
+  const ChangeSetting({
     required this.settingKey,
     required this.settingValue,
   });
 
   @override
   String toString() {
-    return 'SaveSetting{'
+    return 'ChangeSetting{'
         'settingKey: $settingKey, '
         'settingValue: $settingValue}';
   }

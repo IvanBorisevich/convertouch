@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
   final String placeholder;
-  final ItemsViewMode iconViewMode;
   final ItemsViewMode pageViewMode;
   final void Function()? onViewModeChange;
   final void Function(String)? onSearchStringChanged;
@@ -17,7 +16,6 @@ class ConvertouchSearchBar extends StatefulWidget {
 
   const ConvertouchSearchBar({
     required this.placeholder,
-    required this.iconViewMode,
     required this.pageViewMode,
     this.onViewModeChange,
     this.onSearchStringChanged,
@@ -120,7 +118,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         child: IconButton(
           icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
             Icon(
-              itemViewModeIconMap[widget.iconViewMode],
+              itemViewModeIconMap[widget.pageViewMode.next],
               key: ValueKey(widget.pageViewMode),
             ),
           ),

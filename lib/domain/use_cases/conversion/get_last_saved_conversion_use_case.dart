@@ -5,12 +5,12 @@ import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_cas
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class RestoreLastConversionUseCase
+class GetLastSavedConversionUseCase
     extends UseCaseNoInput<OutputConversionModel> {
   final ConversionRepository conversionRepository;
   final BuildConversionUseCase buildConversionUseCase;
 
-  const RestoreLastConversionUseCase({
+  const GetLastSavedConversionUseCase({
     required this.conversionRepository,
     required this.buildConversionUseCase,
   });
