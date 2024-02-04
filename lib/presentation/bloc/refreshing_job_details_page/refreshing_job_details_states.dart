@@ -25,20 +25,24 @@ class RefreshingJobDetailsInProgress extends RefreshingJobDetailsState {
 
 class RefreshingJobDetailsReady extends RefreshingJobDetailsState {
   final RefreshingJobModel job;
+  final bool updated;
 
   const RefreshingJobDetailsReady({
     required this.job,
+    this.updated = false,
   });
 
   @override
   List<Object?> get props => [
     job,
+    updated,
   ];
 
   @override
   String toString() {
     return 'RefreshingJobDetailsReady{'
-        'job: $job}';
+        'job: $job, '
+        'updated: $updated}';
   }
 }
 

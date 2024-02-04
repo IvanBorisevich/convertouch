@@ -16,8 +16,7 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
     required this.changeJobCronUseCase,
   }) : super(const RefreshingJobDetailsInitialState()) {
     on<OpenJobDetails>(_onJobDetailsOpen);
-    on<SelectJobCron>(_onAutoRefreshCronSelect);
-    on<SelectDataSource>(_onDataSourceSelect);
+    on<SelectJobCron>(_onJobCronSelect);
   }
 
   _onJobDetailsOpen(
@@ -29,9 +28,7 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
     emit(
       result.fold(
         (left) => RefreshingJobDetailsErrorState(
-          exception: left,
-          lastSuccessfulState: state
-        ),
+            exception: left, lastSuccessfulState: state),
         (job) => RefreshingJobDetailsReady(
           job: job,
         ),
@@ -39,7 +36,7 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
     );
   }
 
-  _onAutoRefreshCronSelect(
+  _onJobCronSelect(
     SelectJobCron event,
     Emitter<RefreshingJobDetailsState> emit,
   ) async {
@@ -58,13 +55,9 @@ class RefreshingJobDetailsBloc extends ConvertouchBloc<
         ),
         (job) => RefreshingJobDetailsReady(
           job: job,
+          updated: true,
         ),
       ),
     );
   }
-
-  _onDataSourceSelect(
-    SelectDataSource event,
-    Emitter<RefreshingJobDetailsState> emit,
-  ) async {}
 }
