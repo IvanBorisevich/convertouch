@@ -45,7 +45,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
 
   @override
   Future<Either<ConvertouchException, List<T>>> refreshForGroup<T>({
-    required int unitGroupId,
+    required String unitGroupName,
     required JobDataSourceModel dataSource,
     required RefreshableDataPart refreshableDataPart,
   }) async {
@@ -61,7 +61,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
 
           List<UnitEntity> units = await unitDao.updateUnitsCoefficients(
             database,
-            unitGroupId,
+            unitGroupName,
             codeToCoefficient,
           );
           return Right(
@@ -78,7 +78,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
           ).transform(responseStr);
 
           List<UnitEntity> savedUnits = await unitDao.getUnitsByCodes(
-            unitGroupId,
+            unitGroupName,
             codeToValue.keys.toList(),
           );
 

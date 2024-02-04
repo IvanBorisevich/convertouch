@@ -59,12 +59,12 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
   @override
   Future<Either<ConvertouchException, List<RefreshableValueModel>>>
       updateValuesByCodes(
-    int unitGroupId,
+    String unitGroupName,
     Map<String, String?> codeToValue,
   ) async {
     try {
       List<UnitEntity> savedUnits = await unitDao.getUnitsByCodes(
-        unitGroupId,
+        unitGroupName,
         codeToValue.keys.toList(),
       );
 
