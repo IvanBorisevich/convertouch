@@ -64,16 +64,15 @@ class RefreshingJobModel extends IdNameItemModel {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        unitGroupName,
-        refreshableDataPart,
-        selectedCron,
-        lastRefreshTime,
-        selectedDataSource,
-        progressController,
-        itemType,
-      ];
+    name,
+    unitGroupName,
+    refreshableDataPart,
+    selectedCron,
+    lastRefreshTime,
+    selectedDataSource,
+    progressController,
+    itemType,
+  ];
 
   static RefreshingJobModel? fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -112,10 +111,9 @@ class RefreshingJobModel extends IdNameItemModel {
   @override
   String toString() {
     return 'RefreshingJobModel{'
-        'id: $id, '
         'name: $name, '
         'selectedCron: $selectedCron, '
-        'selectedDataSource: $selectedDataSource, '
-        'lastRefreshTime: $lastRefreshTime}';
+        'lastRefreshTime: $lastRefreshTime, '
+        'progressController: $progressController}';
   }
 }

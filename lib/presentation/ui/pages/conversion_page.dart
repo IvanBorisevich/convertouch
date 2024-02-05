@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -93,12 +94,16 @@ class ConvertouchConversionPage extends StatelessWidget {
               listener: (_, state) {
                 if (state is RefreshingJobsFetched) {
                   for (var job in state.jobs.values) {
+                    log("Looking for jobs to be finalized");
                     job.progressController?.stream.lastWhere(
                       (jobResult) {
                         return jobResult.progressPercent == 1.0;
                       },
-                    ).then(
-                      (jobResult) {
+                      orElse: () => const RefreshingJobResultModel.noResult(),
+                    ).then((jobResult) {
+                      if (jobResult.progressPercent == -1) {
+                        log("Job '${job.name}' was interrupted");
+                      } else {
                         log("Finalizing the job '${job.name}'");
                         BlocProvider.of<RefreshingJobsBloc>(context).add(
                           FinishJob(
@@ -113,8 +118,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                             ),
                           );
                         }
-                      },
-                    );
+                      }
+                    });
                   }
                 } else if (state is RefreshingJobsNotificationState) {
                   showSnackBar(

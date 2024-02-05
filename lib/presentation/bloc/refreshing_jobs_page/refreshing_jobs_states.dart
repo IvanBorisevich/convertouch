@@ -16,7 +16,7 @@ class RefreshingJobsFetched extends RefreshingJobsState {
 
   @override
   List<Object?> get props => [
-    jobs,
+    jobs.entries,
     namesOfRefreshedGroups,
   ];
 
@@ -40,7 +40,7 @@ class RefreshingJobDetailsOpened extends RefreshingJobsFetched {
   @override
   List<Object?> get props => [
     openedJob,
-    namesOfRefreshedGroups,
+    super.props,
   ];
 
   @override

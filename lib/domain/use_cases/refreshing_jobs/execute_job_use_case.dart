@@ -55,7 +55,11 @@ class ExecuteJobUseCase
 
       jobProgressController = createJobProgressStream(
         jobFunc: (jobProgressController) async {
-          jobProgressController.add(const RefreshingJobResultModel.start());
+          if (!jobProgressController.isClosed) {
+            jobProgressController.add(const RefreshingJobResultModel.start());
+          } else {
+            log("On start: stream controller is already closed");
+          }
 
           final refreshedData = ObjectUtils.tryGet(
             await networkDataRepository.refreshForGroup(
@@ -79,11 +83,16 @@ class ExecuteJobUseCase
             );
           }
 
-          jobProgressController.add(
-            RefreshingJobResultModel.finish(
-              rebuiltConversion: rebuiltConversion,
-            ),
-          );
+          if (!jobProgressController.isClosed) {
+            log("Add finish result to the stream");
+            jobProgressController.add(
+              RefreshingJobResultModel.finish(
+                rebuiltConversion: rebuiltConversion,
+              ),
+            );
+          } else {
+            log("At finish: stream controller is already closed");
+          }
         },
       );
 
@@ -94,7 +103,7 @@ class ExecuteJobUseCase
         ),
       );
     } catch (e) {
-      log("Close the stream from use case");
+      log("Closing the stream from use case");
       jobProgressController?.close();
 
       return Left(
@@ -114,9 +123,16 @@ class ExecuteJobUseCase
     jobProgressController = BehaviorSubject<RefreshingJobResultModel>(
       onListen: () async {
         try {
-          await jobFunc.call(jobProgressController);
-        } finally {
-          log("Close the stream from onListen() callback");
+          await jobFunc.call(jobProgressController).whenComplete(() {
+            if (!jobProgressController.isClosed) {
+              log("Closing the stream after when job completed");
+              jobProgressController.close();
+            } else {
+              log("After finish: stream controller is already closed");
+            }
+          });
+        } catch (e) {
+          log("Closing the stream when error during job execution: $e");
           await jobProgressController.close();
         }
       },

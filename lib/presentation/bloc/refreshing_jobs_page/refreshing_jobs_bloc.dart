@@ -156,6 +156,8 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
 
     RefreshingJobModel jobToBeStopped = refreshingJobs[event.unitGroupName]!;
 
+    jobToBeStopped.progressController?.close();
+
     RefreshingJobModel stoppedJob = RefreshingJobModel(
       name: jobToBeStopped.name,
       unitGroupName: jobToBeStopped.unitGroupName,
@@ -192,7 +194,7 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
       dataSources: jobToBeFinished.dataSources,
       selectedDataSource: jobToBeFinished.selectedDataSource,
       lastRefreshTime: DateTime.now().toString(),
-      progressController: jobToBeFinished.progressController,
+      progressController: null,
     );
 
     refreshingJobs.update(event.unitGroupName, (value) => completedJob);

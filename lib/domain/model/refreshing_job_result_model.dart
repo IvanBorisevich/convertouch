@@ -20,4 +20,15 @@ class RefreshingJobResultModel {
           progressPercent: 1.0,
           rebuiltConversion: rebuiltConversion,
         );
+
+  const RefreshingJobResultModel.noResult()
+      : this(
+          progressPercent: -1,
+        );
+
+  @override
+  String toString() {
+    return 'RefreshingJobResultModel{'
+        'progressPercent: $progressPercent}';
+  }
 }

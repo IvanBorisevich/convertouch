@@ -11,7 +11,7 @@ class ConvertouchProgressButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final void Function()? onProgressIndicatorClick;
-  final void Function()? onOngoingProgressIndicatorClick;
+  final void Function()? onProgressIndicatorInterrupt;
   final void Function()? onProgressIndicatorErrorIconClick;
   final EdgeInsets? margin;
   final Color? progressIndicatorColor;
@@ -24,7 +24,7 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.visible = true,
     this.onProgressIndicatorClick,
-    this.onOngoingProgressIndicatorClick,
+    this.onProgressIndicatorInterrupt,
     this.onProgressIndicatorErrorIconClick,
     this.margin,
     this.progressIndicatorColor,
@@ -46,6 +46,9 @@ class ConvertouchProgressButton extends StatelessWidget {
             : StreamBuilder<RefreshingJobResultModel>(
                 stream: progressStream,
                 builder: (context, snapshot) {
+                  log("Connection: ${snapshot.connectionState}, "
+                      "data: ${snapshot.data?.progressPercent}");
+
                   if (snapshot.hasError) {
                     log("Snapshot contains an error");
                     return IconButton(
@@ -56,18 +59,22 @@ class ConvertouchProgressButton extends StatelessWidget {
                         size: radius,
                       ),
                     );
+                  } else if (snapshot.data == null) {
+                    return buttonWidget;
                   } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data == null) {
-                      log("Snapshot does not contain data");
-                      return buttonWidget;
-                    }
                     if (snapshot.data!.progressPercent != 1.0) {
-                      onOngoingProgressIndicatorClick?.call();
+                      onProgressIndicatorInterrupt?.call();
                     }
                     return buttonWidget;
                   } else {
                     return GestureDetector(
-                      onTap: onProgressIndicatorClick,
+                      onTap: () {
+                        if (onProgressIndicatorClick != null) {
+                          onProgressIndicatorClick!.call();
+                        } else {
+                          onProgressIndicatorInterrupt?.call();
+                        }
+                      },
                       child: determinate
                           ? CircularPercentIndicator(
                               radius: radius,

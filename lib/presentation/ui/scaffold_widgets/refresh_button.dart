@@ -9,7 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchRefreshFloatingButton extends StatelessWidget {
-  const ConvertouchRefreshFloatingButton({super.key});
+  final bool determinate;
+
+  const ConvertouchRefreshFloatingButton({
+    this.determinate = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +26,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
         return refreshingJobsBlocBuilder((jobsState) {
           return ConvertouchProgressButton(
             visible: conversionState.showRefreshButton,
+            determinate: determinate,
             buttonWidget: ConvertouchFloatingActionButton(
               onClick: () {
                 BlocProvider.of<RefreshingJobsBloc>(context).add(
@@ -35,13 +41,6 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
             ),
             radius: 28,
             onProgressIndicatorClick: () {
-              BlocProvider.of<RefreshingJobsBloc>(context).add(
-                StopJob(
-                  unitGroupName: conversionState.conversion.unitGroup!.name,
-                ),
-              );
-            },
-            onOngoingProgressIndicatorClick: () {
               BlocProvider.of<RefreshingJobsBloc>(context).add(
                 StopJob(
                   unitGroupName: conversionState.conversion.unitGroup!.name,
