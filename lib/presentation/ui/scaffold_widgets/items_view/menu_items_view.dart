@@ -41,7 +41,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -77,15 +77,21 @@ class ConvertouchMenuItemsView extends StatelessWidget {
 
             switch (itemsViewMode) {
               case ItemsViewMode.grid:
-                return GridView.builder(
-                  itemCount: items.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: itemsSpacing,
-                    crossAxisSpacing: itemsSpacing,
-                  ),
+                return Padding(
                   padding: EdgeInsets.all(itemsSpacing),
-                  itemBuilder: itemBuilder,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverGrid.builder(
+                        itemCount: items.length,
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: ConvertouchMenuItem.gridItemWidth,
+                          mainAxisSpacing: itemsSpacing,
+                          crossAxisSpacing: itemsSpacing,
+                        ),
+                        itemBuilder: itemBuilder,
+                      ),
+                    ],
+                  ),
                 );
               case ItemsViewMode.list:
                 return ListView.separated(

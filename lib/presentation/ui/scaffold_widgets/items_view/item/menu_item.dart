@@ -10,11 +10,17 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem extends StatelessWidget {
+  static const double gridItemWidth = 80;
+  static const double gridItemHeight = 80;
+  static const double listItemHeight = 50;
+
   final IdNameItemModel item;
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final void Function()? onTapForRemoval;
+  final double? width;
+  final double? height;
   final bool marked;
   final bool selected;
   final bool removalMode;
@@ -32,6 +38,8 @@ class ConvertouchMenuItem extends StatelessWidget {
     this.selected = false,
     this.removalMode = false,
     this.markedForRemoval = false,
+    this.width,
+    this.height,
     required this.theme,
     this.customColors,
     super.key,
@@ -126,11 +134,14 @@ class ConvertouchMenuItem extends StatelessWidget {
                 markedForConversion: selected,
                 logo: itemLogo,
                 color: itemColorSet,
+                width: width ?? gridItemWidth,
+                height: height ?? gridItemHeight,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
                 item,
                 itemName: itemName,
+                height: height ?? listItemHeight,
                 removalMode: removalMode,
                 selectedForRemoval: markedForRemoval,
                 selectedForConversion: selected,
@@ -149,7 +160,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final String itemName;
   final bool removalMode;
   final Widget logo;
-  final double itemContainerHeight;
+  final double height;
   final bool selectedForRemoval;
   final bool selectedForConversion;
   final BaseColorSet color;
@@ -159,7 +170,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
     required this.itemName,
     required this.removalMode,
     required this.logo,
-    this.itemContainerHeight = 50,
+    this.height = 50,
     required this.color,
     this.selectedForRemoval = false,
     this.selectedForConversion = false,
@@ -169,7 +180,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: itemContainerHeight,
+      height: height,
       child: Row(
         children: [
           Expanded(
@@ -250,6 +261,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final Widget logo;
   final bool markedForRemoval;
   final bool markedForConversion;
+  final double width;
+  final double height;
   final BaseColorSet color;
 
   const ConvertouchMenuGridItem(
@@ -260,12 +273,16 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.color,
     this.markedForRemoval = false,
     this.markedForConversion = false,
+    required this.width,
+    required this.height,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: color.background,
         borderRadius: BorderRadius.circular(7),
