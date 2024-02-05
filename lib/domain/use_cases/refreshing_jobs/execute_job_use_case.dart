@@ -59,6 +59,7 @@ class ExecuteJobUseCase
             jobProgressController.add(const RefreshingJobResultModel.start());
           } else {
             log("On start: stream controller is already closed");
+            return null;
           }
 
           final refreshedData = ObjectUtils.tryGet(
@@ -86,14 +87,15 @@ class ExecuteJobUseCase
           if (!jobProgressController.isClosed) {
             log("Add finish result to the stream");
             jobProgressController.add(
-              RefreshingJobResultModel.finish(
-                rebuiltConversion: rebuiltConversion,
-              ),
+              const RefreshingJobResultModel.finish(),
             );
           } else {
             log("At finish: stream controller is already closed");
           }
+
+          return rebuiltConversion;
         },
+        onComplete: input.onJobComplete,
       );
 
       return Right(
@@ -116,17 +118,18 @@ class ExecuteJobUseCase
   }
 
   StreamController<RefreshingJobResultModel> createJobProgressStream({
-    required Future<void> Function(StreamController<RefreshingJobResultModel>)
-        jobFunc,
+    required JobProcessFunction jobFunc,
+    void Function(OutputConversionModel?)? onComplete,
   }) {
     late final BehaviorSubject<RefreshingJobResultModel> jobProgressController;
     jobProgressController = BehaviorSubject<RefreshingJobResultModel>(
       onListen: () async {
         try {
-          await jobFunc.call(jobProgressController).whenComplete(() {
+          await jobFunc.call(jobProgressController).then((rebuiltConversion) {
             if (!jobProgressController.isClosed) {
-              log("Closing the stream after when job completed");
+              log("Closing the stream once job has been completed");
               jobProgressController.close();
+              onComplete?.call(rebuiltConversion);
             } else {
               log("After finish: stream controller is already closed");
             }
@@ -141,3 +144,6 @@ class ExecuteJobUseCase
     return jobProgressController;
   }
 }
+
+typedef JobProcessFunction = Future<OutputConversionModel?> Function(
+    StreamController<RefreshingJobResultModel>);

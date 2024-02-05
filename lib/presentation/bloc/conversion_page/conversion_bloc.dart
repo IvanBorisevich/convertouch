@@ -51,9 +51,6 @@ class ConversionBloc
     } else {
       await saveConversionUseCase.execute(conversionResult.right);
 
-      RefreshingJobModel? jobOfConversion = RefreshingJobModel.fromJson(
-          refreshingJobsMap[event.conversionParams.unitGroup]);
-
       if (event.runtimeType != RebuildConversionOnValueChange &&
           conversionResult.right.emptyConversionItemsExist) {
         emit(
@@ -68,7 +65,6 @@ class ConversionBloc
           conversion: conversionResult.right,
           showRefreshButton: conversionResult.right.unitGroup != null &&
               conversionResult.right.unitGroup!.refreshable,
-          job: jobOfConversion,
         ),
       );
     }
@@ -93,7 +89,6 @@ class ConversionBloc
       ConversionBuilt(
         conversion: event.newConversion,
         showRefreshButton: true,
-        job: event.job,
       ),
     );
   }
@@ -142,7 +137,6 @@ class ConversionBloc
           conversion: result.right,
           showRefreshButton: result.right.unitGroup?.refreshable == true &&
               jobOfConversion != null,
-          job: jobOfConversion,
         ),
       );
     }

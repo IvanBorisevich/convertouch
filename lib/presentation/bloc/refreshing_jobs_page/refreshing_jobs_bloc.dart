@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
@@ -112,6 +114,15 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
       InputExecuteJobModel(
         job: job,
         conversionToBeRebuilt: event.conversionToBeRebuilt,
+        onJobComplete: (rebuiltConversion) {
+          log("onJobComplete callback func");
+          add(
+            FinishJob(
+              unitGroupName: event.unitGroupName,
+              rebuiltConversion: rebuiltConversion,
+            ),
+          );
+        },
       ),
     );
 
@@ -138,7 +149,9 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
       }
     } else {
       refreshingJobs.update(
-          event.unitGroupName, (value) => startedJobResult.right);
+        event.unitGroupName,
+        (value) => startedJobResult.right,
+      );
 
       emit(
         RefreshingJobsFetched(
@@ -202,6 +215,7 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
     emit(
       RefreshingJobsFetched(
         jobs: refreshingJobs,
+        rebuiltConversion: event.rebuiltConversion,
       ),
     );
   }

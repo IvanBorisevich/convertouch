@@ -95,13 +95,17 @@ class StopJob extends SingleJobEvent {
 }
 
 class FinishJob extends SingleJobEvent {
+  final OutputConversionModel? rebuiltConversion;
+
   const FinishJob({
     required super.unitGroupName,
+    this.rebuiltConversion,
   });
 
   @override
   String toString() {
     return 'FinishJob{'
-        'unitGroupName: $unitGroupName}';
+        'unitGroupName: $unitGroupName,'
+        'rebuiltConversion: $rebuiltConversion}';
   }
 }

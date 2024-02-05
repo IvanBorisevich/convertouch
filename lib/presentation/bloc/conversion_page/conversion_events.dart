@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -19,8 +18,8 @@ class BuildConversion extends ConversionEvent {
 
   @override
   List<Object?> get props => [
-    conversionParams,
-  ];
+        conversionParams,
+      ];
 
   @override
   String toString() {
@@ -47,10 +46,10 @@ class RebuildConversionAfterUnitReplacement extends BuildConversion {
 
   @override
   List<Object?> get props => [
-    newUnit,
-    oldUnit,
-    super.props,
-  ];
+        newUnit,
+        oldUnit,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -63,24 +62,20 @@ class RebuildConversionAfterUnitReplacement extends BuildConversion {
 
 class ShowNewConversionAfterRefresh extends ConversionEvent {
   final OutputConversionModel newConversion;
-  final RefreshingJobModel job;
 
   const ShowNewConversionAfterRefresh({
     required this.newConversion,
-    required this.job,
   });
 
   @override
   List<Object?> get props => [
     newConversion,
-    job,
   ];
 
   @override
   String toString() {
     return 'ShowNewConversionAfterRefresh{'
-        'newConversion: $newConversion, '
-        'jobOfConversion: $job}';
+        'newConversion: $newConversion}';
   }
 }
 

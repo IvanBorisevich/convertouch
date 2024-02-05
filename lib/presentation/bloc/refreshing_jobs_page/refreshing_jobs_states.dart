@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class RefreshingJobsState extends ConvertouchState {
@@ -7,24 +8,24 @@ abstract class RefreshingJobsState extends ConvertouchState {
 
 class RefreshingJobsFetched extends RefreshingJobsState {
   final Map<String, RefreshingJobModel> jobs;
-  final List<String> namesOfRefreshedGroups;
+  final OutputConversionModel? rebuiltConversion;
 
   const RefreshingJobsFetched({
     required this.jobs,
-    this.namesOfRefreshedGroups = const [],
+    this.rebuiltConversion,
   });
 
   @override
   List<Object?> get props => [
     jobs.entries,
-    namesOfRefreshedGroups,
+    rebuiltConversion,
   ];
 
   @override
   String toString() {
     return 'RefreshingJobsFetched{'
         'items: $jobs, '
-        'namesOfRefreshedGroups: $namesOfRefreshedGroups}';
+        'rebuiltConversion: $rebuiltConversion}';
   }
 }
 
@@ -34,7 +35,6 @@ class RefreshingJobDetailsOpened extends RefreshingJobsFetched {
   const RefreshingJobDetailsOpened({
     required this.openedJob,
     required super.jobs,
-    super.namesOfRefreshedGroups,
   });
 
   @override
