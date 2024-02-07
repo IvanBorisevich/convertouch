@@ -11,15 +11,15 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchUnitGroupCreationPage extends StatefulWidget {
-  const ConvertouchUnitGroupCreationPage({super.key});
+class ConvertouchUnitGroupDetailsPage extends StatefulWidget {
+  const ConvertouchUnitGroupDetailsPage({super.key});
 
   @override
-  State createState() => _ConvertouchUnitGroupCreationPageState();
+  State createState() => _ConvertouchUnitGroupDetailsPageState();
 }
 
-class _ConvertouchUnitGroupCreationPageState
-    extends State<ConvertouchUnitGroupCreationPage> {
+class _ConvertouchUnitGroupDetailsPageState
+    extends State<ConvertouchUnitGroupDetailsPage> {
   late final TextEditingController _controller;
 
   bool _isApplyButtonEnabled = false;

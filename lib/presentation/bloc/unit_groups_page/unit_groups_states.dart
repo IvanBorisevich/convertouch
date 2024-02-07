@@ -92,25 +92,25 @@ class UnitGroupsFetchedForChangeInConversion extends UnitGroupsFetchedForConvers
   }
 }
 
-class UnitGroupsFetchedForUnitCreation extends UnitGroupsFetched {
-  final UnitGroupModel? unitGroupInUnitCreation;
+class UnitGroupsFetchedForUnitDetails extends UnitGroupsFetched {
+  final UnitGroupModel? unitGroupInUnitDetails;
 
-  const UnitGroupsFetchedForUnitCreation({
+  const UnitGroupsFetchedForUnitDetails({
     required super.unitGroups,
-    this.unitGroupInUnitCreation,
+    this.unitGroupInUnitDetails,
     required super.searchString,
   });
 
   @override
   List<Object?> get props => [
-    unitGroupInUnitCreation,
+    unitGroupInUnitDetails,
     super.props,
   ];
 
   @override
   String toString() {
-    return 'UnitGroupsFetchedForUnitCreation{'
-        'unitGroupInUnitCreation: $unitGroupInUnitCreation}';
+    return 'UnitGroupsFetchedForUnitDetails{'
+        'unitGroupInUnitDetails: $unitGroupInUnitDetails}';
   }
 }
 

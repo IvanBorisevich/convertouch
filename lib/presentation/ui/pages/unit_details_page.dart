@@ -1,12 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_creation_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
@@ -15,20 +17,20 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_but
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchUnitCreationPage extends StatefulWidget {
-  const ConvertouchUnitCreationPage({super.key});
+class ConvertouchUnitDetailsPage extends StatefulWidget {
+  const ConvertouchUnitDetailsPage({super.key});
 
   @override
-  State createState() => _ConvertouchUnitCreationPageState();
+  State createState() => _ConvertouchUnitDetailsPageState();
 }
 
-class _ConvertouchUnitCreationPageState
-    extends State<ConvertouchUnitCreationPage> {
+class _ConvertouchUnitDetailsPageState
+    extends State<ConvertouchUnitDetailsPage> {
   final _unitNameFieldController = TextEditingController();
   final _unitCodeFieldController = TextEditingController();
 
@@ -45,18 +47,34 @@ class _ConvertouchUnitCreationPageState
       ButtonColorSet floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
-      return BlocListener<UnitsBloc, UnitsState>(
-        listener: (_, unitsState) {
-          if (unitsState is UnitExists) {
-            showAlertDialog(
-              context,
-              message: "Unit '${unitsState.unitName}' already exist",
-            );
-          } else if (unitsState is UnitsFetched) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: unitCreationBlocBuilder((pageState) {
+      return MultiBlocListener(
+        listeners: [
+          BlocListener<UnitsBloc, UnitsState>(
+            listener: (_, unitsState) {
+              if (unitsState is UnitExists) {
+                showAlertDialog(
+                  context,
+                  message: "Unit '${unitsState.unitName}' already exist",
+                );
+              } else if (unitsState is UnitsFetched) {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+          BlocListener<UnitDetailsBloc, UnitDetailsState>(
+            listener: (_, unitDetailsState) {
+              if (unitDetailsState is UnitDetailsNotificationState) {
+                showSnackBar(
+                  context,
+                  message: unitDetailsState.message,
+                  severity: unitDetailsState.severity,
+                  theme: appState.theme,
+                );
+              }
+            },
+          ),
+        ],
+        child: unitDetailsBlocBuilder((pageState) {
           return ConvertouchPage(
             title: "Add Unit",
             body: SingleChildScrollView(
@@ -64,22 +82,22 @@ class _ConvertouchUnitCreationPageState
                 padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 60),
                 child: Column(
                   children: [
-                    pageState.unitGroup != null
+                    pageState.unitDetails.unitGroup != null
                         ? ConvertouchMenuItem(
-                            pageState.unitGroup!,
+                            pageState.unitDetails.unitGroup!,
                             onTap: () {
                               FocusScope.of(context).unfocus();
-                              BlocProvider.of<UnitGroupsBlocForUnitCreation>(
+                              BlocProvider.of<UnitGroupsBlocForUnitDetails>(
                                 context,
                               ).add(
-                                FetchUnitGroupsForUnitCreation(
-                                  currentUnitGroupInUnitCreation:
-                                      pageState.unitGroup!,
+                                FetchUnitGroupsForUnitDetails(
+                                  currentUnitGroupInUnitDetails:
+                                      pageState.unitDetails.unitGroup!,
                                   searchString: null,
                                 ),
                               );
                               Navigator.of(context).pushNamed(
-                                PageName.unitGroupsPageForUnitCreation.name,
+                                PageName.unitGroupsPageForUnitDetails.name,
                               );
                             },
                             theme: appState.theme,
@@ -98,7 +116,6 @@ class _ConvertouchUnitCreationPageState
                       },
                       theme: appState.theme,
                     ),
-                    const SizedBox(height: 12),
                     ConvertouchTextBox(
                       label: 'Unit Code',
                       controller: _unitCodeFieldController,
@@ -112,8 +129,7 @@ class _ConvertouchUnitCreationPageState
                       hintText: _unitCodeHint,
                       theme: appState.theme,
                     ),
-                    const SizedBox(height: 25),
-                    pageState.baseUnit != null
+                    pageState.unitDetails.argumentUnit != null
                         ? Column(
                             children: [
                               ConvertouchFadeScaleAnimation(
@@ -135,7 +151,8 @@ class _ConvertouchUnitCreationPageState
                                       code: _unitCode.isNotEmpty
                                           ? _unitCode
                                           : _unitCodeHint,
-                                      unitGroupId: pageState.unitGroup!.id!,
+                                      unitGroupId:
+                                          pageState.unitDetails.unitGroup!.id!,
                                     ),
                                     strValue: _newUnitValue,
                                   ),
@@ -153,7 +170,7 @@ class _ConvertouchUnitCreationPageState
                                 reverse: !_unitName.isNotEmpty,
                                 child: ConvertouchConversionItem(
                                   ConversionItemModel.fromStrValue(
-                                    unit: pageState.baseUnit!,
+                                    unit: pageState.unitDetails.argumentUnit!,
                                     strValue: _baseUnitValue,
                                   ),
                                   onValueChanged: (value) {
@@ -162,18 +179,19 @@ class _ConvertouchUnitCreationPageState
                                     });
                                   },
                                   onTap: () {
-                                    BlocProvider.of<UnitsBlocForUnitCreation>(
+                                    BlocProvider.of<UnitsBlocForUnitDetails>(
                                       context,
                                     ).add(
-                                      FetchUnitsForUnitCreation(
-                                        unitGroup: pageState.unitGroup!,
+                                      FetchUnitsForUnitDetails(
+                                        unitGroup:
+                                            pageState.unitDetails.unitGroup!,
                                         currentSelectedBaseUnit:
-                                            pageState.baseUnit,
+                                            pageState.unitDetails.argumentUnit,
                                         searchString: null,
                                       ),
                                     );
                                     Navigator.of(context).pushNamed(
-                                      PageName.unitsPageForUnitCreation.name,
+                                      PageName.unitsPageForUnitDetails.name,
                                     );
                                   },
                                   theme: appState.theme,
@@ -182,10 +200,7 @@ class _ConvertouchUnitCreationPageState
                               const SizedBox(height: 25),
                             ],
                           )
-                        : ConvertouchFadeScaleAnimation(
-                            duration: const Duration(milliseconds: 150),
-                            child: _infoBox(pageState.comment!),
-                          ),
+                        : empty(),
                   ],
                 ),
               ),
@@ -197,14 +212,14 @@ class _ConvertouchUnitCreationPageState
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitsBloc>(context).add(
                   AddUnit(
-                    unitCreationParams: InputUnitCreationModel(
-                      unitGroup: pageState.unitGroup!,
-                      newUnitName: _unitName,
-                      newUnitCode:
+                    unitDetails: UnitDetailsModel(
+                      unitGroup: pageState.unitDetails.unitGroup!,
+                      unitName: _unitName,
+                      unitCode:
                           _unitCode.isNotEmpty ? _unitCode : _unitCodeHint,
-                      newUnitValue: _newUnitValue,
-                      baseUnit: pageState.baseUnit,
-                      baseUnitValue: _baseUnitValue,
+                      unitValue: _newUnitValue,
+                      argumentUnit: pageState.unitDetails.argumentUnit,
+                      argumentUnitValue: _baseUnitValue,
                     ),
                   ),
                 );
@@ -250,56 +265,6 @@ Widget _horizontalDividerWithText(String text, ConvertouchUITheme theme) {
     const SizedBox(width: 7),
     divider(),
   ]);
-}
-
-Widget _infoBox(String comment) {
-  return Container(
-    padding: const EdgeInsetsDirectional.all(10),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: const Color(0xFFE7EFFF),
-    ),
-    child: Column(
-      children: [
-        const Row(
-          children: [
-            Icon(
-              Icons.info_outline,
-              color: Color(0xFF345E85),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: 5,
-              ),
-              child: Center(
-                child: Text(
-                  "Note",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF345E85),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Center(
-          child: Text(
-            comment,
-            style: const TextStyle(
-              color: Color(0xFF426F99),
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
 const int _unitCodeMaxLength = 4;

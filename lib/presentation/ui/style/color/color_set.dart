@@ -22,6 +22,19 @@ class BaseColorSet extends ColorSet {
   });
 }
 
+class SnackBarColorSet extends BaseColorSet {
+  final Color foregroundInfo;
+  final Color foregroundWarning;
+  final Color foregroundError;
+
+  const SnackBarColorSet({
+    super.background,
+    this.foregroundInfo = noColor,
+    this.foregroundWarning = noColor,
+    this.foregroundError = noColor,
+  });
+}
+
 class AppBarColorSet extends BaseColorSet {
   const AppBarColorSet({
     super.background,

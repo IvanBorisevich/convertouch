@@ -105,7 +105,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
               : ConvertouchFloatingActionButton.adding(
                   onClick: () {
                     Navigator.of(context).pushNamed(
-                      PageName.unitGroupCreationPage.name,
+                      PageName.unitGroupDetailsPage.name,
                     );
                   },
                   visible: true,

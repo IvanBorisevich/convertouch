@@ -4,23 +4,23 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_event
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitGroupsBlocForUnitCreation
+class UnitGroupsBlocForUnitDetails
     extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
 
-  UnitGroupsBlocForUnitCreation({
+  UnitGroupsBlocForUnitDetails({
     required this.fetchUnitGroupsUseCase,
   }) : super(
-          const UnitGroupsFetchedForUnitCreation(
+          const UnitGroupsFetchedForUnitDetails(
             unitGroups: [],
             searchString: null,
           ),
         ) {
-    on<FetchUnitGroupsForUnitCreation>(_onUnitGroupsFetchForUnitCreation);
+    on<FetchUnitGroupsForUnitDetails>(_onUnitGroupsFetchForUnitDetails);
   }
 
-  _onUnitGroupsFetchForUnitCreation(
-    FetchUnitGroupsForUnitCreation event,
+  _onUnitGroupsFetchForUnitDetails(
+    FetchUnitGroupsForUnitDetails event,
     Emitter<UnitGroupsState> emit,
   ) async {
     final result = await fetchUnitGroupsUseCase.execute(event.searchString);
@@ -34,9 +34,9 @@ class UnitGroupsBlocForUnitCreation
       );
     } else {
       emit(
-        UnitGroupsFetchedForUnitCreation(
+        UnitGroupsFetchedForUnitDetails(
           unitGroups: result.right,
-          unitGroupInUnitCreation: event.currentUnitGroupInUnitCreation,
+          unitGroupInUnitDetails: event.currentUnitGroupInUnitDetails,
           searchString: event.searchString,
         ),
       );

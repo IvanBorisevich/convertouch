@@ -6,15 +6,15 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_creation_page/unit_creation_states.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_creation.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/error_page.dart';
@@ -55,18 +55,18 @@ const unitGroupsBlocBuilderForConversion = blocBuilderWrap<
     UnitGroupsBlocForConversion,
     UnitGroupsState,
     UnitGroupsFetchedForConversion>;
-const unitGroupsBlocBuilderForUnitCreation = blocBuilderWrap<
-    UnitGroupsBlocForUnitCreation,
+const unitGroupsBlocBuilderForUnitDetails = blocBuilderWrap<
+    UnitGroupsBlocForUnitDetails,
     UnitGroupsState,
-    UnitGroupsFetchedForUnitCreation>;
+    UnitGroupsFetchedForUnitDetails>;
 
 const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
 const unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
     UnitsState, UnitsFetchedForConversion>;
-const unitsBlocBuilderForUnitCreation = blocBuilderWrap<
-    UnitsBlocForUnitCreation, UnitsState, UnitsFetchedForUnitCreation>;
-const unitCreationBlocBuilder =
-    blocBuilderWrap<UnitCreationBloc, UnitCreationState, UnitCreationPrepared>;
+const unitsBlocBuilderForUnitDetails = blocBuilderWrap<
+    UnitsBlocForUnitDetails, UnitsState, UnitsFetchedForUnitDetails>;
+const unitDetailsBlocBuilder =
+    blocBuilderWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
 
 const conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;

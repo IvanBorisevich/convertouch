@@ -26,13 +26,16 @@ abstract class ConvertouchErrorState extends ConvertouchState {
 
 abstract class ConvertouchNotificationState extends ConvertouchState {
   final String message;
+  final ExceptionSeverity severity;
 
   const ConvertouchNotificationState({
     required this.message,
+    this.severity = ExceptionSeverity.info,
   });
 
   @override
   List<Object?> get props => [
     message,
+    severity,
   ];
 }

@@ -96,7 +96,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
   ) async {
     emit(const UnitsFetching());
     final addUnitResult = await addUnitUseCase.execute(
-      event.unitCreationParams,
+      event.unitDetails,
     );
 
     if (addUnitResult.isLeft) {
@@ -112,7 +112,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
       if (addedUnitId != -1) {
         add(
           FetchUnits(
-            unitGroup: event.unitCreationParams.unitGroup,
+            unitGroup: event.unitDetails.unitGroup!,
             searchString: null,
             addedId: addedUnitId,
           ),
@@ -120,7 +120,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
       } else {
         emit(
           UnitExists(
-            unitName: event.unitCreationParams.newUnitName,
+            unitName: event.unitDetails.unitName,
           ),
         );
       }

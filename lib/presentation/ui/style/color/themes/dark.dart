@@ -18,9 +18,11 @@ const pageColorSchemeDark = PageColorScheme(
     background: Color(0xFF373F4B),
     foreground: Color(0xFFCCD7E0),
   ),
-  snackBar: BaseColorSet(
+  snackBar: SnackBarColorSet(
     background: Color(0xFF535E6E),
-    foreground: Color(0xFFE1E5E7),
+    foregroundInfo: Color(0xFF6FA4DA),
+    foregroundWarning: Color(0xFFE6F391),
+    foregroundError: Color(0xFFF58C8C),
   ),
   bottomBar: ColorStateVariation(
     regular: AppBarColorSet(

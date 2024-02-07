@@ -1,8 +1,8 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_creation_model.dart';
-import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/unit_details_model.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitsEvent extends ConvertouchEvent {
   const UnitsEvent();
@@ -23,11 +23,11 @@ class FetchUnits extends UnitsEvent {
 
   @override
   List<Object?> get props => [
-    unitGroup,
-    searchString,
-    removedIds,
-    addedId,
-  ];
+        unitGroup,
+        searchString,
+        removedIds,
+        addedId,
+      ];
 
   @override
   String toString() {
@@ -52,11 +52,11 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
 
   @override
   List<Object?> get props => [
-    unitNewlyMarkedForConversion,
-    unitsAlreadyMarkedForConversion,
-    currentSourceConversionItem,
-    super.props,
-  ];
+        unitNewlyMarkedForConversion,
+        unitsAlreadyMarkedForConversion,
+        currentSourceConversionItem,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -83,11 +83,11 @@ class FetchUnitsForChangeInConversion extends FetchUnits {
 
   @override
   List<Object?> get props => [
-    currentSelectedUnit,
-    unitsInConversion,
-    currentSourceConversionItem,
-    super.props,
-  ];
+        currentSelectedUnit,
+        unitsInConversion,
+        currentSourceConversionItem,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -98,10 +98,10 @@ class FetchUnitsForChangeInConversion extends FetchUnits {
   }
 }
 
-class FetchUnitsForUnitCreation extends FetchUnits {
+class FetchUnitsForUnitDetails extends FetchUnits {
   final UnitModel? currentSelectedBaseUnit;
 
-  const FetchUnitsForUnitCreation({
+  const FetchUnitsForUnitDetails({
     required super.unitGroup,
     required this.currentSelectedBaseUnit,
     required super.searchString,
@@ -109,13 +109,13 @@ class FetchUnitsForUnitCreation extends FetchUnits {
 
   @override
   List<Object?> get props => [
-    currentSelectedBaseUnit,
-    super.props,
-  ];
+        currentSelectedBaseUnit,
+        super.props,
+      ];
 
   @override
   String toString() {
-    return 'FetchUnitsForUnitCreation{'
+    return 'FetchUnitsForUnitDetails{'
         'currentSelectedBaseUnit: $currentSelectedBaseUnit,'
         '${super.toString()}}';
   }
@@ -134,10 +134,10 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
 
   @override
   List<Object?> get props => [
-    alreadyMarkedIds,
-    newMarkedId,
-    super.props,
-  ];
+        alreadyMarkedIds,
+        newMarkedId,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -148,21 +148,21 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
 }
 
 class AddUnit extends UnitsEvent {
-  final InputUnitCreationModel unitCreationParams;
+  final UnitDetailsModel unitDetails;
 
   const AddUnit({
-    required this.unitCreationParams,
+    required this.unitDetails,
   });
 
   @override
   List<Object?> get props => [
-    unitCreationParams,
-  ];
+        unitDetails,
+      ];
 
   @override
   String toString() {
     return 'AddUnit{'
-        'unitCreationParams: $unitCreationParams}';
+        'unitDetails: $unitDetails}';
   }
 }
 
@@ -177,9 +177,9 @@ class RemoveUnits extends UnitsEvent {
 
   @override
   List<Object?> get props => [
-    ids,
-    unitGroup,
-  ];
+        ids,
+        unitGroup,
+      ];
 
   @override
   String toString() {
@@ -198,8 +198,8 @@ class DisableUnitsRemovalMode extends UnitsEvent {
 
   @override
   List<Object?> get props => [
-    unitGroup,
-  ];
+        unitGroup,
+      ];
 
   @override
   String toString() {

@@ -138,10 +138,10 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
   }
 }
 
-class UnitsFetchedForUnitCreation extends UnitsFetched {
+class UnitsFetchedForUnitDetails extends UnitsFetched {
   final UnitModel? currentSelectedBaseUnit;
 
-  const UnitsFetchedForUnitCreation({
+  const UnitsFetchedForUnitDetails({
     required super.units,
     required super.unitGroup,
     required this.currentSelectedBaseUnit,
@@ -156,7 +156,7 @@ class UnitsFetchedForUnitCreation extends UnitsFetched {
 
   @override
   String toString() {
-    return 'UnitsFetchedForUnitCreation{'
+    return 'UnitsFetchedForUnitDetails{'
         'currentSelectedBaseUnit: $currentSelectedBaseUnit}';
   }
 }

@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/color_set.dart';
@@ -111,19 +112,39 @@ void showAlertDialog(
 void showSnackBar(
   BuildContext context, {
   required String message,
-  required BaseColorSet colorSet,
+  required ExceptionSeverity severity,
+  required ConvertouchUITheme theme,
+  int durationInSec = 2,
 }) {
+  SnackBarColorSet snackBarColorSet = pageColors[theme]!.snackBar;
+
+  Color foreground;
+
+  switch (severity) {
+    case ExceptionSeverity.warning:
+      foreground = snackBarColorSet.foregroundWarning;
+      break;
+    case ExceptionSeverity.error:
+      foreground = snackBarColorSet.foregroundError;
+      break;
+    case ExceptionSeverity.info:
+      foreground = snackBarColorSet.foregroundInfo;
+      break;
+  }
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       showCloseIcon: true,
-      closeIconColor: colorSet.foreground,
-      backgroundColor: colorSet.background,
+      closeIconColor: foreground,
+      backgroundColor: snackBarColorSet.background,
+      duration: Duration(seconds: durationInSec),
       content: Center(
         child: Text(
           message,
           style: TextStyle(
-            color: colorSet.foreground,
+            color: foreground,
             fontFamily: quicksandFontFamily,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

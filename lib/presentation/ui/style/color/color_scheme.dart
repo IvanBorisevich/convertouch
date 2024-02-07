@@ -10,7 +10,7 @@ class PageColorScheme extends ColorScheme {
   final ColorStateVariation<AppBarColorSet> appBar;
   final BaseColorSet page;
   final ColorStateVariation<AppBarColorSet> bottomBar;
-  final BaseColorSet snackBar;
+  final SnackBarColorSet snackBar;
 
   const PageColorScheme({
     required this.appBar,

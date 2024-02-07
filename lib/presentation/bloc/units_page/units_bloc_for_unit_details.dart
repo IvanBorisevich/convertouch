@@ -5,17 +5,17 @@ import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitsBlocForUnitCreation extends ConvertouchBloc<UnitsEvent, UnitsState> {
+class UnitsBlocForUnitDetails extends ConvertouchBloc<UnitsEvent, UnitsState> {
   final FetchUnitsUseCase fetchUnitsUseCase;
 
-  UnitsBlocForUnitCreation({
+  UnitsBlocForUnitDetails({
     required this.fetchUnitsUseCase,
   }) : super(const UnitsInitialState()) {
-    on<FetchUnitsForUnitCreation>(_onUnitsFetchForUnitCreation);
+    on<FetchUnitsForUnitDetails>(_onUnitsFetchForUnitDetails);
   }
 
-  _onUnitsFetchForUnitCreation(
-    FetchUnitsForUnitCreation event,
+  _onUnitsFetchForUnitDetails(
+    FetchUnitsForUnitDetails event,
     Emitter<UnitsState> emit,
   ) async {
     emit(const UnitsFetching());
@@ -36,7 +36,7 @@ class UnitsBlocForUnitCreation extends ConvertouchBloc<UnitsEvent, UnitsState> {
       );
     } else {
       emit(
-        UnitsFetchedForUnitCreation(
+        UnitsFetchedForUnitDetails(
           units: result.right,
           unitGroup: event.unitGroup,
           currentSelectedBaseUnit: event.currentSelectedBaseUnit,

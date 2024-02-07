@@ -22,7 +22,6 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversi
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -37,8 +36,6 @@ class ConvertouchConversionPage extends StatelessWidget {
     return appBlocBuilder((appState) {
       ButtonColorSet floatingButtonColor =
           conversionPageFloatingButtonColors[appState.theme]!;
-
-      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       ColorStateVariation<BaseColorSet> unitGroupInAppBarColor =
           unitGroupItemInAppBarColors[appState.theme]!;
@@ -99,7 +96,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                   showSnackBar(
                     context,
                     message: state.message,
-                    colorSet: pageColorScheme.snackBar,
+                    severity: state.severity,
+                    theme: appState.theme,
                   );
                 }
               },
@@ -110,7 +108,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                   showSnackBar(
                     context,
                     message: state.message,
-                    colorSet: pageColorScheme.snackBar,
+                    severity: state.severity,
+                    theme: appState.theme,
                   );
                 }
               },
