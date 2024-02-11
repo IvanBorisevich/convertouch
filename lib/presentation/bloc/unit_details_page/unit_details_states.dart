@@ -11,14 +11,16 @@ class UnitDetailsReady extends UnitDetailsState {
   final UnitDetailsModel savedDetails;
   final UnitModel? unitToBeSaved;
   final bool editMode;
-  final bool showConversionRule;
+  final bool conversionRuleVisible;
+  final bool conversionRuleEnabled;
 
   const UnitDetailsReady({
     required this.draftDetails,
     required this.savedDetails,
     this.unitToBeSaved,
     required this.editMode,
-    required this.showConversionRule,
+    required this.conversionRuleVisible,
+    required this.conversionRuleEnabled,
   });
 
   @override
@@ -27,7 +29,8 @@ class UnitDetailsReady extends UnitDetailsState {
         savedDetails,
         unitToBeSaved,
         editMode,
-        showConversionRule,
+        conversionRuleVisible,
+        conversionRuleEnabled,
       ];
 
   @override

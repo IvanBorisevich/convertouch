@@ -5,6 +5,9 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_unit_details_use_case.dart';
 import 'package:either_dart/either.dart';
 
+
+// TODO: refactor
+
 class PrepareSavedUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
   const PrepareSavedUnitDetailsUseCase({
     required super.unitRepository,

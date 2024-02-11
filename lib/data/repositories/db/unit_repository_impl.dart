@@ -166,4 +166,18 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     }
   }
+
+  @override
+  Future<Either<ConvertouchException, void>> update(UnitModel unit) async {
+    try {
+      await unitDao.update(UnitTranslator.I.fromModel(unit)!);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        DatabaseException(
+          message: "Error when updating the unit with id = ${unit.id}: $e",
+        ),
+      );
+    }
+  }
 }

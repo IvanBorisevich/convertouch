@@ -16,6 +16,7 @@ class SaveUnitUseCase extends UseCase<UnitModel, int> {
     if (input.id == null) {
       return await unitRepository.add(input);
     }
-    return Right(input.id!);  // TODO: add logic to update unit in DB
+    await unitRepository.update(input);
+    return Right(input.id!);
   }
 }

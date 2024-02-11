@@ -22,7 +22,7 @@ class ValueModel extends Equatable {
 
   ValueModel.ofDouble(double? value)
       : this(
-          strValue: value?.toString() ?? "",
+          strValue: NumberValueUtils.formatValue(value),
           scientificValue:
               NumberValueUtils.formatValueInScientificNotation(value),
         );
@@ -39,11 +39,10 @@ class ValueModel extends Equatable {
 
   bool get notEmpty => strValue.isNotEmpty;
 
-
   @override
   List<Object> get props => [
-    strValue,
-  ];
+        strValue,
+      ];
 
   @override
   String toString() {

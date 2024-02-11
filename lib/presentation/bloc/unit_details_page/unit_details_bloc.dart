@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -13,6 +14,8 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_eve
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// TODO: refactor
+
 class UnitDetailsBloc
     extends ConvertouchBloc<UnitDetailsEvent, UnitDetailsState> {
   final PrepareSavedUnitDetailsUseCase prepareSavedUnitDetailsUseCase;
@@ -22,13 +25,14 @@ class UnitDetailsBloc
     required this.prepareSavedUnitDetailsUseCase,
     required this.prepareDraftUnitDetailsUseCase,
   }) : super(
-    const UnitDetailsReady(
-      draftDetails: UnitDetailsModel.empty,
-      savedDetails: UnitDetailsModel.empty,
-      editMode: false,
-      showConversionRule: false,
-    ),
-  ) {
+          const UnitDetailsReady(
+            draftDetails: UnitDetailsModel.empty,
+            savedDetails: UnitDetailsModel.empty,
+            editMode: false,
+            conversionRuleVisible: false,
+            conversionRuleEnabled: false,
+          ),
+        ) {
     on<GetNewUnitDetails>(_onNewUnitDetailsGet);
     on<GetExistingUnitDetails>(_onExistingUnitDetailsGet);
     on<ChangeGroupInUnitDetails>(_onUnitGroupChange);
@@ -39,8 +43,10 @@ class UnitDetailsBloc
     on<UpdateArgumentUnitValueInUnitDetails>(_onArgumentUnitValueUpdate);
   }
 
-  _onNewUnitDetailsGet(GetNewUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onNewUnitDetailsGet(
+    GetNewUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     await _onUnitDetailsGet(
       unitGroup: event.unitGroup,
       existingUnit: null,
@@ -48,8 +54,10 @@ class UnitDetailsBloc
     );
   }
 
-  _onExistingUnitDetailsGet(GetExistingUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onExistingUnitDetailsGet(
+    GetExistingUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     await _onUnitDetailsGet(
       unitGroup: event.unitGroup,
       existingUnit: event.unit,
@@ -57,8 +65,10 @@ class UnitDetailsBloc
     );
   }
 
-  _onUnitGroupChange(ChangeGroupInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onUnitGroupChange(
+    ChangeGroupInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
@@ -119,15 +129,20 @@ class UnitDetailsBloc
           editMode: editMode,
         ),
         editMode: editMode,
-        showConversionRule:
-        (!editMode && draftDetails.unit.named || editMode) &&
-            draftDetails.argUnit.notEmpty,
+        conversionRuleVisible:
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                (!editMode && draftDetails.unit.named || editMode) &&
+                draftDetails.argUnit.notEmpty,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  _onArgumentUnitChange(ChangeArgumentUnitInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onArgumentUnitChange(
+    ChangeArgumentUnitInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
@@ -141,7 +156,7 @@ class UnitDetailsBloc
     );
 
     UnitDetailsModel? draftDetails =
-    await _processResult(draftDetailsResult, emit);
+        await _processResult(draftDetailsResult, emit);
 
     if (draftDetails == null) {
       return;
@@ -156,14 +171,18 @@ class UnitDetailsBloc
           savedDetails: currentSavedDetails,
           editMode: editMode,
         ),
-        showConversionRule: true,
+        conversionRuleVisible: true,
         editMode: editMode,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  _onUnitNameUpdate(UpdateUnitNameInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onUnitNameUpdate(
+    UpdateUnitNameInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
@@ -176,9 +195,9 @@ class UnitDetailsBloc
         code: editMode
             ? currentSavedDetails.unit.code
             : UnitUtils.calcInitialUnitCode(
-          event.newValue,
-          unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
-        ),
+                event.newValue,
+                unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
+              ),
       ),
     );
 
@@ -200,15 +219,21 @@ class UnitDetailsBloc
           editMode: editMode,
         ),
         editMode: editMode,
-        showConversionRule:
-        (!editMode && draftDetails.unit.named || editMode) &&
-            draftDetails.argUnit.notEmpty,
+        conversionRuleVisible:
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                (!editMode && draftDetails.unit.named ||
+                    editMode && draftDetails.unit.coefficient != 1) &&
+                draftDetails.argUnit.notEmpty,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  _onUnitCodeUpdate(UpdateUnitCodeInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onUnitCodeUpdate(
+    UpdateUnitCodeInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
@@ -231,16 +256,22 @@ class UnitDetailsBloc
           savedDetails: currentSavedDetails,
           editMode: editMode,
         ),
-        showConversionRule:
-        (!editMode && draftDetails.unit.named || editMode) &&
-            draftDetails.argUnit.notEmpty,
+        conversionRuleVisible:
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                (!editMode && draftDetails.unit.named ||
+                    editMode && draftDetails.unit.coefficient != 1) &&
+                draftDetails.argUnit.notEmpty,
         editMode: editMode,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  _onUnitValueUpdate(UpdateUnitValueInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onUnitValueUpdate(
+    UpdateUnitValueInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
@@ -269,8 +300,8 @@ class UnitDetailsBloc
       currentArgUnitValue = ValueModel.one;
     }
 
-    double newUnitCoefficient = await prepareDraftUnitDetailsUseCase
-        .calculateCurrentUnitCoefficient(
+    double newUnitCoefficient =
+        await prepareDraftUnitDetailsUseCase.calculateCurrentUnitCoefficient(
       currentUnitValue: currentUnitValue,
       argUnit: draftDetails.argUnit,
       argValue: currentArgUnitValue,
@@ -293,14 +324,18 @@ class UnitDetailsBloc
           savedDetails: currentSavedDetails,
           editMode: editMode,
         ),
-        showConversionRule: true,
+        conversionRuleVisible: true,
         editMode: editMode,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  _onArgumentUnitValueUpdate(UpdateArgumentUnitValueInUnitDetails event,
-      Emitter<UnitDetailsState> emit,) async {
+  _onArgumentUnitValueUpdate(
+    UpdateArgumentUnitValueInUnitDetails event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
@@ -329,8 +364,8 @@ class UnitDetailsBloc
       currentArgUnitValue = ValueModel.one;
     }
 
-    double newUnitCoefficient = await prepareDraftUnitDetailsUseCase
-        .calculateCurrentUnitCoefficient(
+    double newUnitCoefficient =
+        await prepareDraftUnitDetailsUseCase.calculateCurrentUnitCoefficient(
       currentUnitValue: currentUnitValue,
       argUnit: draftDetails.argUnit,
       argValue: currentArgUnitValue,
@@ -353,14 +388,18 @@ class UnitDetailsBloc
           savedDetails: currentSavedDetails,
           editMode: editMode,
         ),
-        showConversionRule: true,
+        conversionRuleVisible: true,
         editMode: editMode,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }
 
-  Future<UnitDetailsModel?> _processResult(final result,
-      final emit,) async {
+  Future<UnitDetailsModel?> _processResult(
+    final result,
+    final emit,
+  ) async {
     if (result.isLeft) {
       emit(
         UnitDetailsErrorState(
@@ -369,11 +408,14 @@ class UnitDetailsBloc
         ),
       );
       return null;
-    } else if (result.right.argUnit.empty) {
+    } else if (result.right.unitGroup?.conversionType !=
+            ConversionType.formula &&
+        result.right.argUnit.empty) {
       emit(
         const UnitDetailsNotificationState(
           exception: ConvertouchException(
-            message: "It's a first (base) unit with the coefficient = 1",
+            message: "The Base unit is going to be added. "
+                "Default coefficient is 1",
             severity: ExceptionSeverity.info,
           ),
         ),
@@ -399,9 +441,9 @@ class UnitDetailsBloc
       newUnitCode = editMode
           ? savedDetails.unit.code
           : UnitUtils.calcInitialUnitCode(
-        draftDetails.unit.name,
-        unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
-      );
+              draftDetails.unit.name,
+              unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
+            );
     }
 
     bool groupsDiff = draftDetails.unitGroup != savedDetails.unitGroup;
@@ -477,14 +519,29 @@ class UnitDetailsBloc
       return;
     }
 
+    if (editMode && existingUnit.coefficient == 1) {
+      emit(
+        const UnitDetailsNotificationState(
+          exception: ConvertouchException(
+            message: "It is the Base Unit",
+            severity: ExceptionSeverity.info,
+          ),
+        ),
+      );
+    }
+
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
         savedDetails: savedDetails,
         editMode: editMode,
-        showConversionRule:
-        (!editMode && draftDetails.unit.named || editMode) &&
-            draftDetails.argUnit.notEmpty,
+        conversionRuleVisible:
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                (!editMode && draftDetails.unit.named ||
+                    editMode && draftDetails.unit.coefficient != 1) &&
+                draftDetails.argUnit.notEmpty,
+        conversionRuleEnabled:
+            draftDetails.unitGroup?.conversionType == ConversionType.static,
       ),
     );
   }

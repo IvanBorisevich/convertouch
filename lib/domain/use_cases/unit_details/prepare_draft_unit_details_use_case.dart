@@ -1,9 +1,12 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_unit_details_use_case.dart';
 import 'package:either_dart/either.dart';
+
+// TODO: refactor
 
 class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
   const PrepareDraftUnitDetailsUseCase({
@@ -23,8 +26,9 @@ class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
         argUnit = await calculateArgUnit(input);
       }
 
-      ValueModel argValue = ValueModel.one;
-      double newCurrentUnitCoefficient = 1;
+      ValueModel argValue = input.unitGroup?.conversionType == ConversionType.static
+          ? ValueModel.one : ValueModel.none;
+      double? newCurrentUnitCoefficient;
 
       if (argUnit.coefficient != null) {
         if (input.argValue.notEmpty) {
@@ -44,6 +48,8 @@ class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
             newCurrentUnitCoefficient = input.unit.coefficient!;
           }
         }
+      } else if (input.unitGroup?.conversionType == ConversionType.static) {
+        newCurrentUnitCoefficient = 1;
       }
 
       return Right(

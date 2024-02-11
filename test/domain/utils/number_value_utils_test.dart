@@ -6,29 +6,27 @@ void main() {
     test('Values with exponent [-7..10] should not be formatted', () {
       expect(
         NumberValueUtils.formatValueInScientificNotation(-1E-7),
-        "-0.0000001",
+        "0",
       );
       expect(NumberValueUtils.formatValueInScientificNotation(-0.000013),
-          "-0.000013");
+          "-0.00001");
       expect(NumberValueUtils.formatValueInScientificNotation(-0.0000323),
-          "-0.0000323");
-      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000001),
-          "-0.0000001");
-      expect(NumberValueUtils.formatValueInScientificNotation(0.0000017),
-          "0.0000017");
-      expect(
-          NumberValueUtils.formatValueInScientificNotation(0.000005), "0.000005");
-      expect(
-          NumberValueUtils.formatValueInScientificNotation(1E10), "10000000000");
+          "-0.00003");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000001), "0");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.0000017), "0");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.000005),
+          "0.00001");
+      expect(NumberValueUtils.formatValueInScientificNotation(1E10),
+          "10000000000");
       expect(NumberValueUtils.formatValueInScientificNotation(1.236236478785),
-          "1.2362364788");
+          "1.23624");
       expect(NumberValueUtils.formatValueInScientificNotation(1236236.478785),
-          "1236236.478785");
+          "1236236.47879");
     });
 
     test('Values with exponent < -7 should be formatted', () {
-      expect(
-          NumberValueUtils.formatValueInScientificNotation(-1E-8), "-10¯\u2078");
+      expect(NumberValueUtils.formatValueInScientificNotation(-1E-8),
+          "-10¯\u2078");
       expect(NumberValueUtils.formatValueInScientificNotation(-0.00000001),
           "-10¯\u2078");
       expect(NumberValueUtils.formatValueInScientificNotation(0.00000003),
@@ -57,20 +55,28 @@ void main() {
     test('Value 1 should not be formatted', () {
       expect(NumberValueUtils.formatValueInScientificNotation(1), "1");
     });
+
+    test('Value null should be formatted to the empty string', () {
+      expect(NumberValueUtils.formatValueInScientificNotation(null), "");
+    });
   });
 
   group("Format to regular string", () {
     test('Fraction digits should be trimmed by default parameter', () {
+      expect(NumberValueUtils.formatValue(0.5674634563478567348577), "0.56746");
       expect(
-          NumberValueUtils.formatValue(0.5674634563478567348577), "0.5674634563");
-      expect(NumberValueUtils.formatValue(56746345631111.000), "56746345631111");
+          NumberValueUtils.formatValue(56746345631111.000), "56746345631111");
       expect(NumberValueUtils.formatValue(1.0), "1");
+    });
+
+    test('Value null should be formatted to the empty string', () {
+      expect(NumberValueUtils.formatValue(null), "");
     });
 
     test('Fraction digits should be trimmed by explicit parameter', () {
       expect(
         NumberValueUtils.formatValue(
-          0.5674634563478567348577,
+          0.56746,
           fractionDigits: 5,
         ),
         "0.56746",
@@ -93,6 +99,8 @@ void main() {
         "35",
       );
       expect(NumberValueUtils.formatValue(35.0000000), "35");
+      expect(NumberValueUtils.formatValue(1.056000), "1.056");
+      expect(NumberValueUtils.formatValue(1.0), "1");
     });
   });
 }

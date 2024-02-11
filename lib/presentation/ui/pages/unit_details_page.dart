@@ -75,7 +75,10 @@ class _ConvertouchUnitDetailsPageState
                 padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 60),
                 child: Column(
                   children: [
-                    pageState.draftDetails.unitGroup != null
+                    (pageState.draftDetails.unit.coefficient != 1 &&
+                                    pageState.editMode ||
+                                !pageState.editMode) &&
+                            pageState.draftDetails.unitGroup != null
                         ? ConvertouchMenuItem(
                             pageState.draftDetails.unitGroup!,
                             onTap: () {
@@ -127,7 +130,7 @@ class _ConvertouchUnitDetailsPageState
                       theme: appState.theme,
                     ),
                     Visibility(
-                      visible: pageState.showConversionRule,
+                      visible: pageState.conversionRuleVisible,
                       child: Column(
                         children: [
                           _horizontalDividerWithText(
@@ -149,6 +152,7 @@ class _ConvertouchUnitDetailsPageState
                               value: pageState.draftDetails.value,
                               defaultValue: pageState.savedDetails.value,
                             ),
+                            disabled: !pageState.conversionRuleEnabled,
                             onValueChanged: (value) {
                               BlocProvider.of<UnitDetailsBloc>(context).add(
                                 UpdateUnitValueInUnitDetails(
@@ -165,6 +169,7 @@ class _ConvertouchUnitDetailsPageState
                               value: pageState.draftDetails.argValue,
                               defaultValue: pageState.savedDetails.argValue,
                             ),
+                            disabled: !pageState.conversionRuleEnabled,
                             onValueChanged: (value) {
                               BlocProvider.of<UnitDetailsBloc>(context).add(
                                 UpdateArgumentUnitValueInUnitDetails(
@@ -173,21 +178,24 @@ class _ConvertouchUnitDetailsPageState
                               );
                             },
                             onTap: () {
-                              BlocProvider.of<UnitsBlocForUnitDetails>(
-                                context,
-                              ).add(
-                                FetchUnitsForUnitDetails(
-                                  unitGroup: pageState.draftDetails.unitGroup!,
-                                  selectedArgUnit:
-                                      pageState.draftDetails.argUnit,
-                                  currentEditedUnit:
-                                      pageState.draftDetails.unit,
-                                  searchString: null,
-                                ),
-                              );
-                              Navigator.of(context).pushNamed(
-                                PageName.unitsPageForUnitDetails.name,
-                              );
+                              if (pageState.conversionRuleEnabled) {
+                                BlocProvider.of<UnitsBlocForUnitDetails>(
+                                  context,
+                                ).add(
+                                  FetchUnitsForUnitDetails(
+                                    unitGroup:
+                                        pageState.draftDetails.unitGroup!,
+                                    selectedArgUnit:
+                                        pageState.draftDetails.argUnit,
+                                    currentEditedUnit:
+                                        pageState.draftDetails.unit,
+                                    searchString: null,
+                                  ),
+                                );
+                                Navigator.of(context).pushNamed(
+                                  PageName.unitsPageForUnitDetails.name,
+                                );
+                              }
                             },
                             theme: appState.theme,
                           ),

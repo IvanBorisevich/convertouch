@@ -33,9 +33,9 @@ class ConversionItemModel extends ItemModel {
           defaultValue: ValueModel.one,
         );
 
-  bool get notEmpty => value.notEmpty || defaultValue.notEmpty;
+  bool get empty => value.empty && defaultValue.empty;
 
-  bool get empty => !notEmpty;
+  bool get notEmpty => !empty;
 
   @override
   List<Object?> get props => [
@@ -48,6 +48,7 @@ class ConversionItemModel extends ItemModel {
   @override
   String toString() {
     return 'ConversionItemModel{'
+        'unit id: ${unit.id}, '
         'name: ${unit.name}, '
         'coefficient: ${unit.coefficient}, '
         'value: $value, '

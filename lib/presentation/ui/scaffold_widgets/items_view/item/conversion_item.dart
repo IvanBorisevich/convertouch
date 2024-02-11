@@ -10,6 +10,7 @@ class ConvertouchConversionItem extends StatefulWidget {
   final ConversionItemModel item;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
+  final bool disabled;
   final ConvertouchUITheme theme;
   final ConversionItemColorScheme? customColors;
 
@@ -17,6 +18,7 @@ class ConvertouchConversionItem extends StatefulWidget {
     this.item, {
     this.onTap,
     this.onValueChanged,
+        this.disabled = false,
     required this.theme,
     this.customColors,
     super.key,
@@ -69,7 +71,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
           Expanded(
             child: ConvertouchTextBox(
               controller: _unitValueController,
-              disabled: widget.item.empty,
+              disabled: widget.disabled,
               label: widget.item.unit.name,
               hintText: _isFocused
                   ? widget.item.defaultValue.strValue

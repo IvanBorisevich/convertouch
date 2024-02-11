@@ -1,5 +1,5 @@
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
-const int maxFractionDigits = 10;
+const int maxFractionDigits = 5;
 
 const _exponentSuperscripts = {
   '0': '\u2070',
@@ -42,6 +42,11 @@ class NumberValueUtils {
 
       if (exponentNum >= noFormatExponentMin &&
           exponentNum <= noFormatExponentMax) {
+        if (baseSign == '-' &&
+            baseNum == 1 &&
+            exponentNum.abs() > fractionDigits) {
+          return "0";
+        }
         return formatValue(
           value,
           fractionDigits: fractionDigits,
@@ -78,6 +83,9 @@ class NumberValueUtils {
   }) {
     if (value == null) {
       return "";
+    }
+    if (value == 0 && value.isNegative) {
+      return "0";
     }
     if (fractionDigits < 0) {
       fractionDigits = 0;
