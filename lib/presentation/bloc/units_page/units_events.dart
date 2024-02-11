@@ -11,13 +11,13 @@ class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
   final List<int> removedIds;
-  final int? addedId;
+  final UnitModel? modifiedUnit;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
     this.removedIds = const [],
-    this.addedId,
+    this.modifiedUnit,
   });
 
   @override
@@ -25,7 +25,7 @@ class FetchUnits extends UnitsEvent {
         unitGroup,
         searchString,
         removedIds,
-        addedId,
+        modifiedUnit,
       ];
 
   @override

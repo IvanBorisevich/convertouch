@@ -135,14 +135,20 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, int>> add(UnitModel unit) async {
+  Future<Either<ConvertouchException, UnitModel?>> add(UnitModel unit) async {
     try {
       final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.name);
       if (existingUnit == null) {
-        final result = await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
-        return Right(result);
+        int addedUnitId =
+            await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
+        return Right(
+          UnitModel.coalesce(
+            unit,
+            id: addedUnitId,
+          ),
+        );
       } else {
-        return const Right(-1);
+        return const Right(null);
       }
     } catch (e) {
       return Left(
@@ -168,10 +174,10 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, void>> update(UnitModel unit) async {
+  Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) async {
     try {
       await unitDao.update(UnitTranslator.I.fromModel(unit)!);
-      return const Right(null);
+      return Right(unit);
     } catch (e) {
       return Left(
         DatabaseException(

@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ConversionItemModel extends ItemModel {
   final UnitModel unit;
@@ -31,6 +32,32 @@ class ConversionItemModel extends ItemModel {
           unit: unit,
           value: ValueModel.none,
           defaultValue: ValueModel.one,
+        );
+
+  ConversionItemModel.coalesce(
+    ConversionItemModel? savedModel, {
+    UnitModel? unit,
+    ValueModel? value,
+    ValueModel? defaultValue,
+  }) : this(
+          unit: ObjectUtils.coalesce(
+                what: savedModel?.unit,
+                patchWith: unit,
+              ) ??
+              savedModel?.unit ??
+              UnitModel.none,
+          value: ObjectUtils.coalesce(
+                what: savedModel?.value,
+                patchWith: value,
+              ) ??
+              savedModel?.value ??
+              ValueModel.none,
+          defaultValue: ObjectUtils.coalesce(
+                what: savedModel?.defaultValue,
+                patchWith: defaultValue,
+              ) ??
+              savedModel?.defaultValue ??
+              ValueModel.none,
         );
 
   bool get empty => value.empty && defaultValue.empty;

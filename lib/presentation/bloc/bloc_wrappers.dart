@@ -113,7 +113,8 @@ Widget unitsChangeBlocListenerWrap({
   return BlocListener<UnitsBloc, UnitsState>(
     listener: (_, unitsState) {
       if (unitsState is UnitsFetched &&
-          (unitsState.removedIds.isNotEmpty || unitsState.addedId != null)) {
+          (unitsState.removedIds.isNotEmpty ||
+              unitsState.modifiedUnit != null)) {
         handler?.call(unitsState);
       }
     },

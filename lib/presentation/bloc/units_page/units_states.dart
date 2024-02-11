@@ -32,7 +32,7 @@ class UnitsFetched extends UnitsState {
   final bool removalMode;
   final List<int> markedIdsForRemoval;
   final List<int> removedIds;
-  final int? addedId;
+  final UnitModel? modifiedUnit;
 
   const UnitsFetched({
     this.units = const [],
@@ -41,7 +41,7 @@ class UnitsFetched extends UnitsState {
     this.removalMode = false,
     this.markedIdsForRemoval = const [],
     this.removedIds = const [],
-    this.addedId,
+    this.modifiedUnit,
   });
 
   @override
@@ -52,7 +52,7 @@ class UnitsFetched extends UnitsState {
         removalMode,
         markedIdsForRemoval,
         removedIds,
-        addedId,
+        modifiedUnit,
       ];
 
   @override
@@ -67,12 +67,13 @@ abstract class UnitsFetchedForConversion extends UnitsFetched {
   final List<UnitModel> unitsMarkedForConversion;
   final ConversionItemModel? currentSourceConversionItem;
 
-  const UnitsFetchedForConversion(
-      {required super.units,
-      required super.unitGroup,
-      required this.unitsMarkedForConversion,
-      this.currentSourceConversionItem,
-      required super.searchString});
+  const UnitsFetchedForConversion({
+    required super.units,
+    required super.unitGroup,
+    required this.unitsMarkedForConversion,
+    this.currentSourceConversionItem,
+    required super.searchString,
+  });
 
   @override
   List<Object?> get props => [
@@ -153,7 +154,7 @@ class UnitsFetchedForUnitDetails extends UnitsFetched {
   @override
   List<Object?> get props => [
         selectedArgUnit,
-    currentEditedUnit,
+        currentEditedUnit,
         super.props,
       ];
 

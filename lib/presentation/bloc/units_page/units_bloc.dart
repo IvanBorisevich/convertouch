@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
-import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
+import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
@@ -83,7 +84,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
             unitGroup: event.unitGroup,
             searchString: event.searchString,
             removedIds: event.removedIds,
-            addedId: event.addedId,
+            modifiedUnit: event.modifiedUnit,
           ),
         );
       }
@@ -95,24 +96,24 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
     Emitter<UnitsState> emit,
   ) async {
     emit(const UnitsFetching());
-    final addUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
+    final saveUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
 
-    if (addUnitResult.isLeft) {
+    if (saveUnitResult.isLeft) {
       emit(
         UnitsErrorState(
-          exception: addUnitResult.left,
+          exception: saveUnitResult.left,
           lastSuccessfulState: state,
         ),
       );
     } else {
-      int addedUnitId = addUnitResult.right;
+      UnitModel? savedUnit = saveUnitResult.right;
 
-      if (addedUnitId != -1) {
+      if (savedUnit != null) {
         add(
           FetchUnits(
             unitGroup: event.unitGroup,
             searchString: null,
-            addedId: addedUnitId,
+            modifiedUnit: event.unitToBeSaved,
           ),
         );
       } else {

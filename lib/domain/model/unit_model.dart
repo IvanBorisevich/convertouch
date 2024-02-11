@@ -37,13 +37,17 @@ class UnitModel extends IdNameItemModel {
 
   UnitModel.coalesce(
     UnitModel currentModel, {
+    int? id,
     String? name,
     String? code,
     double? coefficient,
     String? symbol,
     int? unitGroupId,
   }) : this(
-          id: currentModel.id,
+          id: ObjectUtils.coalesce(
+            what: currentModel.id,
+            patchWith: id,
+          ),
           name: ObjectUtils.coalesce(
                 what: currentModel.name,
                 patchWith: name,

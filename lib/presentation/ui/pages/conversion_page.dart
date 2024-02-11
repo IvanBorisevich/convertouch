@@ -47,22 +47,39 @@ class ConvertouchConversionPage extends StatelessWidget {
           listeners: [
             BlocListener<UnitsBloc, UnitsState>(
               listener: (_, unitsState) {
-                if (unitsState is UnitsFetched &&
-                    unitsState.removedIds.isNotEmpty &&
-                    unitsState.unitGroup == conversion.unitGroup) {
-                  BlocProvider.of<ConversionBloc>(context).add(
-                    BuildConversion(
-                      conversionParams: InputConversionModel(
-                        unitGroup: unitsState.unitGroup,
-                        sourceConversionItem: conversion.sourceConversionItem,
-                        targetUnits: conversion.targetConversionItems
-                            .map((item) => item.unit)
-                            .whereNot((unit) =>
-                                unitsState.removedIds.contains(unit.id))
-                            .toList(),
+                if (unitsState is UnitsFetched) {
+                  if ((unitsState.removedIds.isNotEmpty ||
+                          unitsState.modifiedUnit != null) &&
+                      unitsState.unitGroup == conversion.unitGroup) {
+                    BlocProvider.of<ConversionBloc>(context).add(
+                      // TODO: move unitsState.modifiedUnit to the conversion bloc
+                      BuildConversion(
+                        conversionParams: InputConversionModel(
+                          unitGroup: unitsState.unitGroup,
+                          sourceConversionItem: unitsState.modifiedUnit !=
+                                      null &&
+                                  conversion.sourceConversionItem?.unit.id ==
+                                      unitsState.modifiedUnit!.id
+                              ? ConversionItemModel.coalesce(
+                                  conversion.sourceConversionItem,
+                                  unit: unitsState.modifiedUnit!,
+                                )
+                              : conversion.sourceConversionItem,
+                          targetUnits: conversion.targetConversionItems
+                              .map(
+                                (item) => unitsState.modifiedUnit != null &&
+                                        item.unit.id ==
+                                            unitsState.modifiedUnit?.id
+                                    ? unitsState.modifiedUnit!
+                                    : item.unit,
+                              )
+                              .whereNot((unit) =>
+                                  unitsState.removedIds.contains(unit.id))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
             ),
