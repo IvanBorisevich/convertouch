@@ -88,23 +88,30 @@ const unitItemColorSchemeLight = ColorStateVariation(
     background: Color(0xFFCCE1FF),
     foreground: Color(0xFF366C9F),
   ),
+  disabled: BaseColorSet(
+    border: Color(0xFFCCE5FF),
+    background: Color(0xFFE9F2FF),
+    foreground: Color(0xFF83B5E5),
+  ),
+);
+
+const textBoxColorLight = ColorStateVariation(
+  regular: TextBoxColorSet(
+    border: Color(0xFF7FA0BE),
+    foreground: Color(0xFF426F99),
+    label: Color(0xFF7FA0BE),
+    hint: Color(0xFFA8C9E7),
+  ),
+  focused: TextBoxColorSet(
+    border: Color(0xFF375067),
+    foreground: Color(0xFF426F99),
+    label: Color(0xFF375067),
+    hint: Color(0xFFA8C9E7),
+  ),
 );
 
 const conversionItemColorSchemeLight = ConversionItemColorScheme(
-  textBox: ColorStateVariation(
-    regular: TextBoxColorSet(
-      border: Color(0xFF7FA0BE),
-      foreground: Color(0xFF426F99),
-      label: Color(0xFF7FA0BE),
-      hint: Color(0xFFA8C9E7),
-    ),
-    focused: TextBoxColorSet(
-      border: Color(0xFF375067),
-      foreground: Color(0xFF426F99),
-      label: Color(0xFF375067),
-      hint: Color(0xFFA8C9E7),
-    ),
-  ),
+  textBox: textBoxColorLight,
   unitButton: ColorStateVariation(
     regular: BaseColorSet(
       border: Color(0xFF7FA0BE),
@@ -151,21 +158,6 @@ const removalFloatingButtonColorLight = ButtonColorSet(
   background: Color(0xFFD36422),
   foreground: Color(0xFFDEE9FF),
   border: Color(0xFFFCFEFF),
-);
-
-const textBoxColorLight = ColorStateVariation(
-  regular: TextBoxColorSet(
-    border: Color(0xFF426F99),
-    foreground: Color(0xFF426F99),
-    label: Color(0xFF426F99),
-    hint: Color(0xFF426F99),
-  ),
-  focused: TextBoxColorSet(
-    border: Color(0xFF426F99),
-    foreground: Color(0xFF426F99),
-    label: Color(0xFF426F99),
-    hint: Color(0xFF426F99),
-  ),
 );
 
 const unitGroupTextBoxColorLight = ColorStateVariation(

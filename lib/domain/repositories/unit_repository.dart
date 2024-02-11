@@ -22,7 +22,7 @@ abstract class UnitRepository {
 
   Future<Either<ConvertouchException, UnitModel?>> get(int id);
 
-  Future<Either<ConvertouchException, UnitModel?>> getBaseUnit(int unitGroupId);
+  Future<Either<ConvertouchException, UnitModel>> getBaseUnit(int unitGroupId);
 
   Future<Either<ConvertouchException, int>> add(UnitModel unit);
 

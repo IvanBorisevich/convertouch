@@ -27,6 +27,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final List<int>? markedUnitIdsForConversion;
   final bool selectedUnitVisible;
   final int? selectedUnitId;
+  final int? disabledUnitId;
   final bool removalModeAllowed;
   final bool removalModeEnabled;
   final Widget? floatingButton;
@@ -47,6 +48,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
     required this.markedUnitIdsForConversion,
     required this.selectedUnitVisible,
     required this.selectedUnitId,
+    required this.disabledUnitId,
     required this.removalModeAllowed,
     required this.removalModeEnabled,
     required this.floatingButton,
@@ -84,6 +86,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
           itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
           showMarkedItems: markedUnitsForConversionVisible,
           selectedItemId: selectedUnitId,
+          disabledItemId: disabledUnitId,
           showSelectedItem: selectedUnitVisible,
           removalModeAllowed: removalModeAllowed,
           removalModeEnabled: removalModeEnabled,

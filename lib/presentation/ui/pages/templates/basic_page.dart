@@ -111,8 +111,7 @@ void showAlertDialog(
 
 void showSnackBar(
   BuildContext context, {
-  required String message,
-  required ExceptionSeverity severity,
+  required ConvertouchException exception,
   required ConvertouchUITheme theme,
   int durationInSec = 2,
 }) {
@@ -120,7 +119,7 @@ void showSnackBar(
 
   Color foreground;
 
-  switch (severity) {
+  switch (exception.severity) {
     case ExceptionSeverity.warning:
       foreground = snackBarColorSet.foregroundWarning;
       break;
@@ -140,7 +139,7 @@ void showSnackBar(
       duration: Duration(seconds: durationInSec),
       content: Center(
         child: Text(
-          message,
+          exception.message,
           style: TextStyle(
             color: foreground,
             fontFamily: quicksandFontFamily,

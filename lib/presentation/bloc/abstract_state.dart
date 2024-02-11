@@ -25,17 +25,20 @@ abstract class ConvertouchErrorState extends ConvertouchState {
 }
 
 abstract class ConvertouchNotificationState extends ConvertouchState {
-  final String message;
-  final ExceptionSeverity severity;
+  final ConvertouchException exception;
 
   const ConvertouchNotificationState({
-    required this.message,
-    this.severity = ExceptionSeverity.info,
+    required this.exception,
   });
 
   @override
   List<Object?> get props => [
-    message,
-    severity,
+    exception,
   ];
+
+  @override
+  String toString() {
+    return 'ConvertouchNotificationState{'
+        'exception: $exception}';
+  }
 }

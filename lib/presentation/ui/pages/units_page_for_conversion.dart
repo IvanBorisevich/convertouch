@@ -152,6 +152,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
               selectedUnitId: pageState is UnitsFetchedForChangeInConversion
                   ? pageState.selectedUnit.id
                   : null,
+              disabledUnitId: null,
               floatingButton: ConvertouchFloatingActionButton(
                 icon: Icons.check_outlined,
                 visible: pageState is UnitsFetchedToMarkForConversion

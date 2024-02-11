@@ -6,7 +6,7 @@ enum ExceptionSeverity {
   info,
 }
 
-abstract class ConvertouchException extends Equatable {
+class ConvertouchException extends Equatable {
   final String message;
   final ExceptionSeverity severity;
 

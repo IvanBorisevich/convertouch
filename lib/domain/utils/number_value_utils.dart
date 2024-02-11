@@ -1,5 +1,3 @@
-import 'package:convertouch/domain/model/value_model.dart';
-
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
 const int maxFractionDigits = 10;
 
@@ -113,16 +111,5 @@ class NumberValueUtils {
     }
 
     return doubleStr.substring(0, index + 1);
-  }
-
-  static ValueModel buildValueModel(double? rawValue) {
-    return ValueModel(
-      strValue: NumberValueUtils.formatValue(
-        rawValue,
-      ),
-      scientificValue: NumberValueUtils.formatValueInScientificNotation(
-        rawValue,
-      ),
-    );
   }
 }

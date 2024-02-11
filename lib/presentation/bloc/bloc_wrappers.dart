@@ -34,9 +34,9 @@ Widget blocBuilderWrap<
     },
     builder: (_, state) {
       if (state is ConvertouchErrorState) {
-        return ConvertouchErrorPage<BlocType, AbstractStateType>(
+        return ConvertouchErrorPage<BlocType, PageStateType>(
           errorState: state,
-          lastSuccessfulState: state.lastSuccessfulState as AbstractStateType,
+          lastSuccessfulState: state.lastSuccessfulState as PageStateType,
         );
       }
       if (state is PageStateType) {
@@ -63,8 +63,8 @@ const unitGroupsBlocBuilderForUnitDetails = blocBuilderWrap<
 const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
 const unitsBlocBuilderForConversion = blocBuilderWrap<UnitsBlocForConversion,
     UnitsState, UnitsFetchedForConversion>;
-const unitsBlocBuilderForUnitDetails = blocBuilderWrap<
-    UnitsBlocForUnitDetails, UnitsState, UnitsFetchedForUnitDetails>;
+const unitsBlocBuilderForUnitDetails = blocBuilderWrap<UnitsBlocForUnitDetails,
+    UnitsState, UnitsFetchedForUnitDetails>;
 const unitDetailsBlocBuilder =
     blocBuilderWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
 
@@ -73,6 +73,38 @@ const conversionBlocBuilder =
 
 const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
+
+BlocListener<BlocType, AbstractStateType> pageListenerWrap<
+    BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
+    AbstractStateType extends ConvertouchState,
+    PageStateType extends AbstractStateType>({
+  required BuildContext context,
+  required Map<dynamic, void Function(AbstractStateType)> handlers,
+  Widget? child,
+}) {
+  return BlocListener<BlocType, AbstractStateType>(
+    listener: (_, state) {
+      // if (state is ConvertouchErrorState) {
+      //   log("Trigger error page");
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => ConvertouchErrorPage<BlocType, PageStateType>(
+      //         errorState: state,
+      //         lastSuccessfulState: state.lastSuccessfulState as PageStateType,
+      //       ),
+      //     ),
+      //   );
+      // } else {
+      handlers[state.runtimeType]?.call(state);
+      // }
+    },
+    child: child,
+  );
+}
+
+const unitDetailsListener =
+    pageListenerWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
 
 Widget unitsChangeBlocListenerWrap({
   required Function(UnitsFetched)? handler,

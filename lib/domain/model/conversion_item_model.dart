@@ -11,7 +11,7 @@ class ConversionItemModel extends ItemModel {
   const ConversionItemModel({
     required this.unit,
     required this.value,
-    this.defaultValue = defaultValueModel,
+    this.defaultValue = ValueModel.one,
   }) : super(
           itemType: ItemType.conversionItem,
         );
@@ -19,43 +19,31 @@ class ConversionItemModel extends ItemModel {
   ConversionItemModel.fromStrValue({
     required UnitModel unit,
     String strValue = "",
-    String defaultValue = "1",
-    String defaultScientificValue = "1",
   }) : this(
           unit: unit,
-          value: ValueModel(
-            strValue: strValue,
-          ),
-          defaultValue: ValueModel(
-            strValue: defaultValue,
-            scientificValue: defaultScientificValue,
-          ),
+          value: ValueModel.ofString(strValue),
+          defaultValue: ValueModel.one,
         );
 
   const ConversionItemModel.fromUnit({
     required UnitModel unit,
   }) : this(
           unit: unit,
-          value: const ValueModel(
-            strValue: "",
-          ),
-          defaultValue: const ValueModel(
-            strValue: "1",
-            scientificValue: "1",
-          ),
+          value: ValueModel.none,
+          defaultValue: ValueModel.one,
         );
 
-  bool hasValue() {
-    return value.hasValue() || defaultValue.hasValue();
-  }
+  bool get notEmpty => value.notEmpty || defaultValue.notEmpty;
+
+  bool get empty => !notEmpty;
 
   @override
   List<Object?> get props => [
-    itemType,
-    unit,
-    value,
-    defaultValue,
-  ];
+        itemType,
+        unit,
+        value,
+        defaultValue,
+      ];
 
   @override
   String toString() {

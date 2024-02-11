@@ -5,11 +5,11 @@ import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/preferences_dao.dart';
 import 'package:convertouch/data/dao/shared_prefs/preferences_dao_impl.dart';
 import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
-import 'package:convertouch/data/repositories/net/network_data_repository_impl.dart';
-import 'package:convertouch/data/repositories/shared_prefs/preferences_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/refreshable_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
+import 'package:convertouch/data/repositories/net/network_data_repository_impl.dart';
+import 'package:convertouch/data/repositories/shared_prefs/preferences_repository_impl.dart';
 import 'package:convertouch/data/translators/refreshable_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
@@ -20,8 +20,8 @@ import 'package:convertouch/domain/repositories/refreshable_value_repository.dar
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
@@ -30,7 +30,8 @@ import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/add_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
-import 'package:convertouch/domain/use_cases/units/prepare_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -93,7 +94,7 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => UnitsBloc(
-      addUnitUseCase: locator(),
+      saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
     ),
@@ -113,8 +114,8 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => UnitDetailsBloc(
-      addUnitUseCase: locator(),
-      prepareUnitDetailsUseCase: locator(),
+      prepareSavedUnitDetailsUseCase: locator(),
+      prepareDraftUnitDetailsUseCase: locator(),
     ),
   );
 
@@ -150,11 +151,18 @@ Future<void> init() async {
   locator.registerLazySingleton<FetchUnitsUseCase>(
     () => FetchUnitsUseCase(locator()),
   );
-  locator.registerLazySingleton<AddUnitUseCase>(
-    () => AddUnitUseCase(locator()),
+  locator.registerLazySingleton<SaveUnitUseCase>(
+    () => SaveUnitUseCase(locator()),
   );
-  locator.registerLazySingleton<PrepareUnitDetailsUseCase>(
-    () => PrepareUnitDetailsUseCase(locator()),
+  locator.registerLazySingleton<PrepareDraftUnitDetailsUseCase>(
+    () => PrepareDraftUnitDetailsUseCase(
+      unitRepository: locator(),
+    ),
+  );
+  locator.registerLazySingleton<PrepareSavedUnitDetailsUseCase>(
+    () => PrepareSavedUnitDetailsUseCase(
+      unitRepository: locator(),
+    ),
   );
   locator.registerLazySingleton<RemoveUnitsUseCase>(
     () => RemoveUnitsUseCase(locator()),

@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
@@ -59,7 +60,17 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
               ),
             );
           },
-          onUnitTap: (unit) {},
+          onUnitTap: (unit) {
+            BlocProvider.of<UnitDetailsBloc>(context).add(
+              GetExistingUnitDetails(
+                unit: unit as UnitModel,
+                unitGroup: pageState.unitGroup,
+              ),
+            );
+            Navigator.of(context).pushNamed(
+              PageName.unitDetailsPage.name,
+            );
+          },
           onUnitTapForRemoval: (unit) {
             BlocProvider.of<UnitsBloc>(context).add(
               FetchUnitsToMarkForRemoval(
@@ -90,6 +101,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           markedUnitIdsForConversion: null,
           selectedUnitVisible: false,
           selectedUnitId: null,
+          disabledUnitId: null,
           floatingButton: pageState.removalMode
               ? ConvertouchFloatingActionButton.removal(
                   visible: pageState.markedIdsForRemoval.isNotEmpty,

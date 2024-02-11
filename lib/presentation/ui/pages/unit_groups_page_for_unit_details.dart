@@ -36,7 +36,7 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
         },
         onUnitGroupTap: (unitGroup) {
           BlocProvider.of<UnitDetailsBloc>(context).add(
-            UpdateGroupInUnitDetails(
+            ChangeGroupInUnitDetails(
               unitGroup: unitGroup as UnitGroupModel,
             ),
           );
@@ -48,6 +48,7 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
         appBarRightWidgets: const [],
         selectedUnitGroupVisible: true,
         selectedUnitGroupId: pageState.unitGroupInUnitDetails?.id,
+        disabledUnitGroupId: null,
         itemIdsSelectedForRemoval: const [],
         removalModeEnabled: false,
         removalModeAllowed: false,

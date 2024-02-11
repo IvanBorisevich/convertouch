@@ -15,7 +15,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return unitsBlocBuilderForUnitDetails((pageState) {
       return ConvertouchUnitsPage(
-        pageTitle: "Select Base Unit",
+        pageTitle: "Select Argument Unit",
         customLeadingIcon: null,
         units: pageState.units,
         appBarRightWidgets: const [],
@@ -23,7 +23,8 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
           BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
             FetchUnitsForUnitDetails(
               unitGroup: pageState.unitGroup,
-              currentSelectedBaseUnit: pageState.currentSelectedBaseUnit,
+              selectedArgUnit: pageState.selectedArgUnit,
+              currentEditedUnit: pageState.currentEditedUnit,
               searchString: text,
             ),
           );
@@ -32,14 +33,15 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
           BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
             FetchUnitsForUnitDetails(
               unitGroup: pageState.unitGroup,
-              currentSelectedBaseUnit: pageState.currentSelectedBaseUnit,
+              selectedArgUnit: pageState.selectedArgUnit,
+              currentEditedUnit: pageState.currentEditedUnit,
               searchString: null,
             ),
           );
         },
         onUnitTap: (unit) {
           BlocProvider.of<UnitDetailsBloc>(context).add(
-            UpdateArgumentUnitInUnitDetails(
+            ChangeArgumentUnitInUnitDetails(
               argumentUnit: unit as UnitModel,
             ),
           );
@@ -54,7 +56,8 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
         markedUnitsForConversionVisible: false,
         markedUnitIdsForConversion: null,
         selectedUnitVisible: true,
-        selectedUnitId: pageState.currentSelectedBaseUnit?.id,
+        selectedUnitId: pageState.selectedArgUnit?.id,
+        disabledUnitId: pageState.currentEditedUnit?.id,
         floatingButton: null,
       );
     });

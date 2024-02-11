@@ -25,6 +25,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
   final List<Widget>? appBarRightWidgets;
   final bool selectedUnitGroupVisible;
   final int? selectedUnitGroupId;
+  final int? disabledUnitGroupId;
   final bool removalModeEnabled;
   final bool removalModeAllowed;
   final Widget? floatingButton;
@@ -43,6 +44,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
     required this.appBarRightWidgets,
     required this.selectedUnitGroupVisible,
     required this.selectedUnitGroupId,
+    required this.disabledUnitGroupId,
     required this.removalModeEnabled,
     required this.removalModeAllowed,
     required this.floatingButton,
@@ -77,6 +79,7 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
         body: ConvertouchMenuItemsView(
           unitGroups,
           selectedItemId: selectedUnitGroupId,
+          disabledItemId: disabledUnitGroupId,
           showSelectedItem: selectedUnitGroupVisible,
           itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
           removalModeEnabled: removalModeEnabled,

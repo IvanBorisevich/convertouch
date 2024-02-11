@@ -39,7 +39,8 @@ class UnitsBlocForUnitDetails extends ConvertouchBloc<UnitsEvent, UnitsState> {
         UnitsFetchedForUnitDetails(
           units: result.right,
           unitGroup: event.unitGroup,
-          currentSelectedBaseUnit: event.currentSelectedBaseUnit,
+          selectedArgUnit: event.selectedArgUnit,
+          currentEditedUnit: event.currentEditedUnit,
           searchString: event.searchString,
         ),
       );

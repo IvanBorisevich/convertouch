@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/unit_details_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class UnitDetailsState extends ConvertouchState {
@@ -6,35 +7,44 @@ abstract class UnitDetailsState extends ConvertouchState {
 }
 
 class UnitDetailsReady extends UnitDetailsState {
-  final UnitDetailsModel unitDetails;
+  final UnitDetailsModel draftDetails;
+  final UnitDetailsModel savedDetails;
+  final UnitModel? unitToBeSaved;
+  final bool editMode;
+  final bool showConversionRule;
 
   const UnitDetailsReady({
-    required this.unitDetails,
+    required this.draftDetails,
+    required this.savedDetails,
+    this.unitToBeSaved,
+    required this.editMode,
+    required this.showConversionRule,
   });
 
   @override
   List<Object?> get props => [
-        unitDetails,
+        draftDetails,
+        savedDetails,
+        unitToBeSaved,
+        editMode,
+        showConversionRule,
       ];
 
   @override
   String toString() {
     return 'UnitDetailsReady{'
-        'unitDetails: $unitDetails}';
+        'savedDetails: $savedDetails, '
+        'draftDetails: $draftDetails, '
+        'unitToBeSaved: $unitToBeSaved, '
+        'editMode: $editMode}';
   }
 }
 
 class UnitDetailsNotificationState extends ConvertouchNotificationState
     implements UnitDetailsState {
   const UnitDetailsNotificationState({
-    required super.message,
+    required super.exception,
   });
-
-  @override
-  String toString() {
-    return 'UnitDetailsNotificationState{'
-        'message: $message}';
-  }
 }
 
 class UnitDetailsErrorState extends ConvertouchErrorState

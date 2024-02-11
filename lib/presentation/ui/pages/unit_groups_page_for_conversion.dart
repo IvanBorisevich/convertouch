@@ -102,6 +102,7 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
           appBarRightWidgets: const [],
           selectedUnitGroupVisible: selectedUnitGroupVisible,
           selectedUnitGroupId: selectedUnitGroupId,
+          disabledUnitGroupId: null,
           removalModeEnabled: false,
           removalModeAllowed: false,
           floatingButton: null,

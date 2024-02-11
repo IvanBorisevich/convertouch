@@ -23,6 +23,7 @@ class ConvertouchMenuItem extends StatelessWidget {
   final double? height;
   final bool marked;
   final bool selected;
+  final bool disabled;
   final bool removalMode;
   final bool markedForRemoval;
   final ConvertouchUITheme theme;
@@ -36,6 +37,7 @@ class ConvertouchMenuItem extends StatelessWidget {
     this.onTapForRemoval,
     this.marked = false,
     this.selected = false,
+    this.disabled = false,
     this.removalMode = false,
     this.markedForRemoval = false,
     this.width,
@@ -62,6 +64,8 @@ class ConvertouchMenuItem extends StatelessWidget {
       itemColorSet = itemColor.selected!;
     } else if (marked) {
       itemColorSet = itemColor.marked!;
+    } else if (disabled) {
+      itemColorSet = itemColor.disabled!;
     } else {
       itemColorSet = itemColor.regular;
     }
@@ -115,7 +119,7 @@ class ConvertouchMenuItem extends StatelessWidget {
         if (removalMode) {
           onTapForRemoval?.call();
         } else {
-          if (!selected) {
+          if (!selected && !disabled) {
             FocusScope.of(context).unfocus();
             onTap?.call();
           }

@@ -112,11 +112,10 @@ class RebuildConversionUseCase
         .value!;
 
     return ConversionItemModel(
-        unit: srcConversionItem.unit,
-        value: srcConversionItem.value,
-        defaultValue: ValueModel(
-          strValue: defaultValueStr,
-        ));
+      unit: srcConversionItem.unit,
+      value: srcConversionItem.value,
+      defaultValue: ValueModel.ofString(defaultValueStr),
+    );
   }
 
   Future<ConversionItemModel?> _refreshSourceConversionItemFromCoefficients({

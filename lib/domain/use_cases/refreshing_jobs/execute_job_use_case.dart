@@ -35,7 +35,7 @@ class ExecuteJobUseCase
         return const Left(
           InternalException(
             message: "No data source found for the job",
-            severity: ExceptionSeverity.info,
+            severity: ExceptionSeverity.warning,
           ),
         );
       }
@@ -48,7 +48,7 @@ class ExecuteJobUseCase
         return const Left(
           InternalException(
             message: "Please check an internet connection",
-            severity: ExceptionSeverity.info,
+            severity: ExceptionSeverity.warning,
           ),
         );
       }

@@ -85,6 +85,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           appBarRightWidgets: const [],
           selectedUnitGroupVisible: false,
           selectedUnitGroupId: null,
+          disabledUnitGroupId: null,
           itemIdsSelectedForRemoval: pageState.markedIdsForRemoval,
           removalModeEnabled: pageState.removalMode,
           removalModeAllowed: true,

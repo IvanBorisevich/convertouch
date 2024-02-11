@@ -9,17 +9,17 @@ import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
-  final AddUnitUseCase addUnitUseCase;
+  final SaveUnitUseCase saveUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
 
   UnitsBloc({
-    required this.addUnitUseCase,
+    required this.saveUnitUseCase,
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,
   }) : super(const UnitsInitialState()) {
     on<FetchUnits>(_onUnitsFetch);
-    on<AddUnit>(_onUnitAdd);
+    on<SaveUnit>(_onUnitSave);
     on<RemoveUnits>(_onUnitsRemove);
     on<DisableUnitsRemovalMode>(_onUnitsRemovalModeDisable);
   }
@@ -90,14 +90,12 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
     }
   }
 
-  _onUnitAdd(
-    AddUnit event,
+  _onUnitSave(
+    SaveUnit event,
     Emitter<UnitsState> emit,
   ) async {
     emit(const UnitsFetching());
-    final addUnitResult = await addUnitUseCase.execute(
-      event.unitDetails,
-    );
+    final addUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
 
     if (addUnitResult.isLeft) {
       emit(
@@ -112,7 +110,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
       if (addedUnitId != -1) {
         add(
           FetchUnits(
-            unitGroup: event.unitDetails.unitGroup!,
+            unitGroup: event.unitGroup,
             searchString: null,
             addedId: addedUnitId,
           ),
@@ -120,7 +118,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
       } else {
         emit(
           UnitExists(
-            unitName: event.unitDetails.unitName,
+            unitName: event.unitToBeSaved.name,
           ),
         );
       }

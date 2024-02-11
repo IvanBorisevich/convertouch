@@ -20,9 +20,9 @@ const pageColorSchemeDark = PageColorScheme(
   ),
   snackBar: SnackBarColorSet(
     background: Color(0xFF535E6E),
-    foregroundInfo: Color(0xFF6FA4DA),
-    foregroundWarning: Color(0xFFE6F391),
-    foregroundError: Color(0xFFF58C8C),
+    foregroundInfo: Color(0xFFF2F8FF),
+    foregroundWarning: Color(0xFFF1FFB0),
+    foregroundError: Color(0xFFFFAAAA),
   ),
   bottomBar: ColorStateVariation(
     regular: AppBarColorSet(
@@ -88,21 +88,29 @@ const unitItemColorSchemeDark = ColorStateVariation(
     background: Color(0xE4415F7E),
     foreground: Color(0xFFA0CAF1),
   ),
+  disabled: BaseColorSet(
+    border: Color(0xFF6A7885),
+    background: Color(0xFF545E6E),
+    foreground: Color(0xFF8DBAE3),
+  ),
+);
+
+
+const textBoxColorDark = ColorStateVariation(
+  regular: TextBoxColorSet(
+    border: Color(0xFF7FA0BE),
+    foreground: Color(0xFF8FB1D0),
+    label: Color(0xFF7FA0BE),
+  ),
+  focused: TextBoxColorSet(
+    border: Color(0xFF98BAD9),
+    foreground: Color(0xFFA0C4E5),
+    label: Color(0xFF98BAD9),
+  ),
 );
 
 const conversionItemColorSchemeDark = ConversionItemColorScheme(
-  textBox: ColorStateVariation(
-    regular: TextBoxColorSet(
-      border: Color(0xFF7FA0BE),
-      foreground: Color(0xFF8FB1D0),
-      label: Color(0xFF7FA0BE),
-    ),
-    focused: TextBoxColorSet(
-      border: Color(0xFF98BAD9),
-      foreground: Color(0xFFA0C4E5),
-      label: Color(0xFF98BAD9),
-    ),
-  ),
+  textBox: textBoxColorDark,
   unitButton: ColorStateVariation(
     regular: BaseColorSet(
       border: Color(0xFF7FA0BE),
@@ -150,21 +158,6 @@ const removalFloatingButtonColorDark = ButtonColorSet(
   background: Color(0xFF9D5225),
   foreground: Color(0xFFDEE9FF),
   border: Color(0xFF373F4B),
-);
-
-const textBoxColorDark = ColorStateVariation(
-  regular: TextBoxColorSet(
-    border: Color(0xFF709FCB),
-    foreground: Color(0xFF709FCB),
-    label: Color(0xFF709FCB),
-    hint: Color(0xFF709FCB),
-  ),
-  focused: TextBoxColorSet(
-    border: Color(0xFF709FCB),
-    foreground: Color(0xFF709FCB),
-    label: Color(0xFF709FCB),
-    hint: Color(0xFF709FCB),
-  ),
 );
 
 const unitGroupTextBoxColorDark = ColorStateVariation(

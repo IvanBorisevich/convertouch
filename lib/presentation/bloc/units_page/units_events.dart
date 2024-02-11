@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitsEvent extends ConvertouchEvent {
@@ -99,24 +98,28 @@ class FetchUnitsForChangeInConversion extends FetchUnits {
 }
 
 class FetchUnitsForUnitDetails extends FetchUnits {
-  final UnitModel? currentSelectedBaseUnit;
+  final UnitModel? selectedArgUnit;
+  final UnitModel? currentEditedUnit;
 
   const FetchUnitsForUnitDetails({
     required super.unitGroup,
-    required this.currentSelectedBaseUnit,
+    required this.selectedArgUnit,
+    required this.currentEditedUnit,
     required super.searchString,
   });
 
   @override
   List<Object?> get props => [
-        currentSelectedBaseUnit,
+        selectedArgUnit,
+        currentEditedUnit,
         super.props,
       ];
 
   @override
   String toString() {
     return 'FetchUnitsForUnitDetails{'
-        'currentSelectedBaseUnit: $currentSelectedBaseUnit,'
+        'selectedArgUnit: $selectedArgUnit, '
+        'currentEditedUnit: $currentEditedUnit, '
         '${super.toString()}}';
   }
 }
@@ -147,22 +150,25 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
   }
 }
 
-class AddUnit extends UnitsEvent {
-  final UnitDetailsModel unitDetails;
+class SaveUnit extends UnitsEvent {
+  final UnitModel unitToBeSaved;
+  final UnitGroupModel unitGroup;
 
-  const AddUnit({
-    required this.unitDetails,
+  const SaveUnit({
+    required this.unitToBeSaved,
+    required this.unitGroup,
   });
 
   @override
   List<Object?> get props => [
-        unitDetails,
+        unitToBeSaved,
+        unitGroup,
       ];
 
   @override
   String toString() {
-    return 'AddUnit{'
-        'unitDetails: $unitDetails}';
+    return 'SaveUnit{'
+        'unitToBeSaved: $unitToBeSaved}';
   }
 }
 

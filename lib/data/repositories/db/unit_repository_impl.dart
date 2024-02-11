@@ -118,12 +118,12 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, UnitModel?>> getBaseUnit(
+  Future<Either<ConvertouchException, UnitModel>> getBaseUnit(
     int unitGroupId,
   ) async {
     try {
       var result = await unitDao.getBaseUnit(unitGroupId);
-      return Right(UnitTranslator.I.toModel(result));
+      return Right(UnitTranslator.I.toModel(result) ?? UnitModel.none);
     } catch (e) {
       return Left(
         DatabaseException(

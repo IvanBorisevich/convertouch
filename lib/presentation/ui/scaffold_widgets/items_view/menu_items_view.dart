@@ -14,6 +14,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
   final List<int> itemIdsMarkedForRemoval;
   final bool showMarkedItems;
   final int? selectedItemId;
+  final int? disabledItemId;
   final bool showSelectedItem;
   final bool removalModeAllowed;
   final bool removalModeEnabled;
@@ -30,6 +31,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
     this.itemIdsMarkedForRemoval = const [],
     this.showMarkedItems = false,
     this.selectedItemId,
+    this.disabledItemId,
     this.showSelectedItem = false,
     this.removalModeAllowed = false,
     this.removalModeEnabled = false,
@@ -49,6 +51,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
             Widget? itemBuilder(context, index) {
               IdNameItemModel item = items[index];
               bool selected = showSelectedItem && item.id == selectedItemId;
+              bool disabled = item.id == disabledItemId;
               bool marked = showMarkedItems &&
                   itemIdsMarkedForConversion != null &&
                   itemIdsMarkedForConversion!.contains(item.id);
@@ -68,6 +71,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                   },
                   marked: marked,
                   selected: selected,
+                  disabled: disabled,
                   removalMode: removalModeAllowed && removalModeEnabled,
                   markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
                   theme: theme,

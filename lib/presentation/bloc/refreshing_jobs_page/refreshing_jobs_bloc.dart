@@ -99,7 +99,10 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
     if (job.progressController != null) {
       emit(
         RefreshingJobsNotificationState(
-          message: "Job '${job.name}' is running at the moment",
+          exception: ConvertouchException(
+            message: "Job '${job.name}' is running at the moment",
+            severity: ExceptionSeverity.info,
+          ),
         ),
       );
       emit(
@@ -138,7 +141,7 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
       } else {
         emit(
           RefreshingJobsNotificationState(
-            message: exception.message,
+            exception: exception,
           ),
         );
         emit(

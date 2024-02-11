@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
@@ -55,7 +56,10 @@ class ConversionBloc
           conversionResult.right.emptyConversionItemsExist) {
         emit(
           const ConversionNotificationState(
-            message: 'Some dynamic values are empty. Please refresh them',
+            exception: ConvertouchException(
+              message: "Some dynamic values are empty. Please refresh them",
+              severity: ExceptionSeverity.warning,
+            )
           ),
         );
       }

@@ -95,8 +95,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                 } else if (state is RefreshingJobsNotificationState) {
                   showSnackBar(
                     context,
-                    message: state.message,
-                    severity: state.severity,
+                    exception: state.exception,
                     theme: appState.theme,
                   );
                 }
@@ -107,8 +106,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                 if (state is ConversionNotificationState) {
                   showSnackBar(
                     context,
-                    message: state.message,
-                    severity: state.severity,
+                    exception: state.exception,
                     theme: appState.theme,
                   );
                 }
