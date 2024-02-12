@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -47,39 +46,21 @@ class ConvertouchConversionPage extends StatelessWidget {
           listeners: [
             BlocListener<UnitsBloc, UnitsState>(
               listener: (_, unitsState) {
-                if (unitsState is UnitsFetched) {
-                  if ((unitsState.removedIds.isNotEmpty ||
-                          unitsState.modifiedUnit != null) &&
-                      unitsState.unitGroup == conversion.unitGroup) {
-                    BlocProvider.of<ConversionBloc>(context).add(
-                      // TODO: move unitsState.modifiedUnit to the conversion bloc
-                      BuildConversion(
-                        conversionParams: InputConversionModel(
-                          unitGroup: unitsState.unitGroup,
-                          sourceConversionItem: unitsState.modifiedUnit !=
-                                      null &&
-                                  conversion.sourceConversionItem?.unit.id ==
-                                      unitsState.modifiedUnit!.id
-                              ? ConversionItemModel.coalesce(
-                                  conversion.sourceConversionItem,
-                                  unit: unitsState.modifiedUnit!,
-                                )
-                              : conversion.sourceConversionItem,
-                          targetUnits: conversion.targetConversionItems
-                              .map(
-                                (item) => unitsState.modifiedUnit != null &&
-                                        item.unit.id ==
-                                            unitsState.modifiedUnit?.id
-                                    ? unitsState.modifiedUnit!
-                                    : item.unit,
-                              )
-                              .whereNot((unit) =>
-                                  unitsState.removedIds.contains(unit.id))
-                              .toList(),
-                        ),
+                if (unitsState is UnitsFetched &&
+                    unitsState.rebuildConversion) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    BuildConversion(
+                      conversionParams: InputConversionModel(
+                        unitGroup: conversion.unitGroup,
+                        sourceConversionItem: conversion.sourceConversionItem,
+                        targetUnits: conversion.targetConversionItems
+                            .map((item) => item.unit)
+                            .toList(),
                       ),
-                    );
-                  }
+                      modifiedUnit: unitsState.modifiedUnit,
+                      removedUnitIds: unitsState.removedIds,
+                    ),
+                  );
                 }
               },
             ),

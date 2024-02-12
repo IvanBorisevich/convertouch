@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
@@ -38,8 +41,54 @@ class ConversionBloc
     BuildConversion event,
     Emitter<ConversionState> emit,
   ) async {
+    InputConversionModel conversionParams = event.conversionParams;
+    List<UnitModel> targetUnits = event.conversionParams.targetUnits;
+
+    if (event.removedUnitIds.isNotEmpty) {
+      targetUnits = targetUnits
+          .whereNot((unit) => event.removedUnitIds.contains(unit.id))
+          .toList();
+    }
+
+    if (event.modifiedUnit != null) {
+      ConversionItemModel? sourceConversionItem =
+          event.conversionParams.sourceConversionItem;
+
+      if (event.modifiedUnit!.id == sourceConversionItem?.unit.id) {
+        if (event.modifiedUnit!.unitGroupId == sourceConversionItem?.unit.unitGroupId) {
+          sourceConversionItem = ConversionItemModel.coalesce(
+            sourceConversionItem,
+            unit: event.modifiedUnit!,
+          );
+        } else {
+          sourceConversionItem = null;
+        }
+      }
+
+      targetUnits = targetUnits
+          .map((unit) {
+            if (event.modifiedUnit!.id == unit.id) {
+              if (event.modifiedUnit!.unitGroupId == unit.unitGroupId) {
+                return event.modifiedUnit!;
+              } else {
+                return null;
+              }
+            } else {
+              return unit;
+            }
+          })
+          .whereNotNull()
+          .toList();
+
+      conversionParams = InputConversionModel(
+        unitGroup: event.conversionParams.unitGroup,
+        sourceConversionItem: sourceConversionItem,
+        targetUnits: targetUnits,
+      );
+    }
+
     final conversionResult = await buildConversionUseCase.execute(
-      event.conversionParams,
+      conversionParams,
     );
 
     if (conversionResult.isLeft) {
@@ -56,11 +105,10 @@ class ConversionBloc
           conversionResult.right.emptyConversionItemsExist) {
         emit(
           const ConversionNotificationState(
-            exception: ConvertouchException(
-              message: "Some dynamic values are empty. Please refresh them",
-              severity: ExceptionSeverity.warning,
-            )
-          ),
+              exception: ConvertouchException(
+            message: "Some dynamic values are empty. Please refresh them",
+            severity: ExceptionSeverity.warning,
+          )),
         );
       }
 

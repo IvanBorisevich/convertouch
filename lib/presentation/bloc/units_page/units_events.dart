@@ -12,12 +12,14 @@ class FetchUnits extends UnitsEvent {
   final String? searchString;
   final List<int> removedIds;
   final UnitModel? modifiedUnit;
+  final bool rebuildConversion;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
     this.removedIds = const [],
     this.modifiedUnit,
+    this.rebuildConversion = false,
   });
 
   @override
@@ -26,13 +28,17 @@ class FetchUnits extends UnitsEvent {
         searchString,
         removedIds,
         modifiedUnit,
+        rebuildConversion,
       ];
 
   @override
   String toString() {
     return 'FetchUnits{'
-        'unitGroup: $unitGroup,'
-        'searchString: $searchString}';
+        'unitGroup: $unitGroup, '
+        'searchString: $searchString, '
+        'removedIds: $removedIds, '
+        'modifiedUnit: $modifiedUnit, '
+        'rebuildConversion: $rebuildConversion}';
   }
 }
 
@@ -153,22 +159,29 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
 class SaveUnit extends UnitsEvent {
   final UnitModel unitToBeSaved;
   final UnitGroupModel unitGroup;
+  final int prevUnitGroupId;
+  final int? conversionGroupId;
 
   const SaveUnit({
     required this.unitToBeSaved,
     required this.unitGroup,
+    required this.prevUnitGroupId,
+    this.conversionGroupId,
   });
 
   @override
   List<Object?> get props => [
         unitToBeSaved,
         unitGroup,
+        prevUnitGroupId,
+        conversionGroupId,
       ];
 
   @override
   String toString() {
     return 'SaveUnit{'
-        'unitToBeSaved: $unitToBeSaved}';
+        'unitToBeSaved: $unitToBeSaved, '
+        'prevUnitGroupId: $prevUnitGroupId}';
   }
 }
 

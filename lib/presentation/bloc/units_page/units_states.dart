@@ -33,6 +33,7 @@ class UnitsFetched extends UnitsState {
   final List<int> markedIdsForRemoval;
   final List<int> removedIds;
   final UnitModel? modifiedUnit;
+  final bool rebuildConversion;
 
   const UnitsFetched({
     this.units = const [],
@@ -42,6 +43,7 @@ class UnitsFetched extends UnitsState {
     this.markedIdsForRemoval = const [],
     this.removedIds = const [],
     this.modifiedUnit,
+    this.rebuildConversion = false,
   });
 
   @override
@@ -53,6 +55,7 @@ class UnitsFetched extends UnitsState {
         markedIdsForRemoval,
         removedIds,
         modifiedUnit,
+        rebuildConversion,
       ];
 
   @override

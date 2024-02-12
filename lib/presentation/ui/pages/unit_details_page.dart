@@ -207,22 +207,27 @@ class _ConvertouchUnitDetailsPageState
                 ),
               ),
             ),
-            floatingActionButton: ConvertouchFloatingActionButton(
-              icon: Icons.check_outlined,
-              visible: pageState.unitToBeSaved != null,
-              onClick: () {
-                FocusScope.of(context).unfocus();
-                if (pageState.unitToBeSaved != null) {
-                  BlocProvider.of<UnitsBloc>(context).add(
-                    SaveUnit(
-                      unitToBeSaved: pageState.unitToBeSaved!,
-                      unitGroup: pageState.draftDetails.unitGroup!,
-                    ),
-                  );
-                }
-              },
-              colorSet: floatingButtonColor,
-            ),
+            floatingActionButton: conversionBlocBuilder((conversionState) {
+              return ConvertouchFloatingActionButton(
+                icon: Icons.check_outlined,
+                visible: pageState.unitToBeSaved != null,
+                onClick: () {
+                  FocusScope.of(context).unfocus();
+                  if (pageState.unitToBeSaved != null) {
+                    BlocProvider.of<UnitsBloc>(context).add(
+                      SaveUnit(
+                        unitToBeSaved: pageState.unitToBeSaved!,
+                        unitGroup: pageState.draftDetails.unitGroup!,
+                        prevUnitGroupId: pageState.savedDetails.unitGroup!.id!,
+                        conversionGroupId:
+                            conversionState.conversion.unitGroup?.id,
+                      ),
+                    );
+                  }
+                },
+                colorSet: floatingButtonColor,
+              );
+            }),
           );
         }),
       );

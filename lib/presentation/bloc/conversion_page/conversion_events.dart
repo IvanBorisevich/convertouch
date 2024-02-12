@@ -11,20 +11,28 @@ abstract class ConversionEvent extends ConvertouchEvent {
 
 class BuildConversion extends ConversionEvent {
   final InputConversionModel conversionParams;
+  final UnitModel? modifiedUnit;
+  final List<int> removedUnitIds;
 
   const BuildConversion({
     required this.conversionParams,
+    this.modifiedUnit,
+    this.removedUnitIds = const [],
   });
 
   @override
   List<Object?> get props => [
         conversionParams,
+        modifiedUnit,
+        removedUnitIds,
       ];
 
   @override
   String toString() {
     return 'BuildConversion{'
-        'conversionParams: $conversionParams}';
+        'conversionParams: $conversionParams, '
+        'modifiedUnit: $modifiedUnit, '
+        'removedUnitIds: $removedUnitIds}';
   }
 }
 
@@ -69,8 +77,8 @@ class ShowNewConversionAfterRefresh extends ConversionEvent {
 
   @override
   List<Object?> get props => [
-    newConversion,
-  ];
+        newConversion,
+      ];
 
   @override
   String toString() {

@@ -85,6 +85,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
             searchString: event.searchString,
             removedIds: event.removedIds,
             modifiedUnit: event.modifiedUnit,
+            rebuildConversion: event.rebuildConversion,
           ),
         );
       }
@@ -114,6 +115,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
             unitGroup: event.unitGroup,
             searchString: null,
             modifiedUnit: event.unitToBeSaved,
+            rebuildConversion: event.conversionGroupId == event.prevUnitGroupId,
           ),
         );
       } else {
@@ -145,6 +147,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
           unitGroup: event.unitGroup,
           searchString: null,
           removedIds: event.ids,
+          rebuildConversion: event.ids.isNotEmpty,
         ),
       );
     }
