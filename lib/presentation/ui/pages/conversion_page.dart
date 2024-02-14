@@ -66,16 +66,19 @@ class ConvertouchConversionPage extends StatelessWidget {
             ),
             BlocListener<UnitGroupsBloc, UnitGroupsState>(
               listener: (_, state) {
-                if (state is UnitGroupsFetched &&
-                    state.removedIds.isNotEmpty &&
-                    conversion.unitGroup != null &&
-                    state.removedIds.contains(conversion.unitGroup!.id)) {
+                if (state is UnitGroupsFetched && state.rebuildConversion) {
                   BlocProvider.of<ConversionBloc>(context).add(
-                    const BuildConversion(
+                    BuildConversion(
                       conversionParams: InputConversionModel(
-                        unitGroup: null,
-                        sourceConversionItem: null,
+                        unitGroup: pageState.conversion.unitGroup,
+                        sourceConversionItem:
+                            pageState.conversion.sourceConversionItem,
+                        targetUnits: pageState.conversion.targetConversionItems
+                            .map((item) => item.unit)
+                            .toList(),
                       ),
+                      modifiedUnitGroup: state.modifiedUnitGroup,
+                      removedUnitGroupIds: state.removedIds,
                     ),
                   );
                 }

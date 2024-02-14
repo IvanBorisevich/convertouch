@@ -20,7 +20,8 @@ class UnitGroupsFetched extends UnitGroupsState {
   final bool removalMode;
   final List<int> markedIdsForRemoval;
   final List<int> removedIds;
-  final int? addedId;
+  final UnitGroupModel? modifiedUnitGroup;
+  final bool rebuildConversion;
 
   const UnitGroupsFetched({
     required this.unitGroups,
@@ -28,7 +29,8 @@ class UnitGroupsFetched extends UnitGroupsState {
     this.removalMode = false,
     this.markedIdsForRemoval = const [],
     this.removedIds = const [],
-    this.addedId,
+    this.modifiedUnitGroup,
+    this.rebuildConversion = false,
   });
 
   @override
@@ -38,7 +40,8 @@ class UnitGroupsFetched extends UnitGroupsState {
     removalMode,
     markedIdsForRemoval,
     removedIds,
-    addedId,
+    modifiedUnitGroup,
+    rebuildConversion,
   ];
 
   @override
@@ -46,7 +49,8 @@ class UnitGroupsFetched extends UnitGroupsState {
     return 'UnitGroupsFetched{'
         'unitGroups: $unitGroups, '
         'removedIds: $removedIds, '
-        'addedId: $addedId}';
+        'modifiedUnitGroup: $modifiedUnitGroup, '
+        'rebuildConversion: $rebuildConversion}';
   }
 }
 

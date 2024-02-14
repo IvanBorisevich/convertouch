@@ -165,11 +165,19 @@ const unitGroupTextBoxColorLight = ColorStateVariation(
     border: Color(0xFF5F4299),
     foreground: Color(0xFF5F4299),
     label: Color(0xFF5F4299),
+    hint: Color(0xFFC4B0EF),
   ),
   focused: TextBoxColorSet(
     border: Color(0xFF5F4299),
     foreground: Color(0xFF5F4299),
     label: Color(0xFF5F4299),
+    hint: Color(0xFFC4B0EF),
+  ),
+  disabled: TextBoxColorSet(
+    border: Color(0xFFB9A3E7),
+    foreground: Color(0xFFB9A3E7),
+    label: Color(0xFFB9A3E7),
+    hint: Color(0xFFB9A3E7),
   ),
 );
 

@@ -13,11 +13,15 @@ class BuildConversion extends ConversionEvent {
   final InputConversionModel conversionParams;
   final UnitModel? modifiedUnit;
   final List<int> removedUnitIds;
+  final UnitGroupModel? modifiedUnitGroup;
+  final List<int> removedUnitGroupIds;
 
   const BuildConversion({
     required this.conversionParams,
     this.modifiedUnit,
     this.removedUnitIds = const [],
+    this.modifiedUnitGroup,
+    this.removedUnitGroupIds = const [],
   });
 
   @override
@@ -25,6 +29,8 @@ class BuildConversion extends ConversionEvent {
         conversionParams,
         modifiedUnit,
         removedUnitIds,
+        modifiedUnitGroup,
+        removedUnitGroupIds,
       ];
 
   @override
@@ -32,7 +38,9 @@ class BuildConversion extends ConversionEvent {
     return 'BuildConversion{'
         'conversionParams: $conversionParams, '
         'modifiedUnit: $modifiedUnit, '
-        'removedUnitIds: $removedUnitIds}';
+        'removedUnitIds: $removedUnitIds, '
+        'modifiedUnitGroup: $modifiedUnitGroup, '
+        'removedUnitGroupIds: $removedUnitGroupIds}';
   }
 }
 

@@ -51,16 +51,21 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, int>> add(
+  Future<Either<ConvertouchException, UnitGroupModel?>> add(
       UnitGroupModel unitGroup) async {
     try {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
       if (existingGroup == null) {
-        final result = await unitGroupDao
+        final addedGroupId = await unitGroupDao
             .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
-        return Right(result);
+        return Right(
+          UnitGroupModel.coalesce(
+            unitGroup,
+            id: addedGroupId,
+          ),
+        );
       } else {
-        return const Right(-1);
+        return const Right(null);
       }
     } catch (e) {
       return Left(
@@ -96,7 +101,8 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
 
   @override
   Future<Either<ConvertouchException, void>> remove(
-      List<int> unitGroupIds) async {
+    List<int> unitGroupIds,
+  ) async {
     try {
       await unitGroupDao.remove(unitGroupIds);
       return const Right(null);
@@ -104,6 +110,22 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       return Left(
         DatabaseException(
           message: "Error when deleting unit groups by ids = $unitGroupIds: $e",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, UnitGroupModel>> update(
+    UnitGroupModel unitGroup,
+  ) async {
+    try {
+      await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup)!);
+      return Right(unitGroup);
+    } catch (e) {
+      return Left(
+        DatabaseException(
+          message: "Error when updating unit group by id = ${unitGroup.id}: $e",
         ),
       );
     }

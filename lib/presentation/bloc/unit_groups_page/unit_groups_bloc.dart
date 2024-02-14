@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
@@ -9,18 +9,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
-  final AddUnitGroupUseCase addUnitGroupUseCase;
+  final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
-    required this.addUnitGroupUseCase,
+    required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
     on<RemoveUnitGroups>(_onUnitGroupsRemove);
-    on<AddUnitGroup>(_onUnitGroupAdd);
+    on<SaveUnitGroup>(_onUnitGroupSave);
     on<DisableUnitGroupsRemovalMode>(_onUnitGroupsRemovalModeDisable);
+
   }
 
   _onUnitGroupsFetch(
@@ -74,7 +75,8 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
             unitGroups: result.right,
             searchString: event.searchString,
             removedIds: event.removedIds,
-            addedId: event.addedId,
+            modifiedUnitGroup: event.modifiedUnitGroup,
+            rebuildConversion: event.rebuildConversion,
           ),
         );
       }
@@ -100,41 +102,42 @@ class UnitGroupsBloc extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
         FetchUnitGroups(
           searchString: null,
           removedIds: event.ids,
+          rebuildConversion: event.ids.isNotEmpty,
         ),
       );
     }
   }
 
-  _onUnitGroupAdd(
-    AddUnitGroup event,
+  _onUnitGroupSave(
+    SaveUnitGroup event,
     Emitter<UnitGroupsState> emit,
   ) async {
     emit(const UnitGroupsFetching());
 
-    final addUnitGroupResult =
-        await addUnitGroupUseCase.execute(event.unitGroupName);
+    final saveUnitGroupResult =
+        await saveUnitGroupUseCase.execute(event.unitGroupToBeSaved);
 
-    if (addUnitGroupResult.isLeft) {
+    if (saveUnitGroupResult.isLeft) {
       emit(
         UnitGroupsErrorState(
-          exception: addUnitGroupResult.left,
+          exception: saveUnitGroupResult.left,
           lastSuccessfulState: state,
         ),
       );
     } else {
-      int addedUnitGroupId = addUnitGroupResult.right;
-
-      if (addedUnitGroupId != -1) {
+      if (saveUnitGroupResult.right != null) {
         add(
           FetchUnitGroups(
             searchString: null,
-            addedId: addedUnitGroupId,
+            modifiedUnitGroup: saveUnitGroupResult.right,
+            rebuildConversion:
+                event.conversionGroupId == saveUnitGroupResult.right!.id,
           ),
         );
       } else {
         emit(
           UnitGroupExists(
-            unitGroupName: event.unitGroupName,
+            unitGroupName: event.unitGroupToBeSaved.name,
           ),
         );
       }

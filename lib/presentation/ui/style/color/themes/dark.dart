@@ -165,11 +165,19 @@ const unitGroupTextBoxColorDark = ColorStateVariation(
     border: Color(0xFFA1A4CE),
     foreground: Color(0xFFA1A4CE),
     label: Color(0xFFA1A4CE),
+    hint: Color(0xFFC3C5E3),
   ),
   focused: TextBoxColorSet(
     border: Color(0xFFC1C3E5),
     foreground: Color(0xFFC1C3E5),
     label: Color(0xFFC1C3E5),
+    hint: Color(0xFFC3C5E3),
+  ),
+  disabled: TextBoxColorSet(
+    border: Color(0xFFC3C5E3),
+    foreground: Color(0xFFC3C5E3),
+    label: Color(0xFFC3C5E3),
+    hint: Color(0xFFC3C5E3),
   ),
 );
 

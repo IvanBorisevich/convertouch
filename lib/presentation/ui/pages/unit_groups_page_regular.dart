@@ -1,6 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -105,6 +107,9 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                 )
               : ConvertouchFloatingActionButton.adding(
                   onClick: () {
+                    BlocProvider.of<UnitGroupDetailsBloc>(context).add(
+                      const GetNewUnitGroupDetails(),
+                    );
                     Navigator.of(context).pushNamed(
                       PageName.unitGroupDetailsPage.name,
                     );

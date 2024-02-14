@@ -3,6 +3,8 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
@@ -43,7 +45,24 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   },
                 )
               : null,
-          appBarRightWidgets: const [],
+          appBarRightWidgets: [
+            IconButton(
+              onPressed: () {
+                BlocProvider.of<UnitGroupDetailsBloc>(context).add(
+                  GetExistingUnitGroupDetails(
+                    unitGroup: pageState.unitGroup,
+                  ),
+                );
+                Navigator.of(context).pushNamed(
+                  PageName.unitGroupDetailsPage.name,
+                );
+              },
+              icon: Icon(
+                Icons.edit_outlined,
+                color: pageColorScheme.appBar.regular.foreground,
+              ),
+            )
+          ],
           onSearchStringChanged: (text) {
             BlocProvider.of<UnitsBloc>(context).add(
               FetchUnits(

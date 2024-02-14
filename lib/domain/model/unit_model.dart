@@ -71,6 +71,7 @@ class UnitModel extends IdNameItemModel {
                 patchWith: unitGroupId,
               ) ??
               -1,
+          oob: currentModel.oob,
         );
 
   bool get empty => this == none;

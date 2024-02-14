@@ -225,3 +225,21 @@ class DisableUnitsRemovalMode extends UnitsEvent {
     return 'DisableUnitsRemovalMode{}';
   }
 }
+
+class ModifyGroup extends UnitsEvent {
+  final UnitGroupModel modifiedGroup;
+
+  const ModifyGroup({
+    required this.modifiedGroup,
+  });
+
+  @override
+  List<Object?> get props => [
+    modifiedGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'ModifyGroup{modifiedGroup: $modifiedGroup}';
+  }
+}

@@ -8,24 +8,29 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
   final List<int> removedIds;
-  final int? addedId;
+  final UnitGroupModel? modifiedUnitGroup;
+  final bool rebuildConversion;
 
   const FetchUnitGroups({
     required this.searchString,
     this.removedIds = const [],
-    this.addedId,
+    this.modifiedUnitGroup,
+    this.rebuildConversion = false,
   });
 
   @override
   List<Object?> get props => [
     searchString,
     removedIds,
-    addedId,
+    modifiedUnitGroup,
+    rebuildConversion,
   ];
 
   @override
   String toString() {
-    return 'FetchUnitGroups{searchString: $searchString}';
+    return 'FetchUnitGroups{'
+        'searchString: $searchString, '
+        'rebuildConversion: $rebuildConversion}';
   }
 }
 
@@ -118,7 +123,7 @@ class RemoveUnitGroups extends UnitGroupsEvent {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     ids,
     super.props,
   ];
@@ -130,22 +135,26 @@ class RemoveUnitGroups extends UnitGroupsEvent {
   }
 }
 
-class AddUnitGroup extends UnitGroupsEvent {
-  final String unitGroupName;
+class SaveUnitGroup extends UnitGroupsEvent {
+  final UnitGroupModel unitGroupToBeSaved;
+  final int? conversionGroupId;
 
-  const AddUnitGroup({
-    required this.unitGroupName,
+  const SaveUnitGroup({
+    required this.unitGroupToBeSaved,
+    this.conversionGroupId,
   });
 
   @override
-  List<Object> get props => [
-    unitGroupName,
+  List<Object?> get props => [
+    unitGroupToBeSaved,
+    conversionGroupId,
   ];
 
   @override
   String toString() {
-    return 'AddUnitGroup{'
-        'unitGroupName: $unitGroupName}';
+    return 'SaveUnitGroup{'
+        'unitGroupToBeSaved: $unitGroupToBeSaved, '
+        'conversionGroupId: $conversionGroupId}';
   }
 }
 

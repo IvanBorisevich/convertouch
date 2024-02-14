@@ -11,9 +11,15 @@ abstract class UnitGroupRepository {
     String searchString,
   );
 
-  Future<Either<ConvertouchException, int>> add(UnitGroupModel unitGroup);
+  Future<Either<ConvertouchException, UnitGroupModel?>> add(
+    UnitGroupModel unitGroup,
+  );
 
   Future<Either<ConvertouchException, UnitGroupModel?>> get(int unitGroupId);
 
   Future<Either<ConvertouchException, void>> remove(List<int> unitGroupIds);
+
+  Future<Either<ConvertouchException, UnitGroupModel>> update(
+    UnitGroupModel unitGroup,
+  );
 }

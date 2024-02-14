@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ConvertouchTextBox extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final String? text;
   final FocusNode? focusNode;
   final ValueNotifier<String?>? notifier;
   final bool useCustomKeyboard;
@@ -31,7 +32,8 @@ class ConvertouchTextBox extends StatefulWidget {
   final ColorStateVariation<TextBoxColorSet>? customColor;
 
   const ConvertouchTextBox({
-    required this.controller,
+    this.controller,
+    this.text,
     this.focusNode,
     this.notifier,
     this.useCustomKeyboard = false,
@@ -60,16 +62,29 @@ class ConvertouchTextBox extends StatefulWidget {
 }
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
-  late final ColorStateVariation<TextBoxColorSet> _color;
+  late final ColorStateVariation<TextBoxColorSet> _colorVariation;
   late final FocusNode _focusNode;
+  late final TextEditingController _controller;
 
+  TextEditingController? _defaultController;
   FocusNode? _defaultFocusNode;
   ValueNotifier<String?>? _notifier;
   ValueNotifier<String?>? _defaultNotifier;
 
   @override
   void initState() {
-    _color = widget.customColor ?? textBoxColors[widget.theme]!;
+    if (widget.controller != null) {
+      _controller = widget.controller!;
+    } else {
+      _defaultController = TextEditingController();
+      _controller = _defaultController!;
+    }
+
+    if (_controller.text.isEmpty) {
+      _controller.text = widget.text ?? "";
+    }
+
+    _colorVariation = widget.customColor ?? textBoxColors[widget.theme]!;
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
@@ -110,6 +125,17 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   Widget build(BuildContext context) {
+    TextBoxColorSet resultColorSet;
+
+    TextBoxColorSet? colorSet;
+    if (widget.disabled) {
+      colorSet = _colorVariation.disabled;
+    } else if (_focusNode.hasFocus) {
+      colorSet = _colorVariation.focused;
+    }
+
+    resultColorSet = colorSet ?? _colorVariation.regular;
+
     return SizedBox(
       height: widget.height,
       child: LayoutBuilder(
@@ -120,12 +146,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
               child: KeyboardActionsWrapper(
                 keyboardType: widget.customKeyboardType,
                 inputFormatter: widget.customInputFormatter,
-                controller: widget.controller,
+                controller: _controller,
                 focusNode: _focusNode,
                 notifier: _notifier!,
                 child: _textBox(
                   needToSetFocusNode: false,
                   textInputType: TextInputType.none,
+                  colorSet: resultColorSet,
                 ),
               ),
             );
@@ -133,6 +160,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             return _textBox(
               textInputType: widget.textInputType,
               onChanged: widget.onChanged,
+              colorSet: resultColorSet,
             );
           }
         },
@@ -143,6 +171,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   Widget _textBox({
     bool needToSetFocusNode = true,
     TextInputType? textInputType,
+    required TextBoxColorSet colorSet,
     void Function(String)? onChanged,
   }) {
     return TextField(
@@ -152,9 +181,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       keyboardType: textInputType,
       autofocus: widget.autofocus,
       focusNode: needToSetFocusNode ? _focusNode : null,
-      controller: widget.controller
+      controller: _controller
         ..selection = TextSelection.collapsed(
-          offset: widget.controller.text.length,
+          offset: _controller.text.length,
         ),
       inputFormatters: widget.inputFormatters,
       onChanged: onChanged,
@@ -162,13 +191,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
           borderSide: BorderSide(
-            color: _color.regular.border,
+            color: colorSet.border,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
           borderSide: BorderSide(
-            color: _color.focused?.border ?? noColor,
+            color: colorSet.border,
           ),
         ),
         label: Container(
@@ -187,13 +216,11 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelStyle: TextStyle(
-          color: _focusNode.hasFocus
-              ? _color.focused?.label
-              : _color.regular.label,
+          color: colorSet.label,
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(
-          color: _color.regular.hint,
+          color: colorSet.hint,
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 15.0,
@@ -201,13 +228,11 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         counterText: "",
         suffixText: widget.textLengthCounterVisible
-            ? '${widget.controller.text.length}/${widget.maxTextLength}'
+            ? '${_controller.text.length}/${widget.maxTextLength}'
             : null,
       ),
       style: TextStyle(
-        color: _focusNode.hasFocus
-            ? _color.focused?.foreground
-            : _color.regular.foreground,
+        color: colorSet.foreground,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),
@@ -217,6 +242,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   void dispose() {
+    _defaultController?.dispose();
     _focusNode.removeListener(_focusListener);
     _defaultFocusNode?.dispose();
     _notifier?.removeListener(_customKeyboardValueChangeListener);

@@ -24,15 +24,15 @@ import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversio
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/add_unit_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
-import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
+import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
@@ -46,6 +46,8 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_det
 import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 
 final locator = GetIt.I;
 
@@ -75,7 +77,7 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => UnitGroupsBloc(
       fetchUnitGroupsUseCase: locator(),
-      addUnitGroupUseCase: locator(),
+      saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
     ),
   );
@@ -120,6 +122,10 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton(
+    () => UnitGroupDetailsBloc(),
+  );
+
+  locator.registerLazySingleton(
     () => ConversionBloc(
       buildConversionUseCase: locator(),
       saveConversionUseCase: locator(),
@@ -141,8 +147,8 @@ Future<void> init() async {
   locator.registerLazySingleton<GetUnitGroupUseCase>(
     () => GetUnitGroupUseCase(locator()),
   );
-  locator.registerLazySingleton<AddUnitGroupUseCase>(
-    () => AddUnitGroupUseCase(locator()),
+  locator.registerLazySingleton<SaveUnitGroupUseCase>(
+    () => SaveUnitGroupUseCase(locator()),
   );
   locator.registerLazySingleton<RemoveUnitGroupsUseCase>(
     () => RemoveUnitGroupsUseCase(locator()),

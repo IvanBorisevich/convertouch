@@ -69,7 +69,7 @@ class _ConvertouchUnitDetailsPageState
           _unitCodeTextController.text = pageState.draftDetails.unit.code;
 
           return ConvertouchPage(
-            title: pageState.editMode ? "Edit Unit" : "Add Unit",
+            title: pageState.editMode ? "Edit Unit" : "New Unit",
             body: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 60),

@@ -33,7 +33,8 @@ class UnitGroupTranslator
       name: model.name,
       iconName:
           model.iconName != unitGroupDefaultIconName ? model.iconName : null,
-      conversionType: model.conversionType.value,
+      conversionType:
+          model.conversionType.value != 0 ? model.conversionType.value : null,
       refreshable: model.refreshable == true ? 1 : null,
       oob: model.oob == true ? 1 : null,
     );

@@ -8,6 +8,8 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
@@ -67,6 +69,8 @@ const unitsBlocBuilderForUnitDetails = blocBuilderWrap<UnitsBlocForUnitDetails,
     UnitsState, UnitsFetchedForUnitDetails>;
 const unitDetailsBlocBuilder =
     blocBuilderWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
+const unitGroupDetailsBlocBuilder = blocBuilderWrap<UnitGroupDetailsBloc,
+    UnitGroupDetailsState, UnitGroupDetailsReady>;
 
 const conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
@@ -130,7 +134,7 @@ Widget unitGroupsChangeBlocListenerWrap({
     listener: (_, unitGroupsState) {
       if (unitGroupsState is UnitGroupsFetched &&
           (unitGroupsState.removedIds.isNotEmpty ||
-              unitGroupsState.addedId != null)) {
+              unitGroupsState.modifiedUnitGroup != null)) {
         handler?.call(unitGroupsState);
       }
     },

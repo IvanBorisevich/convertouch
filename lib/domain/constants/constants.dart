@@ -85,13 +85,14 @@ enum ConvertouchUITheme {
 }
 
 enum ConversionType {
-  static(0),
-  dynamic(1),
-  formula(2);
+  static(0, "Static"),
+  dynamic(1, "Dynamic"),
+  formula(2, "Formula");
 
   final int value;
+  final String name;
 
-  const ConversionType(this.value);
+  const ConversionType(this.value, this.name);
 
   static ConversionType valueOf(int? value) {
     return values.firstWhereOrNull((element) => value == element.value) ??
