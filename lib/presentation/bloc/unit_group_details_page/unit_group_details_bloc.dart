@@ -1,11 +1,12 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupDetailsBloc
-    extends ConvertouchBloc<UnitGroupDetailsEvent, UnitGroupDetailsState> {
+    extends ConvertouchBloc<ConvertouchEvent, UnitGroupDetailsState> {
   UnitGroupDetailsBloc()
       : super(
           const UnitGroupDetailsReady(

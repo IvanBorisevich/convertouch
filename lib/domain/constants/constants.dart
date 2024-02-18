@@ -45,7 +45,6 @@ enum BottomNavbarItem {
   home,
   unitsMenu,
   settings,
-  more,
 }
 
 enum ItemsViewMode {

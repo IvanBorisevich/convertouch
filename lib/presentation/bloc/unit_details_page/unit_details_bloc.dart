@@ -10,6 +10,7 @@ import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_det
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/utils/unit_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // TODO: refactor
 
 class UnitDetailsBloc
-    extends ConvertouchBloc<UnitDetailsEvent, UnitDetailsState> {
+    extends ConvertouchBloc<ConvertouchEvent, UnitDetailsState> {
   final PrepareSavedUnitDetailsUseCase prepareSavedUnitDetailsUseCase;
   final PrepareDraftUnitDetailsUseCase prepareDraftUnitDetailsUseCase;
 

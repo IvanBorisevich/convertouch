@@ -1,11 +1,12 @@
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupsBlocForConversion
-    extends ConvertouchBloc<UnitGroupsEvent, UnitGroupsState> {
+    extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> {
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
 
   UnitGroupsBlocForConversion({

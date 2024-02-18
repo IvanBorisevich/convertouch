@@ -26,14 +26,15 @@ import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
@@ -72,6 +73,10 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => AppBloc(),
+  );
+
+  locator.registerLazySingleton(
+    () => NavigationBloc(),
   );
 
   locator.registerLazySingleton(

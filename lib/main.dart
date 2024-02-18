@@ -5,6 +5,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
@@ -45,6 +46,9 @@ class ConvertouchApp extends StatelessWidget {
             ..add(
               const GetAppSettings(),
             ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<NavigationBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>()

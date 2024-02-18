@@ -6,11 +6,12 @@ import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RefreshingJobsBloc extends ConvertouchPersistentBloc<RefreshingJobsEvent,
+class RefreshingJobsBloc extends ConvertouchPersistentBloc<ConvertouchEvent,
     RefreshingJobsState> {
   final ExecuteJobUseCase executeJobUseCase;
 

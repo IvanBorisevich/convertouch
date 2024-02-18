@@ -20,7 +20,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversi
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/pages/templates/error_page.dart';
+import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

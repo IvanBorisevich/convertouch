@@ -5,11 +5,12 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
+class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
   final SaveUnitUseCase saveUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
