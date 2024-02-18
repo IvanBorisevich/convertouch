@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
@@ -35,12 +36,6 @@ Widget blocBuilderWrap<
           (next is PageStateType || next is ConvertouchErrorState);
     },
     builder: (_, state) {
-      if (state is ConvertouchErrorState) {
-        return ConvertouchErrorPage<BlocType, PageStateType>(
-          errorState: state,
-          lastSuccessfulState: state.lastSuccessfulState as PageStateType,
-        );
-      }
       if (state is PageStateType) {
         return builderFunc.call(state);
       }
@@ -78,66 +73,74 @@ const conversionBlocBuilder =
 const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
 
-BlocListener<BlocType, AbstractStateType> pageListenerWrap<
+class StateHandler<T> {
+  final Type stateType;
+  final void Function(dynamic) handlerFunc;
+
+  StateHandler(void Function(T) func)
+      : stateType = T,
+        handlerFunc = _castFunc(func);
+
+  static void Function(dynamic) _castFunc<T>(void Function(T) func) {
+    return (value) {
+      func.call(value as T);
+    };
+  }
+}
+
+BlocListener<BlocType, AbstractStateType> blocListenerWrap<
     BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
-    AbstractStateType extends ConvertouchState,
-    PageStateType extends AbstractStateType>({
-  required BuildContext context,
-  required Map<dynamic, void Function(AbstractStateType)> handlers,
+    AbstractStateType extends ConvertouchState>({
+  required List<StateHandler> handlers,
   Widget? child,
 }) {
   return BlocListener<BlocType, AbstractStateType>(
     listener: (_, state) {
-      // if (state is ConvertouchErrorState) {
-      //   log("Trigger error page");
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => ConvertouchErrorPage<BlocType, PageStateType>(
-      //         errorState: state,
-      //         lastSuccessfulState: state.lastSuccessfulState as PageStateType,
-      //       ),
-      //     ),
-      //   );
-      // } else {
-      handlers[state.runtimeType]?.call(state);
-      // }
+      StateHandler? handler = handlers.firstWhereOrNull(
+        (handler) => handler.stateType == state.runtimeType,
+      );
+      handler?.handlerFunc.call(state);
     },
     child: child,
   );
 }
 
-const unitDetailsListener =
-    pageListenerWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
+const unitGroupsBlocListener =
+    blocListenerWrap<UnitGroupsBloc, UnitGroupsState>;
+const unitGroupsBlocListenerForConversion =
+    blocListenerWrap<UnitGroupsBlocForConversion, UnitGroupsState>;
+const unitsBlocListener = blocListenerWrap<UnitsBloc, UnitsState>;
+const unitsBlocListenerForConversion =
+    blocListenerWrap<UnitsBlocForConversion, UnitsState>;
+const unitDetailsBlocListener =
+    blocListenerWrap<UnitDetailsBloc, UnitDetailsState>;
+const conversionBlocListener =
+    blocListenerWrap<ConversionBloc, ConversionState>;
+const refreshingJobsBlocListener =
+    blocListenerWrap<RefreshingJobsBloc, RefreshingJobsState>;
 
-Widget unitsChangeBlocListenerWrap({
-  required Function(UnitsFetched)? handler,
-  required Widget? child,
-}) {
-  return BlocListener<UnitsBloc, UnitsState>(
-    listener: (_, unitsState) {
-      if (unitsState is UnitsFetched &&
-          (unitsState.removedIds.isNotEmpty ||
-              unitsState.modifiedUnit != null)) {
-        handler?.call(unitsState);
-      }
-    },
-    child: child,
+BlocListener<BlocType, AbstractStateType> errorHandlingBlocListenerWrap<
+    BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
+    AbstractStateType extends ConvertouchState,
+    ErrorStateType extends ConvertouchErrorState>(BuildContext context) {
+  return blocListenerWrap<BlocType, AbstractStateType>(
+    handlers: [
+      StateHandler<ErrorStateType>((state) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ConvertouchErrorPage<BlocType, AbstractStateType>(
+              errorState: state,
+              lastSuccessfulState:
+                  state.lastSuccessfulState as AbstractStateType,
+            ),
+          ),
+        );
+      })
+    ],
   );
 }
 
-Widget unitGroupsChangeBlocListenerWrap({
-  required Function(UnitGroupsFetched)? handler,
-  required Widget? child,
-}) {
-  return BlocListener<UnitGroupsBloc, UnitGroupsState>(
-    listener: (_, unitGroupsState) {
-      if (unitGroupsState is UnitGroupsFetched &&
-          (unitGroupsState.removedIds.isNotEmpty ||
-              unitGroupsState.modifiedUnitGroup != null)) {
-        handler?.call(unitGroupsState);
-      }
-    },
-    child: child,
-  );
-}
+const conversionErrorListener = errorHandlingBlocListenerWrap<ConversionBloc,
+    ConversionState, ConversionErrorState>;

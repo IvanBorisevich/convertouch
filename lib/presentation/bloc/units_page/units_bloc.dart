@@ -76,6 +76,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
             searchString: event.searchString,
             removalMode: true,
             markedIdsForRemoval: markedIds,
+            navigateToPage: event.navigateToPage,
           ),
         );
       } else {
@@ -87,6 +88,7 @@ class UnitsBloc extends ConvertouchBloc<UnitsEvent, UnitsState> {
             removedIds: event.removedIds,
             modifiedUnit: event.modifiedUnit,
             rebuildConversion: event.rebuildConversion,
+            navigateToPage: event.navigateToPage,
           ),
         );
       }

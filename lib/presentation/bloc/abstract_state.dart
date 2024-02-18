@@ -22,6 +22,11 @@ abstract class ConvertouchErrorState extends ConvertouchState {
     exception,
     lastSuccessfulState,
   ];
+
+  @override
+  String toString() {
+    return 'ConvertouchErrorState{lastSuccessfulState: $lastSuccessfulState}';
+  }
 }
 
 abstract class ConvertouchNotificationState extends ConvertouchState {

@@ -39,6 +39,7 @@ class UnitGroupsBlocForConversion
           UnitGroupsFetchedForFirstAddingToConversion(
             unitGroups: result.right,
             searchString: event.searchString,
+            navigateToPage: event.navigateToPage,
           ),
         );
       } else if (event is FetchUnitGroupsForChangeInConversion) {
@@ -47,6 +48,7 @@ class UnitGroupsBlocForConversion
             unitGroups: result.right,
             currentUnitGroupInConversion: event.currentUnitGroupInConversion,
             searchString: event.searchString,
+            navigateToPage: event.navigateToPage,
           ),
         );
       }

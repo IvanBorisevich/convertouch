@@ -34,6 +34,7 @@ class UnitsFetched extends UnitsState {
   final List<int> removedIds;
   final UnitModel? modifiedUnit;
   final bool rebuildConversion;
+  final bool navigateToPage;
 
   const UnitsFetched({
     this.units = const [],
@@ -44,6 +45,7 @@ class UnitsFetched extends UnitsState {
     this.removedIds = const [],
     this.modifiedUnit,
     this.rebuildConversion = false,
+    this.navigateToPage = false,
   });
 
   @override
@@ -56,6 +58,7 @@ class UnitsFetched extends UnitsState {
         removedIds,
         modifiedUnit,
         rebuildConversion,
+        navigateToPage,
       ];
 
   @override
@@ -76,6 +79,7 @@ abstract class UnitsFetchedForConversion extends UnitsFetched {
     required this.unitsMarkedForConversion,
     this.currentSourceConversionItem,
     required super.searchString,
+    super.navigateToPage,
   });
 
   @override
@@ -85,6 +89,7 @@ abstract class UnitsFetchedForConversion extends UnitsFetched {
         unitsMarkedForConversion,
         currentSourceConversionItem,
         searchString,
+        super.props,
       ];
 }
 
@@ -98,6 +103,7 @@ class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
     required this.allowUnitsToBeAddedToConversion,
     super.currentSourceConversionItem,
     required super.searchString,
+    super.navigateToPage,
   });
 
   @override
@@ -112,7 +118,8 @@ class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
         'unitsMarkedForConversion: $unitsMarkedForConversion, '
         'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion, '
         'currentSourceConversionItem: $currentSourceConversionItem, '
-        'searchString: $searchString}';
+        'searchString: $searchString, '
+        'navigateToPage: $navigateToPage}';
   }
 }
 
@@ -126,6 +133,7 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
     required super.unitsMarkedForConversion,
     super.currentSourceConversionItem,
     required super.searchString,
+    super.navigateToPage,
   });
 
   @override
@@ -138,7 +146,8 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
   String toString() {
     return 'UnitsFetchedForChangeInConversion{'
         'selectedUnit: $selectedUnit, '
-        'unitsMarkedForConversion: $unitsMarkedForConversion}';
+        'unitsMarkedForConversion: $unitsMarkedForConversion, '
+        'navigateToPage: $navigateToPage}';
   }
 }
 
@@ -152,6 +161,7 @@ class UnitsFetchedForUnitDetails extends UnitsFetched {
     required this.selectedArgUnit,
     required this.currentEditedUnit,
     required super.searchString,
+    super.navigateToPage,
   });
 
   @override

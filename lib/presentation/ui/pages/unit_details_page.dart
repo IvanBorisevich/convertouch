@@ -42,15 +42,17 @@ class _ConvertouchUnitDetailsPageState
 
       return MultiBlocListener(
         listeners: [
-          unitDetailsListener(context: context, handlers: {
-            UnitDetailsNotificationState: (state) {
-              showSnackBar(
-                context,
-                exception: (state as UnitDetailsNotificationState).exception,
-                theme: appState.theme,
-              );
-            },
-          }),
+          unitDetailsBlocListener(
+            handlers: [
+              StateHandler<UnitDetailsNotificationState>((state) {
+                showSnackBar(
+                  context,
+                  exception: state.exception,
+                  theme: appState.theme,
+                );
+              }),
+            ],
+          ),
           BlocListener<UnitsBloc, UnitsState>(
             listener: (_, unitsState) {
               if (unitsState is UnitExists) {

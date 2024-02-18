@@ -38,7 +38,7 @@ class ConvertouchPage extends StatelessWidget {
               builder: (context) {
                 if (customLeadingIcon != null) {
                   return customLeadingIcon!;
-                } else if (ModalRoute.of(context)?.canPop ?? true) {
+                } else if (ModalRoute.of(context)?.canPop == true) {
                   return leadingIcon(
                     icon: Icons.arrow_back_rounded,
                     color: pageColorScheme.appBar.regular,

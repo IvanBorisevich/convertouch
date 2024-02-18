@@ -7,8 +7,8 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchErrorPage<B extends Bloc, S extends ConvertouchState>
-    extends StatelessWidget {
+class ConvertouchErrorPage<B extends Bloc<ConvertouchEvent, S>,
+    S extends ConvertouchState> extends StatelessWidget {
   final String pageTitle;
   final ConvertouchErrorState errorState;
   final S lastSuccessfulState;
@@ -27,6 +27,18 @@ class ConvertouchErrorPage<B extends Bloc, S extends ConvertouchState>
 
       return ConvertouchPage(
         title: pageTitle,
+        customLeadingIcon: leadingIcon(
+          icon: Icons.arrow_back_rounded,
+          color: pageColorScheme.appBar.regular,
+          onClick: () {
+            BlocProvider.of<B>(context).add(
+              ShowState<S>(
+                state: lastSuccessfulState,
+              ),
+            );
+            Navigator.of(context).pop();
+          },
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +89,7 @@ class ConvertouchErrorPage<B extends Bloc, S extends ConvertouchState>
                           state: lastSuccessfulState,
                         ),
                       );
+                      Navigator.of(context).pop();
                     },
                     child: Container(
                       width: 100,
