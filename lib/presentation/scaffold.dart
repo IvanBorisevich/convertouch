@@ -129,15 +129,15 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                 items: [
                   _buildNavbarItem(
                     bottomNavbarItem: BottomNavbarItem.home,
-                    selectedItem: navigationState.bottomNavbarItem,
+                    selectedItem: selectedItem,
                   ),
                   _buildNavbarItem(
                     bottomNavbarItem: BottomNavbarItem.unitsMenu,
-                    selectedItem: navigationState.bottomNavbarItem,
+                    selectedItem: selectedItem,
                   ),
                   _buildNavbarItem(
                     bottomNavbarItem: BottomNavbarItem.settings,
-                    selectedItem: navigationState.bottomNavbarItem,
+                    selectedItem: selectedItem,
                   ),
                 ],
                 onTap: (index) {
@@ -147,7 +147,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     ),
                   );
                 },
-                currentIndex: navigationState.bottomNavbarItem.index,
+                currentIndex: selectedItem.index,
                 elevation: 0,
                 backgroundColor: pageColorScheme.bottomBar.regular.background,
                 unselectedItemColor:

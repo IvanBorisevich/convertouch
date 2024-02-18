@@ -45,7 +45,7 @@ class UnitGroupDetailsErrorState extends ConvertouchErrorState
 
   @override
   String toString() {
-    return 'UnitDetailsErrorState{'
+    return 'UnitGroupDetailsErrorState{'
         'exception: $exception}';
   }
 }
