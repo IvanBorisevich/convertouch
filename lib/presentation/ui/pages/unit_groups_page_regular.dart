@@ -61,7 +61,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                 searchString: null,
               ),
             );
-            Navigator.of(context).pushNamed(PageName.unitsPageRegular.name);
+            // Navigator.of(context).pushNamed(PageName.unitsPageRegular.name);
           },
           onUnitGroupTapForRemoval: (unitGroup) {
             BlocProvider.of<UnitGroupsBloc>(context).add(

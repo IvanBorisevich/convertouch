@@ -104,6 +104,7 @@ Future<void> init() async {
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 

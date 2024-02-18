@@ -15,6 +15,8 @@ class NavigationBloc
           ),
         ) {
     on<SelectBottomNavbarItem>(_onBottomNavbarItemSelect);
+    on<NavigateToPage>(_onNavigateToPage);
+    on<NavigateBack>(_onNavigateBack);
   }
 
   _onBottomNavbarItemSelect(
@@ -47,5 +49,31 @@ class NavigationBloc
         );
         break;
     }
+  }
+
+  _onNavigateToPage(
+    NavigateToPage event,
+    Emitter<NavigationState> emit,
+  ) async {
+    emit(
+      NavigationState(
+        bottomNavbarItem: state.bottomNavbarItem,
+        index: state.index,
+        nextPageName: event.pageName,
+      ),
+    );
+  }
+
+  _onNavigateBack(
+    NavigateBack event,
+    Emitter<NavigationState> emit,
+  ) async {
+    emit(
+      NavigationState(
+        bottomNavbarItem: state.bottomNavbarItem,
+        index: state.index,
+        navigateBack: true,
+      ),
+    );
   }
 }

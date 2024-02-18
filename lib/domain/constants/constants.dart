@@ -29,6 +29,7 @@ enum PageName {
   unitDetailsPage,
   settingsPage,
   refreshingJobDetailsPage,
+  errorPage,
 }
 
 enum ItemType {

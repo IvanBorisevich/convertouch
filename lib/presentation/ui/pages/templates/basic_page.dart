@@ -1,10 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchPage extends StatelessWidget {
   final Widget body;
@@ -43,7 +46,9 @@ class ConvertouchPage extends StatelessWidget {
                     icon: Icons.arrow_back_rounded,
                     color: pageColorScheme.appBar.regular,
                     onClick: () {
-                      Navigator.of(context).pop();
+                      BlocProvider.of<NavigationBloc>(context).add(
+                        const NavigateBack(),
+                      );
                     },
                   );
                 } else {
@@ -99,7 +104,9 @@ void showAlertDialog(
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              BlocProvider.of<NavigationBloc>(context).add(
+                const NavigateBack(),
+              );
             },
             child: const Text('OK'),
           ),

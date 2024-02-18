@@ -23,3 +23,30 @@ class SelectBottomNavbarItem extends NavigationEvent {
         'bottomNavbarItem: $bottomNavbarItem}';
   }
 }
+
+class NavigateToPage extends NavigationEvent {
+  final PageName pageName;
+
+  const NavigateToPage({
+    required this.pageName,
+  });
+
+  @override
+  List<Object?> get props => [
+    pageName,
+  ];
+
+  @override
+  String toString() {
+    return 'NavigateToPage{pageName: $pageName}';
+  }
+}
+
+class NavigateBack extends NavigationEvent {
+  const NavigateBack();
+
+  @override
+  String toString() {
+    return 'NavigateBack{}';
+  }
+}
