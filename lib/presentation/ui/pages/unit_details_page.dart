@@ -42,29 +42,26 @@ class _ConvertouchUnitDetailsPageState
 
       return MultiBlocListener(
         listeners: [
-          unitDetailsBlocListener(
-            handlers: [
-              StateHandler<UnitDetailsNotificationState>((state) {
-                showSnackBar(
-                  context,
-                  exception: state.exception,
-                  theme: appState.theme,
-                );
-              }),
-            ],
-          ),
-          BlocListener<UnitsBloc, UnitsState>(
-            listener: (_, unitsState) {
-              if (unitsState is UnitExists) {
-                showAlertDialog(
-                  context,
-                  message: "Unit '${unitsState.unitName}' already exist",
-                );
-              } else if (unitsState is UnitsFetched) {
-                Navigator.of(context).pop();
-              }
-            },
-          ),
+          unitDetailsBlocListener([
+            StateHandler<UnitDetailsNotificationState>((state) {
+              showSnackBar(
+                context,
+                exception: state.exception,
+                theme: appState.theme,
+              );
+            }),
+          ]),
+          unitsBlocListener([
+            StateHandler<UnitsFetched>((state) {
+              Navigator.of(context).pop();
+            }),
+            StateHandler<UnitExists>((state) {
+              showAlertDialog(
+                context,
+                message: "Unit '${state.unitName}' already exist",
+              );
+            }),
+          ]),
         ],
         child: unitDetailsBlocBuilder((pageState) {
           _unitNameTextController.text = pageState.draftDetails.unit.name;

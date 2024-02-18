@@ -27,43 +27,38 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
       return unitsBlocBuilderForConversion((pageState) {
         return MultiBlocListener(
           listeners: [
-            unitGroupsBlocListener(
-              handlers: [
-                StateHandler<UnitGroupsFetched>((state) {
-                  if (state.removedIds.contains(pageState.unitGroup.id)) {
-                    Navigator.of(context).pop();
+            unitGroupsBlocListener([
+              StateHandler<UnitGroupsFetched>((state) {
+                if (state.removedIds.contains(pageState.unitGroup.id)) {
+                  Navigator.of(context).pop();
+                }
+              }),
+            ]),
+            unitsBlocListener([
+              StateHandler<UnitsFetched>((state) {
+                if (state.removedIds.isNotEmpty || state.modifiedUnit != null) {
+                  if (pageState is UnitsFetchedToMarkForConversion) {
+                    BlocProvider.of<UnitsBlocForConversion>(context).add(
+                      FetchUnitsToMarkForConversion(
+                        unitGroup: pageState.unitGroup,
+                        unitsAlreadyMarkedForConversion:
+                            pageState.unitsMarkedForConversion,
+                        searchString: pageState.searchString,
+                      ),
+                    );
+                  } else if (pageState is UnitsFetchedForChangeInConversion) {
+                    BlocProvider.of<UnitsBlocForConversion>(context).add(
+                      FetchUnitsForChangeInConversion(
+                        currentSelectedUnit: pageState.selectedUnit,
+                        unitGroup: pageState.unitGroup,
+                        unitsInConversion: pageState.unitsMarkedForConversion,
+                        searchString: pageState.searchString,
+                      ),
+                    );
                   }
-                }),
-              ],
-            ),
-            unitsBlocListener(
-              handlers: [
-                StateHandler<UnitsFetched>((state) {
-                  if (state.removedIds.isNotEmpty ||
-                      state.modifiedUnit != null) {
-                    if (pageState is UnitsFetchedToMarkForConversion) {
-                      BlocProvider.of<UnitsBlocForConversion>(context).add(
-                        FetchUnitsToMarkForConversion(
-                          unitGroup: pageState.unitGroup,
-                          unitsAlreadyMarkedForConversion:
-                              pageState.unitsMarkedForConversion,
-                          searchString: pageState.searchString,
-                        ),
-                      );
-                    } else if (pageState is UnitsFetchedForChangeInConversion) {
-                      BlocProvider.of<UnitsBlocForConversion>(context).add(
-                        FetchUnitsForChangeInConversion(
-                          currentSelectedUnit: pageState.selectedUnit,
-                          unitGroup: pageState.unitGroup,
-                          unitsInConversion: pageState.unitsMarkedForConversion,
-                          searchString: pageState.searchString,
-                        ),
-                      );
-                    }
-                  }
-                }),
-              ],
-            ),
+                }
+              }),
+            ]),
           ],
           child: ConvertouchUnitsPage(
             pageTitle: pageState is UnitsFetchedForChangeInConversion

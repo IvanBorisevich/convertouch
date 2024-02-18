@@ -53,7 +53,6 @@ class UnitsBlocForConversion extends ConvertouchBloc<UnitsEvent, UnitsState> {
               allMarkedUnits.length >= _minUnitsNumForConversion,
           currentSourceConversionItem: event.currentSourceConversionItem,
           searchString: event.searchString,
-          navigateToPage: event.navigateToPage,
         ),
       );
     }
@@ -88,7 +87,6 @@ class UnitsBlocForConversion extends ConvertouchBloc<UnitsEvent, UnitsState> {
           currentSourceConversionItem: event.currentSourceConversionItem,
           unitGroup: event.unitGroup,
           searchString: event.searchString,
-          navigateToPage: event.navigateToPage,
         ),
       );
     }

@@ -26,57 +26,55 @@ class ConvertouchBottomNavbarItemNavigator extends StatelessWidget {
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     MapEntry<String, WidgetBuilder> route(String pageId, Widget page) {
-      return MapEntry(pageId, (context) => page);
+      return MapEntry<String, WidgetBuilder>(pageId, (context) => page);
     }
 
-    return {}..addEntries(
-        [
-          route(
-            PageName.unitsConversionPage.name,
-            const ConvertouchConversionPage(),
-          ),
-          route(
-            PageName.unitGroupsPageRegular.name,
-            const ConvertouchUnitGroupsPageRegular(),
-          ),
-          route(
-            PageName.unitGroupsPageForConversion.name,
-            const ConvertouchUnitGroupsPageForConversion(),
-          ),
-          route(
-            PageName.unitGroupsPageForUnitDetails.name,
-            const ConvertouchUnitGroupsPageForUnitDetails(),
-          ),
-          route(
-            PageName.unitsPageRegular.name,
-            const ConvertouchUnitsPageRegular(),
-          ),
-          route(
-            PageName.unitsPageForConversion.name,
-            const ConvertouchUnitsPageForConversion(),
-          ),
-          route(
-            PageName.unitsPageForUnitDetails.name,
-            const ConvertouchUnitsPageForUnitDetails(),
-          ),
-          route(
-            PageName.unitGroupDetailsPage.name,
-            const ConvertouchUnitGroupDetailsPage(),
-          ),
-          route(
-            PageName.unitDetailsPage.name,
-            const ConvertouchUnitDetailsPage(),
-          ),
-          route(
-            PageName.settingsPage.name,
-            const ConvertouchSettingsPage(),
-          ),
-          route(
-            PageName.refreshingJobDetailsPage.name,
-            const ConvertouchRefreshingJobDetailsPage(),
-          ),
-        ],
-      );
+    return {}..addEntries([
+        route(
+          PageName.unitsConversionPage.name,
+          const ConvertouchConversionPage(),
+        ),
+        route(
+          PageName.unitGroupsPageRegular.name,
+          const ConvertouchUnitGroupsPageRegular(),
+        ),
+        route(
+          PageName.unitGroupsPageForConversion.name,
+          const ConvertouchUnitGroupsPageForConversion(),
+        ),
+        route(
+          PageName.unitGroupsPageForUnitDetails.name,
+          const ConvertouchUnitGroupsPageForUnitDetails(),
+        ),
+        route(
+          PageName.unitsPageRegular.name,
+          const ConvertouchUnitsPageRegular(),
+        ),
+        route(
+          PageName.unitsPageForConversion.name,
+          const ConvertouchUnitsPageForConversion(),
+        ),
+        route(
+          PageName.unitsPageForUnitDetails.name,
+          const ConvertouchUnitsPageForUnitDetails(),
+        ),
+        route(
+          PageName.unitGroupDetailsPage.name,
+          const ConvertouchUnitGroupDetailsPage(),
+        ),
+        route(
+          PageName.unitDetailsPage.name,
+          const ConvertouchUnitDetailsPage(),
+        ),
+        route(
+          PageName.settingsPage.name,
+          const ConvertouchSettingsPage(),
+        ),
+        route(
+          PageName.refreshingJobDetailsPage.name,
+          const ConvertouchRefreshingJobDetailsPage(),
+        ),
+      ]);
   }
 
   @override

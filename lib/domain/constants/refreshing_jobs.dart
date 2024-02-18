@@ -16,10 +16,10 @@ const refreshingJobsMap = {
       },
     },
   },
-  temperatureGroup: {
-    "name": "Temperature",
-    "group": temperatureGroup,
-    "refreshableDataPart": RefreshableDataPart.value,
-    "dataSources": {},
-  }
+  // temperatureGroup: {
+  //   "name": "Temperature",
+  //   "group": temperatureGroup,
+  //   "refreshableDataPart": RefreshableDataPart.value,
+  //   "dataSources": {},
+  // }
 };

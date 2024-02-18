@@ -22,7 +22,6 @@ class UnitGroupsFetched extends UnitGroupsState {
   final List<int> removedIds;
   final UnitGroupModel? modifiedUnitGroup;
   final bool rebuildConversion;
-  final bool navigateToPage;
 
   const UnitGroupsFetched({
     required this.unitGroups,
@@ -32,7 +31,6 @@ class UnitGroupsFetched extends UnitGroupsState {
     this.removedIds = const [],
     this.modifiedUnitGroup,
     this.rebuildConversion = false,
-    this.navigateToPage = false,
   });
 
   @override
@@ -44,7 +42,6 @@ class UnitGroupsFetched extends UnitGroupsState {
     removedIds,
     modifiedUnitGroup,
     rebuildConversion,
-    navigateToPage,
   ];
 
   @override
@@ -61,7 +58,6 @@ abstract class UnitGroupsFetchedForConversion extends UnitGroupsFetched {
   const UnitGroupsFetchedForConversion({
     required super.unitGroups,
     required super.searchString,
-    super.navigateToPage,
   });
 }
 
@@ -69,7 +65,6 @@ class UnitGroupsFetchedForFirstAddingToConversion extends UnitGroupsFetchedForCo
   const UnitGroupsFetchedForFirstAddingToConversion({
     required super.unitGroups,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -86,7 +81,6 @@ class UnitGroupsFetchedForChangeInConversion extends UnitGroupsFetchedForConvers
     required super.unitGroups,
     required this.currentUnitGroupInConversion,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -109,7 +103,6 @@ class UnitGroupsFetchedForUnitDetails extends UnitGroupsFetched {
     required super.unitGroups,
     this.unitGroupInUnitDetails,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override

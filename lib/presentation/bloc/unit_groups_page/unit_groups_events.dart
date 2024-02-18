@@ -10,14 +10,12 @@ class FetchUnitGroups extends UnitGroupsEvent {
   final List<int> removedIds;
   final UnitGroupModel? modifiedUnitGroup;
   final bool rebuildConversion;
-  final bool navigateToPage;
 
   const FetchUnitGroups({
     required this.searchString,
     this.removedIds = const [],
     this.modifiedUnitGroup,
     this.rebuildConversion = false,
-    this.navigateToPage = false,
   });
 
   @override
@@ -26,7 +24,6 @@ class FetchUnitGroups extends UnitGroupsEvent {
     removedIds,
     modifiedUnitGroup,
     rebuildConversion,
-    navigateToPage,
   ];
 
   @override
@@ -40,7 +37,6 @@ class FetchUnitGroups extends UnitGroupsEvent {
 class FetchUnitGroupsForFirstAddingToConversion extends FetchUnitGroups {
   const FetchUnitGroupsForFirstAddingToConversion({
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -56,7 +52,6 @@ class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
   const FetchUnitGroupsForChangeInConversion({
     required this.currentUnitGroupInConversion,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -79,7 +74,6 @@ class FetchUnitGroupsForUnitDetails extends FetchUnitGroups {
   const FetchUnitGroupsForUnitDetails({
     required this.currentUnitGroupInUnitDetails,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override

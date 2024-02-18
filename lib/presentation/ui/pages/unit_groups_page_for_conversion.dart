@@ -28,28 +28,31 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
         selectedUnitGroupId = pageState.currentUnitGroupInConversion.id;
       }
 
-      return unitGroupsBlocListener(
-        handlers: [
-          StateHandler<UnitGroupsFetched>((state) {
-            if (state.removedIds.isNotEmpty ||
-                state.modifiedUnitGroup != null) {
-              if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
-                BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-                  FetchUnitGroupsForFirstAddingToConversion(
-                    searchString: pageState.searchString,
-                  ),
-                );
-              } else if (pageState is UnitGroupsFetchedForChangeInConversion) {
-                BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-                  FetchUnitGroupsForChangeInConversion(
-                    currentUnitGroupInConversion:
-                        pageState.currentUnitGroupInConversion,
-                    searchString: pageState.searchString,
-                  ),
-                );
+      return MultiBlocListener(
+        listeners: [
+          unitGroupsBlocListener([
+            StateHandler<UnitGroupsFetched>((state) {
+              if (state.removedIds.isNotEmpty ||
+                  state.modifiedUnitGroup != null) {
+                if (pageState is UnitGroupsFetchedForFirstAddingToConversion) {
+                  BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                    FetchUnitGroupsForFirstAddingToConversion(
+                      searchString: pageState.searchString,
+                    ),
+                  );
+                } else if (pageState
+                    is UnitGroupsFetchedForChangeInConversion) {
+                  BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                    FetchUnitGroupsForChangeInConversion(
+                      currentUnitGroupInConversion:
+                          pageState.currentUnitGroupInConversion,
+                      searchString: pageState.searchString,
+                    ),
+                  );
+                }
               }
-            }
-          }),
+            }),
+          ]),
         ],
         child: ConvertouchUnitGroupsPage(
           pageTitle: pageTitle,

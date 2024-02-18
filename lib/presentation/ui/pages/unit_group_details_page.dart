@@ -41,25 +41,27 @@ class _ConvertouchUnitGroupDetailsPageState
       ButtonColorSet floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
 
-      return BlocListener<UnitGroupsBloc, UnitGroupsState>(
-        listener: (_, unitGroupsState) {
-          if (unitGroupsState is UnitGroupExists) {
-            showAlertDialog(
-              context,
-              message:
-                  "Unit group '${unitGroupsState.unitGroupName}' already exist",
-            );
-          } else if (unitGroupsState is UnitGroupsFetched) {
-            if (unitGroupsState.modifiedUnitGroup != null) {
-              BlocProvider.of<UnitsBloc>(context).add(
-                ModifyGroup(
-                  modifiedGroup: unitGroupsState.modifiedUnitGroup!,
-                ),
+      return MultiBlocListener(
+        listeners: [
+          unitGroupsBlocListener([
+            StateHandler<UnitGroupExists>((state) {
+              showAlertDialog(
+                context,
+                message: "Unit group '${state.unitGroupName}' already exist",
               );
-            }
-            Navigator.of(context).pop();
-          }
-        },
+            }),
+            StateHandler<UnitGroupsFetched>((state) {
+              if (state.modifiedUnitGroup != null) {
+                BlocProvider.of<UnitsBloc>(context).add(
+                  ModifyGroup(
+                    modifiedGroup: state.modifiedUnitGroup!,
+                  ),
+                );
+              }
+              Navigator.of(context).pop();
+            }),
+          ]),
+        ],
         child: unitGroupDetailsBlocBuilder((unitGroupDetailsState) {
           _unitGroupNameController.text = unitGroupDetailsState.draftGroup.name;
 

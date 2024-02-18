@@ -90,10 +90,7 @@ class StateHandler<T> {
 
 BlocListener<BlocType, AbstractStateType> blocListenerWrap<
     BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
-    AbstractStateType extends ConvertouchState>({
-  required List<StateHandler> handlers,
-  Widget? child,
-}) {
+    AbstractStateType extends ConvertouchState>(List<StateHandler> handlers) {
   return BlocListener<BlocType, AbstractStateType>(
     listener: (_, state) {
       StateHandler? handler = handlers.firstWhereOrNull(
@@ -101,7 +98,6 @@ BlocListener<BlocType, AbstractStateType> blocListenerWrap<
       );
       handler?.handlerFunc.call(state);
     },
-    child: child,
   );
 }
 
@@ -123,23 +119,20 @@ BlocListener<BlocType, AbstractStateType> errorHandlingBlocListenerWrap<
     BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
     AbstractStateType extends ConvertouchState,
     ErrorStateType extends ConvertouchErrorState>(BuildContext context) {
-  return blocListenerWrap<BlocType, AbstractStateType>(
-    handlers: [
-      StateHandler<ErrorStateType>((state) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ConvertouchErrorPage<BlocType, AbstractStateType>(
-              errorState: state,
-              lastSuccessfulState:
-                  state.lastSuccessfulState as AbstractStateType,
-            ),
+  return blocListenerWrap<BlocType, AbstractStateType>([
+    StateHandler<ErrorStateType>((state) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ConvertouchErrorPage<BlocType, AbstractStateType>(
+            errorState: state,
+            lastSuccessfulState: state.lastSuccessfulState as AbstractStateType,
           ),
-        );
-      })
-    ],
-  );
+        ),
+      );
+    })
+  ]);
 }
 
 const conversionErrorListener = errorHandlingBlocListenerWrap<ConversionBloc,

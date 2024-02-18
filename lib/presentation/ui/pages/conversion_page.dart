@@ -41,117 +41,72 @@ class ConvertouchConversionPage extends StatelessWidget {
 
         return MultiBlocListener(
           listeners: [
-            unitsBlocListener(
-              handlers: [
-                StateHandler<UnitsFetched>((state) {
-                  if (state.navigateToPage) {
-                    BlocProvider.of<ConversionBloc>(context).add(
-                      BuildConversion(
-                        conversionParams: InputConversionModel(
-                          unitGroup: conversion.unitGroup,
-                          sourceConversionItem: conversion.sourceConversionItem,
-                          targetUnits: conversion.targetConversionItems
-                              .map((item) => item.unit)
-                              .toList(),
-                        ),
-                        modifiedUnit: state.modifiedUnit,
-                        removedUnitIds: state.removedIds,
+            unitsBlocListener([
+              StateHandler<UnitsFetched>((state) {
+                if (state.rebuildConversion) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    BuildConversion(
+                      conversionParams: InputConversionModel(
+                        unitGroup: conversion.unitGroup,
+                        sourceConversionItem: conversion.sourceConversionItem,
+                        targetUnits: conversion.targetConversionItems
+                            .map((item) => item.unit)
+                            .toList(),
                       ),
-                    );
-                  }
-                }),
-              ],
-            ),
-            unitsBlocListenerForConversion(
-              handlers: [
-                StateHandler<UnitsFetchedToMarkForConversion>((state) {
-                  if (state.navigateToPage) {
-                    Navigator.of(context).pushNamed(
-                      PageName.unitsPageForConversion.name,
-                    );
-                  }
-                }),
-                StateHandler<UnitsFetchedForChangeInConversion>((state) {
-                  if (state.navigateToPage) {
-                    Navigator.of(context).pushNamed(
-                      PageName.unitsPageForConversion.name,
-                    );
-                  }
-                }),
-              ],
-            ),
-            unitGroupsBlocListener(
-              handlers: [
-                StateHandler<UnitGroupsFetched>((state) {
-                  if (state.rebuildConversion) {
-                    BlocProvider.of<ConversionBloc>(context).add(
-                      BuildConversion(
-                        conversionParams: InputConversionModel(
-                          unitGroup: pageState.conversion.unitGroup,
-                          sourceConversionItem:
-                              pageState.conversion.sourceConversionItem,
-                          targetUnits: pageState
-                              .conversion.targetConversionItems
-                              .map((item) => item.unit)
-                              .toList(),
-                        ),
-                        modifiedUnitGroup: state.modifiedUnitGroup,
-                        removedUnitGroupIds: state.removedIds,
-                      ),
-                    );
-                  }
-                }),
-              ],
-            ),
-            unitGroupsBlocListenerForConversion(
-              handlers: [
-                StateHandler<UnitGroupsFetchedForChangeInConversion>((state) {
-                  if (state.navigateToPage) {
-                    Navigator.of(context).pushNamed(
-                      PageName.unitGroupsPageForConversion.name,
-                    );
-                  }
-                }),
-                StateHandler<UnitGroupsFetchedForFirstAddingToConversion>((state) {
-                  if (state.navigateToPage) {
-                    Navigator.of(context).pushNamed(
-                      PageName.unitGroupsPageForConversion.name,
-                    );
-                  }
-                }),
-              ],
-            ),
-            refreshingJobsBlocListener(
-              handlers: [
-                StateHandler<RefreshingJobsFetched>((state) {
-                  if (state.rebuiltConversion != null) {
-                    BlocProvider.of<ConversionBloc>(context).add(
-                      ShowNewConversionAfterRefresh(
-                        newConversion: state.rebuiltConversion!,
-                      ),
-                    );
-                  }
-                }),
-                StateHandler<RefreshingJobsNotificationState>((state) {
-                  showSnackBar(
-                    context,
-                    exception: state.exception,
-                    theme: appState.theme,
+                      modifiedUnit: state.modifiedUnit,
+                      removedUnitIds: state.removedIds,
+                    ),
                   );
-                }),
-              ],
-            ),
-            conversionBlocListener(
-              handlers: [
-                StateHandler<ConversionNotificationState>((state) {
-                  showSnackBar(
-                    context,
-                    exception: state.exception,
-                    theme: appState.theme,
+                }
+              }),
+            ]),
+            unitGroupsBlocListener([
+              StateHandler<UnitGroupsFetched>((state) {
+                if (state.rebuildConversion) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    BuildConversion(
+                      conversionParams: InputConversionModel(
+                        unitGroup: pageState.conversion.unitGroup,
+                        sourceConversionItem:
+                            pageState.conversion.sourceConversionItem,
+                        targetUnits: pageState.conversion.targetConversionItems
+                            .map((item) => item.unit)
+                            .toList(),
+                      ),
+                      modifiedUnitGroup: state.modifiedUnitGroup,
+                      removedUnitGroupIds: state.removedIds,
+                    ),
                   );
-                }),
-              ],
-            ),
+                }
+              }),
+            ]),
+            refreshingJobsBlocListener([
+              StateHandler<RefreshingJobsFetched>((state) {
+                if (state.rebuiltConversion != null) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    ShowNewConversionAfterRefresh(
+                      newConversion: state.rebuiltConversion!,
+                    ),
+                  );
+                }
+              }),
+              StateHandler<RefreshingJobsNotificationState>((state) {
+                showSnackBar(
+                  context,
+                  exception: state.exception,
+                  theme: appState.theme,
+                );
+              }),
+            ]),
+            conversionBlocListener([
+              StateHandler<ConversionNotificationState>((state) {
+                showSnackBar(
+                  context,
+                  exception: state.exception,
+                  theme: appState.theme,
+                );
+              }),
+            ]),
             conversionErrorListener(context),
           ],
           child: ConvertouchPage(
@@ -169,8 +124,10 @@ class ConvertouchConversionPage extends StatelessWidget {
                           FetchUnitGroupsForChangeInConversion(
                             currentUnitGroupInConversion: conversion.unitGroup!,
                             searchString: null,
-                            navigateToPage: true,
                           ),
+                        );
+                        Navigator.of(context).pushNamed(
+                          PageName.unitGroupsPageForConversion.name,
                         );
                       },
                       itemsViewMode: ItemsViewMode.list,
@@ -191,8 +148,10 @@ class ConvertouchConversionPage extends StatelessWidget {
                     currentSourceConversionItem:
                         conversion.sourceConversionItem,
                     searchString: null,
-                    navigateToPage: true,
                   ),
+                );
+                Navigator.of(context).pushNamed(
+                  PageName.unitsPageForConversion.name,
                 );
               },
               onItemValueChanged: (item, value) {
@@ -234,6 +193,9 @@ class ConvertouchConversionPage extends StatelessWidget {
                           searchString: null,
                         ),
                       );
+                      Navigator.of(context).pushNamed(
+                        PageName.unitsPageForConversion.name,
+                      );
                     } else {
                       BlocProvider.of<UnitsBlocForConversion>(context).add(
                         FetchUnitsToMarkForConversion(
@@ -245,8 +207,10 @@ class ConvertouchConversionPage extends StatelessWidget {
                           currentSourceConversionItem:
                               conversion.sourceConversionItem,
                           searchString: null,
-                          navigateToPage: true,
                         ),
+                      );
+                      Navigator.of(context).pushNamed(
+                        PageName.unitsPageForConversion.name,
                       );
                     }
                   },

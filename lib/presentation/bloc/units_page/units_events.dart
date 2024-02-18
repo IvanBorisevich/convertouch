@@ -13,7 +13,6 @@ class FetchUnits extends UnitsEvent {
   final List<int> removedIds;
   final UnitModel? modifiedUnit;
   final bool rebuildConversion;
-  final bool navigateToPage;
 
   const FetchUnits({
     required this.unitGroup,
@@ -21,7 +20,6 @@ class FetchUnits extends UnitsEvent {
     this.removedIds = const [],
     this.modifiedUnit,
     this.rebuildConversion = false,
-    this.navigateToPage = false,
   });
 
   @override
@@ -31,7 +29,6 @@ class FetchUnits extends UnitsEvent {
         removedIds,
         modifiedUnit,
         rebuildConversion,
-        navigateToPage,
       ];
 
   @override
@@ -41,8 +38,7 @@ class FetchUnits extends UnitsEvent {
         'searchString: $searchString, '
         'removedIds: $removedIds, '
         'modifiedUnit: $modifiedUnit, '
-        'rebuildConversion: $rebuildConversion, '
-        'navigateToPage: $navigateToPage}';
+        'rebuildConversion: $rebuildConversion}';
   }
 }
 
@@ -57,7 +53,6 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
     this.unitNewlyMarkedForConversion,
     this.currentSourceConversionItem,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -89,7 +84,6 @@ class FetchUnitsForChangeInConversion extends FetchUnits {
     required super.unitGroup,
     this.currentSourceConversionItem,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
@@ -119,7 +113,6 @@ class FetchUnitsForUnitDetails extends FetchUnits {
     required this.selectedArgUnit,
     required this.currentEditedUnit,
     required super.searchString,
-    super.navigateToPage,
   });
 
   @override
