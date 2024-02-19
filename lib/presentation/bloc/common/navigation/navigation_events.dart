@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class NavigationEvent extends ConvertouchEvent {
@@ -39,6 +40,24 @@ class NavigateToPage extends NavigationEvent {
   @override
   String toString() {
     return 'NavigateToPage{pageName: $pageName}';
+  }
+}
+
+class ShowException extends NavigationEvent {
+  final ConvertouchException exception;
+
+  const ShowException({
+    required this.exception,
+  });
+
+  @override
+  List<Object?> get props => [
+    exception,
+  ];
+
+  @override
+  String toString() {
+    return 'ShowException{exception: $exception}';
   }
 }
 

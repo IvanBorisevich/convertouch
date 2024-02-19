@@ -17,6 +17,7 @@ class NavigationBloc
     on<SelectBottomNavbarItem>(_onBottomNavbarItemSelect);
     on<NavigateToPage>(_onNavigateToPage);
     on<NavigateBack>(_onNavigateBack);
+    on<ShowException>(_onShowException);
   }
 
   _onBottomNavbarItemSelect(
@@ -73,6 +74,20 @@ class NavigationBloc
         bottomNavbarItem: state.bottomNavbarItem,
         index: state.index,
         navigateBack: true,
+      ),
+    );
+  }
+
+  _onShowException(
+    ShowException event,
+    Emitter<NavigationState> emit,
+  ) async {
+    emit(
+      NavigationState(
+        bottomNavbarItem: state.bottomNavbarItem,
+        index: state.index,
+        navigateBack: false,
+        exception: event.exception,
       ),
     );
   }

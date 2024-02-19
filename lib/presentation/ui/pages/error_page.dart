@@ -1,22 +1,20 @@
-import 'package:convertouch/presentation/bloc/abstract_event.dart';
-import 'package:convertouch/presentation/bloc/abstract_state.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchErrorPage<B extends Bloc<ConvertouchEvent, S>,
-    S extends ConvertouchState> extends StatelessWidget {
+class ConvertouchErrorPage extends StatelessWidget {
   final String pageTitle;
-  final ConvertouchErrorState errorState;
-  final S lastSuccessfulState;
+  final ConvertouchException error;
 
   const ConvertouchErrorPage({
     this.pageTitle = "Something Went Wrong...",
-    required this.errorState,
-    required this.lastSuccessfulState,
+    required this.error,
     super.key,
   });
 
@@ -27,18 +25,6 @@ class ConvertouchErrorPage<B extends Bloc<ConvertouchEvent, S>,
 
       return ConvertouchPage(
         title: pageTitle,
-        customLeadingIcon: leadingIcon(
-          icon: Icons.arrow_back_rounded,
-          color: pageColorScheme.appBar.regular,
-          onClick: () {
-            BlocProvider.of<B>(context).add(
-              ShowState<S>(
-                state: lastSuccessfulState,
-              ),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +55,7 @@ class ConvertouchErrorPage<B extends Bloc<ConvertouchEvent, S>,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      errorState.exception.toString(),
+                      error.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         color: pageColorScheme.page.foreground,
@@ -84,12 +70,9 @@ class ConvertouchErrorPage<B extends Bloc<ConvertouchEvent, S>,
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      BlocProvider.of<B>(context).add(
-                        ShowState<S>(
-                          state: lastSuccessfulState,
-                        ),
+                      BlocProvider.of<NavigationBloc>(context).add(
+                        const NavigateBack(),
                       );
-                      Navigator.of(context).pop();
                     },
                     child: Container(
                       width: 100,

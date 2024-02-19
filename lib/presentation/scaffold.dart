@@ -1,11 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/settings_page.dart';
+import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_conversion.dart';
@@ -62,8 +65,24 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           GlobalKey<NavigatorState> navKey =
               _screenNavigatorKeys[state.bottomNavbarItem]!;
 
-          if (state.nextPageName != null) {
+          if (state.nextPageName != null && state.exception == null) {
             navKey.currentState?.pushNamed(state.nextPageName!.name);
+          } else if (state.exception != null) {
+            if (state.exception!.severity == ExceptionSeverity.error) {
+              navKey.currentState?.push(
+                MaterialPageRoute(
+                  builder: (context) => ConvertouchErrorPage(
+                    error: state.exception!,
+                  ),
+                ),
+              );
+            } else {
+              showSnackBar(
+                context,
+                exception: state.exception!,
+                theme: appState.theme,
+              );
+            }
           } else if (state.navigateBack) {
             navKey.currentState?.pop();
           }

@@ -107,7 +107,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                 );
               }),
             ]),
-            conversionErrorListener(context),
           ],
           child: ConvertouchPage(
             title: "Conversion",

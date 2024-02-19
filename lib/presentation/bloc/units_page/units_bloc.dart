@@ -46,10 +46,9 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     );
 
     if (result.isLeft) {
-      emit(
-        UnitsErrorState(
+      navigationBloc.add(
+        ShowException(
           exception: result.left,
-          lastSuccessfulState: state,
         ),
       );
     } else {

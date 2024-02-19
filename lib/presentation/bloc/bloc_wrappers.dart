@@ -19,7 +19,6 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,40 +113,3 @@ const conversionBlocListener =
     blocListenerWrap<ConversionBloc, ConversionState>;
 const refreshingJobsBlocListener =
     blocListenerWrap<RefreshingJobsBloc, RefreshingJobsState>;
-
-BlocListener<BlocType, AbstractStateType> errorHandlingBlocListenerWrap<
-    BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
-    AbstractStateType extends ConvertouchState,
-    ErrorStateType extends ConvertouchErrorState>(BuildContext context) {
-  return blocListenerWrap<BlocType, AbstractStateType>([
-    StateHandler<ErrorStateType>((state) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              ConvertouchErrorPage<BlocType, AbstractStateType>(
-            errorState: state,
-            lastSuccessfulState: state.lastSuccessfulState as AbstractStateType,
-          ),
-        ),
-      );
-    })
-  ]);
-}
-
-const conversionErrorListener = errorHandlingBlocListenerWrap<ConversionBloc,
-    ConversionState, ConversionErrorState>;
-const unitGroupsErrorListener = errorHandlingBlocListenerWrap<UnitGroupsBloc,
-    UnitGroupsState, UnitGroupsErrorState>;
-const unitGroupsErrorListenerForConversion = errorHandlingBlocListenerWrap<
-    UnitGroupsBlocForConversion, UnitGroupsState, UnitGroupsErrorState>;
-const unitGroupDetailsErrorListener = errorHandlingBlocListenerWrap<
-    UnitGroupDetailsBloc, UnitGroupDetailsState, UnitGroupDetailsErrorState>;
-const unitsErrorListener =
-    errorHandlingBlocListenerWrap<UnitsBloc, UnitsState, UnitsErrorState>;
-const unitsErrorListenerForConversion = errorHandlingBlocListenerWrap<
-    UnitsBlocForConversion, UnitsState, UnitsErrorState>;
-const unitDetailsErrorListener = errorHandlingBlocListenerWrap<UnitDetailsBloc,
-    UnitDetailsState, UnitDetailsErrorState>;
-const refreshingJobsErrorListener = errorHandlingBlocListenerWrap<
-    RefreshingJobsBloc, RefreshingJobsState, RefreshingJobsErrorState>;
