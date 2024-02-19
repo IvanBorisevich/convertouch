@@ -3,6 +3,10 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
@@ -143,6 +147,11 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                           PageName.unitDetailsPage.name:
                               const ConvertouchUnitDetailsPage(),
                         },
+                        onInit: () {
+                          BlocProvider.of<UnitGroupsBloc>(context).add(
+                            const FetchUnitGroups(searchString: null),
+                          );
+                        },
                       ),
                       ConvertouchRootScreen(
                         navigatorKey:
@@ -155,6 +164,11 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                               const ConvertouchSettingsPage(),
                           PageName.refreshingJobDetailsPage.name:
                               const ConvertouchRefreshingJobDetailsPage(),
+                        },
+                        onInit: () {
+                          BlocProvider.of<RefreshingJobsBloc>(context).add(
+                            const FetchRefreshingJobs(),
+                          );
                         },
                       ),
                     ],

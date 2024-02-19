@@ -22,6 +22,8 @@ class NavigationDone extends NavigationState {
   final bool navigateBack;
   final bool navigateBackToRoot;
   final ConvertouchException? exception;
+  final List<BottomNavbarItem> openedNavbarItems;
+  final bool isBottomNavbarOpenedFirstTime;
 
   const NavigationDone({
     required this.bottomNavbarItem,
@@ -30,6 +32,8 @@ class NavigationDone extends NavigationState {
     this.navigateBack = false,
     this.navigateBackToRoot = false,
     this.exception,
+    this.openedNavbarItems = const [],
+    this.isBottomNavbarOpenedFirstTime = false,
   });
 
   @override
@@ -40,6 +44,8 @@ class NavigationDone extends NavigationState {
     navigateBack,
     navigateBackToRoot,
     exception,
+    openedNavbarItems,
+    isBottomNavbarOpenedFirstTime,
   ];
 
   @override
@@ -50,6 +56,8 @@ class NavigationDone extends NavigationState {
         'nextPageName: $nextPageName, '
         'navigateBack: $navigateBack, '
         'navigateBackToRoot: $navigateBackToRoot, '
+        'openedNavbarItems: $openedNavbarItems, '
+        'isBottomNavbarOpenedFirstTime: $isBottomNavbarOpenedFirstTime, '
         'exception: $exception}';
   }
 }

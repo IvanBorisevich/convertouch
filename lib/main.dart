@@ -9,13 +9,11 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
@@ -57,12 +55,7 @@ class ConvertouchApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => di.locator<UnitGroupsBloc>()
-            ..add(
-              const FetchUnitGroups(
-                searchString: null,
-              ),
-            ),
+          create: (context) => di.locator<UnitGroupsBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBlocForConversion>(),
@@ -86,10 +79,7 @@ class ConvertouchApp extends StatelessWidget {
           create: (context) => di.locator<UnitGroupDetailsBloc>(),
         ),
         BlocProvider(
-          create: (context) => di.locator<RefreshingJobsBloc>()
-            ..add(
-              const FetchRefreshingJobs(),
-            ),
+          create: (context) => di.locator<RefreshingJobsBloc>(),
         ),
       ],
       child: MaterialApp(

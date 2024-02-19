@@ -25,32 +25,23 @@ class NavigationBloc
     SelectBottomNavbarItem event,
     Emitter<NavigationState> emit,
   ) async {
-    switch (event.bottomNavbarItem) {
-      case BottomNavbarItem.home:
-        emit(
-          const NavigationDone(
-            bottomNavbarItem: BottomNavbarItem.home,
-            index: 0,
-          ),
-        );
-        break;
-      case BottomNavbarItem.unitsMenu:
-        emit(
-          const NavigationDone(
-            bottomNavbarItem: BottomNavbarItem.unitsMenu,
-            index: 1,
-          ),
-        );
-        break;
-      case BottomNavbarItem.settings:
-        emit(
-          const NavigationDone(
-            bottomNavbarItem: BottomNavbarItem.settings,
-            index: 2,
-          ),
-        );
-        break;
+    NavigationDone prev = state as NavigationDone;
+    List<BottomNavbarItem> openedNavbarItems =
+        prev.openedNavbarItems.isNotEmpty ? prev.openedNavbarItems : [];
+    bool isBottomNavbarOpenedFirstTime = false;
+
+    if (!openedNavbarItems.contains(event.bottomNavbarItem)) {
+      isBottomNavbarOpenedFirstTime = true;
+      openedNavbarItems.add(event.bottomNavbarItem);
     }
+    emit(
+      NavigationDone(
+        bottomNavbarItem: event.bottomNavbarItem,
+        index: event.bottomNavbarItem.index,
+        openedNavbarItems: openedNavbarItems,
+        isBottomNavbarOpenedFirstTime: isBottomNavbarOpenedFirstTime,
+      ),
+    );
   }
 
   _onNavigateToPage(
@@ -63,6 +54,8 @@ class NavigationBloc
         bottomNavbarItem: prev.bottomNavbarItem,
         index: prev.index,
         nextPageName: event.pageName,
+        openedNavbarItems: prev.openedNavbarItems,
+        isBottomNavbarOpenedFirstTime: prev.isBottomNavbarOpenedFirstTime,
       ),
     );
   }
@@ -78,6 +71,8 @@ class NavigationBloc
         bottomNavbarItem: prev.bottomNavbarItem,
         index: prev.index,
         navigateBack: true,
+        openedNavbarItems: prev.openedNavbarItems,
+        isBottomNavbarOpenedFirstTime: prev.isBottomNavbarOpenedFirstTime,
       ),
     );
   }
@@ -93,6 +88,8 @@ class NavigationBloc
         index: prev.index,
         navigateBack: true,
         navigateBackToRoot: true,
+        openedNavbarItems: prev.openedNavbarItems,
+        isBottomNavbarOpenedFirstTime: prev.isBottomNavbarOpenedFirstTime,
       ),
     );
   }
@@ -108,6 +105,8 @@ class NavigationBloc
         index: prev.index,
         navigateBack: false,
         exception: event.exception,
+        openedNavbarItems: prev.openedNavbarItems,
+        isBottomNavbarOpenedFirstTime: prev.isBottomNavbarOpenedFirstTime,
       ),
     );
   }
