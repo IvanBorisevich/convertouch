@@ -12,6 +12,8 @@ import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversio
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,11 +23,13 @@ class ConversionBloc
   final BuildConversionUseCase buildConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final GetLastSavedConversionUseCase getLastSavedConversionUseCase;
+  final NavigationBloc navigationBloc;
 
   ConversionBloc({
     required this.buildConversionUseCase,
     required this.saveConversionUseCase,
     required this.getLastSavedConversionUseCase,
+    required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
             conversion: OutputConversionModel(),
@@ -103,23 +107,21 @@ class ConversionBloc
     );
 
     if (conversionResult.isLeft) {
-      emit(
-        ConversionErrorState(
-          exception: conversionResult.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: conversionResult.left),
       );
     } else {
       await saveConversionUseCase.execute(conversionResult.right);
 
       if (event.runtimeType != RebuildConversionOnValueChange &&
           conversionResult.right.emptyConversionItemsExist) {
-        emit(
-          const ConversionNotificationState(
-              exception: ConvertouchException(
-            message: "Some dynamic values are empty. Please refresh them",
-            severity: ExceptionSeverity.warning,
-          )),
+        navigationBloc.add(
+          const ShowException(
+            exception: ConvertouchException(
+              message: "Some dynamic values are empty. Please refresh them",
+              severity: ExceptionSeverity.warning,
+            ),
+          ),
         );
       }
 
@@ -142,6 +144,8 @@ class ConversionBloc
     event.conversionParams.targetUnits[oldUnitIndex] = event.newUnit;
 
     await _onBuildConversion(event, emit);
+
+    navigationBloc.add(const NavigateBack());
   }
 
   _onNewConversionShow(
@@ -185,11 +189,8 @@ class ConversionBloc
     var result = await getLastSavedConversionUseCase.execute();
 
     if (result.isLeft) {
-      emit(
-        ConversionErrorState(
-          exception: result.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: result.left),
       );
     } else {
       RefreshingJobModel? jobOfConversion = RefreshingJobModel.fromJson(

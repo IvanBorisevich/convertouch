@@ -27,18 +27,3 @@ class ConversionBuilt extends ConversionState {
         'conversion: $conversion}';
   }
 }
-
-class ConversionNotificationState extends ConvertouchNotificationState
-    implements ConversionState {
-  const ConversionNotificationState({
-    required super.exception,
-  });
-}
-
-class ConversionErrorState extends ConvertouchErrorState
-    implements ConversionState {
-  const ConversionErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-}

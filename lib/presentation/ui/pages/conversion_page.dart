@@ -4,7 +4,6 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
@@ -90,22 +89,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                   );
                 }
               }),
-              StateHandler<RefreshingJobsNotificationState>((state) {
-                showSnackBar(
-                  context,
-                  exception: state.exception,
-                  theme: appState.theme,
-                );
-              }),
-            ]),
-            conversionBlocListener([
-              StateHandler<ConversionNotificationState>((state) {
-                showSnackBar(
-                  context,
-                  exception: state.exception,
-                  theme: appState.theme,
-                );
-              }),
             ]),
           ],
           child: ConvertouchPage(
@@ -124,9 +107,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                             currentUnitGroupInConversion: conversion.unitGroup!,
                             searchString: null,
                           ),
-                        );
-                        Navigator.of(context).pushNamed(
-                          PageName.unitGroupsPageForConversion.name,
                         );
                       },
                       itemsViewMode: ItemsViewMode.list,
@@ -148,9 +128,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                         conversion.sourceConversionItem,
                     searchString: null,
                   ),
-                );
-                Navigator.of(context).pushNamed(
-                  PageName.unitsPageForConversion.name,
                 );
               },
               onItemValueChanged: (item, value) {
@@ -192,12 +169,9 @@ class ConvertouchConversionPage extends StatelessWidget {
                           searchString: null,
                         ),
                       );
-                      Navigator.of(context).pushNamed(
-                        PageName.unitsPageForConversion.name,
-                      );
                     } else {
                       BlocProvider.of<UnitsBlocForConversion>(context).add(
-                        FetchUnitsToMarkForConversion(
+                        FetchUnitsToMarkForConversionFirstTime(
                           unitGroup: conversion.unitGroup!,
                           unitsAlreadyMarkedForConversion: conversion
                               .targetConversionItems
@@ -207,9 +181,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                               conversion.sourceConversionItem,
                           searchString: null,
                         ),
-                      );
-                      Navigator.of(context).pushNamed(
-                        PageName.unitsPageForConversion.name,
                       );
                     }
                   },

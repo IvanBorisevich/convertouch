@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -11,6 +10,8 @@ import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_det
 import 'package:convertouch/domain/utils/unit_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +20,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitDetailsBloc
     extends ConvertouchBloc<ConvertouchEvent, UnitDetailsState> {
+  static const String baseUnitNote = "Note: It is the Base Unit";
+  static const String firstUnitNote =
+      "Note: The Base unit is going to be added. "
+      "Its default coefficient = 1";
+
   final PrepareSavedUnitDetailsUseCase prepareSavedUnitDetailsUseCase;
   final PrepareDraftUnitDetailsUseCase prepareDraftUnitDetailsUseCase;
+  final NavigationBloc navigationBloc;
 
   UnitDetailsBloc({
     required this.prepareSavedUnitDetailsUseCase,
     required this.prepareDraftUnitDetailsUseCase,
+    required this.navigationBloc,
   }) : super(
           const UnitDetailsReady(
             draftDetails: UnitDetailsModel.empty,
@@ -136,8 +144,12 @@ class UnitDetailsBloc
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note:
+        draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+            draftDetails.argUnit.empty ? firstUnitNote : null,
       ),
     );
+    navigationBloc.add(const NavigateBack());
   }
 
   _onArgumentUnitChange(
@@ -176,8 +188,13 @@ class UnitDetailsBloc
         editMode: editMode,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note:
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                draftDetails.argUnit.empty ? firstUnitNote : null,
       ),
     );
+
+    navigationBloc.add(const NavigateBack());
   }
 
   _onUnitNameUpdate(
@@ -397,30 +414,12 @@ class UnitDetailsBloc
     );
   }
 
-  Future<UnitDetailsModel?> _processResult(
-    final result,
-    final emit,
-  ) async {
+  Future<UnitDetailsModel?> _processResult(final result, final emit) async {
     if (result.isLeft) {
-      emit(
-        UnitDetailsErrorState(
-          exception: result.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: result.left),
       );
       return null;
-    } else if (result.right.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        result.right.argUnit.empty) {
-      emit(
-        const UnitDetailsNotificationState(
-          exception: ConvertouchException(
-            message: "The Base unit is going to be added. "
-                "Default coefficient is 1",
-            severity: ExceptionSeverity.info,
-          ),
-        ),
-      );
     }
 
     return result.right;
@@ -520,15 +519,13 @@ class UnitDetailsBloc
       return;
     }
 
+    String? note;
     if (editMode && existingUnit.coefficient == 1) {
-      emit(
-        const UnitDetailsNotificationState(
-          exception: ConvertouchException(
-            message: "It is the Base Unit",
-            severity: ExceptionSeverity.info,
-          ),
-        ),
-      );
+      note = baseUnitNote;
+    } else if (draftDetails.unitGroup?.conversionType !=
+            ConversionType.formula &&
+        draftDetails.argUnit.empty) {
+      note = firstUnitNote;
     }
 
     emit(
@@ -543,7 +540,12 @@ class UnitDetailsBloc
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note: note,
       ),
+    );
+
+    navigationBloc.add(
+      const NavigateToPage(pageName: PageName.unitDetailsPage),
     );
   }
 }

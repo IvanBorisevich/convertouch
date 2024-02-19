@@ -44,12 +44,6 @@ class _ConvertouchUnitGroupDetailsPageState
       return MultiBlocListener(
         listeners: [
           unitGroupsBlocListener([
-            StateHandler<UnitGroupExists>((state) {
-              showAlertDialog(
-                context,
-                message: "Unit group '${state.unitGroupName}' already exist",
-              );
-            }),
             StateHandler<UnitGroupsFetched>((state) {
               if (state.modifiedUnitGroup != null) {
                 BlocProvider.of<UnitsBloc>(context).add(
@@ -58,7 +52,6 @@ class _ConvertouchUnitGroupDetailsPageState
                   ),
                 );
               }
-              Navigator.of(context).pop();
             }),
           ]),
         ],
@@ -97,15 +90,9 @@ class _ConvertouchUnitGroupDetailsPageState
                   ),
                   Visibility(
                     visible: !unitGroupDetailsState.editMode,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1EBFF),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    child: infoNote(
+                      context: context,
+                      backgroundColor: const Color(0xFFF1EBFF),
                       child: RichText(
                         text: TextSpan(
                           children: const <TextSpan>[

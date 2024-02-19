@@ -9,7 +9,7 @@ class NavigationBloc
     extends ConvertouchBloc<ConvertouchEvent, NavigationState> {
   NavigationBloc()
       : super(
-          const NavigationState(
+          const NavigationDone(
             bottomNavbarItem: BottomNavbarItem.home,
             index: 0,
           ),
@@ -17,6 +17,7 @@ class NavigationBloc
     on<SelectBottomNavbarItem>(_onBottomNavbarItemSelect);
     on<NavigateToPage>(_onNavigateToPage);
     on<NavigateBack>(_onNavigateBack);
+    on<NavigateBackToRootPage>(_onNavigateBackToRootPage);
     on<ShowException>(_onShowException);
   }
 
@@ -27,7 +28,7 @@ class NavigationBloc
     switch (event.bottomNavbarItem) {
       case BottomNavbarItem.home:
         emit(
-          const NavigationState(
+          const NavigationDone(
             bottomNavbarItem: BottomNavbarItem.home,
             index: 0,
           ),
@@ -35,7 +36,7 @@ class NavigationBloc
         break;
       case BottomNavbarItem.unitsMenu:
         emit(
-          const NavigationState(
+          const NavigationDone(
             bottomNavbarItem: BottomNavbarItem.unitsMenu,
             index: 1,
           ),
@@ -43,7 +44,7 @@ class NavigationBloc
         break;
       case BottomNavbarItem.settings:
         emit(
-          const NavigationState(
+          const NavigationDone(
             bottomNavbarItem: BottomNavbarItem.settings,
             index: 2,
           ),
@@ -56,10 +57,11 @@ class NavigationBloc
     NavigateToPage event,
     Emitter<NavigationState> emit,
   ) async {
+    NavigationDone prev = state as NavigationDone;
     emit(
-      NavigationState(
-        bottomNavbarItem: state.bottomNavbarItem,
-        index: state.index,
+      NavigationDone(
+        bottomNavbarItem: prev.bottomNavbarItem,
+        index: prev.index,
         nextPageName: event.pageName,
       ),
     );
@@ -69,11 +71,28 @@ class NavigationBloc
     NavigateBack event,
     Emitter<NavigationState> emit,
   ) async {
+    NavigationDone prev = state as NavigationDone;
+    emit(const NavigationInProgress());
     emit(
-      NavigationState(
-        bottomNavbarItem: state.bottomNavbarItem,
-        index: state.index,
+      NavigationDone(
+        bottomNavbarItem: prev.bottomNavbarItem,
+        index: prev.index,
         navigateBack: true,
+      ),
+    );
+  }
+
+  _onNavigateBackToRootPage(
+    NavigateBackToRootPage event,
+    Emitter<NavigationState> emit,
+  ) async {
+    NavigationDone prev = state as NavigationDone;
+    emit(
+      NavigationDone(
+        bottomNavbarItem: prev.bottomNavbarItem,
+        index: prev.index,
+        navigateBack: true,
+        navigateBackToRoot: true,
       ),
     );
   }
@@ -82,10 +101,11 @@ class NavigationBloc
     ShowException event,
     Emitter<NavigationState> emit,
   ) async {
+    NavigationDone prev = state as NavigationDone;
     emit(
-      NavigationState(
-        bottomNavbarItem: state.bottomNavbarItem,
-        index: state.index,
+      NavigationDone(
+        bottomNavbarItem: prev.bottomNavbarItem,
+        index: prev.index,
         navigateBack: false,
         exception: event.exception,
       ),

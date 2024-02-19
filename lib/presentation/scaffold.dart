@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
@@ -61,14 +60,17 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
       PageColorScheme pageColorScheme = pageColors[appState.theme]!;
 
       return BlocConsumer<NavigationBloc, NavigationState>(
+        listenWhen: (prev, next) {
+          return prev != next && next is NavigationDone;
+        },
         listener: (_, state) {
-          GlobalKey<NavigatorState> navKey =
-              _screenNavigatorKeys[state.bottomNavbarItem]!;
+          if (state is NavigationDone) {
+            GlobalKey<NavigatorState> navKey =
+                _screenNavigatorKeys[state.bottomNavbarItem]!;
 
-          if (state.nextPageName != null && state.exception == null) {
-            navKey.currentState?.pushNamed(state.nextPageName!.name);
-          } else if (state.exception != null) {
-            if (state.exception!.severity == ExceptionSeverity.error) {
+            if (state.nextPageName != null && state.exception == null) {
+              navKey.currentState?.pushNamed(state.nextPageName!.name);
+            } else if (state.exception != null && state.exception!.isError) {
               navKey.currentState?.push(
                 MaterialPageRoute(
                   builder: (context) => ConvertouchErrorPage(
@@ -76,115 +78,124 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                   ),
                 ),
               );
-            } else {
+            } else if (state.exception != null && !state.exception!.isError) {
               showSnackBar(
                 context,
                 exception: state.exception!,
                 theme: appState.theme,
               );
+            } else if (state.navigateBack && !state.navigateBackToRoot) {
+              navKey.currentState?.pop();
+            } else if (state.navigateBack && state.navigateBackToRoot) {
+              navKey.currentState?.popUntil(
+                (route) => route.isFirst,
+              );
             }
-          } else if (state.navigateBack) {
-            navKey.currentState?.pop();
           }
         },
         builder: (_, state) {
-          BottomNavbarItem selectedItem = state.bottomNavbarItem;
-          return WillPopScope(
-            onWillPop: () async {
-              final isFirstRouteInSelectedNavbarItem =
-                  !await _screenNavigatorKeys[selectedItem]!
-                      .currentState!
-                      .maybePop();
-              return isFirstRouteInSelectedNavbarItem;
-            },
-            child: SafeArea(
-              child: Scaffold(
-                body: Stack(
-                  children: [
-                    ConvertouchRootScreen(
-                      navigatorKey: _screenNavigatorKeys[BottomNavbarItem.home],
-                      bottomNavbarItem: BottomNavbarItem.home,
-                      rootPageId: PageName.unitsConversionPage,
-                      selected: selectedItem == BottomNavbarItem.home,
-                      routesMap: {
-                        PageName.unitsConversionPage.name:
-                            const ConvertouchConversionPage(),
-                        PageName.unitGroupsPageForConversion.name:
-                            const ConvertouchUnitGroupsPageForConversion(),
-                        PageName.unitsPageForConversion.name:
-                            const ConvertouchUnitsPageForConversion(),
-                      },
-                    ),
-                    ConvertouchRootScreen(
-                      navigatorKey:
-                          _screenNavigatorKeys[BottomNavbarItem.unitsMenu],
-                      bottomNavbarItem: BottomNavbarItem.unitsMenu,
-                      rootPageId: PageName.unitGroupsPageRegular,
-                      selected: selectedItem == BottomNavbarItem.unitsMenu,
-                      routesMap: {
-                        PageName.unitGroupsPageRegular.name:
-                            const ConvertouchUnitGroupsPageRegular(),
-                        PageName.unitsPageRegular.name:
-                            const ConvertouchUnitsPageRegular(),
-                        PageName.unitGroupsPageForUnitDetails.name:
-                            const ConvertouchUnitGroupsPageForUnitDetails(),
-                        PageName.unitsPageForUnitDetails.name:
-                            const ConvertouchUnitsPageForUnitDetails(),
-                        PageName.unitGroupDetailsPage.name:
-                            const ConvertouchUnitGroupDetailsPage(),
-                        PageName.unitDetailsPage.name:
-                            const ConvertouchUnitDetailsPage(),
-                      },
-                    ),
-                    ConvertouchRootScreen(
-                      navigatorKey:
-                          _screenNavigatorKeys[BottomNavbarItem.settings],
-                      bottomNavbarItem: BottomNavbarItem.settings,
-                      rootPageId: PageName.settingsPage,
-                      selected: selectedItem == BottomNavbarItem.settings,
-                      routesMap: {
-                        PageName.settingsPage.name:
-                            const ConvertouchSettingsPage(),
-                        PageName.refreshingJobDetailsPage.name:
-                            const ConvertouchRefreshingJobDetailsPage(),
-                      },
-                    ),
-                  ],
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  items: [
-                    _buildNavbarItem(
-                      bottomNavbarItem: BottomNavbarItem.home,
-                      selectedItem: selectedItem,
-                    ),
-                    _buildNavbarItem(
-                      bottomNavbarItem: BottomNavbarItem.unitsMenu,
-                      selectedItem: selectedItem,
-                    ),
-                    _buildNavbarItem(
-                      bottomNavbarItem: BottomNavbarItem.settings,
-                      selectedItem: selectedItem,
-                    ),
-                  ],
-                  onTap: (index) {
-                    BlocProvider.of<NavigationBloc>(context).add(
-                      SelectBottomNavbarItem(
-                        bottomNavbarItem: BottomNavbarItem.values[index],
+          if (state is NavigationDone) {
+            BottomNavbarItem selectedItem = state.bottomNavbarItem;
+            return WillPopScope(
+              onWillPop: () async {
+                final isFirstRouteInSelectedNavbarItem =
+                    !await _screenNavigatorKeys[selectedItem]!
+                        .currentState!
+                        .maybePop();
+                return isFirstRouteInSelectedNavbarItem;
+              },
+              child: SafeArea(
+                child: Scaffold(
+                  body: Stack(
+                    children: [
+                      ConvertouchRootScreen(
+                        navigatorKey:
+                            _screenNavigatorKeys[BottomNavbarItem.home],
+                        bottomNavbarItem: BottomNavbarItem.home,
+                        rootPageId: PageName.unitsConversionPage,
+                        selected: selectedItem == BottomNavbarItem.home,
+                        routesMap: {
+                          PageName.unitsConversionPage.name:
+                              const ConvertouchConversionPage(),
+                          PageName.unitGroupsPageForConversion.name:
+                              const ConvertouchUnitGroupsPageForConversion(),
+                          PageName.unitsPageForConversion.name:
+                              const ConvertouchUnitsPageForConversion(),
+                        },
                       ),
-                    );
-                  },
-                  currentIndex: selectedItem.index,
-                  elevation: 0,
-                  backgroundColor: pageColorScheme.bottomBar.regular.background,
-                  unselectedItemColor:
-                      pageColorScheme.bottomBar.regular.foreground,
-                  selectedItemColor:
-                      pageColorScheme.bottomBar.selected?.foreground,
+                      ConvertouchRootScreen(
+                        navigatorKey:
+                            _screenNavigatorKeys[BottomNavbarItem.unitsMenu],
+                        bottomNavbarItem: BottomNavbarItem.unitsMenu,
+                        rootPageId: PageName.unitGroupsPageRegular,
+                        selected: selectedItem == BottomNavbarItem.unitsMenu,
+                        routesMap: {
+                          PageName.unitGroupsPageRegular.name:
+                              const ConvertouchUnitGroupsPageRegular(),
+                          PageName.unitsPageRegular.name:
+                              const ConvertouchUnitsPageRegular(),
+                          PageName.unitGroupsPageForUnitDetails.name:
+                              const ConvertouchUnitGroupsPageForUnitDetails(),
+                          PageName.unitsPageForUnitDetails.name:
+                              const ConvertouchUnitsPageForUnitDetails(),
+                          PageName.unitGroupDetailsPage.name:
+                              const ConvertouchUnitGroupDetailsPage(),
+                          PageName.unitDetailsPage.name:
+                              const ConvertouchUnitDetailsPage(),
+                        },
+                      ),
+                      ConvertouchRootScreen(
+                        navigatorKey:
+                            _screenNavigatorKeys[BottomNavbarItem.settings],
+                        bottomNavbarItem: BottomNavbarItem.settings,
+                        rootPageId: PageName.settingsPage,
+                        selected: selectedItem == BottomNavbarItem.settings,
+                        routesMap: {
+                          PageName.settingsPage.name:
+                              const ConvertouchSettingsPage(),
+                          PageName.refreshingJobDetailsPage.name:
+                              const ConvertouchRefreshingJobDetailsPage(),
+                        },
+                      ),
+                    ],
+                  ),
+                  bottomNavigationBar: BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    items: [
+                      _buildNavbarItem(
+                        bottomNavbarItem: BottomNavbarItem.home,
+                        selectedItem: selectedItem,
+                      ),
+                      _buildNavbarItem(
+                        bottomNavbarItem: BottomNavbarItem.unitsMenu,
+                        selectedItem: selectedItem,
+                      ),
+                      _buildNavbarItem(
+                        bottomNavbarItem: BottomNavbarItem.settings,
+                        selectedItem: selectedItem,
+                      ),
+                    ],
+                    onTap: (index) {
+                      BlocProvider.of<NavigationBloc>(context).add(
+                        SelectBottomNavbarItem(
+                          bottomNavbarItem: BottomNavbarItem.values[index],
+                        ),
+                      );
+                    },
+                    currentIndex: selectedItem.index,
+                    elevation: 0,
+                    backgroundColor:
+                        pageColorScheme.bottomBar.regular.background,
+                    unselectedItemColor:
+                        pageColorScheme.bottomBar.regular.foreground,
+                    selectedItemColor:
+                        pageColorScheme.bottomBar.selected?.foreground,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          }
+          return empty();
         },
       );
     });

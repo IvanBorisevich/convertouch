@@ -40,7 +40,6 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
               unitGroup: unitGroup as UnitGroupModel,
             ),
           );
-          Navigator.of(context).pop();
         },
         onUnitGroupTapForRemoval: null,
         onUnitGroupLongPress: null,

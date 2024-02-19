@@ -59,6 +59,11 @@ abstract class UnitGroupsFetchedForConversion extends UnitGroupsFetched {
     required super.unitGroups,
     required super.searchString,
   });
+
+  @override
+  String toString() {
+    return 'UnitGroupsFetchedForConversion{}';
+  }
 }
 
 class UnitGroupsFetchedForFirstAddingToConversion extends UnitGroupsFetchedForConversion {
@@ -115,38 +120,5 @@ class UnitGroupsFetchedForUnitDetails extends UnitGroupsFetched {
   String toString() {
     return 'UnitGroupsFetchedForUnitDetails{'
         'unitGroupInUnitDetails: $unitGroupInUnitDetails}';
-  }
-}
-
-class UnitGroupExists extends UnitGroupsState {
-  final String unitGroupName;
-
-  const UnitGroupExists({
-    required this.unitGroupName,
-  });
-
-  @override
-  List<Object?> get props => [
-    unitGroupName,
-  ];
-
-  @override
-  String toString() {
-    return 'UnitGroupExists{'
-        'unitGroupName: $unitGroupName}';
-  }
-}
-
-class UnitGroupsErrorState extends ConvertouchErrorState
-    implements UnitGroupsState {
-  const UnitGroupsErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'UnitGroupsErrorState{'
-        'exception: $exception}';
   }
 }

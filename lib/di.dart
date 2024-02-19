@@ -84,18 +84,21 @@ Future<void> init() async {
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => UnitGroupsBlocForConversion(
       fetchUnitGroupsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => UnitGroupsBlocForUnitDetails(
       fetchUnitGroupsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
@@ -111,12 +114,14 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => UnitsBlocForConversion(
       fetchUnitsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => UnitsBlocForUnitDetails(
       fetchUnitsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
@@ -124,11 +129,14 @@ Future<void> init() async {
     () => UnitDetailsBloc(
       prepareSavedUnitDetailsUseCase: locator(),
       prepareDraftUnitDetailsUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
-    () => UnitGroupDetailsBloc(),
+    () => UnitGroupDetailsBloc(
+      navigationBloc: locator(),
+    ),
   );
 
   locator.registerLazySingleton(
@@ -136,12 +144,14 @@ Future<void> init() async {
       buildConversionUseCase: locator(),
       saveConversionUseCase: locator(),
       getLastSavedConversionUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
       executeJobUseCase: locator(),
+      navigationBloc: locator(),
     ),
   );
 

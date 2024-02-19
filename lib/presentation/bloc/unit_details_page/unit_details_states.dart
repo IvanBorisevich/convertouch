@@ -13,6 +13,7 @@ class UnitDetailsReady extends UnitDetailsState {
   final bool editMode;
   final bool conversionRuleVisible;
   final bool conversionRuleEnabled;
+  final String? note;
 
   const UnitDetailsReady({
     required this.draftDetails,
@@ -21,6 +22,7 @@ class UnitDetailsReady extends UnitDetailsState {
     required this.editMode,
     required this.conversionRuleVisible,
     required this.conversionRuleEnabled,
+    this.note,
   });
 
   @override
@@ -31,6 +33,7 @@ class UnitDetailsReady extends UnitDetailsState {
         editMode,
         conversionRuleVisible,
         conversionRuleEnabled,
+        note,
       ];
 
   @override
@@ -39,27 +42,7 @@ class UnitDetailsReady extends UnitDetailsState {
         'savedDetails: $savedDetails, '
         'draftDetails: $draftDetails, '
         'unitToBeSaved: $unitToBeSaved, '
-        'editMode: $editMode}';
-  }
-}
-
-class UnitDetailsNotificationState extends ConvertouchNotificationState
-    implements UnitDetailsState {
-  const UnitDetailsNotificationState({
-    required super.exception,
-  });
-}
-
-class UnitDetailsErrorState extends ConvertouchErrorState
-    implements UnitDetailsState {
-  const UnitDetailsErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'UnitDetailsErrorState{'
-        'exception: $exception}';
+        'editMode: $editMode, '
+        'note: $note}';
   }
 }

@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
@@ -30,7 +32,9 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             unitGroupsBlocListener([
               StateHandler<UnitGroupsFetched>((state) {
                 if (state.removedIds.contains(pageState.unitGroup.id)) {
-                  Navigator.of(context).pop();
+                  BlocProvider.of<NavigationBloc>(context).add(
+                    const NavigateBack(),
+                  );
                 }
               }),
             ]),
@@ -144,7 +148,6 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                     ),
                   ),
                 );
-                Navigator.of(context).pop();
               }
             },
             onUnitTapForRemoval: null,
@@ -179,8 +182,8 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                     ),
                   ),
                 );
-                Navigator.of(context).popUntil(
-                  (route) => route.isFirst,
+                BlocProvider.of<NavigationBloc>(context).add(
+                  const NavigateBackToRootPage()
                 );
               },
               colorSet: floatingButtonColor,

@@ -45,7 +45,6 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
               argumentUnit: unit as UnitModel,
             ),
           );
-          Navigator.of(context).pop();
         },
         onUnitsRemove: null,
         onUnitTapForRemoval: null,

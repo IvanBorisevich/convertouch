@@ -158,6 +158,25 @@ void showSnackBar(
   );
 }
 
+Widget infoNote({
+  required BuildContext context,
+  required Widget child,
+  required Color backgroundColor,
+}) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    padding: const EdgeInsets.symmetric(
+      vertical: 10,
+      horizontal: 14,
+    ),
+    decoration: BoxDecoration(
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: child,
+  );
+}
+
 Widget noItemsView(String label) {
   return SizedBox(
     child: Center(

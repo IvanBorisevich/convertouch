@@ -21,6 +21,12 @@ class ConvertouchException extends Equatable {
     severity,
   ];
 
+  bool get isError => severity == ExceptionSeverity.error;
+
+  bool get isWarning => severity == ExceptionSeverity.warning;
+
+  bool get isInfo => severity == ExceptionSeverity.info;
+
   @override
   String toString() {
     return 'ConvertouchException{'

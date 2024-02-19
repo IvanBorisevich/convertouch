@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
@@ -53,9 +52,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                     unitGroup: pageState.unitGroup,
                   ),
                 );
-                Navigator.of(context).pushNamed(
-                  PageName.unitGroupDetailsPage.name,
-                );
               },
               icon: Icon(
                 Icons.edit_outlined,
@@ -85,9 +81,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 unit: unit as UnitModel,
                 unitGroup: pageState.unitGroup,
               ),
-            );
-            Navigator.of(context).pushNamed(
-              PageName.unitDetailsPage.name,
             );
           },
           onUnitTapForRemoval: (unit) {
@@ -143,9 +136,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                       GetNewUnitDetails(
                         unitGroup: pageState.unitGroup,
                       ),
-                    );
-                    Navigator.of(context).pushNamed(
-                      PageName.unitDetailsPage.name,
                     );
                   },
                   colorSet: floatingButtonColor,

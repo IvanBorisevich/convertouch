@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
@@ -94,13 +93,10 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
           },
           onUnitGroupTap: (unitGroup) {
             BlocProvider.of<UnitsBlocForConversion>(context).add(
-              FetchUnitsToMarkForConversion(
+              FetchUnitsToMarkForConversionFirstTime(
                 unitGroup: unitGroup as UnitGroupModel,
                 searchString: null,
               ),
-            );
-            Navigator.of(context).pushNamed(
-              PageName.unitsPageForConversion.name,
             );
           },
           onUnitGroupTapForRemoval: null,

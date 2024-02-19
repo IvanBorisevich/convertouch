@@ -169,35 +169,3 @@ class UnitsFetchedForUnitDetails extends UnitsFetched {
         'currentEditedUnit: $currentEditedUnit}';
   }
 }
-
-class UnitExists extends UnitsState {
-  final String unitName;
-
-  const UnitExists({
-    required this.unitName,
-  });
-
-  @override
-  List<Object?> get props => [
-        unitName,
-      ];
-
-  @override
-  String toString() {
-    return 'UnitExists{'
-        'unitName: $unitName}';
-  }
-}
-
-class UnitsErrorState extends ConvertouchErrorState implements UnitsState {
-  const UnitsErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'UnitsErrorState{'
-        'exception: $exception}';
-  }
-}

@@ -48,24 +48,3 @@ class RefreshingJobDetailsOpened extends RefreshingJobsFetched {
     return 'RefreshingJobDetailsOpened{openedJob: $openedJob}';
   }
 }
-
-class RefreshingJobsNotificationState
-    extends ConvertouchNotificationState implements RefreshingJobsState {
-  const RefreshingJobsNotificationState({
-    required super.exception,
-  });
-}
-
-class RefreshingJobsErrorState extends ConvertouchErrorState
-    implements RefreshingJobsState {
-  const RefreshingJobsErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'RefreshingJobsErrorState{'
-        'exception: $exception}';
-  }
-}

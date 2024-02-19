@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
@@ -83,14 +84,35 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
             markedIdsForRemoval: markedIds,
           ),
         );
-      } else {
+      } else if (event is FetchUnitsAfterUnitSaving) {
+        emit(
+          UnitsFetched(
+            units: result.right,
+            unitGroup: event.unitGroup,
+            searchString: event.searchString,
+            modifiedUnit: event.modifiedUnit,
+            rebuildConversion: event.rebuildConversion,
+          ),
+        );
+        navigationBloc.add(
+          const NavigateBack(),
+        );
+      } else if (event is FetchUnitsAfterUnitsRemoval) {
         emit(
           UnitsFetched(
             units: result.right,
             unitGroup: event.unitGroup,
             searchString: event.searchString,
             removedIds: event.removedIds,
-            modifiedUnit: event.modifiedUnit,
+            rebuildConversion: event.rebuildConversion,
+          ),
+        );
+      } else {
+        emit(
+          UnitsFetched(
+            units: result.right,
+            unitGroup: event.unitGroup,
+            searchString: event.searchString,
             rebuildConversion: event.rebuildConversion,
           ),
         );
@@ -109,10 +131,9 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     final saveUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
 
     if (saveUnitResult.isLeft) {
-      emit(
-        UnitsErrorState(
+      navigationBloc.add(
+        ShowException(
           exception: saveUnitResult.left,
-          lastSuccessfulState: state,
         ),
       );
     } else {
@@ -120,17 +141,19 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
 
       if (savedUnit != null) {
         add(
-          FetchUnits(
+          FetchUnitsAfterUnitSaving(
             unitGroup: event.unitGroup,
-            searchString: null,
             modifiedUnit: event.unitToBeSaved,
             rebuildConversion: event.conversionGroupId == event.prevUnitGroupId,
           ),
         );
       } else {
-        emit(
-          UnitExists(
-            unitName: event.unitToBeSaved.name,
+        navigationBloc.add(
+          ShowException(
+            exception: ConvertouchException(
+              message: "Unit '${event.unitToBeSaved.name}' already exists",
+              severity: ExceptionSeverity.warning,
+            ),
           ),
         );
       }
@@ -144,17 +167,15 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     emit(const UnitsFetching());
     final result = await removeUnitsUseCase.execute(event.ids);
     if (result.isLeft) {
-      emit(
-        UnitsErrorState(
+      navigationBloc.add(
+        ShowException(
           exception: result.left,
-          lastSuccessfulState: state,
         ),
       );
     } else {
       add(
-        FetchUnits(
+        FetchUnitsAfterUnitsRemoval(
           unitGroup: event.unitGroup,
-          searchString: null,
           removedIds: event.ids,
           rebuildConversion: event.ids.isNotEmpty,
         ),

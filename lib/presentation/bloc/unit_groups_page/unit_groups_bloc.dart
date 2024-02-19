@@ -1,28 +1,33 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitGroupsBloc extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> {
+class UnitGroupsBloc
+    extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> {
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
+  final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
+    required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
     on<RemoveUnitGroups>(_onUnitGroupsRemove);
     on<SaveUnitGroup>(_onUnitGroupSave);
     on<DisableUnitGroupsRemovalMode>(_onUnitGroupsRemovalModeDisable);
-
   }
 
   _onUnitGroupsFetch(
@@ -33,11 +38,8 @@ class UnitGroupsBloc extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> 
     final result = await fetchUnitGroupsUseCase.execute(event.searchString);
 
     if (result.isLeft) {
-      emit(
-        UnitGroupsErrorState(
-          exception: result.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: result.left),
       );
     } else {
       if (event is FetchUnitGroupsToMarkForRemoval) {
@@ -92,11 +94,8 @@ class UnitGroupsBloc extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> 
 
     final result = await removeUnitGroupsUseCase.execute(event.ids);
     if (result.isLeft) {
-      emit(
-        UnitGroupsErrorState(
-          exception: result.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: result.left),
       );
     } else {
       add(
@@ -119,11 +118,8 @@ class UnitGroupsBloc extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> 
         await saveUnitGroupUseCase.execute(event.unitGroupToBeSaved);
 
     if (saveUnitGroupResult.isLeft) {
-      emit(
-        UnitGroupsErrorState(
-          exception: saveUnitGroupResult.left,
-          lastSuccessfulState: state,
-        ),
+      navigationBloc.add(
+        ShowException(exception: saveUnitGroupResult.left),
       );
     } else {
       if (saveUnitGroupResult.right != null) {
@@ -135,10 +131,17 @@ class UnitGroupsBloc extends ConvertouchBloc<ConvertouchEvent, UnitGroupsState> 
                 event.conversionGroupId == saveUnitGroupResult.right!.id,
           ),
         );
+        navigationBloc.add(
+          const NavigateBack(),
+        );
       } else {
-        emit(
-          UnitGroupExists(
-            unitGroupName: event.unitGroupToBeSaved.name,
+        navigationBloc.add(
+          ShowException(
+            exception: ConvertouchException(
+              message:
+                  "Unit group '${event.unitGroupToBeSaved.name}' already exist",
+              severity: ExceptionSeverity.warning,
+            ),
           ),
         );
       }

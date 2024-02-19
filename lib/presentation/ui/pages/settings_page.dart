@@ -60,9 +60,6 @@ class ConvertouchSettingsPage extends StatelessWidget {
                               unitGroupName: item.unitGroupName,
                             ),
                           );
-                          Navigator.of(context).pushNamed(
-                            PageName.refreshingJobDetailsPage.name,
-                          );
                         },
                       ),
                   ],

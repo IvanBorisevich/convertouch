@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/refreshing_job_model.dart';
@@ -7,16 +8,20 @@ import 'package:convertouch/domain/model/use_case_model/input/input_start_job_mo
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RefreshingJobsBloc extends ConvertouchPersistentBloc<ConvertouchEvent,
-    RefreshingJobsState> {
+class RefreshingJobsBloc
+    extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsState> {
   final ExecuteJobUseCase executeJobUseCase;
+  final NavigationBloc navigationBloc;
 
   RefreshingJobsBloc({
     required this.executeJobUseCase,
+    required this.navigationBloc,
   }) : super(const RefreshingJobsFetched(jobs: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
     on<OpenJobDetails>(_onJobDetailsOpen);
@@ -64,6 +69,9 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<ConvertouchEvent,
         openedJob: refreshingJobs[event.unitGroupName]!,
       ),
     );
+    navigationBloc.add(
+      const NavigateToPage(pageName: PageName.refreshingJobDetailsPage),
+    );
   }
 
   _onJobCronChange(
@@ -98,8 +106,8 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<ConvertouchEvent,
     RefreshingJobModel job = refreshingJobs[event.unitGroupName]!;
 
     if (job.progressController != null) {
-      emit(
-        RefreshingJobsNotificationState(
+      navigationBloc.add(
+        ShowException(
           exception: ConvertouchException(
             message: "Job '${job.name}' is running at the moment",
             severity: ExceptionSeverity.info,
@@ -131,20 +139,12 @@ class RefreshingJobsBloc extends ConvertouchPersistentBloc<ConvertouchEvent,
     );
 
     if (startedJobResult.isLeft) {
-      ConvertouchException exception = startedJobResult.left;
-      if (exception.severity == ExceptionSeverity.error) {
-        emit(
-          RefreshingJobsErrorState(
-            exception: exception,
-            lastSuccessfulState: state,
-          ),
-        );
-      } else {
-        emit(
-          RefreshingJobsNotificationState(
-            exception: exception,
-          ),
-        );
+      navigationBloc.add(
+        ShowException(
+          exception: startedJobResult.left,
+        ),
+      );
+      if (startedJobResult.left.severity != ExceptionSeverity.error) {
         emit(
           RefreshingJobsFetched(
             jobs: refreshingJobs,

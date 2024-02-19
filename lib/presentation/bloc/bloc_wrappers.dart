@@ -31,8 +31,7 @@ Widget blocBuilderWrap<
 ) {
   return BlocBuilder<BlocType, AbstractStateType>(
     buildWhen: (prev, next) {
-      return prev != next &&
-          (next is PageStateType || next is ConvertouchErrorState);
+      return prev != next && next is PageStateType;
     },
     builder: (_, state) {
       if (state is PageStateType) {

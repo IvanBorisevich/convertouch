@@ -31,17 +31,3 @@ class AppStateReady extends AppState {
         'unitsViewMode: $unitsViewMode}';
   }
 }
-
-class AppErrorState extends ConvertouchErrorState implements AppState {
-  const AppErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'AppErrorState{'
-        'exception: $exception, '
-        'lastSuccessfulState: $lastSuccessfulState}';
-  }
-}

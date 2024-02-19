@@ -10,15 +10,11 @@ abstract class UnitsEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
-  final List<int> removedIds;
-  final UnitModel? modifiedUnit;
   final bool rebuildConversion;
 
   const FetchUnits({
     required this.unitGroup,
     required this.searchString,
-    this.removedIds = const [],
-    this.modifiedUnit,
     this.rebuildConversion = false,
   });
 
@@ -26,8 +22,6 @@ class FetchUnits extends UnitsEvent {
   List<Object?> get props => [
         unitGroup,
         searchString,
-        removedIds,
-        modifiedUnit,
         rebuildConversion,
       ];
 
@@ -36,10 +30,44 @@ class FetchUnits extends UnitsEvent {
     return 'FetchUnits{'
         'unitGroup: $unitGroup, '
         'searchString: $searchString, '
-        'removedIds: $removedIds, '
-        'modifiedUnit: $modifiedUnit, '
         'rebuildConversion: $rebuildConversion}';
   }
+}
+
+class FetchUnitsAfterUnitSaving extends FetchUnits {
+  final UnitModel modifiedUnit;
+
+  const FetchUnitsAfterUnitSaving({
+    required super.unitGroup,
+    required this.modifiedUnit,
+    super.rebuildConversion,
+  }) : super(
+          searchString: null,
+        );
+
+  @override
+  List<Object?> get props => [
+        modifiedUnit,
+        super.props,
+      ];
+}
+
+class FetchUnitsAfterUnitsRemoval extends FetchUnits {
+  final List<int> removedIds;
+
+  const FetchUnitsAfterUnitsRemoval({
+    required super.unitGroup,
+    this.removedIds = const [],
+    super.rebuildConversion,
+  }) : super(
+          searchString: null,
+        );
+
+  @override
+  List<Object?> get props => [
+        removedIds,
+        super.props,
+      ];
 }
 
 class FetchUnitsToMarkForConversion extends FetchUnits {
@@ -70,6 +98,22 @@ class FetchUnitsToMarkForConversion extends FetchUnits {
         'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion, '
         'currentSourceConversionItem: $currentSourceConversionItem, '
         '${super.toString()}}';
+  }
+}
+
+class FetchUnitsToMarkForConversionFirstTime
+    extends FetchUnitsToMarkForConversion {
+  const FetchUnitsToMarkForConversionFirstTime({
+    required super.unitGroup,
+    super.unitsAlreadyMarkedForConversion,
+    super.unitNewlyMarkedForConversion,
+    super.currentSourceConversionItem,
+    required super.searchString,
+  });
+
+  @override
+  String toString() {
+    return 'FetchUnitsToMarkForConversionFirstTime{}';
   }
 }
 

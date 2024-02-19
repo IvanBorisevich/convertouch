@@ -69,3 +69,12 @@ class NavigateBack extends NavigationEvent {
     return 'NavigateBack{}';
   }
 }
+
+class NavigateBackToRootPage extends NavigationEvent {
+  const NavigateBackToRootPage();
+
+  @override
+  String toString() {
+    return 'NavigateBackToRootPage{}';
+  }
+}

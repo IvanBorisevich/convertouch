@@ -35,17 +35,3 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
         'canChangedBeSaved: $canChangedBeSaved}';
   }
 }
-
-class UnitGroupDetailsErrorState extends ConvertouchErrorState
-    implements UnitGroupDetailsState {
-  const UnitGroupDetailsErrorState({
-    required super.exception,
-    required super.lastSuccessfulState,
-  });
-
-  @override
-  String toString() {
-    return 'UnitGroupDetailsErrorState{'
-        'exception: $exception}';
-  }
-}
