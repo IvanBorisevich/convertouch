@@ -27,8 +27,9 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = ConvertouchBlocObserver();
+  log("Before dependencies initialization", time: DateTime.now());
   await di.init();
-  log("Dependencies initialization finished");
+  log("Dependencies initialization finished", time: DateTime.now());
   runApp(const ConvertouchApp());
 }
 

@@ -5,6 +5,15 @@ abstract class ConversionState extends ConvertouchState {
   const ConversionState();
 }
 
+class ConversionInProgress extends ConversionState {
+  const ConversionInProgress();
+
+  @override
+  String toString() {
+    return 'ConversionInProgress{}';
+  }
+}
+
 class ConversionBuilt extends ConversionState {
   final OutputConversionModel conversion;
   final bool showRefreshButton;
@@ -32,8 +41,9 @@ class ConversionBuilt extends ConversionState {
       return null;
     }
     return ConversionBuilt(
-      conversion: OutputConversionModel.fromJson(json["conversion"])!,
-      showRefreshButton: json["showRefreshButton"],
+      conversion: OutputConversionModel.fromJson(json["conversion"]) ??
+          const OutputConversionModel(),
+      showRefreshButton: json["showRefreshButton"] ?? false,
     );
   }
 

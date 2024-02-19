@@ -154,18 +154,31 @@ class ConversionBloc
     RemoveConversionItem event,
     Emitter<ConversionState> emit,
   ) async {
-    List<ConversionItemModel> conversionItems = event.conversionItems;
-    conversionItems.removeWhere((item) => event.itemUnitId == item.unit.id);
+    ConversionBuilt prev = state as ConversionBuilt;
+
+    emit(const ConversionInProgress());
+
+    List<ConversionItemModel> conversionItems =
+        prev.conversion.targetConversionItems;
+    conversionItems.removeWhere((item) => event.id == item.unit.id);
+
+    ConversionItemModel? sourceConversionItem =
+        prev.conversion.sourceConversionItem;
+    if (sourceConversionItem?.unit.id == event.id) {
+      sourceConversionItem = conversionItems.firstOrNull;
+    }
 
     final outputConversion = OutputConversionModel(
-      unitGroup: event.unitGroupInConversion,
-      sourceConversionItem: conversionItems.firstOrNull,
+      unitGroup: prev.conversion.unitGroup,
+      sourceConversionItem: sourceConversionItem,
       targetConversionItems: conversionItems,
+      emptyConversionItemsExist: prev.conversion.emptyConversionItemsExist,
     );
 
     emit(
       ConversionBuilt(
         conversion: outputConversion,
+        showRefreshButton: prev.showRefreshButton,
       ),
     );
   }

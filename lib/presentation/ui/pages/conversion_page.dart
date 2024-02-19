@@ -149,9 +149,7 @@ class ConvertouchConversionPage extends StatelessWidget {
               onItemRemove: (item) {
                 BlocProvider.of<ConversionBloc>(context).add(
                   RemoveConversionItem(
-                    itemUnitId: item.unit.id!,
-                    conversionItems: conversion.targetConversionItems,
-                    unitGroupInConversion: conversion.unitGroup,
+                    id: item.unit.id!,
                   ),
                 );
               },

@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -96,29 +95,21 @@ class ShowNewConversionAfterRefresh extends ConversionEvent {
 }
 
 class RemoveConversionItem extends ConversionEvent {
-  final UnitGroupModel? unitGroupInConversion;
-  final int itemUnitId;
-  final List<ConversionItemModel> conversionItems;
+  final int id;
 
   const RemoveConversionItem({
-    required this.unitGroupInConversion,
-    required this.itemUnitId,
-    required this.conversionItems,
+    required this.id,
   });
 
   @override
   List<Object?> get props => [
-        unitGroupInConversion,
-        itemUnitId,
-        conversionItems,
+        id,
       ];
 
   @override
   String toString() {
     return 'RemoveConversionItem{'
-        'unitGroupInConversion: $unitGroupInConversion, '
-        'itemUnitId: $itemUnitId, '
-        'conversionItems: $conversionItems}';
+        'id: $id}';
   }
 }
 
