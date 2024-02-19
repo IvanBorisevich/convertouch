@@ -82,6 +82,33 @@ class UnitModel extends IdNameItemModel {
 
   bool get unnamed => name.isEmpty;
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "code": code,
+      "coefficient": coefficient,
+      "symbol": symbol,
+      "unitGroupId": unitGroupId,
+      "oob": oob,
+    };
+  }
+
+  static UnitModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return UnitModel(
+      id: json["id"],
+      name: json["name"],
+      code: json["code"],
+      coefficient: json["coefficient"],
+      symbol: json["symbol"],
+      unitGroupId: json["unitGroupId"],
+      oob: json["oob"],
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

@@ -42,13 +42,6 @@ class DatabaseException extends ConvertouchException {
   });
 }
 
-class PreferencesException extends ConvertouchException {
-  const PreferencesException({
-    required super.message,
-    super.severity,
-  });
-}
-
 class InternalException extends ConvertouchException {
   const InternalException({
     required super.message,

@@ -20,6 +20,23 @@ class ConversionBuilt extends ConversionState {
         showRefreshButton,
       ];
 
+  Map<String, dynamic> toJson() {
+    return {
+      "conversion": conversion.toJson(),
+      "showRefreshButton": showRefreshButton,
+    };
+  }
+
+  static ConversionBuilt? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return ConversionBuilt(
+      conversion: OutputConversionModel.fromJson(json["conversion"])!,
+      showRefreshButton: json["showRefreshButton"],
+    );
+  }
+
   @override
   String toString() {
     return 'ConversionBuilt{'

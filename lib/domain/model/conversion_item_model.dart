@@ -64,6 +64,25 @@ class ConversionItemModel extends ItemModel {
 
   bool get notEmpty => !empty;
 
+  Map<String, dynamic> toJson() {
+    return {
+      "unit": unit.toJson(),
+      "value": value.strValue,
+      "defaultValue": defaultValue.strValue,
+    };
+  }
+
+  static ConversionItemModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return ConversionItemModel(
+      unit: UnitModel.fromJson(json["unit"])!,
+      value: ValueModel.ofString(json["value"]),
+      defaultValue: ValueModel.ofString(json["defaultValue"]),
+    );
+  }
+
   @override
   List<Object?> get props => [
         itemType,

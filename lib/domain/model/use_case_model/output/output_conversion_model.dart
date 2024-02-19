@@ -15,6 +15,38 @@ class OutputConversionModel extends Equatable {
     this.emptyConversionItemsExist = false,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      "unitGroup": unitGroup?.toJson(),
+      "sourceItem": sourceConversionItem?.toJson(),
+      "targetItems":
+          targetConversionItems.map((item) => item.toJson()).toList(),
+      "emptyConversionItemsExist": emptyConversionItemsExist,
+    };
+  }
+
+  static OutputConversionModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return OutputConversionModel(
+      unitGroup: UnitGroupModel.fromJson(json["unitGroup"]),
+      sourceConversionItem: ConversionItemModel.fromJson(json["sourceItem"]),
+      targetConversionItems: (json["targetItems"] as List)
+          .map((unitMap) => ConversionItemModel.fromJson(unitMap)!)
+          .toList(),
+      emptyConversionItemsExist: json["emptyConversionItemsExist"],
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        unitGroup,
+        sourceConversionItem,
+        targetConversionItems,
+        emptyConversionItemsExist,
+      ];
+
   @override
   String toString() {
     return 'OutputConversionModel{'
@@ -22,12 +54,4 @@ class OutputConversionModel extends Equatable {
         'sourceConversionItem: $sourceConversionItem, '
         'targetConversionItems: $targetConversionItems}';
   }
-
-  @override
-  List<Object?> get props => [
-    unitGroup,
-    sourceConversionItem,
-    targetConversionItems,
-    emptyConversionItemsExist,
-  ];
 }

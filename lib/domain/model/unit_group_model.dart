@@ -71,6 +71,31 @@ class UnitGroupModel extends IdNameItemModel {
         oob,
       ];
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "iconName": iconName,
+      "conversionType": conversionType.value,
+      "refreshable": refreshable,
+      "oob": oob,
+    };
+  }
+
+  static UnitGroupModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return UnitGroupModel(
+      id: json["id"],
+      name: json["name"],
+      iconName: json["iconName"],
+      conversionType: ConversionType.valueOf(json["conversionType"]),
+      refreshable: json["refreshable"],
+      oob: json["oob"],
+    );
+  }
+
   @override
   String toString() {
     return 'UnitGroupModel{$name}';

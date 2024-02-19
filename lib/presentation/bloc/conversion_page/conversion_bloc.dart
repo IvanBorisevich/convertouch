@@ -1,15 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/constants/refreshing_jobs.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/refreshing_job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/get_last_saved_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -19,16 +15,12 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversionBloc
-    extends ConvertouchBloc<ConvertouchEvent, ConversionState> {
+    extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
-  final SaveConversionUseCase saveConversionUseCase;
-  final GetLastSavedConversionUseCase getLastSavedConversionUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
     required this.buildConversionUseCase,
-    required this.saveConversionUseCase,
-    required this.getLastSavedConversionUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -39,7 +31,7 @@ class ConversionBloc
     on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
     on<ShowNewConversionAfterRefresh>(_onNewConversionShow);
     on<RemoveConversionItem>(_onRemoveConversion);
-    on<GetLastSavedConversion>(_onLastSavedConversionGet);
+    on<GetLastSavedConversion>((event, emit) => emit(state));
   }
 
   _onBuildConversion(
@@ -111,8 +103,6 @@ class ConversionBloc
         ShowException(exception: conversionResult.left),
       );
     } else {
-      await saveConversionUseCase.execute(conversionResult.right);
-
       if (event.runtimeType != RebuildConversionOnValueChange &&
           conversionResult.right.emptyConversionItemsExist) {
         navigationBloc.add(
@@ -173,8 +163,6 @@ class ConversionBloc
       targetConversionItems: conversionItems,
     );
 
-    await saveConversionUseCase.execute(outputConversion);
-
     emit(
       ConversionBuilt(
         conversion: outputConversion,
@@ -182,27 +170,16 @@ class ConversionBloc
     );
   }
 
-  _onLastSavedConversionGet(
-    GetLastSavedConversion event,
-    Emitter<ConversionState> emit,
-  ) async {
-    var result = await getLastSavedConversionUseCase.execute();
+  @override
+  ConversionState? fromJson(Map<String, dynamic> json) {
+    return ConversionBuilt.fromJson(json);
+  }
 
-    if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
-    } else {
-      RefreshingJobModel? jobOfConversion = RefreshingJobModel.fromJson(
-          refreshingJobsMap[result.right.unitGroup?.name]);
-
-      emit(
-        ConversionBuilt(
-          conversion: result.right,
-          showRefreshButton: result.right.unitGroup?.refreshable == true &&
-              jobOfConversion != null,
-        ),
-      );
+  @override
+  Map<String, dynamic>? toJson(ConversionState state) {
+    if (state is ConversionBuilt) {
+      return state.toJson();
     }
+    return const {};
   }
 }
