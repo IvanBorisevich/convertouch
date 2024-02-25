@@ -46,7 +46,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSearchTextBox(context, searchBarColorScheme.textBox),
-        const SizedBox(width: 7),
+        const SizedBox(width: 6),
         _buildViewModeButton(context, searchBarColorScheme.viewModeButton),
       ],
     );
@@ -107,8 +107,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
     ConvertouchColorScheme color,
   ) {
     return SizedBox(
-      width: 46,
-      height: 46,
+      width: 50,
       child: Container(
         decoration: BoxDecoration(
           color: color.background.regular,
