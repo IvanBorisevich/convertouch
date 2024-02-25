@@ -43,16 +43,16 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
 
 const unitGroupItemColorSchemeDark = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF585A6C),
+    regular: Color(0xff5e6981),
     selected: Color(0xFFA5B2FF),
   ),
   background: ColorVariation(
-    regular: Color(0xFF3E4754),
-    selected: Color(0xFF3E4754),
+    regular: Color(0xff434c60),
+    selected: Color(0xff475065),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFFB1B5EA),
-    selected: Color(0xFFB3B6DE),
+    regular: Color(0xffa6baee),
+    selected: Color(0xffa6baee),
   ),
 );
 

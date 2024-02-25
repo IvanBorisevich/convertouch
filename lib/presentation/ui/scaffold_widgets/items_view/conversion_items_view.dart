@@ -58,7 +58,7 @@ class _ConvertouchConversionItemsViewState
                 Container(
                   width: _dragHandlerWidth,
                   height: _dragHandlerHeight,
-                  padding: const EdgeInsets.only(left: 7),
+                  padding: const EdgeInsets.only(left: 4),
                   child: ReorderableDragStartListener(
                     index: index,
                     child: Card(

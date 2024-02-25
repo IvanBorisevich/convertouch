@@ -60,7 +60,12 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(7),
+      padding: const EdgeInsets.only(
+        left: 4,
+        top: 7,
+        right: 7,
+        bottom: 7,
+      ),
       decoration: BoxDecoration(
         color: itemColor.background.regular,
         borderRadius: _elementsBorderRadius,
