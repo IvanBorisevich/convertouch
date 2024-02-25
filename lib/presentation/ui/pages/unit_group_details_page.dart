@@ -60,8 +60,8 @@ class _ConvertouchUnitGroupDetailsPageState
 
           return ConvertouchPage(
             title: unitGroupDetailsState.editMode
-                ? "Edit Unit Group"
-                : "New Unit Group",
+                ? "Edit Group"
+                : "New Group",
             body: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 15, 7, 0),
               child: Column(

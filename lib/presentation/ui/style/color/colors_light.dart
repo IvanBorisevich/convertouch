@@ -95,7 +95,7 @@ const unitPageInfoBoxColorLight = ConvertouchColorScheme(
   background: ColorVariation.only(Color(0xFFDFEAFF))
 );
 
-const textBoxColorLight = TextBoxColorScheme(
+const unitTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF7FA0BE),
     focused: Color(0xFF375067),
@@ -109,7 +109,7 @@ const textBoxColorLight = TextBoxColorScheme(
 );
 
 const conversionItemColorSchemeLight = ConversionItemColorScheme(
-  textBox: textBoxColorLight,
+  textBox: unitTextBoxColorLight,
   background: ColorVariation.only(Color(0xffe7f2ff)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(

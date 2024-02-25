@@ -122,7 +122,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   Widget build(BuildContext context) {
-    _color = widget.customColor ?? textBoxColors[widget.theme]!;
+    _color = widget.customColor ?? unitTextBoxColors[widget.theme]!;
 
     Color borderColor;
     Color foregroundColor;

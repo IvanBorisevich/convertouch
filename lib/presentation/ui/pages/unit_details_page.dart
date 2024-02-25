@@ -35,7 +35,7 @@ class _ConvertouchUnitDetailsPageState
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      TextBoxColorScheme textBoxColor = textBoxColors[appState.theme]!;
+      TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
       ConvertouchColorScheme floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
       ConvertouchColorScheme unitPageInfoBoxColor =
@@ -47,7 +47,7 @@ class _ConvertouchUnitDetailsPageState
 
         return ConvertouchPage(
           title: pageState.editMode
-              ? pageState.draftDetails.unit.name
+              ? "Edit Unit"
               : "New Unit",
           body: SingleChildScrollView(
             child: Container(
@@ -149,7 +149,6 @@ class _ConvertouchUnitDetailsPageState
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 25),
                             ConvertouchConversionItem(
                               ConversionItemModel(
                                 unit: UnitModel(
@@ -174,7 +173,6 @@ class _ConvertouchUnitDetailsPageState
                               },
                               theme: appState.theme,
                             ),
-                            const SizedBox(height: 9),
                             ConvertouchConversionItem(
                               ConversionItemModel(
                                 unit: pageState.draftDetails.argUnit,

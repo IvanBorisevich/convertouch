@@ -71,27 +71,27 @@ const unitItemColorSchemeDark = ConvertouchColorScheme(
     regular: Color(0xFF576479),
     marked: Color(0xFF7595B2),
     selected: Color(0xFF7A9EBE),
-    disabled: Color(0xFF6A7885),
+    // disabled: Color(0x8C6A7885),
   ),
   background: ColorVariation(
     regular: Color(0xFF3E4A5D),
     marked: Color(0xE4415F7E),
     selected: Color(0xE4415F7E),
-    disabled: Color(0xFF545E6E),
+    // disabled: Color(0x9B3E4A5D),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF7DAAD3),
     marked: Color(0xFF95B8D7),
     selected: Color(0xFFA0CAF1),
-    disabled: Color(0xFF8DBAE3),
+    // disabled: Color(0x867DAAD3),
   ),
 );
 
 const unitPageInfoBoxColorDark = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFDFEAFF))
+    // background: ColorVariation.only(Color(0xFF44526E))
 );
 
-const textBoxColorDark = TextBoxColorScheme(
+const unitTextBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF84A1BD),
     focused: Color(0xFF98BAD9),
@@ -105,7 +105,7 @@ const textBoxColorDark = TextBoxColorScheme(
 );
 
 const conversionItemColorSchemeDark = ConversionItemColorScheme(
-  textBox: textBoxColorDark,
+  textBox: unitTextBoxColorDark,
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
@@ -160,15 +160,14 @@ const removalFloatingButtonColorDark = ConvertouchColorScheme(
 const unitGroupTextBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFFA1A4CE),
-    disabled: Color(0xFFC3C5E3),
+    disabled: Color(0xFF8183A1),
   ),
   foreground: ColorVariation(
     regular: Color(0xFFA1A4CE),
-    disabled: Color(0xFFC3C5E3),
+    disabled: Color(0xFF8183A1),
   ),
   hint: ColorVariation(
-    regular: Color(0xFFC3C5E3),
-    disabled: Color(0xFFC3C5E3),
+    regular: Color(0xFF8183A1),
   ),
 );
 

@@ -75,9 +75,9 @@ const dividerWithTextColors = {
   ConvertouchUITheme.dark: Color(0xFF709FCB),
 };
 
-const textBoxColors = {
-  ConvertouchUITheme.light: textBoxColorLight,
-  ConvertouchUITheme.dark: textBoxColorDark,
+const unitTextBoxColors = {
+  ConvertouchUITheme.light: unitTextBoxColorLight,
+  ConvertouchUITheme.dark: unitTextBoxColorDark,
 };
 
 const unitGroupTextBoxColors = {
