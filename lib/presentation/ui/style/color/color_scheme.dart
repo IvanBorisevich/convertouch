@@ -1,43 +1,110 @@
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
-import 'package:flutter/material.dart';
+import 'package:convertouch/presentation/ui/style/color/color_variation.dart';
 
-abstract class ColorScheme {
-  const ColorScheme();
+class ConvertouchColorScheme {
+  static const ConvertouchColorScheme none = ConvertouchColorScheme();
+
+  final ColorVariation border;
+  final ColorVariation background;
+  final ColorVariation foreground;
+
+  const ConvertouchColorScheme({
+    this.border = ColorVariation.none,
+    this.background = ColorVariation.none,
+    this.foreground = ColorVariation.none,
+  });
 }
 
-class PageColorScheme extends ColorScheme {
-  final ColorStateVariation<AppBarColorSet> appBar;
-  final BaseColorSet page;
-  final ColorStateVariation<AppBarColorSet> bottomBar;
-  final SnackBarColorSet snackBar;
+class ListItemColorScheme extends ConvertouchColorScheme {
+  final ColorVariation divider;
+
+  const ListItemColorScheme({
+    super.border,
+    super.background,
+    super.foreground,
+    this.divider = ColorVariation.none,
+  });
+}
+
+class SwitcherColorScheme extends ConvertouchColorScheme {
+  static const SwitcherColorScheme none = SwitcherColorScheme();
+
+  final ConvertouchColorScheme track;
+
+  const SwitcherColorScheme({
+    this.track = ConvertouchColorScheme.none,
+  });
+}
+
+class SettingItemColorScheme extends ListItemColorScheme {
+  final SwitcherColorScheme switcher;
+
+  const SettingItemColorScheme({
+    super.border,
+    super.background,
+    super.foreground,
+    super.divider,
+    this.switcher = SwitcherColorScheme.none,
+  });
+}
+
+class SnackBarColorScheme extends ConvertouchColorScheme {
+  final ColorVariation foregroundError;
+  final ColorVariation foregroundWarning;
+  final ColorVariation foregroundInfo;
+
+  const SnackBarColorScheme({
+    super.border,
+    super.background,
+    this.foregroundError = ColorVariation.none,
+    this.foregroundWarning = ColorVariation.none,
+    this.foregroundInfo = ColorVariation.none,
+  });
+}
+
+class TextBoxColorScheme extends ConvertouchColorScheme {
+  final ColorVariation hint;
+
+  const TextBoxColorScheme({
+    super.border,
+    super.background,
+    super.foreground,
+    this.hint = ColorVariation.none,
+  });
+}
+
+class SearchBarColorScheme {
+  final TextBoxColorScheme textBox;
+  final ConvertouchColorScheme viewModeButton;
+
+  const SearchBarColorScheme({
+    required this.textBox,
+    required this.viewModeButton,
+  });
+}
+
+class ConversionItemColorScheme extends ConvertouchColorScheme {
+  final TextBoxColorScheme textBox;
+  final ConvertouchColorScheme unitButton;
+  final ConvertouchColorScheme handler;
+
+  const ConversionItemColorScheme({
+    required this.textBox,
+    required this.unitButton,
+    required this.handler,
+    super.background,
+  });
+}
+
+class PageColorScheme {
+  final ConvertouchColorScheme appBar;
+  final ConvertouchColorScheme page;
+  final ConvertouchColorScheme bottomBar;
+  final SnackBarColorScheme snackBar;
 
   const PageColorScheme({
     required this.appBar,
     required this.page,
     required this.bottomBar,
     required this.snackBar,
-  });
-}
-
-class SearchBarColorScheme extends ColorScheme {
-  final TextBoxColorSet searchBox;
-  final ButtonColorSet viewModeButton;
-
-  const SearchBarColorScheme({
-    this.searchBox = emptyTextBoxColorSet,
-    this.viewModeButton = emptyButtonColorSet,
-  });
-}
-
-class ConversionItemColorScheme extends ColorScheme {
-  final ColorStateVariation<TextBoxColorSet> textBox;
-  final ColorStateVariation<BaseColorSet> unitButton;
-  final Color handler;
-
-  const ConversionItemColorScheme({
-    required this.textBox,
-    required this.unitButton,
-    required this.handler,
   });
 }

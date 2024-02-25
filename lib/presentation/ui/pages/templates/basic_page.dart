@@ -4,7 +4,6 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,17 +34,19 @@ class ConvertouchPage extends StatelessWidget {
       PageColorScheme pageColorScheme = pageColors[appState.theme]!;
       return SafeArea(
         child: Scaffold(
-          backgroundColor: pageColorScheme.page.background,
+          backgroundColor: pageColorScheme.page.background.regular,
           appBar: AppBar(
             leading: Builder(
               builder: (context) {
                 if (customLeadingIcon != null) {
                   return customLeadingIcon!;
                 } else if (ModalRoute.of(context)?.canPop == true) {
-                  return leadingIcon(
-                    icon: Icons.arrow_back_rounded,
-                    color: pageColorScheme.appBar.regular,
-                    onClick: () {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: pageColorScheme.appBar.foreground.regular,
+                    ),
+                    onPressed: () {
                       BlocProvider.of<NavigationBloc>(context).add(
                         const NavigateBack(),
                       );
@@ -61,12 +62,12 @@ class ConvertouchPage extends StatelessWidget {
             title: Text(
               title,
               style: TextStyle(
-                color: pageColorScheme.appBar.regular.foreground,
+                color: pageColorScheme.appBar.foreground.regular,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: pageColorScheme.appBar.regular.background,
+            backgroundColor: pageColorScheme.appBar.background.regular,
             elevation: 0,
             actions: appBarRightWidgets,
           ),
@@ -78,19 +79,6 @@ class ConvertouchPage extends StatelessWidget {
   }
 }
 
-Widget leadingIcon({
-  required IconData icon,
-  void Function()? onClick,
-  AppBarColorSet? color,
-}) {
-  return IconButton(
-    icon: Icon(
-      icon,
-      color: color?.foreground,
-    ),
-    onPressed: onClick,
-  );
-}
 
 void showAlertDialog(
   BuildContext context, {
@@ -122,19 +110,19 @@ void showSnackBar(
   required ConvertouchUITheme theme,
   int durationInSec = 2,
 }) {
-  SnackBarColorSet snackBarColorSet = pageColors[theme]!.snackBar;
+  SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
 
   Color foreground;
 
   switch (exception.severity) {
     case ExceptionSeverity.warning:
-      foreground = snackBarColorSet.foregroundWarning;
+      foreground = snackBarColor.foregroundWarning.regular;
       break;
     case ExceptionSeverity.error:
-      foreground = snackBarColorSet.foregroundError;
+      foreground = snackBarColor.foregroundError.regular;
       break;
     case ExceptionSeverity.info:
-      foreground = snackBarColorSet.foregroundInfo;
+      foreground = snackBarColor.foregroundInfo.regular;
       break;
   }
 
@@ -142,7 +130,7 @@ void showSnackBar(
     SnackBar(
       showCloseIcon: true,
       closeIconColor: foreground,
-      backgroundColor: snackBarColorSet.background,
+      backgroundColor: snackBarColor.background.regular,
       duration: Duration(seconds: durationInSec),
       content: Center(
         child: Text(

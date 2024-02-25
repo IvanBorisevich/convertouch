@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/themes/dark.dart';
-import 'package:convertouch/presentation/ui/style/color/themes/light.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_dark.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_light.dart';
 import 'package:flutter/material.dart';
 
 const Color noColor = Colors.transparent;
@@ -21,6 +20,11 @@ const unitGroupItemColors = {
   ConvertouchUITheme.dark: unitGroupItemColorSchemeDark,
 };
 
+const unitGroupPageInfoBoxColors = {
+  ConvertouchUITheme.light: unitGroupPageInfoBoxColorLight,
+  ConvertouchUITheme.dark: unitGroupPageInfoBoxColorDark,
+};
+
 const unitGroupItemInAppBarColors = {
   ConvertouchUITheme.light: unitGroupItemInAppBarColorSchemeLight,
   ConvertouchUITheme.dark: unitGroupItemInAppBarColorSchemeDark,
@@ -29,6 +33,11 @@ const unitGroupItemInAppBarColors = {
 const unitItemColors = {
   ConvertouchUITheme.light: unitItemColorSchemeLight,
   ConvertouchUITheme.dark: unitItemColorSchemeDark,
+};
+
+const unitPageInfoBoxColors = {
+  ConvertouchUITheme.light: unitPageInfoBoxColorLight,
+  ConvertouchUITheme.dark: unitPageInfoBoxColorDark,
 };
 
 const conversionItemColors = {
@@ -82,10 +91,6 @@ const settingItemColors = {
 };
 
 const progressIndicatorColors = {
-  ConvertouchUITheme.light: BaseColorSet(
-    foreground: Color(0xFF3A3A88),
-  ),
-  ConvertouchUITheme.dark: BaseColorSet(
-    foreground: Color(0xFF7272C9),
-  ),
+  ConvertouchUITheme.light: progressIndicatorColorLight,
+  ConvertouchUITheme.dark: progressIndicatorColorDark,
 };

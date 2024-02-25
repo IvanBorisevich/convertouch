@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +45,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSearchTextBox(context, searchBarColorScheme.searchBox),
+        _buildSearchTextBox(context, searchBarColorScheme.textBox),
         const SizedBox(width: 7),
         _buildViewModeButton(context, searchBarColorScheme.viewModeButton),
       ],
@@ -55,7 +54,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   Widget _buildSearchTextBox(
     BuildContext context,
-    TextBoxColorSet color,
+    TextBoxColorScheme color,
   ) {
     return Expanded(
       child: TextFormField(
@@ -67,7 +66,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
           suffixIcon: _searchFieldController.text.isEmpty
               ? Icon(
                   Icons.search,
-                  color: color.foreground,
+                  color: color.foreground.regular,
                 )
               : IconButton(
                   onPressed: () {
@@ -78,23 +77,23 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                   },
                   icon: Icon(
                     Icons.close_rounded,
-                    color: color.foreground,
+                    color: color.foreground.regular,
                   ),
                 ),
           hintText: widget.placeholder,
           hintStyle: TextStyle(
-            color: color.hint,
+            color: color.hint.regular,
             fontSize: searchTextFieldFontSize,
           ),
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               borderSide: BorderSide.none),
           filled: true,
-          fillColor: color.background,
+          fillColor: color.background.regular,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
         ),
         style: TextStyle(
-          color: color.foreground,
+          color: color.foreground.regular,
           fontSize: searchTextFieldFontSize,
           fontWeight: FontWeight.w500,
         ),
@@ -105,14 +104,14 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   Widget _buildViewModeButton(
     BuildContext context,
-    ButtonColorSet color,
+    ConvertouchColorScheme color,
   ) {
     return SizedBox(
       width: 46,
       height: 46,
       child: Container(
         decoration: BoxDecoration(
-          color: color.background,
+          color: color.background.regular,
           borderRadius: BorderRadius.circular(8),
         ),
         child: IconButton(
@@ -123,7 +122,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
             ),
           ),
           onPressed: widget.onViewModeChange,
-          color: color.foreground,
+          color: color.foreground.regular,
         ),
       ),
     );

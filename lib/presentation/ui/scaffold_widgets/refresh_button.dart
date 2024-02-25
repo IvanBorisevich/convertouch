@@ -3,7 +3,7 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/progress_button.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +19,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      BaseColorSet refreshButtonColor =
-          refreshButtonColors[appState.theme]!.regular;
+      ConvertouchColorScheme refreshButtonColor =
+          refreshButtonColors[appState.theme]!;
 
       return conversionBlocBuilder((conversionState) {
         return refreshingJobsBlocBuilder((jobsState) {
@@ -37,7 +37,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 );
               },
               icon: Icons.refresh_rounded,
-              colorSet: refreshButtonColor,
+              colorScheme: refreshButtonColor,
             ),
             radius: 28,
             onProgressIndicatorClick: () {
@@ -52,7 +52,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 .jobs[conversionState.conversion.unitGroup?.name]
                 ?.progressController
                 ?.stream,
-            progressIndicatorColor: refreshButtonColor.foreground,
+            progressIndicatorColor: refreshButtonColor.foreground.regular,
           );
         });
       });

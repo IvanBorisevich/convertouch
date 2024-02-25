@@ -199,11 +199,11 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     currentIndex: selectedItem.index,
                     elevation: 0,
                     backgroundColor:
-                        pageColorScheme.bottomBar.regular.background,
+                        pageColorScheme.bottomBar.background.regular,
                     unselectedItemColor:
-                        pageColorScheme.bottomBar.regular.foreground,
+                        pageColorScheme.bottomBar.foreground.regular,
                     selectedItemColor:
-                        pageColorScheme.bottomBar.selected?.foreground,
+                        pageColorScheme.bottomBar.foreground.selected,
                   ),
                 ),
               ),

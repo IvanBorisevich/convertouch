@@ -17,8 +17,7 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversi
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +28,12 @@ class ConvertouchConversionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorSet floatingButtonColor =
+      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+
+      ConvertouchColorScheme floatingButtonColor =
           conversionPageFloatingButtonColors[appState.theme]!;
 
-      ColorStateVariation<BaseColorSet> unitGroupInAppBarColor =
+      ConvertouchColorScheme unitGroupInAppBarColor =
           unitGroupItemInAppBarColors[appState.theme]!;
 
       return conversionBlocBuilder((pageState) {
@@ -96,7 +97,13 @@ class ConvertouchConversionPage extends StatelessWidget {
             secondaryAppBar: conversion.unitGroup != null
                 ? SecondaryAppBar(
                     theme: appState.theme,
-                    color: Colors.transparent,
+                    color: pageColorScheme.page.background.regular,
+                    padding: const EdgeInsets.only(
+                      left: 7,
+                      top: 7,
+                      right: 7,
+                      bottom: 0,
+                    ),
                     child: ConvertouchMenuItem(
                       conversion.unitGroup!,
                       customColors: unitGroupInAppBarColor,
@@ -114,46 +121,49 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                   )
                 : null,
-            body: ConvertouchConversionItemsView(
-              conversion.targetConversionItems,
-              onItemTap: (item) {
-                BlocProvider.of<UnitsBlocForConversion>(context).add(
-                  FetchUnitsForChangeInConversion(
-                    currentSelectedUnit: item.unit,
-                    unitGroup: conversion.unitGroup!,
-                    unitsInConversion: conversion.targetConversionItems
-                        .map((convItem) => convItem.unit)
-                        .toList(),
-                    currentSourceConversionItem:
-                        conversion.sourceConversionItem,
-                    searchString: null,
-                  ),
-                );
-              },
-              onItemValueChanged: (item, value) {
-                BlocProvider.of<ConversionBloc>(context).add(
-                  RebuildConversionOnValueChange(
-                    conversionParams: InputConversionModel(
-                      sourceConversionItem: ConversionItemModel.fromStrValue(
-                        unit: item.unit,
-                        strValue: value,
-                      ),
-                      targetUnits: conversion.targetConversionItems
-                          .map((item) => item.unit)
+            body: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: ConvertouchConversionItemsView(
+                conversion.targetConversionItems,
+                onItemTap: (item) {
+                  BlocProvider.of<UnitsBlocForConversion>(context).add(
+                    FetchUnitsForChangeInConversion(
+                      currentSelectedUnit: item.unit,
+                      unitGroup: conversion.unitGroup!,
+                      unitsInConversion: conversion.targetConversionItems
+                          .map((convItem) => convItem.unit)
                           .toList(),
-                      unitGroup: conversion.unitGroup,
+                      currentSourceConversionItem:
+                          conversion.sourceConversionItem,
+                      searchString: null,
                     ),
-                  ),
-                );
-              },
-              onItemRemove: (item) {
-                BlocProvider.of<ConversionBloc>(context).add(
-                  RemoveConversionItem(
-                    id: item.unit.id!,
-                  ),
-                );
-              },
-              theme: appState.theme,
+                  );
+                },
+                onItemValueChanged: (item, value) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    RebuildConversionOnValueChange(
+                      conversionParams: InputConversionModel(
+                        sourceConversionItem: ConversionItemModel.fromStrValue(
+                          unit: item.unit,
+                          strValue: value,
+                        ),
+                        targetUnits: conversion.targetConversionItems
+                            .map((item) => item.unit)
+                            .toList(),
+                        unitGroup: conversion.unitGroup,
+                      ),
+                    ),
+                  );
+                },
+                onItemRemove: (item) {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    RemoveConversionItem(
+                      id: item.unit.id!,
+                    ),
+                  );
+                },
+                theme: appState.theme,
+              ),
             ),
             floatingActionButton: Wrap(
               crossAxisAlignment: WrapCrossAlignment.end,
@@ -182,7 +192,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                       );
                     }
                   },
-                  colorSet: floatingButtonColor,
+                  colorScheme: floatingButtonColor,
                 ),
               ],
             ),

@@ -35,7 +35,7 @@ class ConvertouchErrorPage extends StatelessWidget {
                   child: Icon(
                     Icons.troubleshoot_outlined,
                     size: 140,
-                    color: pageColorScheme.page.foreground,
+                    color: pageColorScheme.page.foreground.regular,
                   ),
                 ),
               ),
@@ -51,14 +51,14 @@ class ConvertouchErrorPage extends StatelessWidget {
                     height: MediaQuery.of(context).size.height,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: pageColorScheme.page.background,
+                      color: pageColorScheme.page.background.regular,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       error.toString(),
                       style: TextStyle(
                         fontSize: 16,
-                        color: pageColorScheme.page.foreground,
+                        color: pageColorScheme.page.foreground.regular,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -81,14 +81,14 @@ class ConvertouchErrorPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: pageColorScheme.page.foreground,
+                          color: pageColorScheme.page.foreground.regular,
                           width: 2,
                         ),
                       ),
                       child: Text(
                         'Go Back',
                         style: TextStyle(
-                          color: pageColorScheme.page.foreground,
+                          color: pageColorScheme.page.foreground.regular,
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                         ),

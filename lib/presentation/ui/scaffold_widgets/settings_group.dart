@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +19,17 @@ class ConvertouchSettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BaseColorSet colorSet = disabled
-        ? settingItemColors[theme]!.disabled!
-        : settingItemColors[theme]!.regular;
+    SettingItemColorScheme colorScheme = settingItemColors[theme]!;
+    Color foregroundColor;
+    Color backgroundColor;
+
+    if (disabled) {
+      foregroundColor = colorScheme.foreground.disabled;
+      backgroundColor = colorScheme.background.disabled;
+    } else {
+      foregroundColor = colorScheme.foreground.regular;
+      backgroundColor = colorScheme.background.regular;
+    }
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -31,7 +39,7 @@ class ConvertouchSettingsGroup extends StatelessWidget {
       ),
       child: DefaultTextStyle(
         style: TextStyle(
-          color: colorSet.foreground,
+          color: foregroundColor,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           fontFamily: quicksandFontFamily,
@@ -40,7 +48,7 @@ class ConvertouchSettingsGroup extends StatelessWidget {
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: colorSet.background,
+            color: backgroundColor,
             border: Border.all(
               width: 0.0,
               color: Colors.transparent,

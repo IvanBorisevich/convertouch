@@ -6,11 +6,9 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,9 +20,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
       PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-      ButtonColorSet floatingButtonColor =
+      ConvertouchColorScheme floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
-      ButtonColorSet removalButtonColor =
+      ConvertouchColorScheme removalButtonColor =
           removalFloatingButtonColors[appState.theme]!;
 
       return unitsBlocBuilder((pageState) {
@@ -32,10 +30,12 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           pageTitle: pageState.unitGroup.name,
           units: pageState.units,
           customLeadingIcon: pageState.removalMode
-              ? leadingIcon(
-                  icon: Icons.clear,
-                  color: pageColorScheme.appBar.regular,
-                  onClick: () {
+              ? IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: pageColorScheme.appBar.foreground.regular,
+                  ),
+                  onPressed: () {
                     BlocProvider.of<UnitsBloc>(context).add(
                       DisableUnitsRemovalMode(
                         unitGroup: pageState.unitGroup,
@@ -55,7 +55,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
               },
               icon: Icon(
                 Icons.edit_outlined,
-                color: pageColorScheme.appBar.regular.foreground,
+                color: pageColorScheme.appBar.foreground.regular,
               ),
             )
           ],
@@ -119,7 +119,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   visible: pageState.markedIdsForRemoval.isNotEmpty,
                   extraLabelText:
                       pageState.markedIdsForRemoval.length.toString(),
-                  colorSet: removalButtonColor,
+                  colorScheme: removalButtonColor,
                   onClick: () {
                     BlocProvider.of<UnitsBloc>(context).add(
                       RemoveUnits(
@@ -138,7 +138,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                       ),
                     );
                   },
-                  colorSet: floatingButtonColor,
+                  colorScheme: floatingButtonColor,
                 ),
         );
       });

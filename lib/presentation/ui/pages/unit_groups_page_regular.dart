@@ -6,11 +6,9 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,9 +19,9 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorSet floatingButtonColor =
+      ConvertouchColorScheme floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
-      ButtonColorSet removalButtonColor =
+      ConvertouchColorScheme removalButtonColor =
           removalFloatingButtonColors[appState.theme]!;
 
       PageColorScheme pageColorScheme = pageColors[appState.theme]!;
@@ -32,10 +30,12 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
         return ConvertouchUnitGroupsPage(
           pageTitle: "Unit Groups",
           customLeadingIcon: pageState.removalMode
-              ? leadingIcon(
-                  icon: Icons.clear,
-                  color: pageColorScheme.appBar.regular,
-                  onClick: () {
+              ? IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: pageColorScheme.appBar.foreground.regular,
+                  ),
+                  onPressed: () {
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       const DisableUnitGroupsRemovalMode(),
                     );
@@ -94,7 +94,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                   visible: pageState.markedIdsForRemoval.isNotEmpty,
                   extraLabelText:
                       pageState.markedIdsForRemoval.length.toString(),
-                  colorSet: removalButtonColor,
+                  colorScheme: removalButtonColor,
                   onClick: () {
                     BlocProvider.of<UnitGroupsBloc>(context).add(
                       RemoveUnitGroups(
@@ -110,7 +110,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
                     );
                   },
                   visible: true,
-                  colorSet: floatingButtonColor,
+                  colorScheme: floatingButtonColor,
                 ),
         );
       });

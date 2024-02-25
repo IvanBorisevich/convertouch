@@ -10,8 +10,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,10 +35,11 @@ class _ConvertouchUnitGroupDetailsPageState
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ColorStateVariation<TextBoxColorSet> textBoxColor =
-          unitGroupTextBoxColors[appState.theme]!;
-      ButtonColorSet floatingButtonColor =
+      TextBoxColorScheme textBoxColor = unitGroupTextBoxColors[appState.theme]!;
+      ConvertouchColorScheme floatingButtonColor =
           unitGroupsPageFloatingButtonColors[appState.theme]!;
+      ConvertouchColorScheme infoBoxColor =
+          unitGroupPageInfoBoxColors[appState.theme]!;
 
       return MultiBlocListener(
         listeners: [
@@ -92,7 +92,7 @@ class _ConvertouchUnitGroupDetailsPageState
                     visible: !unitGroupDetailsState.editMode,
                     child: infoNote(
                       context: context,
-                      backgroundColor: const Color(0xFFF1EBFF),
+                      backgroundColor: infoBoxColor.background.regular,
                       child: RichText(
                         text: TextSpan(
                           children: const <TextSpan>[
@@ -113,7 +113,7 @@ class _ConvertouchUnitGroupDetailsPageState
                             ),
                           ],
                           style: TextStyle(
-                            color: textBoxColor.regular.foreground,
+                            color: textBoxColor.foreground.regular,
                             fontWeight: FontWeight.w500,
                             fontFamily: quicksandFontFamily,
                           ),
@@ -137,7 +137,7 @@ class _ConvertouchUnitGroupDetailsPageState
                     ),
                   );
                 },
-                colorSet: floatingButtonColor,
+                colorScheme: floatingButtonColor,
               );
             }),
           );

@@ -12,7 +12,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +23,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ButtonColorSet floatingButtonColor =
+      ConvertouchColorScheme floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
 
       return unitsBlocBuilderForConversion((pageState) {
@@ -182,11 +182,10 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                     ),
                   ),
                 );
-                BlocProvider.of<NavigationBloc>(context).add(
-                  const NavigateBackToRootPage()
-                );
+                BlocProvider.of<NavigationBloc>(context)
+                    .add(const NavigateBackToRootPage());
               },
-              colorSet: floatingButtonColor,
+              colorScheme: floatingButtonColor,
             ),
           ),
         );

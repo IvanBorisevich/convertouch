@@ -15,8 +15,7 @@ import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_but
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,17 +35,20 @@ class _ConvertouchUnitDetailsPageState
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      ColorStateVariation<TextBoxColorSet> textBoxColor =
-          textBoxColors[appState.theme]!;
-      ButtonColorSet floatingButtonColor =
+      TextBoxColorScheme textBoxColor = textBoxColors[appState.theme]!;
+      ConvertouchColorScheme floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
+      ConvertouchColorScheme unitPageInfoBoxColor =
+          unitPageInfoBoxColors[appState.theme]!;
 
       return unitDetailsBlocBuilder((pageState) {
         _unitNameTextController.text = pageState.draftDetails.unit.name;
         _unitCodeTextController.text = pageState.draftDetails.unit.code;
 
         return ConvertouchPage(
-          title: pageState.editMode ? "Edit Unit" : "New Unit",
+          title: pageState.editMode
+              ? pageState.draftDetails.unit.name
+              : "New Unit",
           body: SingleChildScrollView(
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 60),
@@ -107,7 +109,8 @@ class _ConvertouchUnitDetailsPageState
                     if (pageState.note != null) {
                       return infoNote(
                         context: context,
-                        backgroundColor: const Color(0xFFDFEAFF),
+                        backgroundColor:
+                            unitPageInfoBoxColor.background.regular,
                         child: RichText(
                           text: TextSpan(
                             children: <TextSpan>[
@@ -119,7 +122,7 @@ class _ConvertouchUnitDetailsPageState
                               ),
                             ],
                             style: TextStyle(
-                              color: textBoxColor.regular.foreground,
+                              color: textBoxColor.foreground.regular,
                               fontWeight: FontWeight.w500,
                               fontFamily: quicksandFontFamily,
                             ),
@@ -133,12 +136,13 @@ class _ConvertouchUnitDetailsPageState
                           children: [
                             infoNote(
                               context: context,
-                              backgroundColor: const Color(0xFFDFEAFF),
+                              backgroundColor:
+                                  unitPageInfoBoxColor.background.regular,
                               child: Center(
                                 child: Text(
                                   "Conversion Rule",
                                   style: TextStyle(
-                                    color: textBoxColor.regular.foreground,
+                                    color: textBoxColor.foreground.regular,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: quicksandFontFamily,
                                   ),
@@ -232,7 +236,7 @@ class _ConvertouchUnitDetailsPageState
                   );
                 }
               },
-              colorSet: floatingButtonColor,
+              colorScheme: floatingButtonColor,
             );
           }),
         );

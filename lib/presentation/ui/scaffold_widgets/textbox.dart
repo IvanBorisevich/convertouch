@@ -1,8 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/keyboard_wrappers.dart';
 import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +28,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? textInputType;
   final ConvertouchUITheme theme;
-  final ColorStateVariation<TextBoxColorSet>? customColor;
+  final TextBoxColorScheme? customColor;
 
   const ConvertouchTextBox({
     this.controller,
@@ -62,7 +61,7 @@ class ConvertouchTextBox extends StatefulWidget {
 }
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
-  late final ColorStateVariation<TextBoxColorSet> _colorVariation;
+  late TextBoxColorScheme _color;
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
 
@@ -83,8 +82,6 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     if (_controller.text.isEmpty) {
       _controller.text = widget.text ?? "";
     }
-
-    _colorVariation = widget.customColor ?? textBoxColors[widget.theme]!;
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
@@ -125,16 +122,25 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   Widget build(BuildContext context) {
-    TextBoxColorSet resultColorSet;
+    _color = widget.customColor ?? textBoxColors[widget.theme]!;
 
-    TextBoxColorSet? colorSet;
+    Color borderColor;
+    Color foregroundColor;
+    Color hintColor;
+
     if (widget.disabled) {
-      colorSet = _colorVariation.disabled;
+      borderColor = _color.border.disabled;
+      foregroundColor = _color.foreground.disabled;
+      hintColor = _color.hint.disabled;
     } else if (_focusNode.hasFocus) {
-      colorSet = _colorVariation.focused;
+      borderColor = _color.border.focused;
+      foregroundColor = _color.foreground.focused;
+      hintColor = _color.hint.focused;
+    } else {
+      borderColor = _color.border.regular;
+      foregroundColor = _color.foreground.regular;
+      hintColor = _color.hint.regular;
     }
-
-    resultColorSet = colorSet ?? _colorVariation.regular;
 
     return SizedBox(
       height: widget.height,
@@ -152,7 +158,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
                 child: _textBox(
                   needToSetFocusNode: false,
                   textInputType: TextInputType.none,
-                  colorSet: resultColorSet,
+                  borderColor: borderColor,
+                  foregroundColor: foregroundColor,
+                  hintColor: hintColor,
                 ),
               ),
             );
@@ -160,7 +168,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             return _textBox(
               textInputType: widget.textInputType,
               onChanged: widget.onChanged,
-              colorSet: resultColorSet,
+              borderColor: borderColor,
+              foregroundColor: foregroundColor,
+              hintColor: hintColor,
             );
           }
         },
@@ -171,7 +181,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   Widget _textBox({
     bool needToSetFocusNode = true,
     TextInputType? textInputType,
-    required TextBoxColorSet colorSet,
+    required Color borderColor,
+    required Color foregroundColor,
+    required Color hintColor,
     void Function(String)? onChanged,
   }) {
     return TextField(
@@ -191,13 +203,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
           borderSide: BorderSide(
-            color: colorSet.border,
+            color: borderColor,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
           borderSide: BorderSide(
-            color: colorSet.border,
+            color: borderColor,
           ),
         ),
         label: Container(
@@ -216,11 +228,11 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelStyle: TextStyle(
-          color: colorSet.label,
+          color: borderColor,
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(
-          color: colorSet.hint,
+          color: hintColor,
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 15.0,
@@ -232,7 +244,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
       ),
       style: TextStyle(
-        color: colorSet.foreground,
+        color: foregroundColor,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

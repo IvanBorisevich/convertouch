@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_set.dart';
-import 'package:convertouch/presentation/ui/style/color/color_state_variation.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -83,8 +82,7 @@ class SettingItem<T> extends StatelessWidget {
     required bool disabled,
     required ConvertouchUITheme theme,
   }) {
-    ColorStateVariation<SettingItemColorSet> itemColor =
-        settingItemColors[theme]!;
+    SettingItemColorScheme colorScheme = settingItemColors[theme]!;
 
     return Radio<T>.adaptive(
       groupValue: selectedValue,
@@ -96,12 +94,12 @@ class SettingItem<T> extends StatelessWidget {
       },
       fillColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
-          return itemColor.selected!.foreground;
+          return colorScheme.foreground.selected;
         }
         if (states.contains(MaterialState.disabled)) {
-          return itemColor.disabled!.foreground;
+          return colorScheme.foreground.disabled;
         }
-        return itemColor.regular.foreground;
+        return colorScheme.foreground.regular;
       }),
     );
   }
@@ -112,37 +110,36 @@ class SettingItem<T> extends StatelessWidget {
     required bool disabled,
     required ConvertouchUITheme theme,
   }) {
-    ColorStateVariation<SettingItemColorSet> itemColor =
-        settingItemColors[theme]!;
+    SettingItemColorScheme colorScheme = settingItemColors[theme]!;
 
     return Switch(
       value: value,
-      activeColor: itemColor.selected!.foreground,
+      activeColor: colorScheme.foreground.selected,
       thumbColor: MaterialStateProperty.resolveWith(
         (states) {
           if (states.contains(MaterialState.disabled)) {
-            return itemColor.disabled!.foreground;
+            return colorScheme.foreground.disabled;
           }
-          return itemColor.regular.foreground;
+          return colorScheme.foreground.regular;
         },
       ),
       trackOutlineColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
-          return itemColor.selected!.switcher.track.border;
+          return colorScheme.switcher.track.border.selected;
         }
         if (states.contains(MaterialState.disabled)) {
-          return itemColor.disabled!.switcher.track.border;
+          return colorScheme.switcher.track.border.disabled;
         }
-        return itemColor.regular.switcher.track.border;
+        return colorScheme.switcher.track.border.regular;
       }),
       trackColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
-          return itemColor.selected!.switcher.track.background;
+          return colorScheme.switcher.track.background.selected;
         }
         if (states.contains(MaterialState.disabled)) {
-          return itemColor.disabled!.switcher.track.background;
+          return colorScheme.switcher.track.background.disabled;
         }
-        return itemColor.regular.switcher.track.background;
+        return colorScheme.switcher.track.background.regular;
       }),
       onChanged: (bool newValue) {
         onTap?.call(newValue);
@@ -161,9 +158,7 @@ class SettingItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingItemColorSet itemColor = disabled
-        ? settingItemColors[theme]!.disabled!
-        : settingItemColors[theme]!.regular;
+    SettingItemColorScheme colorScheme = settingItemColors[theme]!;
 
     return InkWell(
       onTap: () {
@@ -177,7 +172,7 @@ class SettingItem<T> extends StatelessWidget {
               ? Divider(
                   height: 1,
                   indent: pointerSide != PointerSide.left ? 15 : 40,
-                  color: itemColor.divider,
+                  color: colorScheme.divider.regular,
                 )
               : empty(),
           pointerSide != PointerSide.left

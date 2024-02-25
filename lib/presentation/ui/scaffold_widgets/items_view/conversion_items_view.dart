@@ -32,12 +32,12 @@ class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
   static const double _listSpacingLeft = 1;
   static const double _listSpacingRight = 7;
-  static const double _listSpacingTop = 9;
-  static const double _listItemSpacing = 9;
+  static const double _listSpacingTop = 5;
+  static const double _listItemSpacing = 0;
   static const double _dragHandlerWidth = 38;
-  static const double _dragHandlerHeight = 35;
+  static const double _dragHandlerHeight = 50;
   static const double _removalHandlerWidth = 32;
-  static const double _removalHandlerHeight = 35;
+  static const double _removalHandlerHeight = 50;
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +58,16 @@ class _ConvertouchConversionItemsViewState
                 Container(
                   width: _dragHandlerWidth,
                   height: _dragHandlerHeight,
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.only(left: 7),
                   child: ReorderableDragStartListener(
                     index: index,
                     child: Card(
-                      margin: EdgeInsets.zero,
                       color: Colors.transparent,
                       shadowColor: Colors.transparent,
                       child: Icon(
                         Icons.drag_indicator_outlined,
-                        color: conversionItemColorScheme.handler,
+                        color: conversionItemColorScheme
+                            .handler.foreground.regular,
                       ),
                     ),
                   ),
@@ -96,13 +96,14 @@ class _ConvertouchConversionItemsViewState
                     // on tap effect color
                     highlightColor: Colors.transparent,
                     // on long pressed effect color
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 0),
                     onPressed: () {
                       widget.onItemRemove?.call(widget.convertedItems[index]);
                     },
                     icon: Icon(
                       Icons.remove_circle_outline,
-                      color: conversionItemColorScheme.handler,
+                      color:
+                          conversionItemColorScheme.handler.foreground.regular,
                     ),
                   ),
                 ),
