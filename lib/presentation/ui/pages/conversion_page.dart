@@ -122,7 +122,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                   )
                 : null,
             body: Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(top: 7),
               child: ConvertouchConversionItemsView(
                 conversion.targetConversionItems,
                 onItemTap: (item) {

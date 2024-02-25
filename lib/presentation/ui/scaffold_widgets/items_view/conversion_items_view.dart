@@ -33,7 +33,7 @@ class _ConvertouchConversionItemsViewState
   static const double _listSpacingLeft = 1;
   static const double _listSpacingRight = 7;
   static const double _listSpacingTop = 5;
-  static const double _listItemSpacing = 0;
+  static const double _listItemSpacing = 2;
   static const double _dragHandlerWidth = 38;
   static const double _dragHandlerHeight = 50;
   static const double _removalHandlerWidth = 32;

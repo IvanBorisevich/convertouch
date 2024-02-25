@@ -68,20 +68,20 @@ const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
 
 const unitItemColorSchemeDark = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF54616C),
-    marked: Color(0xFF7A9EBE),
+    regular: Color(0xFF576479),
+    marked: Color(0xFF7595B2),
     selected: Color(0xFF7A9EBE),
     disabled: Color(0xFF6A7885),
   ),
   background: ColorVariation(
-    regular: Color(0xFF3E4754),
+    regular: Color(0xFF3E4A5D),
     marked: Color(0xE4415F7E),
     selected: Color(0xE4415F7E),
     disabled: Color(0xFF545E6E),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF7DAAD3),
-    marked: Color(0xFFA0CAF1),
+    marked: Color(0xFF95B8D7),
     selected: Color(0xFFA0CAF1),
     disabled: Color(0xFF8DBAE3),
   ),
