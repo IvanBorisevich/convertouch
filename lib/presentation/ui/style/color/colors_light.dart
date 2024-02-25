@@ -8,7 +8,6 @@ const pageColorSchemeLight = PageColorScheme(
     background: ColorVariation.only(Color(0xffb0cbef)),
     foreground: ColorVariation(
       regular: Color(0xFF3B5B7A),
-      disabled: Color(0xFFA0C4F5),
     ),
   ),
   page: ConvertouchColorScheme(
@@ -30,7 +29,6 @@ const pageColorSchemeLight = PageColorScheme(
     foreground: ColorVariation(
       regular: Color(0xFF426F99),
       disabled: Color(0xFFA0C4F5),
-      // selected: Color(0xFF4C90EC),
     ),
   ),
 );
@@ -63,8 +61,8 @@ const unitGroupItemColorSchemeLight = ConvertouchColorScheme(
 );
 
 const unitGroupItemInAppBarColorSchemeLight = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xffacbfee)),
-  background: ColorVariation.only(Color(0xffc7d8fd)),
+  border: ColorVariation.only(Color(0xffabbeee)),
+  background: ColorVariation.only(Color(0xffd1dfff)),
   foreground: ColorVariation.only(Color(0xFF353D69)),
 );
 
@@ -108,7 +106,6 @@ const textBoxColorLight = TextBoxColorScheme(
   ),
   hint: ColorVariation(
     regular: Color(0xFF85A9CB),
-    // focused: Color(0xFF95B7D7),
   ),
 );
 
@@ -122,11 +119,9 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
     ),
     background: ColorVariation(
       regular: Color(0xFFB3D2EE),
-      // focused: Color(0xFFB9D7F1),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF2D4B67),
-      // focused: Color(0xFF2D4B67),
     ),
   ),
   handler: ConvertouchColorScheme(

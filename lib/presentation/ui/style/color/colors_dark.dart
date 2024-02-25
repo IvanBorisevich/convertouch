@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeDark = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF2C323D)),
+    background: ColorVariation.only(Color(0xFF2B2F38)),
     foreground: ColorVariation(
-      regular: Color(0xFFCCD7E0),
-      disabled: Color(0xFF8D8D8D),
+      regular: Color(0xFFBDCDDA),
     ),
   ),
   page: ConvertouchColorScheme(
@@ -22,11 +21,10 @@ const pageColorSchemeDark = PageColorScheme(
     foregroundInfo: ColorVariation.only(Color(0xFFF2F8FF)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF2C323D)),
+    background: ColorVariation.only(Color(0xFF2B2F38)),
     foreground: ColorVariation(
       regular: Color(0xFFCCD7E0),
       disabled: Color(0xFF8D8D8D),
-      selected: Color(0xFFC0DCF3),
     ),
   ),
 );
@@ -59,9 +57,9 @@ const unitGroupItemColorSchemeDark = ConvertouchColorScheme(
 );
 
 const unitGroupItemInAppBarColorSchemeDark = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xFF60647E)),
-  background: ColorVariation.only(Color(0xFF585A6C)),
-  foreground: ColorVariation.only(Color(0xFFA1A4CE)),
+  border: ColorVariation.only(Color(0xff555f75)),
+  background: ColorVariation.only(Color(0xff414a5e)),
+  foreground: ColorVariation.only(Color(0xffa1b6ea)),
 );
 
 const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
@@ -95,7 +93,7 @@ const unitPageInfoBoxColorDark = ConvertouchColorScheme(
 
 const textBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF7FA0BE),
+    regular: Color(0xFF7995AF),
     focused: Color(0xFF98BAD9),
   ),
   foreground: ColorVariation(
@@ -103,8 +101,7 @@ const textBoxColorDark = TextBoxColorScheme(
     focused: Color(0xFFA0C4E5),
   ),
   hint: ColorVariation(
-    regular: Color(0xFFA8C9E7),
-    focused: Color(0xFFA8C9E7),
+    regular: Color(0xFF92B2D0),
   ),
 );
 
@@ -113,20 +110,18 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xFF7FA0BE),
+      regular: Color(0xC74075A6),
       focused: Color(0xFF8FB1D0),
     ),
     background: ColorVariation(
-      regular: Color(0xFF373F4B),
-      focused: Color(0xDF49597A),
+      regular: Color(0xA8305E88),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF7FA0BE),
-      focused: Color(0xFF8FB1D0),
     ),
   ),
   handler: ConvertouchColorScheme(
-    foreground: ColorVariation.only(Color(0xFF7FA0BE)),
+    foreground: ColorVariation.only(Color(0xFF718EA9)),
   ),
 );
 
@@ -141,8 +136,8 @@ const unitsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
 );
 
 const conversionPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xDB446F96)),
-  foreground: ColorVariation.only(Color(0xFFD1CFD3)),
+  background: ColorVariation.only(Color(0xA83D6C98)),
+  foreground: ColorVariation.only(Color(0xFF9DC0E0)),
 );
 
 const refreshButtonColorSchemeDark = ConvertouchColorScheme(
