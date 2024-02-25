@@ -100,7 +100,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                     color: pageColorScheme.page.background.regular,
                     padding: const EdgeInsets.only(
                       left: 7,
-                      top: 7,
+                      top: 6,
                       right: 7,
                       bottom: 0,
                     ),

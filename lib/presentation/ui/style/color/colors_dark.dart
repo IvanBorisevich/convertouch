@@ -11,7 +11,7 @@ const pageColorSchemeDark = PageColorScheme(
     ),
   ),
   page: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF373F4B)),
+    background: ColorVariation.only(Color(0xFF363D48)),
     foreground: ColorVariation.only(Color(0xFFCCD7E0)),
   ),
   snackBar: SnackBarColorScheme(
@@ -57,9 +57,9 @@ const unitGroupItemColorSchemeDark = ConvertouchColorScheme(
 );
 
 const unitGroupItemInAppBarColorSchemeDark = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xff555f75)),
-  background: ColorVariation.only(Color(0xff414a5e)),
-  foreground: ColorVariation.only(Color(0xffa1b6ea)),
+  border: ColorVariation.only(Color(0xff5e6981)),
+  background: ColorVariation.only(Color(0xff434c60)),
+  foreground: ColorVariation.only(Color(0xffa6baee)),
 );
 
 const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
@@ -93,15 +93,14 @@ const unitPageInfoBoxColorDark = ConvertouchColorScheme(
 
 const textBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF7995AF),
+    regular: Color(0xFF84A1BD),
     focused: Color(0xFF98BAD9),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF8FB1D0),
-    focused: Color(0xFFA0C4E5),
+    regular: Color(0xFF98BAD9),
   ),
   hint: ColorVariation(
-    regular: Color(0xFF92B2D0),
+    regular: Color(0xFF84A1BD),
   ),
 );
 
@@ -110,14 +109,15 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xC74075A6),
+      regular: Color(0xFF708EA8),
       focused: Color(0xFF8FB1D0),
     ),
     background: ColorVariation(
-      regular: Color(0xA8305E88),
+      regular: Color(0xE43F5B77),
     ),
     foreground: ColorVariation(
-      regular: Color(0xFF7FA0BE),
+      regular: Color(0xFF90B3D2),
+      focused: Color(0xFF8FB1D0),
     ),
   ),
   handler: ConvertouchColorScheme(

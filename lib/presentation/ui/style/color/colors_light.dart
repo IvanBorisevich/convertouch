@@ -102,7 +102,6 @@ const textBoxColorLight = TextBoxColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xFF426F99),
-    focused: Color(0xFF426F99),
   ),
   hint: ColorVariation(
     regular: Color(0xFF85A9CB),
