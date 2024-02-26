@@ -43,11 +43,11 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 
 const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xffc9d9fd),
+    regular: Color(0xffc6d7fd),
     selected: Color(0xFF535D91),
   ),
   background: ColorVariation(
-    regular: Color(0xffc2d4fc),
+    regular: Color(0xffc6d7fd),
     selected: Color(0xff9db3ea),
   ),
   foreground: ColorVariation(
