@@ -13,6 +13,7 @@ class ConvertouchConversionItem extends StatefulWidget {
   final bool disabled;
   final ConvertouchUITheme theme;
   final ConversionItemColorScheme? customColors;
+  final double spacing;
 
   const ConvertouchConversionItem(
     this.item, {
@@ -21,6 +22,7 @@ class ConvertouchConversionItem extends StatefulWidget {
     this.disabled = false,
     required this.theme,
     this.customColors,
+    this.spacing = 11,
     super.key,
   });
 
@@ -60,98 +62,86 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     }
 
     return Container(
-      padding: const EdgeInsets.only(
-        left: 4,
-        top: 7,
-        right: 7,
-        bottom: 7,
-      ),
-      decoration: BoxDecoration(
-        color: itemColor.background.regular,
+      height: _containerHeight,
+      decoration: const BoxDecoration(
         borderRadius: _elementsBorderRadius,
       ),
-      child: Container(
-        height: _containerHeight,
-        decoration: const BoxDecoration(
-          borderRadius: _elementsBorderRadius,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ConvertouchTextBox(
-                controller: _unitValueController,
-                disabled: widget.disabled,
-                label: widget.item.unit.name,
-                hintText: _isFocused
-                    ? widget.item.defaultValue.strValue
-                    : widget.item.defaultValue.scientificValue,
-                inputFormatters: [
-                  decimalNegativeNumbersFormatter,
-                ],
-                textInputType: decimalNegativeNumbersType,
-                onChanged: (value) {
-                  if (value != '.' && value != '-') {
-                    widget.onValueChanged?.call(value);
-                  }
-                },
-                onFocusSelected: () {
-                  setState(() {
-                    _isFocused = true;
-                  });
-                },
-                onFocusLeft: () {
-                  setState(() {
-                    _isFocused = false;
-                  });
-                },
-                theme: widget.theme,
-              ),
-            ),
-            const SizedBox(width: 7),
-            GestureDetector(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-                widget.onTap?.call();
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ConvertouchTextBox(
+              controller: _unitValueController,
+              disabled: widget.disabled,
+              label: widget.item.unit.name,
+              hintText: _isFocused
+                  ? widget.item.defaultValue.strValue
+                  : widget.item.defaultValue.scientificValue,
+              inputFormatters: [
+                decimalNegativeNumbersFormatter,
+              ],
+              textInputType: decimalNegativeNumbersType,
+              onChanged: (value) {
+                if (value != '.' && value != '-') {
+                  widget.onValueChanged?.call(value);
+                }
               },
-              child: SizedBox(
-                width: _unitButtonWidth,
-                height: _unitButtonHeight,
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      _isFocused
-                          ? unitButtonColor.background.focused
-                          : unitButtonColor.background.regular,
-                    ),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: _isFocused
-                              ? unitButtonColor.border.focused
-                              : unitButtonColor.border.regular,
-                          width: 1,
-                        ),
-                        borderRadius: _elementsBorderRadius,
+              onFocusSelected: () {
+                setState(() {
+                  _isFocused = true;
+                });
+              },
+              onFocusLeft: () {
+                setState(() {
+                  _isFocused = false;
+                });
+              },
+              theme: widget.theme,
+            ),
+          ),
+          SizedBox(width: widget.spacing),
+          GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              widget.onTap?.call();
+            },
+            child: SizedBox(
+              width: _unitButtonWidth,
+              height: _unitButtonHeight,
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    _isFocused
+                        ? unitButtonColor.background.focused
+                        : unitButtonColor.background.regular,
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: _isFocused
+                            ? unitButtonColor.border.focused
+                            : unitButtonColor.border.regular,
+                        width: 1,
                       ),
+                      borderRadius: _elementsBorderRadius,
                     ),
                   ),
-                  onPressed: null,
-                  child: Text(
-                    widget.item.unit.code,
-                    style: TextStyle(
-                      color: _isFocused
-                          ? unitButtonColor.foreground.focused
-                          : unitButtonColor.foreground.regular,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    maxLines: 1,
+                ),
+                onPressed: null,
+                child: Text(
+                  widget.item.unit.code,
+                  style: TextStyle(
+                    color: _isFocused
+                        ? unitButtonColor.foreground.focused
+                        : unitButtonColor.foreground.regular,
+                    fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

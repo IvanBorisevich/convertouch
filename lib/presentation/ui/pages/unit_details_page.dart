@@ -46,37 +46,39 @@ class _ConvertouchUnitDetailsPageState
         _unitCodeTextController.text = pageState.draftDetails.unit.code;
 
         return ConvertouchPage(
-          title: pageState.editMode
-              ? "Edit Unit"
-              : "New Unit",
+          title: pageState.editMode ? "Edit Unit" : "New Unit",
           body: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(7, 10, 7, 60),
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 15, 12, 60),
               child: Column(
                 children: [
                   (pageState.draftDetails.unit.coefficient != 1 &&
                                   pageState.editMode ||
                               !pageState.editMode) &&
                           pageState.draftDetails.unitGroup != null
-                      ? ConvertouchMenuItem(
-                          pageState.draftDetails.unitGroup!,
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            BlocProvider.of<UnitGroupsBlocForUnitDetails>(
-                              context,
-                            ).add(
-                              FetchUnitGroupsForUnitDetails(
-                                currentUnitGroupInUnitDetails:
-                                    pageState.draftDetails.unitGroup!,
-                                searchString: null,
-                              ),
-                            );
-                          },
-                          theme: appState.theme,
-                          itemsViewMode: ItemsViewMode.list,
+                      ? Column(
+                          children: [
+                            ConvertouchMenuItem(
+                              pageState.draftDetails.unitGroup!,
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                BlocProvider.of<UnitGroupsBlocForUnitDetails>(
+                                  context,
+                                ).add(
+                                  FetchUnitGroupsForUnitDetails(
+                                    currentUnitGroupInUnitDetails:
+                                        pageState.draftDetails.unitGroup!,
+                                    searchString: null,
+                                  ),
+                                );
+                              },
+                              theme: appState.theme,
+                              itemsViewMode: ItemsViewMode.list,
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         )
                       : empty(),
-                  const SizedBox(height: 20),
                   ConvertouchTextBox(
                     label: 'Unit Name',
                     controller: _unitNameTextController,
@@ -108,7 +110,7 @@ class _ConvertouchUnitDetailsPageState
                   LayoutBuilder(builder: (context, constrains) {
                     if (pageState.note != null) {
                       return infoNote(
-                        context: context,
+                        width: MediaQuery.of(context).size.width,
                         backgroundColor:
                             unitPageInfoBoxColor.background.regular,
                         child: RichText(
@@ -116,9 +118,6 @@ class _ConvertouchUnitDetailsPageState
                             children: <TextSpan>[
                               TextSpan(
                                 text: pageState.note!,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
                               ),
                             ],
                             style: TextStyle(
@@ -135,9 +134,7 @@ class _ConvertouchUnitDetailsPageState
                         child: Column(
                           children: [
                             infoNote(
-                              context: context,
-                              backgroundColor:
-                                  unitPageInfoBoxColor.background.regular,
+                              width: MediaQuery.of(context).size.width,
                               child: Center(
                                 child: Text(
                                   "Conversion Rule",
@@ -172,6 +169,9 @@ class _ConvertouchUnitDetailsPageState
                                 );
                               },
                               theme: appState.theme,
+                            ),
+                            const SizedBox(
+                              height: 12,
                             ),
                             ConvertouchConversionItem(
                               ConversionItemModel(

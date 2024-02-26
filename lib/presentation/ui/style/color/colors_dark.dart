@@ -62,10 +62,6 @@ const unitGroupItemInAppBarColorSchemeDark = ConvertouchColorScheme(
   foreground: ColorVariation.only(Color(0xffa6baee)),
 );
 
-const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFF1EBFF))
-);
-
 const unitItemColorSchemeDark = ConvertouchColorScheme(
   border: ColorVariation(
     regular: Color(0xFF576479),
@@ -87,8 +83,12 @@ const unitItemColorSchemeDark = ConvertouchColorScheme(
   ),
 );
 
+const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xff434c60))
+);
+
 const unitPageInfoBoxColorDark = ConvertouchColorScheme(
-    // background: ColorVariation.only(Color(0xFF44526E))
+    background: ColorVariation.only(Color(0xFF3E4A5D))
 );
 
 const unitTextBoxColorDark = TextBoxColorScheme(
@@ -101,6 +101,20 @@ const unitTextBoxColorDark = TextBoxColorScheme(
   ),
   hint: ColorVariation(
     regular: Color(0xFF84A1BD),
+  ),
+);
+
+const unitGroupTextBoxColorDark = TextBoxColorScheme(
+  border: ColorVariation(
+    regular: Color(0xFFA5B2FF),
+    disabled: Color(0x90A5B2FF),
+  ),
+  foreground: ColorVariation(
+    regular: Color(0xFFA5B2FF),
+    disabled: Color(0x90A5B2FF),
+  ),
+  hint: ColorVariation(
+    regular: Color(0x90A5B2FF),
   ),
 );
 
@@ -155,20 +169,6 @@ const removalFloatingButtonColorDark = ConvertouchColorScheme(
   border: ColorVariation.only(Color(0xFF373F4B)),
   background: ColorVariation.only(Color(0xFF9D5225)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
-);
-
-const unitGroupTextBoxColorDark = TextBoxColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFFA1A4CE),
-    disabled: Color(0xFF8183A1),
-  ),
-  foreground: ColorVariation(
-    regular: Color(0xFFA1A4CE),
-    disabled: Color(0xFF8183A1),
-  ),
-  hint: ColorVariation(
-    regular: Color(0xFF8183A1),
-  ),
 );
 
 const settingItemColorDark = SettingItemColorScheme(

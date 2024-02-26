@@ -30,13 +30,11 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _listSpacingLeft = 1;
-  static const double _listSpacingRight = 7;
   static const double _listSpacingTop = 5;
-  static const double _listItemSpacing = 2;
+  static const double _listItemSpacing = 14;
   static const double _dragHandlerWidth = 38;
   static const double _dragHandlerHeight = 50;
-  static const double _removalHandlerWidth = 32;
+  static const double _removalHandlerWidth = 41;
   static const double _removalHandlerHeight = 50;
 
   @override
@@ -52,13 +50,14 @@ class _ConvertouchConversionItemsViewState
           color: Colors.transparent,
           shadowColor: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: _listItemSpacing),
+            padding: const EdgeInsets.only(
+                bottom: _listItemSpacing,
+            ),
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: _dragHandlerWidth,
                   height: _dragHandlerHeight,
-                  padding: const EdgeInsets.only(left: 4),
                   child: ReorderableDragStartListener(
                     index: index,
                     child: Card(
@@ -87,16 +86,13 @@ class _ConvertouchConversionItemsViewState
                     theme: widget.theme,
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: _removalHandlerWidth,
                   height: _removalHandlerHeight,
-                  padding: EdgeInsets.zero,
                   child: IconButton(
-                    splashColor: Colors.transparent,
-                    // on tap effect color
-                    highlightColor: Colors.transparent,
-                    // on long pressed effect color
-                    padding: const EdgeInsets.only(left: 0),
+                    splashColor: Colors.transparent,    // on tap effect color
+                    highlightColor: Colors.transparent, // on long pressed effect color
+                    // padding: const EdgeInsets.only(left: 0),
                     onPressed: () {
                       widget.onItemRemove?.call(widget.convertedItems[index]);
                     },
@@ -147,11 +143,8 @@ class _ConvertouchConversionItemsViewState
         itemCount: widget.convertedItems.length,
         buildDefaultDragHandles: false,
         proxyDecorator: proxyDecorator,
-        padding: const EdgeInsets.fromLTRB(
-          _listSpacingLeft,
-          _listSpacingTop,
-          _listSpacingRight,
-          0,
+        padding: const EdgeInsets.only(
+          top: _listSpacingTop,
         ),
         onReorder: (int oldIndex, int newIndex) {
           setState(() {

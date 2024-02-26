@@ -97,12 +97,12 @@ class ConvertouchConversionPage extends StatelessWidget {
             secondaryAppBar: conversion.unitGroup != null
                 ? SecondaryAppBar(
                     theme: appState.theme,
-                    color: pageColorScheme.page.background.regular,
+                    color: pageColorScheme.appBar.background.regular,
                     padding: const EdgeInsets.only(
                       left: 7,
-                      top: 6,
+                      top: 0,
                       right: 7,
-                      bottom: 0,
+                      bottom: 7,
                     ),
                     child: ConvertouchMenuItem(
                       conversion.unitGroup!,
@@ -122,7 +122,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                   )
                 : null,
             body: Padding(
-              padding: const EdgeInsets.only(top: 7),
+              padding: const EdgeInsets.only(top: 12),
               child: ConvertouchConversionItemsView(
                 conversion.targetConversionItems,
                 onItemTap: (item) {

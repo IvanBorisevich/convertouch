@@ -59,11 +59,14 @@ class _ConvertouchUnitGroupDetailsPageState
           _unitGroupNameController.text = unitGroupDetailsState.draftGroup.name;
 
           return ConvertouchPage(
-            title: unitGroupDetailsState.editMode
-                ? "Edit Group"
-                : "New Group",
+            title: unitGroupDetailsState.editMode ? "Edit Group" : "New Group",
             body: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(7, 15, 7, 0),
+              padding: const EdgeInsets.only(
+                left: 12,
+                top: 15,
+                right: 12,
+                bottom: 0,
+              ),
               child: Column(
                 children: [
                   ConvertouchTextBox(
@@ -91,7 +94,7 @@ class _ConvertouchUnitGroupDetailsPageState
                   Visibility(
                     visible: !unitGroupDetailsState.editMode,
                     child: infoNote(
-                      context: context,
+                      width: MediaQuery.of(context).size.width,
                       backgroundColor: infoBoxColor.background.regular,
                       child: RichText(
                         text: TextSpan(

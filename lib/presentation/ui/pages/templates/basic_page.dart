@@ -147,12 +147,12 @@ void showSnackBar(
 }
 
 Widget infoNote({
-  required BuildContext context,
+  required double width,
   required Widget child,
-  required Color backgroundColor,
+  Color backgroundColor = noColor,
 }) {
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: width,
     padding: const EdgeInsets.symmetric(
       vertical: 10,
       horizontal: 14,
