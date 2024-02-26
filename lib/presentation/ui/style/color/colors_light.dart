@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffcadbff)),
+    background: ColorVariation.only(Color(0xffa1bbf3)),
     foreground: ColorVariation(
       regular: Color(0xFF3B5B7A),
     ),
   ),
   page: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffe7f2ff)),
+    background: ColorVariation.only(Color(0xffe8efff)),
     foreground: ColorVariation.only(Color(0xFF426F99)),
   ),
   snackBar: SnackBarColorScheme(
@@ -21,9 +21,9 @@ const pageColorSchemeLight = PageColorScheme(
     foregroundInfo: ColorVariation.only(Color(0xFFF2F8FF)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffcadbff)),
+    background: ColorVariation.only(Color(0xffa1bbf3)),
     foreground: ColorVariation(
-      regular: Color(0xFF426F99),
+      regular: Color(0xFF38638A),
       disabled: Color(0xFFA0C4F5),
     ),
   ),
@@ -43,11 +43,11 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 
 const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xffa7bbee),
+    regular: Color(0xffc9d9fd),
     selected: Color(0xFF535D91),
   ),
   background: ColorVariation(
-    regular: Color(0xffa7bbee),
+    regular: Color(0xffc9d9fd),
     selected: Color(0xff9db3ea),
   ),
   foreground: ColorVariation(
@@ -61,8 +61,8 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
 );
 
 const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
-  border: ColorVariation.only(Color(0xffa7bbee)),
-  background: ColorVariation.only(Color(0xff9cb2e8)),
+  border: ColorVariation.only(Color(0xffc4d6ff)),
+  background: ColorVariation.only(Color(0xffc4d6ff)),
   foreground: ColorVariation.only(Color(0xFF353D69)),
   divider: ColorVariation.only(Color(0xFF353D69)),
 );
@@ -70,19 +70,19 @@ const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
 const unitItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xFF76A2DC),
+    marked: Color(0xFF77B0F5),
     selected: Color(0xFF2C6396),
     disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xFF76A2DC),
+    marked: Color(0xE570A8EF),
     selected: Color(0xFF76A2DC),
     disabled: Color(0x9EAAC9F1),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
-    marked: Color(0xFF26537E),
+    marked: Color(0xFF1E4770),
     selected: Color(0xFF26537E),
     disabled: Color(0xB2366C9F),
   ),
@@ -191,8 +191,9 @@ const unitGroupTextBoxColorLight = TextBoxColorScheme(
 );
 
 const settingItemColorLight = SettingItemColorScheme(
+  border: ColorVariation.only(Color(0xFFB1BFE1)),
   background: ColorVariation(
-    regular: Color(0xFFE5ECFF),
+    regular: Color(0xFFD5E2FF),
     selected: Color(0xFFE5ECFF),
     disabled: Color(0xFFE5ECFF),
   ),
@@ -201,7 +202,7 @@ const settingItemColorLight = SettingItemColorScheme(
     selected: Color(0xFF426F99),
     disabled: Color(0xFF6F9ECB),
   ),
-  divider: ColorVariation.only(Color(0xFFB6CAFF)),
+  divider: ColorVariation.only(Color(0xFFB1BFE1)),
   switcher: SwitcherColorScheme(
     track: ConvertouchColorScheme(
       border: ColorVariation(
