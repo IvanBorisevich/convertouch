@@ -38,7 +38,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.showSelectedItem = false,
     this.removalModeAllowed = false,
     this.removalModeEnabled = false,
-    this.itemsSpacing = 7,
+    this.itemsSpacing = 8,
     required this.itemsViewMode,
     required this.theme,
     super.key,

@@ -3,9 +3,9 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/widgets/checkbox.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/checkbox.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
@@ -26,7 +26,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final bool removalMode;
   final bool markedForRemoval;
   final ConvertouchUITheme theme;
-  final ConvertouchColorScheme? customColors;
+  final ListItemColorScheme? customColors;
 
   const ConvertouchMenuItem(
     this.item, {
@@ -48,7 +48,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ConvertouchColorScheme colorScheme;
+    ListItemColorScheme colorScheme;
 
     if (customColors != null) {
       colorScheme = customColors!;
@@ -61,23 +61,28 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     Color backgroundColor;
     Color foregroundColor;
     Color borderColor;
+    Color dividerColor;
 
     if (selected) {
       backgroundColor = colorScheme.background.selected;
       foregroundColor = colorScheme.foreground.selected;
       borderColor = colorScheme.border.selected;
+      dividerColor = colorScheme.divider.selected;
     } else if (marked) {
       backgroundColor = colorScheme.background.marked;
       foregroundColor = colorScheme.foreground.marked;
       borderColor = colorScheme.border.marked;
+      dividerColor = colorScheme.divider.marked;
     } else if (disabled) {
       backgroundColor = colorScheme.background.disabled;
       foregroundColor = colorScheme.foreground.disabled;
       borderColor = colorScheme.border.disabled;
+      dividerColor = colorScheme.divider.disabled;
     } else {
       backgroundColor = colorScheme.background.regular;
       foregroundColor = colorScheme.foreground.regular;
       borderColor = colorScheme.border.regular;
+      dividerColor = colorScheme.divider.regular;
     }
 
     Widget itemLogo;
@@ -167,6 +172,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
+                dividerColor: dividerColor,
               );
           }
         },
@@ -186,6 +192,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
+  final Color dividerColor;
 
   const ConvertouchMenuListItem(
     this.item, {
@@ -196,6 +203,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     required this.borderColor,
+    required this.dividerColor,
     this.selectedForRemoval = false,
     this.selectedForConversion = false,
     super.key,
@@ -223,16 +231,6 @@ class ConvertouchMenuListItem extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  removalMode
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: ConvertouchCheckbox(
-                            selectedForRemoval,
-                            color: borderColor,
-                            colorChecked: foregroundColor,
-                          ),
-                        )
-                      : empty(),
                   DefaultTextStyle(
                     style: TextStyle(
                       color: foregroundColor,
@@ -247,7 +245,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                     thickness: selectedForConversion ? 2 : 1,
                     indent: 5,
                     endIndent: 5,
-                    color: borderColor,
+                    color: dividerColor,
                   ),
                   Expanded(
                     child: Align(
@@ -268,6 +266,16 @@ class ConvertouchMenuListItem extends StatelessWidget {
                       ),
                     ),
                   ),
+                  removalMode && !item.oob
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: ConvertouchCheckbox(
+                            selectedForRemoval,
+                            color: foregroundColor,
+                            colorChecked: foregroundColor,
+                          ),
+                        )
+                      : empty(),
                 ],
               ),
             ),

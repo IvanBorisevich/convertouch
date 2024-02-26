@@ -41,10 +41,10 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
   ),
 );
 
-const unitGroupItemColorSchemeDark = ConvertouchColorScheme(
+const unitGroupItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xff5e6981),
-    selected: Color(0xFFA5B2FF),
+    regular: Color(0xff434c60),
+    selected: Color(0xff475065),
   ),
   background: ColorVariation(
     regular: Color(0xff434c60),
@@ -52,34 +52,43 @@ const unitGroupItemColorSchemeDark = ConvertouchColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xffa6baee),
-    selected: Color(0xffa6baee),
+  ),
+  divider: ColorVariation(
+    regular: Color(0xffa6baee),
   ),
 );
 
-const unitGroupItemInAppBarColorSchemeDark = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xff5e6981)),
+const unitGroupItemInAppBarColorSchemeDark = ListItemColorScheme(
+  border: ColorVariation.only(Color(0xff434c60)),
+  divider: ColorVariation.only(Color(0xff5e6981)),
   background: ColorVariation.only(Color(0xff434c60)),
   foreground: ColorVariation.only(Color(0xffa6baee)),
 );
 
-const unitItemColorSchemeDark = ConvertouchColorScheme(
+const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF576479),
-    marked: Color(0xFF7595B2),
-    selected: Color(0xFF7A9EBE),
-    // disabled: Color(0x8C6A7885),
-  ),
-  background: ColorVariation(
-    regular: Color(0xFF3E4A5D),
+    regular: Color(0xFF435064),
     marked: Color(0xE4415F7E),
     selected: Color(0xE4415F7E),
-    // disabled: Color(0x9B3E4A5D),
+    disabled: Color(0x9B424E62),
+  ),
+  background: ColorVariation(
+    regular: Color(0xFF435064),
+    marked: Color(0xE4415F7E),
+    selected: Color(0xE4415F7E),
+    disabled: Color(0x9B424E62),
   ),
   foreground: ColorVariation(
+    regular: Color(0xFF85B3DC),
+    marked: Color(0xFF95B8D7),
+    selected: Color(0xFFA0CAF1),
+    disabled: Color(0x867FACD5),
+  ),
+  divider: ColorVariation(
     regular: Color(0xFF7DAAD3),
     marked: Color(0xFF95B8D7),
     selected: Color(0xFFA0CAF1),
-    // disabled: Color(0x867DAAD3),
+    disabled: Color(0x867FACD5),
   ),
 );
 
@@ -131,15 +140,14 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xFF708EA8),
+      regular: Color(0xE44B6B8C), //Color(0xFF708EA8),
       focused: Color(0xFF8FB1D0),
     ),
     background: ColorVariation(
-      regular: Color(0xE43F5B77),
+      regular: Color(0xE44B6B8C),
     ),
     foreground: ColorVariation(
-      regular: Color(0xFF90B3D2),
-      focused: Color(0xFF8FB1D0),
+      regular: Color(0xFFADCEEC),
     ),
   ),
   handler: ConvertouchColorScheme(

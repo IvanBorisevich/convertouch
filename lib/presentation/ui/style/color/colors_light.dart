@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffb0cbef)),
+    background: ColorVariation.only(Color(0xffcadbff)),
     foreground: ColorVariation(
       regular: Color(0xFF3B5B7A),
     ),
@@ -21,11 +21,7 @@ const pageColorSchemeLight = PageColorScheme(
     foregroundInfo: ColorVariation.only(Color(0xFFF2F8FF)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation(
-      regular: Color(0xffb0cbef),
-      disabled: Color(0xffa4c0e5),
-      selected: Color(0xFFDEE9FF),
-    ),
+    background: ColorVariation.only(Color(0xffcadbff)),
     foreground: ColorVariation(
       regular: Color(0xFF426F99),
       disabled: Color(0xFFA0C4F5),
@@ -45,74 +41,85 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
   ),
 );
 
-const unitGroupItemColorSchemeLight = ConvertouchColorScheme(
+const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xFFC2CCFF),
-    selected: Color(0xFF9EADFA),
+    regular: Color(0xffa7bbee),
+    selected: Color(0xFF535D91),
   ),
   background: ColorVariation(
-    regular: Color(0xFFF2F5FF),
-    selected: Color(0xFFE5EAFF),
+    regular: Color(0xffa7bbee),
+    selected: Color(0xff9db3ea),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF3A3A88),
+    regular: Color(0xFF303073),
+    selected: Color(0xFF303073),
+  ),
+  divider: ColorVariation(
+    regular: Color(0xFF353D69),
     selected: Color(0xFF303073),
   ),
 );
 
-const unitGroupItemInAppBarColorSchemeLight = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xffabbeee)),
-  background: ColorVariation.only(Color(0xffd1dfff)),
+const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
+  border: ColorVariation.only(Color(0xffa7bbee)),
+  background: ColorVariation.only(Color(0xff9cb2e8)),
   foreground: ColorVariation.only(Color(0xFF353D69)),
+  divider: ColorVariation.only(Color(0xFF353D69)),
 );
 
-const unitItemColorSchemeLight = ConvertouchColorScheme(
+const unitItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
-    regular: Color(0xFFB5DBFF),
-    marked: Color(0xFF509CE0),
-    selected: Color(0xFF2F7DC2),
-    disabled: Color(0xFFCCE5FF),
+    regular: Color(0xFFAAC9F1),
+    marked: Color(0xFF76A2DC),
+    selected: Color(0xFF2C6396),
+    disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
-    regular: Color(0xFFDFEDFF),
-    marked: Color(0xFFCCE1FF),
-    selected: Color(0xFFCCE1FF),
-    disabled: Color(0xFFE9F2FF),
+    regular: Color(0xFFAAC9F1),
+    marked: Color(0xFF76A2DC),
+    selected: Color(0xFF76A2DC),
+    disabled: Color(0x9EAAC9F1),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF366C9F),
-    marked: Color(0xFF366C9F),
-    selected: Color(0xFF366C9F),
-    disabled: Color(0xFF83B5E5),
+    regular: Color(0xFF2C6396),
+    marked: Color(0xFF26537E),
+    selected: Color(0xFF26537E),
+    disabled: Color(0xB2366C9F),
+  ),
+  divider: ColorVariation(
+    regular: Color(0xFF2C6396),
+    marked: Color(0xFF26537E),
+    selected: Color(0xFF26537E),
+    disabled: Color(0xB2366C9F),
   ),
 );
 
 const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFF1EBFF))
+    background: ColorVariation.only(Color(0xFFDBCFF1))
 );
 
 const unitPageInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFDFEAFF))
+  background: ColorVariation.only(Color(0xFFBCD6FF))
 );
 
 const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xffa6baee)),
+  foreground: ColorVariation.only(Color(0xFF45459A)),
 );
 
 const unitPageEmptyViewColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF7DAAD3)),
+  foreground: ColorVariation.only(Color(0xFF3B6083)),
 );
 
 const unitTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF7FA0BE),
+    regular: Color(0xFF5E7993),
     focused: Color(0xFF375067),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF426F99),
+    regular: Color(0xFF345C81),
   ),
   hint: ColorVariation(
-    regular: Color(0xFF85A9CB),
+    regular: Color(0xBE345C81),
   ),
 );
 
@@ -121,33 +128,33 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
   background: ColorVariation.only(Color(0xffe7f2ff)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xFF9FC3E3),
+      regular: Color(0xFFAAC9F1),
       focused: Color(0xFF375067),
     ),
     background: ColorVariation(
-      regular: Color(0xFFB3D2EE),
+      regular: Color(0xFFAAC9F1),
     ),
     foreground: ColorVariation(
-      regular: Color(0xFF2D4B67),
+      regular: Color(0xFF2C6396),
     ),
   ),
   handler: ConvertouchColorScheme(
-    foreground: ColorVariation.only(Color(0xFF7FA0BE)),
+    foreground: ColorVariation.only(Color(0xFF5E7993)),
   ),
 );
 
 const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF7473FA)),
+  background: ColorVariation.only(Color(0xCF6A69D5)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 
 const unitsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF5499DA)),
+  background: ColorVariation.only(Color(0xD25189BE)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 
 const conversionPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF6793BE)),
+  background: ColorVariation.only(Color(0xC55980A6)),
   foreground: ColorVariation.only(Color(0xFFF5F7FF)),
 );
 
@@ -172,15 +179,14 @@ const removalFloatingButtonColorLight = ConvertouchColorScheme(
 const unitGroupTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF5F4299),
-    disabled: Color(0xFFB9A3E7),
+    disabled: Color(0xB561449B),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF5F4299),
-    disabled: Color(0xFFB9A3E7),
+    disabled: Color(0xB561449B),
   ),
   hint: ColorVariation(
-    regular: Color(0xFFC4B0EF),
-    disabled: Color(0xFFB9A3E7),
+    regular: Color(0xB561449B),
   ),
 );
 

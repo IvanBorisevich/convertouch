@@ -134,6 +134,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                     color: _isFocused
                         ? unitButtonColor.foreground.focused
                         : unitButtonColor.foreground.regular,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                   maxLines: 1,

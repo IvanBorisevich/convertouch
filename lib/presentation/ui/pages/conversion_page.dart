@@ -33,7 +33,7 @@ class ConvertouchConversionPage extends StatelessWidget {
       ConvertouchColorScheme floatingButtonColor =
           conversionPageFloatingButtonColors[appState.theme]!;
 
-      ConvertouchColorScheme unitGroupInAppBarColor =
+      ListItemColorScheme unitGroupInAppBarColor =
           unitGroupItemInAppBarColors[appState.theme]!;
 
       return conversionBlocBuilder((pageState) {
@@ -106,6 +106,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                     child: ConvertouchMenuItem(
                       conversion.unitGroup!,
+                      height: 48,
                       customColors: unitGroupInAppBarColor,
                       onTap: () {
                         BlocProvider.of<UnitGroupsBlocForConversion>(context)
