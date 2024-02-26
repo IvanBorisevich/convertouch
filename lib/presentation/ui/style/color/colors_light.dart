@@ -95,11 +95,11 @@ const unitItemColorSchemeLight = ListItemColorScheme(
 );
 
 const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFE1D8F5))
+  background: ColorVariation.only(Color(0xFFE1D8F5)),
 );
 
 const unitPageInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFBCD6FF))
+  background: ColorVariation.only(Color(0xFFBCD6FF)),
 );
 
 const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
