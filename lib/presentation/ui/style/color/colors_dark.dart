@@ -84,11 +84,19 @@ const unitItemColorSchemeDark = ConvertouchColorScheme(
 );
 
 const unitGroupPageInfoBoxColorDark = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff434c60))
+  background: ColorVariation.only(Color(0xff434c60)),
 );
 
 const unitPageInfoBoxColorDark = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF3E4A5D))
+  background: ColorVariation.only(Color(0xFF3E4A5D)),
+);
+
+const unitGroupPageEmptyViewColorDark = ConvertouchColorScheme(
+  foreground: ColorVariation.only(Color(0xffa6baee)),
+);
+
+const unitPageEmptyViewColorDark = ConvertouchColorScheme(
+  foreground: ColorVariation.only(Color(0xFF7DAAD3)),
 );
 
 const unitTextBoxColorDark = TextBoxColorScheme(

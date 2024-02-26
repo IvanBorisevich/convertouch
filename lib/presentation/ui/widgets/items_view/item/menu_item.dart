@@ -3,17 +3,17 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/checkbox.dart';
+import 'package:convertouch/presentation/ui/widgets/checkbox.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuItem extends StatelessWidget {
+class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   static const double gridItemWidth = 80;
   static const double gridItemHeight = 80;
   static const double listItemHeight = 50;
 
-  final IdNameItemModel item;
+  final T item;
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;

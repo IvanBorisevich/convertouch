@@ -11,12 +11,13 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/info_box.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -109,10 +110,8 @@ class _ConvertouchUnitDetailsPageState
                   ),
                   LayoutBuilder(builder: (context, constrains) {
                     if (pageState.note != null) {
-                      return infoNote(
-                        width: MediaQuery.of(context).size.width,
-                        backgroundColor:
-                            unitPageInfoBoxColor.background.regular,
+                      return ConvertouchInfoBox(
+                        background: unitPageInfoBoxColor.background.regular,
                         child: RichText(
                           text: TextSpan(
                             children: <TextSpan>[
@@ -133,8 +132,7 @@ class _ConvertouchUnitDetailsPageState
                         visible: pageState.conversionRuleVisible,
                         child: Column(
                           children: [
-                            infoNote(
-                              width: MediaQuery.of(context).size.width,
+                            ConvertouchInfoBox(
                               child: Center(
                                 child: Text(
                                   "Conversion Rule",

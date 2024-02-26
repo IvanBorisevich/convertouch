@@ -8,10 +8,11 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_state
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/info_box.dart';
+import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,9 +94,8 @@ class _ConvertouchUnitGroupDetailsPageState
                   ),
                   Visibility(
                     visible: !unitGroupDetailsState.editMode,
-                    child: infoNote(
-                      width: MediaQuery.of(context).size.width,
-                      backgroundColor: infoBoxColor.background.regular,
+                    child: ConvertouchInfoBox(
+                      background: infoBoxColor.background.regular,
                       child: RichText(
                         text: TextSpan(
                           children: const <TextSpan>[

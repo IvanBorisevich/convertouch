@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_numeric_map.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_numeric_map.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 

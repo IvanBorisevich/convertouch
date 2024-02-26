@@ -66,10 +66,6 @@ const unitGroupItemInAppBarColorSchemeLight = ConvertouchColorScheme(
   foreground: ColorVariation.only(Color(0xFF353D69)),
 );
 
-const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFF1EBFF))
-);
-
 const unitItemColorSchemeLight = ConvertouchColorScheme(
   border: ColorVariation(
     regular: Color(0xFFB5DBFF),
@@ -91,8 +87,20 @@ const unitItemColorSchemeLight = ConvertouchColorScheme(
   ),
 );
 
+const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xFFF1EBFF))
+);
+
 const unitPageInfoBoxColorLight = ConvertouchColorScheme(
   background: ColorVariation.only(Color(0xFFDFEAFF))
+);
+
+const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
+  foreground: ColorVariation.only(Color(0xffa6baee)),
+);
+
+const unitPageEmptyViewColorLight = ConvertouchColorScheme(
+  foreground: ColorVariation.only(Color(0xFF7DAAD3)),
 );
 
 const unitTextBoxColorLight = TextBoxColorScheme(

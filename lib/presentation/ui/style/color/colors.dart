@@ -20,11 +20,6 @@ const unitGroupItemColors = {
   ConvertouchUITheme.dark: unitGroupItemColorSchemeDark,
 };
 
-const unitGroupPageInfoBoxColors = {
-  ConvertouchUITheme.light: unitGroupPageInfoBoxColorLight,
-  ConvertouchUITheme.dark: unitGroupPageInfoBoxColorDark,
-};
-
 const unitGroupItemInAppBarColors = {
   ConvertouchUITheme.light: unitGroupItemInAppBarColorSchemeLight,
   ConvertouchUITheme.dark: unitGroupItemInAppBarColorSchemeDark,
@@ -35,9 +30,24 @@ const unitItemColors = {
   ConvertouchUITheme.dark: unitItemColorSchemeDark,
 };
 
+const unitGroupPageInfoBoxColors = {
+  ConvertouchUITheme.light: unitGroupPageInfoBoxColorLight,
+  ConvertouchUITheme.dark: unitGroupPageInfoBoxColorDark,
+};
+
 const unitPageInfoBoxColors = {
   ConvertouchUITheme.light: unitPageInfoBoxColorLight,
   ConvertouchUITheme.dark: unitPageInfoBoxColorDark,
+};
+
+const unitGroupPageEmptyViewColor = {
+  ConvertouchUITheme.light: unitGroupPageEmptyViewColorLight,
+  ConvertouchUITheme.dark: unitGroupPageEmptyViewColorDark,
+};
+
+const unitPageEmptyViewColor = {
+  ConvertouchUITheme.light: unitPageEmptyViewColorLight,
+  ConvertouchUITheme.dark: unitPageEmptyViewColorDark,
 };
 
 const conversionItemColors = {

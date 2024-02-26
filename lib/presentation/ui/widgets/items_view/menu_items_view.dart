@@ -1,15 +1,18 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuItemsView extends StatelessWidget {
-  final List<IdNameItemModel> items;
-  final void Function(IdNameItemModel)? onItemTap;
-  final void Function(IdNameItemModel)? onItemTapForRemoval;
-  final void Function(IdNameItemModel)? onItemLongPress;
+class ConvertouchMenuItemsView<T extends IdNameItemModel>
+    extends StatelessWidget {
+  final List<T> items;
+  final void Function(T)? onItemTap;
+  final void Function(T)? onItemTapForRemoval;
+  final void Function(T)? onItemLongPress;
   final List<int>? itemIdsMarkedForConversion;
   final List<int> itemIdsMarkedForRemoval;
   final bool showMarkedItems;
@@ -49,7 +52,7 @@ class ConvertouchMenuItemsView extends StatelessWidget {
         builder: (context, constraints) {
           if (items.isNotEmpty) {
             Widget? itemBuilder(context, index) {
-              IdNameItemModel item = items[index];
+              T item = items[index];
               bool selected = showSelectedItem && item.id == selectedItemId;
               bool disabled = item.id == disabledItemId;
               bool marked = showMarkedItems &&
@@ -103,17 +106,36 @@ class ConvertouchMenuItemsView extends StatelessWidget {
                   itemCount: items.length,
                   itemBuilder: itemBuilder,
                   separatorBuilder: (context, index) => Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(
-                      itemsSpacing,
-                      itemsSpacing,
-                      itemsSpacing,
-                      index == items.length - 1 ? itemsSpacing : 0,
+                    padding: EdgeInsets.only(
+                      left: itemsSpacing,
+                      top: itemsSpacing,
+                      right: itemsSpacing,
+                      bottom: index == items.length - 1 ? itemsSpacing : 0,
                     ),
                   ),
                 );
             }
           }
-          return noItemsView("No menu items found");
+
+          Color? foreground;
+          if (T == UnitGroupModel) {
+            foreground = unitGroupPageEmptyViewColor[theme]!.foreground.regular;
+          } else if (T == UnitModel) {
+            foreground = unitPageEmptyViewColor[theme]!.foreground.regular;
+          }
+
+          return SizedBox(
+            child: Center(
+              child: Text(
+                T == UnitGroupModel ? "No Groups" : "No Units",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: foreground,
+                ),
+              ),
+            ),
+          );
         },
       ),
     );

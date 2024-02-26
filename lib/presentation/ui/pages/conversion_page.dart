@@ -12,11 +12,11 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversi
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/conversion_items_view.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/menu_item.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/refresh_button.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
+import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
+import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';

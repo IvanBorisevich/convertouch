@@ -11,7 +11,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversi
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';

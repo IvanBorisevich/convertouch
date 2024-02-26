@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/ui/scaffold_widgets/keyboard/model/keyboard_models.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
 
 const numericKeyboardMap = [

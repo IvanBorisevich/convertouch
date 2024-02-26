@@ -4,8 +4,8 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/setting_item.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/settings_group.dart';
+import 'package:convertouch/presentation/ui/widgets/setting_item.dart';
+import 'package:convertouch/presentation/ui/widgets/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

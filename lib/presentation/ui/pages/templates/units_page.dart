@@ -5,9 +5,9 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/menu_items_view.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/search_bar.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/secondary_app_bar.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
+import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
+import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

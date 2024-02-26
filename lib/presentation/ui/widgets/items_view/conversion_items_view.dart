@@ -2,10 +2,9 @@ import 'dart:ui';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
@@ -51,7 +50,7 @@ class _ConvertouchConversionItemsViewState
           shadowColor: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.only(
-                bottom: _listItemSpacing,
+              bottom: _listItemSpacing,
             ),
             child: Row(
               children: [
@@ -90,8 +89,10 @@ class _ConvertouchConversionItemsViewState
                   width: _removalHandlerWidth,
                   height: _removalHandlerHeight,
                   child: IconButton(
-                    splashColor: Colors.transparent,    // on tap effect color
-                    highlightColor: Colors.transparent, // on long pressed effect color
+                    splashColor: Colors.transparent,
+                    // on tap effect color
+                    highlightColor: Colors.transparent,
+                    // on long pressed effect color
                     // padding: const EdgeInsets.only(left: 0),
                     onPressed: () {
                       widget.onItemRemove?.call(widget.convertedItems[index]);
@@ -158,7 +159,18 @@ class _ConvertouchConversionItemsViewState
         },
       );
     } else {
-      return noItemsView("No Conversions Added");
+      return SizedBox(
+        child: Center(
+          child: Text(
+            "No Conversion Items Added",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: unitPageEmptyViewColor[widget.theme]!.foreground.regular,
+            ),
+          ),
+        ),
+      );
     }
   }
 }

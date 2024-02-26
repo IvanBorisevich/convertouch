@@ -20,7 +20,7 @@ import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart'
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
-import 'package:convertouch/presentation/ui/scaffold_widgets/root_screen.dart';
+import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';

@@ -79,31 +79,6 @@ class ConvertouchPage extends StatelessWidget {
   }
 }
 
-
-void showAlertDialog(
-  BuildContext context, {
-  required String message,
-}) {
-  showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              BlocProvider.of<NavigationBloc>(context).add(
-                const NavigateBack(),
-              );
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
 void showSnackBar(
   BuildContext context, {
   required ConvertouchException exception,
@@ -140,39 +115,6 @@ void showSnackBar(
             fontFamily: quicksandFontFamily,
             fontWeight: FontWeight.w600,
           ),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget infoNote({
-  required double width,
-  required Widget child,
-  Color backgroundColor = noColor,
-}) {
-  return Container(
-    width: width,
-    padding: const EdgeInsets.symmetric(
-      vertical: 10,
-      horizontal: 14,
-    ),
-    decoration: BoxDecoration(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: child,
-  );
-}
-
-Widget noItemsView(String label) {
-  return SizedBox(
-    child: Center(
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
         ),
       ),
     ),
