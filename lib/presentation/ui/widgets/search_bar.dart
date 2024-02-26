@@ -120,6 +120,8 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
               key: ValueKey(widget.pageViewMode),
             ),
           ),
+          splashColor: noColor,
+          highlightColor: noColor,
           onPressed: widget.onViewModeChange,
           color: color.foreground.regular,
         ),

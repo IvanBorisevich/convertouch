@@ -29,7 +29,6 @@ class UnitGroupsBlocForConversion
     FetchUnitGroups event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    emit(const UnitGroupsFetching());
     final result = await fetchUnitGroupsUseCase.execute(event.searchString);
 
     if (result.isLeft) {

@@ -127,7 +127,9 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (removalMode) {
-          onTapForRemoval?.call();
+          if (!item.oob) {
+            onTapForRemoval?.call();
+          }
         } else {
           if (!selected && !disabled) {
             FocusScope.of(context).unfocus();

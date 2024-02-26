@@ -29,8 +29,6 @@ class UnitsBlocForConversion
     FetchUnitsToMarkForConversion event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
-
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,
@@ -48,6 +46,7 @@ class UnitsBlocForConversion
         event.unitNewlyMarkedForConversion,
       );
 
+      emit(const UnitsFetching());
       emit(
         UnitsFetchedToMarkForConversion(
           units: result.right,
@@ -72,8 +71,6 @@ class UnitsBlocForConversion
     FetchUnitsForChangeInConversion event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
-
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,

@@ -37,8 +37,6 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     FetchUnits event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
-
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,
@@ -66,21 +64,29 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
           markedIds.remove(event.newMarkedId);
         }
 
-        List<int> oobUnitIds = result.right
-            .where((unit) => unit.oob)
-            .map((unit) => unit.id!)
-            .toList();
+        List<int> oobUnitIds = [];
+        bool customUnitsExist = false;
+
+        for (final unit in result.right) {
+          if (unit.oob) {
+            oobUnitIds.add(unit.id!);
+          } else {
+            customUnitsExist = true;
+            continue;
+          }
+        }
 
         markedIds = markedIds
             .whereNot((unitId) => oobUnitIds.contains(unitId))
             .toList();
 
+        emit(const UnitsFetching());
         emit(
           UnitsFetched(
             units: result.right,
             unitGroup: event.unitGroup,
             searchString: event.searchString,
-            removalMode: true,
+            removalMode: customUnitsExist,
             markedIdsForRemoval: markedIds,
           ),
         );
@@ -107,13 +113,23 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
             rebuildConversion: event.rebuildConversion,
           ),
         );
-      } else {
+      } else if (event is FetchUnitsOnSearchStringChange) {
+        UnitsFetched currentState = state as UnitsFetched;
+
         emit(
           UnitsFetched(
             units: result.right,
             unitGroup: event.unitGroup,
             searchString: event.searchString,
-            rebuildConversion: event.rebuildConversion,
+            removalMode: currentState.removalMode,
+            markedIdsForRemoval: currentState.markedIdsForRemoval,
+          ),
+        );
+      } else {
+        emit(
+          UnitsFetched(
+            units: result.right,
+            unitGroup: event.unitGroup,
           ),
         );
         navigationBloc.add(
@@ -127,7 +143,6 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     SaveUnit event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
     final saveUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
 
     if (saveUnitResult.isLeft) {
@@ -151,7 +166,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
         navigationBloc.add(
           ShowException(
             exception: ConvertouchException(
-              message: "Unit '${event.unitToBeSaved.name}' already exists",
+              message: "Unit [${event.unitToBeSaved.name}] already exists",
               severity: ExceptionSeverity.warning,
             ),
           ),
@@ -164,7 +179,6 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     RemoveUnits event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
     final result = await removeUnitsUseCase.execute(event.ids);
     if (result.isLeft) {
       navigationBloc.add(
@@ -187,10 +201,13 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     DisableUnitsRemovalMode event,
     Emitter<UnitsState> emit,
   ) async {
-    add(
-      FetchUnits(
-        unitGroup: event.unitGroup,
-        searchString: null,
+    UnitsFetched currentState = state as UnitsFetched;
+    emit(
+      UnitsFetched(
+        units: currentState.units,
+        unitGroup: currentState.unitGroup,
+        searchString: currentState.searchString,
+        removalMode: false,
       ),
     );
   }

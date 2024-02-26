@@ -7,13 +7,11 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
-  final List<int> removedIds;
   final UnitGroupModel? modifiedUnitGroup;
   final bool rebuildConversion;
 
   const FetchUnitGroups({
     required this.searchString,
-    this.removedIds = const [],
     this.modifiedUnitGroup,
     this.rebuildConversion = false,
   });
@@ -21,7 +19,6 @@ class FetchUnitGroups extends UnitGroupsEvent {
   @override
   List<Object?> get props => [
     searchString,
-    removedIds,
     modifiedUnitGroup,
     rebuildConversion,
   ];
@@ -113,6 +110,22 @@ class FetchUnitGroupsToMarkForRemoval extends FetchUnitGroups {
         'alreadyMarkedIds: $alreadyMarkedIds,'
         'newMarkedId: $newMarkedId}';
   }
+}
+
+class FetchUnitGroupsAfterRemoval extends FetchUnitGroups {
+  final List<int> removedIds;
+
+  const FetchUnitGroupsAfterRemoval({
+    this.removedIds = const [],
+    super.rebuildConversion,
+    super.searchString,
+  });
+
+  @override
+  List<Object?> get props => [
+    removedIds,
+    super.props,
+  ];
 }
 
 class RemoveUnitGroups extends UnitGroupsEvent {

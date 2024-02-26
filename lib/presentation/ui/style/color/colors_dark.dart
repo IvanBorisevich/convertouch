@@ -148,7 +148,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
 );
 
 const unitGroupsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF616491)),
+  background: ColorVariation.only(Color(0xC7616491)),
   foreground: ColorVariation.only(Color(0xFFD1CFD3)),
 );
 
@@ -170,12 +170,12 @@ const refreshButtonColorSchemeDark = ConvertouchColorScheme(
     regular: Color(0xFFBFC3F6),
     disabled: Color(0xFF7E82B4),
   ),
-  background: ColorVariation.only(Color(0xFFC9C9F8)),
+  background: ColorVariation.only(Color(0xD5C9C9F8)),
 );
 
 const removalFloatingButtonColorDark = ConvertouchColorScheme(
   border: ColorVariation.only(Color(0xFF373F4B)),
-  background: ColorVariation.only(Color(0xFF9D5225)),
+  background: ColorVariation.only(Color(0xDA9D5225)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 

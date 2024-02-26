@@ -61,7 +61,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           ],
           onSearchStringChanged: (text) {
             BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnits(
+              FetchUnitsOnSearchStringChange(
                 unitGroup: pageState.unitGroup,
                 searchString: text,
               ),
@@ -69,7 +69,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           },
           onSearchReset: () {
             BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnits(
+              FetchUnitsOnSearchStringChange(
                 unitGroup: pageState.unitGroup,
                 searchString: null,
               ),

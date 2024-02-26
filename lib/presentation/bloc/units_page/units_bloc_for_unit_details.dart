@@ -25,8 +25,6 @@ class UnitsBlocForUnitDetails
     FetchUnitsForUnitDetails event,
     Emitter<UnitsState> emit,
   ) async {
-    emit(const UnitsFetching());
-
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,

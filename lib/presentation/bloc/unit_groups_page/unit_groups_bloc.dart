@@ -34,7 +34,8 @@ class UnitGroupsBloc
     FetchUnitGroups event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    emit(const UnitGroupsFetching());
+    UnitGroupsFetched currentState = state as UnitGroupsFetched;
+
     final result = await fetchUnitGroupsUseCase.execute(event.searchString);
 
     if (result.isLeft) {
@@ -55,21 +56,39 @@ class UnitGroupsBloc
           markedIds.remove(event.newMarkedId);
         }
 
-        List<int> oobUnitGroupIds = result.right
-            .where((unitGroup) => unitGroup.oob)
-            .map((unitGroup) => unitGroup.id!)
-            .toList();
+        List<int> oobUnitGroupIds = [];
+        bool customGroupsExist = false;
+
+        for (final unitGroup in result.right) {
+          if (unitGroup.oob) {
+            oobUnitGroupIds.add(unitGroup.id!);
+          } else {
+            customGroupsExist = true;
+            continue;
+          }
+        }
 
         markedIds = markedIds
             .whereNot((unitGroupId) => oobUnitGroupIds.contains(unitGroupId))
             .toList();
 
+        emit(const UnitGroupsFetching());
         emit(
           UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
-            removalMode: true,
+            removalMode: customGroupsExist,
             markedIdsForRemoval: markedIds,
+          ),
+        );
+      } else if (event is FetchUnitGroupsAfterRemoval) {
+        emit(
+          UnitGroupsFetched(
+            unitGroups: result.right,
+            searchString: event.searchString,
+            removalMode: false,
+            rebuildConversion: event.rebuildConversion,
+            removedIds: event.removedIds,
           ),
         );
       } else {
@@ -77,9 +96,10 @@ class UnitGroupsBloc
           UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
-            removedIds: event.removedIds,
             modifiedUnitGroup: event.modifiedUnitGroup,
             rebuildConversion: event.rebuildConversion,
+            removalMode: currentState.removalMode,
+            markedIdsForRemoval: currentState.markedIdsForRemoval,
           ),
         );
       }
@@ -90,7 +110,7 @@ class UnitGroupsBloc
     RemoveUnitGroups event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    emit(const UnitGroupsFetching());
+    UnitGroupsFetched currentState = state as UnitGroupsFetched;
 
     final result = await removeUnitGroupsUseCase.execute(event.ids);
     if (result.isLeft) {
@@ -99,8 +119,8 @@ class UnitGroupsBloc
       );
     } else {
       add(
-        FetchUnitGroups(
-          searchString: null,
+        FetchUnitGroupsAfterRemoval(
+          searchString: currentState.searchString,
           removedIds: event.ids,
           rebuildConversion: event.ids.isNotEmpty,
         ),
@@ -112,8 +132,6 @@ class UnitGroupsBloc
     SaveUnitGroup event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    emit(const UnitGroupsFetching());
-
     final saveUnitGroupResult =
         await saveUnitGroupUseCase.execute(event.unitGroupToBeSaved);
 
@@ -138,8 +156,8 @@ class UnitGroupsBloc
         navigationBloc.add(
           ShowException(
             exception: ConvertouchException(
-              message:
-                  "Unit group '${event.unitGroupToBeSaved.name}' already exist",
+              message: "Unit group [${event.unitGroupToBeSaved.name}] "
+                  "already exists",
               severity: ExceptionSeverity.warning,
             ),
           ),
@@ -152,9 +170,12 @@ class UnitGroupsBloc
     DisableUnitGroupsRemovalMode event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    add(
-      const FetchUnitGroups(
-        searchString: null,
+    UnitGroupsFetched currentState = state as UnitGroupsFetched;
+    emit(
+      UnitGroupsFetched(
+        unitGroups: currentState.unitGroups,
+        searchString: currentState.searchString,
+        removalMode: false,
       ),
     );
   }

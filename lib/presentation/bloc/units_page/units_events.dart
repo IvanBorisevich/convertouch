@@ -70,6 +70,18 @@ class FetchUnitsAfterUnitsRemoval extends FetchUnits {
       ];
 }
 
+class FetchUnitsOnSearchStringChange extends FetchUnits {
+  const FetchUnitsOnSearchStringChange({
+    required super.searchString,
+    required super.unitGroup,
+  });
+
+  @override
+  String toString() {
+    return 'FetchUnitsOnSearchStringChange{}';
+  }
+}
+
 class FetchUnitsToMarkForConversion extends FetchUnits {
   final List<UnitModel>? unitsAlreadyMarkedForConversion;
   final UnitModel? unitNewlyMarkedForConversion;
