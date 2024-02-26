@@ -180,8 +180,9 @@ const removalFloatingButtonColorDark = ConvertouchColorScheme(
 );
 
 const settingItemColorDark = SettingItemColorScheme(
+  border: ColorVariation(regular: Color(0xE4485564)),
   background: ColorVariation(
-    regular: Color(0xFF3A4E60),
+    regular: Color(0xE438434F),
     selected: Color(0xFF506394),
     disabled: Color(0xFF506394),
   ),
@@ -190,7 +191,7 @@ const settingItemColorDark = SettingItemColorScheme(
     selected: Color(0xFF88A3BD),
     disabled: Color(0xFF6F9ECB),
   ),
-  divider: ColorVariation.only(Color(0xFF4D5D83)),
+  divider: ColorVariation.only(Color(0xE4485564)),
   switcher: SwitcherColorScheme(
     track: ConvertouchColorScheme(
       border: ColorVariation(

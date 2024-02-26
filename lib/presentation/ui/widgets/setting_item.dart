@@ -171,7 +171,7 @@ class SettingItem<T> extends StatelessWidget {
           showDivider
               ? Divider(
                   height: 1,
-                  indent: pointerSide != PointerSide.left ? 15 : 40,
+                  indent: pointerSide != PointerSide.left ? 15 : 47,
                   color: colorScheme.divider.regular,
                 )
               : empty(),

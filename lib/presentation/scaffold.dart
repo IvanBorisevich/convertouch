@@ -5,8 +5,6 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
@@ -20,9 +18,9 @@ import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart'
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
-import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -146,11 +144,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                               const ConvertouchUnitGroupDetailsPage(),
                           PageName.unitDetailsPage.name:
                               const ConvertouchUnitDetailsPage(),
-                        },
-                        onInit: () {
-                          BlocProvider.of<UnitGroupsBloc>(context).add(
-                            const FetchUnitGroups(searchString: null),
-                          );
                         },
                       ),
                       ConvertouchRootScreen(

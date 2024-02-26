@@ -22,13 +22,16 @@ class ConvertouchSettingsGroup extends StatelessWidget {
     SettingItemColorScheme colorScheme = settingItemColors[theme]!;
     Color foregroundColor;
     Color backgroundColor;
+    Color borderColor;
 
     if (disabled) {
       foregroundColor = colorScheme.foreground.disabled;
       backgroundColor = colorScheme.background.disabled;
+      borderColor = colorScheme.border.disabled;
     } else {
       foregroundColor = colorScheme.foreground.regular;
       backgroundColor = colorScheme.background.regular;
+      borderColor = colorScheme.border.regular;
     }
 
     return Padding(
@@ -51,7 +54,7 @@ class ConvertouchSettingsGroup extends StatelessWidget {
             color: backgroundColor,
             border: Border.all(
               width: 0.0,
-              color: Colors.transparent,
+              color: borderColor,
             ),
           ),
           child: Column(

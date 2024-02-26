@@ -14,6 +14,7 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
@@ -56,7 +57,10 @@ class ConvertouchApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => di.locator<UnitGroupsBloc>(),
+          create: (context) => di.locator<UnitGroupsBloc>()
+            ..add(
+              const FetchUnitGroups(searchString: null),
+            ),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBlocForConversion>(),
