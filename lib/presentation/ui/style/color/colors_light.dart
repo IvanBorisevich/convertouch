@@ -47,7 +47,7 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     selected: Color(0xFF535D91),
   ),
   background: ColorVariation(
-    regular: Color(0xffc9d9fd),
+    regular: Color(0xffc2d4fc),
     selected: Color(0xff9db3ea),
   ),
   foreground: ColorVariation(
@@ -95,7 +95,7 @@ const unitItemColorSchemeLight = ListItemColorScheme(
 );
 
 const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFDBCFF1))
+    background: ColorVariation.only(Color(0xFFE1D8F5))
 );
 
 const unitPageInfoBoxColorLight = ConvertouchColorScheme(
