@@ -7,6 +7,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
+import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:convertouch/domain/utils/unit_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -145,8 +146,10 @@ class UnitDetailsBloc
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
         note:
-        draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-            draftDetails.argUnit.empty ? firstUnitNote : null,
+            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
+                    draftDetails.argUnit.empty
+                ? firstUnitNote
+                : null,
       ),
     );
     navigationBloc.add(const NavigateBack());
@@ -160,6 +163,23 @@ class UnitDetailsBloc
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     bool editMode = currentState.editMode;
+
+    final savedDetailsResult = await prepareSavedUnitDetailsUseCase.execute(
+      UnitDetailsModel.coalesce(
+        currentSavedDetails,
+        argUnit: event.argumentUnit,
+        argValue: ValueModel.none,
+      ),
+    );
+
+    final savedDetails = await _processResult(
+      savedDetailsResult,
+      emit,
+    );
+
+    if (savedDetails == null) {
+      return;
+    }
 
     final draftDetailsResult = await prepareDraftUnitDetailsUseCase.execute(
       UnitDetailsModel.coalesce(
@@ -178,10 +198,10 @@ class UnitDetailsBloc
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
-        savedDetails: currentSavedDetails,
+        savedDetails: savedDetails,
         unitToBeSaved: await _buildUnitToBeSaved(
           draftDetails: draftDetails,
-          savedDetails: currentSavedDetails,
+          savedDetails: savedDetails,
           editMode: editMode,
         ),
         conversionRuleVisible: true,
@@ -190,7 +210,9 @@ class UnitDetailsBloc
             draftDetails.unitGroup?.conversionType == ConversionType.static,
         note:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                draftDetails.argUnit.empty ? firstUnitNote : null,
+                    draftDetails.argUnit.empty
+                ? firstUnitNote
+                : null,
       ),
     );
 
@@ -449,8 +471,11 @@ class UnitDetailsBloc
     bool groupsDiff = draftDetails.unitGroup != savedDetails.unitGroup;
     bool unitNameDiff = newUnitName != savedDetails.unit.name;
     bool unitCodeDiff = newUnitCode != savedDetails.unit.code;
-    bool unitCoefficientDiff =
-        draftDetails.unit.coefficient != savedDetails.unit.coefficient;
+    bool unitCoefficientDiff = NumberValueUtils.areNotEqual(
+      draftDetails.unit.coefficient,
+      savedDetails.unit.coefficient,
+    );
+    draftDetails.unit.coefficient != savedDetails.unit.coefficient;
     bool unitSymbolDiff = draftDetails.unit.symbol != savedDetails.unit.symbol;
 
     log("unit name is not empty: ${newUnitName.isNotEmpty}");
@@ -458,7 +483,9 @@ class UnitDetailsBloc
     log("unit name is different: $unitNameDiff");
     log("unit code is empty: ${newUnitCode.isEmpty}, "
         "unit code is different: $unitCodeDiff");
-    log("unit coefficient is different: $unitCoefficientDiff");
+    log("unit coefficient is different: $unitCoefficientDiff "
+        "(was ${savedDetails.unit.coefficient}, "
+        "is: ${draftDetails.unit.coefficient})");
     log("unit symbol is different: $unitSymbolDiff");
 
     if (newUnitName.isNotEmpty &&

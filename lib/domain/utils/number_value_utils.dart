@@ -1,5 +1,4 @@
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
-const int maxFractionDigits = 5;
 
 const _exponentSuperscripts = {
   '0': '\u2070',
@@ -16,14 +15,16 @@ const _exponentSuperscripts = {
 };
 
 class NumberValueUtils {
+  static const int defaultFractionDigitsNum = 3;
+
   const NumberValueUtils._();
 
   static String formatValueInScientificNotation(
     double? value, {
-    int fractionDigits = maxFractionDigits,
-    int fractionDigitsInScientificNotation = 4,
-    int noFormatExponentMin = -7,
-    int noFormatExponentMax = 10,
+    int fractionDigits = defaultFractionDigitsNum,
+    int fractionDigitsInScientificNotation = 2,
+    int noFormatExponentMin = -defaultFractionDigitsNum,
+    int noFormatExponentMax = 5,
   }) {
     if (value == null) {
       return "";
@@ -42,11 +43,6 @@ class NumberValueUtils {
 
       if (exponentNum >= noFormatExponentMin &&
           exponentNum <= noFormatExponentMax) {
-        if (baseSign == '-' &&
-            baseNum == 1 &&
-            exponentNum.abs() > fractionDigits) {
-          return "0";
-        }
         return formatValue(
           value,
           fractionDigits: fractionDigits,
@@ -79,7 +75,7 @@ class NumberValueUtils {
 
   static String formatValue(
     double? value, {
-    int fractionDigits = maxFractionDigits,
+    int fractionDigits = defaultFractionDigitsNum,
   }) {
     if (value == null) {
       return "";
@@ -90,14 +86,38 @@ class NumberValueUtils {
     if (fractionDigits < 0) {
       fractionDigits = 0;
     }
-    if (fractionDigits > maxFractionDigits) {
-      fractionDigits = maxFractionDigits;
-    }
     String valueStr = value.toStringAsFixed(
       value.truncateToDouble() == value ? 0 : fractionDigits,
     );
 
     return _trimTrailingZerosInDouble(valueStr);
+  }
+
+  static bool areEqual(
+    double? num1,
+    double? num2, {
+    int fractionDigits = defaultFractionDigitsNum,
+  }) {
+    return formatValue(
+          num1,
+          fractionDigits: fractionDigits,
+        ) ==
+        formatValue(
+          num2,
+          fractionDigits: fractionDigits,
+        );
+  }
+
+  static bool areNotEqual(
+    double? num1,
+    double? num2, {
+    int fractionDigits = defaultFractionDigitsNum,
+  }) {
+    return !areEqual(
+      num1,
+      num2,
+      fractionDigits: fractionDigits,
+    );
   }
 
   static String _trimTrailingZerosInDouble(String doubleStr) {

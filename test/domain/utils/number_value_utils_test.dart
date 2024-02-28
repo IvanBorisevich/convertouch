@@ -3,32 +3,52 @@ import 'package:test/test.dart';
 
 void main() {
   group('Format to scientific notation', () {
-    test('Values with exponent [-7..10] should not be formatted', () {
-      expect(
-        NumberValueUtils.formatValueInScientificNotation(-1E-7),
-        "0",
-      );
-      expect(NumberValueUtils.formatValueInScientificNotation(-0.000013),
-          "-0.00001");
-      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000323),
-          "-0.00003");
-      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000001), "0");
-      expect(NumberValueUtils.formatValueInScientificNotation(0.0000017), "0");
-      expect(NumberValueUtils.formatValueInScientificNotation(0.000005),
-          "0.00001");
-      expect(NumberValueUtils.formatValueInScientificNotation(1E10),
-          "10000000000");
-      expect(NumberValueUtils.formatValueInScientificNotation(1.236236478785),
-          "1.23624");
-      expect(NumberValueUtils.formatValueInScientificNotation(1236236.478785),
-          "1236236.47879");
-    });
+    test(
+      'Values with exponent [-3..5] should not be formatted to scientific',
+      () {
+        expect(NumberValueUtils.formatValueInScientificNotation(1.236236478785),
+            "1.236");
+        expect(NumberValueUtils.formatValueInScientificNotation(1.236736478785),
+            "1.237");
+        expect(
+            NumberValueUtils.formatValueInScientificNotation(10000), "10000");
+        expect(
+            NumberValueUtils.formatValueInScientificNotation(99999), "99999");
+        expect(
+            NumberValueUtils.formatValueInScientificNotation(0.001), "0.001");
+        expect(
+            NumberValueUtils.formatValueInScientificNotation(0.9999), "1");
+      },
+    );
 
-    test('Values with exponent < -7 should be formatted', () {
-      expect(NumberValueUtils.formatValueInScientificNotation(-1E-8),
-          "-10¯\u2078");
-      expect(NumberValueUtils.formatValueInScientificNotation(-0.00000001),
-          "-10¯\u2078");
+    test('Values with exponent <= -4 should be formatted', () {
+      expect(NumberValueUtils.formatValueInScientificNotation(-1E-4),
+          "-10¯\u2074");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.0001),
+          "-10¯\u2074");
+      expect(NumberValueUtils.formatValueInScientificNotation(-1E-7), "-10¯⁷");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000001),
+          "-10¯⁷");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.000013),
+          "-1.3 · 10¯⁵");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000323),
+          "-3.23 · 10¯⁵");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.0000017),
+          "1.7 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.00000178),
+          "1.78 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.000001781),
+          "1.78 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(0.000001785),
+          "1.79 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.0000017),
+          "-1.7 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.00000178),
+          "-1.78 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.000001781),
+          "-1.78 · 10¯\u2076");
+      expect(NumberValueUtils.formatValueInScientificNotation(-0.000001785),
+          "-1.79 · 10¯\u2076");
       expect(NumberValueUtils.formatValueInScientificNotation(0.00000003),
           "3 · 10¯\u2078");
       expect(NumberValueUtils.formatValueInScientificNotation(0.000000003),
@@ -39,7 +59,7 @@ void main() {
           "4 · 10¯\u00B2\u00B3");
     });
 
-    test('Values with exponent > 10 should be formatted', () {
+    test('Values with exponent > 5 should be formatted', () {
       expect(NumberValueUtils.formatValueInScientificNotation(1E21),
           "10\u00B2\u00B9");
       expect(NumberValueUtils.formatValueInScientificNotation(123E15),
@@ -63,7 +83,7 @@ void main() {
 
   group("Format to regular string", () {
     test('Fraction digits should be trimmed by default parameter', () {
-      expect(NumberValueUtils.formatValue(0.5674634563478567348577), "0.56746");
+      expect(NumberValueUtils.formatValue(0.5674634563478567348577), "0.567");
       expect(
           NumberValueUtils.formatValue(56746345631111.000), "56746345631111");
       expect(NumberValueUtils.formatValue(1.0), "1");
@@ -87,6 +107,18 @@ void main() {
           fractionDigits: 3,
         ),
         "5674634563.001",
+      );
+      expect(
+        NumberValueUtils.formatValue(
+          0.001,
+        ),
+        "0.001",
+      );
+      expect(
+        NumberValueUtils.formatValue(
+          0.001000000000000002,
+        ),
+        "0.001",
       );
     });
 
