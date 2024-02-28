@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -103,17 +102,17 @@ class ConversionBloc
         ShowException(exception: conversionResult.left),
       );
     } else {
-      if (event.runtimeType != RebuildConversionOnValueChange &&
-          conversionResult.right.emptyConversionItemsExist) {
-        navigationBloc.add(
-          const ShowException(
-            exception: ConvertouchException(
-              message: "Some dynamic values are empty. Please refresh them",
-              severity: ExceptionSeverity.warning,
-            ),
-          ),
-        );
-      }
+      // if (event.runtimeType != RebuildConversionOnValueChange &&
+      //     conversionResult.right.emptyConversionItemsExist) {
+      //   navigationBloc.add(
+      //     const ShowException(
+      //       exception: ConvertouchException(
+      //         message: "Some dynamic values are empty. Please refresh them",
+      //         severity: ExceptionSeverity.warning,
+      //       ),
+      //     ),
+      //   );
+      // }
 
       emit(
         ConversionBuilt(

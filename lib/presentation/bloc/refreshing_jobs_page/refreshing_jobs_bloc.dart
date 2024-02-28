@@ -38,6 +38,12 @@ class RefreshingJobsBloc
       refreshingJobs = (state as RefreshingJobsFetched).jobs;
     }
 
+    if (refreshingJobs.isEmpty) {
+      log("Jobs map first initialization");
+      refreshingJobs = refreshingJobsMap.map(
+          (key, value) => MapEntry(key, RefreshingJobModel.fromJson(value)!));
+    }
+
     return refreshingJobs;
   }
 
@@ -46,11 +52,6 @@ class RefreshingJobsBloc
     Emitter<RefreshingJobsState> emit,
   ) async {
     Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
-
-    if (refreshingJobs.isEmpty) {
-      refreshingJobs = refreshingJobsMap.map(
-          (key, value) => MapEntry(key, RefreshingJobModel.fromJson(value)!));
-    }
 
     emit(
       RefreshingJobsFetched(jobs: refreshingJobs),
