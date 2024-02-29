@@ -152,7 +152,6 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 itemName: itemName,
                 removalMode: removalMode,
                 markedForRemoval: markedForRemoval,
-                markedForConversion: selected,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
@@ -166,8 +165,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 itemName: itemName,
                 height: height ?? listItemHeight,
                 removalMode: removalMode,
-                selectedForRemoval: markedForRemoval,
-                selectedForConversion: selected,
+                markedForRemoval: markedForRemoval,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
@@ -187,8 +185,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final bool removalMode;
   final Widget logo;
   final double height;
-  final bool selectedForRemoval;
-  final bool selectedForConversion;
+  final bool markedForRemoval;
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
@@ -204,8 +201,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
     required this.foregroundColor,
     required this.borderColor,
     required this.dividerColor,
-    this.selectedForRemoval = false,
-    this.selectedForConversion = false,
+    this.markedForRemoval = false,
     super.key,
   });
 
@@ -221,11 +217,8 @@ class ConvertouchMenuListItem extends StatelessWidget {
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  strokeAlign: selectedForConversion
-                      ? BorderSide.strokeAlignOutside
-                      : BorderSide.strokeAlignInside,
                   color: borderColor,
-                  width: selectedForConversion ? 2 : 1,
+                  width: 1,
                 ),
               ),
               child: Row(
@@ -241,8 +234,8 @@ class ConvertouchMenuListItem extends StatelessWidget {
                     child: logo,
                   ),
                   VerticalDivider(
-                    width: selectedForConversion ? 3 : 1,
-                    thickness: selectedForConversion ? 2 : 1,
+                    width: 1,
+                    thickness: 1,
                     indent: 5,
                     endIndent: 5,
                     color: dividerColor,
@@ -270,7 +263,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: ConvertouchCheckbox(
-                            selectedForRemoval,
+                            markedForRemoval,
                             color: foregroundColor,
                             colorChecked: foregroundColor,
                           ),
@@ -292,7 +285,6 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final bool removalMode;
   final Widget logo;
   final bool markedForRemoval;
-  final bool markedForConversion;
   final double width;
   final double height;
   final Color backgroundColor;
@@ -308,7 +300,6 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.foregroundColor,
     required this.borderColor,
     this.markedForRemoval = false,
-    this.markedForConversion = false,
     required this.width,
     required this.height,
     super.key,
@@ -323,11 +314,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(7),
         border: Border.all(
-          strokeAlign: markedForConversion
-              ? BorderSide.strokeAlignOutside
-              : BorderSide.strokeAlignInside,
           color: borderColor,
-          width: markedForConversion ? 2 : 1,
+          width: 1,
         ),
       ),
       child: Column(

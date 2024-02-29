@@ -44,11 +44,11 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xffc6d7fd),
-    selected: Color(0xFF535D91),
+    selected: Color(0xFF303073),
   ),
   background: ColorVariation(
     regular: Color(0xffc6d7fd),
-    selected: Color(0xff9db3ea),
+    selected: Color(0xffafc4f8),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF303073),
@@ -75,9 +75,9 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
-    regular: Color(0xFFAAC9F1),
-    marked: Color(0xE570A8EF),
-    selected: Color(0xFF76A2DC),
+    regular: Color(0xFFB2CFF5),
+    marked: Color(0xE583B5F5),
+    selected: Color(0xE583B5F5),
     disabled: Color(0x9EAAC9F1),
   ),
   foreground: ColorVariation(
@@ -164,6 +164,7 @@ const refreshButtonColorSchemeLight = ConvertouchColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xFFE8E8FF),
+    selected: Color(0xC83A3A67),
   ),
   background: ColorVariation.only(Color(0xC83A3A67)),
 );
@@ -215,8 +216,4 @@ const settingItemColorLight = SettingItemColorScheme(
       ),
     ),
   ),
-);
-
-const progressIndicatorColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF3A3A88)),
 );

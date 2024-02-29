@@ -44,7 +44,7 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
 const unitGroupItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xff434c60),
-    selected: Color(0xff475065),
+    selected: Color(0xffa6baee),
   ),
   background: ColorVariation(
     regular: Color(0xff434c60),
@@ -69,7 +69,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFF435064),
     marked: Color(0xE4415F7E),
-    selected: Color(0xE4415F7E),
+    selected: Color(0xFF85B3DC),
     disabled: Color(0x9B424E62),
   ),
   background: ColorVariation(
@@ -80,7 +80,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xFF85B3DC),
-    marked: Color(0xFF95B8D7),
+    marked: Color(0xFFA0CAF1),
     selected: Color(0xFFA0CAF1),
     disabled: Color(0x867FACD5),
   ),
@@ -177,7 +177,7 @@ const refreshButtonColorSchemeDark = ConvertouchColorScheme(
   foreground: ColorVariation(
     regular: Color(0xFFDEE0FF),
   ),
-  background: ColorVariation.only(Color(0xC85858B6)),
+  background: ColorVariation.only(Color(0xC86060BB)),
 );
 
 const removalFloatingButtonColorDark = ConvertouchColorScheme(
@@ -213,8 +213,4 @@ const settingItemColorDark = SettingItemColorScheme(
       ),
     ),
   ),
-);
-
-const progressIndicatorColorDark = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF7272C9)),
 );
