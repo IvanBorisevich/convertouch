@@ -2,7 +2,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/presentation/ui/animation/fade_scale_animation.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
 import 'package:flutter/material.dart';
@@ -59,26 +58,24 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                   itemIdsMarkedForConversion != null &&
                   itemIdsMarkedForConversion!.contains(item.id);
 
-              return ConvertouchFadeScaleAnimation(
-                child: ConvertouchMenuItem(
-                  item,
-                  itemsViewMode: itemsViewMode,
-                  onTap: () {
-                    onItemTap?.call(item);
-                  },
-                  onLongPress: () {
-                    onItemLongPress?.call(item);
-                  },
-                  onTapForRemoval: () {
-                    onItemTapForRemoval?.call(item);
-                  },
-                  marked: marked,
-                  selected: selected,
-                  disabled: disabled,
-                  removalMode: removalModeAllowed && removalModeEnabled,
-                  markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
-                  theme: theme,
-                ),
+              return ConvertouchMenuItem(
+                item,
+                itemsViewMode: itemsViewMode,
+                onTap: () {
+                  onItemTap?.call(item);
+                },
+                onLongPress: () {
+                  onItemLongPress?.call(item);
+                },
+                onTapForRemoval: () {
+                  onItemTapForRemoval?.call(item);
+                },
+                marked: marked,
+                selected: selected,
+                disabled: disabled,
+                removalMode: removalModeAllowed && removalModeEnabled,
+                markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
+                theme: theme,
               );
             }
 
