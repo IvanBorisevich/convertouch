@@ -217,3 +217,12 @@ const settingItemColorLight = SettingItemColorScheme(
     ),
   ),
 );
+
+const progressIndicatorColorLight = ConvertouchColorScheme(
+  foreground: ColorVariation.only(Color(0xFF3A3A88)),
+);
+
+const alertDialogColorLight = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xFFD5E2FF)),
+  foreground: ColorVariation.only(Color(0xFF426F99)),
+);

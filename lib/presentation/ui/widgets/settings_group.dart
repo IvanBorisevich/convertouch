@@ -7,12 +7,14 @@ class ConvertouchSettingsGroup extends StatelessWidget {
   final String name;
   final List<Widget> items;
   final bool disabled;
+  final void Function()? onHeaderTap;
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingsGroup({
     required this.name,
-    required this.items,
+    this.items = const [],
     this.disabled = false,
+    this.onHeaderTap,
     required this.theme,
     super.key,
   });
@@ -59,16 +61,22 @@ class ConvertouchSettingsGroup extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 15,
-                ),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  onHeaderTap?.call();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 15,
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 
 const String appName = "Convertouch";
+const String appVersion = "1.0.0";
+
 const String iconAssetsPathPrefix = "assets/icons";
 const String unitGroupDefaultIconName = "unit-group.png";
 const String quicksandFontFamily = "Quicksand";
