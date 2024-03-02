@@ -19,6 +19,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/scaffold.dart';
+import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -87,11 +88,13 @@ class ConvertouchApp extends StatelessWidget {
           create: (context) => di.locator<RefreshingJobsBloc>(),
         ),
       ],
-      child: MaterialApp(
-        title: appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: quicksandFontFamily),
-        home: const ConvertouchScaffold(),
+      child: DismissKeyboard(
+        child: MaterialApp(
+          title: appName,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: quicksandFontFamily),
+          home: const ConvertouchScaffold(),
+        ),
       ),
     );
   }
