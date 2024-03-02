@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/main.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
@@ -55,6 +56,17 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     BottomNavbarItem.unitsMenu: "Units Menu",
     BottomNavbarItem.settings: "Settings",
   };
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    // FlutterNativeSplash.remove();
+    logger.d("Scaffold initialized");
+  }
 
   @override
   Widget build(BuildContext context) {

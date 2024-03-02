@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/migrations/v1_init.dart';
 import 'package:convertouch/di.dart' as di;
+import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
 
 /// How to upgrade DB structure and content:
@@ -20,7 +21,7 @@ class ConvertouchDatabaseHelper {
       di.locator.get<ConvertouchDatabaseHelper>();
 
   Future<ConvertouchDatabase> initDatabase() async {
-    log("Initializing database ${ConvertouchDatabase.databaseName}");
+    logger.d("Initializing database ${ConvertouchDatabase.databaseName}");
     return $FloorConvertouchDatabase
         .databaseBuilder(ConvertouchDatabase.databaseName)
         .addCallback(initialization)

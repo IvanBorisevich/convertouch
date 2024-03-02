@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
@@ -21,16 +19,25 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_det
 import 'package:convertouch/presentation/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:logger/logger.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
+final logger = Logger(
+  printer: PrettyPrinter(
+    printTime: true,
+  ),
+);
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   Bloc.observer = ConvertouchBlocObserver();
-  log("Before dependencies initialization", time: DateTime.now());
+  logger.d("Before dependencies initialization");
   await di.init();
-  log("Dependencies initialization finished", time: DateTime.now());
+  logger.d("Dependencies initialization finished");
   runApp(const ConvertouchApp());
 }
 
