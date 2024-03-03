@@ -32,7 +32,7 @@ class ConvertouchConversionItem extends StatefulWidget {
 }
 
 class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
-  static const double _unitButtonWidth = 70;
+  static const double _unitButtonWidth = 75;
   static const double _unitButtonHeight = 50;
   static const double _containerHeight = _unitButtonHeight;
   static const BorderRadius _elementsBorderRadius =

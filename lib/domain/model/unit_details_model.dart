@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 
 class UnitDetailsModel extends Equatable {
   static const UnitDetailsModel empty = UnitDetailsModel();
-  static const int unitCodeMaxLength = 4;
+  static const int unitCodeMaxLength = 5;
 
   final UnitGroupModel? unitGroup;
   final UnitModel unit;
