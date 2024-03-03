@@ -41,6 +41,7 @@ class UnitDetailsBloc
             editMode: false,
             conversionRuleVisible: false,
             conversionRuleEnabled: false,
+            note: null,
           ),
         ) {
     on<GetNewUnitDetails>(_onNewUnitDetailsGet);
@@ -249,6 +250,15 @@ class UnitDetailsBloc
       ),
     );
 
+    String? note;
+    if (editMode && draftDetails.unit.coefficient == 1) {
+      note = baseUnitNote;
+    } else if (draftDetails.unitGroup?.conversionType !=
+            ConversionType.formula &&
+        draftDetails.argUnit.empty) {
+      note = firstUnitNote;
+    }
+
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
@@ -266,6 +276,7 @@ class UnitDetailsBloc
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note: note,
       ),
     );
   }
@@ -287,6 +298,15 @@ class UnitDetailsBloc
       ),
     );
 
+    String? note;
+    if (editMode && draftDetails.unit.coefficient == 1) {
+      note = baseUnitNote;
+    } else if (draftDetails.unitGroup?.conversionType !=
+            ConversionType.formula &&
+        draftDetails.argUnit.empty) {
+      note = firstUnitNote;
+    }
+
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
@@ -304,6 +324,7 @@ class UnitDetailsBloc
         editMode: editMode,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note: note,
       ),
     );
   }
@@ -355,6 +376,15 @@ class UnitDetailsBloc
       ),
     );
 
+    String? note;
+    if (editMode && draftDetails.unit.coefficient == 1) {
+      note = baseUnitNote;
+    } else if (draftDetails.unitGroup?.conversionType !=
+        ConversionType.formula &&
+        draftDetails.argUnit.empty) {
+      note = firstUnitNote;
+    }
+
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
@@ -368,6 +398,7 @@ class UnitDetailsBloc
         editMode: editMode,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note: note,
       ),
     );
   }
@@ -419,6 +450,15 @@ class UnitDetailsBloc
       ),
     );
 
+    String? note;
+    if (editMode && draftDetails.unit.coefficient == 1) {
+      note = baseUnitNote;
+    } else if (draftDetails.unitGroup?.conversionType !=
+        ConversionType.formula &&
+        draftDetails.argUnit.empty) {
+      note = firstUnitNote;
+    }
+
     emit(
       UnitDetailsReady(
         draftDetails: draftDetails,
@@ -432,6 +472,7 @@ class UnitDetailsBloc
         editMode: editMode,
         conversionRuleEnabled:
             draftDetails.unitGroup?.conversionType == ConversionType.static,
+        note: note,
       ),
     );
   }

@@ -22,7 +22,7 @@ class UnitDetailsReady extends UnitDetailsState {
     required this.editMode,
     required this.conversionRuleVisible,
     required this.conversionRuleEnabled,
-    this.note,
+    required this.note,
   });
 
   @override
