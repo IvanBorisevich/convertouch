@@ -70,14 +70,14 @@ const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
 const unitItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xFF77B0F5),
-    selected: Color(0xFF2C6396),
+    marked: Color(0xE57AB2F8),
+    selected: Color(0xFF26537E),
     disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xE570A8EF),
-    selected: Color(0xFF76A2DC),
+    marked: Color(0xE57AB2F8),
+    selected: Color(0xE57AB2F8),
     disabled: Color(0x9EAAC9F1),
   ),
   foreground: ColorVariation(

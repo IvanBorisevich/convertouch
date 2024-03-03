@@ -44,7 +44,7 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
 const unitGroupItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xff434c60),
-    selected: Color(0xff475065),
+    selected: Color(0xffa6baee),
   ),
   background: ColorVariation(
     regular: Color(0xff434c60),
@@ -69,7 +69,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFF435064),
     marked: Color(0xE4415F7E),
-    selected: Color(0xE4415F7E),
+    selected: Color(0xFFA0CAF1),
     disabled: Color(0x9B424E62),
   ),
   background: ColorVariation(
