@@ -16,8 +16,9 @@ void main() {
             NumberValueUtils.formatValueInScientificNotation(99999), "99999");
         expect(
             NumberValueUtils.formatValueInScientificNotation(0.001), "0.001");
-        expect(
-            NumberValueUtils.formatValueInScientificNotation(0.9999), "1");
+        expect(NumberValueUtils.formatValueInScientificNotation(0.00980665),
+            "0.01");
+        expect(NumberValueUtils.formatValueInScientificNotation(0.9999), "1");
       },
     );
 

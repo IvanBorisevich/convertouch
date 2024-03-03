@@ -83,15 +83,19 @@ class UnitModel extends IdNameItemModel {
   bool get unnamed => name.isEmpty;
 
   Map<String, dynamic> toJson() {
-    return {
+    var result = {
       "id": id,
       "name": name,
       "code": code,
       "coefficient": coefficient,
       "symbol": symbol,
-      "unitGroupId": unitGroupId,
-      "oob": oob,
+      "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
+      "oob": oob == true ? true : null,
     };
+
+    result.removeWhere((key, value) => value == null);
+
+    return result;
   }
 
   static UnitModel? fromJson(Map<String, dynamic>? json) {
@@ -104,8 +108,8 @@ class UnitModel extends IdNameItemModel {
       code: json["code"],
       coefficient: json["coefficient"],
       symbol: json["symbol"],
-      unitGroupId: json["unitGroupId"],
-      oob: json["oob"],
+      unitGroupId: json["unitGroupId"] ?? -1,
+      oob: json["oob"] == true,
     );
   }
 

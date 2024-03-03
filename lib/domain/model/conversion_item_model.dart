@@ -67,8 +67,8 @@ class ConversionItemModel extends ItemModel {
   Map<String, dynamic> toJson() {
     return {
       "unit": unit.toJson(),
-      "value": value.strValue,
-      "defaultValue": defaultValue.strValue,
+      "value": value.toJson(),
+      "defaultValue": defaultValue.toJson(),
     };
   }
 
@@ -78,8 +78,9 @@ class ConversionItemModel extends ItemModel {
     }
     return ConversionItemModel(
       unit: UnitModel.fromJson(json["unit"])!,
-      value: ValueModel.ofString(json["value"]),
-      defaultValue: ValueModel.ofString(json["defaultValue"]),
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      defaultValue:
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
     );
   }
 

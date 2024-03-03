@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
-import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
+import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
@@ -57,8 +57,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     if (_isFocused) {
       _unitValueController.text = widget.item.value.strValue;
     } else {
-      _unitValueController.text =
-          widget.item.value.scientificValue ?? widget.item.value.strValue;
+      _unitValueController.text = widget.item.value.scientificValue;
     }
 
     return Container(

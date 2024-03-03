@@ -13,7 +13,7 @@ class ValueModel extends Equatable {
   );
 
   final String strValue;
-  final String? scientificValue;
+  final String scientificValue;
 
   const ValueModel({
     required this.strValue,
@@ -39,6 +39,24 @@ class ValueModel extends Equatable {
 
   bool get notEmpty => strValue.isNotEmpty;
 
+  Map<String, dynamic> toJson() {
+    return {
+      "raw": strValue,
+      "scientific": scientificValue,
+    };
+  }
+
+  static ValueModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    return ValueModel(
+      strValue: json["raw"],
+      scientificValue: json["scientific"],
+    );
+  }
+
   @override
   List<Object> get props => [
         strValue,
@@ -46,6 +64,6 @@ class ValueModel extends Equatable {
 
   @override
   String toString() {
-    return "{$strValue - $scientificValue}";
+    return "{$strValue; sc: $scientificValue}";
   }
 }
