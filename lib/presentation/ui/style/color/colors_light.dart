@@ -44,11 +44,11 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xffc6d7fd),
-    selected: Color(0xFF303073),
+    selected: Color(0xFF535D91),
   ),
   background: ColorVariation(
     regular: Color(0xffc6d7fd),
-    selected: Color(0xffafc4f8),
+    selected: Color(0xff9db3ea),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF303073),
@@ -70,14 +70,14 @@ const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
 const unitItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xFF77B0F5),
-    selected: Color(0xFF2C6396),
+    marked: Color(0xE57AB2F8),
+    selected: Color(0xFF26537E),
     disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
-    regular: Color(0xFFB2CFF5),
-    marked: Color(0xE583B5F5),
-    selected: Color(0xE583B5F5),
+    regular: Color(0xFFAAC9F1),
+    marked: Color(0xE57AB2F8),
+    selected: Color(0xE57AB2F8),
     disabled: Color(0x9EAAC9F1),
   ),
   foreground: ColorVariation(
@@ -216,10 +216,6 @@ const settingItemColorLight = SettingItemColorScheme(
       ),
     ),
   ),
-);
-
-const progressIndicatorColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF3A3A88)),
 );
 
 const alertDialogColorLight = ConvertouchColorScheme(

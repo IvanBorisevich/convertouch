@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/widgets/keyboard/keyboard_wrappers.dart';
-import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/keyboard_wrappers.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -62,6 +62,8 @@ class ConvertouchTextBox extends StatefulWidget {
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   late TextBoxColorScheme _color;
+  late int _cursorOffset;
+
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
 
@@ -82,6 +84,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     if (_controller.text.isEmpty) {
       _controller.text = widget.text ?? "";
     }
+
+    _cursorOffset = _controller.text.length;
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
@@ -117,11 +121,20 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       widget.onFocusSelected?.call();
     } else {
       widget.onFocusLeft?.call();
+      _cursorOffset = _controller.text.length;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_focusNode.hasFocus) {
+      if (_cursorOffset > _controller.text.length) {
+        _cursorOffset = _controller.text.length;
+      }
+
+      _controller.selection = TextSelection.collapsed(offset: _cursorOffset);
+    }
+
     _color = widget.customColor ?? unitTextBoxColors[widget.theme]!;
 
     Color borderColor;
@@ -193,12 +206,14 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       keyboardType: textInputType,
       autofocus: widget.autofocus,
       focusNode: needToSetFocusNode ? _focusNode : null,
-      controller: _controller
-        ..selection = TextSelection.collapsed(
-          offset: _controller.text.length,
-        ),
+      controller: _controller,
       inputFormatters: widget.inputFormatters,
-      onChanged: onChanged,
+      onChanged: (newValue) {
+        onChanged?.call(newValue);
+        setState(() {
+          _cursorOffset = _controller.selection.baseOffset;
+        });
+      },
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),

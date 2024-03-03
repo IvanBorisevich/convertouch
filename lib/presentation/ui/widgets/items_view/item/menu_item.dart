@@ -218,7 +218,6 @@ class ConvertouchMenuListItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: borderColor,
-                  width: 1,
                 ),
               ),
               child: Row(
@@ -315,7 +314,6 @@ class ConvertouchMenuGridItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(7),
         border: Border.all(
           color: borderColor,
-          width: 1,
         ),
       ),
       child: Column(

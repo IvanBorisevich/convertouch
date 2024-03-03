@@ -69,7 +69,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFF435064),
     marked: Color(0xE4415F7E),
-    selected: Color(0xFF85B3DC),
+    selected: Color(0xFFA0CAF1),
     disabled: Color(0x9B424E62),
   ),
   background: ColorVariation(
@@ -80,7 +80,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xFF85B3DC),
-    marked: Color(0xFFA0CAF1),
+    marked: Color(0xFF95B8D7),
     selected: Color(0xFFA0CAF1),
     disabled: Color(0x867FACD5),
   ),
@@ -177,7 +177,7 @@ const refreshButtonColorSchemeDark = ConvertouchColorScheme(
   foreground: ColorVariation(
     regular: Color(0xFFDEE0FF),
   ),
-  background: ColorVariation.only(Color(0xC86060BB)),
+  background: ColorVariation.only(Color(0xC85858B6)),
 );
 
 const removalFloatingButtonColorDark = ConvertouchColorScheme(
@@ -213,10 +213,6 @@ const settingItemColorDark = SettingItemColorScheme(
       ),
     ),
   ),
-);
-
-const progressIndicatorColorDark = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF7272C9)),
 );
 
 const alertDialogColorDark = ConvertouchColorScheme(
