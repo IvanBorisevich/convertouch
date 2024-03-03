@@ -215,10 +215,6 @@ const settingItemColorDark = SettingItemColorScheme(
   ),
 );
 
-const progressIndicatorColorDark = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF7272C9)),
-);
-
 const alertDialogColorDark = ConvertouchColorScheme(
   background: ColorVariation.only(Color(0xE438434F)),
   foreground: ColorVariation.only(Color(0xFFB1D2F1)),

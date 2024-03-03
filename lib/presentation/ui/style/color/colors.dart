@@ -100,11 +100,6 @@ const settingItemColors = {
   ConvertouchUITheme.dark: settingItemColorDark,
 };
 
-const progressIndicatorColors = {
-  ConvertouchUITheme.light: progressIndicatorColorLight,
-  ConvertouchUITheme.dark: progressIndicatorColorDark,
-};
-
 const alertDialogColors = {
   ConvertouchUITheme.light: alertDialogColorLight,
   ConvertouchUITheme.dark: alertDialogColorDark,

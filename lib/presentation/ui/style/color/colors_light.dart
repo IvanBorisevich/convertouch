@@ -164,6 +164,7 @@ const refreshButtonColorSchemeLight = ConvertouchColorScheme(
   ),
   foreground: ColorVariation(
     regular: Color(0xFFE8E8FF),
+    selected: Color(0xC83A3A67),
   ),
   background: ColorVariation.only(Color(0xC83A3A67)),
 );
@@ -215,10 +216,6 @@ const settingItemColorLight = SettingItemColorScheme(
       ),
     ),
   ),
-);
-
-const progressIndicatorColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF3A3A88)),
 );
 
 const alertDialogColorLight = ConvertouchColorScheme(

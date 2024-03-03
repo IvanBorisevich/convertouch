@@ -52,7 +52,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 .jobs[conversionState.conversion.unitGroup?.name]
                 ?.progressController
                 ?.stream,
-            progressIndicatorColor: refreshButtonColor.foreground.regular,
+            progressIndicatorColor: refreshButtonColor.foreground.selected,
           );
         });
       });
