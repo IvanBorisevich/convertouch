@@ -919,5 +919,19 @@ const unitsV1 = [
         "coefficient": 0.55076815292998
       },
     ]
-  }
+  },
+  {
+    "groupName": "Pressure",
+    "units": [
+      {"code": "Pa", "name": "pascal", "coefficient": 1},
+      {"code": "bar", "name": "bar", "coefficient": 100000},
+      {"code": "at", "name": "technical atmosphere", "coefficient": 98066.5},
+      {"code": "atm", "name": "physical atmosphere", "coefficient": 101325},
+      {"code": "mmHg", "name": "millimetre of mercury", "coefficient": 133.322},
+      {"code": "mmH2O", "name": "millimetre of water", "coefficient": 9.807},
+      {"code": "psi", "name": "pound per square inch", "coefficient": 6894.757},
+      {"code": "Ba", "name": "barye", "coefficient": 0.1},
+      {"code": "pz", "name": "pièze", "coefficient": 1000},
+    ]
+  },
 ];
