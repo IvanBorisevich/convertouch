@@ -21,6 +21,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final bool removalModeAllowed;
   final bool removalModeEnabled;
   final double itemsSpacing;
+  final double itemsSpacingBottom;
   final ItemsViewMode itemsViewMode;
   final ConvertouchUITheme theme;
 
@@ -38,6 +39,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.removalModeAllowed = false,
     this.removalModeEnabled = false,
     this.itemsSpacing = 8,
+    this.itemsSpacingBottom = 85,
     required this.itemsViewMode,
     required this.theme,
     super.key,
@@ -85,21 +87,33 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                   padding: EdgeInsets.all(itemsSpacing),
                   child: CustomScrollView(
                     slivers: [
-                      SliverGrid.builder(
-                        itemCount: items.length,
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: ConvertouchMenuItem.gridItemWidth,
-                          mainAxisSpacing: itemsSpacing,
-                          crossAxisSpacing: itemsSpacing,
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          bottom: itemsSpacingBottom,
                         ),
-                        itemBuilder: itemBuilder,
+                        sliver: SliverGrid.builder(
+                          itemCount: items.length,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent:
+                                ConvertouchMenuItem.gridItemWidth,
+                            mainAxisSpacing: itemsSpacing,
+                            crossAxisSpacing: itemsSpacing,
+                          ),
+                          itemBuilder: itemBuilder,
+                        ),
                       ),
                     ],
                   ),
                 );
               case ItemsViewMode.list:
                 return ListView.separated(
-                  padding: EdgeInsets.all(itemsSpacing),
+                  padding: EdgeInsets.only(
+                    left: itemsSpacing,
+                    top: itemsSpacing,
+                    right: itemsSpacing,
+                    bottom: itemsSpacingBottom,
+                  ),
                   itemCount: items.length,
                   itemBuilder: itemBuilder,
                   separatorBuilder: (context, index) => Padding(
@@ -107,7 +121,8 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                       left: itemsSpacing,
                       top: itemsSpacing,
                       right: itemsSpacing,
-                      bottom: index == items.length - 1 ? itemsSpacing : 0,
+                      bottom:
+                          index == items.length - 1 ? itemsSpacingBottom : 0,
                     ),
                   ),
                 );
