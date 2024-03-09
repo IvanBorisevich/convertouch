@@ -27,11 +27,12 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching units of the group with id = "
               "$unitGroupId: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -53,10 +54,11 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when searching units: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -67,10 +69,11 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       final result = await unitDao.getUnit(id);
       return Right(UnitTranslator.I.toModel(result)!);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching unit by id = $id: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -87,10 +90,11 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching units by ids = $ids: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -106,12 +110,13 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(
         {for (var v in result) v.id!: UnitTranslator.I.toModel(v)!},
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching units "
               "of the group = $unitGroupName "
               "by codes = $codes: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -124,11 +129,12 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       var result = await unitDao.getBaseUnit(unitGroupId);
       return Right(UnitTranslator.I.toModel(result) ?? UnitModel.none);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when retrieving default base unit "
               "of the group with id = $unitGroupId: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -150,10 +156,11 @@ class UnitRepositoryImpl extends UnitRepository {
       } else {
         return const Right(null);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when adding a unit: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -164,10 +171,11 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       await unitDao.remove(unitIds);
       return const Right(null);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when deleting units by ids = $unitIds: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -178,10 +186,11 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       await unitDao.update(UnitTranslator.I.fromModel(unit)!);
       return Right(unit);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when updating the unit with id = ${unit.id}: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

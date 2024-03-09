@@ -34,10 +34,11 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
       final ConnectivityResult status = await connectivity.checkConnectivity();
 
       return Right(status != ConnectivityResult.none);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         NetworkException(
           message: "Error when checking connectivity: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -100,10 +101,11 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
                 .toList() as List<T>,
           );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         NetworkException(
           message: "Error when refreshing data from network: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

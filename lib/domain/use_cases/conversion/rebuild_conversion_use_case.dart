@@ -32,11 +32,11 @@ class RebuildConversionUseCase
       );
 
       return buildConversionUseCase.execute(refreshedConversionParams);
-    } catch (e, stacktrace) {
+    } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when rebuilding conversion after data refresh: $e,"
-              "\n$stacktrace",
+          message: "Error when rebuilding conversion after data refresh: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

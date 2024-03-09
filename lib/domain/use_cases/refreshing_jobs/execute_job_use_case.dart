@@ -36,6 +36,7 @@ class ExecuteJobUseCase
           InternalException(
             message: "No data source found for the job",
             severity: ExceptionSeverity.warning,
+            stackTrace: null,
           ),
         );
       }
@@ -49,6 +50,7 @@ class ExecuteJobUseCase
           InternalException(
             message: "Please check an internet connection",
             severity: ExceptionSeverity.warning,
+            stackTrace: null,
           ),
         );
       }
@@ -104,7 +106,7 @@ class ExecuteJobUseCase
           progressController: jobProgressController,
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       log("Closing the stream from use case");
       jobProgressController?.close();
 
@@ -112,6 +114,7 @@ class ExecuteJobUseCase
         InternalException(
           message: "Error when starting the refreshing job "
               "'${input.job.name}': $e",
+          stackTrace: stackTrace,
         ),
       );
     }

@@ -64,10 +64,11 @@ class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
           argValue: argValue,
         ),
       );
-    } catch (e, stacktrace) {
+    } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when preparing draft unit details: $e,\n$stacktrace",
+          message: "Error when preparing draft unit details: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

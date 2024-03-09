@@ -113,10 +113,11 @@ class BuildConversionUseCase
           emptyConversionItemsExist: emptyConversionItemsExist,
         ),
       );
-    } catch (e, stacktrace) {
+    } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when converting unit value: $e,\n$stacktrace",
+          message: "Error when converting unit value: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

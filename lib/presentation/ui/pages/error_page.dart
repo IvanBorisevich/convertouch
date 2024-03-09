@@ -13,7 +13,7 @@ class ConvertouchErrorPage extends StatelessWidget {
   final ConvertouchException error;
 
   const ConvertouchErrorPage({
-    this.pageTitle = "Something Went Wrong...",
+    this.pageTitle = "Oops..",
     required this.error,
     super.key,
   });
@@ -21,52 +21,50 @@ class ConvertouchErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+      ConvertouchColorScheme errorInfoBoxColor =
+          errorInfoBoxColors[appState.theme]!;
 
       return ConvertouchPage(
         title: pageTitle,
-        body: Center(
+        body: Padding(
+          padding: const EdgeInsets.only(
+            left: 12,
+            right: 12,
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                flex: 1,
+                flex: 2,
                 child: Center(
                   child: Icon(
                     Icons.troubleshoot_outlined,
-                    size: 140,
-                    color: pageColorScheme.page.foreground.regular,
+                    size: 50,
+                    color: errorInfoBoxColor.foreground.regular,
                   ),
                 ),
               ),
               Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                    right: 12,
+                flex: 3,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: errorInfoBoxColor.background.regular,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: pageColorScheme.page.background.regular,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      error.toString(),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: pageColorScheme.page.foreground.regular,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  child: Text(
+                    error.message,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: errorInfoBoxColor.foreground.regular,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
               ),
               Flexible(
-                flex: 1,
+                flex: 2,
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
@@ -74,23 +72,26 @@ class ConvertouchErrorPage extends StatelessWidget {
                         const NavigateBack(),
                       );
                     },
-                    child: Container(
-                      width: 100,
-                      height: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: pageColorScheme.page.foreground.regular,
-                          width: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: errorInfoBoxColor.foreground.regular,
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Go Back',
-                        style: TextStyle(
-                          color: pageColorScheme.page.foreground.regular,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17,
+                        child: Text(
+                          'Back',
+                          style: TextStyle(
+                            color: errorInfoBoxColor.foreground.regular,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                          ),
                         ),
                       ),
                     ),

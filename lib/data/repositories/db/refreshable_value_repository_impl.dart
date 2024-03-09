@@ -26,11 +26,12 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
     try {
       final result = await refreshableValueDao.get(unitId);
       return Right(RefreshableValueTranslator.I.toModel(result));
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching a refreshable value by unit "
               "with id = $unitId: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -47,10 +48,11 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
             .map((entity) => RefreshableValueTranslator.I.toModel(entity)!)
             .toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when getting unit values: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -83,10 +85,11 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
             .map((entity) => RefreshableValueTranslator.I.toModel(entity)!)
             .toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when batch-updating unit values: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

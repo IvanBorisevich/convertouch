@@ -18,10 +18,11 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       return Right(
         result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when fetching unit groups: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -41,10 +42,11 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       return Right(
         result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when searching unit groups: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -67,10 +69,11 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       } else {
         return const Right(null);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when adding a unit group: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -86,14 +89,16 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         return Left(
           DatabaseException(
             message: "Unit group with id = $unitGroupId not found",
+            stackTrace: null,
           ),
         );
       }
       return Right(UnitGroupTranslator.I.toModel(result)!);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when searching a unit group by id = $unitGroupId: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -106,10 +111,11 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     try {
       await unitGroupDao.remove(unitGroupIds);
       return const Right(null);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when deleting unit groups by ids = $unitGroupIds: $e",
+          stackTrace: stackTrace,
         ),
       );
     }
@@ -122,10 +128,11 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     try {
       await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup)!);
       return Right(unitGroup);
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         DatabaseException(
           message: "Error when updating unit group by id = ${unitGroup.id}: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

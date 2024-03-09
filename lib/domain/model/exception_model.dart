@@ -9,16 +9,19 @@ enum ExceptionSeverity {
 class ConvertouchException extends Equatable {
   final String message;
   final ExceptionSeverity severity;
+  final StackTrace? stackTrace;
 
   const ConvertouchException({
     required this.message,
     this.severity = ExceptionSeverity.error,
+    required this.stackTrace,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     message,
     severity,
+    stackTrace,
   ];
 
   bool get isError => severity == ExceptionSeverity.error;
@@ -39,6 +42,7 @@ class DatabaseException extends ConvertouchException {
   const DatabaseException({
     required super.message,
     super.severity,
+    required super.stackTrace,
   });
 }
 
@@ -46,6 +50,7 @@ class InternalException extends ConvertouchException {
   const InternalException({
     required super.message,
     super.severity,
+    required super.stackTrace,
   });
 }
 
@@ -53,5 +58,6 @@ class NetworkException extends ConvertouchException {
   const NetworkException({
     required super.message,
     super.severity,
+    required super.stackTrace,
   });
 }

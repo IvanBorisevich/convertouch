@@ -159,6 +159,7 @@ class UnitGroupsBloc
               message: "Unit group [${event.unitGroupToBeSaved.name}] "
                   "already exists",
               severity: ExceptionSeverity.warning,
+              stackTrace: null,
             ),
           ),
         );

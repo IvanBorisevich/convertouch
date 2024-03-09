@@ -222,3 +222,8 @@ const alertDialogColorLight = ConvertouchColorScheme(
   background: ColorVariation.only(Color(0xFFD5E2FF)),
   foreground: ColorVariation.only(Color(0xFF426F99)),
 );
+
+const errorInfoBoxColorLight = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xFFBCD6FF)),
+  foreground: ColorVariation.only(Color(0xFF426F99)),
+);

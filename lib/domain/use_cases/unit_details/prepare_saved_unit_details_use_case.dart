@@ -52,10 +52,11 @@ class PrepareSavedUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
           argValue: argValue,
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       return Left(
         InternalException(
           message: "Error when preparing saved unit details: $e",
+          stackTrace: stackTrace,
         ),
       );
     }

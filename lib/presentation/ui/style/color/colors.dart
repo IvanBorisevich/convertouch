@@ -104,3 +104,8 @@ const alertDialogColors = {
   ConvertouchUITheme.light: alertDialogColorLight,
   ConvertouchUITheme.dark: alertDialogColorDark,
 };
+
+const errorInfoBoxColors = {
+  ConvertouchUITheme.light: errorInfoBoxColorLight,
+  ConvertouchUITheme.dark: errorInfoBoxColorDark,
+};
