@@ -64,7 +64,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   }
 
   void initialization() async {
-    // FlutterNativeSplash.remove();
     logger.d("Scaffold initialized");
   }
 

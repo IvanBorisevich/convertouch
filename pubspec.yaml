@@ -53,9 +53,7 @@ dependencies:
   keyboard_actions: ^4.2.0
   hydrated_bloc: ^7.1.0
   path_provider: ^2.1.2
-  flutter_native_splash: ^2.3.7
   logger: ^2.0.2+1
-  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -101,18 +99,3 @@ flutter:
           weight: 600
         - asset: assets/fonts/Quicksand-Bold.ttf
           weight: 700
-
-#flutter_native_splash:
-#  color: "#ffffff"
-#  image: assets/splash-logo.png
-#  android_gravity: center
-#
-#  android_12:
-#    color: "#ffffff"
-#    image: assets/splash-logo.png
-#    android_gravity: center
-
-flutter_launcher_icons:
-  android: "launcher_icon"
-  image_path: "assets/app_logo.png"
-  min_sdk_android: 21

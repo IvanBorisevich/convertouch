@@ -20,7 +20,6 @@ import 'package:convertouch/presentation/scaffold.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:logger/logger.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -33,8 +32,7 @@ final logger = Logger(
 );
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = ConvertouchBlocObserver();
   logger.d("Before dependencies initialization");
   await di.init();
