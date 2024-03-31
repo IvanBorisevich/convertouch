@@ -316,15 +316,8 @@ class _$UnitDaoDb extends UnitDaoDb {
     String searchString,
   ) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 and name like ?2',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            oob: row['oob'] as int?),
+        'select * from units where unit_group_id = ?1 and (name like ?2 or code like ?2)',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
         arguments: [unitGroupId, searchString]);
   }
 
