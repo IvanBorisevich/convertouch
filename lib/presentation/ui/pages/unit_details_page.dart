@@ -47,15 +47,17 @@ class _ConvertouchUnitDetailsPageState
         _unitCodeTextController.text = pageState.draftDetails.unit.code;
 
         return ConvertouchPage(
-          title: pageState.editMode ? "Edit Unit" : "New Unit",
+          title: pageState.isExistingUnit
+              ? pageState.savedDetails.unit.name
+              : "New Unit",
           body: SingleChildScrollView(
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(12, 15, 12, 60),
               child: Column(
                 children: [
                   (pageState.draftDetails.unit.coefficient != 1 &&
-                                  pageState.editMode ||
-                              !pageState.editMode) &&
+                                  pageState.isExistingUnit ||
+                              !pageState.isExistingUnit) &&
                           pageState.draftDetails.unitGroup != null
                       ? Column(
                           children: [
@@ -73,6 +75,7 @@ class _ConvertouchUnitDetailsPageState
                                   ),
                                 );
                               },
+                              disabled: pageState.draftDetails.unit.oob,
                               theme: appState.theme,
                               itemsViewMode: ItemsViewMode.list,
                             ),
@@ -82,6 +85,7 @@ class _ConvertouchUnitDetailsPageState
                       : empty(),
                   ConvertouchTextBox(
                     label: 'Unit Name',
+                    disabled: pageState.draftDetails.unit.oob,
                     controller: _unitNameTextController,
                     onChanged: (String value) async {
                       BlocProvider.of<UnitDetailsBloc>(context).add(
@@ -95,6 +99,7 @@ class _ConvertouchUnitDetailsPageState
                   ),
                   ConvertouchTextBox(
                     label: 'Unit Code',
+                    disabled: pageState.draftDetails.unit.oob,
                     controller: _unitCodeTextController,
                     onChanged: (String value) async {
                       BlocProvider.of<UnitDetailsBloc>(context).add(

@@ -10,7 +10,7 @@ class UnitDetailsReady extends UnitDetailsState {
   final UnitDetailsModel draftDetails;
   final UnitDetailsModel savedDetails;
   final UnitModel? unitToBeSaved;
-  final bool editMode;
+  final bool isExistingUnit;
   final bool conversionRuleVisible;
   final bool conversionRuleEnabled;
   final String? note;
@@ -19,7 +19,7 @@ class UnitDetailsReady extends UnitDetailsState {
     required this.draftDetails,
     required this.savedDetails,
     this.unitToBeSaved,
-    required this.editMode,
+    required this.isExistingUnit,
     required this.conversionRuleVisible,
     required this.conversionRuleEnabled,
     required this.note,
@@ -30,7 +30,7 @@ class UnitDetailsReady extends UnitDetailsState {
         draftDetails,
         savedDetails,
         unitToBeSaved,
-        editMode,
+        isExistingUnit,
         conversionRuleVisible,
         conversionRuleEnabled,
         note,
@@ -42,7 +42,8 @@ class UnitDetailsReady extends UnitDetailsState {
         'savedDetails: $savedDetails, '
         'draftDetails: $draftDetails, '
         'unitToBeSaved: $unitToBeSaved, '
-        'editMode: $editMode, '
+        'isExistingUnit: $isExistingUnit, '
+        'conversionRuleEnabled: $conversionRuleEnabled, '
         'note: $note}';
   }
 }

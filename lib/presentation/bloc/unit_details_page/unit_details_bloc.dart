@@ -38,7 +38,7 @@ class UnitDetailsBloc
           const UnitDetailsReady(
             draftDetails: UnitDetailsModel.empty,
             savedDetails: UnitDetailsModel.empty,
-            editMode: false,
+            isExistingUnit: false,
             conversionRuleVisible: false,
             conversionRuleEnabled: false,
             note: null,
@@ -83,7 +83,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     UnitDetailsModel? savedDetails;
 
@@ -139,13 +139,14 @@ class UnitDetailsBloc
           savedDetails: savedDetails ?? currentSavedDetails,
           editMode: editMode,
         ),
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleVisible:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
                 (!editMode && draftDetails.unit.named || editMode) &&
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
                     draftDetails.argUnit.empty
@@ -163,7 +164,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     final savedDetailsResult = await prepareSavedUnitDetailsUseCase.execute(
       UnitDetailsModel.coalesce(
@@ -206,9 +207,10 @@ class UnitDetailsBloc
           editMode: editMode,
         ),
         conversionRuleVisible: true,
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
                     draftDetails.argUnit.empty
@@ -227,7 +229,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     UnitDetailsModel savedDetails = UnitDetailsModel.coalesce(
       currentSavedDetails,
@@ -268,14 +270,15 @@ class UnitDetailsBloc
           savedDetails: savedDetails,
           editMode: editMode,
         ),
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleVisible:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
                 (!editMode && draftDetails.unit.named ||
                     editMode && draftDetails.unit.coefficient != 1) &&
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note: note,
       ),
     );
@@ -288,7 +291,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
       currentDraftDetails,
@@ -321,9 +324,10 @@ class UnitDetailsBloc
                 (!editMode && draftDetails.unit.named ||
                     editMode && draftDetails.unit.coefficient != 1) &&
                 draftDetails.argUnit.notEmpty,
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note: note,
       ),
     );
@@ -336,7 +340,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
       currentDraftDetails,
@@ -380,7 +384,7 @@ class UnitDetailsBloc
     if (editMode && draftDetails.unit.coefficient == 1) {
       note = baseUnitNote;
     } else if (draftDetails.unitGroup?.conversionType !=
-        ConversionType.formula &&
+            ConversionType.formula &&
         draftDetails.argUnit.empty) {
       note = firstUnitNote;
     }
@@ -395,9 +399,10 @@ class UnitDetailsBloc
           editMode: editMode,
         ),
         conversionRuleVisible: true,
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note: note,
       ),
     );
@@ -410,7 +415,7 @@ class UnitDetailsBloc
     UnitDetailsReady currentState = state as UnitDetailsReady;
     UnitDetailsModel currentDraftDetails = currentState.draftDetails;
     UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.editMode;
+    bool editMode = currentState.isExistingUnit;
 
     UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
       currentDraftDetails,
@@ -454,7 +459,7 @@ class UnitDetailsBloc
     if (editMode && draftDetails.unit.coefficient == 1) {
       note = baseUnitNote;
     } else if (draftDetails.unitGroup?.conversionType !=
-        ConversionType.formula &&
+            ConversionType.formula &&
         draftDetails.argUnit.empty) {
       note = firstUnitNote;
     }
@@ -469,9 +474,10 @@ class UnitDetailsBloc
           editMode: editMode,
         ),
         conversionRuleVisible: true,
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note: note,
       ),
     );
@@ -600,14 +606,15 @@ class UnitDetailsBloc
       UnitDetailsReady(
         draftDetails: draftDetails,
         savedDetails: savedDetails,
-        editMode: editMode,
+        isExistingUnit: editMode,
         conversionRuleVisible:
             draftDetails.unitGroup?.conversionType != ConversionType.formula &&
                 (!editMode && draftDetails.unit.named ||
                     editMode && draftDetails.unit.coefficient != 1) &&
                 draftDetails.argUnit.notEmpty,
         conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static,
+            draftDetails.unitGroup?.conversionType == ConversionType.static &&
+                !draftDetails.unit.oob,
         note: note,
       ),
     );

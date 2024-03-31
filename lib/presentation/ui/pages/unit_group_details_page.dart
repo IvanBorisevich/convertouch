@@ -61,7 +61,7 @@ class _ConvertouchUnitGroupDetailsPageState
 
           return ConvertouchPage(
             title: unitGroupDetailsState.isExistingGroup
-                ? unitGroupDetailsState.draftGroup.name
+                ? unitGroupDetailsState.savedGroup.name
                 : "New Group",
             body: Container(
               padding: const EdgeInsets.only(

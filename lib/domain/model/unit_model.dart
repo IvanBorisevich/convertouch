@@ -131,6 +131,7 @@ class UnitModel extends IdNameItemModel {
       return "UnitModel.none";
     }
     return 'UnitModel{'
-        'id: $id, $code, $name, c: $coefficient, groupId: $unitGroupId}';
+        'id: $id, $code, $name, c: $coefficient, '
+        'groupId: $unitGroupId, oob: $oob}';
   }
 }
