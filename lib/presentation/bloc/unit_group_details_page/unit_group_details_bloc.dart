@@ -18,7 +18,7 @@ class UnitGroupDetailsBloc
           const UnitGroupDetailsReady(
             savedGroup: UnitGroupModel.none,
             draftGroup: UnitGroupModel.none,
-            editMode: false,
+            isExistingGroup: false,
             canChangedBeSaved: false,
           ),
         ) {
@@ -35,7 +35,7 @@ class UnitGroupDetailsBloc
       const UnitGroupDetailsReady(
         savedGroup: UnitGroupModel.none,
         draftGroup: UnitGroupModel.none,
-        editMode: false,
+        isExistingGroup: false,
         canChangedBeSaved: false,
       ),
     );
@@ -52,7 +52,7 @@ class UnitGroupDetailsBloc
       UnitGroupDetailsReady(
         savedGroup: event.unitGroup,
         draftGroup: event.unitGroup,
-        editMode: true,
+        isExistingGroup: true,
         canChangedBeSaved: false,
       ),
     );
@@ -79,7 +79,7 @@ class UnitGroupDetailsBloc
       UnitGroupDetailsReady(
         savedGroup: savedGroup,
         draftGroup: draftGroup,
-        editMode: savedGroup != UnitGroupModel.none,
+        isExistingGroup: savedGroup != UnitGroupModel.none,
         canChangedBeSaved: await _checkIfChangesCanBeSaved(
           savedGroup: savedGroup,
           draftGroup: draftGroup,

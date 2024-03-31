@@ -60,7 +60,9 @@ class _ConvertouchUnitGroupDetailsPageState
           _unitGroupNameController.text = unitGroupDetailsState.draftGroup.name;
 
           return ConvertouchPage(
-            title: unitGroupDetailsState.editMode ? "Edit Group" : "New Group",
+            title: unitGroupDetailsState.isExistingGroup
+                ? unitGroupDetailsState.draftGroup.name
+                : "New Group",
             body: Container(
               padding: const EdgeInsets.only(
                 left: 12,
@@ -83,6 +85,7 @@ class _ConvertouchUnitGroupDetailsPageState
                     hintText: unitGroupDetailsState.savedGroup.name,
                     theme: appState.theme,
                     customColor: textBoxColor,
+                    disabled: unitGroupDetailsState.draftGroup.oob,
                   ),
                   ConvertouchTextBox(
                     text: unitGroupDetailsState.draftGroup.conversionType.name,
@@ -93,7 +96,7 @@ class _ConvertouchUnitGroupDetailsPageState
                     customColor: textBoxColor,
                   ),
                   Visibility(
-                    visible: !unitGroupDetailsState.editMode,
+                    visible: !unitGroupDetailsState.draftGroup.oob,
                     child: ConvertouchInfoBox(
                       background: infoBoxColor.background.regular,
                       child: RichText(

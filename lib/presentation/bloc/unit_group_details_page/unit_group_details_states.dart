@@ -8,13 +8,13 @@ abstract class UnitGroupDetailsState extends ConvertouchState {
 class UnitGroupDetailsReady extends UnitGroupDetailsState {
   final UnitGroupModel savedGroup;
   final UnitGroupModel draftGroup;
-  final bool editMode;
+  final bool isExistingGroup;
   final bool canChangedBeSaved;
 
   const UnitGroupDetailsReady({
     required this.savedGroup,
     required this.draftGroup,
-    required this.editMode,
+    required this.isExistingGroup,
     required this.canChangedBeSaved,
   });
 
@@ -22,7 +22,7 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
   List<Object?> get props => [
     savedGroup,
     draftGroup,
-    editMode,
+    isExistingGroup,
     canChangedBeSaved,
   ];
 
@@ -31,7 +31,7 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
     return 'UnitGroupDetailsReady{'
         'savedGroup: $savedGroup, '
         'draftGroup: $draftGroup, '
-        'editMode: $editMode, '
+        'isExistingGroup: $isExistingGroup, '
         'canChangedBeSaved: $canChangedBeSaved}';
   }
 }
