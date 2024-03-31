@@ -115,16 +115,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
             unit.symbol != null ? "${unit.name} (${unit.symbol})" : unit.name;
         break;
       default:
-        itemLogo = IconButton(
-          onPressed: null,
-          icon: ImageIcon(
-            const AssetImage(
-              "$iconAssetsPathPrefix/$unitGroupDefaultIconName",
-            ),
-            color: foregroundColor,
-            size: 25,
-          ),
-        );
+        itemLogo = empty();
         itemName = item.name;
         break;
     }
