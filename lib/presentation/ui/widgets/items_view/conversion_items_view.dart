@@ -12,6 +12,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final void Function(ConversionItemModel)? onItemTap;
   final void Function(ConversionItemModel, String)? onItemValueChanged;
   final void Function(ConversionItemModel)? onItemRemove;
+  final Widget noItemsView;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
@@ -19,6 +20,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.onItemTap,
     this.onItemValueChanged,
     this.onItemRemove,
+    required this.noItemsView,
     required this.theme,
     super.key,
   });
@@ -159,18 +161,7 @@ class _ConvertouchConversionItemsViewState
         },
       );
     } else {
-      return SizedBox(
-        child: Center(
-          child: Text(
-            "No Conversion Items Added",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: unitPageEmptyViewColor[widget.theme]!.foreground.regular,
-            ),
-          ),
-        ),
-      );
+      return widget.noItemsView;
     }
   }
 }

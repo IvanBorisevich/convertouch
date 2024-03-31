@@ -28,9 +28,9 @@ class ConversionBloc
         ) {
     on<BuildConversion>(_onBuildConversion);
     on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
-    on<ShowNewConversionAfterRefresh>(_onNewConversionShow);
+    on<ShowNewConversionAfterRefresh>(_onNewConversionShowAfterRefresh);
     on<RemoveConversionItem>(_onRemoveConversion);
-    on<GetLastSavedConversion>((event, emit) => emit(state));
+    on<GetLastSavedConversion>(_onGetLastSavedConversion);
   }
 
   _onBuildConversion(
@@ -118,7 +118,8 @@ class ConversionBloc
         ConversionBuilt(
           conversion: conversionResult.right,
           showRefreshButton: conversionResult.right.unitGroup != null &&
-              conversionResult.right.unitGroup!.refreshable,
+              conversionResult.right.unitGroup!.refreshable &&
+              conversionResult.right.targetConversionItems.isNotEmpty,
         ),
       );
     }
@@ -137,14 +138,14 @@ class ConversionBloc
     navigationBloc.add(const NavigateBack());
   }
 
-  _onNewConversionShow(
+  _onNewConversionShowAfterRefresh(
     ShowNewConversionAfterRefresh event,
     Emitter<ConversionState> emit,
   ) async {
     emit(
       ConversionBuilt(
         conversion: event.newConversion,
-        showRefreshButton: true,
+        showRefreshButton: event.newConversion.targetConversionItems.isNotEmpty,
       ),
     );
   }
@@ -177,7 +178,23 @@ class ConversionBloc
     emit(
       ConversionBuilt(
         conversion: outputConversion,
-        showRefreshButton: prev.showRefreshButton,
+        showRefreshButton: prev.showRefreshButton &&
+            outputConversion.targetConversionItems.isNotEmpty,
+      ),
+    );
+  }
+
+  _onGetLastSavedConversion(
+    GetLastSavedConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt prev = state as ConversionBuilt;
+
+    emit(
+      ConversionBuilt(
+        conversion: prev.conversion,
+        showRefreshButton: prev.showRefreshButton &&
+            prev.conversion.targetConversionItems.isNotEmpty,
       ),
     );
   }

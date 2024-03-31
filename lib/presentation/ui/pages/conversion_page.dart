@@ -12,13 +12,13 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversi
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +38,34 @@ class ConvertouchConversionPage extends StatelessWidget {
 
       return conversionBlocBuilder((pageState) {
         final conversion = pageState.conversion;
+
+        Widget addingButton() {
+          return ConvertouchFloatingActionButton.adding(
+            onClick: () {
+              if (conversion.unitGroup == null) {
+                BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
+                  const FetchUnitGroupsForFirstAddingToConversion(
+                    searchString: null,
+                  ),
+                );
+              } else {
+                BlocProvider.of<UnitsBlocForConversion>(context).add(
+                  FetchUnitsToMarkForConversionFirstTime(
+                    unitGroup: conversion.unitGroup!,
+                    unitsAlreadyMarkedForConversion: conversion
+                        .targetConversionItems
+                        .map((unitValue) => unitValue.unit)
+                        .toList(),
+                    currentSourceConversionItem:
+                        conversion.sourceConversionItem,
+                    searchString: null,
+                  ),
+                );
+              }
+            },
+            colorScheme: floatingButtonColor,
+          );
+        }
 
         return MultiBlocListener(
           listeners: [
@@ -163,6 +191,27 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                   );
                 },
+                noItemsView: SizedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          "No Conversion Items Added",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: unitPageEmptyViewColor[appState.theme]!
+                                .foreground
+                                .regular,
+                          ),
+                        ),
+                      ),
+                      addingButton(),
+                    ],
+                  ),
+                ),
                 theme: appState.theme,
               ),
             ),
@@ -170,31 +219,9 @@ class ConvertouchConversionPage extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.end,
               children: [
                 const ConvertouchRefreshFloatingButton(),
-                ConvertouchFloatingActionButton.adding(
-                  onClick: () {
-                    if (conversion.unitGroup == null) {
-                      BlocProvider.of<UnitGroupsBlocForConversion>(context).add(
-                        const FetchUnitGroupsForFirstAddingToConversion(
-                          searchString: null,
-                        ),
-                      );
-                    } else {
-                      BlocProvider.of<UnitsBlocForConversion>(context).add(
-                        FetchUnitsToMarkForConversionFirstTime(
-                          unitGroup: conversion.unitGroup!,
-                          unitsAlreadyMarkedForConversion: conversion
-                              .targetConversionItems
-                              .map((unitValue) => unitValue.unit)
-                              .toList(),
-                          currentSourceConversionItem:
-                              conversion.sourceConversionItem,
-                          searchString: null,
-                        ),
-                      );
-                    }
-                  },
-                  colorScheme: floatingButtonColor,
-                ),
+                conversion.targetConversionItems.isNotEmpty
+                    ? addingButton()
+                    : empty(),
               ],
             ),
           ),
