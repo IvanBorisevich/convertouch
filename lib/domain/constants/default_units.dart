@@ -66,7 +66,6 @@ const unitsV1 = [
   {
     "groupName": temperatureGroup,
     "conversionType": ConversionType.formula,
-    "refreshable": true,
     "units": [
       {"code": degreeCelsiusCode, "name": "Degree Celsius"},
       {"code": degreeFahrenheitCode, "name": "Degree Fahrenheit"},

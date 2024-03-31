@@ -46,7 +46,7 @@ enum ItemType {
 
 enum BottomNavbarItem {
   home,
-  unitsMenu,
+  unitsEditor,
   settings,
 }
 
