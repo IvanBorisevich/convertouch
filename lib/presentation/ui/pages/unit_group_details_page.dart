@@ -96,7 +96,8 @@ class _ConvertouchUnitGroupDetailsPageState
                     customColor: textBoxColor,
                   ),
                   Visibility(
-                    visible: !unitGroupDetailsState.draftGroup.oob,
+                    visible: !unitGroupDetailsState.isExistingGroup &&
+                        !unitGroupDetailsState.draftGroup.oob,
                     child: ConvertouchInfoBox(
                       background: infoBoxColor.background.regular,
                       child: RichText(
