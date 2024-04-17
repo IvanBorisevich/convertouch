@@ -1,6 +1,7 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -94,12 +95,22 @@ class ConvertouchApp extends StatelessWidget {
         ),
       ],
       child: DismissKeyboard(
-        child: MaterialApp(
-          title: appName,
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(fontFamily: quicksandFontFamily),
-          home: const ConvertouchScaffold(),
-        ),
+        child: appBlocBuilder((appState) {
+          return MaterialApp(
+            title: appName,
+            debugShowCheckedModeBanner: false,
+            // theme: ThemeData.light().copyWith(
+            //   textTheme: Typography().black.apply(
+            //         fontFamily: quicksandFontFamily,
+            //       ),
+            // ),
+            darkTheme: ThemeData.dark(),
+            // themeMode: appState.theme == ConvertouchUITheme.dark
+            //     ? ThemeMode.dark
+            //     : ThemeMode.light,
+            home: const ConvertouchScaffold(),
+          );
+        }),
       ),
     );
   }

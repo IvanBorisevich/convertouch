@@ -54,6 +54,8 @@ dependencies:
   hydrated_bloc: ^7.1.0
   path_provider: ^2.1.2
   logger: ^2.0.2+1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.7
 
 dev_dependencies:
   flutter_test:
