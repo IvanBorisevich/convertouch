@@ -101,7 +101,7 @@ class ConvertouchApp extends StatelessWidget {
           final statusBarColor =
               pageColors[appState.theme]!.appBar.background.regular;
           final systemNavbarColor =
-              pageColors[appState.theme]!.page.background.regular;
+              pageColors[appState.theme]!.bottomBar.background.regular;
           Brightness iconBrightness = appState.theme == ConvertouchUITheme.dark
               ? Brightness.light
               : Brightness.dark;
