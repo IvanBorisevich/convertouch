@@ -98,16 +98,21 @@ class ConvertouchApp extends StatelessWidget {
       ],
       child: DismissKeyboard(
         child: appBlocBuilder((appState) {
+          final statusBarColor =
+              pageColors[appState.theme]!.appBar.background.regular;
           final systemNavbarColor =
-              pageColors[appState.theme]!.bottomBar.background.regular;
+              pageColors[appState.theme]!.page.background.regular;
+          Brightness iconBrightness = appState.theme == ConvertouchUITheme.dark
+              ? Brightness.light
+              : Brightness.dark;
 
           SystemChrome.setSystemUIOverlayStyle(
             SystemUiOverlayStyle(
+              statusBarColor: statusBarColor,
+              statusBarIconBrightness: iconBrightness,
               systemNavigationBarColor: systemNavbarColor,
-              systemNavigationBarIconBrightness:
-                  appState.theme == ConvertouchUITheme.dark
-                      ? Brightness.light
-                      : Brightness.dark,
+              systemNavigationBarIconBrightness: iconBrightness,
+              systemNavigationBarDividerColor: systemNavbarColor,
             ),
           );
 
