@@ -24,6 +24,7 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
   const ConvertouchScaffold({super.key});
@@ -64,6 +65,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   }
 
   void initialization() async {
+    FlutterNativeSplash.remove();
     logger.d("Scaffold initialized");
   }
 
