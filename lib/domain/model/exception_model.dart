@@ -10,11 +10,13 @@ class ConvertouchException extends Equatable {
   final String message;
   final ExceptionSeverity severity;
   final StackTrace? stackTrace;
+  final DateTime dateTime;
 
   const ConvertouchException({
     required this.message,
     this.severity = ExceptionSeverity.error,
     required this.stackTrace,
+    required this.dateTime,
   });
 
   @override
@@ -22,6 +24,7 @@ class ConvertouchException extends Equatable {
     message,
     severity,
     stackTrace,
+    dateTime,
   ];
 
   bool get isError => severity == ExceptionSeverity.error;
@@ -43,6 +46,7 @@ class DatabaseException extends ConvertouchException {
     required super.message,
     super.severity,
     required super.stackTrace,
+    required super.dateTime,
   });
 }
 
@@ -51,6 +55,7 @@ class InternalException extends ConvertouchException {
     required super.message,
     super.severity,
     required super.stackTrace,
+    required super.dateTime,
   });
 }
 
@@ -59,5 +64,6 @@ class NetworkException extends ConvertouchException {
     required super.message,
     super.severity,
     required super.stackTrace,
+    required super.dateTime,
   });
 }

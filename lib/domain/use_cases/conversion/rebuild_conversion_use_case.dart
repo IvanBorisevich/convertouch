@@ -37,6 +37,7 @@ class RebuildConversionUseCase
         InternalException(
           message: "Error when rebuilding conversion after data refresh: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

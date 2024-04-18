@@ -69,6 +69,7 @@ class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
         InternalException(
           message: "Error when preparing draft unit details: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

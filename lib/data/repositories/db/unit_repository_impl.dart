@@ -33,6 +33,7 @@ class UnitRepositoryImpl extends UnitRepository {
           message: "Error when fetching units of the group with id = "
               "$unitGroupId: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -59,6 +60,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when searching units: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -74,6 +76,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when fetching unit by id = $id: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -95,6 +98,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when fetching units by ids = $ids: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -117,6 +121,7 @@ class UnitRepositoryImpl extends UnitRepository {
               "of the group = $unitGroupName "
               "by codes = $codes: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -135,6 +140,7 @@ class UnitRepositoryImpl extends UnitRepository {
           message: "Error when retrieving default base unit "
               "of the group with id = $unitGroupId: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -161,6 +167,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when adding a unit: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -176,6 +183,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when deleting units by ids = $unitIds: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -191,6 +199,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when updating the unit with id = ${unit.id}: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

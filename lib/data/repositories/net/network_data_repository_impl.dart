@@ -39,6 +39,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
         NetworkException(
           message: "Error when checking connectivity: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -106,6 +107,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
         NetworkException(
           message: "Error when refreshing data from network: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

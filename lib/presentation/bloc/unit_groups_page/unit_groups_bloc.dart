@@ -160,6 +160,7 @@ class UnitGroupsBloc
                   "already exists",
               severity: ExceptionSeverity.warning,
               stackTrace: null,
+              dateTime: DateTime.now(),
             ),
           ),
         );

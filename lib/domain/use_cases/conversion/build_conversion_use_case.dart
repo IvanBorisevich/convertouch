@@ -118,6 +118,7 @@ class BuildConversionUseCase
         InternalException(
           message: "Error when converting unit value: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

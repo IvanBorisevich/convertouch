@@ -23,6 +23,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when fetching unit groups: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -47,6 +48,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when searching unit groups: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -74,6 +76,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when adding a unit group: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -90,6 +93,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
           DatabaseException(
             message: "Unit group with id = $unitGroupId not found",
             stackTrace: null,
+            dateTime: DateTime.now(),
           ),
         );
       }
@@ -99,6 +103,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when searching a unit group by id = $unitGroupId: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -116,6 +121,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when deleting unit groups by ids = $unitGroupIds: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
@@ -133,6 +139,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         DatabaseException(
           message: "Error when updating unit group by id = ${unitGroup.id}: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

@@ -169,6 +169,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
               message: "Unit [${event.unitToBeSaved.name}] already exists",
               severity: ExceptionSeverity.warning,
               stackTrace: null,
+              dateTime: DateTime.now(),
             ),
           ),
         );

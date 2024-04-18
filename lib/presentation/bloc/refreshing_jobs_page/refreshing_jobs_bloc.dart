@@ -113,6 +113,7 @@ class RefreshingJobsBloc
             message: "Job '${job.name}' is running at the moment",
             severity: ExceptionSeverity.info,
             stackTrace: null,
+            dateTime: DateTime.now(),
           ),
         ),
       );

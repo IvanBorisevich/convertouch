@@ -32,11 +32,12 @@ class ExecuteJobUseCase
 
     try {
       if (input.job.selectedDataSource == null) {
-        return const Left(
+        return Left(
           InternalException(
             message: "No data source found for the job",
             severity: ExceptionSeverity.warning,
             stackTrace: null,
+            dateTime: DateTime.now(),
           ),
         );
       }
@@ -46,11 +47,12 @@ class ExecuteJobUseCase
       );
 
       if (!isConnectionAvailable) {
-        return const Left(
+        return Left(
           InternalException(
-            message: "Please check an internet connection",
+            message: "No internet connection",
             severity: ExceptionSeverity.warning,
             stackTrace: null,
+            dateTime: DateTime.now(),
           ),
         );
       }
@@ -115,6 +117,7 @@ class ExecuteJobUseCase
           message: "Error when starting the refreshing job "
               "'${input.job.name}': $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }

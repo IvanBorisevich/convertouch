@@ -83,7 +83,7 @@ void showSnackBar(
   BuildContext context, {
   required ConvertouchException exception,
   required ConvertouchUITheme theme,
-  int durationInSec = 2,
+  int durationInSec = 1,
 }) {
   SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
 

@@ -57,6 +57,7 @@ class PrepareSavedUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
         InternalException(
           message: "Error when preparing saved unit details: $e",
           stackTrace: stackTrace,
+          dateTime: DateTime.now(),
         ),
       );
     }
