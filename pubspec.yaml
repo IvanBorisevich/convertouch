@@ -54,7 +54,6 @@ dependencies:
   hydrated_bloc: ^7.1.0
   path_provider: ^2.1.2
   logger: ^2.0.2+1
-  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.7
 
 dev_dependencies:
@@ -73,6 +72,22 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+
+flutter_native_splash:
+  color: "#F7FAFF"
+  color_dark: "#363C48"
+  background_image: "assets/logo_splash_light_below_android_12.png"
+  background_image_dark: "assets/logo_splash_dark_below_android_12.png"
+
+  android_12:
+    color: "#F7FAFF"
+    color_dark: "#363C48"
+    icon_background_color: "#F7FAFF"
+    icon_background_color_dark: "#363C48"
+    image: "assets/logo_splash.png"
+
+
 
 # The following section is specific to Flutter packages.
 flutter:

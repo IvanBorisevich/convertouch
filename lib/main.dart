@@ -18,8 +18,10 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/scaffold.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
@@ -96,18 +98,25 @@ class ConvertouchApp extends StatelessWidget {
       ],
       child: DismissKeyboard(
         child: appBlocBuilder((appState) {
+          final systemNavbarColor =
+              pageColors[appState.theme]!.bottomBar.background.regular;
+
+          SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle(
+              systemNavigationBarColor: systemNavbarColor,
+              systemNavigationBarIconBrightness:
+                  appState.theme == ConvertouchUITheme.dark
+                      ? Brightness.light
+                      : Brightness.dark,
+            ),
+          );
+
           return MaterialApp(
             title: appName,
             debugShowCheckedModeBanner: false,
-            // theme: ThemeData.light().copyWith(
-            //   textTheme: Typography().black.apply(
-            //         fontFamily: quicksandFontFamily,
-            //       ),
-            // ),
-            darkTheme: ThemeData.dark(),
-            // themeMode: appState.theme == ConvertouchUITheme.dark
-            //     ? ThemeMode.dark
-            //     : ThemeMode.light,
+            theme: ThemeData(
+              fontFamily: quicksandFontFamily,
+            ),
             home: const ConvertouchScaffold(),
           );
         }),
