@@ -77,8 +77,7 @@ dev_dependencies:
 flutter_native_splash:
   color: "#F7FAFF"
   color_dark: "#363C48"
-  background_image: "assets/logo_splash_light_below_android_12.png"
-  background_image_dark: "assets/logo_splash_dark_below_android_12.png"
+  background_image: "assets/logo_splash.png"
 
   android_12:
     color: "#F7FAFF"

@@ -21,7 +21,7 @@ const pageColorSchemeLight = PageColorScheme(
     foregroundInfo: ColorVariation.only(Color(0xFFF2F8FF)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffa1bbf3)),
+    background: ColorVariation.only(Color(0xffbed2ff)),
     foreground: ColorVariation(
       regular: Color(0xFF38638A),
       disabled: Color(0xFFA0C4F5),
