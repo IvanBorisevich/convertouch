@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/checkbox.dart';
 import 'package:flutter/material.dart';
 
@@ -93,12 +94,9 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
         UnitGroupModel unitGroup = item as UnitGroupModel;
         itemLogo = IconButton(
           onPressed: null,
-          icon: ImageIcon(
-            AssetImage(
-              "$iconAssetsPathPrefix/${unitGroup.iconName}",
-            ),
+          icon: IconUtils.getUnitGroupIcon(
+            iconName: unitGroup.iconName,
             color: foregroundColor,
-            size: 25,
           ),
         );
         itemName = unitGroup.name;

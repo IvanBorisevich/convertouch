@@ -16,7 +16,7 @@ class UnitGroupTranslator
     return UnitGroupModel(
       id: entity.id!,
       name: entity.name,
-      iconName: entity.iconName ?? unitGroupDefaultIconName,
+      iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),
       refreshable: entity.refreshable == 1,
       oob: entity.oob == 1,
@@ -31,8 +31,7 @@ class UnitGroupTranslator
     return UnitGroupEntity(
       id: model.id,
       name: model.name,
-      iconName:
-          model.iconName != unitGroupDefaultIconName ? model.iconName : null,
+      iconName: model.iconName,
       conversionType:
           model.conversionType.value != 0 ? model.conversionType.value : null,
       refreshable: model.refreshable == true ? 1 : null,

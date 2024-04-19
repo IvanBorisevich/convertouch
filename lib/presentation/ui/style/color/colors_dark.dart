@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeDark = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF2B2F38)),
+    background: ColorVariation.only(Color(0xFF26292F)),
     foreground: ColorVariation(
       regular: Color(0xFFBDCDDA),
     ),

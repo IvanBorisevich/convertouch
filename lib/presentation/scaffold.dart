@@ -204,6 +204,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     },
                     currentIndex: selectedItem.index,
                     elevation: 0,
+                    selectedFontSize: 12,
                     backgroundColor:
                         pageColorScheme.bottomBar.background.regular,
                     unselectedItemColor:
