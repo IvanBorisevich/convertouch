@@ -123,7 +123,15 @@ class ConvertouchApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               fontFamily: quicksandFontFamily,
+              brightness: Brightness.light,
             ),
+            darkTheme: ThemeData(
+              fontFamily: quicksandFontFamily,
+              brightness: Brightness.dark,
+            ),
+            themeMode: appState.theme == ConvertouchUITheme.dark
+                ? ThemeMode.dark
+                : ThemeMode.light,
             home: const ConvertouchScaffold(),
           );
         }),

@@ -15,7 +15,7 @@ const pageColorSchemeLight = PageColorScheme(
     foreground: ColorVariation.only(Color(0xFF426F99)),
   ),
   snackBar: SnackBarColorScheme(
-    background: ColorVariation.only(Color(0xFF426F99)),
+    background: ColorVariation.only(Color(0xFF467FB2)),
     foregroundError: ColorVariation.only(Color(0xFFFFAAAA)),
     foregroundWarning: ColorVariation.only(Color(0xFFF1FFB0)),
     foregroundInfo: ColorVariation.only(Color(0xFFF2F8FF)),
