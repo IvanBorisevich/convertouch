@@ -22,7 +22,7 @@ class IconUtils {
         "$iconAssetsPathPrefix/$iconName",
       ),
       color: color,
-      size: defaultIconSize,
+      size: size,
     );
   }
 

@@ -40,16 +40,17 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
-  static const _navBarIcons = {
-    BottomNavbarItem.home: Icons.home_outlined,
-    BottomNavbarItem.unitsEditor: Icons.dashboard_customize_outlined,
-    BottomNavbarItem.settings: Icons.settings_outlined,
+  static final _navBarIcons = {
+    BottomNavbarItem.home: const Icon(Icons.home_outlined),
+    BottomNavbarItem.unitsEditor:
+        const Icon(Icons.dashboard_customize_outlined),
+    BottomNavbarItem.settings: const Icon(Icons.settings_outlined),
   };
 
-  static const _navBarIconsSelected = {
-    BottomNavbarItem.home: Icons.home_rounded,
-    BottomNavbarItem.unitsEditor: Icons.dashboard_customize_rounded,
-    BottomNavbarItem.settings: Icons.settings_rounded,
+  static final _navBarIconsSelected = {
+    BottomNavbarItem.home: const Icon(Icons.home_rounded),
+    BottomNavbarItem.unitsEditor: const Icon(Icons.dashboard_customize_rounded),
+    BottomNavbarItem.settings: const Icon(Icons.settings_rounded),
   };
 
   static const _navBarLabels = {
@@ -227,11 +228,9 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     required BottomNavbarItem selectedItem,
   }) {
     return BottomNavigationBarItem(
-      icon: Icon(
-        bottomNavbarItem == selectedItem
-            ? _navBarIconsSelected[bottomNavbarItem]
-            : _navBarIcons[bottomNavbarItem],
-      ),
+      icon: bottomNavbarItem == selectedItem
+          ? _navBarIconsSelected[bottomNavbarItem]!
+          : _navBarIcons[bottomNavbarItem]!,
       label: _navBarLabels[bottomNavbarItem],
     );
   }

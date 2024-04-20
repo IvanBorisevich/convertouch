@@ -18,6 +18,7 @@ const unitDataVersions = [
 const unitsV1 = [
   {
     "groupName": "Length",
+    "iconName": "length-group.png",
     "units": [
       {"code": "mm", "name": "Millimeter", "coefficient": 0.001},
       {"code": "cm", "name": "Centimeter", "coefficient": 0.01},
@@ -34,6 +35,7 @@ const unitsV1 = [
   },
   {
     "groupName": "Area",
+    "iconName": "area-group.png",
     "units": [
       {"code": "mm²", "name": "Square Millimeter", "coefficient": 1E-6},
       {"code": "cm²", "name": "Square Centimeter", "coefficient": 1E-4},
@@ -43,6 +45,7 @@ const unitsV1 = [
   },
   {
     "groupName": "Volume",
+    "iconName": "volume-group.png",
     "units": [
       {"code": "mm³", "name": "Cubic Millimeter", "coefficient": 1E-9},
       {"code": "cm", "name": "Cubic Centimeter", "coefficient": 1E-6},
@@ -54,6 +57,7 @@ const unitsV1 = [
   },
   {
     "groupName": "Mass",
+    "iconName": "mass-group.png",
     "units": [
       {"code": "g", "name": "Gram", "coefficient": 0.001},
       {"code": "kg", "name": "Kilogram", "coefficient": 1},
@@ -65,6 +69,7 @@ const unitsV1 = [
   },
   {
     "groupName": temperatureGroup,
+    "iconName": "temperature-group.png",
     "conversionType": ConversionType.formula,
     "units": [
       {"code": degreeCelsiusCode, "name": "Degree Celsius"},
@@ -79,6 +84,7 @@ const unitsV1 = [
   },
   {
     "groupName": currencyGroup,
+    "iconName": "currency-group.png",
     "conversionType": ConversionType.dynamic,
     "refreshable": true,
     "units": [
@@ -921,6 +927,7 @@ const unitsV1 = [
   },
   {
     "groupName": "Pressure",
+    "iconName": "pressure-group.png",
     "units": [
       {"code": "Pa", "name": "pascal", "coefficient": 1},
       {"code": "bar", "name": "bar", "coefficient": 100000},
@@ -931,6 +938,43 @@ const unitsV1 = [
       {"code": "psi", "name": "pound per square inch", "coefficient": 6894.757},
       {"code": "Ba", "name": "barye", "coefficient": 0.1},
       {"code": "pz", "name": "pièze", "coefficient": 1000},
+    ]
+  },
+  {
+    "groupName": "Speed",
+    "iconName": "speed-group.png",
+    "units": [
+      {"code": "m/s", "name": "meter per second", "coefficient": 1},
+      {"code": "m/h", "name": "meter per hour", "coefficient": 0.0002778},
+      {"code": "km/s", "name": "kilometer per second", "coefficient": 1000},
+      {"code": "km/h", "name": "kilometer per hour", "coefficient": 0.2778},
+      {"code": "ft/s", "name": "foot per second", "coefficient": 0.3048},
+      {"code": "ft/h", "name": "foot per hour", "coefficient": 0.00008467},
+      {"code": "mi/s", "name": "mile per second", "coefficient": 1609.344},
+      {"code": "mi/h", "name": "mile per hour", "coefficient": 0.44704},
+      {"code": "kn", "name": "knot", "coefficient": 0.514444},
+      {"code": "kt", "name": "knot (UK)", "coefficient": 0.514773},
+      {
+        "code": "V₁E",
+        "name": "1st cosmic velocity (Earth)",
+        "coefficient": 7910
+      },
+      {
+        "code": "V₂E",
+        "name": "2nd cosmic velocity (Earth)",
+        "coefficient": 11186
+      },
+      {
+        "code": "V₃E",
+        "name": "3rd cosmic velocity (Earth)",
+        "coefficient": 16670
+      },
+      {
+        "code": "c",
+        "name": "speed of light (vacuum)",
+        "coefficient": 299792458,
+      },
+      {"code": "M", "name": "speed of sound (Mach)", "coefficient": 340.29},
     ]
   },
 ];
