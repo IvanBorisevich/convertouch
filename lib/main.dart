@@ -42,6 +42,7 @@ void main() async {
   logger.d("Before dependencies initialization");
   await di.init();
   logger.d("Dependencies initialization finished");
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ConvertouchApp());
 }
 
