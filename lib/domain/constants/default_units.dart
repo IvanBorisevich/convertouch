@@ -977,4 +977,49 @@ const unitsV1 = [
       {"code": "M", "name": "speed of sound (Mach)", "coefficient": 340.29},
     ]
   },
+  {
+    "groupName": "Angle",
+    "iconName": "angle-group.png",
+    "units": [
+      {"code": "deg", "name": "degree", "coefficient": 1, "symbol": "°"},
+      {"code": "rad", "name": "radian", "coefficient": 57.2958},
+      {
+        "code": "grad",
+        "name": "gradian, gon",
+        "coefficient": 0.9,
+      },
+      {
+        "code": "arcmin",
+        "name": "arcminute",
+        "coefficient": 1 / 60,
+        "symbol": "′",
+      },
+      {
+        "code": "arcsec",
+        "name": "arcsecond",
+        "coefficient": 1 / 3600,
+        "symbol": "″",
+      },
+      {
+        "code": "tr",
+        "name": "turn",
+        "coefficient": 360,
+      },
+      {
+        "code": "oct",
+        "name": "octant",
+        "coefficient": 45,
+      },
+      {
+        "code": "sxt",
+        "name": "sextant",
+        "coefficient": 60,
+      },
+      {
+        "code": "qnt",
+        "name": "quintant",
+        "coefficient": 72,
+      },
+    ]
+  },
 ];
