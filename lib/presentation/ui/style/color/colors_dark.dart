@@ -167,17 +167,17 @@ const unitsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
 
 const conversionPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
   background: ColorVariation.only(Color(0xA83D6C98)),
-  foreground: ColorVariation.only(Color(0xFF9DC0E0)),
+  foreground: ColorVariation.only(Color(0xFFDEE0FF)),
 );
 
 const refreshButtonColorSchemeDark = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xC85858B6),
+    regular: Color(0xC821677C),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFFDEE0FF),
+    regular: Color(0xC8BFEFFF),
   ),
-  background: ColorVariation.only(Color(0xC85858B6)),
+  background: ColorVariation.only(Color(0xC821677C)),
 );
 
 const removalFloatingButtonColorDark = ConvertouchColorScheme(

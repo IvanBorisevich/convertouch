@@ -160,13 +160,13 @@ const conversionPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
 
 const refreshButtonColorSchemeLight = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xC83A3A67),
+    regular: Color(0xC82095B7),
   ),
   foreground: ColorVariation(
     regular: Color(0xFFE8E8FF),
-    selected: Color(0xC83A3A67),
+    selected: Color(0xC82095B7),
   ),
-  background: ColorVariation.only(Color(0xC83A3A67)),
+  background: ColorVariation.only(Color(0xC82095B7)),
 );
 
 const removalFloatingButtonColorLight = ConvertouchColorScheme(
