@@ -35,7 +35,7 @@ class RebuildConversionUseCase
     } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when rebuilding conversion after data refresh: $e",
+          message: "Error when rebuilding conversion after data refresh",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

@@ -21,7 +21,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching unit groups: $e",
+          message: "Error when fetching unit groups",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -46,7 +46,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when searching unit groups: $e",
+          message: "Error when searching unit groups",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -55,7 +55,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, UnitGroupModel?>> add(
+  Future<Either<ConvertouchException, UnitGroupModel>> add(
       UnitGroupModel unitGroup) async {
     try {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
@@ -69,12 +69,19 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
           ),
         );
       } else {
-        return const Right(null);
+        return Left(
+          DatabaseException(
+            message: "Unit group '${existingGroup.name}' already exists",
+            stackTrace: null,
+            dateTime: DateTime.now(),
+            severity: ExceptionSeverity.info,
+          ),
+        );
       }
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when adding a unit group: $e",
+          message: "Error when adding a unit group",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -101,7 +108,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when searching a unit group by id = $unitGroupId: $e",
+          message: "Error when searching a unit group by id",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -119,7 +126,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when deleting unit groups by ids = $unitGroupIds: $e",
+          message: "Error when deleting unit groups by ids",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -137,7 +144,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when updating unit group by id = ${unitGroup.id}: $e",
+          message: "Error when updating unit group by id",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

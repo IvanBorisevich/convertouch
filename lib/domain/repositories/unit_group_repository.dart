@@ -11,7 +11,7 @@ abstract class UnitGroupRepository {
     String searchString,
   );
 
-  Future<Either<ConvertouchException, UnitGroupModel?>> add(
+  Future<Either<ConvertouchException, UnitGroupModel>> add(
     UnitGroupModel unitGroup,
   );
 

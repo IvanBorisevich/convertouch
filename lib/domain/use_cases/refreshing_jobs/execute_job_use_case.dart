@@ -115,7 +115,7 @@ class ExecuteJobUseCase
       return Left(
         InternalException(
           message: "Error when starting the refreshing job "
-              "'${input.job.name}': $e",
+              "'${input.job.name}'",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -141,7 +141,7 @@ class ExecuteJobUseCase
             }
           });
         } catch (e) {
-          log("Closing the stream when error during job execution: $e");
+          log("Closing the stream when error during job execution");
           await jobProgressController.close();
         }
       },

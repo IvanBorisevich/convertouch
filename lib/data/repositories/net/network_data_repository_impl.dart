@@ -37,7 +37,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
     } catch (e, stackTrace) {
       return Left(
         NetworkException(
-          message: "Error when checking connectivity: $e",
+          message: "Error when checking connectivity",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -105,7 +105,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
     } catch (e, stackTrace) {
       return Left(
         NetworkException(
-          message: "Error when refreshing data from network: $e",
+          message: "Error when refreshing data from network",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

@@ -102,18 +102,6 @@ class ConversionBloc
         ShowException(exception: conversionResult.left),
       );
     } else {
-      // if (event.runtimeType != RebuildConversionOnValueChange &&
-      //     conversionResult.right.emptyConversionItemsExist) {
-      //   navigationBloc.add(
-      //     const ShowException(
-      //       exception: ConvertouchException(
-      //         message: "Some dynamic values are empty. Please refresh them",
-      //         severity: ExceptionSeverity.warning,
-      //       ),
-      //     ),
-      //   );
-      // }
-
       emit(
         ConversionBuilt(
           conversion: conversionResult.right,

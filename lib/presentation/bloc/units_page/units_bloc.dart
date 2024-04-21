@@ -1,7 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
@@ -147,33 +145,16 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
 
     if (saveUnitResult.isLeft) {
       navigationBloc.add(
-        ShowException(
-          exception: saveUnitResult.left,
-        ),
+        ShowException(exception: saveUnitResult.left),
       );
     } else {
-      UnitModel? savedUnit = saveUnitResult.right;
-
-      if (savedUnit != null) {
-        add(
-          FetchUnitsAfterUnitSaving(
-            unitGroup: event.unitGroup,
-            modifiedUnit: event.unitToBeSaved,
-            rebuildConversion: event.conversionGroupId == event.prevUnitGroupId,
-          ),
-        );
-      } else {
-        navigationBloc.add(
-          ShowException(
-            exception: ConvertouchException(
-              message: "Unit [${event.unitToBeSaved.name}] already exists",
-              severity: ExceptionSeverity.warning,
-              stackTrace: null,
-              dateTime: DateTime.now(),
-            ),
-          ),
-        );
-      }
+      add(
+        FetchUnitsAfterUnitSaving(
+          unitGroup: event.unitGroup,
+          modifiedUnit: saveUnitResult.right,
+          rebuildConversion: event.conversionGroupId == event.prevUnitGroupId,
+        ),
+      );
     }
   }
 

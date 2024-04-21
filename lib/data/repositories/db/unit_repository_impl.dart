@@ -31,7 +31,7 @@ class UnitRepositoryImpl extends UnitRepository {
       return Left(
         DatabaseException(
           message: "Error when fetching units of the group with id = "
-              "$unitGroupId: $e",
+              "$unitGroupId",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -58,7 +58,7 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when searching units: $e",
+          message: "Error when searching units",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -74,7 +74,7 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching unit by id = $id: $e",
+          message: "Error when fetching unit by id",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -96,7 +96,7 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching units by ids = $ids: $e",
+          message: "Error when fetching units by ids",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -119,7 +119,7 @@ class UnitRepositoryImpl extends UnitRepository {
         DatabaseException(
           message: "Error when fetching units "
               "of the group = $unitGroupName "
-              "by codes = $codes: $e",
+              "by codes = $codes",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -138,7 +138,7 @@ class UnitRepositoryImpl extends UnitRepository {
       return Left(
         DatabaseException(
           message: "Error when retrieving default base unit "
-              "of the group with id = $unitGroupId: $e",
+              "of the group with id = $unitGroupId",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -147,9 +147,9 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, UnitModel?>> add(UnitModel unit) async {
+  Future<Either<ConvertouchException, UnitModel>> add(UnitModel unit) async {
     try {
-      final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.name);
+      final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.code);
       if (existingUnit == null) {
         int addedUnitId =
             await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
@@ -160,12 +160,23 @@ class UnitRepositoryImpl extends UnitRepository {
           ),
         );
       } else {
-        return const Right(null);
+        String unitCode = existingUnit.code;
+        String unitName = existingUnit.name;
+
+        return Left(
+          DatabaseException(
+            message: "Unit with the code '$unitCode' ($unitName) "
+                "already exists",
+            stackTrace: null,
+            dateTime: DateTime.now(),
+            severity: ExceptionSeverity.info,
+          ),
+        );
       }
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when adding a unit: $e",
+          message: "Error when adding a unit",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -181,7 +192,7 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when deleting units by ids = $unitIds: $e",
+          message: "Error when deleting units by ids = $unitIds",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -197,7 +208,7 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when updating the unit with id = ${unit.id}: $e",
+          message: "Error when updating the unit with id = ${unit.id}",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

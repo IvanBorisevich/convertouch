@@ -37,6 +37,7 @@ class ConvertouchException extends Equatable {
   String toString() {
     return 'ConvertouchException{'
         'message: $message, '
+        'stackTrace: $stackTrace, '
         'severity: $severity}';
   }
 }

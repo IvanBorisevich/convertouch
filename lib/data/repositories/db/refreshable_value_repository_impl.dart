@@ -29,8 +29,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching a refreshable value by unit "
-              "with id = $unitId: $e",
+          message: "Error when fetching a refreshable value by unit with id",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -52,7 +51,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when getting unit values: $e",
+          message: "Error when getting unit values",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -90,7 +89,7 @@ class RefreshableValueRepositoryImpl extends RefreshableValueRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when batch-updating unit values: $e",
+          message: "Error when batch-updating unit values",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

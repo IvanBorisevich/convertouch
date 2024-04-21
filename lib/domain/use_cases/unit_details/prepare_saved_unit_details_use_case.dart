@@ -55,7 +55,7 @@ class PrepareSavedUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
     } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when preparing saved unit details: $e",
+          message: "Error when preparing saved unit details",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

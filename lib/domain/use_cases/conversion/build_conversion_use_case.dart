@@ -116,7 +116,7 @@ class BuildConversionUseCase
     } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when converting unit value: $e",
+          message: "Error when converting unit value",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

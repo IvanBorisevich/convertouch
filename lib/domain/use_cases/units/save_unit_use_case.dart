@@ -4,13 +4,13 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class SaveUnitUseCase extends UseCase<UnitModel, UnitModel?> {
+class SaveUnitUseCase extends UseCase<UnitModel, UnitModel> {
   final UnitRepository unitRepository;
 
   const SaveUnitUseCase(this.unitRepository);
 
   @override
-  Future<Either<ConvertouchException, UnitModel?>> execute(
+  Future<Either<ConvertouchException, UnitModel>> execute(
     UnitModel input,
   ) async {
     if (input.id == null) {
