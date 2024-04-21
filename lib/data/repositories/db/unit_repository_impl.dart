@@ -176,7 +176,8 @@ class UnitRepositoryImpl extends UnitRepository {
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when adding a unit",
+          message: "Error when adding a unit: code [${unit.code}], "
+              "name [${unit.name}]",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
