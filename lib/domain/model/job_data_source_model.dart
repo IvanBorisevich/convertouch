@@ -15,20 +15,20 @@ class JobDataSourceModel extends IdNameItemModel {
 
   @override
   List<Object?> get props => [
-    name,
-    url,
-    responseTransformerClassName,
-    itemType,
-  ];
+        name,
+        url,
+        responseTransformerClassName,
+        itemType,
+      ];
 
   static JobDataSourceModel? fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return null;
     }
     return JobDataSourceModel(
-        name: json["name"],
-        url: json["url"],
-        responseTransformerClassName: json["responseTransformerClassName"],
+      name: json["name"],
+      url: json["url"],
+      responseTransformerClassName: json["responseTransformerClassName"],
     );
   }
 
@@ -43,6 +43,7 @@ class JobDataSourceModel extends IdNameItemModel {
   @override
   String toString() {
     return 'JobDataSourceModel{'
+        'name: $name, '
         'url: $url, '
         'responseTransformerClassName: $responseTransformerClassName';
   }

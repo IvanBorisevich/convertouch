@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/refreshable_value_dao.dart';
@@ -61,6 +63,8 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
             dataSource.responseTransformerClassName,
           ).transform(responseStr);
 
+          log("Currency rates map: $codeToCoefficient");
+
           List<UnitEntity> units = await unitDao.updateUnitsCoefficients(
             database,
             unitGroupName,
@@ -103,6 +107,7 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
           );
       }
     } catch (e, stackTrace) {
+      log("Error when refreshing data from network: $e, $stackTrace");
       return Left(
         NetworkException(
           message: "Error when refreshing data from network",

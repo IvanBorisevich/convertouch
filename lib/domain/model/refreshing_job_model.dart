@@ -92,7 +92,6 @@ class RefreshingJobModel extends IdNameItemModel {
       selectedCron: Cron.valueOf(json["selectedCron"]),
       selectedDataSource: dataSourceMap[json["selectedDataSource"]],
       lastRefreshTime: json["lastRefreshTime"],
-
     );
   }
 
@@ -113,6 +112,8 @@ class RefreshingJobModel extends IdNameItemModel {
     return 'RefreshingJobModel{'
         'name: $name, '
         'selectedCron: $selectedCron, '
+        'dataSources: $dataSources, '
+        'selectedDataSource: $selectedDataSource, '
         'lastRefreshTime: $lastRefreshTime, '
         'progressController: $progressController}';
   }

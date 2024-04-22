@@ -36,6 +36,7 @@ class RefreshingJobsBloc
 
     if (state is RefreshingJobsFetched) {
       refreshingJobs = (state as RefreshingJobsFetched).jobs;
+      log("Retrieved jobs from last state: $refreshingJobs");
     }
 
     if (refreshingJobs.isEmpty) {
@@ -106,7 +107,7 @@ class RefreshingJobsBloc
 
     RefreshingJobModel job = refreshingJobs[event.unitGroupName]!;
 
-    if (job.progressController != null) {
+    if (job.progressController != null && !job.progressController!.isClosed) {
       navigationBloc.add(
         ShowException(
           exception: ConvertouchException(

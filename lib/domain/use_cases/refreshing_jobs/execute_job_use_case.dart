@@ -112,6 +112,9 @@ class ExecuteJobUseCase
       log("Closing the stream from use case");
       jobProgressController?.close();
 
+      log("Error when starting the refreshing job '${input.job.name}': "
+          "$e, $stackTrace");
+
       return Left(
         InternalException(
           message: "Error when starting the refreshing job "
