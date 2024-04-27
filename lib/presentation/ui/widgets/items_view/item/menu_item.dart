@@ -305,6 +305,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
           color: borderColor,
         ),
       ),
+      padding: const EdgeInsets.only(bottom: 5),
       child: Column(
         children: [
           Flexible(
@@ -342,7 +343,12 @@ class ConvertouchMenuGridItem extends StatelessWidget {
           Flexible(
             flex: 3,
             child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
+              padding: const EdgeInsets.only(
+                left: 5,
+                top: 0,
+                right: 5,
+                bottom: 0,
+              ),
               child: Text(
                 itemName,
                 style: TextStyle(
