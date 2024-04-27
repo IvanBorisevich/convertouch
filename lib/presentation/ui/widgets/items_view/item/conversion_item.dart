@@ -55,7 +55,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     var itemColor = widget.customColors ?? conversionItemColors[widget.theme]!;
     var unitButtonColor = itemColor.unitButton;
 
-    if (_isFocused) {
+    if (_isFocused && !widget.disabled) {
       _unitValueController.text = widget.item.value.strValue;
     } else {
       _unitValueController.text = widget.item.value.scientificValue;
@@ -74,7 +74,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               controller: _unitValueController,
               disabled: widget.disabled,
               label: widget.item.unit.name,
-              hintText: _isFocused
+              hintText: _isFocused && !widget.disabled
                   ? widget.item.defaultValue.strValue
                   : widget.item.defaultValue.scientificValue,
               inputType: widget.valueType,
@@ -108,14 +108,14 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    _isFocused
+                    _isFocused && !widget.disabled
                         ? unitButtonColor.background.focused
                         : unitButtonColor.background.regular,
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       side: BorderSide(
-                        color: _isFocused
+                        color: _isFocused && !widget.disabled
                             ? unitButtonColor.border.focused
                             : unitButtonColor.border.regular,
                         width: 1,
@@ -128,7 +128,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 child: Text(
                   widget.item.unit.code,
                   style: TextStyle(
-                    color: _isFocused
+                    color: _isFocused && !widget.disabled
                         ? unitButtonColor.foreground.focused
                         : unitButtonColor.foreground.regular,
                     fontSize: 15,

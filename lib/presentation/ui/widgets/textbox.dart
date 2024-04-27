@@ -111,6 +111,10 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   }
 
   void _focusListener() {
+    if (widget.disabled) {
+      return;
+    }
+
     if (_focusNode.hasFocus) {
       widget.onFocusSelected?.call();
     } else {
