@@ -63,8 +63,6 @@ class NetworkDataRepositoryImpl extends NetworkDataRepository {
             dataSource.responseTransformerClassName,
           ).transform(responseStr);
 
-          log("Currency rates map: $codeToCoefficient");
-
           List<UnitEntity> units = await unitDao.updateUnitsCoefficients(
             database,
             unitGroupName,

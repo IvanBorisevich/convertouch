@@ -36,7 +36,6 @@ class RefreshingJobsBloc
 
     if (state is RefreshingJobsFetched) {
       refreshingJobs = (state as RefreshingJobsFetched).jobs;
-      log("Retrieved jobs from last state: $refreshingJobs");
     }
 
     if (refreshingJobs.isEmpty) {

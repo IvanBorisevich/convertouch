@@ -36,7 +36,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                   ),
                 );
               },
-              icon: Icons.refresh_rounded,
+              assetIconName: "currency-rates-refresh.png",
               colorScheme: refreshButtonColor,
             ),
             radius: 28,
