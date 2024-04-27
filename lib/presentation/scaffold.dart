@@ -199,7 +199,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     onTap: (index) {
                       BlocProvider.of<NavigationBloc>(context).add(
                         SelectBottomNavbarItem(
-                          bottomNavbarItem: BottomNavbarItem.values[index],
+                          targetItem: BottomNavbarItem.values[index],
+                          selectedItem: selectedItem,
                         ),
                       );
                     },

@@ -30,16 +30,20 @@ class NavigationBloc
         prev.openedNavbarItems.isNotEmpty ? prev.openedNavbarItems : [];
     bool isBottomNavbarOpenedFirstTime = false;
 
-    if (!openedNavbarItems.contains(event.bottomNavbarItem)) {
+    if (!openedNavbarItems.contains(event.targetItem)) {
       isBottomNavbarOpenedFirstTime = true;
-      openedNavbarItems.add(event.bottomNavbarItem);
+      openedNavbarItems.add(event.targetItem);
     }
     emit(
       NavigationDone(
-        bottomNavbarItem: event.bottomNavbarItem,
-        index: event.bottomNavbarItem.index,
+        bottomNavbarItem: event.targetItem,
+        index: event.targetItem.index,
         openedNavbarItems: openedNavbarItems,
         isBottomNavbarOpenedFirstTime: isBottomNavbarOpenedFirstTime,
+        navigateBack: event.targetItem == BottomNavbarItem.home &&
+            event.selectedItem == BottomNavbarItem.home,
+        navigateBackToRoot: event.targetItem == BottomNavbarItem.home &&
+            event.selectedItem == BottomNavbarItem.home,
       ),
     );
   }

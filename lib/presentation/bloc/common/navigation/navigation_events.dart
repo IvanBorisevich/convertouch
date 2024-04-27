@@ -7,21 +7,25 @@ abstract class NavigationEvent extends ConvertouchEvent {
 }
 
 class SelectBottomNavbarItem extends NavigationEvent {
-  final BottomNavbarItem bottomNavbarItem;
+  final BottomNavbarItem targetItem;
+  final BottomNavbarItem selectedItem;
 
   const SelectBottomNavbarItem({
-    required this.bottomNavbarItem,
+    required this.targetItem,
+    required this.selectedItem,
   });
 
   @override
   List<Object?> get props => [
-    bottomNavbarItem,
+    targetItem,
+    selectedItem,
   ];
 
   @override
   String toString() {
     return 'SelectBottomNavbarItem{'
-        'bottomNavbarItem: $bottomNavbarItem}';
+        'targetItem: $targetItem, '
+        'selectedItem: $selectedItem}';
   }
 }
 
