@@ -1,12 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
-import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_numeric_map.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-
-const Map<KeyboardType, List<List<KeyboardButton>>> keyboardMaps = {
-  KeyboardType.numeric: numericKeyboardMap,
-};
 
 class ConvertouchKeyboard extends StatelessWidget
     with KeyboardCustomPanelMixin<String?>
@@ -14,15 +9,15 @@ class ConvertouchKeyboard extends StatelessWidget
   static const double _keysPadding = 5;
   static const double _kKeyboardHeight = 230;
 
-  final KeyboardType keyboardType;
-  final RegExp? inputFormatter;
+  final InputType inputType;
+  final RegExp? inputRegExp;
   @override
   final ValueNotifier<String?> notifier;
   final void Function()? onDoneClick;
 
   const ConvertouchKeyboard({
-    required this.keyboardType,
-    this.inputFormatter,
+    required this.inputType,
+    this.inputRegExp,
     required this.notifier,
     this.onDoneClick,
     super.key,
@@ -33,7 +28,7 @@ class ConvertouchKeyboard extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    List<List<KeyboardButton>> keyboardMap = keyboardMaps[keyboardType]!;
+    List<List<KeyboardButton>> keyboardMap = keyboardMaps[inputType]!;
 
     double keyboardWidth = MediaQuery.of(context).size.width;
     int rowsNum = keyboardMap.length;
@@ -119,11 +114,11 @@ class ConvertouchKeyboard extends StatelessWidget
                 }
               }
 
-              bool matchesFormatter = inputFormatter != null &&
-                      inputFormatter!.hasMatch(newValue) ||
-                  inputFormatter == null;
+              bool matchesRegExp =
+                  inputRegExp != null && inputRegExp!.hasMatch(newValue) ||
+                      inputRegExp == null;
 
-              if (newValue.isEmpty || matchesFormatter) {
+              if (newValue.isEmpty || matchesRegExp) {
                 updateValue(newValue);
               }
             },

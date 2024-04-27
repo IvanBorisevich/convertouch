@@ -1,5 +1,5 @@
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_numeric_map.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class KeyboardButton {
   final String key;
@@ -20,22 +20,48 @@ class KeyboardButton {
   }
 }
 
-enum KeyboardType {
+enum InputType {
   text,
-  numeric,
-  numericHexadecimal,
+  integer,
+  integerPositive,
+  decimal,
+  decimalPositive,
+  hexadecimal,
 }
-
-final RegExp customDecimalNegativeNumbersFormatter =
-    RegExp(r'(^-$)|(^-?\d+\.?\d*$)');
-
-final TextInputFormatter decimalNegativeNumbersFormatter =
-    FilteringTextInputFormatter.allow(RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'));
-
-const decimalNegativeNumbersType = TextInputType.numberWithOptions(
-  signed: true,
-  decimal: true,
-);
 
 const String backspaceKey = "backspace";
 const String okKey = "OK";
+
+const Map<InputType, TextInputType> inputTypeToKeyboardTypeMap = {
+  InputType.text: TextInputType.text,
+  InputType.integer: TextInputType.numberWithOptions(
+    signed: true,
+    decimal: false,
+  ),
+  InputType.integerPositive: TextInputType.numberWithOptions(
+    signed: false,
+    decimal: false,
+  ),
+  InputType.decimal: TextInputType.numberWithOptions(
+    signed: true,
+    decimal: true,
+  ),
+  InputType.decimalPositive: TextInputType.numberWithOptions(
+    signed: false,
+    decimal: true,
+  ),
+  InputType.hexadecimal: TextInputType.text,
+};
+
+const Map<InputType, List<List<KeyboardButton>>> keyboardMaps = {
+  InputType.decimal: decimalSignedKeyboardMap,
+};
+
+final Map<InputType, RegExp> inputTypeToRegExpMap = {
+  InputType.text: RegExp(r'(^[a-zA-Z\d ]+$)'),
+  InputType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
+  InputType.integerPositive: RegExp(r'(^\d+$)'),
+  InputType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
+  InputType.decimalPositive: RegExp(r'(^\d+\.?\d*$)'),
+  InputType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
+};

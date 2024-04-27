@@ -1,7 +1,7 @@
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
 
-const numericKeyboardMap = [
+const decimalSignedKeyboardMap = [
   [
     KeyboardButton(key: '1'),
     KeyboardButton(key: '2'),

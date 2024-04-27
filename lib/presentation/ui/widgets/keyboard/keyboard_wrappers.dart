@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
 class KeyboardActionsWrapper extends StatelessWidget {
-  final KeyboardType keyboardType;
-  final RegExp? inputFormatter;
+  final InputType inputType;
   final FocusNode focusNode;
   final TextEditingController controller;
   final ValueNotifier<String?> notifier;
   final Widget child;
 
   const KeyboardActionsWrapper({
-    required this.keyboardType,
-    this.inputFormatter,
+    required this.inputType,
     required this.focusNode,
     required this.controller,
     required this.notifier,
@@ -36,9 +34,9 @@ class KeyboardActionsWrapper extends StatelessWidget {
             displayActionBar: false,
             displayDoneButton: false,
             footerBuilder: (_) => ConvertouchKeyboard(
-              keyboardType: keyboardType,
+              inputType: inputType,
               notifier: notifier,
-              inputFormatter: inputFormatter,
+              inputRegExp: inputTypeToRegExpMap[inputType],
               onDoneClick: () {
                 focusNode.unfocus();
               },

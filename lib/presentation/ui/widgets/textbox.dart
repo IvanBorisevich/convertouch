@@ -11,9 +11,8 @@ class ConvertouchTextBox extends StatefulWidget {
   final String? text;
   final FocusNode? focusNode;
   final ValueNotifier<String?>? notifier;
+  final InputType inputType;
   final bool useCustomKeyboard;
-  final KeyboardType customKeyboardType;
-  final RegExp? customInputFormatter;
   final double height;
   final String label;
   final bool autofocus;
@@ -25,8 +24,6 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool textLengthCounterVisible;
   final String? hintText;
   final double borderRadius;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextInputType? textInputType;
   final ConvertouchUITheme theme;
   final TextBoxColorScheme? customColor;
 
@@ -36,8 +33,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.focusNode,
     this.notifier,
     this.useCustomKeyboard = false,
-    this.customKeyboardType = KeyboardType.numeric,
-    this.customInputFormatter,
+    this.inputType = InputType.text,
     this.height = 70,
     this.label = "",
     this.autofocus = false,
@@ -49,8 +45,6 @@ class ConvertouchTextBox extends StatefulWidget {
     this.textLengthCounterVisible = false,
     this.hintText,
     this.borderRadius = 8,
-    this.inputFormatters,
-    this.textInputType,
     required this.theme,
     this.customColor,
     super.key,
@@ -163,14 +157,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             return Container(
               padding: const EdgeInsetsDirectional.fromSTEB(7, 5, 7, 0),
               child: KeyboardActionsWrapper(
-                keyboardType: widget.customKeyboardType,
-                inputFormatter: widget.customInputFormatter,
+                inputType: widget.inputType,
                 controller: _controller,
                 focusNode: _focusNode,
                 notifier: _notifier!,
                 child: _textBox(
                   needToSetFocusNode: false,
-                  textInputType: TextInputType.none,
+                  inputType: widget.inputType,
                   borderColor: borderColor,
                   foregroundColor: foregroundColor,
                   hintColor: hintColor,
@@ -179,7 +172,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             );
           } else {
             return _textBox(
-              textInputType: widget.textInputType,
+              inputType: widget.inputType,
               onChanged: widget.onChanged,
               borderColor: borderColor,
               foregroundColor: foregroundColor,
@@ -193,21 +186,25 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   Widget _textBox({
     bool needToSetFocusNode = true,
-    TextInputType? textInputType,
+    required InputType inputType,
     required Color borderColor,
     required Color foregroundColor,
     required Color hintColor,
     void Function(String)? onChanged,
   }) {
+    RegExp? inputRegExp = inputTypeToRegExpMap[inputType];
+
     return TextField(
       readOnly: widget.disabled,
       maxLength: widget.maxTextLength,
       obscureText: false,
-      keyboardType: textInputType,
+      keyboardType: inputTypeToKeyboardTypeMap[inputType],
       autofocus: widget.autofocus,
       focusNode: needToSetFocusNode ? _focusNode : null,
       controller: _controller,
-      inputFormatters: widget.inputFormatters,
+      inputFormatters: inputRegExp != null
+          ? [FilteringTextInputFormatter.allow(inputRegExp)]
+          : null,
       onChanged: (newValue) {
         onChanged?.call(newValue);
         setState(() {

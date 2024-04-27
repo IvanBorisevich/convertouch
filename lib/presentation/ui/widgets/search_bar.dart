@@ -2,7 +2,9 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
   final String placeholder;
@@ -62,6 +64,11 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         obscureText: false,
         controller: _searchFieldController,
         onChanged: widget.onSearchStringChanged,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            inputTypeToRegExpMap[InputType.text]!,
+          ),
+        ],
         decoration: InputDecoration(
           suffixIcon: _searchFieldController.text.isEmpty
               ? Icon(

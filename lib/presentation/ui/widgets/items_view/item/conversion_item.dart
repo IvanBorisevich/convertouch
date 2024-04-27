@@ -76,10 +76,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               hintText: _isFocused
                   ? widget.item.defaultValue.strValue
                   : widget.item.defaultValue.scientificValue,
-              inputFormatters: [
-                decimalNegativeNumbersFormatter,
-              ],
-              textInputType: decimalNegativeNumbersType,
+              inputType: InputType.decimal,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
