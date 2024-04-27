@@ -11,7 +11,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final String? text;
   final FocusNode? focusNode;
   final ValueNotifier<String?>? notifier;
-  final InputType inputType;
+  final ConvertouchValueType inputType;
   final bool useCustomKeyboard;
   final double height;
   final String label;
@@ -33,7 +33,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.focusNode,
     this.notifier,
     this.useCustomKeyboard = false,
-    this.inputType = InputType.text,
+    this.inputType = ConvertouchValueType.text,
     this.height = 70,
     this.label = "",
     this.autofocus = false,
@@ -186,19 +186,19 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   Widget _textBox({
     bool needToSetFocusNode = true,
-    required InputType inputType,
+    required ConvertouchValueType inputType,
     required Color borderColor,
     required Color foregroundColor,
     required Color hintColor,
     void Function(String)? onChanged,
   }) {
-    RegExp? inputRegExp = inputTypeToRegExpMap[inputType];
+    RegExp? inputRegExp = inputValueTypeToRegExpMap[inputType];
 
     return TextField(
       readOnly: widget.disabled,
       maxLength: widget.maxTextLength,
       obscureText: false,
-      keyboardType: inputTypeToKeyboardTypeMap[inputType],
+      keyboardType: inputValueTypeToKeyboardTypeMap[inputType],
       autofocus: widget.autofocus,
       focusNode: needToSetFocusNode ? _focusNode : null,
       controller: _controller,

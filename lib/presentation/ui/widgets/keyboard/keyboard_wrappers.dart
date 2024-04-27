@@ -1,10 +1,11 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/keyboard.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
 class KeyboardActionsWrapper extends StatelessWidget {
-  final InputType inputType;
+  final ConvertouchValueType inputType;
   final FocusNode focusNode;
   final TextEditingController controller;
   final ValueNotifier<String?> notifier;
@@ -36,7 +37,7 @@ class KeyboardActionsWrapper extends StatelessWidget {
             footerBuilder: (_) => ConvertouchKeyboard(
               inputType: inputType,
               notifier: notifier,
-              inputRegExp: inputTypeToRegExpMap[inputType],
+              inputRegExp: inputValueTypeToRegExpMap[inputType],
               onDoneClick: () {
                 focusNode.unfocus();
               },

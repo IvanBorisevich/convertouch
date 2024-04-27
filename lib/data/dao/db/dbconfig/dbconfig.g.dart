@@ -89,9 +89,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `oob` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `value_type` INTEGER NOT NULL, `min_value` REAL, `max_value` REAL, `oob` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `oob` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `value_type` INTEGER, `min_value` REAL, `max_value` REAL, `oob` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -138,6 +138,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
                   'refreshable': item.refreshable,
+                  'value_type': item.valueType,
+                  'min_value': item.minValue,
+                  'max_value': item.maxValue,
                   'oob': item.oob
                 }),
         _unitGroupEntityUpdateAdapter = UpdateAdapter(
@@ -150,6 +153,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
                   'refreshable': item.refreshable,
+                  'value_type': item.valueType,
+                  'min_value': item.minValue,
+                  'max_value': item.maxValue,
                   'oob': item.oob
                 });
 
@@ -172,6 +178,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
             refreshable: row['refreshable'] as int?,
+            valueType: row['value_type'] as int,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?));
   }
 
@@ -185,6 +194,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
             refreshable: row['refreshable'] as int?,
+            valueType: row['value_type'] as int,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [searchString]);
   }
@@ -199,6 +211,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
             refreshable: row['refreshable'] as int?,
+            valueType: row['value_type'] as int,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?));
   }
 
@@ -212,6 +227,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
             refreshable: row['refreshable'] as int?,
+            valueType: row['value_type'] as int,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [id]);
   }
@@ -226,6 +244,9 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             iconName: row['icon_name'] as String?,
             conversionType: row['conversion_type'] as int?,
             refreshable: row['refreshable'] as int?,
+            valueType: row['value_type'] as int,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [name]);
   }
@@ -269,6 +290,9 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
                   'unit_group_id': item.unitGroupId,
+                  'value_type': item.valueType,
+                  'min_value': item.minValue,
+                  'max_value': item.maxValue,
                   'oob': item.oob
                 }),
         _unitEntityUpdateAdapter = UpdateAdapter(
@@ -282,6 +306,9 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
                   'unit_group_id': item.unitGroupId,
+                  'value_type': item.valueType,
+                  'min_value': item.minValue,
+                  'max_value': item.maxValue,
                   'oob': item.oob
                 });
 
@@ -306,6 +333,9 @@ class _$UnitDaoDb extends UnitDaoDb {
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
             unitGroupId: row['unit_group_id'] as int,
+            valueType: row['value_type'] as int?,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
@@ -317,7 +347,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   ) async {
     return _queryAdapter.queryList(
         'select * from units where unit_group_id = ?1 and (name like ?2 or code like ?2)',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, oob: row['oob'] as int?),
         arguments: [unitGroupId, searchString]);
   }
 
@@ -335,6 +365,9 @@ class _$UnitDaoDb extends UnitDaoDb {
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
             unitGroupId: row['unit_group_id'] as int,
+            valueType: row['value_type'] as int?,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [unitGroupId, code]);
   }
@@ -343,7 +376,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   Future<UnitEntity?> getBaseUnit(int unitGroupId) async {
     return _queryAdapter.query(
         'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 1',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
 
@@ -357,6 +390,9 @@ class _$UnitDaoDb extends UnitDaoDb {
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
             unitGroupId: row['unit_group_id'] as int,
+            valueType: row['value_type'] as int?,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [id]);
   }
@@ -376,6 +412,9 @@ class _$UnitDaoDb extends UnitDaoDb {
             symbol: row['symbol'] as String?,
             coefficient: row['coefficient'] as double?,
             unitGroupId: row['unit_group_id'] as int,
+            valueType: row['value_type'] as int?,
+            minValue: row['min_value'] as double?,
+            maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
         arguments: [...ids]);
   }
@@ -393,7 +432,7 @@ class _$UnitDaoDb extends UnitDaoDb {
         'select u.* from units u inner join unit_groups g where 1=1 and g.name = ?1 and u.unit_group_id = g.id and u.code in (' +
             _sqliteVariablesForCodes +
             ')',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, oob: row['oob'] as int?),
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, oob: row['oob'] as int?),
         arguments: [unitGroupName, ...codes]);
   }
 

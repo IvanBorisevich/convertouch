@@ -9,7 +9,7 @@ class ConvertouchKeyboard extends StatelessWidget
   static const double _keysPadding = 5;
   static const double _kKeyboardHeight = 230;
 
-  final InputType inputType;
+  final ConvertouchValueType inputType;
   final RegExp? inputRegExp;
   @override
   final ValueNotifier<String?> notifier;

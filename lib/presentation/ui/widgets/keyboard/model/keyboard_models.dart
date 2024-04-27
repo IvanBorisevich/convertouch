@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_numeric_map.dart';
 import 'package:flutter/material.dart';
 
@@ -20,48 +21,39 @@ class KeyboardButton {
   }
 }
 
-enum InputType {
-  text,
-  integer,
-  integerPositive,
-  decimal,
-  decimalPositive,
-  hexadecimal,
-}
-
 const String backspaceKey = "backspace";
 const String okKey = "OK";
 
-const Map<InputType, TextInputType> inputTypeToKeyboardTypeMap = {
-  InputType.text: TextInputType.text,
-  InputType.integer: TextInputType.numberWithOptions(
+const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap = {
+  ConvertouchValueType.text: TextInputType.text,
+  ConvertouchValueType.integer: TextInputType.numberWithOptions(
     signed: true,
     decimal: false,
   ),
-  InputType.integerPositive: TextInputType.numberWithOptions(
+  ConvertouchValueType.integerPositive: TextInputType.numberWithOptions(
     signed: false,
     decimal: false,
   ),
-  InputType.decimal: TextInputType.numberWithOptions(
+  ConvertouchValueType.decimal: TextInputType.numberWithOptions(
     signed: true,
     decimal: true,
   ),
-  InputType.decimalPositive: TextInputType.numberWithOptions(
+  ConvertouchValueType.decimalPositive: TextInputType.numberWithOptions(
     signed: false,
     decimal: true,
   ),
-  InputType.hexadecimal: TextInputType.text,
+  ConvertouchValueType.hexadecimal: TextInputType.text,
 };
 
-const Map<InputType, List<List<KeyboardButton>>> keyboardMaps = {
-  InputType.decimal: decimalSignedKeyboardMap,
+const Map<ConvertouchValueType, List<List<KeyboardButton>>> keyboardMaps = {
+  ConvertouchValueType.decimal: decimalSignedKeyboardMap,
 };
 
-final Map<InputType, RegExp> inputTypeToRegExpMap = {
-  InputType.text: RegExp(r'(^[a-zA-Z\d ]+$)'),
-  InputType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
-  InputType.integerPositive: RegExp(r'(^\d+$)'),
-  InputType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
-  InputType.decimalPositive: RegExp(r'(^\d+\.?\d*$)'),
-  InputType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
+final Map<ConvertouchValueType, RegExp> inputValueTypeToRegExpMap = {
+  ConvertouchValueType.text: RegExp(r'(^[a-zA-Z\d ]+$)'),
+  ConvertouchValueType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
+  ConvertouchValueType.integerPositive: RegExp(r'(^\d+$)'),
+  ConvertouchValueType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
+  ConvertouchValueType.decimalPositive: RegExp(r'(^\d+\.?\d*$)'),
+  ConvertouchValueType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
 };

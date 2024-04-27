@@ -66,7 +66,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         onChanged: widget.onSearchStringChanged,
         inputFormatters: [
           FilteringTextInputFormatter.allow(
-            inputTypeToRegExpMap[InputType.text]!,
+            inputValueTypeToRegExpMap[ConvertouchValueType.text]!,
           ),
         ],
         decoration: InputDecoration(

@@ -9,6 +9,9 @@ class UnitModel extends IdNameItemModel {
   final double? coefficient;
   final String? symbol;
   final int unitGroupId;
+  final ConvertouchValueType? valueType;
+  final double? minValue;
+  final double? maxValue;
 
   const UnitModel({
     super.id,
@@ -17,6 +20,9 @@ class UnitModel extends IdNameItemModel {
     this.coefficient,
     this.symbol,
     this.unitGroupId = -1,
+    this.valueType,
+    this.minValue,
+    this.maxValue,
     super.oob,
   }) : super(
           itemType: ItemType.unit,
@@ -28,50 +34,58 @@ class UnitModel extends IdNameItemModel {
           code: "",
         );
 
-  const UnitModel.onlyId(int id)
-      : this(
-          id: id,
-          name: "",
-          code: "",
-        );
-
   UnitModel.coalesce(
-    UnitModel currentModel, {
+    UnitModel savedUnit, {
     int? id,
     String? name,
     String? code,
     double? coefficient,
     String? symbol,
     int? unitGroupId,
+    ConvertouchValueType? valueType,
+    double? minValue,
+    double? maxValue,
   }) : this(
           id: ObjectUtils.coalesce(
-            what: currentModel.id,
+            what: savedUnit.id,
             patchWith: id,
           ),
           name: ObjectUtils.coalesce(
-                what: currentModel.name,
+                what: savedUnit.name,
                 patchWith: name,
               ) ??
               "",
           code: ObjectUtils.coalesce(
-                what: currentModel.code,
+                what: savedUnit.code,
                 patchWith: code,
               ) ??
               "",
           coefficient: ObjectUtils.coalesce(
-            what: currentModel.coefficient,
+            what: savedUnit.coefficient,
             patchWith: coefficient,
           ),
           symbol: ObjectUtils.coalesce(
-            what: currentModel.symbol,
+            what: savedUnit.symbol,
             patchWith: symbol,
           ),
+          valueType: ObjectUtils.coalesce(
+            what: savedUnit.valueType,
+            patchWith: valueType,
+          ),
+          minValue: ObjectUtils.coalesce(
+            what: savedUnit.minValue,
+            patchWith: minValue,
+          ),
+          maxValue: ObjectUtils.coalesce(
+            what: savedUnit.maxValue,
+            patchWith: maxValue,
+          ),
           unitGroupId: ObjectUtils.coalesce(
-                what: currentModel.unitGroupId,
+                what: savedUnit.unitGroupId,
                 patchWith: unitGroupId,
               ) ??
               -1,
-          oob: currentModel.oob,
+          oob: savedUnit.oob,
         );
 
   bool get empty => this == none;
@@ -90,6 +104,9 @@ class UnitModel extends IdNameItemModel {
       "coefficient": coefficient,
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
+      "valueType": valueType?.val,
+      "minValue": minValue,
+      "maxValue": maxValue,
       "oob": oob == true ? true : null,
     };
 
@@ -109,6 +126,9 @@ class UnitModel extends IdNameItemModel {
       coefficient: json["coefficient"],
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
+      valueType: ConvertouchValueType.valueOf(json["valueType"]),
+      minValue: json["minValue"],
+      maxValue: json["maxValue"],
       oob: json["oob"] == true,
     );
   }

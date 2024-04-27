@@ -1,7 +1,8 @@
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/di.dart' as di;
+import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 
 class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
   static final UnitTranslator I = di.locator.get<UnitTranslator>();
@@ -18,6 +19,9 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       symbol: model.symbol,
       coefficient: model.coefficient,
       unitGroupId: model.unitGroupId,
+      valueType: model.valueType?.val,
+      minValue: model.minValue,
+      maxValue: model.maxValue,
       oob: model.oob == true ? 1 : null,
     );
   }
@@ -34,6 +38,9 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       symbol: entity.symbol,
       coefficient: entity.coefficient,
       unitGroupId: entity.unitGroupId,
+      valueType: ConvertouchValueType.valueOf(entity.valueType),
+      minValue: entity.minValue,
+      maxValue: entity.maxValue,
       oob: entity.oob == 1,
     );
   }

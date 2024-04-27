@@ -8,6 +8,9 @@ class UnitGroupModel extends IdNameItemModel {
   final String? iconName;
   final ConversionType conversionType;
   final bool refreshable;
+  final ConvertouchValueType valueType;
+  final double? minValue;
+  final double? maxValue;
 
   const UnitGroupModel({
     super.id,
@@ -15,27 +18,21 @@ class UnitGroupModel extends IdNameItemModel {
     this.iconName,
     this.conversionType = ConversionType.static,
     this.refreshable = false,
+    required this.valueType,
+    this.minValue,
+    this.maxValue,
     super.oob,
     super.itemType = ItemType.unitGroup,
   });
-
-  const UnitGroupModel.onlyId(
-    int? id, {
-    this.iconName,
-    this.conversionType = ConversionType.static,
-    this.refreshable = false,
-    super.oob,
-  }) : super(
-          id: id,
-          name: '',
-          itemType: ItemType.unitGroup,
-        );
 
   UnitGroupModel.coalesce(
     UnitGroupModel savedUnitGroup, {
     int? id,
     String? name,
     String? iconName,
+    ConvertouchValueType? valueType,
+    double? minValue,
+    double? maxValue,
   }) : this(
           id: ObjectUtils.coalesce(
             what: savedUnitGroup.id,
@@ -52,12 +49,22 @@ class UnitGroupModel extends IdNameItemModel {
           ),
           conversionType: savedUnitGroup.conversionType,
           refreshable: savedUnitGroup.refreshable,
+          valueType: valueType ?? savedUnitGroup.valueType,
+          minValue: ObjectUtils.coalesce(
+            what: savedUnitGroup.minValue,
+            patchWith: minValue,
+          ),
+          maxValue: ObjectUtils.coalesce(
+            what: savedUnitGroup.maxValue,
+            patchWith: maxValue,
+          ),
           oob: savedUnitGroup.oob,
         );
 
   const UnitGroupModel._()
       : this(
           name: "",
+          valueType: ConvertouchValueType.text,
         );
 
   @override
@@ -78,6 +85,9 @@ class UnitGroupModel extends IdNameItemModel {
       "iconName": iconName,
       "conversionType": conversionType.value,
       "refreshable": refreshable,
+      "valueType": valueType.val,
+      "minValue": minValue,
+      "maxValue": maxValue,
       "oob": oob,
     };
   }
@@ -92,6 +102,10 @@ class UnitGroupModel extends IdNameItemModel {
       iconName: json["iconName"],
       conversionType: ConversionType.valueOf(json["conversionType"]),
       refreshable: json["refreshable"],
+      valueType: ConvertouchValueType.valueOf(json["valueType"]) ??
+          ConvertouchValueType.text,
+      minValue: json["minValue"],
+      maxValue: json["maxValue"],
       oob: json["oob"],
     );
   }

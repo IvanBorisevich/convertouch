@@ -163,6 +163,9 @@ class _ConvertouchUnitDetailsPageState
                                 value: pageState.draftDetails.value,
                                 defaultValue: pageState.savedDetails.value,
                               ),
+                              valueType: pageState
+                                      .draftDetails.unit.valueType ??
+                                  pageState.draftDetails.unitGroup!.valueType,
                               disabled: !pageState.conversionRuleEnabled,
                               onValueChanged: (value) {
                                 BlocProvider.of<UnitDetailsBloc>(context).add(
@@ -182,6 +185,9 @@ class _ConvertouchUnitDetailsPageState
                                 value: pageState.draftDetails.argValue,
                                 defaultValue: pageState.savedDetails.argValue,
                               ),
+                              valueType: pageState
+                                      .draftDetails.argUnit.valueType ??
+                                  pageState.draftDetails.unitGroup!.valueType,
                               disabled: !pageState.conversionRuleEnabled,
                               onValueChanged: (value) {
                                 BlocProvider.of<UnitDetailsBloc>(context).add(

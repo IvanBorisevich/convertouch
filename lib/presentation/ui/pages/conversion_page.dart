@@ -154,6 +154,8 @@ class ConvertouchConversionPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12),
               child: ConvertouchConversionItemsView(
                 conversion.targetConversionItems,
+                valueType: conversion.unitGroup?.valueType ??
+                    ConvertouchValueType.decimal,
                 onItemTap: (item) {
                   BlocProvider.of<UnitsBlocForConversion>(context).add(
                     FetchUnitsForChangeInConversion(

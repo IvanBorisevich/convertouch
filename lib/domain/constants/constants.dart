@@ -142,3 +142,20 @@ enum Cron {
     );
   }
 }
+
+enum ConvertouchValueType {
+  text(1),
+  integer(2),
+  integerPositive(3),
+  decimal(4),
+  decimalPositive(5),
+  hexadecimal(6);
+
+  final int val;
+
+  const ConvertouchValueType(this.val);
+
+  static ConvertouchValueType? valueOf(int? value) {
+    return values.firstWhereOrNull((element) => value == element.val);
+  }
+}

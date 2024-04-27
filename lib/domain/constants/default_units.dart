@@ -19,6 +19,8 @@ const unitsV1 = [
   {
     "groupName": "Length",
     "iconName": "length-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "mm", "name": "Millimeter", "coefficient": 0.001},
       {"code": "cm", "name": "Centimeter", "coefficient": 0.01},
@@ -36,6 +38,8 @@ const unitsV1 = [
   {
     "groupName": "Area",
     "iconName": "area-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "mm²", "name": "Square Millimeter", "coefficient": 1E-6},
       {"code": "cm²", "name": "Square Centimeter", "coefficient": 1E-4},
@@ -46,6 +50,8 @@ const unitsV1 = [
   {
     "groupName": "Volume",
     "iconName": "volume-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "mm³", "name": "Cubic Millimeter", "coefficient": 1E-9},
       {"code": "cm", "name": "Cubic Centimeter", "coefficient": 1E-6},
@@ -58,6 +64,8 @@ const unitsV1 = [
   {
     "groupName": "Mass",
     "iconName": "mass-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "g", "name": "Gram", "coefficient": 0.001},
       {"code": "kg", "name": "Kilogram", "coefficient": 1},
@@ -70,6 +78,7 @@ const unitsV1 = [
   {
     "groupName": temperatureGroup,
     "iconName": "temperature-group.png",
+    "valueType": ConvertouchValueType.decimal,
     "conversionType": ConversionType.formula,
     "units": [
       {"code": degreeCelsiusCode, "name": "Degree Celsius"},
@@ -85,6 +94,8 @@ const unitsV1 = [
   {
     "groupName": currencyGroup,
     "iconName": "currency-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "conversionType": ConversionType.dynamic,
     "refreshable": true,
     "units": [
@@ -828,6 +839,8 @@ const unitsV1 = [
   {
     "groupName": "Pressure",
     "iconName": "pressure-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "Pa", "name": "pascal", "coefficient": 1},
       {"code": "bar", "name": "bar", "coefficient": 100000},
@@ -843,6 +856,8 @@ const unitsV1 = [
   {
     "groupName": "Speed",
     "iconName": "speed-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "minValue": 0,
     "units": [
       {"code": "m/s", "name": "meter per second", "coefficient": 1},
       {"code": "m/h", "name": "meter per hour", "coefficient": 0.0002778},
@@ -880,6 +895,7 @@ const unitsV1 = [
   {
     "groupName": "Angle",
     "iconName": "angle-group.png",
+    "valueType": ConvertouchValueType.decimal,
     "units": [
       {"code": "deg", "name": "degree", "coefficient": 1, "symbol": "°"},
       {"code": "rad", "name": "radian", "coefficient": 57.2958},

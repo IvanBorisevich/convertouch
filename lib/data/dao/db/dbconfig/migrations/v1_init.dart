@@ -39,16 +39,8 @@ class InitialMigration extends ConvertouchDbMigration {
     Transaction txn,
     Map<String, dynamic> entity,
   ) async {
-    int groupId = await txn.insert(unitGroupsTableName, {
-      'name': entity['groupName'],
-      'icon_name': entity['iconName'],
-      'conversion_type': entity['conversionType'] != null &&
-              entity['conversionType'] != ConversionType.static
-          ? (entity['conversionType'] as ConversionType).value
-          : null,
-      'refreshable': entity['refreshable'] == true ? 1 : null,
-      'oob': 1,
-    });
+    int groupId = await txn.insert(
+        unitGroupsTableName, UnitGroupEntity.entityToRow(entity));
 
     return groupId;
   }
@@ -63,14 +55,7 @@ class InitialMigration extends ConvertouchDbMigration {
     for (Map<String, dynamic> unit in entity['units']) {
       batch.insert(
         unitsTableName,
-        {
-          'name': unit['name'],
-          'code': unit['code'],
-          'symbol': unit['symbol'],
-          'coefficient': unit['coefficient'],
-          'unit_group_id': unitGroupId,
-          'oob': 1,
-        },
+        UnitEntity.entityToRow(unit, unitGroupId),
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }

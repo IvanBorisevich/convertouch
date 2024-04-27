@@ -2,12 +2,12 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
   final ConversionItemModel item;
+  final ConvertouchValueType valueType;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final bool disabled;
@@ -17,6 +17,7 @@ class ConvertouchConversionItem extends StatefulWidget {
 
   const ConvertouchConversionItem(
     this.item, {
+    required this.valueType,
     this.onTap,
     this.onValueChanged,
     this.disabled = false,
@@ -76,7 +77,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               hintText: _isFocused
                   ? widget.item.defaultValue.strValue
                   : widget.item.defaultValue.scientificValue,
-              inputType: InputType.decimal,
+              inputType: widget.valueType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
