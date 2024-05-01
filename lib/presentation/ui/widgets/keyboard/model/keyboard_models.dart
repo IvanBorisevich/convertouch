@@ -50,7 +50,7 @@ const Map<ConvertouchValueType, List<List<KeyboardButton>>> keyboardMaps = {
 };
 
 final Map<ConvertouchValueType, RegExp> inputValueTypeToRegExpMap = {
-  ConvertouchValueType.text: RegExp(r'(^[a-zA-Z\d ]+$)'),
+  ConvertouchValueType.text: RegExp(r'(^[\S ]+$)'),
   ConvertouchValueType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
   ConvertouchValueType.integerPositive: RegExp(r'(^\d+$)'),
   ConvertouchValueType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
