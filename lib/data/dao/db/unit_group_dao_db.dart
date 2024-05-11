@@ -5,12 +5,14 @@ import 'package:floor/floor.dart';
 @dao
 abstract class UnitGroupDaoDb extends UnitGroupDao {
   @override
-  @Query('select * from $unitGroupsTableName')
+  @Query('select * from $unitGroupsTableName '
+      'order by name')
   Future<List<UnitGroupEntity>> getAll();
 
   @override
   @Query('select * from $unitGroupsTableName '
-      'where name like :searchString')
+      'where name like :searchString '
+      'order by name')
   Future<List<UnitGroupEntity>> getBySearchString(String searchString);
 
   @override

@@ -171,7 +171,7 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
 
   @override
   Future<List<UnitGroupEntity>> getAll() async {
-    return _queryAdapter.queryList('select * from unit_groups',
+    return _queryAdapter.queryList('select * from unit_groups order by name',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
@@ -187,7 +187,7 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   @override
   Future<List<UnitGroupEntity>> getBySearchString(String searchString) async {
     return _queryAdapter.queryList(
-        'select * from unit_groups where name like ?1',
+        'select * from unit_groups where name like ?1 order by name',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
@@ -325,7 +325,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   @override
   Future<List<UnitEntity>> getAll(int unitGroupId) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1',
+        'select * from units where unit_group_id = ?1 order by code',
         mapper: (Map<String, Object?> row) => UnitEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
@@ -346,7 +346,7 @@ class _$UnitDaoDb extends UnitDaoDb {
     String searchString,
   ) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 and (name like ?2 or code like ?2)',
+        'select * from units where unit_group_id = ?1 and (name like ?2 or code like ?2) order by code',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, oob: row['oob'] as int?),
         arguments: [unitGroupId, searchString]);
   }
