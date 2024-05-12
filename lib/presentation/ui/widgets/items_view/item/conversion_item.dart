@@ -56,7 +56,15 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     var unitButtonColor = itemColor.unitButton;
 
     if (_isFocused && !widget.disabled) {
+      // int currentCursorPos = widget.item.value.strValue.length;
+      // if (_unitValueController.text == widget.item.value.strValue) {
+      //   currentCursorPos = _unitValueController.selection.baseOffset;
+      // }
+
       _unitValueController.text = widget.item.value.strValue;
+      // _unitValueController.selection = TextSelection.collapsed(
+      //   offset: currentCursorPos,
+      // );
     } else {
       _unitValueController.text = widget.item.value.scientificValue;
     }

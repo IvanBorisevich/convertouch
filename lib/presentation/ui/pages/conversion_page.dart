@@ -156,7 +156,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                 conversion.targetConversionItems,
                 valueType: conversion.unitGroup?.valueType ??
                     ConvertouchValueType.decimal,
-                onItemTap: (item) {
+                onUnitItemTap: (item) {
                   BlocProvider.of<UnitsBlocForConversion>(context).add(
                     FetchUnitsForChangeInConversion(
                       currentSelectedUnit: item.unit,
@@ -170,7 +170,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                   );
                 },
-                onItemValueChanged: (item, value) {
+                onTextValueChanged: (item, value) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     RebuildConversionOnValueChange(
                       conversionParams: InputConversionModel(
@@ -186,7 +186,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                     ),
                   );
                 },
-                onItemRemove: (item) {
+                onItemRemoveTap: (item) {
                   BlocProvider.of<ConversionBloc>(context).add(
                     RemoveConversionItem(
                       id: item.unit.id!,

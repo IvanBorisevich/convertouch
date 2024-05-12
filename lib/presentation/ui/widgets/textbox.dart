@@ -56,7 +56,7 @@ class ConvertouchTextBox extends StatefulWidget {
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   late TextBoxColorScheme _color;
-  late int _cursorOffset;
+  int? _cursorPosition;
 
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
@@ -78,8 +78,6 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     if (_controller.text.isEmpty) {
       _controller.text = widget.text ?? "";
     }
-
-    _cursorOffset = _controller.text.length;
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
@@ -117,21 +115,17 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
     if (_focusNode.hasFocus) {
       widget.onFocusSelected?.call();
+      _cursorPosition = null;
     } else {
       widget.onFocusLeft?.call();
-      _cursorOffset = _controller.text.length;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_focusNode.hasFocus) {
-      if (_cursorOffset > _controller.text.length) {
-        _cursorOffset = _controller.text.length;
-      }
-
-      _controller.selection = TextSelection.collapsed(offset: _cursorOffset);
-    }
+    _controller.selection = TextSelection.collapsed(
+      offset: _cursorPosition ?? _controller.text.length,
+    );
 
     _color = widget.customColor ?? unitTextBoxColors[widget.theme]!;
 
@@ -210,9 +204,10 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           ? [FilteringTextInputFormatter.allow(inputRegExp)]
           : null,
       onChanged: (newValue) {
+        int currentCursorPos = _controller.selection.baseOffset;
         onChanged?.call(newValue);
         setState(() {
-          _cursorOffset = _controller.selection.baseOffset;
+          _cursorPosition = currentCursorPos;
         });
       },
       decoration: InputDecoration(

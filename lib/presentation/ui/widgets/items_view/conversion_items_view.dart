@@ -10,18 +10,18 @@ import 'package:flutter/material.dart';
 class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionItemModel> convertedItems;
   final ConvertouchValueType valueType;
-  final void Function(ConversionItemModel)? onItemTap;
-  final void Function(ConversionItemModel, String)? onItemValueChanged;
-  final void Function(ConversionItemModel)? onItemRemove;
+  final void Function(ConversionItemModel)? onUnitItemTap;
+  final void Function(ConversionItemModel, String)? onTextValueChanged;
+  final void Function(ConversionItemModel)? onItemRemoveTap;
   final Widget noItemsView;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
     this.convertedItems, {
     required this.valueType,
-    this.onItemTap,
-    this.onItemValueChanged,
-    this.onItemRemove,
+    this.onUnitItemTap,
+    this.onTextValueChanged,
+    this.onItemRemoveTap,
     required this.noItemsView,
     required this.theme,
     super.key,
@@ -80,10 +80,10 @@ class _ConvertouchConversionItemsViewState
                     valueType: widget.convertedItems[index].unit.valueType ??
                         widget.valueType,
                     onTap: () {
-                      widget.onItemTap?.call(widget.convertedItems[index]);
+                      widget.onUnitItemTap?.call(widget.convertedItems[index]);
                     },
                     onValueChanged: (String value) {
-                      widget.onItemValueChanged?.call(
+                      widget.onTextValueChanged?.call(
                         widget.convertedItems[index],
                         value,
                       );
@@ -101,7 +101,8 @@ class _ConvertouchConversionItemsViewState
                     // on long pressed effect color
                     // padding: const EdgeInsets.only(left: 0),
                     onPressed: () {
-                      widget.onItemRemove?.call(widget.convertedItems[index]);
+                      widget.onItemRemoveTap
+                          ?.call(widget.convertedItems[index]);
                     },
                     icon: Icon(
                       Icons.remove_circle_outline,
