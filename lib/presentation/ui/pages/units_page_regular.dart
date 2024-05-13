@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
@@ -132,7 +133,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   },
                 )
               : ConvertouchFloatingActionButton.adding(
-                  visible: !pageState.unitGroup.refreshable,
+                  visible: !pageState.unitGroup.refreshable &&
+                      pageState.unitGroup.conversionType !=
+                          ConversionType.formula,
                   onClick: () {
                     BlocProvider.of<UnitDetailsBloc>(context).add(
                       GetNewUnitDetails(
