@@ -7,18 +7,18 @@ const refreshingJobsMap = {
     "name": "Currency Rates",
     "group": currencyGroup,
     "refreshableDataPart": RefreshableDataPart.coefficient,
-    "selectedDataSource": "ExchangeRateAPI",
+    "selectedDataSource": "default",
     "dataSources": {
       "FloatRates": {
         "name": "FloatRates",
         "url": "https://www.floatrates.com/daily/usd.json",
         "responseTransformerClassName": floatRatesResponseTransformer,
       },
-      "ExchangeRateAPI": {
-        "name": "ExchangeRateAPI",
+      "default": {
+        "name": "default",
         "url":
             "https://convertouch-dynamic-data-gatherer.onrender.com/currency-rates/",
-        "responseTransformerClassName": exchangeRateResponseTransformer,
+        "responseTransformerClassName": defaultRatesResponseTransformer,
       },
     },
   },

@@ -1,12 +1,12 @@
-import 'package:convertouch/domain/utils/response_transformers/exchange_rate_response_transformer.dart';
+import 'package:convertouch/domain/utils/response_transformers/default_rates_response_transformer.dart';
 import 'package:convertouch/domain/utils/response_transformers/float_rates_response_transformer.dart';
 
+const defaultRatesResponseTransformer = "DefaultRatesResponseTransformer";
 const floatRatesResponseTransformer = "FloatRatesResponseTransformer";
-const exchangeRateResponseTransformer = "ExchangeRateResponseTransformer";
 
 const transformersMap = {
   floatRatesResponseTransformer: FloatRatesResponseTransformer(),
-  exchangeRateResponseTransformer: ExchangeRateResponseTransformer(),
+  defaultRatesResponseTransformer: DefaultRatesResponseTransformer(),
 };
 
 abstract class ResponseTransformer<V> {
