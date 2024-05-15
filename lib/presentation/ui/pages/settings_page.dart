@@ -70,7 +70,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   showAboutDialog(
                     context: context,
                     applicationName: appName,
-                    applicationVersion: appVersion,
+                    applicationVersion: "Version: $appVersion",
                     applicationLegalese: "©2024, Made by johnbor7",
                   );
                 },
