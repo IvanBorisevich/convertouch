@@ -50,6 +50,7 @@ class _ConvertouchConversionItemsViewState
         Card(
           key: Key('$index'),
           margin: EdgeInsets.zero,
+          elevation: 0,
           color: Colors.transparent,
           shadowColor: Colors.transparent,
           child: Padding(
@@ -64,6 +65,7 @@ class _ConvertouchConversionItemsViewState
                   child: ReorderableDragStartListener(
                     index: index,
                     child: Card(
+                      elevation: 0,
                       color: Colors.transparent,
                       shadowColor: Colors.transparent,
                       child: Icon(
