@@ -123,8 +123,12 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   Widget build(BuildContext context) {
+    if (_cursorPosition == null || _cursorPosition! > _controller.text.length) {
+      _cursorPosition = _controller.text.length;
+    }
+
     _controller.selection = TextSelection.collapsed(
-      offset: _cursorPosition ?? _controller.text.length,
+      offset: _cursorPosition!,
     );
 
     _color = widget.customColor ?? unitTextBoxColors[widget.theme]!;
