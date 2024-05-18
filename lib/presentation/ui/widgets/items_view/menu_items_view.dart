@@ -18,6 +18,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final int? selectedItemId;
   final int? disabledItemId;
   final bool showSelectedItem;
+  final bool editableItemsVisible;
   final bool removalModeAllowed;
   final bool removalModeEnabled;
   final double itemsSpacing;
@@ -36,6 +37,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.selectedItemId,
     this.disabledItemId,
     this.showSelectedItem = false,
+    this.editableItemsVisible = false,
     this.removalModeAllowed = false,
     this.removalModeEnabled = false,
     this.itemsSpacing = 8,
@@ -76,6 +78,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                 selected: selected,
                 disabled: disabled,
                 removalMode: removalModeAllowed && removalModeEnabled,
+                editIconVisible: editableItemsVisible,
                 markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
                 theme: theme,
               );

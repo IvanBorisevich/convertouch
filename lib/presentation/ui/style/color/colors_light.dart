@@ -58,6 +58,30 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF353D69),
     selected: Color(0xFF303073),
   ),
+  removalIcon: ConvertouchColorScheme(
+    border: ColorVariation(
+      regular: Color(0xFF303073),
+    ),
+    background: ColorVariation(
+      regular: noColor,
+      selected: Color(0xFF303073),
+    ),
+    foreground: ColorVariation(
+      regular: noColor,
+      selected: Colors.white,
+    ),
+  ),
+  modeIcon: ConvertouchColorScheme(
+    border: ColorVariation(
+      regular: Color(0xffaebfe7),
+    ),
+    background: ColorVariation(
+      regular: Color(0xffaebfe7),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF303073),
+    ),
+  ),
 );
 
 const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
@@ -91,6 +115,30 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     marked: Color(0xFF26537E),
     selected: Color(0xFF26537E),
     disabled: Color(0xB2366C9F),
+  ),
+  removalIcon: ConvertouchColorScheme(
+    border: ColorVariation(
+      regular: Color(0xFF2C6396),
+    ),
+    background: ColorVariation(
+      regular: noColor,
+      selected: Color(0xFF2C6396),
+    ),
+    foreground: ColorVariation(
+      regular: noColor,
+      selected: Colors.white,
+    ),
+  ),
+  modeIcon: ConvertouchColorScheme(
+    border: ColorVariation(
+      regular: Color(0xFF96B5DC),
+    ),
+    background: ColorVariation(
+      regular: Color(0xFF96B5DC),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF2C6396),
+    ),
   ),
 );
 

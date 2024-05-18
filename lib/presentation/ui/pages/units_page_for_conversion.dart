@@ -156,6 +156,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             itemIdsSelectedForRemoval: const [],
             removalModeAllowed: false,
             removalModeEnabled: false,
+            editableUnitsVisible: false,
             appBarRightWidgets: const [],
             markedUnitsForConversionVisible: true,
             markedUnitIdsForConversion: pageState.unitsMarkedForConversion

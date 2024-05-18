@@ -89,6 +89,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           itemIdsSelectedForRemoval: pageState.markedIdsForRemoval,
           removalModeEnabled: pageState.removalMode,
           removalModeAllowed: true,
+          editableUnitGroupsVisible: true,
           floatingButton: pageState.removalMode
               ? ConvertouchFloatingActionButton.removal(
                   visible: pageState.markedIdsForRemoval.isNotEmpty,

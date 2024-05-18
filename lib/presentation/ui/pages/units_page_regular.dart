@@ -112,6 +112,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           itemIdsSelectedForRemoval: pageState.markedIdsForRemoval,
           removalModeAllowed: true,
           removalModeEnabled: pageState.removalMode,
+          editableUnitsVisible: true,
           markedUnitsForConversionVisible: false,
           markedUnitIdsForConversion: null,
           selectedUnitVisible: false,

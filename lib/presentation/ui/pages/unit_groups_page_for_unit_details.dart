@@ -51,6 +51,7 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
         itemIdsSelectedForRemoval: const [],
         removalModeEnabled: false,
         removalModeAllowed: false,
+        editableUnitGroupsVisible: false,
         floatingButton: null,
       );
     });

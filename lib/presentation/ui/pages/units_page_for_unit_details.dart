@@ -52,6 +52,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
         itemIdsSelectedForRemoval: const [],
         removalModeAllowed: false,
         removalModeEnabled: false,
+        editableUnitsVisible: false,
         markedUnitsForConversionVisible: false,
         markedUnitIdsForConversion: null,
         selectedUnitVisible: true,

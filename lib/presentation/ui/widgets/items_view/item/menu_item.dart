@@ -6,7 +6,7 @@ import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/checkbox.dart';
+import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
@@ -24,6 +24,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final bool marked;
   final bool selected;
   final bool disabled;
+  final bool editIconVisible;
   final bool removalMode;
   final bool markedForRemoval;
   final ConvertouchUITheme theme;
@@ -38,6 +39,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     this.marked = false,
     this.selected = false,
     this.disabled = false,
+    this.editIconVisible = false,
     this.removalMode = false,
     this.markedForRemoval = false,
     this.width,
@@ -140,11 +142,14 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 item,
                 itemName: itemName,
                 removalMode: removalMode,
+                editIconVisible: editIconVisible,
                 markedForRemoval: markedForRemoval,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
+                removalIconColors: colorScheme.removalIcon,
+                modeIconColors: colorScheme.modeIcon,
                 width: width ?? gridItemWidth,
                 height: height ?? gridItemHeight,
               );
@@ -154,12 +159,15 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 itemName: itemName,
                 height: height ?? listItemHeight,
                 removalMode: removalMode,
+                editIconVisible: editIconVisible,
                 markedForRemoval: markedForRemoval,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
                 dividerColor: dividerColor,
+                removalIconColors: colorScheme.removalIcon,
+                modeIconColors: colorScheme.modeIcon,
               );
           }
         },
@@ -172,6 +180,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final IdNameItemModel item;
   final String itemName;
   final bool removalMode;
+  final bool editIconVisible;
   final Widget logo;
   final double height;
   final bool markedForRemoval;
@@ -179,17 +188,22 @@ class ConvertouchMenuListItem extends StatelessWidget {
   final Color foregroundColor;
   final Color borderColor;
   final Color dividerColor;
+  final ConvertouchColorScheme removalIconColors;
+  final ConvertouchColorScheme modeIconColors;
 
   const ConvertouchMenuListItem(
     this.item, {
     required this.itemName,
     required this.removalMode,
+    required this.editIconVisible,
     required this.logo,
     this.height = 50,
     required this.backgroundColor,
     required this.foregroundColor,
     required this.borderColor,
     required this.dividerColor,
+    required this.removalIconColors,
+    required this.modeIconColors,
     this.markedForRemoval = false,
     super.key,
   });
@@ -247,16 +261,30 @@ class ConvertouchMenuListItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  removalMode && !item.oob
-                      ? Padding(
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (item.oob) {
+                        return empty();
+                      }
+
+                      if (removalMode) {
+                        return ConvertouchItemModeIcon.checkbox(
+                          active: markedForRemoval,
+                          colors: removalIconColors,
                           padding: const EdgeInsets.only(right: 10),
-                          child: ConvertouchCheckbox(
-                            markedForRemoval,
-                            color: foregroundColor,
-                            colorChecked: foregroundColor,
-                          ),
-                        )
-                      : empty(),
+                        );
+                      }
+
+                      if (editIconVisible) {
+                        return ConvertouchItemModeIcon.edit(
+                          colors: modeIconColors,
+                          padding: const EdgeInsets.only(right: 10),
+                        );
+                      }
+
+                      return empty();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -271,6 +299,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final IdNameItemModel item;
   final String itemName;
   final bool removalMode;
+  final bool editIconVisible;
   final Widget logo;
   final bool markedForRemoval;
   final double width;
@@ -278,15 +307,20 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
+  final ConvertouchColorScheme removalIconColors;
+  final ConvertouchColorScheme modeIconColors;
 
   const ConvertouchMenuGridItem(
     this.item, {
     required this.itemName,
     required this.removalMode,
+    required this.editIconVisible,
     required this.logo,
     required this.backgroundColor,
     required this.foregroundColor,
     required this.borderColor,
+    required this.removalIconColors,
+    required this.modeIconColors,
     this.markedForRemoval = false,
     required this.width,
     required this.height,
@@ -326,17 +360,30 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                     child: logo,
                   ),
                 ),
-                removalMode && !item.oob
-                    ? Padding(
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (item.oob) {
+                      return empty();
+                    }
+
+                    if (removalMode) {
+                      return ConvertouchItemModeIcon.checkbox(
+                        active: markedForRemoval,
+                        colors: removalIconColors,
                         padding: const EdgeInsets.only(left: 3, top: 3),
-                        child: ConvertouchCheckbox(
-                          markedForRemoval,
-                          size: 12,
-                          color: foregroundColor,
-                          colorChecked: foregroundColor,
-                        ),
-                      )
-                    : empty(),
+                      );
+                    }
+
+                    if (editIconVisible) {
+                      return ConvertouchItemModeIcon.edit(
+                        colors: modeIconColors,
+                        padding: const EdgeInsets.only(left: 2, top: 2),
+                      );
+                    }
+
+                    return empty();
+                  },
+                ),
               ],
             ),
           ),

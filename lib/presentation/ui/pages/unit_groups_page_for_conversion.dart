@@ -109,6 +109,7 @@ class ConvertouchUnitGroupsPageForConversion extends StatelessWidget {
           disabledUnitGroupId: null,
           removalModeEnabled: false,
           removalModeAllowed: false,
+          editableUnitGroupsVisible: false,
           floatingButton: null,
         ),
       );

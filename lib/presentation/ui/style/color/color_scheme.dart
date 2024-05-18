@@ -16,11 +16,15 @@ class ConvertouchColorScheme {
 
 class ListItemColorScheme extends ConvertouchColorScheme {
   final ColorVariation divider;
+  final ConvertouchColorScheme modeIcon;
+  final ConvertouchColorScheme removalIcon;
 
   const ListItemColorScheme({
     super.border,
     super.background,
     super.foreground,
+    this.modeIcon = ConvertouchColorScheme.none,
+    this.removalIcon = ConvertouchColorScheme.none,
     this.divider = ColorVariation.none,
   });
 }
