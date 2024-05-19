@@ -144,16 +144,17 @@ enum Cron {
 }
 
 enum ConvertouchValueType {
-  text(1),
-  integer(2),
-  integerPositive(3),
-  decimal(4),
-  decimalPositive(5),
-  hexadecimal(6);
+  text(1, "Any"),
+  integer(2, "Integer"),
+  integerPositive(3, "Positive Integer"),
+  decimal(4, "Decimal"),
+  decimalPositive(5, "Positive Decimal"),
+  hexadecimal(6, "Hexadecimal");
 
   final int val;
+  final String name;
 
-  const ConvertouchValueType(this.val);
+  const ConvertouchValueType(this.val, this.name);
 
   static ConvertouchValueType? valueOf(int? value) {
     return values.firstWhereOrNull((element) => value == element.val);

@@ -1,10 +1,14 @@
 class ConvertouchFormula {
   final double Function(double) forward;
   final double Function(double) reverse;
+  final String? forwardStr;
+  final String? reverseStr;
 
   const ConvertouchFormula({
     required this.forward,
     required this.reverse,
+    this.forwardStr,
+    this.reverseStr,
   });
 
   double? applyForward(double? x) {

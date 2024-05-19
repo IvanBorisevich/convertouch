@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/utils/formula_utils.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
@@ -39,8 +40,6 @@ class _ConvertouchUnitDetailsPageState
       TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
       ConvertouchColorScheme floatingButtonColor =
           unitsPageFloatingButtonColors[appState.theme]!;
-      ConvertouchColorScheme unitPageInfoBoxColor =
-          unitPageInfoBoxColors[appState.theme]!;
 
       return unitDetailsBlocBuilder((pageState) {
         _unitNameTextController.text = pageState.draftDetails.unit.name;
@@ -52,87 +51,148 @@ class _ConvertouchUnitDetailsPageState
               : "New Unit",
           body: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 15, 12, 60),
+              padding: const EdgeInsets.only(
+                left: 20,
+                top: 23,
+                right: 20,
+                bottom: 0,
+              ),
               child: Column(
                 children: [
-                  (pageState.draftDetails.unit.coefficient != 1 &&
-                                  pageState.isExistingUnit ||
-                              !pageState.isExistingUnit) &&
-                          pageState.draftDetails.unitGroup != null
-                      ? Column(
-                          children: [
-                            ConvertouchMenuItem(
-                              pageState.draftDetails.unitGroup!,
-                              onTap: () {
-                                FocusScope.of(context).unfocus();
-                                BlocProvider.of<UnitGroupsBlocForUnitDetails>(
-                                  context,
-                                ).add(
-                                  FetchUnitGroupsForUnitDetails(
-                                    currentUnitGroupInUnitDetails:
-                                        pageState.draftDetails.unitGroup!,
-                                    searchString: null,
-                                  ),
-                                );
-                              },
-                              disabled: pageState.draftDetails.unit.oob,
-                              theme: appState.theme,
-                              itemsViewMode: ItemsViewMode.list,
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        )
-                      : empty(),
-                  ConvertouchTextBox(
-                    label: 'Unit Name',
-                    disabled: pageState.draftDetails.unit.oob,
-                    controller: _unitNameTextController,
-                    onChanged: (String value) async {
-                      BlocProvider.of<UnitDetailsBloc>(context).add(
-                        UpdateUnitNameInUnitDetails(
-                          newValue: value,
-                        ),
-                      );
-                    },
-                    hintText: pageState.savedDetails.unit.name,
-                    theme: appState.theme,
-                  ),
-                  ConvertouchTextBox(
-                    label: 'Unit Code',
-                    disabled: pageState.draftDetails.unit.oob,
-                    controller: _unitCodeTextController,
-                    onChanged: (String value) async {
-                      BlocProvider.of<UnitDetailsBloc>(context).add(
-                        UpdateUnitCodeInUnitDetails(
-                          newValue: value,
-                        ),
-                      );
-                    },
-                    maxTextLength: UnitDetailsModel.unitCodeMaxLength,
-                    textLengthCounterVisible: true,
-                    hintText: pageState.savedDetails.unit.code,
-                    theme: appState.theme,
-                  ),
-                  LayoutBuilder(builder: (context, constrains) {
-                    if (pageState.note != null) {
-                      return ConvertouchInfoBox(
-                        background: unitPageInfoBoxColor.background.regular,
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: pageState.note!,
-                              ),
-                            ],
-                            style: TextStyle(
-                              color: textBoxColor.foreground.regular,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: quicksandFontFamily,
-                            ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (pageState.draftDetails.unitGroup == null ||
+                          pageState.draftDetails.unit.oob) {
+                        return empty();
+                      }
+
+                      return Column(
+                        children: [
+                          ConvertouchMenuItem(
+                            pageState.draftDetails.unitGroup!,
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                              BlocProvider.of<UnitGroupsBlocForUnitDetails>(
+                                context,
+                              ).add(
+                                FetchUnitGroupsForUnitDetails(
+                                  currentUnitGroupInUnitDetails:
+                                      pageState.draftDetails.unitGroup!,
+                                  searchString: null,
+                                ),
+                              );
+                            },
+                            theme: appState.theme,
+                            itemsViewMode: ItemsViewMode.list,
                           ),
-                        ),
+                          const SizedBox(height: 20),
+                        ],
                       );
-                    } else {
+                    },
+                  ),
+                  pageState.draftDetails.unit.oob
+                      ? ConvertouchInfoBox(
+                          headerText: "Unit Name",
+                          bodyText: pageState.savedDetails.unit.name,
+                          bodyColor: textBoxColor.foreground.regular,
+                          margin: const EdgeInsets.only(
+                            bottom: 20,
+                          ),
+                        )
+                      : ConvertouchTextBox(
+                          label: 'Unit Name',
+                          controller: _unitNameTextController,
+                          onChanged: (String value) async {
+                            BlocProvider.of<UnitDetailsBloc>(context).add(
+                              UpdateUnitNameInUnitDetails(
+                                newValue: value,
+                              ),
+                            );
+                          },
+                          hintText: pageState.savedDetails.unit.name,
+                          theme: appState.theme,
+                        ),
+                  pageState.draftDetails.unit.oob
+                      ? ConvertouchInfoBox(
+                          headerText: "Unit Code",
+                          bodyText: pageState.savedDetails.unit.code,
+                          bodyColor: textBoxColor.foreground.regular,
+                          margin: const EdgeInsets.only(
+                            bottom: 20,
+                          ),
+                        )
+                      : ConvertouchTextBox(
+                          label: 'Unit Code',
+                          disabled: pageState.draftDetails.unit.oob,
+                          controller: _unitCodeTextController,
+                          onChanged: (String value) async {
+                            BlocProvider.of<UnitDetailsBloc>(context).add(
+                              UpdateUnitCodeInUnitDetails(
+                                newValue: value,
+                              ),
+                            );
+                          },
+                          maxTextLength: UnitDetailsModel.unitCodeMaxLength,
+                          textLengthCounterVisible: true,
+                          hintText: pageState.savedDetails.unit.code,
+                          theme: appState.theme,
+                        ),
+                  ConvertouchInfoBox(
+                    headerText: "Value Type",
+                    bodyText: pageState.savedDetails.unit.valueType?.name ??
+                        pageState.savedDetails.unitGroup!.valueType.name,
+                    bodyColor: textBoxColor.foreground.regular,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                  ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (pageState.draftDetails.unit.oob) {
+                        return ConvertouchInfoBox(
+                          headerText: "Unit Group",
+                          bodyText: pageState.draftDetails.unitGroup!.name,
+                          bodyColor: textBoxColor.foreground.regular,
+                          margin: const EdgeInsets.only(bottom: 20),
+                        );
+                      }
+
+                      return empty();
+                    },
+                  ),
+                  LayoutBuilder(
+                    builder: (context, constrains) {
+                      if (pageState.draftDetails.unit.oob) {
+                        String text;
+
+                        if (pageState.draftDetails.unit.coefficient == 1) {
+                          text = "No (It is a base unit)";
+                        } else if (pageState
+                                .draftDetails.unitGroup!.conversionType ==
+                            ConversionType.formula) {
+                          text = FormulaUtils.getReverseStr(
+                                unitGroupName:
+                                    pageState.draftDetails.unitGroup!.name,
+                                unitCode: pageState.draftDetails.unit.code,
+                              ) ??
+                              "No (It is a base unit)";
+                        } else {
+                          text = "${pageState.draftDetails.value.strValue} "
+                              "${pageState.draftDetails.unit.code} = "
+                              "${pageState.draftDetails.argValue.scientificValue} "
+                              "${pageState.draftDetails.argUnit.code}";
+                        }
+
+                        return ConvertouchInfoBox(
+                          headerText: "Conversion Rule",
+                          bodyText: text,
+                          bodyColor: textBoxColor.foreground.regular,
+                          margin: const EdgeInsets.only(
+                            bottom: 20,
+                          ),
+                        );
+                      }
+
                       return Visibility(
                         visible: pageState.conversionRuleVisible,
                         child: Column(
@@ -149,6 +209,7 @@ class _ConvertouchUnitDetailsPageState
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 20),
                             ConvertouchConversionItem(
                               ConversionItemModel(
                                 unit: UnitModel(
@@ -219,8 +280,8 @@ class _ConvertouchUnitDetailsPageState
                           ],
                         ),
                       );
-                    }
-                  }),
+                    },
+                  ),
                 ],
               ),
             ),

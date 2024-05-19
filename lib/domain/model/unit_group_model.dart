@@ -4,6 +4,8 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 
 class UnitGroupModel extends IdNameItemModel {
   static const UnitGroupModel none = UnitGroupModel._();
+  static const ConvertouchValueType defaultValueType =
+      ConvertouchValueType.decimal;
 
   final String? iconName;
   final ConversionType conversionType;
@@ -64,7 +66,7 @@ class UnitGroupModel extends IdNameItemModel {
   const UnitGroupModel._()
       : this(
           name: "",
-          valueType: ConvertouchValueType.text,
+          valueType: defaultValueType,
         );
 
   @override
@@ -75,6 +77,9 @@ class UnitGroupModel extends IdNameItemModel {
         iconName,
         conversionType,
         refreshable,
+        valueType,
+        minValue,
+        maxValue,
         oob,
       ];
 
@@ -102,8 +107,8 @@ class UnitGroupModel extends IdNameItemModel {
       iconName: json["iconName"],
       conversionType: ConversionType.valueOf(json["conversionType"]),
       refreshable: json["refreshable"],
-      valueType: ConvertouchValueType.valueOf(json["valueType"]) ??
-          ConvertouchValueType.text,
+      valueType:
+          ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
       minValue: json["minValue"],
       maxValue: json["maxValue"],
       oob: json["oob"],
@@ -112,6 +117,6 @@ class UnitGroupModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'UnitGroupModel{$name}';
+    return 'UnitGroupModel{$name $valueType}';
   }
 }

@@ -39,7 +39,7 @@ class UnitGroupTranslator
       conversionType: ConversionType.valueOf(entity.conversionType),
       refreshable: entity.refreshable == 1,
       valueType: ConvertouchValueType.valueOf(entity.valueType) ??
-          ConvertouchValueType.text,
+          UnitGroupModel.defaultValueType,
       minValue: entity.minValue,
       maxValue: entity.maxValue,
       oob: entity.oob == 1,

@@ -142,6 +142,9 @@ class UnitModel extends IdNameItemModel {
         code,
         symbol,
         unitGroupId,
+        valueType,
+        minValue,
+        maxValue,
         oob,
       ];
 
@@ -152,6 +155,6 @@ class UnitModel extends IdNameItemModel {
     }
     return 'UnitModel{'
         'id: $id, $code, $name, c: $coefficient, '
-        'groupId: $unitGroupId, oob: $oob}';
+        'groupId: $unitGroupId, oob: $oob, type: $valueType}';
   }
 }

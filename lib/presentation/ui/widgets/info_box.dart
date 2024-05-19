@@ -53,7 +53,7 @@ class ConvertouchInfoBox extends StatelessWidget {
                         headerText!,
                         style: TextStyle(
                           fontSize: headerFontSize,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: headerColor,
                         ),
                       ),
