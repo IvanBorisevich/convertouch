@@ -65,65 +65,90 @@ class _ConvertouchUnitGroupDetailsPageState
                 : "New Group",
             body: Container(
               padding: const EdgeInsets.only(
-                left: 12,
-                top: 15,
-                right: 12,
+                left: 20,
+                top: 23,
+                right: 20,
                 bottom: 0,
               ),
               child: Column(
                 children: [
-                  ConvertouchTextBox(
-                    controller: _unitGroupNameController,
-                    onChanged: (value) {
-                      BlocProvider.of<UnitGroupDetailsBloc>(context).add(
-                        UpdateUnitGroupName(
-                          newValue: value,
+                  unitGroupDetailsState.savedGroup.oob
+                      ? ConvertouchInfoBox(
+                          headerText: "Name",
+                          bodyText: unitGroupDetailsState.savedGroup.name,
+                          bodyColor: textBoxColor.foreground.regular,
+                          margin: const EdgeInsets.only(
+                            bottom: 20,
+                          ),
+                        )
+                      : ConvertouchTextBox(
+                          controller: _unitGroupNameController,
+                          onChanged: (value) {
+                            BlocProvider.of<UnitGroupDetailsBloc>(context).add(
+                              UpdateUnitGroupName(
+                                newValue: value,
+                              ),
+                            );
+                          },
+                          label: "Name",
+                          hintText: unitGroupDetailsState.savedGroup.name,
+                          theme: appState.theme,
+                          customColor: textBoxColor,
+                          disabled: unitGroupDetailsState.draftGroup.oob,
                         ),
-                      );
-                    },
-                    label: "Name",
-                    hintText: unitGroupDetailsState.savedGroup.name,
-                    theme: appState.theme,
-                    customColor: textBoxColor,
-                    disabled: unitGroupDetailsState.draftGroup.oob,
+                  ConvertouchInfoBox(
+                    headerText: "Conversion Type",
+                    bodyText:
+                        unitGroupDetailsState.draftGroup.conversionType.name,
+                    bodyColor: textBoxColor.foreground.regular,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
                   ),
-                  ConvertouchTextBox(
-                    text: unitGroupDetailsState.draftGroup.conversionType.name,
-                    disabled: true,
-                    label: "Conversion Type",
-                    hintText: unitGroupDetailsState.savedGroup.name,
-                    theme: appState.theme,
-                    customColor: textBoxColor,
+                  ConvertouchInfoBox(
+                    headerText: "Refreshable",
+                    bodyText: unitGroupDetailsState.draftGroup.refreshable
+                        ? "Yes"
+                        : "No",
+                    bodyColor: textBoxColor.foreground.regular,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
                   ),
-                  Visibility(
+                  ConvertouchInfoBox(
                     visible: !unitGroupDetailsState.isExistingGroup &&
                         !unitGroupDetailsState.draftGroup.oob,
-                    child: ConvertouchInfoBox(
-                      background: infoBoxColor.background.regular,
-                      child: RichText(
-                        text: TextSpan(
-                          children: const <TextSpan>[
-                            TextSpan(
-                              text: 'Note: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: 'Currently only ',
-                            ),
-                            TextSpan(
-                              text: 'static',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: ' conversion type (coefficients) '
-                                  'is supported for custom unit groups',
-                            ),
-                          ],
-                          style: TextStyle(
-                            color: textBoxColor.foreground.regular,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: quicksandFontFamily,
+                    background: infoBoxColor.background.regular,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 14,
+                    ),
+                    margin: const EdgeInsets.only(
+                      top: 15,
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        children: const <TextSpan>[
+                          TextSpan(
+                            text: 'Note: ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
+                          TextSpan(
+                            text: 'Currently only ',
+                          ),
+                          TextSpan(
+                            text: 'static',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: ' conversion type (coefficients) '
+                                'is supported for custom unit groups',
+                          ),
+                        ],
+                        style: TextStyle(
+                          color: textBoxColor.foreground.regular,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: quicksandFontFamily,
                         ),
                       ),
                     ),
