@@ -19,15 +19,16 @@ class NumberValueUtils {
 
   const NumberValueUtils._();
 
-  static String formatValueInScientificNotation(
+  static String formatValueScientific(
     double? value, {
     int fractionDigits = defaultFractionDigitsNum,
     int fractionDigitsInScientificNotation = 2,
     int noFormatExponentMin = -defaultFractionDigitsNum,
     int noFormatExponentMax = 5,
+    String noValueStr = "",
   }) {
     if (value == null) {
-      return "";
+      return noValueStr;
     }
     String valueStr =
         value.toStringAsExponential(fractionDigitsInScientificNotation);
@@ -118,6 +119,27 @@ class NumberValueUtils {
       num2,
       fractionDigits: fractionDigits,
     );
+  }
+
+  static bool between({
+    required double? value,
+    double? min,
+    double? max,
+  }) {
+    if (value == null) {
+      return true;
+    }
+    if (value.isNaN) {
+      return false;
+    }
+    value = _valueOrZero(value);
+    min = _valueOrZero(min ?? double.negativeInfinity);
+    max = _valueOrZero(max ?? double.infinity);
+    return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
+  }
+
+  static double _valueOrZero(double value) {
+    return value != 0 ? value : 0;
   }
 
   static String _trimTrailingZerosInDouble(String doubleStr) {

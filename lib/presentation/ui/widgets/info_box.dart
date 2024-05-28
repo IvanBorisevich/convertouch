@@ -10,6 +10,7 @@ class ConvertouchInfoBox extends StatelessWidget {
   final Color? bodyColor;
   final String? bodyText;
   final double bodyFontSize;
+  final FontWeight bodyFontWeight;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool visible;
@@ -23,6 +24,7 @@ class ConvertouchInfoBox extends StatelessWidget {
     this.bodyColor,
     this.bodyText,
     this.bodyFontSize = 18,
+    this.bodyFontWeight = FontWeight.w500,
     this.padding,
     this.margin,
     this.visible = true,
@@ -70,6 +72,7 @@ class ConvertouchInfoBox extends StatelessWidget {
                       bodyText!,
                       style: TextStyle(
                         fontSize: bodyFontSize,
+                        fontWeight: bodyFontWeight,
                         color: bodyColor,
                       ),
                     );

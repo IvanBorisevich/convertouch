@@ -27,7 +27,7 @@ class PrepareDraftUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
       }
 
       ValueModel argValue = input.unitGroup?.conversionType == ConversionType.static
-          ? ValueModel.one : ValueModel.none;
+          ? ValueModel.one : ValueModel.emptyVal;
       double? newCurrentUnitCoefficient;
 
       if (argUnit.coefficient != null) {

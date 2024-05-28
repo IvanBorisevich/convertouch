@@ -13,6 +13,7 @@ import 'package:convertouch/domain/repositories/refreshable_value_repository.dar
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
+import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
@@ -91,11 +92,31 @@ class BuildConversionUseCase
           tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue);
         }
 
+        double? minValue = tgtUnit.minValue ?? input.unitGroup?.minValue;
+        double? maxValue = tgtUnit.maxValue ?? input.unitGroup?.maxValue;
+
+        ValueModel resultValue = NumberValueUtils.between(
+          value: tgtValue,
+          min: minValue,
+          max: maxValue,
+        )
+            ? ValueModel.ofDouble(tgtValue)
+            : ValueModel.undefined;
+
+        ValueModel resultDefaultValue = NumberValueUtils.between(
+                  value: tgtDefaultValue,
+                  min: minValue,
+                  max: maxValue,
+                ) &&
+                resultValue.isDefined
+            ? ValueModel.ofDouble(tgtDefaultValue)
+            : ValueModel.undefined;
+
         convertedUnitValues.add(
           ConversionItemModel(
             unit: tgtUnit,
-            value: ValueModel.ofDouble(tgtValue),
-            defaultValue: ValueModel.ofDouble(tgtDefaultValue),
+            value: resultValue.isDefined ? resultValue : ValueModel.emptyVal,
+            defaultValue: resultDefaultValue,
           ),
         );
       }
@@ -134,7 +155,7 @@ class BuildConversionUseCase
     if (!unitGroup!.refreshable) {
       return ConversionItemModel(
         unit: sourceUnit,
-        value: ValueModel.none,
+        value: ValueModel.emptyVal,
         defaultValue: ValueModel.one,
       );
     }
@@ -145,15 +166,15 @@ class BuildConversionUseCase
     if (job == null) {
       return ConversionItemModel(
         unit: sourceUnit,
-        value: ValueModel.none,
-        defaultValue: ValueModel.none,
+        value: ValueModel.emptyVal,
+        defaultValue: ValueModel.emptyVal,
       );
     }
 
     if (job.refreshableDataPart != RefreshableDataPart.value) {
       return ConversionItemModel(
         unit: sourceUnit,
-        value: ValueModel.none,
+        value: ValueModel.emptyVal,
         defaultValue: ValueModel.one,
       );
     }
@@ -164,7 +185,7 @@ class BuildConversionUseCase
 
     return ConversionItemModel(
       unit: sourceUnit,
-      value: ValueModel.none,
+      value: ValueModel.emptyVal,
       defaultValue: refreshableValue?.value != null
           ? ValueModel.ofString(refreshableValue!.value!)
           : ValueModel.one,

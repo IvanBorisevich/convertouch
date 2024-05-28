@@ -170,7 +170,7 @@ class UnitDetailsBloc
       UnitDetailsModel.coalesce(
         currentSavedDetails,
         argUnit: event.argumentUnit,
-        argValue: ValueModel.none,
+        argValue: ValueModel.emptyVal,
       ),
     );
 
@@ -563,7 +563,7 @@ class UnitDetailsBloc
       UnitDetailsModel(
         unitGroup: unitGroup,
         unit: existingUnit ?? UnitModel.none,
-        argValue: editMode ? ValueModel.none : ValueModel.one,
+        argValue: editMode ? ValueModel.emptyVal : ValueModel.one,
       ),
     );
 
@@ -580,7 +580,7 @@ class UnitDetailsBloc
       UnitDetailsModel(
         unitGroup: unitGroup,
         unit: existingUnit ?? UnitModel.none,
-        argValue: editMode ? ValueModel.none : ValueModel.one,
+        argValue: editMode ? ValueModel.emptyVal : ValueModel.one,
       ),
     );
 

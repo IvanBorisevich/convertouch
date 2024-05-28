@@ -26,7 +26,7 @@ class PrepareSavedUnitDetailsUseCase extends PrepareUnitDetailsUseCase {
         argUnit = await calculateArgUnit(input);
       }
 
-      ValueModel argValue = ValueModel.none;
+      ValueModel argValue = ValueModel.emptyVal;
 
       if (input.unit.coefficient != null && argUnit.coefficient != null) {
         if (input.argValue.notEmpty) {

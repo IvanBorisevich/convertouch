@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/utils/formula_utils.dart';
+import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
@@ -141,6 +142,30 @@ class _ConvertouchUnitDetailsPageState
                     headerText: "Value Type",
                     bodyText: pageState.savedDetails.unit.valueType?.name ??
                         pageState.savedDetails.unitGroup!.valueType.name,
+                    bodyColor: textBoxColor.foreground.regular,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                  ),
+                  ConvertouchInfoBox(
+                    headerText: "Min Value",
+                    bodyText: NumberValueUtils.formatValueScientific(
+                      pageState.savedDetails.unit.minValue ??
+                          pageState.savedDetails.unitGroup?.minValue,
+                      noValueStr: '-',
+                    ),
+                    bodyColor: textBoxColor.foreground.regular,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                  ),
+                  ConvertouchInfoBox(
+                    headerText: "Max Value",
+                    bodyText: NumberValueUtils.formatValueScientific(
+                      pageState.savedDetails.unit.maxValue ??
+                          pageState.savedDetails.unitGroup?.maxValue,
+                      noValueStr: '-',
+                    ),
                     bodyColor: textBoxColor.foreground.regular,
                     margin: const EdgeInsets.only(
                       bottom: 20,

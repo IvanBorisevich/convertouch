@@ -30,7 +30,7 @@ class ConversionItemModel extends ItemModel {
     required UnitModel unit,
   }) : this(
           unit: unit,
-          value: ValueModel.none,
+          value: ValueModel.emptyVal,
           defaultValue: ValueModel.one,
         );
 
@@ -51,13 +51,13 @@ class ConversionItemModel extends ItemModel {
                 patchWith: value,
               ) ??
               savedModel?.value ??
-              ValueModel.none,
+              ValueModel.emptyVal,
           defaultValue: ObjectUtils.coalesce(
                 what: savedModel?.defaultValue,
                 patchWith: defaultValue,
               ) ??
               savedModel?.defaultValue ??
-              ValueModel.none,
+              ValueModel.emptyVal,
         );
 
   bool get empty => value.empty && defaultValue.empty;
@@ -78,9 +78,9 @@ class ConversionItemModel extends ItemModel {
     }
     return ConversionItemModel(
       unit: UnitModel.fromJson(json["unit"])!,
-      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.emptyVal,
       defaultValue:
-          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.emptyVal,
     );
   }
 

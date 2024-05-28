@@ -17,9 +17,9 @@ class UnitDetailsModel extends Equatable {
   const UnitDetailsModel({
     this.unitGroup,
     this.unit = UnitModel.none,
-    this.value = ValueModel.none,
+    this.value = ValueModel.emptyVal,
     this.argUnit = UnitModel.none,
-    this.argValue = ValueModel.none,
+    this.argValue = ValueModel.emptyVal,
   });
 
   UnitDetailsModel.coalesce(
@@ -43,7 +43,7 @@ class UnitDetailsModel extends Equatable {
                 what: currentModel.value,
                 patchWith: value,
               ) ??
-              ValueModel.none,
+              ValueModel.emptyVal,
           argUnit: ObjectUtils.coalesce(
                 what: currentModel.argUnit,
                 patchWith: argUnit,
@@ -53,7 +53,7 @@ class UnitDetailsModel extends Equatable {
                 what: currentModel.argValue,
                 patchWith: argValue,
               ) ??
-              ValueModel.none,
+              ValueModel.emptyVal,
         );
 
   @override

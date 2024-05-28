@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/utils/number_value_utils.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
@@ -110,6 +111,28 @@ class _ConvertouchUnitGroupDetailsPageState
                     ConvertouchInfoBox(
                       headerText: "Values Type",
                       bodyText: unitGroupDetailsState.draftGroup.valueType.name,
+                      bodyColor: textBoxColor.foreground.regular,
+                      margin: const EdgeInsets.only(
+                        bottom: 20,
+                      ),
+                    ),
+                    ConvertouchInfoBox(
+                      headerText: "Values Minimum",
+                      bodyText: NumberValueUtils.formatValueScientific(
+                        unitGroupDetailsState.draftGroup.minValue,
+                        noValueStr: '-',
+                      ),
+                      bodyColor: textBoxColor.foreground.regular,
+                      margin: const EdgeInsets.only(
+                        bottom: 20,
+                      ),
+                    ),
+                    ConvertouchInfoBox(
+                      headerText: "Values Maximum",
+                      bodyText: NumberValueUtils.formatValueScientific(
+                        unitGroupDetailsState.draftGroup.maxValue,
+                        noValueStr: '-',
+                      ),
                       bodyColor: textBoxColor.foreground.regular,
                       margin: const EdgeInsets.only(
                         bottom: 20,
