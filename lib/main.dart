@@ -35,7 +35,7 @@ final logger = Logger(
 );
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = ConvertouchBlocObserver();
   logger.d("Before dependencies initialization");
   await di.init();
@@ -54,7 +54,7 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.locator<AppBloc>()
             ..add(
-              const GetAppSettings(),
+              const GetAppSettingsInit(),
             ),
         ),
         BlocProvider(

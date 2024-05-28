@@ -1,8 +1,7 @@
 import 'package:collection/collection.dart';
 
 const String appName = "Convertouch";
-const String appVersion = "1.0.0+9";
-
+const String unknownAppVersion = "Unknown";
 const String iconAssetsPathPrefix = "assets/icons";
 const String quicksandFontFamily = "Quicksand";
 
@@ -16,6 +15,7 @@ abstract class SettingKeys {
   static const String theme = "theme";
   static const String unitGroupsViewMode = "unitGroupsViewMode";
   static const String unitsViewMode = "unitsViewMode";
+  static const String appVersion = "appVersion";
 }
 
 enum PageName {

@@ -4,6 +4,15 @@ abstract class AppEvent extends ConvertouchEvent {
   const AppEvent();
 }
 
+class GetAppSettingsInit extends AppEvent {
+  const GetAppSettingsInit();
+
+  @override
+  String toString() {
+    return 'GetAppSettingsInit{}';
+  }
+}
+
 class GetAppSettings extends AppEvent {
   const GetAppSettings();
 

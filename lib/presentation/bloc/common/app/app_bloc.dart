@@ -3,6 +3,7 @@ import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
   AppBloc()
@@ -11,10 +12,43 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
             theme: ConvertouchUITheme.light,
             unitGroupsViewMode: ItemsViewMode.grid,
             unitsViewMode: ItemsViewMode.grid,
+            appVersion: unknownAppVersion,
           ),
         ) {
-    on<GetAppSettings>((event, emit) => emit(state));
+    on<GetAppSettingsInit>(_onInitialSettingsGet);
+    on<GetAppSettings>(_onSettingsGet);
     on<ChangeSetting>(_onSettingSave);
+  }
+
+  _onInitialSettingsGet(
+    GetAppSettingsInit event,
+    Emitter<AppState> emit,
+  ) async {
+    Map<String, dynamic> currentStateMap = toJson(state);
+    String appVersion = await _getAppVersion();
+
+    currentStateMap.update(
+      SettingKeys.appVersion,
+      (value) => appVersion,
+      ifAbsent: () => appVersion,
+    );
+
+    emit(fromJson(currentStateMap));
+  }
+
+  Future<String> _getAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+
+    String buildNum = info.buildNumber.isNotEmpty ? "+${info.buildNumber}" : "";
+
+    return "${info.version}$buildNum";
+  }
+
+  _onSettingsGet(
+    GetAppSettings event,
+    Emitter<AppState> emit,
+  ) async {
+    emit(state);
   }
 
   _onSettingSave(
@@ -39,6 +73,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
       unitGroupsViewMode:
           ItemsViewMode.valueOf(json[SettingKeys.unitGroupsViewMode]),
       unitsViewMode: ItemsViewMode.valueOf(json[SettingKeys.unitsViewMode]),
+      appVersion: json[SettingKeys.appVersion] ?? unknownAppVersion,
     );
   }
 
@@ -49,6 +84,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
         SettingKeys.theme: state.theme.value,
         SettingKeys.unitGroupsViewMode: state.unitGroupsViewMode.value,
         SettingKeys.unitsViewMode: state.unitsViewMode.value,
+        SettingKeys.appVersion: state.appVersion,
       };
     }
     return const {};

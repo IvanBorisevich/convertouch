@@ -9,11 +9,13 @@ class AppStateReady extends AppState {
   final ConvertouchUITheme theme;
   final ItemsViewMode unitGroupsViewMode;
   final ItemsViewMode unitsViewMode;
+  final String appVersion;
 
   const AppStateReady({
     required this.theme,
     required this.unitGroupsViewMode,
     required this.unitsViewMode,
+    required this.appVersion,
   });
 
   @override
@@ -21,6 +23,7 @@ class AppStateReady extends AppState {
     theme,
     unitGroupsViewMode,
     unitsViewMode,
+    appVersion,
   ];
 
   @override
@@ -28,6 +31,7 @@ class AppStateReady extends AppState {
     return 'AppStateReady{'
         'theme: $theme, '
         'unitGroupsViewMode: $unitGroupsViewMode, '
-        'unitsViewMode: $unitsViewMode}';
+        'unitsViewMode: $unitsViewMode, '
+        'appVersion: $appVersion}';
   }
 }
