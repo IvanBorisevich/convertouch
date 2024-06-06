@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbconfig/migrations/v1_init.dart';
+import 'package:convertouch/data/dao/db/dbconfig/migrations/v2_add_invertible.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
@@ -14,7 +15,6 @@ import 'package:floor/floor.dart';
 ///   - dart run build_runner build
 ///   - flutter packages pub run build_runner build
 /// 5) Rebuild and start the app
-
 
 class ConvertouchDatabaseHelper {
   static final ConvertouchDatabaseHelper I =
@@ -33,10 +33,8 @@ class ConvertouchDatabaseHelper {
 final initialization = Callback(
   onCreate: (database, version) {
     log("[onCreate] Current database version: $version");
-    for (int version = 1; version <= dbVersion; version++) {
-      log("[onCreate] Initialization units of version $version");
-      InitialMigration().execute(database);
-    }
+    log("[onCreate] Run initial migration (version 1)");
+    InitialMigration().execute(database);
   },
 );
 
@@ -46,4 +44,6 @@ final migrations = [
 
 final migration1to2 = Migration(1, 2, (database) async {
   log("Migration database from version 1 to 2");
+  await database.execute('ALTER TABLE units ADD COLUMN invertible INTEGER');
+  await InvertibleFlagAddingMigration().execute(database);
 });

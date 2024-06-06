@@ -17,6 +17,7 @@ void main() {
     "unit": {
       "name": "testUnitName",
       "code": "testUnitCode",
+      "invertible": true,
     },
     "value": {
       "raw": "0",

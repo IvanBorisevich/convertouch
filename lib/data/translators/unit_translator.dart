@@ -22,6 +22,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       valueType: model.valueType?.val,
       minValue: model.minValue,
       maxValue: model.maxValue,
+      invertible: model.invertible ? null : 0,
       oob: model.oob == true ? 1 : null,
     );
   }
@@ -41,6 +42,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       valueType: ConvertouchValueType.valueOf(entity.valueType),
       minValue: entity.minValue,
       maxValue: entity.maxValue,
+      invertible: entity.invertible == 0 ? false : true,
       oob: entity.oob == 1,
     );
   }

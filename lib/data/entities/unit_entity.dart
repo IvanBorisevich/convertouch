@@ -34,6 +34,7 @@ class UnitEntity {
   final double? minValue;
   @ColumnInfo(name: 'max_value')
   final double? maxValue;
+  final int? invertible;
   final int? oob;
 
   const UnitEntity({
@@ -46,6 +47,7 @@ class UnitEntity {
     this.valueType,
     this.minValue,
     this.maxValue,
+    this.invertible,
     this.oob,
   });
 
@@ -65,24 +67,38 @@ class UnitEntity {
           valueType: savedEntity.valueType,
           minValue: savedEntity.minValue,
           maxValue: savedEntity.maxValue,
+          invertible: savedEntity.invertible,
         );
 
   static Map<String, Object?> entityToRow(
-    Map<String, dynamic> entity,
-    int unitGroupId,
-  ) {
+    Map<String, dynamic> entity, {
+    required int unitGroupId,
+    bool autoSetDefaults = true,
+  }) {
+    int? valueType;
+    int? oob;
+
+    if (autoSetDefaults) {
+      valueType = entity['valueType'] != null
+          ? (entity['valueType'] as ConvertouchValueType).val
+          : null;
+      oob = entity['oob'] ?? 1;
+    } else {
+      valueType = entity['valueType'];
+      oob = entity['oob'];
+    }
+
     return {
       'name': entity['name'],
       'code': entity['code'],
       'symbol': entity['symbol'],
       'coefficient': entity['coefficient'],
       'unit_group_id': unitGroupId,
-      'value_type': entity['valueType'] != null
-          ? (entity['valueType'] as ConvertouchValueType).val
-          : null,
+      'value_type': valueType,
       'min_value': entity['minValue'],
       'max_value': entity['maxValue'],
-      'oob': entity['oob'] ?? 1,
+      'invertible': entity['invertible'],
+      'oob': oob,
     };
   }
 }

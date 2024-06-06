@@ -11,10 +11,8 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'dbconfig.g.dart';
 
-const int dbVersion = 1;
-
 @Database(
-  version: dbVersion,
+  version: 2,
   entities: [
     UnitGroupEntity,
     UnitEntity,

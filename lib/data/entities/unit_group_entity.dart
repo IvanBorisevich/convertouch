@@ -38,19 +38,39 @@ class UnitGroupEntity {
     this.oob,
   });
 
-  static Map<String, Object?> entityToRow(Map<String, dynamic> entity) {
+  static Map<String, Object?> entityToRow(
+    Map<String, dynamic> entity, {
+    bool autoSetDefaults = true,
+  }) {
+    int? convType;
+    int? refreshable;
+    int? valueType;
+    int? oob;
+
+    if (autoSetDefaults) {
+      convType = entity['conversionType'] != null &&
+              entity['conversionType'] != ConversionType.static
+          ? (entity['conversionType'] as ConversionType).value
+          : null;
+      refreshable = entity['refreshable'] == true ? 1 : null;
+      valueType = (entity['valueType'] as ConvertouchValueType).val;
+      oob = entity['oob'] ?? 1;
+    } else {
+      convType = entity['conversionType'];
+      refreshable = entity['refreshable'];
+      valueType = entity['valueType'];
+      oob = entity['oob'];
+    }
+
     return {
       'name': entity['groupName'],
       'icon_name': entity['iconName'],
-      'conversion_type': entity['conversionType'] != null &&
-          entity['conversionType'] != ConversionType.static
-          ? (entity['conversionType'] as ConversionType).value
-          : null,
-      'refreshable': entity['refreshable'] == true ? 1 : null,
-      'value_type': (entity['valueType'] as ConvertouchValueType).val,
+      'conversion_type': convType,
+      'refreshable': refreshable,
+      'value_type': valueType,
       'min_value': entity['minValue'],
       'max_value': entity['maxValue'],
-      'oob': entity['oob'] ?? 1,
+      'oob': oob,
     };
   }
 }

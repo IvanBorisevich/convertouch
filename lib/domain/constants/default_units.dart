@@ -11,7 +11,7 @@ const degreeNewtonCode = "°N";
 const degreeReaumurCode = "°Ré";
 const degreeRomerCode = "°Rø";
 
-const unitDataVersions = [
+const unitsData = [
   unitsV1,
 ];
 

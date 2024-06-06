@@ -12,6 +12,7 @@ class UnitModel extends IdNameItemModel {
   final ConvertouchValueType? valueType;
   final double? minValue;
   final double? maxValue;
+  final bool invertible;
 
   const UnitModel({
     super.id,
@@ -23,6 +24,7 @@ class UnitModel extends IdNameItemModel {
     this.valueType,
     this.minValue,
     this.maxValue,
+    this.invertible = true,
     super.oob,
   }) : super(
           itemType: ItemType.unit,
@@ -45,6 +47,7 @@ class UnitModel extends IdNameItemModel {
     ConvertouchValueType? valueType,
     double? minValue,
     double? maxValue,
+    bool? invertible,
   }) : this(
           id: ObjectUtils.coalesce(
             what: savedUnit.id,
@@ -85,6 +88,7 @@ class UnitModel extends IdNameItemModel {
                 patchWith: unitGroupId,
               ) ??
               -1,
+          invertible: savedUnit.invertible,
           oob: savedUnit.oob,
         );
 
@@ -107,6 +111,7 @@ class UnitModel extends IdNameItemModel {
       "valueType": valueType?.val,
       "minValue": minValue,
       "maxValue": maxValue,
+      "invertible": invertible,
       "oob": oob == true ? true : null,
     };
 
@@ -129,6 +134,7 @@ class UnitModel extends IdNameItemModel {
       valueType: ConvertouchValueType.valueOf(json["valueType"]),
       minValue: json["minValue"],
       maxValue: json["maxValue"],
+      invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );
   }
@@ -145,6 +151,7 @@ class UnitModel extends IdNameItemModel {
         valueType,
         minValue,
         maxValue,
+        invertible,
         oob,
       ];
 
