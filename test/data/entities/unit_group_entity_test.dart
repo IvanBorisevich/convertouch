@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   test(
-    'Build unit_groups table row from entity with auto set defaults',
+    'Build unit_groups table row from entity with init defaults',
     () {
       expect(
         UnitGroupEntity.entityToRow({
@@ -33,6 +33,7 @@ void main() {
           'refreshable': false,
           'valueType': ConvertouchValueType.decimalPositive,
           'minValue': 0,
+          'units': [],
         }),
         {
           'name': 'Length',
@@ -49,24 +50,32 @@ void main() {
   );
 
   test(
-    'Build unit_groups table row from entity without auto set defaults',
+    'Build unit_groups table row from entity without init defaults',
     () {
       expect(
         UnitGroupEntity.entityToRow(
           {
             'groupName': 'Length',
           },
-          autoSetDefaults: false,
+          initDefaults: false,
         ),
         {
           'name': 'Length',
-          'icon_name': null,
-          'conversion_type': null,
-          'refreshable': null,
-          'value_type': null,
+        },
+      );
+
+      expect(
+        UnitGroupEntity.entityToRow(
+          {
+            'groupName': 'Length',
+            'minValue': null,
+            'units': [],
+          },
+          initDefaults: false,
+        ),
+        {
+          'name': 'Length',
           'min_value': null,
-          'max_value': null,
-          'oob': null
         },
       );
     },

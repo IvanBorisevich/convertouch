@@ -1,5 +1,5 @@
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
-import 'package:convertouch/data/dao/db/dbconfig/dbhelper.dart';
+import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/repositories/db/refreshable_value_repository_impl.dart';

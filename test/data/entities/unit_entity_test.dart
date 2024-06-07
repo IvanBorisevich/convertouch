@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   test(
-    'Build units table row from entity with auto set defaults',
+    'Build units table row from entity with init defaults',
     () {
       expect(
         UnitEntity.entityToRow(
@@ -31,7 +31,7 @@ void main() {
   );
 
   test(
-    'Build units table row from entity without auto set defaults',
+    'Build units table row from entity without init defaults',
     () {
       expect(
         UnitEntity.entityToRow(
@@ -39,19 +39,25 @@ void main() {
             "code": "g",
           },
           unitGroupId: 1,
-          autoSetDefaults: false,
+          initDefaults: false,
         ),
         {
           'code': 'g',
-          'name': null,
+        },
+      );
+
+      expect(
+        UnitEntity.entityToRow(
+          {
+            "code": "g",
+            "coefficient": null,
+          },
+          unitGroupId: 1,
+          initDefaults: false,
+        ),
+        {
+          'code': 'g',
           'coefficient': null,
-          'symbol': null,
-          'unit_group_id': 1,
-          'value_type': null,
-          'min_value': null,
-          'max_value': null,
-          'invertible': null,
-          'oob': null,
         },
       );
     },

@@ -1,6 +1,6 @@
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
-import 'package:convertouch/data/utils/sql_utils.dart';
+import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -35,6 +35,23 @@ void main() {
         "UPDATE unit_groups SET "
         "icon_name = 'length-group.png' "
         "WHERE id = 1",
+      );
+
+      expect(
+        SqlUtils.getUpdateQuery(
+          tableName: unitGroupsTableName,
+          id: 1,
+          row: {
+            'name': 'Length',
+            'icon_name': 'length-group.png',
+            'min_value': null,
+          },
+          excludedColumns: ['name'],
+        ),
+        "UPDATE unit_groups SET "
+            "icon_name = 'length-group.png', "
+            "min_value = null "
+            "WHERE id = 1",
       );
 
       expect(

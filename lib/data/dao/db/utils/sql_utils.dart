@@ -1,16 +1,49 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/data/entities/refreshable_value_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
-import 'package:convertouch/data/utils/sql_utils.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class ConvertouchDbMigration {
-  const ConvertouchDbMigration();
+class SqlUtils {
+  const SqlUtils._();
 
-  Future<void> execute(Database database);
+  static String? getUpdateQuery({
+    required String tableName,
+    required int id,
+    required Map<String, Object?> row,
+    List<String> excludedColumns = const [],
+  }) {
+    mappingFunc(MapEntry<String, Object?> e) {
+      String name = e.key;
+      Object? value;
+      if (!excludedColumns.contains(e.key)) {
+        value = e.value.runtimeType == String ? "'${e.value}'" : e.value;
+        return '$name = $value';
+      }
+      return null;
+    }
 
-  static Future<void> fillUnits(
+    List<String> setClauses = row.entries.map(mappingFunc).nonNulls.toList();
+    return setClauses.isNotEmpty
+        ? 'UPDATE $tableName SET '
+            '${setClauses.join(', ')}'
+            ' WHERE id = $id'
+        : null;
+  }
+
+  static Future<bool> isColumnNew(
+    Database database, {
+    required String tableName,
+    required String columnName,
+  }) async {
+    final tableInfo = await database.rawQuery('PRAGMA table_info($tableName)');
+    return tableInfo.none(
+      (rowMap) => rowMap["name"] == columnName,
+    );
+  }
+
+  static Future<void> mergeGroupsAndUnits(
     Database database, {
     required List<dynamic> entities,
   }) async {
@@ -70,12 +103,12 @@ abstract class ConvertouchDbMigration {
     int groupId;
     if (existingGroupNames.containsKey(entity['groupName'])) {
       groupId = existingGroupNames[entity['groupName']]!;
-      String? query = SqlUtils.getUpdateQuery(
+      String? query = getUpdateQuery(
         tableName: unitGroupsTableName,
         id: groupId,
         row: UnitGroupEntity.entityToRow(
           entity,
-          autoSetDefaults: false,
+          initDefaults: false,
         ),
         excludedColumns: ['name', 'oob'],
       );
@@ -121,13 +154,13 @@ abstract class ConvertouchDbMigration {
   }) {
     if (existingUnitCodes.containsKey(entity['code'])) {
       int unitId = existingUnitCodes[entity['code']]!;
-      String? query = SqlUtils.getUpdateQuery(
+      String? query = getUpdateQuery(
         tableName: unitsTableName,
         id: unitId,
         row: UnitEntity.entityToRow(
           entity,
           unitGroupId: unitGroupId,
-          autoSetDefaults: false,
+          initDefaults: false,
         ),
         excludedColumns: ['code', 'oob', 'unit_group_id'],
       );

@@ -11,10 +11,6 @@ const degreeNewtonCode = "°N";
 const degreeReaumurCode = "°Ré";
 const degreeRomerCode = "°Rø";
 
-const unitsData = [
-  unitsV1,
-];
-
 const unitsV1 = [
   {
     "groupName": "Length",
@@ -939,3 +935,14 @@ const unitsV1 = [
     ]
   },
 ];
+
+// const unitsV2 = [
+//   {
+//     "groupName": "Volume",
+//     "minValue": null,
+//     "units": [
+//       {"code": "mm³", "name": "Cubic 1 Millimeter", "coefficient": 1E-9},
+//       {"code": "mmm³", "name": "Cubic 3 Millimeter", "coefficient": 1E-9},
+//     ]
+//   },
+// ];
