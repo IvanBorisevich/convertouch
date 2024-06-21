@@ -8,7 +8,7 @@ void main() {
     'Build queries for update',
     () {
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -23,7 +23,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -38,7 +38,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -55,7 +55,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -72,7 +72,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -91,7 +91,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitsTableName,
           id: 1,
           row: {
@@ -117,7 +117,7 @@ void main() {
     'Not build queries for update if no data to be updated',
     () {
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {},
@@ -126,7 +126,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitGroupsTableName,
           id: 1,
           row: {
@@ -138,7 +138,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitsTableName,
           id: 1,
           row: {},
@@ -147,7 +147,7 @@ void main() {
       );
 
       expect(
-        SqlUtils.getUpdateQuery(
+        SqlUtils.buildUpdateQuery(
           tableName: unitsTableName,
           id: 1,
           row: {

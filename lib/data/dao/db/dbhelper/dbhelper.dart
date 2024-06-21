@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
-import 'package:convertouch/data/dao/db/dbhelper/migrations/v1_init.dart';
-import 'package:convertouch/data/dao/db/dbhelper/migrations/v2_add_invertible.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/init_migration.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration1to2.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
@@ -58,5 +58,5 @@ final _initCallback = Callback(
 );
 
 final List<ConvertouchDbMigration> _rawMigrations = [
-  InvertibleFlagAddingMigration(),
+  Migration1to2(),
 ];

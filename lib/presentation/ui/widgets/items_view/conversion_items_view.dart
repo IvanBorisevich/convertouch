@@ -79,6 +79,7 @@ class _ConvertouchConversionItemsViewState
                 Expanded(
                   child: ConvertouchConversionItem(
                     widget.convertedItems[index],
+                    disabled: !widget.convertedItems[index].unit.invertible,
                     valueType: widget.convertedItems[index].unit.valueType ??
                         widget.valueType,
                     onTap: () {

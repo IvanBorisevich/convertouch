@@ -50,7 +50,7 @@ const unitsV1 = [
     "minValue": 0,
     "units": [
       {"code": "mm³", "name": "Cubic Millimeter", "coefficient": 1E-9},
-      {"code": "cm", "name": "Cubic Centimeter", "coefficient": 1E-6},
+      {"code": "cm³", "name": "Cubic Centimeter", "coefficient": 1E-6},
       {"code": "dm³", "name": "Cubic Decimeter (Liter)", "coefficient": 1E-3},
       {"code": "m³", "name": "Cubic Meter", "coefficient": 1},
       {"code": "gal", "name": "Gallon USA", "coefficient": 3.785411784E-3},
@@ -936,13 +936,12 @@ const unitsV1 = [
   },
 ];
 
-// const unitsV2 = [
-//   {
-//     "groupName": "Volume",
-//     "minValue": null,
-//     "units": [
-//       {"code": "mm³", "name": "Cubic 1 Millimeter", "coefficient": 1E-9},
-//       {"code": "mmm³", "name": "Cubic 3 Millimeter", "coefficient": 1E-9},
-//     ]
-//   },
-// ];
+const unitsV2 = [
+  {
+    "groupName": "Volume",
+    "minValue": null,
+    "units": [
+      {"code": "mm³", "invertible": false},
+    ]
+  },
+];

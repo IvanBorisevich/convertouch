@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class SqlUtils {
   const SqlUtils._();
 
-  static String? getUpdateQuery({
+  static String? buildUpdateQuery({
     required String tableName,
     required int id,
     required Map<String, Object?> row,
@@ -41,6 +41,36 @@ class SqlUtils {
     return tableInfo.none(
       (rowMap) => rowMap["name"] == columnName,
     );
+  }
+
+  static Future<void> updateUnitColumn(
+    Database database, {
+    required String columnName,
+    required Object? newColumnValue,
+    required String unitCode,
+    required String groupName,
+  }) async {
+    List<Map<String, dynamic>> result = await database.rawQuery(
+      "SELECT u.id FROM unit_groups g, units u "
+      "WHERE 1=1 "
+      "AND u.code = ? "
+      "AND g.name = ? "
+      "AND u.unit_group_id = g.id ",
+      [unitCode, groupName],
+    );
+    if (result.isNotEmpty) {
+      int unitId = result.first['id'];
+
+      await database.rawUpdate(
+        buildUpdateQuery(
+          tableName: unitsTableName,
+          id: unitId,
+          row: {
+            columnName: newColumnValue,
+          },
+        )!,
+      );
+    }
   }
 
   static Future<void> mergeGroupsAndUnits(
@@ -103,7 +133,7 @@ class SqlUtils {
     int groupId;
     if (existingGroupNames.containsKey(entity['groupName'])) {
       groupId = existingGroupNames[entity['groupName']]!;
-      String? query = getUpdateQuery(
+      String? query = buildUpdateQuery(
         tableName: unitGroupsTableName,
         id: groupId,
         row: UnitGroupEntity.entityToRow(
@@ -154,7 +184,7 @@ class SqlUtils {
   }) {
     if (existingUnitCodes.containsKey(entity['code'])) {
       int unitId = existingUnitCodes[entity['code']]!;
-      String? query = getUpdateQuery(
+      String? query = buildUpdateQuery(
         tableName: unitsTableName,
         id: unitId,
         row: UnitEntity.entityToRow(
