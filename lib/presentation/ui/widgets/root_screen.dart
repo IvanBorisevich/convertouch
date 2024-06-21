@@ -29,13 +29,13 @@ class ConvertouchRootScreen extends StatelessWidget {
       listenWhen: (prev, next) {
         return prev != next &&
             next is NavigationDone &&
-            next.bottomNavbarItem == bottomNavbarItem &&
-            next.bottomNavbarItem != BottomNavbarItem.home;
+            next.selectedNavbarItem == bottomNavbarItem &&
+            next.selectedNavbarItem != BottomNavbarItem.home;
       },
       listener: (_, state) {
         if (state is NavigationDone &&
-            state.bottomNavbarItem == bottomNavbarItem &&
-            state.bottomNavbarItem != BottomNavbarItem.home &&
+            state.selectedNavbarItem == bottomNavbarItem &&
+            state.selectedNavbarItem != BottomNavbarItem.home &&
             state.isBottomNavbarOpenedFirstTime) {
           onInit?.call();
         }
@@ -47,16 +47,12 @@ class ConvertouchRootScreen extends StatelessWidget {
           initialRoute: rootPageId.name,
           onGenerateRoute: (settings) {
             return ConvertouchNavigationAnimation.wrapIntoAnimation(
-              _getRoute(settings.name),
+              routesMap[settings.name] ?? routesMap[rootPageId.name]!,
               settings,
             );
           },
         ),
       ),
     );
-  }
-
-  Widget _getRoute(String? routeName) {
-    return routesMap[routeName] ?? routesMap[rootPageId.name]!;
   }
 }

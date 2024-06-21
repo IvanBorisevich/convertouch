@@ -80,7 +80,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         listener: (_, state) {
           if (state is NavigationDone) {
             GlobalKey<NavigatorState> navKey =
-                _screenNavigatorKeys[state.bottomNavbarItem]!;
+                _screenNavigatorKeys[state.selectedNavbarItem]!;
 
             if (state.nextPageName != null && state.exception == null) {
               navKey.currentState?.pushNamed(state.nextPageName!.name);
@@ -109,13 +109,27 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         },
         builder: (_, state) {
           if (state is NavigationDone) {
-            BottomNavbarItem selectedItem = state.bottomNavbarItem;
+            BottomNavbarItem selectedItem = state.selectedNavbarItem;
             return WillPopScope(
               onWillPop: () async {
                 final isFirstRouteInSelectedNavbarItem =
                     !await _screenNavigatorKeys[selectedItem]!
                         .currentState!
                         .maybePop();
+                if (isFirstRouteInSelectedNavbarItem) {
+                  if (selectedItem != BottomNavbarItem.home) {
+                    BlocProvider.of<NavigationBloc>(
+                            _screenNavigatorKeys[selectedItem]!
+                                .currentContext!)
+                        .add(
+                      SelectBottomNavbarItem(
+                        targetItem: BottomNavbarItem.home,
+                        selectedItem: selectedItem,
+                      ),
+                    );
+                    return false;
+                  }
+                }
                 return isFirstRouteInSelectedNavbarItem;
               },
               child: SafeArea(

@@ -10,7 +10,7 @@ class NavigationBloc
   NavigationBloc()
       : super(
           const NavigationDone(
-            bottomNavbarItem: BottomNavbarItem.home,
+            selectedNavbarItem: BottomNavbarItem.home,
             index: 0,
           ),
         ) {
@@ -36,7 +36,7 @@ class NavigationBloc
     }
     emit(
       NavigationDone(
-        bottomNavbarItem: event.targetItem,
+        selectedNavbarItem: event.targetItem,
         index: event.targetItem.index,
         openedNavbarItems: openedNavbarItems,
         isBottomNavbarOpenedFirstTime: isBottomNavbarOpenedFirstTime,
@@ -55,7 +55,7 @@ class NavigationBloc
     NavigationDone prev = state as NavigationDone;
     emit(
       NavigationDone(
-        bottomNavbarItem: prev.bottomNavbarItem,
+        selectedNavbarItem: prev.selectedNavbarItem,
         index: prev.index,
         nextPageName: event.pageName,
         openedNavbarItems: prev.openedNavbarItems,
@@ -72,7 +72,7 @@ class NavigationBloc
     emit(const NavigationInProgress());
     emit(
       NavigationDone(
-        bottomNavbarItem: prev.bottomNavbarItem,
+        selectedNavbarItem: prev.selectedNavbarItem,
         index: prev.index,
         navigateBack: true,
         openedNavbarItems: prev.openedNavbarItems,
@@ -88,7 +88,7 @@ class NavigationBloc
     NavigationDone prev = state as NavigationDone;
     emit(
       NavigationDone(
-        bottomNavbarItem: prev.bottomNavbarItem,
+        selectedNavbarItem: prev.selectedNavbarItem,
         index: prev.index,
         navigateBack: true,
         navigateBackToRoot: true,
@@ -105,7 +105,7 @@ class NavigationBloc
     NavigationDone prev = state as NavigationDone;
     emit(
       NavigationDone(
-        bottomNavbarItem: prev.bottomNavbarItem,
+        selectedNavbarItem: prev.selectedNavbarItem,
         index: prev.index,
         navigateBack: false,
         exception: event.exception,

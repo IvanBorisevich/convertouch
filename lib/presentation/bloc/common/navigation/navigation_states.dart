@@ -16,7 +16,7 @@ class NavigationInProgress extends NavigationState {
 }
 
 class NavigationDone extends NavigationState {
-  final BottomNavbarItem bottomNavbarItem;
+  final BottomNavbarItem selectedNavbarItem;
   final int index;
   final PageName? nextPageName;
   final bool navigateBack;
@@ -26,7 +26,7 @@ class NavigationDone extends NavigationState {
   final bool isBottomNavbarOpenedFirstTime;
 
   const NavigationDone({
-    required this.bottomNavbarItem,
+    required this.selectedNavbarItem,
     required this.index,
     this.nextPageName,
     this.navigateBack = false,
@@ -38,7 +38,7 @@ class NavigationDone extends NavigationState {
 
   @override
   List<Object?> get props => [
-    bottomNavbarItem,
+    selectedNavbarItem,
     index,
     nextPageName,
     navigateBack,
@@ -51,7 +51,7 @@ class NavigationDone extends NavigationState {
   @override
   String toString() {
     return 'NavigationDone{'
-        'bottomNavbarItem: $bottomNavbarItem, '
+        'selectedNavbarItem: $selectedNavbarItem, '
         'index: $index, '
         'nextPageName: $nextPageName, '
         'navigateBack: $navigateBack, '
