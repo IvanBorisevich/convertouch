@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/keyboard_wrappers.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,8 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool textLengthCounterVisible;
   final String? hintText;
   final double borderRadius;
-  final ConvertouchUITheme theme;
-  final TextBoxColorScheme? customColor;
+  final TextBoxColorScheme colors;
+  final Widget? suffixIcon;
 
   const ConvertouchTextBox({
     this.controller,
@@ -45,8 +44,8 @@ class ConvertouchTextBox extends StatefulWidget {
     this.textLengthCounterVisible = false,
     this.hintText,
     this.borderRadius = 8,
-    required this.theme,
-    this.customColor,
+    required this.colors,
+    this.suffixIcon,
     super.key,
   });
 
@@ -55,7 +54,6 @@ class ConvertouchTextBox extends StatefulWidget {
 }
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
-  late TextBoxColorScheme _color;
   int? _cursorPosition;
 
   late final FocusNode _focusNode;
@@ -131,24 +129,22 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       offset: _cursorPosition!,
     );
 
-    _color = widget.customColor ?? unitTextBoxColors[widget.theme]!;
-
     Color borderColor;
     Color foregroundColor;
     Color hintColor;
 
     if (widget.disabled) {
-      borderColor = _color.border.disabled;
-      foregroundColor = _color.foreground.disabled;
-      hintColor = _color.hint.disabled;
+      borderColor = widget.colors.border.disabled;
+      foregroundColor = widget.colors.foreground.disabled;
+      hintColor = widget.colors.hint.disabled;
     } else if (_focusNode.hasFocus) {
-      borderColor = _color.border.focused;
-      foregroundColor = _color.foreground.focused;
-      hintColor = _color.hint.focused;
+      borderColor = widget.colors.border.focused;
+      foregroundColor = widget.colors.foreground.focused;
+      hintColor = widget.colors.hint.focused;
     } else {
-      borderColor = _color.border.regular;
-      foregroundColor = _color.foreground.regular;
-      hintColor = _color.hint.regular;
+      borderColor = widget.colors.border.regular;
+      foregroundColor = widget.colors.foreground.regular;
+      hintColor = widget.colors.hint.regular;
     }
 
     return SizedBox(
@@ -254,6 +250,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           horizontal: 15.0,
         ),
         counterText: "",
+        suffixIcon: widget.suffixIcon,
+        suffixIconColor: foregroundColor,
         suffixText: widget.textLengthCounterVisible
             ? '${_controller.text.length}/${widget.maxTextLength}'
             : null,

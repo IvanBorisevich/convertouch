@@ -111,7 +111,7 @@ class _ConvertouchUnitDetailsPageState
                             );
                           },
                           hintText: pageState.savedDetails.unit.name,
-                          theme: appState.theme,
+                          colors: unitTextBoxColors[appState.theme]!,
                         ),
                   pageState.draftDetails.unit.oob
                       ? ConvertouchInfoBox(
@@ -136,7 +136,7 @@ class _ConvertouchUnitDetailsPageState
                           maxTextLength: UnitDetailsModel.unitCodeMaxLength,
                           textLengthCounterVisible: true,
                           hintText: pageState.savedDetails.unit.code,
-                          theme: appState.theme,
+                          colors: unitTextBoxColors[appState.theme]!,
                         ),
                   ConvertouchInfoBox(
                     headerText: "Value Type",

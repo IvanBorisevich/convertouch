@@ -19,8 +19,8 @@ import 'package:floor/floor.dart';
 /// 5) Rebuild and start the app
 
 class ConvertouchDatabaseHelper {
-  static const String databaseName = "convertouch_database.db";
-  static const int databaseVersion = 2;
+  static const databaseName = "convertouch_database.db";
+  static const databaseVersion = 2;
 
   static final ConvertouchDatabaseHelper I =
       di.locator.get<ConvertouchDatabaseHelper>();

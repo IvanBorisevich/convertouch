@@ -162,12 +162,15 @@ const unitTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF5E7993),
     focused: Color(0xFF375067),
+    disabled: Color(0xFF90A8C0),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF345C81),
+    disabled: Color(0xFF90A8C0),
   ),
   hint: ColorVariation(
     regular: Color(0xBE345C81),
+    disabled: Color(0xFF90A8C0),
   ),
 );
 

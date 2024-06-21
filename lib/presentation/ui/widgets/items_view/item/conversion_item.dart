@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
@@ -93,7 +94,13 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   _isFocused = false;
                 });
               },
-              theme: widget.theme,
+              suffixIcon: !widget.item.unit.invertible
+                  ? Padding(
+                      padding: const EdgeInsets.all(9),
+                      child: IconUtils.getIcon('one-way-conversion.png'),
+                    )
+                  : null,
+              colors: unitTextBoxColors[widget.theme]!,
             ),
           ),
           SizedBox(width: widget.spacing),

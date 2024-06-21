@@ -935,13 +935,3 @@ const unitsV1 = [
     ]
   },
 ];
-
-const unitsV2 = [
-  {
-    "groupName": "Volume",
-    "minValue": null,
-    "units": [
-      {"code": "mm³", "invertible": false},
-    ]
-  },
-];

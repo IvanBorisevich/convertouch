@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
 import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
-import 'package:convertouch/domain/constants/default_units.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Migration1to2 extends ConvertouchDbMigration {
@@ -22,10 +21,6 @@ class Migration1to2 extends ConvertouchDbMigration {
       groupName: 'Volume',
       columnName: 'code',
       newColumnValue: 'cm³',
-    );
-    await SqlUtils.mergeGroupsAndUnits(
-      database,
-      entities: unitsV2,
     );
   }
 }

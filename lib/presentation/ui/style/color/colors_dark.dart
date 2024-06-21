@@ -160,12 +160,15 @@ const unitTextBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF84A1BD),
     focused: Color(0xFF98BAD9),
+    disabled: Color(0xFF687A8C),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF98BAD9),
+    disabled: Color(0xFF687A8C),
   ),
   hint: ColorVariation(
     regular: Color(0xFF84A1BD),
+    disabled: Color(0xFF687A8C),
   ),
 );
 

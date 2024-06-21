@@ -95,8 +95,7 @@ class _ConvertouchUnitGroupDetailsPageState
                             },
                             label: "Name",
                             hintText: unitGroupDetailsState.savedGroup.name,
-                            theme: appState.theme,
-                            customColor: textBoxColor,
+                            colors: textBoxColor,
                             disabled: unitGroupDetailsState.draftGroup.oob,
                           ),
                     ConvertouchInfoBox(
