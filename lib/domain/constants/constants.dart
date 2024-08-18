@@ -5,6 +5,12 @@ const String unknownAppVersion = "Unknown";
 const String iconAssetsPathPrefix = "assets/icons";
 const String quicksandFontFamily = "Quicksand";
 
+abstract class IconNames {
+  const IconNames._();
+
+  static const String oneWayConversion = "one_way_conversion.svg";
+}
+
 abstract class SettingKeys {
   const SettingKeys._();
 

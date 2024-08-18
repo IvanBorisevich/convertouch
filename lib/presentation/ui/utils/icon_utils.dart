@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class IconUtils {
   static const double defaultIconSize = 25;
@@ -23,6 +24,33 @@ class IconUtils {
       ),
       color: color,
       size: size,
+    );
+  }
+
+  static Widget getSvgIcon(
+    String iconName, {
+    Color color = Colors.black,
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return SvgPicture.asset(
+      "$iconAssetsPathPrefix/$iconName",
+      colorFilter: ColorFilter.mode(
+        color,
+        BlendMode.srcIn,
+      ),
+      alignment: alignment,
+      width: defaultIconSize,
+    );
+  }
+
+  static Widget getSuffixSvgIcon(
+    String iconName, {
+    Color color = Colors.black,
+  }) {
+    return getSvgIcon(
+      iconName,
+      color: color,
+      alignment: Alignment.centerRight,
     );
   }
 

@@ -97,7 +97,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               suffixIcon: !widget.item.unit.invertible
                   ? Padding(
                       padding: const EdgeInsets.all(9),
-                      child: IconUtils.getIcon('one-way-conversion.png'),
+                      child: IconUtils.getSuffixSvgIcon(
+                        IconNames.oneWayConversion,
+                        color: itemColor.textBox.foreground.regular,
+                      ),
                     )
                   : null,
               colors: unitTextBoxColors[widget.theme]!,

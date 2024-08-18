@@ -55,6 +55,7 @@ dependencies:
   path_provider: ^2.1.2
   logger: ^2.0.2+1
   package_info_plus: ^4.2.0
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
