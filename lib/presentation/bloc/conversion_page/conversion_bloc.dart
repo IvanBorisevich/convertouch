@@ -1,9 +1,9 @@
-import 'package:collection/collection.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_item_removal_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_item_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -17,11 +17,13 @@ class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
   final ModifyConversionInputParamsUseCase modifyConversionInputParamsUseCase;
+  final RemoveConversionItemUseCase removeConversionItemUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
     required this.buildConversionUseCase,
     required this.modifyConversionInputParamsUseCase,
+    required this.removeConversionItemUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -31,7 +33,7 @@ class ConversionBloc
     on<BuildConversion>(_onBuildConversion);
     on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
     on<ShowNewConversionAfterRefresh>(_onNewConversionShowAfterRefresh);
-    on<RemoveConversionItem>(_onRemoveConversion);
+    on<RemoveConversionItem>(_onRemoveConversionItem);
     on<GetLastSavedConversion>(_onGetLastSavedConversion);
   }
 
@@ -111,7 +113,7 @@ class ConversionBloc
     );
   }
 
-  _onRemoveConversion(
+  _onRemoveConversionItem(
     RemoveConversionItem event,
     Emitter<ConversionState> emit,
   ) async {
@@ -119,28 +121,22 @@ class ConversionBloc
 
     emit(const ConversionInProgress());
 
-    List<ConversionItemModel> conversionItems =
-        prev.conversion.targetConversionItems;
-    conversionItems.removeWhere((item) => event.id == item.unit.id);
-
-    ConversionItemModel? sourceConversionItem =
-        prev.conversion.sourceConversionItem;
-    if (sourceConversionItem?.unit.id == event.id) {
-      sourceConversionItem = conversionItems.firstOrNull;
-    }
-
-    final outputConversion = OutputConversionModel(
-      unitGroup: prev.conversion.unitGroup,
-      sourceConversionItem: sourceConversionItem,
-      targetConversionItems: conversionItems,
-      emptyConversionItemsExist: prev.conversion.emptyConversionItemsExist,
+    final conversionItemRemovalResult =
+        await removeConversionItemUseCase.execute(
+      InputConversionItemRemovalModel(
+        id: event.id,
+        conversion: prev.conversion,
+      ),
     );
+
+    final updatedOutputConversion =
+        ObjectUtils.tryGet(conversionItemRemovalResult);
 
     emit(
       ConversionBuilt(
-        conversion: outputConversion,
+        conversion: updatedOutputConversion,
         showRefreshButton: prev.showRefreshButton &&
-            outputConversion.targetConversionItems.isNotEmpty,
+            updatedOutputConversion.targetConversionItems.isNotEmpty,
       ),
     );
   }

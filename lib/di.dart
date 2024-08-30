@@ -17,6 +17,7 @@ import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_c
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
@@ -139,6 +140,7 @@ Future<void> init() async {
     () => ConversionBloc(
       buildConversionUseCase: locator(),
       modifyConversionInputParamsUseCase: locator(),
+      removeConversionItemUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -211,6 +213,10 @@ Future<void> init() async {
 
   locator.registerLazySingleton<ModifyConversionInputParamsUseCase>(
     () => ModifyConversionInputParamsUseCase(),
+  );
+
+  locator.registerLazySingleton<RemoveConversionItemUseCase>(
+    () => RemoveConversionItemUseCase(),
   );
 
   // repositories

@@ -72,6 +72,14 @@ class ModifyConversionInputParamsUseCase
           }
         }
       }
+
+      return Right(
+        InputConversionModel(
+          unitGroup: unitGroup,
+          sourceConversionItem: sourceConversionItem,
+          targetUnits: targetUnits,
+        ),
+      );
     } catch (e) {
       return Left(
         InternalException(
@@ -81,13 +89,5 @@ class ModifyConversionInputParamsUseCase
         ),
       );
     }
-
-    return Right(
-      InputConversionModel(
-        unitGroup: unitGroup,
-        sourceConversionItem: sourceConversionItem,
-        targetUnits: targetUnits,
-      ),
-    );
   }
 }
