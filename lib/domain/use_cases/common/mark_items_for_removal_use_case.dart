@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/use_case_model/output/output_items_for_
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class MarkGroupsForRemovalUseCase
+class MarkItemsForRemovalUseCase
     extends UseCase<InputItemsForRemovalModel, OutputItemsForRemovalModel> {
   @override
   Future<Either<ConvertouchException, OutputItemsForRemovalModel>> execute(
@@ -33,7 +33,7 @@ class MarkGroupsForRemovalUseCase
       }
 
       markedIds = markedIds
-          .whereNot((unitGroupId) => input.oobIds.contains(unitGroupId))
+          .whereNot((id) => input.oobIds.contains(id))
           .toList();
 
       return Right(
@@ -44,7 +44,8 @@ class MarkGroupsForRemovalUseCase
     } catch (e) {
       return Left(
         InternalException(
-          message: "Error when marking a group for removal",
+          message: "Error when marking the item with id = ${input.newMarkedId}"
+              " for removal",
           stackTrace: null,
           dateTime: DateTime.now(),
         ),

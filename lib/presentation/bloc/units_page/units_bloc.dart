@@ -1,9 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -16,12 +18,14 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
   final SaveUnitUseCase saveUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
+  final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
   final NavigationBloc navigationBloc;
 
   UnitsBloc({
     required this.saveUnitUseCase,
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,
+    required this.markItemsForRemovalUseCase,
     required this.navigationBloc,
   }) : super(const UnitsInitialState()) {
     on<FetchUnits>(_onUnitsFetch);
@@ -50,33 +54,15 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
       );
     } else {
       if (event is FetchUnitsToMarkForRemoval) {
-        List<int> markedIds = [];
+        final markedIdsResult = await markItemsForRemovalUseCase.execute(
+          InputItemsForRemovalModel(
+            newMarkedId: event.newMarkedId,
+            alreadyMarkedIds: event.alreadyMarkedIds,
+            oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
+          ),
+        );
 
-        if (event.alreadyMarkedIds.isNotEmpty) {
-          markedIds = event.alreadyMarkedIds;
-        }
-
-        if (!markedIds.contains(event.newMarkedId)) {
-          markedIds.add(event.newMarkedId);
-        } else {
-          markedIds.remove(event.newMarkedId);
-        }
-
-        List<int> oobUnitIds = [];
-        bool customUnitsExist = false;
-
-        for (final unit in result.right) {
-          if (unit.oob) {
-            oobUnitIds.add(unit.id!);
-          } else {
-            customUnitsExist = true;
-            continue;
-          }
-        }
-
-        markedIds = markedIds
-            .whereNot((unitId) => oobUnitIds.contains(unitId))
-            .toList();
+        final markedIds = ObjectUtils.tryGet(markedIdsResult).markedIds;
 
         emit(const UnitsFetching());
         emit(
@@ -84,7 +70,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
             units: result.right,
             unitGroup: event.unitGroup,
             searchString: event.searchString,
-            removalMode: customUnitsExist,
+            removalMode: markedIds.isNotEmpty,
             markedIdsForRemoval: markedIds,
           ),
         );

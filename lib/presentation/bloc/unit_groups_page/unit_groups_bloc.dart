@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/mark_groups_for_removal_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -17,14 +17,14 @@ class UnitGroupsBloc
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
-  final MarkGroupsForRemovalUseCase markGroupsForRemovalUseCase;
+  final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
   final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
-    required this.markGroupsForRemovalUseCase,
+    required this.markItemsForRemovalUseCase,
     required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
@@ -47,7 +47,7 @@ class UnitGroupsBloc
       );
     } else {
       if (event is FetchUnitGroupsToMarkForRemoval) {
-        final markedIdsResult = await markGroupsForRemovalUseCase.execute(
+        final markedIdsResult = await markItemsForRemovalUseCase.execute(
           InputItemsForRemovalModel(
             newMarkedId: event.newMarkedId,
             alreadyMarkedIds: event.alreadyMarkedIds,

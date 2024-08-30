@@ -20,7 +20,7 @@ import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_det
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/mark_groups_for_removal_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
@@ -77,7 +77,7 @@ Future<void> init() async {
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
-      markGroupsForRemovalUseCase: locator(),
+      markItemsForRemovalUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -101,6 +101,7 @@ Future<void> init() async {
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
+      markItemsForRemovalUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -202,8 +203,8 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<MarkGroupsForRemovalUseCase>(
-    () => MarkGroupsForRemovalUseCase(),
+  locator.registerLazySingleton<MarkItemsForRemovalUseCase>(
+    () => MarkItemsForRemovalUseCase(),
   );
 
   // repositories
