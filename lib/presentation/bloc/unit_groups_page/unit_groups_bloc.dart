@@ -1,7 +1,9 @@
-import 'package:collection/collection.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/mark_groups_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -15,12 +17,14 @@ class UnitGroupsBloc
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
+  final MarkGroupsForRemovalUseCase markGroupsForRemovalUseCase;
   final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
+    required this.markGroupsForRemovalUseCase,
     required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
@@ -43,40 +47,22 @@ class UnitGroupsBloc
       );
     } else {
       if (event is FetchUnitGroupsToMarkForRemoval) {
-        List<int> markedIds = [];
+        final markedIdsResult = await markGroupsForRemovalUseCase.execute(
+          InputItemsForRemovalModel(
+            newMarkedId: event.newMarkedId,
+            alreadyMarkedIds: event.alreadyMarkedIds,
+            oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
+          ),
+        );
 
-        if (event.alreadyMarkedIds.isNotEmpty) {
-          markedIds = event.alreadyMarkedIds;
-        }
-
-        if (!markedIds.contains(event.newMarkedId)) {
-          markedIds.add(event.newMarkedId);
-        } else {
-          markedIds.remove(event.newMarkedId);
-        }
-
-        List<int> oobUnitGroupIds = [];
-        bool customGroupsExist = false;
-
-        for (final unitGroup in result.right) {
-          if (unitGroup.oob) {
-            oobUnitGroupIds.add(unitGroup.id!);
-          } else {
-            customGroupsExist = true;
-            continue;
-          }
-        }
-
-        markedIds = markedIds
-            .whereNot((unitGroupId) => oobUnitGroupIds.contains(unitGroupId))
-            .toList();
+        final markedIds = ObjectUtils.tryGet(markedIdsResult).markedIds;
 
         emit(const UnitGroupsFetching());
         emit(
           UnitGroupsFetched(
             unitGroups: result.right,
             searchString: event.searchString,
-            removalMode: customGroupsExist,
+            removalMode: markedIds.isNotEmpty,
             markedIdsForRemoval: markedIds,
           ),
         );
