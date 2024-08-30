@@ -13,14 +13,15 @@ import 'package:convertouch/domain/repositories/network_data_repository.dart';
 import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
@@ -137,6 +138,7 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => ConversionBloc(
       buildConversionUseCase: locator(),
+      modifyConversionInputParamsUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -205,6 +207,10 @@ Future<void> init() async {
 
   locator.registerLazySingleton<MarkItemsForRemovalUseCase>(
     () => MarkItemsForRemovalUseCase(),
+  );
+
+  locator.registerLazySingleton<ModifyConversionInputParamsUseCase>(
+    () => ModifyConversionInputParamsUseCase(),
   );
 
   // repositories

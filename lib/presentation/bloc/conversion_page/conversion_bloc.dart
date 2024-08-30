@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -16,10 +16,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
   final BuildConversionUseCase buildConversionUseCase;
+  final ModifyConversionInputParamsUseCase modifyConversionInputParamsUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
     required this.buildConversionUseCase,
+    required this.modifyConversionInputParamsUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -37,65 +39,49 @@ class ConversionBloc
     BuildConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    UnitGroupModel? unitGroup = event.conversionParams.unitGroup;
-    ConversionItemModel? sourceConversionItem =
-        event.conversionParams.sourceConversionItem;
-    List<UnitModel> targetUnits = event.conversionParams.targetUnits;
-
-    if (event.removedUnitGroupIds
-        .contains(event.conversionParams.unitGroup?.id)) {
-      unitGroup = null;
-      sourceConversionItem = null;
-      targetUnits = [];
-    } else {
-      if (event.modifiedUnitGroup != null &&
-          event.modifiedUnitGroup!.id == event.conversionParams.unitGroup?.id) {
-        unitGroup = event.modifiedUnitGroup!;
-      }
-
-      if (event.removedUnitIds.isNotEmpty) {
-        targetUnits = targetUnits
-            .whereNot((unit) => event.removedUnitIds.contains(unit.id))
-            .toList();
-      }
-
-      if (event.modifiedUnit != null) {
-        if (event.modifiedUnit!.id == sourceConversionItem?.unit.id) {
-          if (event.modifiedUnit!.unitGroupId ==
-              sourceConversionItem?.unit.unitGroupId) {
-            sourceConversionItem = ConversionItemModel.coalesce(
-              sourceConversionItem,
-              unit: event.modifiedUnit!,
-            );
-          } else {
-            sourceConversionItem = null;
-          }
-        }
-
-        targetUnits = targetUnits
-            .map((unit) {
-              if (event.modifiedUnit!.id == unit.id) {
-                if (event.modifiedUnit!.unitGroupId == unit.unitGroupId) {
-                  return event.modifiedUnit!;
-                } else {
-                  return null;
-                }
-              } else {
-                return unit;
-              }
-            })
-            .whereNotNull()
-            .toList();
-      }
-    }
-
-    final conversionResult = await buildConversionUseCase.execute(
-      InputConversionModel(
-        unitGroup: unitGroup,
-        sourceConversionItem: sourceConversionItem,
-        targetUnits: targetUnits,
+    final conversionInputParamsResult =
+        await modifyConversionInputParamsUseCase.execute(
+      InputConversionModifyModel(
+        unitGroup: event.conversionParams.unitGroup,
+        sourceConversionItem: event.conversionParams.sourceConversionItem,
+        targetUnits: event.conversionParams.targetUnits,
+        newUnitGroup: event.modifiedUnitGroup,
+        newUnit: event.modifiedUnit,
+        removedUnitGroupIds: event.removedUnitGroupIds,
+        removedUnitIds: event.removedUnitIds,
       ),
     );
+
+    final params = ObjectUtils.tryGet(conversionInputParamsResult);
+    await _buildConversion(params, emit);
+  }
+
+  _onConversionItemUnitChange(
+    RebuildConversionAfterUnitReplacement event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final conversionInputParamsResult =
+        await modifyConversionInputParamsUseCase.execute(
+      InputConversionModifyModel(
+        unitGroup: event.conversionParams.unitGroup,
+        sourceConversionItem: event.conversionParams.sourceConversionItem,
+        targetUnits: event.conversionParams.targetUnits,
+        oldUnit: event.oldUnit,
+        newUnit: event.newUnit,
+      ),
+    );
+
+    final params = ObjectUtils.tryGet(conversionInputParamsResult);
+    await _buildConversion(params, emit);
+
+    navigationBloc.add(const NavigateBack());
+  }
+
+  _buildConversion(
+    InputConversionModel params,
+    Emitter<ConversionState> emit,
+  ) async {
+    final conversionResult = await buildConversionUseCase.execute(params);
 
     if (conversionResult.isLeft) {
       navigationBloc.add(
@@ -111,19 +97,6 @@ class ConversionBloc
         ),
       );
     }
-  }
-
-  _onConversionItemUnitChange(
-    RebuildConversionAfterUnitReplacement event,
-    Emitter<ConversionState> emit,
-  ) async {
-    int oldUnitIndex = event.conversionParams.targetUnits
-        .indexWhere((unit) => event.oldUnit.id! == unit.id!);
-    event.conversionParams.targetUnits[oldUnitIndex] = event.newUnit;
-
-    await _onBuildConversion(event, emit);
-
-    navigationBloc.add(const NavigateBack());
   }
 
   _onNewConversionShowAfterRefresh(
