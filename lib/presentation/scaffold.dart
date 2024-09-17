@@ -35,26 +35,26 @@ class ConvertouchScaffold extends StatefulWidget {
 class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   final _screenNavigatorKeys = {
     BottomNavbarItem.home: GlobalKey<NavigatorState>(),
-    BottomNavbarItem.unitsEditor: GlobalKey<NavigatorState>(),
+    BottomNavbarItem.unitsBook: GlobalKey<NavigatorState>(),
     BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
   static final _navBarIcons = {
     BottomNavbarItem.home: const Icon(Icons.home_outlined),
-    BottomNavbarItem.unitsEditor:
+    BottomNavbarItem.unitsBook:
         const Icon(Icons.dashboard_customize_outlined),
     BottomNavbarItem.settings: const Icon(Icons.settings_outlined),
   };
 
   static final _navBarIconsSelected = {
     BottomNavbarItem.home: const Icon(Icons.home_rounded),
-    BottomNavbarItem.unitsEditor: const Icon(Icons.dashboard_customize_rounded),
+    BottomNavbarItem.unitsBook: const Icon(Icons.dashboard_customize_rounded),
     BottomNavbarItem.settings: const Icon(Icons.settings_rounded),
   };
 
   static const _navBarLabels = {
     BottomNavbarItem.home: "Home",
-    BottomNavbarItem.unitsEditor: "Units Editor",
+    BottomNavbarItem.unitsBook: "Units Book",
     BottomNavbarItem.settings: "Settings",
   };
 
@@ -153,10 +153,10 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                       ),
                       ConvertouchRootScreen(
                         navigatorKey:
-                            _screenNavigatorKeys[BottomNavbarItem.unitsEditor],
-                        bottomNavbarItem: BottomNavbarItem.unitsEditor,
+                            _screenNavigatorKeys[BottomNavbarItem.unitsBook],
+                        bottomNavbarItem: BottomNavbarItem.unitsBook,
                         rootPageId: PageName.unitGroupsPageRegular,
-                        selected: selectedItem == BottomNavbarItem.unitsEditor,
+                        selected: selectedItem == BottomNavbarItem.unitsBook,
                         routesMap: {
                           PageName.unitGroupsPageRegular.name:
                               const ConvertouchUnitGroupsPageRegular(),
@@ -200,7 +200,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                         selectedItem: selectedItem,
                       ),
                       _buildNavbarItem(
-                        bottomNavbarItem: BottomNavbarItem.unitsEditor,
+                        bottomNavbarItem: BottomNavbarItem.unitsBook,
                         selectedItem: selectedItem,
                       ),
                       _buildNavbarItem(

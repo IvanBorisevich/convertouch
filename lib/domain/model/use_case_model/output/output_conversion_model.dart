@@ -6,14 +6,21 @@ class OutputConversionModel extends Equatable {
   final UnitGroupModel? unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<ConversionItemModel> targetConversionItems;
-  final bool emptyConversionItemsExist;
 
   const OutputConversionModel({
     this.unitGroup,
     this.sourceConversionItem,
     this.targetConversionItems = const [],
-    this.emptyConversionItemsExist = false,
   });
+
+  const OutputConversionModel.none()
+      : unitGroup = null,
+        sourceConversionItem = null,
+        targetConversionItems = const [];
+
+  const OutputConversionModel.noItems(this.unitGroup)
+      : sourceConversionItem = null,
+        targetConversionItems = const [];
 
   Map<String, dynamic> toJson() {
     return {
@@ -21,7 +28,6 @@ class OutputConversionModel extends Equatable {
       "sourceItem": sourceConversionItem?.toJson(),
       "targetItems":
           targetConversionItems.map((item) => item.toJson()).toList(),
-      "emptyConversionItemsExist": emptyConversionItemsExist,
     };
   }
 
@@ -35,7 +41,6 @@ class OutputConversionModel extends Equatable {
       targetConversionItems: (json["targetItems"] as List)
           .map((unitMap) => ConversionItemModel.fromJson(unitMap)!)
           .toList(),
-      emptyConversionItemsExist: json["emptyConversionItemsExist"],
     );
   }
 
@@ -44,7 +49,6 @@ class OutputConversionModel extends Equatable {
         unitGroup,
         sourceConversionItem,
         targetConversionItems,
-        emptyConversionItemsExist,
       ];
 
   @override

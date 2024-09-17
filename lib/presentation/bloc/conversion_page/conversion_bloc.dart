@@ -1,148 +1,223 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_item_removal_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_removal_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/remove_conversion_item_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
+import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
-  final BuildConversionUseCase buildConversionUseCase;
-  final ModifyConversionInputParamsUseCase modifyConversionInputParamsUseCase;
-  final RemoveConversionItemUseCase removeConversionItemUseCase;
+  final BuildNewConversionUseCase buildNewConversionUseCase;
+  final EditConversionGroupUseCase editConversionGroupUseCase;
+  final EditConversionItemUnitUseCase editConversionItemUnitUseCase;
+  final EditConversionItemValueUseCase editConversionItemValueUseCase;
+  final UpdateConversionCoefficientsUseCase updateConversionCoefficientsUseCase;
+  final RemoveConversionUseCase removeConversionUseCase;
+  final RemoveConversionItemsUseCase removeConversionItemsUseCase;
+  final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
-    required this.buildConversionUseCase,
-    required this.modifyConversionInputParamsUseCase,
-    required this.removeConversionItemUseCase,
+    required this.buildNewConversionUseCase,
+    required this.editConversionGroupUseCase,
+    required this.editConversionItemUnitUseCase,
+    required this.editConversionItemValueUseCase,
+    required this.updateConversionCoefficientsUseCase,
+    required this.removeConversionUseCase,
+    required this.removeConversionItemsUseCase,
+    required this.replaceConversionItemUnitUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
             conversion: OutputConversionModel(),
           ),
         ) {
-    on<BuildConversion>(_onBuildConversion);
-    on<RebuildConversionAfterUnitReplacement>(_onConversionItemUnitChange);
-    on<ShowNewConversionAfterRefresh>(_onNewConversionShowAfterRefresh);
-    on<RemoveConversionItem>(_onRemoveConversionItem);
-    on<GetLastSavedConversion>(_onGetLastSavedConversion);
+    on<BuildNewConversion>(_onBuildNewConversion);
+    on<EditConversionGroup>(_onEditConversionGroup);
+    on<EditConversionItemUnit>(_onEditConversionItemUnit);
+    on<EditConversionItemValue>(_onEditConversionItemValue);
+    on<UpdateConversionCoefficients>(_onUpdateConversionCoefficients);
+    on<RemoveConversions>(_onRemoveConversion);
+    on<RemoveConversionItems>(_onRemoveConversionItems);
+    on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
+    on<GetLastOpenedConversion>(_onGetLastOpenedConversion);
   }
 
-  _onBuildConversion(
-    BuildConversion event,
+  _onBuildNewConversion(
+    BuildNewConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    final conversionInputParamsResult =
-        await modifyConversionInputParamsUseCase.execute(
-      InputConversionModifyModel(
-        unitGroup: event.conversionParams.unitGroup,
-        sourceConversionItem: event.conversionParams.sourceConversionItem,
-        targetUnits: event.conversionParams.targetUnits,
-        newUnitGroup: event.modifiedUnitGroup,
-        newUnit: event.modifiedUnit,
-        removedUnitGroupIds: event.removedUnitGroupIds,
-        removedUnitIds: event.removedUnitIds,
+    final result = await buildNewConversionUseCase.execute(event.inputParams);
+    await _handleAndEmit(result, emit);
+  }
+
+  _onEditConversionGroup(
+    EditConversionGroup event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await editConversionGroupUseCase.execute(
+      InputConversionModifyModel<EditConversionGroupDelta>(
+        delta: EditConversionGroupDelta(
+          editedGroup: event.editedGroup,
+        ),
+        conversion: current.conversion,
       ),
     );
 
-    final params = ObjectUtils.tryGet(conversionInputParamsResult);
-    await _buildConversion(params, emit);
+    await _handleAndEmit(result, emit);
   }
 
-  _onConversionItemUnitChange(
-    RebuildConversionAfterUnitReplacement event,
+  _onEditConversionItemUnit(
+    EditConversionItemUnit event,
     Emitter<ConversionState> emit,
   ) async {
-    final conversionInputParamsResult =
-        await modifyConversionInputParamsUseCase.execute(
-      InputConversionModifyModel(
-        unitGroup: event.conversionParams.unitGroup,
-        sourceConversionItem: event.conversionParams.sourceConversionItem,
-        targetUnits: event.conversionParams.targetUnits,
-        oldUnit: event.oldUnit,
-        newUnit: event.newUnit,
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await editConversionItemUnitUseCase.execute(
+      InputConversionModifyModel<EditConversionItemUnitDelta>(
+        delta: EditConversionItemUnitDelta(
+          editedUnit: event.editedUnit,
+        ),
+        conversion: current.conversion,
       ),
     );
 
-    final params = ObjectUtils.tryGet(conversionInputParamsResult);
-    await _buildConversion(params, emit);
+    await _handleAndEmit(result, emit);
+  }
+
+  _onEditConversionItemValue(
+    EditConversionItemValue event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await editConversionItemValueUseCase.execute(
+      InputConversionModifyModel<EditConversionItemValueDelta>(
+        delta: EditConversionItemValueDelta(
+          newValue: event.newValue,
+          newDefaultValue: event.newDefaultValue,
+          unitId: event.unitId,
+        ),
+        conversion: current.conversion,
+        rebuildConversion: true,
+      ),
+    );
+
+    await _handleAndEmit(result, emit);
+  }
+
+  _onUpdateConversionCoefficients(
+    UpdateConversionCoefficients event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await updateConversionCoefficientsUseCase.execute(
+      InputConversionModifyModel<UpdateConversionCoefficientsDelta>(
+        delta: UpdateConversionCoefficientsDelta(
+          updatedUnitCoefs: event.updatedUnitCoefs,
+        ),
+        conversion: current.conversion,
+        rebuildConversion: true,
+      ),
+    );
+
+    await _handleAndEmit(result, emit);
+  }
+
+  _onRemoveConversion(
+    RemoveConversions event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await removeConversionUseCase.execute(
+      InputConversionRemovalModel(
+        removedGroupIds: event.removedGroupIds,
+        currentConversion: current.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onRemoveConversionItems(
+    RemoveConversionItems event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    emit(const ConversionInProgress());
+
+    final result = await removeConversionItemsUseCase.execute(
+      InputConversionModifyModel<RemoveConversionItemsDelta>(
+        delta: RemoveConversionItemsDelta(
+          unitIds: event.unitIds,
+        ),
+        conversion: current.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onReplaceConversionItemUnit(
+    ReplaceConversionItemUnit event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await replaceConversionItemUnitUseCase.execute(
+      InputConversionModifyModel<ReplaceConversionItemUnitDelta>(
+        delta: ReplaceConversionItemUnitDelta(
+          newUnit: event.newUnit,
+          oldUnitId: event.oldUnitId,
+        ),
+        conversion: current.conversion,
+        rebuildConversion: true,
+      ),
+    );
+    await _handleAndEmit(result, emit);
 
     navigationBloc.add(const NavigateBack());
   }
 
-  _buildConversion(
-    InputConversionModel params,
+  _handleAndEmit(
+    Either<ConvertouchException, OutputConversionModel> result,
     Emitter<ConversionState> emit,
   ) async {
-    final conversionResult = await buildConversionUseCase.execute(params);
-
-    if (conversionResult.isLeft) {
+    if (result.isLeft) {
       navigationBloc.add(
-        ShowException(exception: conversionResult.left),
+        ShowException(exception: result.left),
       );
     } else {
       emit(
         ConversionBuilt(
-          conversion: conversionResult.right,
-          showRefreshButton: conversionResult.right.unitGroup != null &&
-              conversionResult.right.unitGroup!.refreshable &&
-              conversionResult.right.targetConversionItems.isNotEmpty,
+          conversion: result.right,
+          showRefreshButton: result.right.unitGroup != null &&
+              result.right.unitGroup!.refreshable &&
+              result.right.targetConversionItems.isNotEmpty,
         ),
       );
     }
   }
 
-  _onNewConversionShowAfterRefresh(
-    ShowNewConversionAfterRefresh event,
-    Emitter<ConversionState> emit,
-  ) async {
-    emit(
-      ConversionBuilt(
-        conversion: event.newConversion,
-        showRefreshButton: event.newConversion.targetConversionItems.isNotEmpty,
-      ),
-    );
-  }
-
-  _onRemoveConversionItem(
-    RemoveConversionItem event,
-    Emitter<ConversionState> emit,
-  ) async {
-    ConversionBuilt prev = state as ConversionBuilt;
-
-    emit(const ConversionInProgress());
-
-    final conversionItemRemovalResult =
-        await removeConversionItemUseCase.execute(
-      InputConversionItemRemovalModel(
-        id: event.id,
-        conversion: prev.conversion,
-      ),
-    );
-
-    final updatedOutputConversion =
-        ObjectUtils.tryGet(conversionItemRemovalResult);
-
-    emit(
-      ConversionBuilt(
-        conversion: updatedOutputConversion,
-        showRefreshButton: prev.showRefreshButton &&
-            updatedOutputConversion.targetConversionItems.isNotEmpty,
-      ),
-    );
-  }
-
-  _onGetLastSavedConversion(
-    GetLastSavedConversion event,
+  _onGetLastOpenedConversion(
+    GetLastOpenedConversion event,
     Emitter<ConversionState> emit,
   ) async {
     ConversionBuilt prev = state as ConversionBuilt;

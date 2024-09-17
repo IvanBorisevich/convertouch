@@ -30,9 +30,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
             buttonWidget: ConvertouchFloatingActionButton(
               onClick: () {
                 BlocProvider.of<RefreshingJobsBloc>(context).add(
-                  ExecuteJob(
+                  StartRefreshingJobForConversion(
                     unitGroupName: conversionState.conversion.unitGroup!.name,
-                    conversionToBeRebuilt: conversionState.conversion,
                   ),
                 );
               },
@@ -42,7 +41,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
             radius: 28,
             onProgressIndicatorClick: () {
               BlocProvider.of<RefreshingJobsBloc>(context).add(
-                StopJob(
+                StopRefreshingJobForConversion(
                   unitGroupName: conversionState.conversion.unitGroup!.name,
                 ),
               );

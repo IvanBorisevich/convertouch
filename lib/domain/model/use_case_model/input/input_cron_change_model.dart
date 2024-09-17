@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/refreshing_job_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
 
 class InputCronChangeModel {
-  final RefreshingJobModel job;
+  final JobModel job;
   final Cron newCron;
 
   const InputCronChangeModel({

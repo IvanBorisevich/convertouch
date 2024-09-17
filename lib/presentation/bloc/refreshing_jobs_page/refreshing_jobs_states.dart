@@ -1,5 +1,5 @@
-import 'package:convertouch/domain/model/refreshing_job_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class RefreshingJobsState extends ConvertouchState {
@@ -7,44 +7,45 @@ abstract class RefreshingJobsState extends ConvertouchState {
 }
 
 class RefreshingJobsFetched extends RefreshingJobsState {
-  final Map<String, RefreshingJobModel> jobs;
-  final OutputConversionModel? rebuiltConversion;
+  final Map<String, JobModel> jobs;
+  final Map<String, String> currentDataSources;
 
   const RefreshingJobsFetched({
     required this.jobs,
-    this.rebuiltConversion,
+    required this.currentDataSources,
   });
 
   @override
   List<Object?> get props => [
-    jobs.entries,
-    rebuiltConversion,
-  ];
+        jobs.entries,
+        currentDataSources.entries,
+      ];
+
+  Map<String, dynamic> toJson() {
+    return {
+      "jobs": jobs.map((key, value) => MapEntry(key, value.toJson())),
+      "currentDataSources": currentDataSources,
+    };
+  }
+
+  static RefreshingJobsFetched? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    return RefreshingJobsFetched(
+      jobs: ObjectUtils.convertToMap(
+        json["jobs"],
+        valueMapFunc: (value) => JobModel.fromJson(value)!,
+      ),
+      currentDataSources: ObjectUtils.convertToMap(json["currentDataSources"]),
+    );
+  }
 
   @override
   String toString() {
     return 'RefreshingJobsFetched{'
-        'items: $jobs, '
-        'rebuiltConversion: $rebuiltConversion}';
-  }
-}
-
-class RefreshingJobDetailsOpened extends RefreshingJobsFetched {
-  final RefreshingJobModel openedJob;
-
-  const RefreshingJobDetailsOpened({
-    required this.openedJob,
-    required super.jobs,
-  });
-
-  @override
-  List<Object?> get props => [
-    openedJob,
-    super.props,
-  ];
-
-  @override
-  String toString() {
-    return 'RefreshingJobDetailsOpened{openedJob: $openedJob}';
+        'jobs: $jobs, '
+        'currentDataSources: $currentDataSources}';
   }
 }

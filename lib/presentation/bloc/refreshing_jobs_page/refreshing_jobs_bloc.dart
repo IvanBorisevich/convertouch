@@ -1,142 +1,115 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/refreshing_jobs.dart';
+import 'package:convertouch/domain/model/data_source_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/refreshing_job_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_start_job_model.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
+import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/network_data_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_data_refresh_model.dart';
+import 'package:convertouch/domain/repositories/data_source_repository.dart';
+import 'package:convertouch/domain/repositories/job_repository.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/get_dynamic_data_for_conversion.dart';
+import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsState> {
-  final ExecuteJobUseCase executeJobUseCase;
+  final StartJobUseCase startJobUseCase;
+  final StopJobUseCase stopJobUseCase;
+  final GetDynamicDataForConversionUseCase getDynamicDataForConversionUseCase;
+  final DataSourceRepository dataSourceRepository;
+  final JobRepository jobRepository;
+  final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   RefreshingJobsBloc({
-    required this.executeJobUseCase,
+    required this.startJobUseCase,
+    required this.stopJobUseCase,
+    required this.getDynamicDataForConversionUseCase,
+    required this.dataSourceRepository,
+    required this.jobRepository,
+    required this.conversionBloc,
     required this.navigationBloc,
-  }) : super(const RefreshingJobsFetched(jobs: {})) {
+  }) : super(const RefreshingJobsFetched(jobs: {}, currentDataSources: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
-    on<OpenJobDetails>(_onJobDetailsOpen);
-    on<ChangeJobCron>(_onJobCronChange);
-    on<ExecuteJob>(_onJobExecute);
-    on<StopJob>(_onJobStop);
-    on<FinishJob>(_onJobFinish);
-  }
-
-  Future<Map<String, RefreshingJobModel>> _getAllJobs() async {
-    Map<String, RefreshingJobModel> refreshingJobs = {};
-
-    if (state is RefreshingJobsFetched) {
-      refreshingJobs = (state as RefreshingJobsFetched).jobs;
-    }
-
-    if (refreshingJobs.isEmpty) {
-      log("Jobs map first initialization");
-      refreshingJobs = refreshingJobsMap.map(
-          (key, value) => MapEntry(key, RefreshingJobModel.fromJson(value)!));
-    }
-
-    return refreshingJobs;
+    on<StartRefreshingJobForConversion>(_onStartRefreshingJobForConversion);
+    on<StopRefreshingJobForConversion>(_onStopRefreshingJobForConversion);
   }
 
   _onJobsFetch(
     FetchRefreshingJobs event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
+    Map<String, JobModel> jobs = await _getAllJobs();
+    Map<String, String> currentDataSources = await _getCurrentDataSources();
 
     emit(
-      RefreshingJobsFetched(jobs: refreshingJobs),
-    );
-  }
-
-  _onJobDetailsOpen(
-    OpenJobDetails event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
-
-    emit(
-      RefreshingJobDetailsOpened(
-        jobs: refreshingJobs,
-        openedJob: refreshingJobs[event.unitGroupName]!,
-      ),
-    );
-    navigationBloc.add(
-      const NavigateToPage(pageName: PageName.refreshingJobDetailsPage),
-    );
-  }
-
-  _onJobCronChange(
-    ChangeJobCron event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
-
-    RefreshingJobModel openedJob = refreshingJobs[event.unitGroupName]!;
-
-    RefreshingJobModel updatedJob = RefreshingJobModel.coalesce(
-      openedJob,
-      cron: event.newCron,
-    );
-
-    refreshingJobs.update(event.unitGroupName, (value) => updatedJob);
-
-    emit(
-      RefreshingJobDetailsOpened(
-        jobs: refreshingJobs,
-        openedJob: updatedJob,
+      RefreshingJobsFetched(
+        jobs: jobs,
+        currentDataSources: currentDataSources,
       ),
     );
   }
 
-  _onJobExecute(
-    ExecuteJob event,
+  _onStartRefreshingJobForConversion(
+    StartRefreshingJobForConversion event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
+    Map<String, JobModel> jobs = await _getAllJobs();
+    Map<String, String> currentDataSources = await _getCurrentDataSources();
+    JobModel job = jobs[event.unitGroupName]!;
 
-    RefreshingJobModel job = refreshingJobs[event.unitGroupName]!;
+    DataSourceModel dataSource = ObjectUtils.tryGet(
+      await dataSourceRepository.getSelected(event.unitGroupName),
+    );
 
-    if (job.progressController != null && !job.progressController!.isClosed) {
-      navigationBloc.add(
-        ShowException(
-          exception: ConvertouchException(
-            message: "Job '${job.name}' is running at the moment",
-            severity: ExceptionSeverity.info,
-            stackTrace: null,
-            dateTime: DateTime.now(),
-          ),
-        ),
-      );
-      emit(
-        RefreshingJobsFetched(
-          jobs: refreshingJobs,
-        ),
-      );
-      return;
-    }
+    final inputParamsForRefresh = InputDataRefreshForConversionModel(
+      unitGroupName: event.unitGroupName,
+      dataSource: dataSource,
+    );
 
-    final startedJobResult = await executeJobUseCase.execute(
-      InputExecuteJobModel(
-        job: job,
-        conversionToBeRebuilt: event.conversionToBeRebuilt,
-        onJobComplete: (rebuiltConversion) {
-          log("onJobComplete callback func");
-          add(
-            FinishJob(
-              unitGroupName: event.unitGroupName,
-              rebuiltConversion: rebuiltConversion,
+    final startedJobResult = await startJobUseCase.execute(
+      JobModel<NetworkDataModel>.coalesce(
+        job,
+        jobFunc: () async {
+          NetworkDataModel networkData = ObjectUtils.tryGet(
+            await getDynamicDataForConversionUseCase.execute(
+              inputParamsForRefresh,
             ),
           );
+          return networkData;
+        },
+        onComplete: (networkData) {
+          if (networkData == null) {
+            return;
+          }
+
+          if (networkData.dynamicCoefficients != null) {
+            conversionBloc.add(
+              UpdateConversionCoefficients(
+                updatedUnitCoefs: networkData.dynamicCoefficients!,
+              ),
+            );
+          }
+
+          if (networkData.dynamicValue != null) {
+            conversionBloc.add(
+              EditConversionItemValue(
+                newValue: null,
+                newDefaultValue: networkData.dynamicValue!.value,
+                unitId: networkData.dynamicValue!.unitId,
+              ),
+            );
+          }
         },
       ),
     );
@@ -147,101 +120,103 @@ class RefreshingJobsBloc
           exception: startedJobResult.left,
         ),
       );
-      if (startedJobResult.left.severity != ExceptionSeverity.error) {
-        emit(
-          RefreshingJobsFetched(
-            jobs: refreshingJobs,
+    } else {
+      if (startedJobResult.right.alreadyRunning) {
+        navigationBloc.add(
+          ShowException(
+            exception: InternalException(
+              message: "Job '${job.name}' is running at the moment",
+              severity: ExceptionSeverity.info,
+              stackTrace: null,
+              dateTime: DateTime.now(),
+            ),
           ),
         );
+      } else {
+        jobs.update(
+          event.unitGroupName,
+          (value) => startedJobResult.right,
+        );
       }
-    } else {
-      refreshingJobs.update(
-        event.unitGroupName,
-        (value) => startedJobResult.right,
-      );
+    }
 
-      emit(
-        RefreshingJobsFetched(
-          jobs: refreshingJobs,
+    emit(
+      RefreshingJobsFetched(
+        jobs: jobs,
+        currentDataSources: currentDataSources,
+      ),
+    );
+  }
+
+  _onStopRefreshingJobForConversion(
+    StopRefreshingJobForConversion event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    Map<String, JobModel> jobs = await _getAllJobs();
+    Map<String, String> currentDataSources = await _getCurrentDataSources();
+
+    final stoppedJobResult = await stopJobUseCase.execute(
+      jobs[event.unitGroupName]!,
+    );
+
+    if (stoppedJobResult.isLeft) {
+      navigationBloc.add(
+        ShowException(
+          exception: stoppedJobResult.left,
         ),
       );
+    } else {
+      jobs.update(event.unitGroupName, (value) => stoppedJobResult.right);
     }
-  }
-
-  _onJobStop(
-    StopJob event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
-
-    RefreshingJobModel jobToBeStopped = refreshingJobs[event.unitGroupName]!;
-
-    jobToBeStopped.progressController?.close();
-
-    RefreshingJobModel stoppedJob = RefreshingJobModel(
-      name: jobToBeStopped.name,
-      unitGroupName: jobToBeStopped.unitGroupName,
-      refreshableDataPart: jobToBeStopped.refreshableDataPart,
-      selectedCron: jobToBeStopped.selectedCron,
-      dataSources: jobToBeStopped.dataSources,
-      selectedDataSource: jobToBeStopped.selectedDataSource,
-      lastRefreshTime: jobToBeStopped.lastRefreshTime,
-      progressController: null,
-    );
-
-    refreshingJobs.update(event.unitGroupName, (value) => stoppedJob);
 
     emit(
       RefreshingJobsFetched(
-        jobs: refreshingJobs,
+        jobs: jobs,
+        currentDataSources: currentDataSources,
       ),
     );
   }
 
-  _onJobFinish(
-    FinishJob event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    Map<String, RefreshingJobModel> refreshingJobs = await _getAllJobs();
+  Future<Map<String, JobModel>> _getAllJobs() async {
+    Map<String, JobModel> jobs = {};
 
-    RefreshingJobModel jobToBeFinished = refreshingJobs[event.unitGroupName]!;
+    if (state is RefreshingJobsFetched) {
+      jobs = (state as RefreshingJobsFetched).jobs;
+    }
 
-    RefreshingJobModel completedJob = RefreshingJobModel(
-      name: jobToBeFinished.name,
-      unitGroupName: jobToBeFinished.unitGroupName,
-      refreshableDataPart: jobToBeFinished.refreshableDataPart,
-      selectedCron: jobToBeFinished.selectedCron,
-      dataSources: jobToBeFinished.dataSources,
-      selectedDataSource: jobToBeFinished.selectedDataSource,
-      lastRefreshTime: DateTime.now().toString(),
-      progressController: null,
-    );
+    if (jobs.isEmpty) {
+      log("Jobs map first initialization");
+      jobs = ObjectUtils.tryGet(await jobRepository.getAll());
+    }
 
-    refreshingJobs.update(event.unitGroupName, (value) => completedJob);
+    return jobs;
+  }
 
-    emit(
-      RefreshingJobsFetched(
-        jobs: refreshingJobs,
-        rebuiltConversion: event.rebuiltConversion,
-      ),
-    );
+  Future<Map<String, String>> _getCurrentDataSources() async {
+    Map<String, String> currentDataSources = {};
+
+    if (state is RefreshingJobsFetched) {
+      currentDataSources = (state as RefreshingJobsFetched).currentDataSources;
+    }
+
+    if (currentDataSources.isEmpty) {
+      log("Data sources map first initialization");
+      currentDataSources =
+          ObjectUtils.tryGet(await dataSourceRepository.getAllSelected());
+    }
+
+    return currentDataSources;
   }
 
   @override
   RefreshingJobsState? fromJson(Map<String, dynamic> json) {
-    return RefreshingJobsFetched(
-      jobs: (json["jobs"] as Map).map(
-        (key, value) => MapEntry(key, RefreshingJobModel.fromJson(value)!),
-      ),
-    );
+    return RefreshingJobsFetched.fromJson(json);
   }
 
   @override
   Map<String, dynamic>? toJson(RefreshingJobsState state) {
     if (state is RefreshingJobsFetched) {
-      return {
-        "jobs": state.jobs.map((key, value) => MapEntry(key, value.toJson())),
-      };
+      return state.toJson();
     }
     return const {};
   }

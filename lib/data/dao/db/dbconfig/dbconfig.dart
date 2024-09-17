@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
-import 'package:convertouch/data/dao/db/refreshable_value_dao_db.dart';
+import 'package:convertouch/data/dao/db/dynamic_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_group_dao_db.dart';
-import 'package:convertouch/data/entities/refreshable_value_entity.dart';
+import 'package:convertouch/data/entities/dynamic_value_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';
@@ -17,7 +17,7 @@ part 'dbconfig.g.dart';
   entities: [
     UnitGroupEntity,
     UnitEntity,
-    RefreshableValueEntity,
+    DynamicValueEntity,
   ],
 )
 abstract class ConvertouchDatabase extends FloorDatabase {
@@ -25,5 +25,5 @@ abstract class ConvertouchDatabase extends FloorDatabase {
 
   UnitDaoDb get unitDao;
 
-  RefreshableValueDaoDb get refreshableValueDao;
+  DynamicValueDaoDb get dynamicValueDao;
 }

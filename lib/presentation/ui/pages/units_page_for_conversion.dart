@@ -137,15 +137,9 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                   pageState.unitsMarkedForConversion
                       .none((markedUnit) => markedUnit.id == unit.id)) {
                 BlocProvider.of<ConversionBloc>(context).add(
-                  RebuildConversionAfterUnitReplacement(
-                    oldUnit: pageState.selectedUnit,
+                  ReplaceConversionItemUnit(
+                    oldUnitId: pageState.selectedUnit.id!,
                     newUnit: unit as UnitModel,
-                    conversionParams: InputConversionModel(
-                      unitGroup: pageState.unitGroup,
-                      sourceConversionItem:
-                          pageState.currentSourceConversionItem,
-                      targetUnits: pageState.unitsMarkedForConversion,
-                    ),
                   ),
                 );
               }
@@ -174,8 +168,8 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                   : false,
               onClick: () {
                 BlocProvider.of<ConversionBloc>(context).add(
-                  BuildConversion(
-                    conversionParams: InputConversionModel(
+                  BuildNewConversion(
+                    inputParams: InputConversionModel(
                       unitGroup: pageState.unitGroup,
                       sourceConversionItem:
                           pageState.currentSourceConversionItem,

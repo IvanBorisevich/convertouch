@@ -22,30 +22,3 @@ class InputConversionModel {
   }
 }
 
-class InputConversionModifyModel extends InputConversionModel {
-  final UnitGroupModel? newUnitGroup;
-  final UnitModel? oldUnit;
-  final UnitModel? newUnit;
-  final List<int> removedUnitGroupIds;
-  final List<int> removedUnitIds;
-
-  const InputConversionModifyModel({
-    required super.unitGroup,
-    required super.sourceConversionItem,
-    super.targetUnits = const [],
-    this.newUnitGroup,
-    this.newUnit,
-    this.oldUnit,
-    this.removedUnitGroupIds = const [],
-    this.removedUnitIds = const [],
-  });
-
-  @override
-  String toString() {
-    return 'InputConversionModifyModel{'
-        'modifiedUnitGroup: $newUnitGroup, '
-        'modifiedUnit: $newUnit, '
-        'removedUnitGroupIds: $removedUnitGroupIds, '
-        'removedUnitIds: $removedUnitIds}';
-  }
-}

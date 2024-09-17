@@ -5,6 +5,17 @@ const String unknownAppVersion = "Unknown";
 const String iconAssetsPathPrefix = "assets/icons";
 const String quicksandFontFamily = "Quicksand";
 
+const currencyGroup = "Currency";
+const temperatureGroup = "Temperature";
+const degreeCelsiusCode = "°C";
+const degreeFahrenheitCode = "°F";
+const degreeKelvinCode = "K";
+const degreeRankineCode = "°R";
+const degreeDelisleCode = "°De";
+const degreeNewtonCode = "°N";
+const degreeReaumurCode = "°Ré";
+const degreeRomerCode = "°Rø";
+
 abstract class IconNames {
   const IconNames._();
 
@@ -43,15 +54,15 @@ enum ItemType {
   unit,
   unitGroup,
   conversionItem,
-  refreshingJob,
-  refreshableValue,
+  job,
+  dynamicValue,
   cron,
-  jobDataSource,
+  dataSource,
 }
 
 enum BottomNavbarItem {
   home,
-  unitsEditor,
+  unitsBook,
   settings,
 }
 

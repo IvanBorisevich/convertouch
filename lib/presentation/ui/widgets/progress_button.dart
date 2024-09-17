@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/refreshing_job_result_model.dart';
+import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ConvertouchProgressButton extends StatelessWidget {
   final Widget buttonWidget;
-  final Stream<RefreshingJobResultModel>? progressStream;
+  final Stream<JobResultModel>? progressStream;
   final double radius;
   final bool determinate;
   final bool visible;
@@ -43,7 +43,7 @@ class ConvertouchProgressButton extends StatelessWidget {
         margin: margin,
         child: progressStream == null
             ? buttonWidget
-            : StreamBuilder<RefreshingJobResultModel>(
+            : StreamBuilder<JobResultModel>(
                 stream: progressStream,
                 builder: (context, snapshot) {
                   log("Connection: ${snapshot.connectionState}, "

@@ -2,23 +2,34 @@ import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
-import 'package:convertouch/data/repositories/db/refreshable_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
-import 'package:convertouch/data/repositories/net/network_data_repository_impl.dart';
-import 'package:convertouch/data/translators/refreshable_value_translator.dart';
+import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
+import 'package:convertouch/data/repositories/local/job_repository_impl.dart';
+import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
+import 'package:convertouch/data/translators/data_source_translator.dart';
+import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
-import 'package:convertouch/domain/repositories/network_data_repository.dart';
-import 'package:convertouch/domain/repositories/refreshable_value_repository.dart';
+import 'package:convertouch/domain/repositories/data_source_repository.dart';
+import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
+import 'package:convertouch/domain/repositories/job_repository.dart';
+import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/build_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/modify_conversion_input_params_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/rebuild_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/remove_conversion_item_use_case.dart';
-import 'package:convertouch/domain/use_cases/refreshing_jobs/execute_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/get_dynamic_data_for_conversion.dart';
+import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
@@ -80,6 +91,7 @@ Future<void> init() async {
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
       markItemsForRemovalUseCase: locator(),
+      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -104,6 +116,7 @@ Future<void> init() async {
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
       markItemsForRemovalUseCase: locator(),
+      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -138,16 +151,26 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => ConversionBloc(
-      buildConversionUseCase: locator(),
-      modifyConversionInputParamsUseCase: locator(),
-      removeConversionItemUseCase: locator(),
+      buildNewConversionUseCase: locator(),
+      editConversionGroupUseCase: locator(),
+      editConversionItemUnitUseCase: locator(),
+      editConversionItemValueUseCase: locator(),
+      updateConversionCoefficientsUseCase: locator(),
+      removeConversionUseCase: locator(),
+      removeConversionItemsUseCase: locator(),
+      replaceConversionItemUnitUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton(
     () => RefreshingJobsBloc(
-      executeJobUseCase: locator(),
+      startJobUseCase: locator(),
+      stopJobUseCase: locator(),
+      getDynamicDataForConversionUseCase: locator(),
+      dataSourceRepository: locator(),
+      jobRepository: locator(),
+      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -187,36 +210,68 @@ Future<void> init() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
-  locator.registerLazySingleton<RebuildConversionUseCase>(
-    () => RebuildConversionUseCase(
-      buildConversionUseCase: locator(),
+  locator.registerLazySingleton<BuildNewConversionUseCase>(
+    () => BuildNewConversionUseCase(
+      dynamicValueRepository: locator(),
     ),
   );
 
-  locator.registerLazySingleton<BuildConversionUseCase>(
-    () => BuildConversionUseCase(
-      unitGroupRepository: locator(),
-      refreshableValueRepository: locator(),
+  locator.registerLazySingleton<EditConversionGroupUseCase>(
+    () => EditConversionGroupUseCase(
+      buildNewConversionUseCase: locator(),
     ),
   );
 
-  locator.registerLazySingleton<ExecuteJobUseCase>(
-    () => ExecuteJobUseCase(
-      networkDataRepository: locator(),
-      rebuildConversionUseCase: locator(),
+  locator.registerLazySingleton<EditConversionItemUnitUseCase>(
+    () => EditConversionItemUnitUseCase(
+      buildNewConversionUseCase: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<EditConversionItemValueUseCase>(
+    () => EditConversionItemValueUseCase(
+      buildNewConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<RemoveConversionItemsUseCase>(
+    () => RemoveConversionItemsUseCase(
+      buildNewConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<RemoveConversionUseCase>(
+    () => const RemoveConversionUseCase(),
+  );
+
+  locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
+    () => ReplaceConversionItemUnitUseCase(
+      buildNewConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
+    () => UpdateConversionCoefficientsUseCase(
+      buildNewConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetDynamicDataForConversionUseCase>(
+    () => GetDynamicDataForConversionUseCase(
+      networkRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<StartJobUseCase>(
+    () => const StartJobUseCase(),
+  );
+
+  locator.registerLazySingleton<StopJobUseCase>(
+    () => const StopJobUseCase(),
   );
 
   locator.registerLazySingleton<MarkItemsForRemovalUseCase>(
     () => MarkItemsForRemovalUseCase(),
-  );
-
-  locator.registerLazySingleton<ModifyConversionInputParamsUseCase>(
-    () => ModifyConversionInputParamsUseCase(),
-  );
-
-  locator.registerLazySingleton<RemoveConversionItemUseCase>(
-    () => RemoveConversionItemUseCase(),
   );
 
   // repositories
@@ -233,18 +288,26 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton<NetworkDataRepository>(
-    () => NetworkDataRepositoryImpl(
+  locator.registerLazySingleton<NetworkRepository>(
+    () => NetworkRepositoryImpl(
       networkDao: locator(),
       unitDao: database.unitDao,
-      refreshableValueDao: database.refreshableValueDao,
+      dynamicValueDao: database.dynamicValueDao,
       database: database.database.database,
     ),
   );
 
-  locator.registerLazySingleton<RefreshableValueRepository>(
-    () => RefreshableValueRepositoryImpl(
-      refreshableValueDao: database.refreshableValueDao,
+  locator.registerLazySingleton<DataSourceRepository>(
+    () => const DataSourceRepositoryImpl(),
+  );
+
+  locator.registerLazySingleton<JobRepository>(
+    () => const JobRepositoryImpl(),
+  );
+
+  locator.registerLazySingleton<DynamicValueRepository>(
+    () => DynamicValueRepositoryImpl(
+      dynamicValueDao: database.dynamicValueDao,
       unitDao: database.unitDao,
       database: database.database.database,
     ),
@@ -266,7 +329,11 @@ Future<void> init() async {
     () => UnitTranslator(),
   );
 
-  locator.registerLazySingleton<RefreshableValueTranslator>(
-    () => RefreshableValueTranslator(),
+  locator.registerLazySingleton<DynamicValueTranslator>(
+    () => DynamicValueTranslator(),
+  );
+
+  locator.registerLazySingleton<DataSourceTranslator>(
+    () => DataSourceTranslator(),
   );
 }

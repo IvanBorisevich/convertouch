@@ -1,15 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_removal_mark_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_for_removal_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 class MarkItemsForRemovalUseCase
-    extends UseCase<InputItemsForRemovalModel, OutputItemsForRemovalModel> {
+    extends UseCase<InputItemsRemovalMarkModel, OutputItemsForRemovalModel> {
   @override
   Future<Either<ConvertouchException, OutputItemsForRemovalModel>> execute(
-    InputItemsForRemovalModel input,
+    InputItemsRemovalMarkModel input,
   ) async {
     List<int> markedIds = [];
 

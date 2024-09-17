@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_removal_mark_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
@@ -10,6 +10,8 @@ import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +21,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
   final FetchUnitsUseCase fetchUnitsUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
   final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
+  final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   UnitsBloc({
@@ -26,6 +29,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,
     required this.markItemsForRemovalUseCase,
+    required this.conversionBloc,
     required this.navigationBloc,
   }) : super(const UnitsInitialState()) {
     on<FetchUnits>(_onUnitsFetch);
@@ -55,7 +59,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     } else {
       if (event is FetchUnitsToMarkForRemoval) {
         final markedIdsResult = await markItemsForRemovalUseCase.execute(
-          InputItemsForRemovalModel(
+          InputItemsRemovalMarkModel(
             newMarkedId: event.newMarkedId,
             alreadyMarkedIds: event.alreadyMarkedIds,
             oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
@@ -138,9 +142,18 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
         FetchUnitsAfterUnitSaving(
           unitGroup: event.unitGroup,
           modifiedUnit: saveUnitResult.right,
-          rebuildConversion: event.conversionGroupId == event.prevUnitGroupId,
         ),
       );
+
+      if (event.conversionGroupId == event.prevUnitGroupId) {
+        conversionBloc.add(
+          EditConversionItemUnit(editedUnit: event.unitToBeSaved),
+        );
+      } else {
+        conversionBloc.add(
+          RemoveConversionItems(unitIds: [event.unitToBeSaved.id!]),
+        );
+      }
     }
   }
 
@@ -160,7 +173,12 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
         FetchUnitsAfterUnitsRemoval(
           unitGroup: event.unitGroup,
           removedIds: event.ids,
-          rebuildConversion: event.ids.isNotEmpty,
+        ),
+      );
+
+      conversionBloc.add(
+        RemoveConversionItems(
+          unitIds: event.ids,
         ),
       );
     }

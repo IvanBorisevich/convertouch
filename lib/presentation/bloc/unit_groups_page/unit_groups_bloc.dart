@@ -1,6 +1,6 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_items_for_removal_model.dart';
-import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_removal_mark_model.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -8,6 +8,8 @@ import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +20,7 @@ class UnitGroupsBloc
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
   final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
+  final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
@@ -25,6 +28,7 @@ class UnitGroupsBloc
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
     required this.markItemsForRemovalUseCase,
+    required this.conversionBloc,
     required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
@@ -48,7 +52,7 @@ class UnitGroupsBloc
     } else {
       if (event is FetchUnitGroupsToMarkForRemoval) {
         final markedIdsResult = await markItemsForRemovalUseCase.execute(
-          InputItemsForRemovalModel(
+          InputItemsRemovalMarkModel(
             newMarkedId: event.newMarkedId,
             alreadyMarkedIds: event.alreadyMarkedIds,
             oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
@@ -110,6 +114,8 @@ class UnitGroupsBloc
           rebuildConversion: event.ids.isNotEmpty,
         ),
       );
+
+      conversionBloc.add(RemoveConversions(removedGroupIds: event.ids));
     }
   }
 
@@ -133,6 +139,11 @@ class UnitGroupsBloc
               event.conversionGroupId == saveUnitGroupResult.right.id,
         ),
       );
+
+      conversionBloc.add(
+        EditConversionGroup(editedGroup: saveUnitGroupResult.right),
+      );
+
       navigationBloc.add(
         const NavigateBack(),
       );

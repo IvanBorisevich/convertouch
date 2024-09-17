@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/data/entities/refreshable_value_entity.dart';
+import 'package:convertouch/data/entities/dynamic_value_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
@@ -101,7 +101,7 @@ class SqlUtils {
           bool valuesAreRefreshable = entity['refreshable'] == true &&
               entity['conversionType'] == ConversionType.formula;
           if (valuesAreRefreshable) {
-            _insertRefreshableValuesUnits(txn, unitIds);
+            _insertDynamicUnits(txn, unitIds);
           }
         },
       );
@@ -209,7 +209,7 @@ class SqlUtils {
     }
   }
 
-  static Future<void> _insertRefreshableValuesUnits(
+  static Future<void> _insertDynamicUnits(
     Transaction txn,
     List<int> unitIds,
   ) async {
@@ -217,7 +217,7 @@ class SqlUtils {
 
     for (int unitId in unitIds) {
       batch.insert(
-        refreshableValuesTableName,
+        dynamicValuesTableName,
         {
           'unit_id': unitId,
         },

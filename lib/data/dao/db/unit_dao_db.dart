@@ -66,8 +66,12 @@ abstract class UnitDaoDb extends UnitDao {
     );
 
     List<UnitEntity> patchEntities = savedEntities
-        .map((entity) => UnitEntity.coalesce(
-            savedEntity: entity, coefficient: codeToCoefficient[entity.code]))
+        .map(
+          (entity) => UnitEntity.coalesce(
+            savedEntity: entity,
+            coefficient: codeToCoefficient[entity.code],
+          ),
+        )
         .toList();
 
     await updateBatch(db, patchEntities);

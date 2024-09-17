@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:convertouch/data/const/default_units.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
 import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
-import 'package:convertouch/domain/constants/default_units.dart';
 import 'package:sqflite/sqflite.dart';
 
 class InitialMigration extends ConvertouchDbMigration {

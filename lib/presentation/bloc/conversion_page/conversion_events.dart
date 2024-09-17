@@ -1,123 +1,181 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
   const ConversionEvent();
 }
 
-class BuildConversion extends ConversionEvent {
-  final InputConversionModel conversionParams;
-  final UnitModel? modifiedUnit;
-  final List<int> removedUnitIds;
-  final UnitGroupModel? modifiedUnitGroup;
-  final List<int> removedUnitGroupIds;
+abstract class ModifyConversion extends ConversionEvent {
+  const ModifyConversion();
+}
 
-  const BuildConversion({
-    required this.conversionParams,
-    this.modifiedUnit,
-    this.removedUnitIds = const [],
-    this.modifiedUnitGroup,
-    this.removedUnitGroupIds = const [],
+class BuildNewConversion extends ConversionEvent {
+  final InputConversionModel inputParams;
+
+  const BuildNewConversion({
+    required this.inputParams,
   });
 
   @override
   List<Object?> get props => [
-        conversionParams,
-        modifiedUnit,
-        removedUnitIds,
-        modifiedUnitGroup,
-        removedUnitGroupIds,
+        inputParams,
       ];
 
   @override
   String toString() {
-    return 'BuildConversion{'
-        'conversionParams: $conversionParams, '
-        'modifiedUnit: $modifiedUnit, '
-        'removedUnitIds: $removedUnitIds, '
-        'modifiedUnitGroup: $modifiedUnitGroup, '
-        'removedUnitGroupIds: $removedUnitGroupIds}';
+    return 'BuildNewConversion{'
+        'inputParams: $inputParams}';
   }
 }
 
-class RebuildConversionOnValueChange extends BuildConversion {
-  const RebuildConversionOnValueChange({
-    required super.conversionParams,
+class EditConversionGroup extends ModifyConversion {
+  final UnitGroupModel editedGroup;
+
+  const EditConversionGroup({
+    required this.editedGroup,
   });
+
+  @override
+  List<Object?> get props => [
+        editedGroup,
+      ];
+
+  @override
+  String toString() {
+    return 'EditConversionGroup{editedGroup: $editedGroup}';
+  }
 }
 
-class RebuildConversionAfterUnitReplacement extends BuildConversion {
-  final UnitModel newUnit;
-  final UnitModel oldUnit;
+class EditConversionItemUnit extends ModifyConversion {
+  final UnitModel editedUnit;
 
-  const RebuildConversionAfterUnitReplacement({
+  const EditConversionItemUnit({
+    required this.editedUnit,
+  });
+
+  @override
+  List<Object?> get props => [
+        editedUnit,
+      ];
+
+  @override
+  String toString() {
+    return 'EditConversionItemUnit{editedUnit: $editedUnit}';
+  }
+}
+
+class EditConversionItemValue extends ModifyConversion {
+  final String? newValue;
+  final String? newDefaultValue;
+  final int unitId;
+
+  const EditConversionItemValue({
+    required this.newValue,
+    this.newDefaultValue,
+    required this.unitId,
+  });
+
+  @override
+  List<Object?> get props => [
+        newValue,
+        newDefaultValue,
+        unitId,
+      ];
+
+  @override
+  String toString() {
+    return 'EditConversionItemValue{'
+        'newValue: $newValue, '
+        'newDefaultValue: $newDefaultValue, '
+        'unitId: $unitId}';
+  }
+}
+
+class UpdateConversionCoefficients extends ModifyConversion {
+  final Map<String, double?> updatedUnitCoefs;
+
+  const UpdateConversionCoefficients({
+    required this.updatedUnitCoefs,
+  });
+
+  @override
+  List<Object?> get props => [
+        updatedUnitCoefs.entries,
+      ];
+
+  @override
+  String toString() {
+    return 'UpdateConversionCoefficients{updatedUnits: $updatedUnitCoefs}';
+  }
+}
+
+class RemoveConversionItems extends ModifyConversion {
+  final List<int> unitIds;
+
+  const RemoveConversionItems({
+    required this.unitIds,
+  });
+
+  @override
+  List<Object?> get props => [
+        unitIds,
+      ];
+
+  @override
+  String toString() {
+    return 'RemoveConversionItems{'
+        'unitIds: $unitIds}';
+  }
+}
+
+class ReplaceConversionItemUnit extends ModifyConversion {
+  final UnitModel newUnit;
+  final int oldUnitId;
+
+  const ReplaceConversionItemUnit({
     required this.newUnit,
-    required this.oldUnit,
-    required super.conversionParams,
+    required this.oldUnitId,
   });
 
   @override
   List<Object?> get props => [
         newUnit,
-        oldUnit,
-        super.props,
+        oldUnitId,
       ];
 
   @override
   String toString() {
-    return 'RebuildConversionAfterUnitReplacement{'
+    return 'ReplaceConversionItemUnit{'
         'newUnit: $newUnit, '
-        'oldUnit: $oldUnit, '
-        'conversionParams: $conversionParams}';
+        'oldUnitId: $oldUnitId}';
   }
 }
 
-class ShowNewConversionAfterRefresh extends ConversionEvent {
-  final OutputConversionModel newConversion;
+class RemoveConversions extends ConversionEvent {
+  final List<int> removedGroupIds;
 
-  const ShowNewConversionAfterRefresh({
-    required this.newConversion,
+  const RemoveConversions({
+    required this.removedGroupIds,
   });
 
   @override
   List<Object?> get props => [
-        newConversion,
+        removedGroupIds,
       ];
 
   @override
   String toString() {
-    return 'ShowNewConversionAfterRefresh{'
-        'newConversion: $newConversion}';
+    return 'RemoveConversions{removedGroupIds: $removedGroupIds}';
   }
 }
 
-class RemoveConversionItem extends ConversionEvent {
-  final int id;
-
-  const RemoveConversionItem({
-    required this.id,
-  });
-
-  @override
-  List<Object?> get props => [
-        id,
-      ];
+class GetLastOpenedConversion extends ConversionEvent {
+  const GetLastOpenedConversion();
 
   @override
   String toString() {
-    return 'RemoveConversionItem{'
-        'id: $id}';
-  }
-}
-
-class GetLastSavedConversion extends ConversionEvent {
-  const GetLastSavedConversion();
-
-  @override
-  String toString() {
-    return 'GetLastSavedConversion{}';
+    return 'GetLastOpenedConversion{}';
   }
 }

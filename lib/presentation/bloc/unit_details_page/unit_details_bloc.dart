@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
-import 'package:convertouch/domain/utils/number_value_utils.dart';
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/domain/utils/unit_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -518,7 +518,7 @@ class UnitDetailsBloc
     bool groupsDiff = draftDetails.unitGroup != savedDetails.unitGroup;
     bool unitNameDiff = newUnitName != savedDetails.unit.name;
     bool unitCodeDiff = newUnitCode != savedDetails.unit.code;
-    bool unitCoefficientDiff = NumberValueUtils.areNotEqual(
+    bool unitCoefficientDiff = DoubleValueUtils.areNotEqual(
       draftDetails.unit.coefficient,
       savedDetails.unit.coefficient,
     );

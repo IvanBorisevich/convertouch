@@ -1,18 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class RefreshingJobsEvent extends ConvertouchEvent {
   const RefreshingJobsEvent();
-}
-
-class FetchRefreshingJobs extends RefreshingJobsEvent {
-  const FetchRefreshingJobs();
-
-  @override
-  String toString() {
-    return 'FetchRefreshingJobs{}';
-  }
 }
 
 abstract class SingleJobEvent extends RefreshingJobsEvent {
@@ -28,23 +18,21 @@ abstract class SingleJobEvent extends RefreshingJobsEvent {
       ];
 }
 
-class OpenJobDetails extends SingleJobEvent {
-  const OpenJobDetails({
-    required super.unitGroupName,
-  });
+class FetchRefreshingJobs extends RefreshingJobsEvent {
+  const FetchRefreshingJobs();
 
   @override
   String toString() {
-    return 'OpenJobDetails{unitGroupName: $unitGroupName}';
+    return 'FetchRefreshingJobs{}';
   }
 }
 
-class ChangeJobCron extends SingleJobEvent {
+class ChangeRefreshingJobCron extends SingleJobEvent {
   final Cron newCron;
 
-  const ChangeJobCron({
-    required super.unitGroupName,
+  const ChangeRefreshingJobCron({
     required this.newCron,
+    required super.unitGroupName,
   });
 
   @override
@@ -55,57 +43,40 @@ class ChangeJobCron extends SingleJobEvent {
 
   @override
   String toString() {
-    return 'ChangeJobCron{'
+    return 'ChangeRefreshingJobCron{'
         'unitGroupName: $unitGroupName, '
         'newCron: $newCron}';
   }
 }
 
-class ExecuteJob extends SingleJobEvent {
-  final OutputConversionModel? conversionToBeRebuilt;
-
-  const ExecuteJob({
+class StartRefreshingJobForConversion extends SingleJobEvent {
+  const StartRefreshingJobForConversion({
     required super.unitGroupName,
-    this.conversionToBeRebuilt,
   });
 
   @override
   List<Object?> get props => [
-        conversionToBeRebuilt,
-        super.props,
+        unitGroupName,
       ];
 
   @override
   String toString() {
-    return 'ExecuteJob{'
-        'unitGroupName: $unitGroupName}';
+    return 'StartRefreshingJobForConversion{unitGroupName: $unitGroupName}';
   }
 }
 
-class StopJob extends SingleJobEvent {
-  const StopJob({
+class StopRefreshingJobForConversion extends SingleJobEvent {
+  const StopRefreshingJobForConversion({
     required super.unitGroupName,
   });
 
   @override
-  String toString() {
-    return 'StopJob{'
-        'unitGroupName: $unitGroupName}';
-  }
-}
-
-class FinishJob extends SingleJobEvent {
-  final OutputConversionModel? rebuiltConversion;
-
-  const FinishJob({
-    required super.unitGroupName,
-    this.rebuiltConversion,
-  });
+  List<Object?> get props => [
+        unitGroupName,
+      ];
 
   @override
   String toString() {
-    return 'FinishJob{'
-        'unitGroupName: $unitGroupName,'
-        'rebuiltConversion: $rebuiltConversion}';
+    return 'StopRefreshingJobForConversion{unitGroupName: $unitGroupName}';
   }
 }

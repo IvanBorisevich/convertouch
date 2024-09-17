@@ -40,7 +40,6 @@ class FetchUnitsAfterUnitSaving extends FetchUnits {
   const FetchUnitsAfterUnitSaving({
     required super.unitGroup,
     required this.modifiedUnit,
-    super.rebuildConversion,
   }) : super(
           searchString: null,
         );
@@ -56,9 +55,8 @@ class FetchUnitsAfterUnitsRemoval extends FetchUnits {
   final List<int> removedIds;
 
   const FetchUnitsAfterUnitsRemoval({
-    required super.unitGroup,
     this.removedIds = const [],
-    super.rebuildConversion,
+    required super.unitGroup,
   }) : super(
           searchString: null,
         );

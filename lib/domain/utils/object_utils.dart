@@ -18,4 +18,22 @@ class ObjectUtils {
   }) {
     return patchWith ?? what;
   }
+
+  static Map<String, T> convertToMap<T>(
+    Map<String, dynamic>? map, {
+    T Function(dynamic)? valueMapFunc,
+  }) {
+    if (map == null) {
+      return {};
+    }
+
+    return map.map(
+      (key, value) => MapEntry(
+        key,
+        valueMapFunc != null
+            ? valueMapFunc.call(value)
+            : value?.toString() as T,
+      ),
+    );
+  }
 }

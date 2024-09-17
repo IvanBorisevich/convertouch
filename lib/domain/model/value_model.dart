@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/utils/number_value_utils.dart';
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
@@ -27,14 +27,14 @@ class ValueModel extends Equatable {
 
   ValueModel.ofDouble(double? value)
       : this(
-          strValue: NumberValueUtils.formatValue(value),
-          scientificValue: NumberValueUtils.formatValueScientific(value),
+          strValue: DoubleValueUtils.formatValue(value),
+          scientificValue: DoubleValueUtils.formatValueScientific(value),
         );
 
   ValueModel.ofString(String? value)
       : this(
           strValue: value ?? "",
-          scientificValue: NumberValueUtils.formatValueScientific(
+          scientificValue: DoubleValueUtils.formatValueScientific(
             double.tryParse(value ?? ""),
           ),
         );

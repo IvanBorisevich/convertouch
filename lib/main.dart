@@ -63,7 +63,7 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>()
             ..add(
-              const GetLastSavedConversion(),
+              const GetLastOpenedConversion(),
             ),
         ),
         BlocProvider(

@@ -65,7 +65,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   UnitDaoDb? _unitDaoInstance;
 
-  RefreshableValueDaoDb? _refreshableValueDaoInstance;
+  DynamicValueDaoDb? _refreshableValueDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -118,7 +118,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   }
 
   @override
-  RefreshableValueDaoDb get refreshableValueDao {
+  DynamicValueDaoDb get dynamicValueDao {
     return _refreshableValueDaoInstance ??=
         _$RefreshableValueDaoDb(database, changeListener);
   }
@@ -466,7 +466,7 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 }
 
-class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
+class _$RefreshableValueDaoDb extends DynamicValueDaoDb {
   _$RefreshableValueDaoDb(
     this.database,
     this.changeListener,
@@ -479,10 +479,10 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
   final QueryAdapter _queryAdapter;
 
   @override
-  Future<RefreshableValueEntity?> get(int unitId) async {
+  Future<DynamicValueEntity?> get(int unitId) async {
     return _queryAdapter.query(
         'select * from refreshable_values where unit_id = ?1 limit 1',
-        mapper: (Map<String, Object?> row) => RefreshableValueEntity(
+        mapper: (Map<String, Object?> row) => DynamicValueEntity(
             id: row['id'] as int?,
             unitId: row['unit_id'] as int,
             value: row['value'] as String?),
@@ -490,7 +490,7 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
   }
 
   @override
-  Future<List<RefreshableValueEntity>> getList(List<int> unitIds) async {
+  Future<List<DynamicValueEntity>> getList(List<int> unitIds) async {
     const offset = 1;
     final _sqliteVariablesForUnitIds =
         Iterable<String>.generate(unitIds.length, (i) => '?${i + offset}')
@@ -499,7 +499,7 @@ class _$RefreshableValueDaoDb extends RefreshableValueDaoDb {
         'select * from refreshable_values where unit_id in (' +
             _sqliteVariablesForUnitIds +
             ')',
-        mapper: (Map<String, Object?> row) => RefreshableValueEntity(
+        mapper: (Map<String, Object?> row) => DynamicValueEntity(
             id: row['id'] as int?,
             unitId: row['unit_id'] as int,
             value: row['value'] as String?),
