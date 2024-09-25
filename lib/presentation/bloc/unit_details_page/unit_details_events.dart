@@ -7,10 +7,10 @@ abstract class UnitDetailsEvent extends ConvertouchEvent {
 }
 
 class GetNewUnitDetails extends UnitDetailsEvent {
-  final UnitGroupModel? unitGroup;
+  final UnitGroupModel unitGroup;
 
   const GetNewUnitDetails({
-    this.unitGroup,
+    required this.unitGroup,
   });
 
   @override

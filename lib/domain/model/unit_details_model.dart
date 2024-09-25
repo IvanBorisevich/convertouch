@@ -1,75 +1,53 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class UnitDetailsModel extends Equatable {
-  static const UnitDetailsModel empty = UnitDetailsModel();
   static const int unitCodeMaxLength = 5;
 
-  final UnitGroupModel? unitGroup;
-  final UnitModel unit;
+  final UnitGroupModel unitGroup;
+  final UnitModel unitData;
   final ValueModel value;
   final UnitModel argUnit;
   final ValueModel argValue;
 
   const UnitDetailsModel({
-    this.unitGroup,
-    this.unit = UnitModel.none,
-    this.value = ValueModel.emptyVal,
+    this.unitGroup = UnitGroupModel.none,
+    this.unitData = UnitModel.none,
+    this.value = ValueModel.one,
     this.argUnit = UnitModel.none,
-    this.argValue = ValueModel.emptyVal,
+    this.argValue = ValueModel.one,
   });
-
-  UnitDetailsModel.coalesce(
-    UnitDetailsModel currentModel, {
-    UnitGroupModel? unitGroup,
-    UnitModel? unit,
-    ValueModel? value,
-    UnitModel? argUnit,
-    ValueModel? argValue,
-  }) : this(
-          unitGroup: ObjectUtils.coalesce(
-            what: currentModel.unitGroup,
-            patchWith: unitGroup,
-          ),
-          unit: ObjectUtils.coalesce(
-                what: currentModel.unit,
-                patchWith: unit,
-              ) ??
-              UnitModel.none,
-          value: ObjectUtils.coalesce(
-                what: currentModel.value,
-                patchWith: value,
-              ) ??
-              ValueModel.emptyVal,
-          argUnit: ObjectUtils.coalesce(
-                what: currentModel.argUnit,
-                patchWith: argUnit,
-              ) ??
-              UnitModel.none,
-          argValue: ObjectUtils.coalesce(
-                what: currentModel.argValue,
-                patchWith: argValue,
-              ) ??
-              ValueModel.emptyVal,
-        );
 
   @override
   List<Object?> get props => [
         unitGroup,
-        unit,
+        unitData,
         value,
         argUnit,
         argValue,
       ];
 
+  static UnitDetailsModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return UnitDetailsModel(
+      unitGroup:
+          UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
+      unitData: UnitModel.fromJson(json["unitData"]) ?? UnitModel.none,
+      value: ValueModel.ofString(json["valueStr"]),
+      argUnit: UnitModel.fromJson(json["argUnit"]) ?? UnitModel.none,
+      argValue: ValueModel.ofString(json["argValueStr"]),
+    );
+  }
+
   @override
   String toString() {
     return 'UnitDetailsModel{'
         'unitGroup: $unitGroup, '
-        'unit: $unit, '
+        'unitData: $unitData, '
         'value: $value, '
         'argUnit: $argUnit, '
         'argValue: $argValue}';

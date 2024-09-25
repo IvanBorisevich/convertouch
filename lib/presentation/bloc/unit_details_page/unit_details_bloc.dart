@@ -1,14 +1,13 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
-import 'package:convertouch/domain/utils/double_value_utils.dart';
-import 'package:convertouch/domain/utils/unit_utils.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_modify_model.dart';
+import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/change_arg_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/change_unit_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_arg_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_code_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_name_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_value_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -17,33 +16,27 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_eve
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// TODO: refactor
-
 class UnitDetailsBloc
     extends ConvertouchBloc<ConvertouchEvent, UnitDetailsState> {
-  static const String baseUnitNote = "Note: It is the Base Unit";
-  static const String firstUnitNote =
-      "Note: The Base unit is going to be added. "
-      "Its default coefficient = 1";
-
-  final PrepareSavedUnitDetailsUseCase prepareSavedUnitDetailsUseCase;
-  final PrepareDraftUnitDetailsUseCase prepareDraftUnitDetailsUseCase;
+  final BuildUnitDetailsUseCase buildUnitDetailsUseCase;
+  final ChangeUnitGroupUseCase changeUnitGroupUseCase;
+  final ChangeArgUnitUseCase changeArgUnitUseCase;
+  final EditUnitNameUseCase editUnitNameUseCase;
+  final EditUnitCodeUseCase editUnitCodeUseCase;
+  final EditUnitValueUseCase editUnitValueUseCase;
+  final EditArgValueUseCase editArgValueUseCase;
   final NavigationBloc navigationBloc;
 
   UnitDetailsBloc({
-    required this.prepareSavedUnitDetailsUseCase,
-    required this.prepareDraftUnitDetailsUseCase,
+    required this.buildUnitDetailsUseCase,
+    required this.changeUnitGroupUseCase,
+    required this.changeArgUnitUseCase,
+    required this.editUnitNameUseCase,
+    required this.editUnitCodeUseCase,
+    required this.editUnitValueUseCase,
+    required this.editArgValueUseCase,
     required this.navigationBloc,
-  }) : super(
-          const UnitDetailsReady(
-            draftDetails: UnitDetailsModel.empty,
-            savedDetails: UnitDetailsModel.empty,
-            isExistingUnit: false,
-            conversionRuleVisible: false,
-            conversionRuleEnabled: false,
-            note: null,
-          ),
-        ) {
+  }) : super(const UnitDetailsInitialState()) {
     on<GetNewUnitDetails>(_onNewUnitDetailsGet);
     on<GetExistingUnitDetails>(_onExistingUnitDetailsGet);
     on<ChangeGroupInUnitDetails>(_onUnitGroupChange);
@@ -58,569 +51,134 @@ class UnitDetailsBloc
     GetNewUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    await _onUnitDetailsGet(
-      unitGroup: event.unitGroup,
-      existingUnit: null,
-      emit: emit,
+    final result = await buildUnitDetailsUseCase.execute(
+      InputUnitDetailsBuildModel(
+        unitGroup: event.unitGroup,
+      ),
     );
+
+    await _handleAndEmit(result, emit, navigationFunc: () {
+      navigationBloc.add(
+        const NavigateToPage(pageName: PageName.unitDetailsPage),
+      );
+    });
   }
 
   _onExistingUnitDetailsGet(
     GetExistingUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    await _onUnitDetailsGet(
-      unitGroup: event.unitGroup,
-      existingUnit: event.unit,
-      emit: emit,
+    final result = await buildUnitDetailsUseCase.execute(
+      InputExistingUnitDetailsBuildModel(
+        unit: event.unit,
+        unitGroup: event.unitGroup,
+      ),
     );
+
+    await _handleAndEmit(result, emit, navigationFunc: () {
+      navigationBloc.add(
+        const NavigateToPage(pageName: PageName.unitDetailsPage),
+      );
+    });
   }
 
   _onUnitGroupChange(
     ChangeGroupInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.isExistingUnit;
-
-    UnitDetailsModel? savedDetails;
-
-    if (!editMode) {
-      final savedDetailsResult = await prepareSavedUnitDetailsUseCase.execute(
-        UnitDetailsModel.coalesce(
-          currentSavedDetails,
-          unitGroup: event.unitGroup,
-          unit: UnitModel.coalesce(
-            currentSavedDetails.unit,
-            code: UnitUtils.calcInitialUnitCode(
-              currentDraftDetails.unit.name,
-              unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
-            ),
-          ),
-          argUnit: UnitModel.none,
-        ),
-      );
-
-      savedDetails = await _processResult(
-        savedDetailsResult,
-        emit,
-      );
-
-      if (savedDetails == null) {
-        return;
-      }
-    }
-
-    final draftDetailsResult = await prepareDraftUnitDetailsUseCase.execute(
-      UnitDetailsModel.coalesce(
-        currentDraftDetails,
-        unitGroup: event.unitGroup,
-        argUnit: UnitModel.none,
-      ),
+    final result = await changeUnitGroupUseCase.execute(
+      await _buildInputParamsForModify(event.unitGroup),
     );
 
-    UnitDetailsModel? draftDetails = await _processResult(
-      draftDetailsResult,
-      emit,
-    );
-
-    if (draftDetails == null) {
-      return;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: savedDetails ?? currentSavedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: savedDetails ?? currentSavedDetails,
-          editMode: editMode,
-        ),
-        isExistingUnit: editMode,
-        conversionRuleVisible:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                (!editMode && draftDetails.unit.named || editMode) &&
-                draftDetails.argUnit.notEmpty,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                    draftDetails.argUnit.empty
-                ? firstUnitNote
-                : null,
-      ),
-    );
-    navigationBloc.add(const NavigateBack());
+    await _handleAndEmit(result, emit, navigationFunc: () {
+      navigationBloc.add(const NavigateBack());
+    });
   }
 
   _onArgumentUnitChange(
     ChangeArgumentUnitInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.isExistingUnit;
-
-    final savedDetailsResult = await prepareSavedUnitDetailsUseCase.execute(
-      UnitDetailsModel.coalesce(
-        currentSavedDetails,
-        argUnit: event.argumentUnit,
-        argValue: ValueModel.emptyVal,
-      ),
+    final result = await changeArgUnitUseCase.execute(
+      await _buildInputParamsForModify(event.argumentUnit),
     );
 
-    final savedDetails = await _processResult(
-      savedDetailsResult,
-      emit,
-    );
-
-    if (savedDetails == null) {
-      return;
-    }
-
-    final draftDetailsResult = await prepareDraftUnitDetailsUseCase.execute(
-      UnitDetailsModel.coalesce(
-        currentDraftDetails,
-        argUnit: event.argumentUnit,
-      ),
-    );
-
-    UnitDetailsModel? draftDetails =
-        await _processResult(draftDetailsResult, emit);
-
-    if (draftDetails == null) {
-      return;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: savedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: savedDetails,
-          editMode: editMode,
-        ),
-        conversionRuleVisible: true,
-        isExistingUnit: editMode,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                    draftDetails.argUnit.empty
-                ? firstUnitNote
-                : null,
-      ),
-    );
-
-    navigationBloc.add(const NavigateBack());
+    await _handleAndEmit(result, emit, navigationFunc: () {
+      navigationBloc.add(const NavigateBack());
+    });
   }
 
   _onUnitNameUpdate(
     UpdateUnitNameInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.isExistingUnit;
-
-    UnitDetailsModel savedDetails = UnitDetailsModel.coalesce(
-      currentSavedDetails,
-      unit: UnitModel.coalesce(
-        currentSavedDetails.unit,
-        code: editMode
-            ? currentSavedDetails.unit.code
-            : UnitUtils.calcInitialUnitCode(
-                event.newValue,
-                unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
-              ),
-      ),
+    final result = await editUnitNameUseCase.execute(
+      await _buildInputParamsForModify(event.newValue),
     );
 
-    UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
-      currentDraftDetails,
-      unit: UnitModel.coalesce(
-        currentDraftDetails.unit,
-        name: event.newValue,
-      ),
-    );
-
-    String? note;
-    if (editMode && draftDetails.unit.coefficient == 1) {
-      note = baseUnitNote;
-    } else if (draftDetails.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        draftDetails.argUnit.empty) {
-      note = firstUnitNote;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: savedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: savedDetails,
-          editMode: editMode,
-        ),
-        isExistingUnit: editMode,
-        conversionRuleVisible:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                (!editMode && draftDetails.unit.named ||
-                    editMode && draftDetails.unit.coefficient != 1) &&
-                draftDetails.argUnit.notEmpty,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note: note,
-      ),
-    );
+    await _handleAndEmit(result, emit);
   }
 
   _onUnitCodeUpdate(
     UpdateUnitCodeInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    bool editMode = currentState.isExistingUnit;
-
-    UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
-      currentDraftDetails,
-      unit: UnitModel.coalesce(
-        currentDraftDetails.unit,
-        code: event.newValue,
-      ),
+    final result = await editUnitCodeUseCase.execute(
+      await _buildInputParamsForModify(event.newValue),
     );
 
-    String? note;
-    if (editMode && draftDetails.unit.coefficient == 1) {
-      note = baseUnitNote;
-    } else if (draftDetails.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        draftDetails.argUnit.empty) {
-      note = firstUnitNote;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: currentSavedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: currentSavedDetails,
-          editMode: editMode,
-        ),
-        conversionRuleVisible:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                (!editMode && draftDetails.unit.named ||
-                    editMode && draftDetails.unit.coefficient != 1) &&
-                draftDetails.argUnit.notEmpty,
-        isExistingUnit: editMode,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note: note,
-      ),
-    );
+    await _handleAndEmit(result, emit);
   }
 
   _onUnitValueUpdate(
     UpdateUnitValueInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.isExistingUnit;
-
-    UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
-      currentDraftDetails,
-      value: ValueModel.ofString(event.newValue),
+    final result = await editUnitValueUseCase.execute(
+      await _buildInputParamsForModify(event.newValue),
     );
 
-    ValueModel currentUnitValue;
-    if (draftDetails.value.notEmpty) {
-      currentUnitValue = draftDetails.value;
-    } else if (currentSavedDetails.value.notEmpty) {
-      currentUnitValue = currentSavedDetails.value;
-    } else {
-      currentUnitValue = ValueModel.one;
-    }
-
-    ValueModel currentArgUnitValue;
-    if (draftDetails.argValue.notEmpty) {
-      currentArgUnitValue = draftDetails.argValue;
-    } else if (currentSavedDetails.argValue.notEmpty) {
-      currentArgUnitValue = currentSavedDetails.argValue;
-    } else {
-      currentArgUnitValue = ValueModel.one;
-    }
-
-    double newUnitCoefficient =
-        await prepareDraftUnitDetailsUseCase.calculateCurrentUnitCoefficient(
-      currentUnitValue: currentUnitValue,
-      argUnit: draftDetails.argUnit,
-      argValue: currentArgUnitValue,
-    );
-
-    draftDetails = UnitDetailsModel.coalesce(
-      draftDetails,
-      unit: UnitModel.coalesce(
-        draftDetails.unit,
-        coefficient: newUnitCoefficient,
-      ),
-    );
-
-    String? note;
-    if (editMode && draftDetails.unit.coefficient == 1) {
-      note = baseUnitNote;
-    } else if (draftDetails.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        draftDetails.argUnit.empty) {
-      note = firstUnitNote;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: currentSavedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: currentSavedDetails,
-          editMode: editMode,
-        ),
-        conversionRuleVisible: true,
-        isExistingUnit: editMode,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note: note,
-      ),
-    );
+    await _handleAndEmit(result, emit);
   }
 
   _onArgumentUnitValueUpdate(
     UpdateArgumentUnitValueInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
+    final result = await editArgValueUseCase.execute(
+      await _buildInputParamsForModify(event.newValue),
+    );
+
+    await _handleAndEmit(result, emit);
+  }
+
+  Future<InputUnitDetailsModifyModel<T>> _buildInputParamsForModify<T>(
+    T newValue,
+  ) async {
     UnitDetailsReady currentState = state as UnitDetailsReady;
-    UnitDetailsModel currentDraftDetails = currentState.draftDetails;
-    UnitDetailsModel currentSavedDetails = currentState.savedDetails;
-    bool editMode = currentState.isExistingUnit;
 
-    UnitDetailsModel draftDetails = UnitDetailsModel.coalesce(
-      currentDraftDetails,
-      argValue: ValueModel.ofString(event.newValue),
-    );
-
-    ValueModel currentUnitValue;
-    if (draftDetails.value.notEmpty) {
-      currentUnitValue = draftDetails.value;
-    } else if (currentSavedDetails.value.notEmpty) {
-      currentUnitValue = currentSavedDetails.value;
-    } else {
-      currentUnitValue = ValueModel.one;
-    }
-
-    ValueModel currentArgUnitValue;
-    if (draftDetails.argValue.notEmpty) {
-      currentArgUnitValue = draftDetails.argValue;
-    } else if (currentSavedDetails.argValue.notEmpty) {
-      currentArgUnitValue = currentSavedDetails.argValue;
-    } else {
-      currentArgUnitValue = ValueModel.one;
-    }
-
-    double newUnitCoefficient =
-        await prepareDraftUnitDetailsUseCase.calculateCurrentUnitCoefficient(
-      currentUnitValue: currentUnitValue,
-      argUnit: draftDetails.argUnit,
-      argValue: currentArgUnitValue,
-    );
-
-    draftDetails = UnitDetailsModel.coalesce(
-      draftDetails,
-      unit: UnitModel.coalesce(
-        draftDetails.unit,
-        coefficient: newUnitCoefficient,
-      ),
-    );
-
-    String? note;
-    if (editMode && draftDetails.unit.coefficient == 1) {
-      note = baseUnitNote;
-    } else if (draftDetails.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        draftDetails.argUnit.empty) {
-      note = firstUnitNote;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: currentSavedDetails,
-        unitToBeSaved: await _buildUnitToBeSaved(
-          draftDetails: draftDetails,
-          savedDetails: currentSavedDetails,
-          editMode: editMode,
-        ),
-        conversionRuleVisible: true,
-        isExistingUnit: editMode,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note: note,
-      ),
+    return InputUnitDetailsModifyModel(
+      draft: currentState.details.draft,
+      saved: currentState.details.saved,
+      delta: newValue,
     );
   }
 
-  Future<UnitDetailsModel?> _processResult(final result, final emit) async {
+  Future<void> _handleAndEmit(
+    final result,
+    Emitter<UnitDetailsState> emit, {
+    void Function()? navigationFunc,
+  }) async {
     if (result.isLeft) {
       navigationBloc.add(
         ShowException(exception: result.left),
       );
-      return null;
-    }
-
-    return result.right;
-  }
-
-  Future<UnitModel?> _buildUnitToBeSaved({
-    required UnitDetailsModel draftDetails,
-    required UnitDetailsModel savedDetails,
-    required bool editMode,
-  }) async {
-    String newUnitName = draftDetails.unit.named
-        ? draftDetails.unit.name
-        : savedDetails.unit.name;
-
-    String newUnitCode;
-    if (draftDetails.unit.code.isNotEmpty) {
-      newUnitCode = draftDetails.unit.code;
     } else {
-      newUnitCode = editMode
-          ? savedDetails.unit.code
-          : UnitUtils.calcInitialUnitCode(
-              draftDetails.unit.name,
-              unitCodeMaxLength: UnitDetailsModel.unitCodeMaxLength,
-            );
-    }
-
-    bool groupsDiff = draftDetails.unitGroup != savedDetails.unitGroup;
-    bool unitNameDiff = newUnitName != savedDetails.unit.name;
-    bool unitCodeDiff = newUnitCode != savedDetails.unit.code;
-    bool unitCoefficientDiff = DoubleValueUtils.areNotEqual(
-      draftDetails.unit.coefficient,
-      savedDetails.unit.coefficient,
-    );
-    draftDetails.unit.coefficient != savedDetails.unit.coefficient;
-    bool unitSymbolDiff = draftDetails.unit.symbol != savedDetails.unit.symbol;
-
-    log("unit name is not empty: ${newUnitName.isNotEmpty}");
-    log("group is different: $groupsDiff");
-    log("unit name is different: $unitNameDiff");
-    log("unit code is empty: ${newUnitCode.isEmpty}, "
-        "unit code is different: $unitCodeDiff");
-    log("unit coefficient is different: $unitCoefficientDiff "
-        "(was ${savedDetails.unit.coefficient}, "
-        "is: ${draftDetails.unit.coefficient})");
-    log("unit symbol is different: $unitSymbolDiff");
-
-    if (newUnitName.isNotEmpty &&
-        (groupsDiff ||
-            unitNameDiff ||
-            unitCodeDiff ||
-            unitCoefficientDiff ||
-            unitSymbolDiff)) {
-      return UnitModel.coalesce(
-        draftDetails.unit,
-        name: newUnitName,
-        code: newUnitCode,
-        unitGroupId: draftDetails.unitGroup!.id,
+      emit(
+        UnitDetailsReady(details: result.right),
       );
+
+      navigationFunc?.call();
     }
-
-    return null;
-  }
-
-  _onUnitDetailsGet({
-    required UnitGroupModel? unitGroup,
-    required UnitModel? existingUnit,
-    required Emitter<UnitDetailsState> emit,
-  }) async {
-    bool editMode = existingUnit != null;
-
-    final savedDetailsResult = await prepareSavedUnitDetailsUseCase.execute(
-      UnitDetailsModel(
-        unitGroup: unitGroup,
-        unit: existingUnit ?? UnitModel.none,
-        argValue: editMode ? ValueModel.emptyVal : ValueModel.one,
-      ),
-    );
-
-    UnitDetailsModel? savedDetails = await _processResult(
-      savedDetailsResult,
-      emit,
-    );
-
-    if (savedDetails == null) {
-      return;
-    }
-
-    final draftDetailsResult = await prepareDraftUnitDetailsUseCase.execute(
-      UnitDetailsModel(
-        unitGroup: unitGroup,
-        unit: existingUnit ?? UnitModel.none,
-        argValue: editMode ? ValueModel.emptyVal : ValueModel.one,
-      ),
-    );
-
-    UnitDetailsModel? draftDetails = await _processResult(
-      draftDetailsResult,
-      emit,
-    );
-
-    if (draftDetails == null) {
-      return;
-    }
-
-    String? note;
-    if (editMode && existingUnit.coefficient == 1) {
-      note = baseUnitNote;
-    } else if (draftDetails.unitGroup?.conversionType !=
-            ConversionType.formula &&
-        draftDetails.argUnit.empty) {
-      note = firstUnitNote;
-    }
-
-    emit(
-      UnitDetailsReady(
-        draftDetails: draftDetails,
-        savedDetails: savedDetails,
-        isExistingUnit: editMode,
-        conversionRuleVisible:
-            draftDetails.unitGroup?.conversionType != ConversionType.formula &&
-                (!editMode && draftDetails.unit.named ||
-                    editMode && draftDetails.unit.coefficient != 1) &&
-                draftDetails.argUnit.notEmpty,
-        conversionRuleEnabled:
-            draftDetails.unitGroup?.conversionType == ConversionType.static &&
-                !draftDetails.unit.oob,
-        note: note,
-      ),
-    );
-
-    navigationBloc.add(
-      const NavigateToPage(pageName: PageName.unitDetailsPage),
-    );
   }
 }

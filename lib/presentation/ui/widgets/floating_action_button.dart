@@ -58,7 +58,11 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
           children: [
             FittedBox(
               child: FloatingActionButton(
-                onPressed: onClick,
+                onPressed: () {
+                  if (visible) {
+                    onClick?.call();
+                  }
+                },
                 backgroundColor: colorScheme.background.regular,
                 foregroundColor: colorScheme.foreground.regular,
                 disabledElevation: 0,

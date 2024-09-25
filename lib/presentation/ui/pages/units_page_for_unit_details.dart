@@ -24,7 +24,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
             FetchUnitsForUnitDetails(
               unitGroup: pageState.unitGroup,
               selectedArgUnit: pageState.selectedArgUnit,
-              currentEditedUnit: pageState.currentEditedUnit,
+              unitIdBeingEdited: pageState.currentEditedUnitId,
               searchString: text,
             ),
           );
@@ -34,7 +34,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
             FetchUnitsForUnitDetails(
               unitGroup: pageState.unitGroup,
               selectedArgUnit: pageState.selectedArgUnit,
-              currentEditedUnit: pageState.currentEditedUnit,
+              unitIdBeingEdited: pageState.currentEditedUnitId,
               searchString: null,
             ),
           );
@@ -57,7 +57,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
         markedUnitIdsForConversion: null,
         selectedUnitVisible: true,
         selectedUnitId: pageState.selectedArgUnit?.id,
-        disabledUnitId: pageState.currentEditedUnit?.id,
+        disabledUnitId: pageState.currentEditedUnitId,
         floatingButton: null,
       );
     });

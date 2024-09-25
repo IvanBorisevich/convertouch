@@ -65,7 +65,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   UnitDaoDb? _unitDaoInstance;
 
-  DynamicValueDaoDb? _refreshableValueDaoInstance;
+  DynamicValueDaoDb? _dynamicValueDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -119,8 +119,8 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   @override
   DynamicValueDaoDb get dynamicValueDao {
-    return _refreshableValueDaoInstance ??=
-        _$RefreshableValueDaoDb(database, changeListener);
+    return _dynamicValueDaoInstance ??=
+        _$DynamicValueDaoDb(database, changeListener);
   }
 }
 
@@ -377,9 +377,9 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 
   @override
-  Future<UnitEntity?> getBaseUnit(int unitGroupId) async {
-    return _queryAdapter.query(
-        'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 1',
+  Future<List<UnitEntity>> getBaseUnits(int unitGroupId) async {
+    return _queryAdapter.queryList(
+        'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 2',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
@@ -466,8 +466,8 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 }
 
-class _$RefreshableValueDaoDb extends DynamicValueDaoDb {
-  _$RefreshableValueDaoDb(
+class _$DynamicValueDaoDb extends DynamicValueDaoDb {
+  _$DynamicValueDaoDb(
     this.database,
     this.changeListener,
   ) : _queryAdapter = QueryAdapter(database);

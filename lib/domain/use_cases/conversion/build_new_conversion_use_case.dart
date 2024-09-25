@@ -95,7 +95,7 @@ class BuildNewConversionUseCase
           ConversionItemModel(
             unit: tgtUnit,
             value:
-                tgtValueModel.isDefined ? tgtValueModel : ValueModel.emptyVal,
+                tgtValueModel.isDefined ? tgtValueModel : ValueModel.none,
             defaultValue: tgtDefaultValueModel,
           ),
         );
@@ -125,7 +125,7 @@ class BuildNewConversionUseCase
     UnitModel srcUnit =
         input.sourceConversionItem?.unit ?? input.targetUnits.first;
     ValueModel srcValue =
-        input.sourceConversionItem?.value ?? ValueModel.emptyVal;
+        input.sourceConversionItem?.value ?? ValueModel.none;
     ValueModel srcDefaultValue = ValueModel.ofString(
       ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id!)).value,
     );

@@ -1,4 +1,4 @@
-import 'package:convertouch/data/dao/db/dbconfig/dbconfig.dart';
+import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
@@ -30,8 +30,13 @@ import 'package:convertouch/domain/use_cases/conversion/update_conversion_coeffi
 import 'package:convertouch/domain/use_cases/dynamic_data/get_dynamic_data_for_conversion.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_draft_unit_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/prepare_saved_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/change_arg_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/change_unit_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_arg_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_code_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_name_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/edit_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/get_unit_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
@@ -137,8 +142,13 @@ Future<void> init() async {
 
   locator.registerLazySingleton(
     () => UnitDetailsBloc(
-      prepareSavedUnitDetailsUseCase: locator(),
-      prepareDraftUnitDetailsUseCase: locator(),
+      buildUnitDetailsUseCase: locator(),
+      changeUnitGroupUseCase: locator(),
+      changeArgUnitUseCase: locator(),
+      editUnitNameUseCase: locator(),
+      editUnitCodeUseCase: locator(),
+      editUnitValueUseCase: locator(),
+      editArgValueUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -196,16 +206,32 @@ Future<void> init() async {
   locator.registerLazySingleton<SaveUnitUseCase>(
     () => SaveUnitUseCase(locator()),
   );
-  locator.registerLazySingleton<PrepareDraftUnitDetailsUseCase>(
-    () => PrepareDraftUnitDetailsUseCase(
-      unitRepository: locator(),
-    ),
-  );
-  locator.registerLazySingleton<PrepareSavedUnitDetailsUseCase>(
-    () => PrepareSavedUnitDetailsUseCase(
-      unitRepository: locator(),
-    ),
-  );
+
+  locator.registerLazySingleton<BuildUnitDetailsUseCase>(
+      () => BuildUnitDetailsUseCase(
+            unitRepository: locator(),
+          ));
+
+  locator.registerLazySingleton<ChangeArgUnitUseCase>(
+      () => const ChangeArgUnitUseCase());
+
+  locator.registerLazySingleton<ChangeUnitGroupUseCase>(
+      () => ChangeUnitGroupUseCase(
+            unitRepository: locator(),
+          ));
+
+  locator.registerLazySingleton<EditArgValueUseCase>(
+      () => const EditArgValueUseCase());
+
+  locator.registerLazySingleton<EditUnitCodeUseCase>(
+      () => const EditUnitCodeUseCase());
+
+  locator.registerLazySingleton<EditUnitNameUseCase>(
+      () => const EditUnitNameUseCase());
+
+  locator.registerLazySingleton<EditUnitValueUseCase>(
+      () => const EditUnitValueUseCase());
+
   locator.registerLazySingleton<RemoveUnitsUseCase>(
     () => RemoveUnitsUseCase(locator()),
   );

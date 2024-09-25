@@ -1,49 +1,33 @@
-import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class UnitDetailsState extends ConvertouchState {
   const UnitDetailsState();
 }
 
+class UnitDetailsInitialState extends UnitDetailsState {
+  const UnitDetailsInitialState();
+
+  @override
+  String toString() {
+    return 'UnitDetailsInitialState{}';
+  }
+}
+
 class UnitDetailsReady extends UnitDetailsState {
-  final UnitDetailsModel draftDetails;
-  final UnitDetailsModel savedDetails;
-  final UnitModel? unitToBeSaved;
-  final bool isExistingUnit;
-  final bool conversionRuleVisible;
-  final bool conversionRuleEnabled;
-  final String? note;
+  final OutputUnitDetailsModel details;
 
   const UnitDetailsReady({
-    required this.draftDetails,
-    required this.savedDetails,
-    this.unitToBeSaved,
-    required this.isExistingUnit,
-    required this.conversionRuleVisible,
-    required this.conversionRuleEnabled,
-    required this.note,
+    required this.details,
   });
 
   @override
   List<Object?> get props => [
-        draftDetails,
-        savedDetails,
-        unitToBeSaved,
-        isExistingUnit,
-        conversionRuleVisible,
-        conversionRuleEnabled,
-        note,
+        details,
       ];
 
   @override
   String toString() {
-    return 'UnitDetailsReady{'
-        'savedDetails: $savedDetails, '
-        'draftDetails: $draftDetails, '
-        'unitToBeSaved: $unitToBeSaved, '
-        'isExistingUnit: $isExistingUnit, '
-        'conversionRuleEnabled: $conversionRuleEnabled, '
-        'note: $note}';
+    return 'UnitDetailsReady{details: $details}';
   }
 }

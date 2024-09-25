@@ -44,7 +44,7 @@ class UnitsBlocForUnitDetails
           units: result.right,
           unitGroup: event.unitGroup,
           selectedArgUnit: event.selectedArgUnit,
-          currentEditedUnit: event.currentEditedUnit,
+          currentEditedUnitId: event.unitIdBeingEdited,
           searchString: event.searchString,
         ),
       );

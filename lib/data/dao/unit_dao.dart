@@ -11,7 +11,7 @@ abstract class UnitDao {
 
   Future<UnitEntity?> getByCode(int unitGroupId, String code);
 
-  Future<UnitEntity?> getBaseUnit(int unitGroupId);
+  Future<List<UnitEntity>> getBaseUnits(int unitGroupId);
 
   Future<UnitEntity?> getUnit(int id);
 

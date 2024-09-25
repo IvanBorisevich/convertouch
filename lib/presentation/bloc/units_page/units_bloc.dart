@@ -145,13 +145,13 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
         ),
       );
 
-      if (event.conversionGroupId == event.prevUnitGroupId) {
+      if (event.unitGroupChanged) {
         conversionBloc.add(
-          EditConversionItemUnit(editedUnit: event.unitToBeSaved),
+          RemoveConversionItems(unitIds: [event.unitToBeSaved.id!]),
         );
       } else {
         conversionBloc.add(
-          RemoveConversionItems(unitIds: [event.unitToBeSaved.id!]),
+          EditConversionItemUnit(editedUnit: event.unitToBeSaved),
         );
       }
     }

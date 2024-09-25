@@ -56,6 +56,8 @@ dependencies:
   logger: ^2.0.2+1
   package_info_plus: ^4.2.0
   flutter_svg: ^2.0.10+1
+  mockito: ^5.4.4
+  basic_utils: ^5.7.0
 
 dev_dependencies:
   flutter_test:

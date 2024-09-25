@@ -30,7 +30,7 @@ class ConversionItemModel extends ItemModel {
     required UnitModel unit,
   }) : this(
           unit: unit,
-          value: ValueModel.emptyVal,
+          value: ValueModel.none,
           defaultValue: ValueModel.one,
         );
 
@@ -51,18 +51,19 @@ class ConversionItemModel extends ItemModel {
                 patchWith: value,
               ) ??
               savedModel?.value ??
-              ValueModel.emptyVal,
+              ValueModel.none,
           defaultValue: ObjectUtils.coalesce(
                 what: savedModel?.defaultValue,
                 patchWith: defaultValue,
               ) ??
               savedModel?.defaultValue ??
-              ValueModel.emptyVal,
+              ValueModel.none,
         );
 
-  bool get empty => value.empty && defaultValue.empty;
+  bool get valueExists => value.exists && defaultValue.exists;
 
-  bool get notEmpty => !empty;
+  bool get isUndefined =>
+      (!value.isDefined || !value.exists) && !defaultValue.isDefined;
 
   Map<String, dynamic> toJson() {
     return {
@@ -78,9 +79,9 @@ class ConversionItemModel extends ItemModel {
     }
     return ConversionItemModel(
       unit: UnitModel.fromJson(json["unit"])!,
-      value: ValueModel.fromJson(json["value"]) ?? ValueModel.emptyVal,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
       defaultValue:
-          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.emptyVal,
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
     );
   }
 

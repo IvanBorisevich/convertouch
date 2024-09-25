@@ -16,6 +16,8 @@ const degreeNewtonCode = "°N";
 const degreeReaumurCode = "°Ré";
 const degreeRomerCode = "°Rø";
 
+const baseUnitConversionRule = "Base unit";
+
 abstract class IconNames {
   const IconNames._();
 

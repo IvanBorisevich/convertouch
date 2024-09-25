@@ -1,3 +1,5 @@
+import 'package:convertouch/domain/constants/constants.dart';
+
 class ConvertouchFormula {
   final double Function(double) forward;
   final double Function(double) reverse;
@@ -27,4 +29,6 @@ double _identityFunc(double x) => x;
 const ConvertouchFormula identity = ConvertouchFormula(
   forward: _identityFunc,
   reverse: _identityFunc,
+  forwardStr: baseUnitConversionRule,
+  reverseStr: baseUnitConversionRule,
 );

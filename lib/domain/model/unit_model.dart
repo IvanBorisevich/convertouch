@@ -92,9 +92,7 @@ class UnitModel extends IdNameItemModel {
           oob: savedUnit.oob,
         );
 
-  bool get empty => this == none;
-
-  bool get notEmpty => this != none;
+  bool get exists => this != none;
 
   bool get named => name.isNotEmpty;
 

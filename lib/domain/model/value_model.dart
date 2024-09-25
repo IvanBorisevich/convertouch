@@ -2,7 +2,7 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const ValueModel emptyVal = ValueModel(
+  static const ValueModel none = ValueModel(
     strValue: "",
     scientificValue: "",
   );
@@ -39,13 +39,9 @@ class ValueModel extends Equatable {
           ),
         );
 
-  bool get empty => strValue.isEmpty;
-
-  bool get notEmpty => strValue.isNotEmpty;
-
-  bool get isUndefined => this == undefined;
-
   bool get isDefined => this != undefined;
+
+  bool get exists => this != none;
 
   Map<String, dynamic> toJson() {
     return {

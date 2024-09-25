@@ -145,20 +145,20 @@ class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
 
 class UnitsFetchedForUnitDetails extends UnitsFetched {
   final UnitModel? selectedArgUnit;
-  final UnitModel? currentEditedUnit;
+  final int? currentEditedUnitId;
 
   const UnitsFetchedForUnitDetails({
     required super.units,
     required super.unitGroup,
     required this.selectedArgUnit,
-    required this.currentEditedUnit,
+    required this.currentEditedUnitId,
     required super.searchString,
   });
 
   @override
   List<Object?> get props => [
         selectedArgUnit,
-        currentEditedUnit,
+        currentEditedUnitId,
         super.props,
       ];
 
@@ -166,6 +166,6 @@ class UnitsFetchedForUnitDetails extends UnitsFetched {
   String toString() {
     return 'UnitsFetchedForUnitDetails{'
         'selectedArgUnit: $selectedArgUnit, '
-        'currentEditedUnit: $currentEditedUnit}';
+        'currentEditedUnitId: $currentEditedUnitId}';
   }
 }

@@ -160,19 +160,19 @@ class FetchUnitsForChangeInConversion extends FetchUnits {
 
 class FetchUnitsForUnitDetails extends FetchUnits {
   final UnitModel? selectedArgUnit;
-  final UnitModel? currentEditedUnit;
+  final int? unitIdBeingEdited;
 
   const FetchUnitsForUnitDetails({
     required super.unitGroup,
     required this.selectedArgUnit,
-    required this.currentEditedUnit,
+    required this.unitIdBeingEdited,
     required super.searchString,
   });
 
   @override
   List<Object?> get props => [
         selectedArgUnit,
-        currentEditedUnit,
+        unitIdBeingEdited,
         super.props,
       ];
 
@@ -180,7 +180,7 @@ class FetchUnitsForUnitDetails extends FetchUnits {
   String toString() {
     return 'FetchUnitsForUnitDetails{'
         'selectedArgUnit: $selectedArgUnit, '
-        'currentEditedUnit: $currentEditedUnit, '
+        'unitIdBeingEdited: $unitIdBeingEdited, '
         '${super.toString()}}';
   }
 }
@@ -214,29 +214,26 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
 class SaveUnit extends UnitsEvent {
   final UnitModel unitToBeSaved;
   final UnitGroupModel unitGroup;
-  final int prevUnitGroupId;
-  final int? conversionGroupId;
+  final bool unitGroupChanged;
 
   const SaveUnit({
     required this.unitToBeSaved,
     required this.unitGroup,
-    required this.prevUnitGroupId,
-    this.conversionGroupId,
+    required this.unitGroupChanged,
   });
 
   @override
   List<Object?> get props => [
         unitToBeSaved,
         unitGroup,
-        prevUnitGroupId,
-        conversionGroupId,
+        unitGroupChanged,
       ];
 
   @override
   String toString() {
     return 'SaveUnit{'
         'unitToBeSaved: $unitToBeSaved, '
-        'prevUnitGroupId: $prevUnitGroupId}';
+        'unitGroupChanged: $unitGroupChanged}';
   }
 }
 

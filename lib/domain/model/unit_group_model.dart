@@ -20,12 +20,13 @@ class UnitGroupModel extends IdNameItemModel {
     this.iconName,
     this.conversionType = ConversionType.static,
     this.refreshable = false,
-    required this.valueType,
+    this.valueType = defaultValueType,
     this.minValue,
     this.maxValue,
     super.oob,
-    super.itemType = ItemType.unitGroup,
-  });
+  }) : super(
+          itemType: ItemType.unitGroup,
+        );
 
   UnitGroupModel.coalesce(
     UnitGroupModel savedUnitGroup, {
@@ -68,6 +69,10 @@ class UnitGroupModel extends IdNameItemModel {
           name: "",
           valueType: defaultValueType,
         );
+
+  bool get empty => this == none;
+
+  bool get notEmpty => this != none;
 
   @override
   List<Object?> get props => [

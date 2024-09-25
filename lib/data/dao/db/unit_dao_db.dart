@@ -30,8 +30,8 @@ abstract class UnitDaoDb extends UnitDao {
   @Query('select * from $unitsTableName '
       'where unit_group_id = :unitGroupId '
       'and cast(coefficient as int) = 1 '
-      'limit 1')
-  Future<UnitEntity?> getBaseUnit(int unitGroupId);
+      'limit 2')
+  Future<List<UnitEntity>> getBaseUnits(int unitGroupId);
 
   @override
   @Query('select * from $unitsTableName where id = :id limit 1')

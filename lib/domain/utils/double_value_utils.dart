@@ -99,14 +99,8 @@ class DoubleValueUtils {
     double? num2, {
     int fractionDigits = defaultFractionDigitsNum,
   }) {
-    return formatValue(
-          num1,
-          fractionDigits: fractionDigits,
-        ) ==
-        formatValue(
-          num2,
-          fractionDigits: fractionDigits,
-        );
+    return formatValue(num1, fractionDigits: fractionDigits) ==
+        formatValue(num2, fractionDigits: fractionDigits);
   }
 
   static bool areNotEqual(
