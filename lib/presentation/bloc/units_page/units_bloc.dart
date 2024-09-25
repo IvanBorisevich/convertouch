@@ -131,7 +131,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     SaveUnit event,
     Emitter<UnitsState> emit,
   ) async {
-    final saveUnitResult = await saveUnitUseCase.execute(event.unitToBeSaved);
+    final saveUnitResult = await saveUnitUseCase.execute(event.unit);
 
     if (saveUnitResult.isLeft) {
       navigationBloc.add(
@@ -147,11 +147,11 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
 
       if (event.unitGroupChanged) {
         conversionBloc.add(
-          RemoveConversionItems(unitIds: [event.unitToBeSaved.id!]),
+          RemoveConversionItems(unitIds: [event.unit.id!]),
         );
       } else {
         conversionBloc.add(
-          EditConversionItemUnit(editedUnit: event.unitToBeSaved),
+          EditConversionItemUnit(editedUnit: event.unit),
         );
       }
     }

@@ -212,7 +212,7 @@ class _ConvertouchUnitDetailsPageState
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitsBloc>(context).add(
                   SaveUnit(
-                    unitToBeSaved: pageState.details.unitToSave!,
+                    unit: pageState.details.unitToSave!,
                     unitGroup: pageState.details.draft.unitGroup,
                     unitGroupChanged: pageState.details.unitGroupChanged,
                   ),

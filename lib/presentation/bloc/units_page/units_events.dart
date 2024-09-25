@@ -212,19 +212,19 @@ class FetchUnitsToMarkForRemoval extends FetchUnits {
 }
 
 class SaveUnit extends UnitsEvent {
-  final UnitModel unitToBeSaved;
+  final UnitModel unit;
   final UnitGroupModel unitGroup;
   final bool unitGroupChanged;
 
   const SaveUnit({
-    required this.unitToBeSaved,
+    required this.unit,
     required this.unitGroup,
     required this.unitGroupChanged,
   });
 
   @override
   List<Object?> get props => [
-        unitToBeSaved,
+        unit,
         unitGroup,
         unitGroupChanged,
       ];
@@ -232,7 +232,7 @@ class SaveUnit extends UnitsEvent {
   @override
   String toString() {
     return 'SaveUnit{'
-        'unitToBeSaved: $unitToBeSaved, '
+        'unit: $unit, '
         'unitGroupChanged: $unitGroupChanged}';
   }
 }
