@@ -64,7 +64,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
           onUnitGroupTapForRemoval: (unitGroup) {
             BlocProvider.of<UnitGroupsBloc>(context).add(
               FetchUnitGroupsToMarkForRemoval(
-                newMarkedId: unitGroup.id!,
+                newMarkedId: unitGroup.id,
                 alreadyMarkedIds: pageState.markedIdsForRemoval,
                 searchString: pageState.searchString,
               ),
@@ -74,7 +74,7 @@ class ConvertouchUnitGroupsPageRegular extends StatelessWidget {
             if (!pageState.removalMode) {
               BlocProvider.of<UnitGroupsBloc>(context).add(
                 FetchUnitGroupsToMarkForRemoval(
-                  newMarkedId: unitGroup.id!,
+                  newMarkedId: unitGroup.id,
                   alreadyMarkedIds: pageState.markedIdsForRemoval,
                   searchString: pageState.searchString,
                 ),

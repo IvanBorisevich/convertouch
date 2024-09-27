@@ -12,13 +12,13 @@ class UnitDetailsUtils {
     required UnitGroupModel unitGroup,
     required UnitModel unitData,
     required UnitModel argUnit,
+    required UnitModel secondaryBaseUnit,
     String unitValue = "1",
     required ValueModel argValue,
+    required bool isBaseConversionRule,
+    required bool mandatoryParamsFilled,
+    required bool showNonBaseConversionRule,
   }) {
-    if (!unitData.exists) {
-      return null;
-    }
-
     if (unitGroup.conversionType == ConversionType.formula) {
       return FormulaUtils.getReverseStr(
         unitGroupName: unitGroup.name,
@@ -26,13 +26,15 @@ class UnitDetailsUtils {
       );
     }
 
-    if (unitData.coefficient == 1 && !argUnit.exists) {
+    if (isBaseConversionRule) {
       return baseUnitConversionRule;
     }
 
-    if (argUnit.coefficient == 1) {
+    if (mandatoryParamsFilled && showNonBaseConversionRule) {
+      String argUnitCode =
+          unitData.id != argUnit.id ? argUnit.code : secondaryBaseUnit.code;
       return "$unitValue ${unitData.code} = "
-          "${argValue.scientificValue} ${argUnit.code}";
+          "${argValue.scientificValue} $argUnitCode";
     }
 
     return null;

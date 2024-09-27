@@ -15,6 +15,7 @@ void main() {
 
   Map<String, dynamic> itemJson = {
     "unit": {
+      "id": -1,
       "name": "testUnitName",
       "code": "testUnitCode",
       "invertible": true,

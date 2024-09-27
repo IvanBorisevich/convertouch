@@ -55,7 +55,7 @@ class UnitGroupsBloc
           InputItemsRemovalMarkModel(
             newMarkedId: event.newMarkedId,
             alreadyMarkedIds: event.alreadyMarkedIds,
-            oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
+            oobIds: result.right.where((e) => e.oob).map((e) => e.id).toList(),
           ),
         );
 

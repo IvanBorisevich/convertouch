@@ -23,7 +23,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
   ) async {
     final targetUnitsMap = {
       for (var item in input.conversion.targetConversionItems)
-        item.unit.id!: item.unit
+        item.unit.id: item.unit
     };
 
     if (input.rebuildConversion) {
@@ -90,7 +90,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         .map(
           (item) => ConversionItemModel.coalesce(
             item,
-            unit: targetUnitMapsUpdated[item.unit.id!],
+            unit: targetUnitMapsUpdated[item.unit.id],
           ),
         )
         .toList();

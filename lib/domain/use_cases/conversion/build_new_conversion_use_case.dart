@@ -41,7 +41,7 @@ class BuildNewConversionUseCase
       double srcCoefficient = srcItem.unit.coefficient!;
 
       for (UnitModel tgtUnit in input.targetUnits) {
-        if (tgtUnit.id! == srcItem.unit.id!) {
+        if (tgtUnit.id == srcItem.unit.id) {
           convertedUnitValues.add(srcItem);
           continue;
         }
@@ -127,7 +127,7 @@ class BuildNewConversionUseCase
     ValueModel srcValue =
         input.sourceConversionItem?.value ?? ValueModel.none;
     ValueModel srcDefaultValue = ValueModel.ofString(
-      ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id!)).value,
+      ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id)).value,
     );
 
     return ConversionItemModel(

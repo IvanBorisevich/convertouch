@@ -79,7 +79,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                 disabled: disabled,
                 removalMode: removalModeAllowed && removalModeEnabled,
                 editIconVisible: editableItemsVisible,
-                markedForRemoval: itemIdsMarkedForRemoval.contains(item.id!),
+                markedForRemoval: itemIdsMarkedForRemoval.contains(item.id),
                 theme: theme,
               );
             }

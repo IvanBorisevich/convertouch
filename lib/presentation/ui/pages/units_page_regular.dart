@@ -91,7 +91,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
               FetchUnitsToMarkForRemoval(
                 unitGroup: pageState.unitGroup,
                 searchString: pageState.searchString,
-                newMarkedId: unit.id!,
+                newMarkedId: unit.id,
                 alreadyMarkedIds: pageState.markedIdsForRemoval,
               ),
             );
@@ -102,7 +102,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 FetchUnitsToMarkForRemoval(
                   unitGroup: pageState.unitGroup,
                   searchString: pageState.searchString,
-                  newMarkedId: unit.id!,
+                  newMarkedId: unit.id,
                   alreadyMarkedIds: pageState.markedIdsForRemoval,
                 ),
               );

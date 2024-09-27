@@ -46,7 +46,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,
-        unitGroupId: event.unitGroup.id!,
+        unitGroupId: event.unitGroup.id,
       ),
     );
 
@@ -62,7 +62,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
           InputItemsRemovalMarkModel(
             newMarkedId: event.newMarkedId,
             alreadyMarkedIds: event.alreadyMarkedIds,
-            oobIds: result.right.where((e) => e.oob).map((e) => e.id!).toList(),
+            oobIds: result.right.where((e) => e.oob).map((e) => e.id).toList(),
           ),
         );
 
@@ -147,7 +147,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
 
       if (event.unitGroupChanged) {
         conversionBloc.add(
-          RemoveConversionItems(unitIds: [event.unit.id!]),
+          RemoveConversionItems(unitIds: [event.unit.id]),
         );
       } else {
         conversionBloc.add(
@@ -206,7 +206,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     if (state is UnitsFetched) {
       UnitsFetched currentState = state as UnitsFetched;
 
-      if (event.modifiedGroup.id! == currentState.unitGroup.id!) {
+      if (event.modifiedGroup.id == currentState.unitGroup.id) {
         emit(
           UnitsFetched(
             units: currentState.units,

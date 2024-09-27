@@ -1,6 +1,7 @@
+import 'package:basic_utils/basic_utils.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
@@ -26,18 +27,56 @@ class BuildUnitDetailsUseCase
     try {
       UnitModel unit = getUnit(input);
 
-      UnitModel baseUnit = await getBaseUnit(
+      List<UnitModel> baseUnits = ObjectUtils.tryGet(
+        await unitRepository.getBaseUnits(input.unitGroup.id),
+      );
+
+      UnitModel firstBaseUnit = getFirstBaseUnit(
+        baseUnits: baseUnits,
         unit: unit,
-        unitGroup: input.unitGroup,
+      );
+
+      UnitModel secondBaseUnit = getSecondBaseUnit(
+        baseUnits: baseUnits,
+        primaryBaseUnit: firstBaseUnit,
       );
 
       ValueModel argValue = getArgValue(
-        argUnit: baseUnit,
+        argUnit: firstBaseUnit,
         unit: unit,
       );
 
       bool editMode = !unit.oob;
-      bool conversionConfigEditable = editMode && baseUnit.exists;
+
+      bool mandatoryParamsFilled = StringUtils.isNotNullOrEmpty(unit.name) &&
+          StringUtils.isNotNullOrEmpty(unit.code);
+
+      bool isNewFirstUnitInGroup = !firstBaseUnit.exists;
+      bool isEditSingleUnitInGroup = firstBaseUnit.exists &&
+          !secondBaseUnit.exists &&
+          unit.id == firstBaseUnit.id;
+      bool isBaseConversionRule =
+          isNewFirstUnitInGroup || isEditSingleUnitInGroup;
+
+      bool showNonBaseConversionRuleDescription =
+          !editMode || input.unitGroup.conversionType == ConversionType.formula;
+
+      bool conversionConfigVisible = mandatoryParamsFilled &&
+          !showNonBaseConversionRuleDescription &&
+          !isBaseConversionRule;
+
+      bool conversionConfigEditable = conversionConfigVisible;
+
+      String? conversionDescription = UnitDetailsUtils.getConversionDesc(
+        unitGroup: input.unitGroup,
+        unitData: unit,
+        argUnit: firstBaseUnit,
+        secondaryBaseUnit: secondBaseUnit,
+        argValue: argValue,
+        isBaseConversionRule: isBaseConversionRule,
+        mandatoryParamsFilled: mandatoryParamsFilled,
+        showNonBaseConversionRule: showNonBaseConversionRuleDescription,
+      );
 
       UnitDetailsModel resultDetails = UnitDetailsModel(
         unitGroup: input.unitGroup,
@@ -51,7 +90,7 @@ class BuildUnitDetailsUseCase
           maxValue: unit.maxValue ?? input.unitGroup.maxValue,
         ),
         value: ValueModel.one,
-        argUnit: baseUnit,
+        argUnit: firstBaseUnit,
         argValue: argValue,
       );
 
@@ -60,14 +99,11 @@ class BuildUnitDetailsUseCase
           draft: resultDetails,
           saved: resultDetails,
           unitToSave: null,
+          secondaryBaseUnit: secondBaseUnit,
           editMode: editMode,
+          conversionConfigVisible: conversionConfigVisible,
           conversionConfigEditable: conversionConfigEditable,
-          conversionDescription: UnitDetailsUtils.getConversionDesc(
-            unitGroup: input.unitGroup,
-            unitData: unit,
-            argUnit: baseUnit,
-            argValue: argValue,
-          ),
+          conversionDescription: conversionDescription,
         ),
       );
     } catch (e, stackTrace) {
@@ -86,31 +122,23 @@ class BuildUnitDetailsUseCase
     return existingUnit ? input.unit : UnitModel.none;
   }
 
-  Future<UnitModel> getBaseUnit({
+  UnitModel getFirstBaseUnit({
+    required List<UnitModel> baseUnits,
     required UnitModel unit,
-    required UnitGroupModel unitGroup,
-  }) async {
-    List<UnitModel> baseUnits = ObjectUtils.tryGet(
-      await unitRepository.getBaseUnits(unitGroup.id!),
-    );
+  }) {
+    return baseUnits.where((baseUnit) => baseUnit.id != unit.id).firstOrNull ??
+        baseUnits.firstOrNull ??
+        UnitModel.none;
+  }
 
-    UnitModel? firstBaseUnit = baseUnits.firstOrNull;
-    UnitModel? secondBaseUnit = baseUnits.length > 1 ? baseUnits.last : null;
-    UnitModel argUnit;
-
-    if (unit.exists) {
-      if (firstBaseUnit != null && unit.id! != firstBaseUnit.id) {
-        argUnit = firstBaseUnit;
-      } else if (secondBaseUnit != null && unit.id! != secondBaseUnit.id) {
-        argUnit = secondBaseUnit;
-      } else {
-        argUnit = UnitModel.none;
-      }
-    } else {
-      argUnit = firstBaseUnit ?? UnitModel.none;
-    }
-
-    return argUnit;
+  UnitModel getSecondBaseUnit({
+    required List<UnitModel> baseUnits,
+    required UnitModel primaryBaseUnit,
+  }) {
+    return baseUnits
+            .where((baseUnit) => baseUnit.id != primaryBaseUnit.id)
+            .firstOrNull ??
+        UnitModel.none;
   }
 
   ValueModel getArgValue({

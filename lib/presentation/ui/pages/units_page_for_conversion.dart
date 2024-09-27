@@ -138,7 +138,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                       .none((markedUnit) => markedUnit.id == unit.id)) {
                 BlocProvider.of<ConversionBloc>(context).add(
                   ReplaceConversionItemUnit(
-                    oldUnitId: pageState.selectedUnit.id!,
+                    oldUnitId: pageState.selectedUnit.id,
                     newUnit: unit as UnitModel,
                   ),
                 );
@@ -154,7 +154,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             appBarRightWidgets: const [],
             markedUnitsForConversionVisible: true,
             markedUnitIdsForConversion: pageState.unitsMarkedForConversion
-                .map((unit) => unit.id!)
+                .map((unit) => unit.id)
                 .toList(),
             selectedUnitVisible: pageState is UnitsFetchedForChangeInConversion,
             selectedUnitId: pageState is UnitsFetchedForChangeInConversion

@@ -5,9 +5,11 @@ class OutputUnitDetailsModel {
   final UnitDetailsModel draft;
   final UnitDetailsModel saved;
   final UnitModel? unitToSave;
+  final UnitModel secondaryBaseUnit;
   final bool editMode;
-  final bool conversionConfigEditable;
   final bool unitGroupChanged;
+  final bool conversionConfigVisible;
+  final bool conversionConfigEditable;
   final String? conversionDescription;
   final String? note;
 
@@ -15,9 +17,11 @@ class OutputUnitDetailsModel {
     required this.draft,
     required this.saved,
     required this.unitToSave,
+    this.secondaryBaseUnit = UnitModel.none,
     this.editMode = false,
-    this.conversionConfigEditable = false,
     this.unitGroupChanged = false,
+    this.conversionConfigVisible = false,
+    this.conversionConfigEditable = false,
     this.conversionDescription,
     this.note,
   });

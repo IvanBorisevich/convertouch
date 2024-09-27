@@ -1,41 +1,46 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
 const mockUnit = UnitModel(
   id: 1,
-  name: "name",
-  code: "code",
-  coefficient: 3,
-  valueType: ConvertouchValueType.decimal,
-);
-
-const mockBaseUnit = UnitModel(
-  id: 2,
-  name: "name2",
-  code: "code2",
-  coefficient: 1,
+  name: "name1",
+  code: "n1",
+  coefficient: 2,
 );
 
 const mockOobUnit = UnitModel(
-  id: 3,
-  name: "name3",
-  code: "code3",
+  id: 2,
+  name: "name1oob",
+  code: "n1o",
   coefficient: 2,
   oob: true,
 );
 
+const mockBaseUnit = UnitModel(
+  id: 3,
+  name: "base1",
+  code: "b1",
+  coefficient: 1,
+);
+
 const mockOobBaseUnit = UnitModel(
   id: 4,
-  name: "name4",
-  code: "code4",
+  name: "base1oob",
+  code: "b1o",
   coefficient: 1,
   oob: true,
 );
 
+const mockBaseUnit2 = UnitModel(
+  id: 5,
+  name: "base2",
+  code: "b2",
+  coefficient: 1,
+);
+
 const mockOobBaseUnit2 = UnitModel(
-  id: 2,
-  name: "name2",
-  code: "code2",
+  id: 6,
+  name: "base2oob",
+  code: "b2o",
   coefficient: 1,
   oob: true,
 );

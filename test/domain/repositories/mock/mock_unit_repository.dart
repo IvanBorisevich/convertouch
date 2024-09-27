@@ -24,7 +24,19 @@ class MockUnitRepository extends UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> getBaseUnits(
     int unitGroupId,
   ) async {
-    return const Right([mockBaseUnit]);
+    List<UnitModel> result;
+    if (unitGroupId == 1) {
+      result = [mockBaseUnit];
+    } else if (unitGroupId == 2) {
+      result = [mockBaseUnit, mockBaseUnit2];
+    } else if (unitGroupId == 3) {
+      result = [mockOobBaseUnit];
+    } else if (unitGroupId == 4) {
+      result = [mockOobBaseUnit, mockOobBaseUnit2];
+    } else {
+      result = [];
+    }
+    return Right(result);
   }
 
   @override

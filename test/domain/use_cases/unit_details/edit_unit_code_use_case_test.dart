@@ -27,7 +27,7 @@ void main() {
               name: draftUnitName,
               code: draftUnitCode,
             ),
-            unitGroup: mockUnitGroup,
+            unitGroup: mockUnitGroupWithOneBaseUnit,
             argUnit: mockBaseUnit,
           ),
           saved: UnitDetailsModel(
@@ -35,7 +35,7 @@ void main() {
               name: savedUnitName,
               code: savedUnitCode,
             ),
-            unitGroup: mockUnitGroup,
+            unitGroup: mockUnitGroupWithOneBaseUnit,
             argUnit: mockBaseUnit,
           ),
           delta: newUnitCode,
@@ -110,7 +110,10 @@ void main() {
 
       expect(result.unitToSave, null);
       expect(result.unitGroupChanged, false);
-      expect(result.conversionConfigEditable, true);
+
+      expect(result.conversionConfigVisible, false); // name or code is empty
+      expect(result.conversionConfigEditable, false);
+      expect(result.conversionDescription, null); // name or code is empty
     });
 
     test('New unit code != empty, unit name = empty', () async {
@@ -130,7 +133,10 @@ void main() {
 
       expect(result.unitToSave, null);
       expect(result.unitGroupChanged, false);
-      expect(result.conversionConfigEditable, true);
+
+      expect(result.conversionConfigVisible, false); // name or code is empty
+      expect(result.conversionConfigEditable, false);
+      expect(result.conversionDescription, null); // name or code is empty
     });
   });
 
@@ -152,7 +158,10 @@ void main() {
 
       expect(result.unitToSave, null);
       expect(result.unitGroupChanged, false);
+
       expect(result.conversionConfigEditable, true);
+      expect(result.conversionConfigEditable, true);
+      expect(result.conversionDescription, null);
     });
 
     test('New unit code != empty, unit name != empty', () async {
@@ -175,7 +184,10 @@ void main() {
       expect(result.unitToSave!.code, 'newCode');
 
       expect(result.unitGroupChanged, false);
+
       expect(result.conversionConfigEditable, true);
+      expect(result.conversionConfigEditable, true);
+      expect(result.conversionDescription, null);
     });
 
     test('New unit code = empty, unit name = empty', () async {
@@ -195,7 +207,10 @@ void main() {
 
       expect(result.unitToSave, null);
       expect(result.unitGroupChanged, false);
+
       expect(result.conversionConfigEditable, true);
+      expect(result.conversionConfigEditable, true);
+      expect(result.conversionDescription, null);
     });
 
     test('New unit code != empty, unit name = empty', () async {
@@ -218,7 +233,10 @@ void main() {
       expect(result.unitToSave!.code, 'newCode');
 
       expect(result.unitGroupChanged, false);
+
       expect(result.conversionConfigEditable, true);
+      expect(result.conversionConfigEditable, true);
+      expect(result.conversionDescription, null);
     });
   });
 }

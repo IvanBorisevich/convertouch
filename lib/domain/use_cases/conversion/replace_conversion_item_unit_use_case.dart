@@ -35,7 +35,7 @@ class ReplaceConversionItemUnitUseCase
     ReplaceConversionItemUnitDelta delta,
   ) {
     return targetUnits.map((key, value) => key == delta.oldUnitId
-        ? MapEntry(delta.newUnit.id!, delta.newUnit)
+        ? MapEntry(delta.newUnit.id, delta.newUnit)
         : MapEntry(key, value));
   }
 }

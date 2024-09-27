@@ -28,7 +28,7 @@ class UnitsBlocForUnitDetails
     final result = await fetchUnitsUseCase.execute(
       InputUnitFetchModel(
         searchString: event.searchString,
-        unitGroupId: event.unitGroup.id!,
+        unitGroupId: event.unitGroup.id,
       ),
     );
 

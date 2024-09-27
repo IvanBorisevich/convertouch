@@ -1,4 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -100,13 +101,25 @@ abstract class ModifyUnitDetailsUseCase<T>
               symbol: resultUnitSymbol,
               valueType: resultValueType,
               coefficient: draftCoefficient,
-              unitGroupId: draftUnitGroup.id!,
+              unitGroupId: draftUnitGroup.id,
             )
           : null;
 
-      bool conversionConfigEditable =
-          draftArgUnit.exists && input.draft.unitData.id != draftArgUnit.id;
+      bool isNewFirstUnitInGroup = !draftArgUnit.exists;
+      bool isEditSingleUnitInGroup = draftArgUnit.exists &&
+          !input.secondaryBaseUnit.exists &&
+          input.draft.unitData.id == draftArgUnit.id;
+      bool isBaseConversionRule =
+          isNewFirstUnitInGroup || isEditSingleUnitInGroup;
 
+      bool showNonBaseConversionRuleDescription =
+          input.draft.unitGroup.conversionType == ConversionType.formula;
+
+      bool conversionConfigVisible = mandatoryParamsFilled &&
+          !showNonBaseConversionRuleDescription &&
+          !isBaseConversionRule;
+
+      bool conversionConfigEditable = conversionConfigVisible;
       String? conversionDescription = UnitDetailsUtils.getConversionDesc(
         unitGroup: draftUnitGroup,
         unitData: UnitModel(
@@ -114,8 +127,12 @@ abstract class ModifyUnitDetailsUseCase<T>
           code: draftUnitCode,
           coefficient: draftCoefficient,
         ),
+        secondaryBaseUnit: input.secondaryBaseUnit,
         argUnit: draftArgUnit,
         argValue: draftArgValue,
+        isBaseConversionRule: isBaseConversionRule,
+        mandatoryParamsFilled: mandatoryParamsFilled,
+        showNonBaseConversionRule: showNonBaseConversionRuleDescription,
       );
 
       final note = getNote(input);
@@ -145,7 +162,9 @@ abstract class ModifyUnitDetailsUseCase<T>
             ),
           ),
           unitToSave: unitToSave,
+          secondaryBaseUnit: input.secondaryBaseUnit,
           editMode: true,
+          conversionConfigVisible: conversionConfigVisible,
           conversionConfigEditable: conversionConfigEditable,
           conversionDescription: conversionDescription,
           unitGroupChanged: unitGroupChanged,

@@ -24,7 +24,7 @@ class ChangeUnitGroupUseCase extends ModifyUnitDetailsUseCase<UnitGroupModel> {
     InputUnitDetailsModifyModel<UnitGroupModel> input,
   ) async {
     List<UnitModel> baseUnits = ObjectUtils.tryGet(
-      await unitRepository.getBaseUnits(input.delta.id!),
+      await unitRepository.getBaseUnits(input.delta.id),
     );
     return baseUnits.firstOrNull ?? UnitModel.none;
   }

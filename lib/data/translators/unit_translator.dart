@@ -33,7 +33,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       return null;
     }
     return UnitModel(
-      id: entity.id,
+      id: entity.id ?? -1,
       name: entity.name,
       code: entity.code,
       symbol: entity.symbol,

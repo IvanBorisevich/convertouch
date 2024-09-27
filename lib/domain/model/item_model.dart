@@ -12,11 +12,11 @@ abstract class ItemModel extends Equatable {
 }
 
 abstract class IdNameItemModel extends ItemModel {
-  final int? id;
+  final int id;
   final String name;
 
   const IdNameItemModel({
-    this.id,
+    this.id = -1,
     required this.name,
     required super.itemType,
     super.oob,

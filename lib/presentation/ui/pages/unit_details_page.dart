@@ -134,7 +134,7 @@ class _ConvertouchUnitDetailsPageState
                     context,
                     name: 'Conversion Rule',
                     hintText: pageState.details.conversionDescription,
-                    visible: !pageState.details.editMode,
+                    visible: !pageState.details.conversionConfigVisible,
                     textBoxColor: textBoxColor,
                   ),
                   _renderUnitDetailItem(
@@ -149,18 +149,17 @@ class _ConvertouchUnitDetailsPageState
                         ),
                       ),
                     ),
-                    editable: true,
-                    visible: pageState.details.editMode,
+                    visible: pageState.details.conversionConfigVisible,
                     textBoxColor: textBoxColor,
                   ),
                   _renderConversionRuleItem(
                     context,
-                    visible: pageState.details.editMode,
-                    editable: pageState.details.conversionConfigEditable,
                     unit: pageState.details.draft.unitData,
                     value: pageState.details.draft.value,
                     valueType: pageState.details.draft.unitData.valueType!,
                     hintValue: pageState.details.saved.value,
+                    editable: pageState.details.conversionConfigEditable,
+                    visible: pageState.details.conversionConfigVisible,
                     appState: appState,
                     onValueChanged: (value) {
                       BlocProvider.of<UnitDetailsBloc>(context).add(
@@ -172,12 +171,12 @@ class _ConvertouchUnitDetailsPageState
                   ),
                   _renderConversionRuleItem(
                     context,
-                    visible: pageState.details.editMode,
-                    editable: pageState.details.conversionConfigEditable,
                     unit: pageState.details.draft.argUnit,
                     value: pageState.details.draft.argValue,
                     valueType: pageState.details.draft.unitData.valueType!,
                     hintValue: pageState.details.saved.argValue,
+                    editable: pageState.details.conversionConfigEditable,
+                    visible: pageState.details.conversionConfigVisible,
                     appState: appState,
                     onValueChanged: (value) {
                       BlocProvider.of<UnitDetailsBloc>(context).add(

@@ -160,6 +160,7 @@ class UnitDetailsBloc
     return InputUnitDetailsModifyModel(
       draft: currentState.details.draft,
       saved: currentState.details.saved,
+      secondaryBaseUnit: currentState.details.secondaryBaseUnit,
       delta: newValue,
     );
   }

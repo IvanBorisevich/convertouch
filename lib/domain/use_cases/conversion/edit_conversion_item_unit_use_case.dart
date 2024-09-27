@@ -37,8 +37,8 @@ class EditConversionItemUnitUseCase
     Map<int, UnitModel> targetUnits,
     EditConversionItemUnitDelta delta,
   ) {
-    if (targetUnits[delta.editedUnit.id!] != null) {
-      targetUnits[delta.editedUnit.id!] = delta.editedUnit;
+    if (targetUnits[delta.editedUnit.id] != null) {
+      targetUnits[delta.editedUnit.id] = delta.editedUnit;
     }
     return targetUnits;
   }
