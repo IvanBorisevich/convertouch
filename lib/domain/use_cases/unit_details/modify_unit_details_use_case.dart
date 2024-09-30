@@ -1,89 +1,99 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_rule_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/unit_details_utils.dart';
 import 'package:either_dart/either.dart';
 
-abstract class ModifyUnitDetailsUseCase<T>
-    extends UseCase<InputUnitDetailsModifyModel<T>, OutputUnitDetailsModel> {
-  const ModifyUnitDetailsUseCase();
+class ModifyUnitDetailsUseCase
+    extends UseCase<UnitDetailsModel, UnitDetailsModel> {
+  final UnitRepository unitRepository;
+
+  const ModifyUnitDetailsUseCase({
+    required this.unitRepository,
+  });
 
   @override
-  Future<Either<ConvertouchException, OutputUnitDetailsModel>> execute(
-    InputUnitDetailsModifyModel<T> input,
+  Future<Either<ConvertouchException, UnitDetailsModel>> execute(
+    UnitDetailsModel input,
   ) async {
     try {
-      final draftUnitGroup = getDraftUnitGroup(input);
-      final draftUnitName = getDraftUnitName(input);
-      final draftUnitCode = getDraftUnitCode(input);
-      final draftUnitSymbol = input.draft.unitData.symbol;
-      final draftValueType = input.draft.unitData.valueType;
-      final draftMinValue = input.draft.unitData.minValue;
-      final draftMaxValue = input.draft.unitData.maxValue;
-      final draftUnitValue = getDraftUnitValue(input);
-      final draftArgUnit = await getDraftArgUnit(input);
-      final draftArgValue = getDraftArgValue(input);
-      final draftCoefficient = UnitDetailsUtils.calcNewUnitCoefficient(
-        value: draftUnitValue,
-        argUnit: draftArgUnit,
-        argValue: draftArgValue,
-      );
+      final unitGroupChanged =
+          input.unitGroup.id != input.draftUnitData.unitGroupId;
 
-      final savedUnitGroup = input.saved.unitGroup;
-      final savedUnitName = input.saved.unitData.name;
-      final savedUnitCode = ObjectUtils.coalesceStringOrDefault(
-        str1: input.saved.unitData.code,
-        str2: UnitDetailsUtils.calcInitialUnitCode(draftUnitName),
-      );
-      final savedUnitSymbol = input.saved.unitData.symbol;
-      final savedValueType = input.saved.unitData.valueType;
-      final savedMinValue = input.saved.unitData.minValue;
-      final savedMaxValue = input.saved.unitData.maxValue;
-      final savedUnitValue = input.saved.value;
-      final savedArgUnit = input.saved.argUnit;
-      final savedArgValue = input.saved.argValue;
-      final savedCoefficient = UnitDetailsUtils.calcNewUnitCoefficient(
-        value: savedUnitValue,
-        argUnit: savedArgUnit,
-        argValue: savedArgValue,
-      );
+      UnitModel primaryBaseUnit;
+      UnitModel secondaryBaseUnit;
+      UnitModel argUnit;
+      ValueModel savedArgValue;
+
+      if (unitGroupChanged) {
+        List<UnitModel> baseUnits = ObjectUtils.tryGet(
+          await unitRepository.getBaseUnits(input.unitGroup.id),
+        );
+
+        primaryBaseUnit = UnitDetailsUtils.getPrimaryBaseUnit(
+          baseUnits: baseUnits,
+          draftUnitId: input.draftUnitData.id,
+        );
+
+        secondaryBaseUnit = UnitDetailsUtils.getSecondaryBaseUnit(
+          baseUnits: baseUnits,
+          primaryBaseUnitId: primaryBaseUnit.id,
+        );
+
+        argUnit = primaryBaseUnit;
+
+        savedArgValue = UnitDetailsUtils.getArgValue(
+          argUnit: primaryBaseUnit,
+          unit: input.draftUnitData,
+        );
+      } else {
+        primaryBaseUnit = input.conversionRule.primaryBaseUnit;
+        secondaryBaseUnit = input.conversionRule.secondaryBaseUnit;
+        argUnit = input.conversionRule.argUnit;
+        savedArgValue = input.conversionRule.draftArgValue;
+      }
 
       final resultUnitName = ObjectUtils.coalesceStringOrDefault(
-        str1: draftUnitName,
-        str2: savedUnitName,
+        str1: input.draftUnitData.name,
+        str2: input.savedUnitData.name,
+      );
+
+      final savedUnitCode = ObjectUtils.coalesceStringOrDefault(
+        str1: input.savedUnitData.code,
+        str2: UnitDetailsUtils.calcInitialUnitCode(input.draftUnitData.name),
       );
       final resultUnitCode = ObjectUtils.coalesceStringOrDefault(
-        str1: draftUnitCode,
+        str1: input.draftUnitData.code,
         str2: savedUnitCode,
       );
+
       final resultUnitSymbol = ObjectUtils.coalesceStringOrNull(
-        str1: draftUnitSymbol,
-        str2: savedUnitSymbol,
+        str1: input.draftUnitData.symbol,
+        str2: input.savedUnitData.symbol,
       );
-      final resultValueType = ObjectUtils.coalesceOrNull(
-        v1: draftValueType,
-        v2: savedValueType,
+
+      final draftCoefficient = UnitDetailsUtils.calcUnitCoefficient(
+        value: input.conversionRule.unitValue,
+        argUnit: input.conversionRule.argUnit,
+        argValue: input.conversionRule.draftArgValue,
       );
 
       final mandatoryParamsFilled =
           StringUtils.isNotNullOrEmpty(resultUnitName) &&
               StringUtils.isNotNullOrEmpty(resultUnitCode);
-      final unitGroupChanged = draftUnitGroup != savedUnitGroup;
-      final unitNameChanged = resultUnitName != savedUnitName;
+      final unitNameChanged = resultUnitName != input.savedUnitData.name;
       final unitCodeChanged = resultUnitCode != savedUnitCode;
-      final unitSymbolChanged = resultUnitSymbol != savedUnitSymbol;
+      final unitSymbolChanged = resultUnitSymbol != input.savedUnitData.symbol;
       final coefficientChanged = DoubleValueUtils.areNotEqual(
         draftCoefficient,
-        savedCoefficient,
+        input.savedUnitData.coefficient,
       );
 
       final deltaDetected = mandatoryParamsFilled &&
@@ -95,122 +105,48 @@ abstract class ModifyUnitDetailsUseCase<T>
 
       final unitToSave = deltaDetected
           ? UnitModel(
-              id: input.saved.unitData.id,
+              id: input.savedUnitData.id,
               name: resultUnitName,
               code: resultUnitCode,
               symbol: resultUnitSymbol,
-              valueType: resultValueType,
+              valueType: input.draftUnitData.valueType,
               coefficient: draftCoefficient,
-              unitGroupId: draftUnitGroup.id,
+              unitGroupId: input.unitGroup.id,
             )
-          : null;
-
-      bool isNewFirstUnitInGroup = !draftArgUnit.exists;
-      bool isEditSingleUnitInGroup = draftArgUnit.exists &&
-          !input.secondaryBaseUnit.exists &&
-          input.draft.unitData.id == draftArgUnit.id;
-      bool isBaseConversionRule =
-          isNewFirstUnitInGroup || isEditSingleUnitInGroup;
-
-      bool showNonBaseConversionRuleDescription =
-          input.draft.unitGroup.conversionType == ConversionType.formula;
-
-      bool conversionConfigVisible = mandatoryParamsFilled &&
-          !showNonBaseConversionRuleDescription &&
-          !isBaseConversionRule;
-
-      bool conversionConfigEditable = conversionConfigVisible;
-      String? conversionDescription = UnitDetailsUtils.getConversionDesc(
-        unitGroup: draftUnitGroup,
-        unitData: UnitModel(
-          name: draftUnitName,
-          code: draftUnitCode,
-          coefficient: draftCoefficient,
-        ),
-        secondaryBaseUnit: input.secondaryBaseUnit,
-        argUnit: draftArgUnit,
-        argValue: draftArgValue,
-        isBaseConversionRule: isBaseConversionRule,
-        mandatoryParamsFilled: mandatoryParamsFilled,
-        showNonBaseConversionRule: showNonBaseConversionRuleDescription,
-      );
-
-      final note = getNote(input);
+          : UnitModel.none;
 
       return Right(
-        OutputUnitDetailsModel(
-          draft: UnitDetailsModel(
-            unitGroup: draftUnitGroup,
-            unitData: UnitModel(
-              name: draftUnitName,
-              code: draftUnitCode,
-              symbol: draftUnitSymbol,
-              valueType: draftValueType,
-              minValue: draftMinValue,
-              maxValue: draftMaxValue,
-            ),
-          ),
-          saved: UnitDetailsModel(
-            unitGroup: savedUnitGroup,
-            unitData: UnitModel(
-              name: savedUnitName,
-              code: savedUnitCode,
-              symbol: savedUnitSymbol,
-              valueType: savedValueType,
-              minValue: savedMinValue,
-              maxValue: savedMaxValue,
-            ),
+        UnitDetailsModel(
+          unitGroup: input.unitGroup,
+          draftUnitData: input.draftUnitData,
+          savedUnitData: UnitModel.coalesce(
+            input.savedUnitData,
+            code: savedUnitCode,
           ),
           unitToSave: unitToSave,
-          secondaryBaseUnit: input.secondaryBaseUnit,
           editMode: true,
-          conversionConfigVisible: conversionConfigVisible,
-          conversionConfigEditable: conversionConfigEditable,
-          conversionDescription: conversionDescription,
           unitGroupChanged: unitGroupChanged,
-          note: note,
+          conversionRule: ConversionRule.build(
+            unitGroup: input.unitGroup,
+            mandatoryParamsFilled: mandatoryParamsFilled,
+            draftUnit: input.draftUnitData,
+            draftUnitValue: input.conversionRule.unitValue,
+            argUnit: argUnit,
+            draftArgValue: input.conversionRule.draftArgValue,
+            savedArgValue: savedArgValue,
+            primaryBaseUnit: primaryBaseUnit,
+            secondaryBaseUnit: secondaryBaseUnit,
+          ),
         ),
       );
     } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: getErrorMessage(),
+          message: "Error when modifying unit details",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
       );
     }
   }
-
-  UnitGroupModel getDraftUnitGroup(InputUnitDetailsModifyModel<T> input) {
-    return input.draft.unitGroup;
-  }
-
-  String getDraftUnitName(InputUnitDetailsModifyModel<T> input) {
-    return input.draft.unitData.name;
-  }
-
-  String getDraftUnitCode(InputUnitDetailsModifyModel<T> input) {
-    return input.draft.unitData.code;
-  }
-
-  ValueModel getDraftUnitValue(InputUnitDetailsModifyModel<T> input) {
-    return input.draft.value;
-  }
-
-  Future<UnitModel> getDraftArgUnit(
-    InputUnitDetailsModifyModel<T> input,
-  ) async {
-    return input.draft.argUnit;
-  }
-
-  ValueModel getDraftArgValue(InputUnitDetailsModifyModel<T> input) {
-    return input.draft.argValue;
-  }
-
-  String? getNote(InputUnitDetailsModifyModel<T> input) {
-    return null;
-  }
-
-  String getErrorMessage();
 }

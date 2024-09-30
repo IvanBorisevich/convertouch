@@ -1,13 +1,11 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/unit_details_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_modify_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/change_arg_unit_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/change_unit_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/edit_arg_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/edit_unit_code_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/edit_unit_name_use_case.dart';
-import 'package:convertouch/domain/use_cases/unit_details/edit_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -19,22 +17,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class UnitDetailsBloc
     extends ConvertouchBloc<ConvertouchEvent, UnitDetailsState> {
   final BuildUnitDetailsUseCase buildUnitDetailsUseCase;
-  final ChangeUnitGroupUseCase changeUnitGroupUseCase;
-  final ChangeArgUnitUseCase changeArgUnitUseCase;
-  final EditUnitNameUseCase editUnitNameUseCase;
-  final EditUnitCodeUseCase editUnitCodeUseCase;
-  final EditUnitValueUseCase editUnitValueUseCase;
-  final EditArgValueUseCase editArgValueUseCase;
+  final ModifyUnitDetailsUseCase modifyUnitDetailsUseCase;
   final NavigationBloc navigationBloc;
 
   UnitDetailsBloc({
     required this.buildUnitDetailsUseCase,
-    required this.changeUnitGroupUseCase,
-    required this.changeArgUnitUseCase,
-    required this.editUnitNameUseCase,
-    required this.editUnitCodeUseCase,
-    required this.editUnitValueUseCase,
-    required this.editArgValueUseCase,
+    required this.modifyUnitDetailsUseCase,
     required this.navigationBloc,
   }) : super(const UnitDetailsInitialState()) {
     on<GetNewUnitDetails>(_onNewUnitDetailsGet);
@@ -86,11 +74,13 @@ class UnitDetailsBloc
     ChangeGroupInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await changeUnitGroupUseCase.execute(
-      await _buildInputParamsForModify(event.unitGroup),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      unitGroup: event.unitGroup,
     );
 
-    await _handleAndEmit(result, emit, navigationFunc: () {
+    await _handleInputParamAndEmit(inputParam, emit, navigationFunc: () {
       navigationBloc.add(const NavigateBack());
     });
   }
@@ -99,11 +89,16 @@ class UnitDetailsBloc
     ChangeArgumentUnitInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await changeArgUnitUseCase.execute(
-      await _buildInputParamsForModify(event.argumentUnit),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      conversionRule: ConversionRule.coalesce(
+        inputParam.conversionRule,
+        argUnit: event.argumentUnit,
+      ),
     );
 
-    await _handleAndEmit(result, emit, navigationFunc: () {
+    await _handleInputParamAndEmit(inputParam, emit, navigationFunc: () {
       navigationBloc.add(const NavigateBack());
     });
   }
@@ -112,57 +107,78 @@ class UnitDetailsBloc
     UpdateUnitNameInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await editUnitNameUseCase.execute(
-      await _buildInputParamsForModify(event.newValue),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      draftUnit: UnitModel.coalesce(
+        inputParam.draftUnitData,
+        name: event.newValue,
+      ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleInputParamAndEmit(inputParam, emit);
   }
 
   _onUnitCodeUpdate(
     UpdateUnitCodeInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await editUnitCodeUseCase.execute(
-      await _buildInputParamsForModify(event.newValue),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      draftUnit: UnitModel.coalesce(
+        inputParam.draftUnitData,
+        code: event.newValue,
+      ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleInputParamAndEmit(inputParam, emit);
   }
 
   _onUnitValueUpdate(
     UpdateUnitValueInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await editUnitValueUseCase.execute(
-      await _buildInputParamsForModify(event.newValue),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      conversionRule: ConversionRule.coalesce(
+        inputParam.conversionRule,
+        unitValue: ValueModel.ofString(event.newValue),
+      ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleInputParamAndEmit(inputParam, emit);
   }
 
   _onArgumentUnitValueUpdate(
     UpdateArgumentUnitValueInUnitDetails event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    final result = await editArgValueUseCase.execute(
-      await _buildInputParamsForModify(event.newValue),
+    var inputParam = _buildInputParams();
+    inputParam = UnitDetailsModel.coalesce(
+      inputParam,
+      conversionRule: ConversionRule.coalesce(
+        inputParam.conversionRule,
+        draftArgValue: ValueModel.ofString(event.newValue),
+      ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleInputParamAndEmit(inputParam, emit);
   }
 
-  Future<InputUnitDetailsModifyModel<T>> _buildInputParamsForModify<T>(
-    T newValue,
-  ) async {
+  UnitDetailsModel _buildInputParams() {
     UnitDetailsReady currentState = state as UnitDetailsReady;
+    return currentState.details;
+  }
 
-    return InputUnitDetailsModifyModel(
-      draft: currentState.details.draft,
-      saved: currentState.details.saved,
-      secondaryBaseUnit: currentState.details.secondaryBaseUnit,
-      delta: newValue,
-    );
+  Future<void> _handleInputParamAndEmit(
+    final UnitDetailsModel inputParam,
+    Emitter<UnitDetailsState> emit, {
+    void Function()? navigationFunc,
+  }) async {
+    final result = await modifyUnitDetailsUseCase.execute(inputParam);
+    await _handleAndEmit(result, emit, navigationFunc: navigationFunc);
   }
 
   Future<void> _handleAndEmit(

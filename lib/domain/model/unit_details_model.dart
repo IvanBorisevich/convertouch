@@ -1,55 +1,63 @@
+import 'package:convertouch/domain/model/conversion_rule_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
 class UnitDetailsModel extends Equatable {
   static const int unitCodeMaxLength = 5;
 
   final UnitGroupModel unitGroup;
-  final UnitModel unitData;
-  final ValueModel value;
-  final UnitModel argUnit;
-  final ValueModel argValue;
+  final UnitModel draftUnitData;
+  final UnitModel savedUnitData;
+  final bool editMode;
+  final bool unitGroupChanged;
+  final ConversionRule conversionRule;
+  final UnitModel unitToSave;
 
   const UnitDetailsModel({
-    this.unitGroup = UnitGroupModel.none,
-    this.unitData = UnitModel.none,
-    this.value = ValueModel.one,
-    this.argUnit = UnitModel.none,
-    this.argValue = ValueModel.one,
+    required this.unitGroup,
+    this.draftUnitData = UnitModel.none,
+    this.savedUnitData = UnitModel.none,
+    this.editMode = false,
+    this.unitGroupChanged = false,
+    this.conversionRule = ConversionRule.none,
+    this.unitToSave = UnitModel.none,
   });
+
+  UnitDetailsModel.coalesce(
+    UnitDetailsModel model, {
+    UnitGroupModel? unitGroup,
+    UnitModel? draftUnit,
+    UnitModel? savedUnit,
+    ConversionRule? conversionRule,
+  }) : this(
+          editMode: model.editMode,
+          unitGroupChanged: model.unitGroupChanged,
+          unitGroup: unitGroup ?? model.unitGroup,
+          draftUnitData: draftUnit ?? model.draftUnitData,
+          savedUnitData: savedUnit ?? model.savedUnitData,
+          conversionRule: conversionRule ?? model.conversionRule,
+          unitToSave: model.unitToSave,
+        );
 
   @override
   List<Object?> get props => [
         unitGroup,
-        unitData,
-        value,
-        argUnit,
-        argValue,
+        draftUnitData,
+        savedUnitData,
+        editMode,
+        unitGroupChanged,
+        conversionRule,
+        unitToSave,
       ];
-
-  static UnitDetailsModel? fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return null;
-    }
-    return UnitDetailsModel(
-      unitGroup:
-          UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
-      unitData: UnitModel.fromJson(json["unitData"]) ?? UnitModel.none,
-      value: ValueModel.ofString(json["valueStr"]),
-      argUnit: UnitModel.fromJson(json["argUnit"]) ?? UnitModel.none,
-      argValue: ValueModel.ofString(json["argValueStr"]),
-    );
-  }
 
   @override
   String toString() {
     return 'UnitDetailsModel{'
         'unitGroup: $unitGroup, '
-        'unitData: $unitData, '
-        'value: $value, '
-        'argUnit: $argUnit, '
-        'argValue: $argValue}';
+        'draft: $draftUnitData, '
+        'saved: $savedUnitData, '
+        'unitGroupChanged: $unitGroupChanged, '
+        'unitToSave: $unitToSave}';
   }
 }

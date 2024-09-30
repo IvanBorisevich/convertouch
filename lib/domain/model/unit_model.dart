@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class UnitModel extends IdNameItemModel {
@@ -10,8 +11,8 @@ class UnitModel extends IdNameItemModel {
   final String? symbol;
   final int unitGroupId;
   final ConvertouchValueType? valueType;
-  final double? minValue;
-  final double? maxValue;
+  final ValueModel? minValue;
+  final ValueModel? maxValue;
   final bool invertible;
 
   const UnitModel({
@@ -22,8 +23,8 @@ class UnitModel extends IdNameItemModel {
     this.symbol,
     this.unitGroupId = -1,
     this.valueType,
-    this.minValue,
-    this.maxValue,
+    this.minValue = ValueModel.undefined,
+    this.maxValue = ValueModel.undefined,
     this.invertible = true,
     super.oob,
   }) : super(
@@ -45,8 +46,8 @@ class UnitModel extends IdNameItemModel {
     String? symbol,
     int? unitGroupId,
     ConvertouchValueType? valueType,
-    double? minValue,
-    double? maxValue,
+    ValueModel? minValue,
+    ValueModel? maxValue,
     bool? invertible,
   }) : this(
           id: ObjectUtils.coalesce(
@@ -107,8 +108,8 @@ class UnitModel extends IdNameItemModel {
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
       "valueType": valueType?.val,
-      "minValue": minValue,
-      "maxValue": maxValue,
+      "minValue": minValue?.num,
+      "maxValue": maxValue?.num,
       "invertible": invertible,
       "oob": oob == true ? true : null,
     };
@@ -130,8 +131,8 @@ class UnitModel extends IdNameItemModel {
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
       valueType: ConvertouchValueType.valueOf(json["valueType"]),
-      minValue: json["minValue"],
-      maxValue: json["maxValue"],
+      minValue: ValueModel.ofDouble(json["minValue"]),
+      maxValue: ValueModel.ofDouble(json["maxValue"]),
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );
@@ -155,11 +156,19 @@ class UnitModel extends IdNameItemModel {
 
   @override
   String toString() {
-    if (this == UnitModel.none) {
+    if (!exists) {
       return "UnitModel.none";
     }
     return 'UnitModel{'
-        'id: $id, $code, $name, c: $coefficient, '
-        'groupId: $unitGroupId, oob: $oob, type: $valueType}';
+        'id: $id, '
+        'name: $name, '
+        'code: $code, '
+        'coefficient: $coefficient, '
+        'symbol: $symbol, '
+        'unitGroupId: $unitGroupId, '
+        'valueType: $valueType, '
+        'minValue: $minValue, '
+        'maxValue: $maxValue, '
+        'invertible: $invertible}';
   }
 }

@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -14,7 +14,7 @@ void main() {
   late UnitRepository unitRepository;
   late BuildUnitDetailsUseCase useCase;
 
-  setUp(() {
+  setUpAll(() {
     unitRepository = const MockUnitRepository();
     useCase = BuildUnitDetailsUseCase(
       unitRepository: unitRepository,
@@ -23,7 +23,7 @@ void main() {
 
   group('For a new unit', () {
     test('In a group without units', () async {
-      OutputUnitDetailsModel result = ObjectUtils.tryGet(
+      UnitDetailsModel result = ObjectUtils.tryGet(
         await useCase.execute(
           const InputUnitDetailsBuildModel(
             unitGroup: mockUnitGroupWithoutUnits,
@@ -32,15 +32,15 @@ void main() {
       );
 
       expect(result.editMode, true);
-      expect(result.unitToSave == null, true);
+      expect(result.unitToSave.exists, false);
       expect(result.unitGroupChanged, false);
-      expect(result.conversionConfigVisible, false);
-      expect(result.conversionConfigEditable, false);
-      expect(result.conversionDescription, baseUnitConversionRule);
+      expect(result.conversionRule.configVisible, false);
+      expect(result.conversionRule.configEditable, false);
+      expect(result.conversionRule.readOnlyDescription, baseUnitConversionRule);
     });
 
     test('In a group with units', () async {
-      OutputUnitDetailsModel result = ObjectUtils.tryGet(
+      UnitDetailsModel result = ObjectUtils.tryGet(
         await useCase.execute(
           const InputUnitDetailsBuildModel(
             unitGroup: mockUnitGroupWithOneBaseUnit,
@@ -49,18 +49,19 @@ void main() {
       );
 
       expect(result.editMode, true);
-      expect(result.unitToSave == null, true);
+      expect(result.unitToSave.exists, false);
       expect(result.unitGroupChanged, false);
-      expect(result.conversionConfigVisible, false); // name or code is empty
-      expect(result.conversionConfigEditable, false);
-      expect(result.conversionDescription, null);
+      expect(
+          result.conversionRule.configVisible, false); // name or code is empty
+      expect(result.conversionRule.configEditable, false);
+      expect(result.conversionRule.readOnlyDescription, null);
     });
   });
 
   group('For an existing unit', () {
     group('For a custom unit (edit mode)', () {
       test('For a custom non-base unit', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockUnit,
@@ -70,15 +71,15 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.unitToSave != null, false);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, true);
-        expect(result.conversionConfigEditable, true);
-        expect(result.conversionDescription, null);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
       });
 
       test('For a custom base unit (no other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockBaseUnit,
@@ -88,15 +89,16 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, false);
-        expect(result.conversionConfigEditable, false);
-        expect(result.conversionDescription, baseUnitConversionRule);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+            result.conversionRule.readOnlyDescription, baseUnitConversionRule);
       });
 
       test('For a custom base unit 1 (with other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockBaseUnit,
@@ -106,15 +108,15 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, true);
-        expect(result.conversionConfigEditable, true);
-        expect(result.conversionDescription, null);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
       });
 
       test('For a custom base unit 2 (with other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockBaseUnit2,
@@ -124,17 +126,17 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, true);
-        expect(result.conversionConfigEditable, true);
-        expect(result.conversionDescription, null);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
       });
     });
 
     group('For read-only mode (oob unit)', () {
       test('For a non-base unit', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockOobUnit,
@@ -144,15 +146,15 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, false);
-        expect(result.conversionConfigEditable, false);
-        expect(result.conversionDescription, "1 n1o = 2 b1");
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(result.conversionRule.readOnlyDescription, "1 n1o = 2 b1");
       });
 
       test('For a base unit (no other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockOobBaseUnit,
@@ -162,15 +164,16 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, false);
-        expect(result.conversionConfigEditable, false);
-        expect(result.conversionDescription, baseUnitConversionRule);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+            result.conversionRule.readOnlyDescription, baseUnitConversionRule);
       });
 
       test('For a base unit 1 (with other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockOobBaseUnit,
@@ -180,15 +183,15 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, false);
-        expect(result.conversionConfigEditable, false);
-        expect(result.conversionDescription, "1 b1o = 1 b2o");
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(result.conversionRule.readOnlyDescription, "1 b1o = 1 b2o");
       });
 
       test('For a base unit 2 (with other base units)', () async {
-        OutputUnitDetailsModel result = ObjectUtils.tryGet(
+        UnitDetailsModel result = ObjectUtils.tryGet(
           await useCase.execute(
             const InputExistingUnitDetailsBuildModel(
               unit: mockOobBaseUnit2,
@@ -198,11 +201,11 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.unitToSave == null, true);
+        expect(result.unitToSave.exists, false);
         expect(result.unitGroupChanged, false);
-        expect(result.conversionConfigVisible, false);
-        expect(result.conversionConfigEditable, false);
-        expect(result.conversionDescription, "1 b2o = 1 b1");
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(result.conversionRule.readOnlyDescription, "1 b2o = 1 b1");
       });
     });
   });

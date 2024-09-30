@@ -3,41 +3,55 @@ import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
   static const ValueModel none = ValueModel(
-    strValue: "",
-    scientificValue: "",
+    str: "",
+    scientific: "",
   );
 
   static const ValueModel undefined = ValueModel(
-    strValue: "-",
-    scientificValue: "-",
+    str: "-",
+    scientific: "-",
   );
 
   static const ValueModel one = ValueModel(
-    strValue: "1",
-    scientificValue: "1",
+    str: "1",
+    scientific: "1",
   );
 
-  final String strValue;
-  final String scientificValue;
+  final double? num;
+  final String str;
+  final String scientific;
 
   const ValueModel({
-    required this.strValue,
-    required this.scientificValue,
+    this.num,
+    required this.str,
+    required this.scientific,
   });
 
-  ValueModel.ofDouble(double? value)
-      : this(
-          strValue: DoubleValueUtils.formatValue(value),
-          scientificValue: DoubleValueUtils.formatValueScientific(value),
-        );
+  factory ValueModel.ofDouble(double? value) {
+    if (value == null) {
+      return ValueModel.none;
+    }
 
-  ValueModel.ofString(String? value)
-      : this(
-          strValue: value ?? "",
-          scientificValue: DoubleValueUtils.formatValueScientific(
-            double.tryParse(value ?? ""),
-          ),
-        );
+    return ValueModel(
+      num: value,
+      str: DoubleValueUtils.format(value),
+      scientific: DoubleValueUtils.formatScientific(value),
+    );
+  }
+
+  factory ValueModel.ofString(String? value) {
+    if (value == null) {
+      return ValueModel.none;
+    }
+
+    var numVal = double.tryParse(value);
+
+    return ValueModel(
+      num: numVal,
+      str: value,
+      scientific: DoubleValueUtils.formatScientific(numVal),
+    );
+  }
 
   bool get isDefined => this != undefined;
 
@@ -45,8 +59,9 @@ class ValueModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      "raw": strValue,
-      "scientific": scientificValue,
+      "num": num,
+      "raw": str,
+      "scientific": scientific,
     };
   }
 
@@ -56,18 +71,21 @@ class ValueModel extends Equatable {
     }
 
     return ValueModel(
-      strValue: json["raw"],
-      scientificValue: json["scientific"],
+      num: json["num"] ?? double.tryParse(json["raw"] ?? ""),
+      str: json["raw"],
+      scientific: json["scientific"],
     );
   }
 
   @override
-  List<Object> get props => [
-        strValue,
+  List<Object?> get props => [
+        num,
+        str,
+        scientific,
       ];
 
   @override
   String toString() {
-    return "{$strValue; sc: $scientificValue}";
+    return "{num: $num; str: $str; sc: $scientific}";
   }
 }

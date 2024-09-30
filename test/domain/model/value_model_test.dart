@@ -8,8 +8,8 @@ void main() {
       String inputValue = "0.0098";
       ValueModel result = ValueModel.ofString(inputValue);
 
-      expect(result.strValue, inputValue);
-      expect(result.scientificValue, "0.01");
+      expect(result.str, inputValue);
+      expect(result.scientific, "0.01");
     },
   );
 }

@@ -17,6 +17,7 @@ const degreeReaumurCode = "°Ré";
 const degreeRomerCode = "°Rø";
 
 const baseUnitConversionRule = "Base unit";
+const noConversionRule = "-";
 
 abstract class IconNames {
   const IconNames._();

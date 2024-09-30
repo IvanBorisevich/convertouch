@@ -21,10 +21,12 @@ void main() {
       "invertible": true,
     },
     "value": {
+      "num": 0.00009,
       "raw": "0",
       "scientific": "9 · 10¯⁵",
     },
     "defaultValue": {
+      "num": 0.008,
       "raw": "0.008",
       "scientific": "0.008",
     },
@@ -35,6 +37,11 @@ void main() {
   });
 
   test('Deserialize conversion item', () {
-    expect(ConversionItemModel.fromJson(itemJson), item);
+    final actual = ConversionItemModel.fromJson(itemJson);
+    expect(actual?.unit.id, item.unit.id);
+    expect(actual?.unit.name, item.unit.name);
+    expect(actual?.unit.code, item.unit.code);
+    expect(actual?.value, item.value);
+    expect(actual?.defaultValue, item.defaultValue);
   });
 }

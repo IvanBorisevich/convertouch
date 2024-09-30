@@ -1,51 +1,48 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_rule_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
-import 'package:convertouch/domain/use_cases/unit_details/edit_unit_name_use_case.dart';
+import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
+import '../../repositories/mock/mock_unit_repository.dart';
 
 void main() {
-  const EditUnitNameUseCase useCase = EditUnitNameUseCase();
+  late UnitRepository unitRepository;
+  late ModifyUnitDetailsUseCase useCase;
 
-  Future<OutputUnitDetailsModel> testForInput({
-    required String newUnitName,
+  setUpAll(() {
+    unitRepository = const MockUnitRepository();
+    useCase = ModifyUnitDetailsUseCase(
+      unitRepository: unitRepository,
+    );
+  });
+
+  Future<UnitDetailsModel> testForInput({
+    required UnitGroupModel unitGroup,
+    int unitId = -1,
     required String draftUnitName,
     required String draftUnitCode,
-    required String savedUnitName,
-    required String savedUnitCode,
-    int unitId = 1,
-    double unitCoefficient = 2,
+    required UnitModel savedUnitData,
+    ConversionRule conversionRule = ConversionRule.none,
   }) async {
-    OutputUnitDetailsModel result = ObjectUtils.tryGet(
+    UnitDetailsModel result = ObjectUtils.tryGet(
       await useCase.execute(
-        InputUnitDetailsModifyModel(
-          draft: UnitDetailsModel(
-            unitData: UnitModel(
-              id: unitId,
-              name: draftUnitName,
-              code: draftUnitCode,
-              coefficient: unitCoefficient,
-            ),
-            unitGroup: mockUnitGroupWithOneBaseUnit,
-            argUnit: mockBaseUnit,
+        UnitDetailsModel(
+          unitGroup: unitGroup,
+          draftUnitData: UnitModel(
+            id: unitId,
+            name: draftUnitName,
+            code: draftUnitCode,
+            unitGroupId: unitGroup.id,
           ),
-          saved: UnitDetailsModel(
-            unitData: UnitModel(
-              id: unitId,
-              name: savedUnitName,
-              code: savedUnitCode,
-              coefficient: unitCoefficient,
-            ),
-            unitGroup: mockUnitGroupWithOneBaseUnit,
-            argUnit: mockBaseUnit,
-          ),
-          delta: newUnitName,
+          savedUnitData: savedUnitData,
+          conversionRule: conversionRule,
         ),
       ),
     );
@@ -54,230 +51,260 @@ void main() {
   }
 
   group('For new details', () {
-    test('New unit name = empty, unit code != empty', () async {
-      final result = await testForInput(
-        newUnitName: "",
-        draftUnitName: "name",
-        draftUnitCode: "code",
-        savedUnitName: "",
-        savedUnitCode: "",
-      );
+    group('In group without units', () {
+      test('New unit name = empty', () async {
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithoutUnits,
+          draftUnitName: '',
+          draftUnitCode: 'code',
+          savedUnitData: UnitModel.none,
+        );
 
-      expect(result.draft.unitData.name, '');
-      expect(result.draft.unitData.code, 'code');
+        expect(result.draftUnitData.name, '');
+        expect(result.draftUnitData.code, 'code');
+        expect(result.savedUnitData.name, '');
+        expect(result.savedUnitData.code, '');
+        expect(result.unitToSave.exists, false);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+            result.conversionRule.readOnlyDescription, baseUnitConversionRule);
+      });
 
-      expect(result.saved.unitData.name, '');
-      expect(result.saved.unitData.code, '');
+      test('New unit name != empty', () async {
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithoutUnits,
+          draftUnitName: 'unitName',
+          draftUnitCode: 'code',
+          savedUnitData: UnitModel.none,
+        );
 
-      expect(result.unitToSave, null);
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, false); // name or code is empty
-      expect(result.conversionConfigEditable, false);
-      expect(result.conversionDescription, null);    // name or code is empty
+        expect(result.draftUnitData.name, 'unitName');
+        expect(result.draftUnitData.code, 'code');
+        expect(result.savedUnitData.name, '');
+        expect(result.savedUnitData.code, 'unitN');
+        expect(result.unitToSave.exists, true);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+          result.conversionRule.readOnlyDescription,
+          baseUnitConversionRule,
+        );
+      });
     });
 
-    test('New unit name != empty, unit code != empty', () async {
-      final result = await testForInput(
-        newUnitName: "newName",
-        draftUnitName: "name",
-        draftUnitCode: "code",
-        savedUnitName: "",
-        savedUnitCode: "",
-      );
+    group('In group with units', () {
+      test('New unit name = empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: '',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+        );
 
-      expect(result.draft.unitData.name, 'newName');
-      expect(result.draft.unitData.code, 'code');
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithOneBaseUnit,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: UnitModel.none,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithOneBaseUnit,
+            mandatoryParamsFilled: false,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+          ),
+        );
 
-      expect(result.saved.unitData.name, '');
-      expect(result.saved.unitData.code, 'newNa');
+        expect(result.draftUnitData.name, '');
+        expect(result.draftUnitData.code, 'code');
+        expect(result.savedUnitData.name, '');
+        expect(result.savedUnitData.code, '');
+        expect(result.unitToSave.exists, false);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, false); // name is empty
+        expect(result.conversionRule.configEditable, false);
+        expect(result.conversionRule.readOnlyDescription, null);
+      });
 
-      expect(result.unitToSave != null, true);
-      expect(result.unitToSave!.name, 'newName');
-      expect(result.unitToSave!.code, 'code');
+      test('New unit name != empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: 'unitName',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+        );
 
-      expect(result.unitGroupChanged, false);
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithoutUnits,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: UnitModel.none,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithOneBaseUnit,
+            mandatoryParamsFilled: true,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+          ),
+        );
 
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
-    });
-
-    test('New unit name = empty, unit code = empty', () async {
-      final result = await testForInput(
-        newUnitName: "",
-        draftUnitName: "name",
-        draftUnitCode: "",
-        savedUnitName: "",
-        savedUnitCode: "",
-      );
-
-      expect(result.draft.unitData.name, '');
-      expect(result.draft.unitData.code, '');
-
-      expect(result.saved.unitData.name, '');
-      expect(result.saved.unitData.code, '');
-
-      expect(result.unitToSave, null);
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, false); // name or code is empty
-      expect(result.conversionConfigEditable, false);
-      expect(result.conversionDescription, null);    // name or code is empty
-    });
-
-    test('New unit name != empty, unit code = empty', () async {
-      final result = await testForInput(
-        newUnitName: "newName",
-        draftUnitName: "name",
-        draftUnitCode: "",
-        savedUnitName: "",
-        savedUnitCode: "",
-      );
-
-      expect(result.draft.unitData.name, 'newName');
-      expect(result.draft.unitData.code, '');
-
-      expect(result.saved.unitData.name, '');
-      expect(result.saved.unitData.code, 'newNa');
-
-      expect(result.unitToSave != null, true);
-      expect(result.unitToSave!.name, 'newName');
-      expect(result.unitToSave!.code, 'newNa');
-
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
+        expect(result.draftUnitData.name, 'unitName');
+        expect(result.draftUnitData.code, 'code');
+        expect(result.savedUnitData.name, '');
+        expect(result.savedUnitData.code, 'unitN');
+        expect(result.unitToSave.exists, true);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
+      });
     });
   });
 
   group('For existing details', () {
-    test('New unit name = empty, unit code != empty', () async {
-      final result = await testForInput(
-        newUnitName: "",
-        draftUnitName: "name",
-        draftUnitCode: "code",
-        savedUnitName: "name",
-        savedUnitCode: "code",
-      );
+    group('In group with 1 unit', () {
+      test('New unit name = empty', () async {
+        UnitModel draftUnit = UnitModel(
+          id: mockBaseUnit.id,
+          name: '',
+          code: 'b1',
+        );
 
-      expect(result.draft.unitData.name, '');
-      expect(result.draft.unitData.code, 'code');
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithOneBaseUnit,
+          unitId: draftUnit.id,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: mockBaseUnit,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithOneBaseUnit,
+            mandatoryParamsFilled: true,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+          ),
+        );
 
-      expect(result.saved.unitData.name, 'name');
-      expect(result.saved.unitData.code, 'code');
+        expect(result.draftUnitData.name, '');
+        expect(result.draftUnitData.code, 'b1');
+        expect(result.savedUnitData.name, 'base1');
+        expect(result.savedUnitData.code, 'b1');
+        expect(result.unitToSave.exists, false);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+          result.conversionRule.readOnlyDescription,
+          baseUnitConversionRule,
+        );
+      });
 
-      expect(result.unitToSave, null);
-      expect(result.unitGroupChanged, false);
+      test('New unit name != empty', () async {
+        UnitModel draftUnit = UnitModel(
+          id: mockBaseUnit.id,
+          name: 'newName',
+          code: 'b1',
+        );
 
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithOneBaseUnit,
+          unitId: draftUnit.id,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: mockBaseUnit,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithOneBaseUnit,
+            mandatoryParamsFilled: true,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+          ),
+        );
+
+        expect(result.draftUnitData.name, 'newName');
+        expect(result.draftUnitData.code, 'b1');
+        expect(result.savedUnitData.name, 'base1');
+        expect(result.savedUnitData.code, 'b1');
+        expect(result.unitToSave.exists, true);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, false);
+        expect(result.conversionRule.configEditable, false);
+        expect(
+          result.conversionRule.readOnlyDescription,
+          baseUnitConversionRule,
+        );
+      });
     });
 
-    test('New unit name != empty, unit code != empty', () async {
-      final result = await testForInput(
-        newUnitName: "newName",
-        draftUnitName: "name",
-        draftUnitCode: "code",
-        savedUnitName: "name",
-        savedUnitCode: "code",
-      );
+    group('In group with more than 1 unit', () {
+      test('New unit name = empty', () async {
+        UnitModel draftUnit = UnitModel(
+          id: mockBaseUnit.id,
+          name: '',
+          code: 'b1',
+        );
 
-      expect(result.draft.unitData.name, 'newName');
-      expect(result.draft.unitData.code, 'code');
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithMultipleBaseUnits,
+          unitId: draftUnit.id,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: mockBaseUnit,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithMultipleBaseUnits,
+            mandatoryParamsFilled: true,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+            secondaryBaseUnit: mockBaseUnit2,
+          ),
+        );
 
-      expect(result.saved.unitData.name, 'name');
-      expect(result.saved.unitData.code, 'code');
+        expect(result.draftUnitData.name, '');
+        expect(result.draftUnitData.code, 'b1');
+        expect(result.savedUnitData.name, 'base1');
+        expect(result.savedUnitData.code, 'b1');
+        expect(result.unitToSave.exists, false);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
+      });
 
-      expect(result.unitToSave != null, true);
-      expect(result.unitToSave!.name, 'newName');
-      expect(result.unitToSave!.code, 'code');
+      test('New unit name != empty', () async {
+        UnitModel draftUnit = UnitModel(
+          id: mockBaseUnit.id,
+          name: 'newName',
+          code: 'b1',
+        );
 
-      expect(result.unitGroupChanged, false);
+        final result = await testForInput(
+          unitGroup: mockUnitGroupWithMultipleBaseUnits,
+          unitId: draftUnit.id,
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
+          savedUnitData: mockBaseUnit2,
+          conversionRule: ConversionRule.build(
+            unitGroup: mockUnitGroupWithMultipleBaseUnits,
+            mandatoryParamsFilled: true,
+            draftUnit: draftUnit,
+            argUnit: mockBaseUnit,
+            primaryBaseUnit: mockBaseUnit,
+            secondaryBaseUnit: mockBaseUnit2,
+          ),
+        );
 
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
-    });
-
-    test('New unit name = empty, unit code = empty', () async {
-      final result = await testForInput(
-        newUnitName: "",
-        draftUnitName: "name",
-        draftUnitCode: "",
-        savedUnitName: "name",
-        savedUnitCode: "code",
-      );
-
-      expect(result.draft.unitData.name, '');
-      expect(result.draft.unitData.code, '');
-
-      expect(result.saved.unitData.name, 'name');
-      expect(result.saved.unitData.code, 'code');
-
-      expect(result.unitToSave, null);
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
-    });
-
-    test('New unit name != empty, unit code = empty', () async {
-      final result = await testForInput(
-        newUnitName: "newName",
-        draftUnitName: "name",
-        draftUnitCode: "",
-        savedUnitName: "name",
-        savedUnitCode: "code",
-      );
-
-      expect(result.draft.unitData.name, 'newName');
-      expect(result.draft.unitData.code, '');
-
-      expect(result.saved.unitData.name, 'name');
-      expect(result.saved.unitData.code, 'code');
-
-      expect(result.unitToSave != null, true);
-      expect(result.unitToSave!.name, 'newName');
-      expect(result.unitToSave!.code, 'code');
-
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, true);
-      expect(result.conversionConfigEditable, true);
-      expect(result.conversionDescription, null);
-    });
-
-    test('Base unit | New unit name != empty, unit code != empty', () async {
-      final result = await testForInput(
-        newUnitName: "newName",
-        draftUnitName: "name",
-        draftUnitCode: "code",
-        savedUnitName: "name",
-        savedUnitCode: "code",
-        unitId: mockBaseUnit.id,
-        unitCoefficient: 1,
-      );
-
-      expect(result.draft.unitData.name, 'newName');
-      expect(result.draft.unitData.code, 'code');
-
-      expect(result.saved.unitData.name, 'name');
-      expect(result.saved.unitData.code, 'code');
-
-      expect(result.unitToSave != null, true);
-      expect(result.unitToSave!.name, 'newName');
-      expect(result.unitToSave!.code, 'code');
-
-      expect(result.unitGroupChanged, false);
-
-      expect(result.conversionConfigVisible, false);
-      expect(result.conversionConfigEditable, false);
-      expect(result.conversionDescription, baseUnitConversionRule);
+        expect(result.draftUnitData.name, 'newName');
+        expect(result.draftUnitData.code, 'b1');
+        expect(result.savedUnitData.name, 'base2');
+        expect(result.savedUnitData.code, 'b2');
+        expect(result.unitToSave.exists, true);
+        expect(result.unitGroupChanged, false);
+        expect(result.conversionRule.configVisible, true);
+        expect(result.conversionRule.configEditable, true);
+        expect(result.conversionRule.readOnlyDescription, null);
+      });
     });
   });
 }

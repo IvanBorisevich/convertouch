@@ -19,7 +19,7 @@ class DoubleValueUtils {
 
   const DoubleValueUtils._();
 
-  static String formatValueScientific(
+  static String formatScientific(
     double? value, {
     int fractionDigits = defaultFractionDigitsNum,
     int fractionDigitsInScientificNotation = 2,
@@ -44,7 +44,7 @@ class DoubleValueUtils {
 
       if (exponentNum >= noFormatExponentMin &&
           exponentNum <= noFormatExponentMax) {
-        return formatValue(
+        return format(
           value,
           fractionDigits: fractionDigits,
         );
@@ -56,7 +56,7 @@ class DoubleValueUtils {
       String result = "${10}$superscriptExponentStr";
 
       if (baseNum.abs() != 1) {
-        String basePart = formatValue(
+        String basePart = format(
           baseNum.abs(),
           fractionDigits: fractionDigitsInScientificNotation,
         );
@@ -68,13 +68,13 @@ class DoubleValueUtils {
       return result;
     }
 
-    return formatValue(
+    return format(
       value,
       fractionDigits: fractionDigits,
     );
   }
 
-  static String formatValue(
+  static String format(
     double? value, {
     int fractionDigits = defaultFractionDigitsNum,
   }) {
@@ -99,8 +99,8 @@ class DoubleValueUtils {
     double? num2, {
     int fractionDigits = defaultFractionDigitsNum,
   }) {
-    return formatValue(num1, fractionDigits: fractionDigits) ==
-        formatValue(num2, fractionDigits: fractionDigits);
+    return format(num1, fractionDigits: fractionDigits) ==
+        format(num2, fractionDigits: fractionDigits);
   }
 
   static bool areNotEqual(

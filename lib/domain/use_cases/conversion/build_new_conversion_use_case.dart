@@ -36,8 +36,8 @@ class BuildNewConversionUseCase
       ConversionItemModel srcItem = await _getSourceConversionItem(input);
 
       List<ConversionItemModel> convertedUnitValues = [];
-      double? srcValue = double.tryParse(srcItem.value.strValue);
-      double srcDefaultValue = double.parse(srcItem.defaultValue.strValue);
+      double? srcValue = double.tryParse(srcItem.value.str);
+      double srcDefaultValue = double.parse(srcItem.defaultValue.str);
       double srcCoefficient = srcItem.unit.coefficient!;
 
       for (UnitModel tgtUnit in input.targetUnits) {
@@ -74,8 +74,10 @@ class BuildNewConversionUseCase
           tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
         }
 
-        double? minValue = tgtUnit.minValue ?? input.unitGroup?.minValue;
-        double? maxValue = tgtUnit.maxValue ?? input.unitGroup?.maxValue;
+        double? minValue =
+            (tgtUnit.minValue ?? input.unitGroup?.minValue)?.num;
+        double? maxValue =
+            (tgtUnit.maxValue ?? input.unitGroup?.maxValue)?.num;
 
         ValueModel tgtValueModel = ValueModelUtils.betweenOrUndefined(
           rawValue: tgtValue,
@@ -94,8 +96,7 @@ class BuildNewConversionUseCase
         convertedUnitValues.add(
           ConversionItemModel(
             unit: tgtUnit,
-            value:
-                tgtValueModel.isDefined ? tgtValueModel : ValueModel.none,
+            value: tgtValueModel.isDefined ? tgtValueModel : ValueModel.none,
             defaultValue: tgtDefaultValueModel,
           ),
         );
@@ -124,8 +125,7 @@ class BuildNewConversionUseCase
   ) async {
     UnitModel srcUnit =
         input.sourceConversionItem?.unit ?? input.targetUnits.first;
-    ValueModel srcValue =
-        input.sourceConversionItem?.value ?? ValueModel.none;
+    ValueModel srcValue = input.sourceConversionItem?.value ?? ValueModel.none;
     ValueModel srcDefaultValue = ValueModel.ofString(
       ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id)).value,
     );

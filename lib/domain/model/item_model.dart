@@ -21,4 +21,6 @@ abstract class IdNameItemModel extends ItemModel {
     required super.itemType,
     super.oob,
   });
+
+  bool get hasId => id != -1;
 }

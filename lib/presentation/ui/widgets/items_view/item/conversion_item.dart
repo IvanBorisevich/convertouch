@@ -57,9 +57,9 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     var unitButtonColor = itemColor.unitButton;
 
     if (_isFocused && !widget.disabled) {
-      _unitValueController.text = widget.item.value.strValue;
+      _unitValueController.text = widget.item.value.str;
     } else {
-      _unitValueController.text = widget.item.value.scientificValue;
+      _unitValueController.text = widget.item.value.scientific;
     }
 
     return Container(
@@ -76,8 +76,8 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               disabled: widget.disabled,
               label: widget.item.unit.name,
               hintText: _isFocused && !widget.disabled
-                  ? widget.item.defaultValue.strValue
-                  : widget.item.defaultValue.scientificValue,
+                  ? widget.item.defaultValue.str
+                  : widget.item.defaultValue.scientific,
               inputType: widget.valueType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {

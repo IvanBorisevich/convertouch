@@ -1,52 +1,52 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/formula_utils.dart';
 
 class UnitDetailsUtils {
   const UnitDetailsUtils._();
 
-  static String? getConversionDesc({
-    required UnitGroupModel unitGroup,
-    required UnitModel unitData,
-    required UnitModel argUnit,
-    required UnitModel secondaryBaseUnit,
-    String unitValue = "1",
-    required ValueModel argValue,
-    required bool isBaseConversionRule,
-    required bool mandatoryParamsFilled,
-    required bool showNonBaseConversionRule,
+  static UnitModel getPrimaryBaseUnit({
+    required List<UnitModel> baseUnits,
+    required int draftUnitId,
   }) {
-    if (unitGroup.conversionType == ConversionType.formula) {
-      return FormulaUtils.getReverseStr(
-        unitGroupName: unitGroup.name,
-        unitCode: unitData.code,
-      );
-    }
-
-    if (isBaseConversionRule) {
-      return baseUnitConversionRule;
-    }
-
-    if (mandatoryParamsFilled && showNonBaseConversionRule) {
-      String argUnitCode =
-          unitData.id != argUnit.id ? argUnit.code : secondaryBaseUnit.code;
-      return "$unitValue ${unitData.code} = "
-          "${argValue.scientificValue} $argUnitCode";
-    }
-
-    return null;
+    return baseUnits
+            .where((baseUnit) => baseUnit.id != draftUnitId)
+            .firstOrNull ??
+        baseUnits.firstOrNull ??
+        UnitModel.none;
   }
 
-  static double? calcNewUnitCoefficient({
+  static UnitModel getSecondaryBaseUnit({
+    required List<UnitModel> baseUnits,
+    required int primaryBaseUnitId,
+  }) {
+    return baseUnits
+            .where((baseUnit) => baseUnit.id != primaryBaseUnitId)
+            .firstOrNull ??
+        UnitModel.none;
+  }
+
+  static ValueModel getArgValue({
+    ValueModel unitValue = ValueModel.one,
+    required UnitModel argUnit,
+    required UnitModel unit,
+  }) {
+    return argUnit.exists
+        ? UnitDetailsUtils.calcNewArgValue(
+            unitValue: unitValue.num ?? 1,
+            unitCoefficient: unit.coefficient,
+            argUnitCoefficient: argUnit.coefficient!,
+          )
+        : ValueModel.none;
+  }
+
+  static double? calcUnitCoefficient({
     required ValueModel value,
     required UnitModel argUnit,
     required ValueModel argValue,
   }) {
-    double valueNum = double.tryParse(value.strValue) ?? 1;
-    double argValueNum = double.tryParse(argValue.strValue) ?? 1;
+    double valueNum = double.tryParse(value.str) ?? 1;
+    double argValueNum = double.tryParse(argValue.str) ?? 1;
     double? argUnitCoefficient = argUnit.coefficient;
 
     return argUnitCoefficient != null

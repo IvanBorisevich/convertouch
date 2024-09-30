@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class UnitGroupModel extends IdNameItemModel {
@@ -11,8 +12,8 @@ class UnitGroupModel extends IdNameItemModel {
   final ConversionType conversionType;
   final bool refreshable;
   final ConvertouchValueType valueType;
-  final double? minValue;
-  final double? maxValue;
+  final ValueModel minValue;
+  final ValueModel maxValue;
 
   const UnitGroupModel({
     super.id,
@@ -21,8 +22,8 @@ class UnitGroupModel extends IdNameItemModel {
     this.conversionType = ConversionType.static,
     this.refreshable = false,
     this.valueType = defaultValueType,
-    this.minValue,
-    this.maxValue,
+    this.minValue = ValueModel.undefined,
+    this.maxValue = ValueModel.undefined,
     super.oob,
   }) : super(
           itemType: ItemType.unitGroup,
@@ -55,11 +56,11 @@ class UnitGroupModel extends IdNameItemModel {
           valueType: valueType ?? savedUnitGroup.valueType,
           minValue: ObjectUtils.coalesce(
             what: savedUnitGroup.minValue,
-            patchWith: minValue,
+            patchWith: ValueModel.ofDouble(minValue),
           ),
           maxValue: ObjectUtils.coalesce(
             what: savedUnitGroup.maxValue,
-            patchWith: maxValue,
+            patchWith: ValueModel.ofDouble(maxValue),
           ),
           oob: savedUnitGroup.oob,
         );
@@ -70,9 +71,7 @@ class UnitGroupModel extends IdNameItemModel {
           valueType: defaultValueType,
         );
 
-  bool get empty => this == none;
-
-  bool get notEmpty => this != none;
+  bool get exists => this == none;
 
   @override
   List<Object?> get props => [
@@ -96,8 +95,8 @@ class UnitGroupModel extends IdNameItemModel {
       "conversionType": conversionType.value,
       "refreshable": refreshable,
       "valueType": valueType.val,
-      "minValue": minValue,
-      "maxValue": maxValue,
+      "minValue": minValue.num,
+      "maxValue": maxValue.num,
       "oob": oob,
     };
   }
@@ -114,8 +113,8 @@ class UnitGroupModel extends IdNameItemModel {
       refreshable: json["refreshable"],
       valueType:
           ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
-      minValue: json["minValue"],
-      maxValue: json["maxValue"],
+      minValue: ValueModel.ofDouble(json["minValue"]),
+      maxValue: ValueModel.ofDouble(json["maxValue"]),
       oob: json["oob"],
     );
   }

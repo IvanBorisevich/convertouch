@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/use_case_model/output/output_unit_details_model.dart';
+import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class UnitDetailsState extends ConvertouchState {
@@ -15,7 +15,7 @@ class UnitDetailsInitialState extends UnitDetailsState {
 }
 
 class UnitDetailsReady extends UnitDetailsState {
-  final OutputUnitDetailsModel details;
+  final UnitDetailsModel details;
 
   const UnitDetailsReady({
     required this.details,
