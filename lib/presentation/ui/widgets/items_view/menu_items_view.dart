@@ -16,7 +16,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final List<int> itemIdsMarkedForRemoval;
   final bool showMarkedItems;
   final int? selectedItemId;
-  final int? disabledItemId;
+  final List<int>? disabledItemIds;
   final bool showSelectedItem;
   final bool editableItemsVisible;
   final bool removalModeAllowed;
@@ -35,7 +35,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.itemIdsMarkedForRemoval = const [],
     this.showMarkedItems = false,
     this.selectedItemId,
-    this.disabledItemId,
+    this.disabledItemIds,
     this.showSelectedItem = false,
     this.editableItemsVisible = false,
     this.removalModeAllowed = false,
@@ -57,7 +57,8 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
             Widget? itemBuilder(context, index) {
               T item = items[index];
               bool selected = showSelectedItem && item.id == selectedItemId;
-              bool disabled = item.id == disabledItemId;
+              bool disabled =
+                  disabledItemIds != null && disabledItemIds!.contains(item.id);
               bool marked = showMarkedItems &&
                   itemIdsMarkedForConversion != null &&
                   itemIdsMarkedForConversion!.contains(item.id);

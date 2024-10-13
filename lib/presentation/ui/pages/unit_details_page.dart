@@ -10,10 +10,9 @@ import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -40,126 +39,134 @@ class _ConvertouchUnitDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
-      ConvertouchColorScheme floatingButtonColor =
-          unitsPageFloatingButtonColors[appState.theme]!;
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
+        ConvertouchColorScheme floatingButtonColor =
+            unitsPageFloatingButtonColors[appState.theme]!;
 
-      return unitDetailsBlocBuilder((pageState) {
-        _unitNameTextController.text = pageState.details.draftUnitData.name;
-        _unitCodeTextController.text = pageState.details.draftUnitData.code;
+        return unitDetailsBlocBuilder(
+          builderFunc: (pageState) {
+            _unitNameTextController.text = pageState.details.draftUnitData.name;
+            _unitCodeTextController.text = pageState.details.draftUnitData.code;
 
-        return ConvertouchPage(
-          title: pageState.details.editMode
-              ? pageState.details.savedUnitData.name
-              : 'New Unit',
-          body: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: 20,
-                top: 23,
-                right: 20,
-                bottom: 0,
-              ),
-              child: Column(
-                children: [
-                  _renderGroupItem(
-                    context,
-                    state: pageState,
-                    appState: appState,
+            return ConvertouchPage(
+              title: pageState.details.editMode
+                  ? pageState.details.savedUnitData.name
+                  : 'New Unit',
+              body: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 23,
+                    right: 20,
+                    bottom: 0,
                   ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Unit Name',
-                    hintText: pageState.details.savedUnitData.name,
-                    valueChangeController: _unitNameTextController,
-                    editable: pageState.details.editMode,
-                    textBoxColor: textBoxColor,
-                    onValueChange: (value) {
-                      BlocProvider.of<UnitDetailsBloc>(context).add(
-                        UpdateUnitNameInUnitDetails(
-                          newValue: value,
+                  child: Column(
+                    children: [
+                      _renderGroupItem(
+                        context,
+                        state: pageState,
+                        appState: appState,
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Unit Name',
+                        hintText: pageState.details.savedUnitData.name,
+                        valueChangeController: _unitNameTextController,
+                        editable: pageState.details.editMode,
+                        textBoxColor: textBoxColor,
+                        onValueChange: (value) {
+                          BlocProvider.of<UnitDetailsBloc>(context).add(
+                            UpdateUnitNameInUnitDetails(
+                              newValue: value,
+                            ),
+                          );
+                        },
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Unit Code',
+                        hintText: pageState.details.savedUnitData.code,
+                        valueChangeController: _unitCodeTextController,
+                        editable: pageState.details.editMode,
+                        textBoxColor: textBoxColor,
+                        editableValueMaxLength:
+                            UnitDetailsModel.unitCodeMaxLength,
+                        editableValueLengthVisible: true,
+                        onValueChange: (value) {
+                          BlocProvider.of<UnitDetailsBloc>(context).add(
+                            UpdateUnitCodeInUnitDetails(
+                              newValue: value,
+                            ),
+                          );
+                        },
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Value Type',
+                        hintText:
+                            pageState.details.draftUnitData.valueType!.name,
+                        textBoxColor: textBoxColor,
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Min Value',
+                        hintText: pageState
+                            .details.savedUnitData.minValue?.scientific,
+                        textBoxColor: textBoxColor,
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Max Value',
+                        hintText: pageState
+                            .details.savedUnitData.maxValue?.scientific,
+                        textBoxColor: textBoxColor,
+                      ),
+                      _renderUnitDetailItem(
+                        context,
+                        name: 'Unit Group',
+                        hintText: pageState.details.unitGroup.name,
+                        visible: !pageState.details.editMode,
+                        textBoxColor: textBoxColor,
+                      ),
+                      _renderConversionRule(
+                        context,
+                        unitGroup: pageState.details.unitGroup,
+                        unit: pageState.details.draftUnitData,
+                        conversionRule: pageState.details.conversionRule,
+                        textBoxColor: textBoxColor,
+                        editMode: pageState.details.editMode,
+                        appState: appState,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              floatingActionButton: conversionBlocBuilder(
+                builderFunc: (conversionState) {
+                  return ConvertouchFloatingActionButton(
+                    icon: Icons.check_outlined,
+                    visible: pageState.details.unitToSave.exists,
+                    onClick: () {
+                      FocusScope.of(context).unfocus();
+                      BlocProvider.of<UnitsBloc>(context).add(
+                        SaveUnit(
+                          unit: pageState.details.draftUnitData,
+                          unitGroup: pageState.details.unitGroup,
+                          unitGroupChanged: pageState.details.unitGroupChanged,
                         ),
                       );
                     },
-                  ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Unit Code',
-                    hintText: pageState.details.savedUnitData.code,
-                    valueChangeController: _unitCodeTextController,
-                    editable: pageState.details.editMode,
-                    textBoxColor: textBoxColor,
-                    editableValueMaxLength: UnitDetailsModel.unitCodeMaxLength,
-                    editableValueLengthVisible: true,
-                    onValueChange: (value) {
-                      BlocProvider.of<UnitDetailsBloc>(context).add(
-                        UpdateUnitCodeInUnitDetails(
-                          newValue: value,
-                        ),
-                      );
-                    },
-                  ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Value Type',
-                    hintText: pageState.details.draftUnitData.valueType!.name,
-                    textBoxColor: textBoxColor,
-                  ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Min Value',
-                    hintText:
-                        pageState.details.savedUnitData.minValue?.scientific,
-                    textBoxColor: textBoxColor,
-                  ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Max Value',
-                    hintText:
-                        pageState.details.savedUnitData.maxValue?.scientific,
-                    textBoxColor: textBoxColor,
-                  ),
-                  _renderUnitDetailItem(
-                    context,
-                    name: 'Unit Group',
-                    hintText: pageState.details.unitGroup.name,
-                    visible: !pageState.details.editMode,
-                    textBoxColor: textBoxColor,
-                  ),
-                  _renderConversionRule(
-                    context,
-                    unitGroup: pageState.details.unitGroup,
-                    unit: pageState.details.draftUnitData,
-                    conversionRule: pageState.details.conversionRule,
-                    textBoxColor: textBoxColor,
-                    editMode: pageState.details.editMode,
-                    appState: appState,
-                  ),
-                ],
+                    colorScheme: floatingButtonColor,
+                  );
+                },
               ),
-            ),
-          ),
-          floatingActionButton: conversionBlocBuilder((conversionState) {
-            return ConvertouchFloatingActionButton(
-              icon: Icons.check_outlined,
-              visible: pageState.details.unitToSave.exists,
-              onClick: () {
-                FocusScope.of(context).unfocus();
-                BlocProvider.of<UnitsBloc>(context).add(
-                  SaveUnit(
-                    unit: pageState.details.draftUnitData,
-                    unitGroup: pageState.details.unitGroup,
-                    unitGroupChanged: pageState.details.unitGroupChanged,
-                  ),
-                );
-              },
-              colorScheme: floatingButtonColor,
             );
-          }),
+          },
         );
-      });
-    });
+      },
+    );
   }
 
   Widget _renderGroupItem(
@@ -180,10 +187,7 @@ class _ConvertouchUnitDetailsPageState
             BlocProvider.of<UnitGroupsBlocForUnitDetails>(
               context,
             ).add(
-              FetchUnitGroupsForUnitDetails(
-                currentUnitGroupInUnitDetails: state.details.unitGroup,
-                searchString: null,
-              ),
+              const FetchUnitGroups(),
             );
           },
           theme: appState.theme,
@@ -295,11 +299,8 @@ class _ConvertouchUnitDetailsPageState
                 BlocProvider.of<UnitsBlocForUnitDetails>(
                   context,
                 ).add(
-                  FetchUnitsForUnitDetails(
+                  FetchUnits(
                     unitGroup: unitGroup,
-                    selectedArgUnit: conversionRule.argUnit,
-                    unitIdBeingEdited: unit.id,
-                    searchString: null,
                   ),
                 );
               },

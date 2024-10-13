@@ -1,11 +1,14 @@
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_removal_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -22,6 +25,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
   final BuildNewConversionUseCase buildNewConversionUseCase;
+  final GetConversionUseCase getConversionUseCase;
+  final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
   final EditConversionGroupUseCase editConversionGroupUseCase;
   final EditConversionItemUnitUseCase editConversionItemUnitUseCase;
   final EditConversionItemValueUseCase editConversionItemValueUseCase;
@@ -33,6 +38,8 @@ class ConversionBloc
 
   ConversionBloc({
     required this.buildNewConversionUseCase,
+    required this.getConversionUseCase,
+    required this.addUnitsToConversionUseCase,
     required this.editConversionGroupUseCase,
     required this.editConversionItemUnitUseCase,
     required this.editConversionItemValueUseCase,
@@ -46,7 +53,8 @@ class ConversionBloc
             conversion: OutputConversionModel(),
           ),
         ) {
-    on<BuildNewConversion>(_onBuildNewConversion);
+    on<GetConversion>(_onGetConversion);
+    on<AddUnitsToConversion>(_onAddUnitsToConversion);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<EditConversionItemUnit>(_onEditConversionItemUnit);
     on<EditConversionItemValue>(_onEditConversionItemValue);
@@ -54,14 +62,41 @@ class ConversionBloc
     on<RemoveConversions>(_onRemoveConversion);
     on<RemoveConversionItems>(_onRemoveConversionItems);
     on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
-    on<GetLastOpenedConversion>(_onGetLastOpenedConversion);
   }
 
-  _onBuildNewConversion(
-    BuildNewConversion event,
+  _onGetConversion(
+    GetConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    final result = await buildNewConversionUseCase.execute(event.inputParams);
+    var result = await getConversionUseCase.execute(event.unitGroup);
+
+    if (result.isLeft) {
+      navigationBloc.add(
+        ShowException(exception: result.left),
+      );
+    } else if (result.right == OutputConversionModel.none) {
+      result = await buildNewConversionUseCase
+          .execute(InputConversionModel(unitGroup: event.unitGroup));
+    }
+
+    await _handleAndEmit(result, emit);
+  }
+
+  _onAddUnitsToConversion(
+    AddUnitsToConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ConversionBuilt current = state as ConversionBuilt;
+
+    final result = await addUnitsToConversionUseCase.execute(
+      InputConversionModifyModel<AddUnitsToConversionDelta>(
+        delta: AddUnitsToConversionDelta(
+          unitIds: event.unitIds,
+        ),
+        conversion: current.conversion,
+      ),
+    );
+
     await _handleAndEmit(result, emit);
   }
 
@@ -77,6 +112,7 @@ class ConversionBloc
           editedGroup: event.editedGroup,
         ),
         conversion: current.conversion,
+        rebuildConversion: false,
       ),
     );
 
@@ -95,6 +131,7 @@ class ConversionBloc
           editedUnit: event.editedUnit,
         ),
         conversion: current.conversion,
+        rebuildConversion: false,
       ),
     );
 
@@ -115,7 +152,6 @@ class ConversionBloc
           unitId: event.unitId,
         ),
         conversion: current.conversion,
-        rebuildConversion: true,
       ),
     );
 
@@ -134,7 +170,6 @@ class ConversionBloc
           updatedUnitCoefs: event.updatedUnitCoefs,
         ),
         conversion: current.conversion,
-        rebuildConversion: true,
       ),
     );
 
@@ -153,7 +188,16 @@ class ConversionBloc
         currentConversion: current.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+
+    if (result.isLeft) {
+      navigationBloc.add(
+        ShowException(exception: result.left),
+      );
+    } else {
+      navigationBloc.add(
+        const NavigateBack(),
+      );
+    }
   }
 
   _onRemoveConversionItems(
@@ -170,6 +214,7 @@ class ConversionBloc
           unitIds: event.unitIds,
         ),
         conversion: current.conversion,
+        rebuildConversion: false,
       ),
     );
     await _handleAndEmit(result, emit);
@@ -188,7 +233,6 @@ class ConversionBloc
           oldUnitId: event.oldUnitId,
         ),
         conversion: current.conversion,
-        rebuildConversion: true,
       ),
     );
     await _handleAndEmit(result, emit);
@@ -208,27 +252,11 @@ class ConversionBloc
       emit(
         ConversionBuilt(
           conversion: result.right,
-          showRefreshButton: result.right.unitGroup != null &&
-              result.right.unitGroup!.refreshable &&
+          showRefreshButton: result.right.unitGroup.refreshable &&
               result.right.targetConversionItems.isNotEmpty,
         ),
       );
     }
-  }
-
-  _onGetLastOpenedConversion(
-    GetLastOpenedConversion event,
-    Emitter<ConversionState> emit,
-  ) async {
-    ConversionBuilt prev = state as ConversionBuilt;
-
-    emit(
-      ConversionBuilt(
-        conversion: prev.conversion,
-        showRefreshButton: prev.showRefreshButton &&
-            prev.conversion.targetConversionItems.isNotEmpty,
-      ),
-    );
   }
 
   @override

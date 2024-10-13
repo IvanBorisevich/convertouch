@@ -13,7 +13,7 @@ class SaveUnitUseCase extends UseCase<UnitModel, UnitModel> {
   Future<Either<ConvertouchException, UnitModel>> execute(
     UnitModel input,
   ) async {
-    if (input.id == null) {
+    if (!input.hasId) {
       return await unitRepository.add(input);
     }
     return await unitRepository.update(input);

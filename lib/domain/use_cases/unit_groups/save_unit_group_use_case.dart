@@ -13,7 +13,7 @@ class SaveUnitGroupUseCase extends UseCase<UnitGroupModel, UnitGroupModel> {
   Future<Either<ConvertouchException, UnitGroupModel>> execute(
     UnitGroupModel input,
   ) async {
-    if (input.id == null) {
+    if (!input.hasId) {
       return await unitGroupRepository.add(input);
     }
     return await unitGroupRepository.update(input);

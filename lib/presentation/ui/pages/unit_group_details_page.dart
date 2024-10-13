@@ -4,9 +4,6 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -35,179 +32,176 @@ class _ConvertouchUnitGroupDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      TextBoxColorScheme textBoxColor = unitGroupTextBoxColors[appState.theme]!;
-      ConvertouchColorScheme floatingButtonColor =
-          unitGroupsPageFloatingButtonColors[appState.theme]!;
-      ConvertouchColorScheme infoBoxColor =
-          unitGroupPageInfoBoxColors[appState.theme]!;
+    final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
+    final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
 
-      return MultiBlocListener(
-        listeners: [
-          unitGroupsBlocListener([
-            StateHandler<UnitGroupsFetched>((state) {
-              if (state.modifiedUnitGroup != null) {
-                BlocProvider.of<UnitsBloc>(context).add(
-                  ModifyGroup(
-                    modifiedGroup: state.modifiedUnitGroup!,
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        TextBoxColorScheme textBoxColor =
+            unitGroupTextBoxColors[appState.theme]!;
+        ConvertouchColorScheme floatingButtonColor =
+            unitGroupsPageFloatingButtonColors[appState.theme]!;
+        ConvertouchColorScheme infoBoxColor =
+            unitGroupPageInfoBoxColors[appState.theme]!;
+
+        return unitGroupDetailsBlocBuilder(
+          bloc: unitGroupDetailsBloc,
+          builderFunc: (unitGroupDetailsState) {
+            _unitGroupNameController.text =
+                unitGroupDetailsState.draftGroup.name;
+
+            return ConvertouchPage(
+              title: unitGroupDetailsState.isExistingGroup
+                  ? unitGroupDetailsState.savedGroup.name
+                  : "New Group",
+              body: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 23,
+                    right: 20,
+                    bottom: 0,
                   ),
-                );
-              }
-            }),
-          ]),
-        ],
-        child: unitGroupDetailsBlocBuilder((unitGroupDetailsState) {
-          _unitGroupNameController.text = unitGroupDetailsState.draftGroup.name;
-
-          return ConvertouchPage(
-            title: unitGroupDetailsState.isExistingGroup
-                ? unitGroupDetailsState.savedGroup.name
-                : "New Group",
-            body: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  top: 23,
-                  right: 20,
-                  bottom: 0,
-                ),
-                child: Column(
-                  children: [
-                    unitGroupDetailsState.savedGroup.oob
-                        ? ConvertouchInfoBox(
-                            headerText: "Name",
-                            bodyText: unitGroupDetailsState.savedGroup.name,
-                            bodyColor: textBoxColor.foreground.regular,
-                            margin: const EdgeInsets.only(
-                              bottom: 20,
+                  child: Column(
+                    children: [
+                      unitGroupDetailsState.savedGroup.oob
+                          ? ConvertouchInfoBox(
+                              headerText: "Name",
+                              bodyText: unitGroupDetailsState.savedGroup.name,
+                              bodyColor: textBoxColor.foreground.regular,
+                              margin: const EdgeInsets.only(
+                                bottom: 20,
+                              ),
+                            )
+                          : ConvertouchTextBox(
+                              controller: _unitGroupNameController,
+                              onChanged: (value) {
+                                unitGroupDetailsBloc.add(
+                                  UpdateUnitGroupName(
+                                    newValue: value,
+                                  ),
+                                );
+                              },
+                              label: "Name",
+                              hintText: unitGroupDetailsState.savedGroup.name,
+                              colors: textBoxColor,
+                              disabled: unitGroupDetailsState.draftGroup.oob,
                             ),
-                          )
-                        : ConvertouchTextBox(
-                            controller: _unitGroupNameController,
-                            onChanged: (value) {
-                              BlocProvider.of<UnitGroupDetailsBloc>(context)
-                                  .add(
-                                UpdateUnitGroupName(
-                                  newValue: value,
-                                ),
-                              );
-                            },
-                            label: "Name",
-                            hintText: unitGroupDetailsState.savedGroup.name,
-                            colors: textBoxColor,
-                            disabled: unitGroupDetailsState.draftGroup.oob,
-                          ),
-                    ConvertouchInfoBox(
-                      headerText: "Conversion Type",
-                      bodyText:
-                          unitGroupDetailsState.draftGroup.conversionType.name,
-                      bodyColor: textBoxColor.foreground.regular,
-                      margin: const EdgeInsets.only(
-                        bottom: 20,
+                      ConvertouchInfoBox(
+                        headerText: "Conversion Type",
+                        bodyText: unitGroupDetailsState
+                            .draftGroup.conversionType.name,
+                        bodyColor: textBoxColor.foreground.regular,
+                        margin: const EdgeInsets.only(
+                          bottom: 20,
+                        ),
                       ),
-                    ),
-                    ConvertouchInfoBox(
-                      headerText: "Values Type",
-                      bodyText: unitGroupDetailsState.draftGroup.valueType.name,
-                      bodyColor: textBoxColor.foreground.regular,
-                      margin: const EdgeInsets.only(
-                        bottom: 20,
+                      ConvertouchInfoBox(
+                        headerText: "Values Type",
+                        bodyText:
+                            unitGroupDetailsState.draftGroup.valueType.name,
+                        bodyColor: textBoxColor.foreground.regular,
+                        margin: const EdgeInsets.only(
+                          bottom: 20,
+                        ),
                       ),
-                    ),
-                    ConvertouchInfoBox(
-                      headerText: "Values Minimum",
-                      bodyText:
-                          unitGroupDetailsState.draftGroup.minValue.scientific,
-                      bodyColor: textBoxColor.foreground.regular,
-                      margin: const EdgeInsets.only(
-                        bottom: 20,
+                      ConvertouchInfoBox(
+                        headerText: "Values Minimum",
+                        bodyText: unitGroupDetailsState
+                            .draftGroup.minValue.scientific,
+                        bodyColor: textBoxColor.foreground.regular,
+                        margin: const EdgeInsets.only(
+                          bottom: 20,
+                        ),
                       ),
-                    ),
-                    ConvertouchInfoBox(
-                      headerText: "Values Maximum",
-                      bodyText:
-                          unitGroupDetailsState.draftGroup.maxValue.scientific,
-                      bodyColor: textBoxColor.foreground.regular,
-                      margin: const EdgeInsets.only(
-                        bottom: 20,
+                      ConvertouchInfoBox(
+                        headerText: "Values Maximum",
+                        bodyText: unitGroupDetailsState
+                            .draftGroup.maxValue.scientific,
+                        bodyColor: textBoxColor.foreground.regular,
+                        margin: const EdgeInsets.only(
+                          bottom: 20,
+                        ),
                       ),
-                    ),
-                    ConvertouchInfoBox(
-                      headerText: "Refreshable",
-                      bodyText: unitGroupDetailsState.draftGroup.refreshable
-                          ? "Yes"
-                          : "No",
-                      bodyColor: textBoxColor.foreground.regular,
-                      margin: const EdgeInsets.only(
-                        bottom: 20,
+                      ConvertouchInfoBox(
+                        headerText: "Refreshable",
+                        bodyText: unitGroupDetailsState.draftGroup.refreshable
+                            ? "Yes"
+                            : "No",
+                        bodyColor: textBoxColor.foreground.regular,
+                        margin: const EdgeInsets.only(
+                          bottom: 20,
+                        ),
                       ),
-                    ),
-                    ConvertouchInfoBox(
-                      visible: !unitGroupDetailsState.isExistingGroup &&
-                          !unitGroupDetailsState.draftGroup.oob,
-                      background: infoBoxColor.background.regular,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 14,
-                      ),
-                      margin: const EdgeInsets.only(
-                        bottom: 30,
-                      ),
-                      headerText: "Note",
-                      child: RichText(
-                        text: TextSpan(
-                          children: const <TextSpan>[
-                            TextSpan(
-                              text: 'Currently only ',
+                      ConvertouchInfoBox(
+                        visible: !unitGroupDetailsState.isExistingGroup &&
+                            !unitGroupDetailsState.draftGroup.oob,
+                        background: infoBoxColor.background.regular,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 14,
+                        ),
+                        margin: const EdgeInsets.only(
+                          bottom: 30,
+                        ),
+                        headerText: "Note",
+                        child: RichText(
+                          text: TextSpan(
+                            children: const <TextSpan>[
+                              TextSpan(
+                                text: 'Currently only ',
+                              ),
+                              TextSpan(
+                                text: 'static',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: ' conversion type (coefficients) and ',
+                              ),
+                              TextSpan(
+                                text: 'decimal',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: ' value type are supported for '
+                                    'custom unit groups',
+                              ),
+                            ],
+                            style: TextStyle(
+                              color: textBoxColor.foreground.regular,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: quicksandFontFamily,
                             ),
-                            TextSpan(
-                              text: 'static',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: ' conversion type (coefficients) and ',
-                            ),
-                            TextSpan(
-                              text: 'decimal',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: ' value type are supported for '
-                                  'custom unit groups',
-                            ),
-                          ],
-                          style: TextStyle(
-                            color: textBoxColor.foreground.regular,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: quicksandFontFamily,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            floatingActionButton: conversionBlocBuilder((conversionState) {
-              return ConvertouchFloatingActionButton(
-                icon: Icons.check_outlined,
-                visible: unitGroupDetailsState.canChangedBeSaved,
-                onClick: () {
-                  BlocProvider.of<UnitGroupsBloc>(context).add(
-                    SaveUnitGroup(
-                      unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
-                      conversionGroupId:
-                          conversionState.conversion.unitGroup?.id,
-                    ),
+              floatingActionButton: conversionBlocBuilder(
+                builderFunc: (conversionState) {
+                  return ConvertouchFloatingActionButton(
+                    icon: Icons.check_outlined,
+                    visible: unitGroupDetailsState.canChangedBeSaved,
+                    onClick: () {
+                      unitGroupsBloc.add(
+                        SaveUnitGroup(
+                          unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
+                          conversionGroupId:
+                              conversionState.conversion.unitGroup.id,
+                        ),
+                      );
+                    },
+                    colorScheme: floatingButtonColor,
                   );
                 },
-                colorScheme: floatingButtonColor,
-              );
-            }),
-          );
-        }),
-      );
-    });
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override

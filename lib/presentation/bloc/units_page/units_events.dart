@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -10,204 +9,23 @@ abstract class UnitsEvent extends ConvertouchEvent {
 class FetchUnits extends UnitsEvent {
   final UnitGroupModel unitGroup;
   final String? searchString;
-  final bool rebuildConversion;
 
   const FetchUnits({
     required this.unitGroup,
-    required this.searchString,
-    this.rebuildConversion = false,
+    this.searchString,
   });
 
   @override
   List<Object?> get props => [
         unitGroup,
         searchString,
-        rebuildConversion,
       ];
 
   @override
   String toString() {
     return 'FetchUnits{'
         'unitGroup: $unitGroup, '
-        'searchString: $searchString, '
-        'rebuildConversion: $rebuildConversion}';
-  }
-}
-
-class FetchUnitsAfterUnitSaving extends FetchUnits {
-  final UnitModel modifiedUnit;
-
-  const FetchUnitsAfterUnitSaving({
-    required super.unitGroup,
-    required this.modifiedUnit,
-  }) : super(
-          searchString: null,
-        );
-
-  @override
-  List<Object?> get props => [
-        modifiedUnit,
-        super.props,
-      ];
-}
-
-class FetchUnitsAfterUnitsRemoval extends FetchUnits {
-  final List<int> removedIds;
-
-  const FetchUnitsAfterUnitsRemoval({
-    this.removedIds = const [],
-    required super.unitGroup,
-  }) : super(
-          searchString: null,
-        );
-
-  @override
-  List<Object?> get props => [
-        removedIds,
-        super.props,
-      ];
-}
-
-class FetchUnitsOnSearchStringChange extends FetchUnits {
-  const FetchUnitsOnSearchStringChange({
-    required super.searchString,
-    required super.unitGroup,
-  });
-
-  @override
-  String toString() {
-    return 'FetchUnitsOnSearchStringChange{}';
-  }
-}
-
-class FetchUnitsToMarkForConversion extends FetchUnits {
-  final List<UnitModel>? unitsAlreadyMarkedForConversion;
-  final UnitModel? unitNewlyMarkedForConversion;
-  final ConversionItemModel? currentSourceConversionItem;
-
-  const FetchUnitsToMarkForConversion({
-    required super.unitGroup,
-    this.unitsAlreadyMarkedForConversion,
-    this.unitNewlyMarkedForConversion,
-    this.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        unitNewlyMarkedForConversion,
-        unitsAlreadyMarkedForConversion,
-        currentSourceConversionItem,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'FetchUnitsToMarkForConversion{'
-        'unitNewlyMarkedForConversion: $unitNewlyMarkedForConversion, '
-        'unitsAlreadyMarkedForConversion: $unitsAlreadyMarkedForConversion, '
-        'currentSourceConversionItem: $currentSourceConversionItem, '
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitsToMarkForConversionFirstTime
-    extends FetchUnitsToMarkForConversion {
-  const FetchUnitsToMarkForConversionFirstTime({
-    required super.unitGroup,
-    super.unitsAlreadyMarkedForConversion,
-    super.unitNewlyMarkedForConversion,
-    super.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  String toString() {
-    return 'FetchUnitsToMarkForConversionFirstTime{}';
-  }
-}
-
-class FetchUnitsForChangeInConversion extends FetchUnits {
-  final UnitModel currentSelectedUnit;
-  final List<UnitModel> unitsInConversion;
-  final ConversionItemModel? currentSourceConversionItem;
-
-  const FetchUnitsForChangeInConversion({
-    required this.currentSelectedUnit,
-    required this.unitsInConversion,
-    required super.unitGroup,
-    this.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        currentSelectedUnit,
-        unitsInConversion,
-        currentSourceConversionItem,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'FetchUnitsForChangeInConversion{'
-        'currentSelectedUnit: $currentSelectedUnit, '
-        'unitsInConversion: $unitsInConversion, '
-        'currentSourceConversionItem: $currentSourceConversionItem, '
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitsForUnitDetails extends FetchUnits {
-  final UnitModel? selectedArgUnit;
-  final int? unitIdBeingEdited;
-
-  const FetchUnitsForUnitDetails({
-    required super.unitGroup,
-    required this.selectedArgUnit,
-    required this.unitIdBeingEdited,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        selectedArgUnit,
-        unitIdBeingEdited,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'FetchUnitsForUnitDetails{'
-        'selectedArgUnit: $selectedArgUnit, '
-        'unitIdBeingEdited: $unitIdBeingEdited, '
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitsToMarkForRemoval extends FetchUnits {
-  final List<int> alreadyMarkedIds;
-  final int newMarkedId;
-
-  const FetchUnitsToMarkForRemoval({
-    required super.unitGroup,
-    this.alreadyMarkedIds = const [],
-    required this.newMarkedId,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        alreadyMarkedIds,
-        newMarkedId,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'FetchUnitsToMarkForRemoval{'
-        'alreadyMarkedIds: $alreadyMarkedIds,'
-        'newMarkedId: $newMarkedId}';
+        'searchString: $searchString}';
   }
 }
 
@@ -260,21 +78,21 @@ class RemoveUnits extends UnitsEvent {
   }
 }
 
-class DisableUnitsRemovalMode extends UnitsEvent {
-  final UnitGroupModel unitGroup;
+class ModifyUnit extends UnitsEvent {
+  final UnitModel modifiedUnit;
 
-  const DisableUnitsRemovalMode({
-    required this.unitGroup,
+  const ModifyUnit({
+    required this.modifiedUnit,
   });
 
   @override
   List<Object?> get props => [
-        unitGroup,
+        modifiedUnit,
       ];
 
   @override
   String toString() {
-    return 'DisableUnitsRemovalMode{}';
+    return 'ModifyUnit{modifiedUnit: $modifiedUnit}';
   }
 }
 

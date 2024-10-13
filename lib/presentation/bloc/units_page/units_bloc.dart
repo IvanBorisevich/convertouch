@@ -1,42 +1,32 @@
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_removal_mark_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
-import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
-  final SaveUnitUseCase saveUnitUseCase;
   final FetchUnitsUseCase fetchUnitsUseCase;
+  final SaveUnitUseCase saveUnitUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
-  final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
-  final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   UnitsBloc({
     required this.saveUnitUseCase,
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,
-    required this.markItemsForRemovalUseCase,
-    required this.conversionBloc,
     required this.navigationBloc,
   }) : super(const UnitsInitialState()) {
     on<FetchUnits>(_onUnitsFetch);
     on<SaveUnit>(_onUnitSave);
     on<RemoveUnits>(_onUnitsRemove);
-    on<DisableUnitsRemovalMode>(_onUnitsRemovalModeDisable);
-    on<ModifyGroup>(_onGroupModify);
+    on<ModifyGroup>(_onModifyGroup);
+    on<ModifyUnit>(_onModifyUnit);
   }
 
   _onUnitsFetch(
@@ -57,73 +47,12 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
         ),
       );
     } else {
-      if (event is FetchUnitsToMarkForRemoval) {
-        final markedIdsResult = await markItemsForRemovalUseCase.execute(
-          InputItemsRemovalMarkModel(
-            newMarkedId: event.newMarkedId,
-            alreadyMarkedIds: event.alreadyMarkedIds,
-            oobIds: result.right.where((e) => e.oob).map((e) => e.id).toList(),
-          ),
-        );
-
-        final markedIds = ObjectUtils.tryGet(markedIdsResult).markedIds;
-
-        emit(const UnitsFetching());
-        emit(
-          UnitsFetched(
-            units: result.right,
-            unitGroup: event.unitGroup,
-            searchString: event.searchString,
-            removalMode: markedIds.isNotEmpty,
-            markedIdsForRemoval: markedIds,
-          ),
-        );
-      } else if (event is FetchUnitsAfterUnitSaving) {
-        emit(
-          UnitsFetched(
-            units: result.right,
-            unitGroup: event.unitGroup,
-            searchString: event.searchString,
-            modifiedUnit: event.modifiedUnit,
-            rebuildConversion: event.rebuildConversion,
-          ),
-        );
-        navigationBloc.add(
-          const NavigateBack(),
-        );
-      } else if (event is FetchUnitsAfterUnitsRemoval) {
-        emit(
-          UnitsFetched(
-            units: result.right,
-            unitGroup: event.unitGroup,
-            searchString: event.searchString,
-            removedIds: event.removedIds,
-            rebuildConversion: event.rebuildConversion,
-          ),
-        );
-      } else if (event is FetchUnitsOnSearchStringChange) {
-        UnitsFetched currentState = state as UnitsFetched;
-
-        emit(
-          UnitsFetched(
-            units: result.right,
-            unitGroup: event.unitGroup,
-            searchString: event.searchString,
-            removalMode: currentState.removalMode,
-            markedIdsForRemoval: currentState.markedIdsForRemoval,
-          ),
-        );
-      } else {
-        emit(
-          UnitsFetched(
-            units: result.right,
-            unitGroup: event.unitGroup,
-          ),
-        );
-        navigationBloc.add(
-          const NavigateToPage(pageName: PageName.unitsPageRegular),
-        );
-      }
+      emit(
+        UnitsFetched(
+          units: result.right,
+          unitGroup: event.unitGroup,
+        ),
+      );
     }
   }
 
@@ -131,29 +60,19 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     SaveUnit event,
     Emitter<UnitsState> emit,
   ) async {
-    final saveUnitResult = await saveUnitUseCase.execute(event.unit);
+    final result = await saveUnitUseCase.execute(event.unit);
 
-    if (saveUnitResult.isLeft) {
+    if (result.isLeft) {
       navigationBloc.add(
-        ShowException(exception: saveUnitResult.left),
+        ShowException(exception: result.left),
       );
     } else {
       add(
-        FetchUnitsAfterUnitSaving(
+        FetchUnits(
           unitGroup: event.unitGroup,
-          modifiedUnit: saveUnitResult.right,
+          searchString: null,
         ),
       );
-
-      if (event.unitGroupChanged) {
-        conversionBloc.add(
-          RemoveConversionItems(unitIds: [event.unit.id]),
-        );
-      } else {
-        conversionBloc.add(
-          EditConversionItemUnit(editedUnit: event.unit),
-        );
-      }
     }
   }
 
@@ -161,6 +80,8 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     RemoveUnits event,
     Emitter<UnitsState> emit,
   ) async {
+    UnitsFetched currentState = state as UnitsFetched;
+
     final result = await removeUnitsUseCase.execute(event.ids);
     if (result.isLeft) {
       navigationBloc.add(
@@ -170,56 +91,61 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
       );
     } else {
       add(
-        FetchUnitsAfterUnitsRemoval(
+        FetchUnits(
           unitGroup: event.unitGroup,
-          removedIds: event.ids,
-        ),
-      );
-
-      conversionBloc.add(
-        RemoveConversionItems(
-          unitIds: event.ids,
+          searchString: currentState.searchString,
         ),
       );
     }
   }
 
-  _onUnitsRemovalModeDisable(
-    DisableUnitsRemovalMode event,
-    Emitter<UnitsState> emit,
-  ) async {
-    UnitsFetched currentState = state as UnitsFetched;
-    emit(
-      UnitsFetched(
-        units: currentState.units,
-        unitGroup: currentState.unitGroup,
-        searchString: currentState.searchString,
-        removalMode: false,
-      ),
-    );
-  }
-
-  _onGroupModify(
+  _onModifyGroup(
     ModifyGroup event,
     Emitter<UnitsState> emit,
   ) async {
-    if (state is UnitsFetched) {
-      UnitsFetched currentState = state as UnitsFetched;
+    UnitsFetched currentState = state as UnitsFetched;
 
-      if (event.modifiedGroup.id == currentState.unitGroup.id) {
-        emit(
-          UnitsFetched(
-            units: currentState.units,
-            unitGroup: event.modifiedGroup,
-            searchString: currentState.searchString,
-            removalMode: currentState.removalMode,
-            markedIdsForRemoval: currentState.markedIdsForRemoval,
-            removedIds: currentState.removedIds,
-            modifiedUnit: currentState.modifiedUnit,
-            rebuildConversion: currentState.rebuildConversion,
-          ),
-        );
-      }
+    if (event.modifiedGroup.id == currentState.unitGroup.id) {
+      emit(
+        UnitsFetched(
+          units: currentState.units,
+          unitGroup: event.modifiedGroup,
+          searchString: currentState.searchString,
+        ),
+      );
     }
   }
+
+  _onModifyUnit(
+    ModifyUnit event,
+    Emitter<UnitsState> emit,
+  ) async {
+    UnitsFetched currentState = state as UnitsFetched;
+
+    await _onUnitsFetch(
+      FetchUnits(
+        unitGroup: currentState.unitGroup,
+        searchString: currentState.searchString,
+      ),
+      emit,
+    );
+  }
+}
+
+class UnitsBlocForConversion extends UnitsBloc {
+  UnitsBlocForConversion({
+    required super.fetchUnitsUseCase,
+    required super.saveUnitUseCase,
+    required super.removeUnitsUseCase,
+    required super.navigationBloc,
+  });
+}
+
+class UnitsBlocForUnitDetails extends UnitsBloc {
+  UnitsBlocForUnitDetails({
+    required super.fetchUnitsUseCase,
+    required super.saveUnitUseCase,
+    required super.removeUnitsUseCase,
+    required super.navigationBloc,
+  });
 }

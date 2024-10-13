@@ -25,10 +25,6 @@ class BuildNewConversionUseCase
     InputConversionModel input,
   ) async {
     try {
-      if (input.unitGroup == null) {
-        return const Right(OutputConversionModel.none());
-      }
-
       if (input.targetUnits.isEmpty) {
         return Right(OutputConversionModel.noItems(input.unitGroup));
       }
@@ -49,14 +45,14 @@ class BuildNewConversionUseCase
         double? tgtValue;
         double tgtDefaultValue;
 
-        if (input.unitGroup!.conversionType != ConversionType.formula) {
+        if (input.unitGroup.conversionType != ConversionType.formula) {
           double tgtCoefficient = tgtUnit.coefficient!;
           tgtValue = srcValue != null
               ? srcValue * srcCoefficient / tgtCoefficient
               : null;
           tgtDefaultValue = srcDefaultValue * srcCoefficient / tgtCoefficient;
         } else {
-          String groupName = input.unitGroup!.name;
+          String groupName = input.unitGroup.name;
 
           var srcToBase = FormulaUtils.getFormula(
             unitGroupName: groupName,
@@ -74,10 +70,8 @@ class BuildNewConversionUseCase
           tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
         }
 
-        double? minValue =
-            (tgtUnit.minValue ?? input.unitGroup?.minValue)?.num;
-        double? maxValue =
-            (tgtUnit.maxValue ?? input.unitGroup?.maxValue)?.num;
+        double? minValue = (tgtUnit.minValue ?? input.unitGroup.minValue).num;
+        double? maxValue = (tgtUnit.maxValue ?? input.unitGroup.maxValue).num;
 
         ValueModel tgtValueModel = ValueModelUtils.betweenOrUndefined(
           rawValue: tgtValue,

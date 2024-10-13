@@ -1,19 +1,9 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class UnitsState extends ConvertouchState {
   const UnitsState();
-}
-
-class UnitsFetching extends UnitsState {
-  const UnitsFetching();
-
-  @override
-  String toString() {
-    return 'UnitsFetching{}';
-  }
 }
 
 class UnitsInitialState extends UnitsState {
@@ -29,21 +19,11 @@ class UnitsFetched extends UnitsState {
   final List<UnitModel> units;
   final UnitGroupModel unitGroup;
   final String? searchString;
-  final bool removalMode;
-  final List<int> markedIdsForRemoval;
-  final List<int> removedIds;
-  final UnitModel? modifiedUnit;
-  final bool rebuildConversion;
 
   const UnitsFetched({
     this.units = const [],
     required this.unitGroup,
     this.searchString,
-    this.removalMode = false,
-    this.markedIdsForRemoval = const [],
-    this.removedIds = const [],
-    this.modifiedUnit,
-    this.rebuildConversion = false,
   });
 
   @override
@@ -51,11 +31,6 @@ class UnitsFetched extends UnitsState {
         units,
         unitGroup,
         searchString,
-        removalMode,
-        markedIdsForRemoval,
-        removedIds,
-        modifiedUnit,
-        rebuildConversion,
       ];
 
   @override
@@ -63,109 +38,5 @@ class UnitsFetched extends UnitsState {
     return 'UnitsFetched{'
         'units: $units, '
         'unitGroup: $unitGroup}';
-  }
-}
-
-abstract class UnitsFetchedForConversion extends UnitsFetched {
-  final List<UnitModel> unitsMarkedForConversion;
-  final ConversionItemModel? currentSourceConversionItem;
-
-  const UnitsFetchedForConversion({
-    required super.units,
-    required super.unitGroup,
-    required this.unitsMarkedForConversion,
-    this.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        units,
-        unitGroup,
-        unitsMarkedForConversion,
-        currentSourceConversionItem,
-        searchString,
-        super.props,
-      ];
-}
-
-class UnitsFetchedToMarkForConversion extends UnitsFetchedForConversion {
-  final bool allowUnitsToBeAddedToConversion;
-
-  const UnitsFetchedToMarkForConversion({
-    required super.units,
-    required super.unitGroup,
-    required super.unitsMarkedForConversion,
-    required this.allowUnitsToBeAddedToConversion,
-    super.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        allowUnitsToBeAddedToConversion,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'UnitsFetchedToMarkForConversion{'
-        'unitsMarkedForConversion: $unitsMarkedForConversion, '
-        'allowUnitsToBeAddedToConversion: $allowUnitsToBeAddedToConversion, '
-        'currentSourceConversionItem: $currentSourceConversionItem, '
-        'searchString: $searchString}';
-  }
-}
-
-class UnitsFetchedForChangeInConversion extends UnitsFetchedForConversion {
-  final UnitModel selectedUnit;
-
-  const UnitsFetchedForChangeInConversion({
-    required this.selectedUnit,
-    required super.units,
-    required super.unitGroup,
-    required super.unitsMarkedForConversion,
-    super.currentSourceConversionItem,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        selectedUnit,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'UnitsFetchedForChangeInConversion{'
-        'selectedUnit: $selectedUnit, '
-        'unitsMarkedForConversion: $unitsMarkedForConversion}';
-  }
-}
-
-class UnitsFetchedForUnitDetails extends UnitsFetched {
-  final UnitModel? selectedArgUnit;
-  final int? currentEditedUnitId;
-
-  const UnitsFetchedForUnitDetails({
-    required super.units,
-    required super.unitGroup,
-    required this.selectedArgUnit,
-    required this.currentEditedUnitId,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-        selectedArgUnit,
-        currentEditedUnitId,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'UnitsFetchedForUnitDetails{'
-        'selectedArgUnit: $selectedArgUnit, '
-        'currentEditedUnitId: $currentEditedUnitId}';
   }
 }

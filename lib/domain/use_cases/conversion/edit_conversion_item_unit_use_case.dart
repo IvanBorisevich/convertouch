@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -11,18 +10,11 @@ class EditConversionItemUnitUseCase
   });
 
   @override
-  UnitGroupModel modifyConversionGroup(
-    UnitGroupModel unitGroup,
-    EditConversionItemUnitDelta delta,
-  ) {
-    return unitGroup;
-  }
-
-  @override
-  ConversionItemModel? modifySourceConversionItem(
-    ConversionItemModel? sourceItem,
-    EditConversionItemUnitDelta delta,
-  ) {
+  ConversionItemModel? modifySourceConversionItem({
+    required ConversionItemModel? sourceItem,
+    required Map<int, UnitModel> targetUnits,
+    required EditConversionItemUnitDelta delta,
+  }) {
     if (delta.editedUnit.id == sourceItem?.unit.id) {
       return ConversionItemModel.coalesce(
         sourceItem,
@@ -33,10 +25,10 @@ class EditConversionItemUnitUseCase
   }
 
   @override
-  Map<int, UnitModel> modifyTargetUnits(
+  Future<Map<int, UnitModel>> modifyTargetUnits(
     Map<int, UnitModel> targetUnits,
     EditConversionItemUnitDelta delta,
-  ) {
+  ) async {
     if (targetUnits[delta.editedUnit.id] != null) {
       targetUnits[delta.editedUnit.id] = delta.editedUnit;
     }

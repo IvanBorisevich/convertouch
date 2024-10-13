@@ -1,11 +1,11 @@
-class InputItemsRemovalMarkModel {
+class InputItemsMarkingModel {
   final int newMarkedId;
   final List<int> alreadyMarkedIds;
-  final List<int> oobIds;
+  final List<int> excludedIds;
 
-  const InputItemsRemovalMarkModel({
+  const InputItemsMarkingModel({
     required this.newMarkedId,
     required this.alreadyMarkedIds,
-    required this.oobIds,
+    this.excludedIds = const [],
   });
 }

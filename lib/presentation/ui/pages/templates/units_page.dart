@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
@@ -15,9 +14,9 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final String pageTitle;
   final Widget? customLeadingIcon;
   final List<UnitModel> units;
-  final void Function(IdNameItemModel)? onUnitTap;
-  final void Function(IdNameItemModel)? onUnitTapForRemoval;
-  final void Function(IdNameItemModel)? onUnitLongPress;
+  final void Function(UnitModel)? onUnitTap;
+  final void Function(UnitModel)? onUnitTapForRemoval;
+  final void Function(UnitModel)? onUnitLongPress;
   final void Function(String)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final void Function()? onUnitsRemove;
@@ -28,7 +27,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final bool selectedUnitVisible;
   final bool editableUnitsVisible;
   final int? selectedUnitId;
-  final int? disabledUnitId;
+  final List<int>? disabledUnitIds;
   final bool removalModeAllowed;
   final bool removalModeEnabled;
   final Widget? floatingButton;
@@ -50,7 +49,7 @@ class ConvertouchUnitsPage extends StatelessWidget {
     required this.selectedUnitVisible,
     required this.editableUnitsVisible,
     required this.selectedUnitId,
-    required this.disabledUnitId,
+    required this.disabledUnitIds,
     required this.removalModeAllowed,
     required this.removalModeEnabled,
     required this.floatingButton,
@@ -59,49 +58,51 @@ class ConvertouchUnitsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      return ConvertouchPage(
-        title: pageTitle,
-        customLeadingIcon: customLeadingIcon,
-        appBarRightWidgets: appBarRightWidgets,
-        secondaryAppBar: SecondaryAppBar(
-          theme: appState.theme,
-          child: ConvertouchSearchBar(
-            placeholder: "Search units...",
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        return ConvertouchPage(
+          title: pageTitle,
+          customLeadingIcon: customLeadingIcon,
+          appBarRightWidgets: appBarRightWidgets,
+          secondaryAppBar: SecondaryAppBar(
             theme: appState.theme,
-            pageViewMode: appState.unitsViewMode,
-            onViewModeChange: () {
-              BlocProvider.of<AppBloc>(context).add(
-                ChangeSetting(
-                  settingKey: SettingKeys.unitsViewMode,
-                  settingValue: appState.unitsViewMode.next.value,
-                ),
-              );
-            },
-            onSearchStringChanged: onSearchStringChanged,
-            onSearchReset: onSearchReset,
+            child: ConvertouchSearchBar(
+              placeholder: "Search units...",
+              theme: appState.theme,
+              pageViewMode: appState.unitsViewMode,
+              onViewModeChange: () {
+                BlocProvider.of<AppBloc>(context).add(
+                  ChangeSetting(
+                    settingKey: SettingKeys.unitsViewMode,
+                    settingValue: appState.unitsViewMode.next.value,
+                  ),
+                );
+              },
+              onSearchStringChanged: onSearchStringChanged,
+              onSearchReset: onSearchReset,
+            ),
           ),
-        ),
-        body: ConvertouchMenuItemsView(
-          units,
-          itemIdsMarkedForConversion: markedUnitIdsForConversion,
-          itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
-          showMarkedItems: markedUnitsForConversionVisible,
-          selectedItemId: selectedUnitId,
-          disabledItemId: disabledUnitId,
-          showSelectedItem: selectedUnitVisible,
-          removalModeAllowed: removalModeAllowed,
-          removalModeEnabled: removalModeEnabled,
-          editableItemsVisible: editableUnitsVisible,
-          onItemTap: onUnitTap,
-          onItemTapForRemoval: onUnitTapForRemoval,
-          onItemLongPress: onUnitLongPress,
-          itemsViewMode: appState.unitsViewMode,
-          theme: appState.theme,
-        ),
-        floatingActionButton: floatingButton,
-        onItemsRemove: onUnitsRemove,
-      );
-    });
+          body: ConvertouchMenuItemsView(
+            units,
+            itemIdsMarkedForConversion: markedUnitIdsForConversion,
+            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
+            showMarkedItems: markedUnitsForConversionVisible,
+            selectedItemId: selectedUnitId,
+            disabledItemIds: disabledUnitIds,
+            showSelectedItem: selectedUnitVisible,
+            removalModeAllowed: removalModeAllowed,
+            removalModeEnabled: removalModeEnabled,
+            editableItemsVisible: editableUnitsVisible,
+            onItemTap: onUnitTap,
+            onItemTapForRemoval: onUnitTapForRemoval,
+            onItemLongPress: onUnitLongPress,
+            itemsViewMode: appState.unitsViewMode,
+            theme: appState.theme,
+          ),
+          floatingActionButton: floatingButton,
+          onItemsRemove: onUnitsRemove,
+        );
+      },
+    );
   }
 }

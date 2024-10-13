@@ -7,50 +7,54 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      return refreshingJobsBlocBuilder((jobsState) {
-        // if (jobsState is RefreshingJobDetailsOpened) {
-        //   return ConvertouchPage(
-        //     title: jobsState.openedJob.name,
-        //     customLeadingIcon: null,
-        //     appBarRightWidgets: null,
-        //     body: SingleChildScrollView(
-        //       child: Column(
-        //         children: [
-        //           ConvertouchSettingsGroup(
-        //             name: "Auto Refresh",
-        //             items: [
-        //               for (final value in Cron.values)
-        //                 SettingItem<Cron>.radio(
-        //                   value: value,
-        //                   titleMapper: (value) => value.name,
-        //                   selectedValue: jobsState.openedJob.selectedCron,
-        //                   theme: appState.theme,
-        //                   onChanged: (Cron? newValue) {
-        //                     if (newValue != null) {
-        //                       BlocProvider.of<RefreshingJobsBloc>(context).add(
-        //                         ChangeRefreshingJobCron(
-        //                           unitGroupName:
-        //                               jobsState.openedJob.unitGroupName,
-        //                           newCron: newValue,
-        //                         ),
-        //                       );
-        //                     }
-        //                   },
-        //                 ),
-        //             ],
-        //             theme: appState.theme,
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //     floatingActionButton: null,
-        //   );
-        // } else {
-        //   return empty();
-        // }
-        return empty();
-      });
-    });
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        return refreshingJobsBlocBuilder(
+          builderFunc: (jobsState) {
+            // if (jobsState is RefreshingJobDetailsOpened) {
+            //   return ConvertouchPage(
+            //     title: jobsState.openedJob.name,
+            //     customLeadingIcon: null,
+            //     appBarRightWidgets: null,
+            //     body: SingleChildScrollView(
+            //       child: Column(
+            //         children: [
+            //           ConvertouchSettingsGroup(
+            //             name: "Auto Refresh",
+            //             items: [
+            //               for (final value in Cron.values)
+            //                 SettingItem<Cron>.radio(
+            //                   value: value,
+            //                   titleMapper: (value) => value.name,
+            //                   selectedValue: jobsState.openedJob.selectedCron,
+            //                   theme: appState.theme,
+            //                   onChanged: (Cron? newValue) {
+            //                     if (newValue != null) {
+            //                       BlocProvider.of<RefreshingJobsBloc>(context).add(
+            //                         ChangeRefreshingJobCron(
+            //                           unitGroupName:
+            //                               jobsState.openedJob.unitGroupName,
+            //                           newCron: newValue,
+            //                         ),
+            //                       );
+            //                     }
+            //                   },
+            //                 ),
+            //             ],
+            //             theme: appState.theme,
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     floatingActionButton: null,
+            //   );
+            // } else {
+            //   return empty();
+            // }
+            return empty();
+          },
+        );
+      },
+    );
   }
 }

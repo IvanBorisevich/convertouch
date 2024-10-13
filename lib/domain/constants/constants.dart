@@ -39,9 +39,9 @@ abstract class SettingKeys {
 }
 
 enum PageName {
-  unitsConversionPage,
+  conversionGroupsPage,
+  conversionPage,
   unitGroupsPageRegular,
-  unitGroupsPageForConversion,
   unitGroupsPageForUnitDetails,
   unitsPageRegular,
   unitsPageForConversion,

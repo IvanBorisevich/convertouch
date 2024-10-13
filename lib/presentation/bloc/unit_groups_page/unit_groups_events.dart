@@ -1,5 +1,5 @@
-import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitGroupsEvent extends ConvertouchEvent {
   const UnitGroupsEvent();
@@ -7,125 +7,21 @@ abstract class UnitGroupsEvent extends ConvertouchEvent {
 
 class FetchUnitGroups extends UnitGroupsEvent {
   final String? searchString;
-  final UnitGroupModel? modifiedUnitGroup;
-  final bool rebuildConversion;
 
   const FetchUnitGroups({
-    required this.searchString,
-    this.modifiedUnitGroup,
-    this.rebuildConversion = false,
+    this.searchString,
   });
 
   @override
   List<Object?> get props => [
-    searchString,
-    modifiedUnitGroup,
-    rebuildConversion,
-  ];
+        searchString,
+      ];
 
   @override
   String toString() {
     return 'FetchUnitGroups{'
-        'searchString: $searchString, '
-        'rebuildConversion: $rebuildConversion}';
+        'searchString: $searchString}';
   }
-}
-
-class FetchUnitGroupsForFirstAddingToConversion extends FetchUnitGroups {
-  const FetchUnitGroupsForFirstAddingToConversion({
-    required super.searchString,
-  });
-
-  @override
-  String toString() {
-    return 'FetchUnitGroupsForFirstAddingToConversion{'
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitGroupsForChangeInConversion extends FetchUnitGroups {
-  final UnitGroupModel currentUnitGroupInConversion;
-
-  const FetchUnitGroupsForChangeInConversion({
-    required this.currentUnitGroupInConversion,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-    currentUnitGroupInConversion,
-    super.props,
-  ];
-
-  @override
-  String toString() {
-    return 'FetchUnitGroupsForChangeInConversion{'
-        'currentUnitGroupInConversion: $currentUnitGroupInConversion,'
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitGroupsForUnitDetails extends FetchUnitGroups {
-  final UnitGroupModel currentUnitGroupInUnitDetails;
-
-  const FetchUnitGroupsForUnitDetails({
-    required this.currentUnitGroupInUnitDetails,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-    currentUnitGroupInUnitDetails,
-    super.props,
-  ];
-
-  @override
-  String toString() {
-    return 'FetchUnitGroupsForUnitDetails{'
-        'currentUnitGroupInUnitDetails: $currentUnitGroupInUnitDetails,'
-        '${super.toString()}}';
-  }
-}
-
-class FetchUnitGroupsToMarkForRemoval extends FetchUnitGroups {
-  final List<int> alreadyMarkedIds;
-  final int newMarkedId;
-
-  const FetchUnitGroupsToMarkForRemoval({
-    this.alreadyMarkedIds = const [],
-    required this.newMarkedId,
-    required super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-    alreadyMarkedIds,
-    newMarkedId,
-    super.props,
-  ];
-
-  @override
-  String toString() {
-    return 'FetchUnitGroupsToMarkForRemoval{'
-        'alreadyMarkedIds: $alreadyMarkedIds,'
-        'newMarkedId: $newMarkedId}';
-  }
-}
-
-class FetchUnitGroupsAfterRemoval extends FetchUnitGroups {
-  final List<int> removedIds;
-
-  const FetchUnitGroupsAfterRemoval({
-    this.removedIds = const [],
-    super.rebuildConversion,
-    super.searchString,
-  });
-
-  @override
-  List<Object?> get props => [
-    removedIds,
-    super.props,
-  ];
 }
 
 class RemoveUnitGroups extends UnitGroupsEvent {
@@ -137,9 +33,9 @@ class RemoveUnitGroups extends UnitGroupsEvent {
 
   @override
   List<Object?> get props => [
-    ids,
-    super.props,
-  ];
+        ids,
+        super.props,
+      ];
 
   @override
   String toString() {
@@ -159,23 +55,14 @@ class SaveUnitGroup extends UnitGroupsEvent {
 
   @override
   List<Object?> get props => [
-    unitGroupToBeSaved,
-    conversionGroupId,
-  ];
+        unitGroupToBeSaved,
+        conversionGroupId,
+      ];
 
   @override
   String toString() {
     return 'SaveUnitGroup{'
         'unitGroupToBeSaved: $unitGroupToBeSaved, '
         'conversionGroupId: $conversionGroupId}';
-  }
-}
-
-class DisableUnitGroupsRemovalMode extends UnitGroupsEvent {
-  const DisableUnitGroupsRemovalMode();
-
-  @override
-  String toString() {
-    return 'DisableUnitGroupsRemovalMode{}';
   }
 }

@@ -1,8 +1,8 @@
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/unit_groups_page.dart';
 import 'package:flutter/material.dart';
@@ -13,47 +13,56 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unitGroupsBlocBuilderForUnitDetails((pageState) {
-      return ConvertouchUnitGroupsPage(
-        pageTitle: "Group of New Unit",
-        customLeadingIcon: null,
-        unitGroups: pageState.unitGroups,
-        onSearchStringChanged: (text) {
-          BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
-            FetchUnitGroupsForUnitDetails(
-              currentUnitGroupInUnitDetails: pageState.unitGroupInUnitDetails!,
-              searchString: text,
-            ),
-          );
-        },
-        onSearchReset: () {
-          BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
-            FetchUnitGroupsForUnitDetails(
-              currentUnitGroupInUnitDetails: pageState.unitGroupInUnitDetails!,
-              searchString: null,
-            ),
-          );
-        },
-        onUnitGroupTap: (unitGroup) {
-          BlocProvider.of<UnitDetailsBloc>(context).add(
-            ChangeGroupInUnitDetails(
-              unitGroup: unitGroup as UnitGroupModel,
-            ),
-          );
-        },
-        onUnitGroupTapForRemoval: null,
-        onUnitGroupLongPress: null,
-        onUnitGroupsRemove: null,
-        appBarRightWidgets: const [],
-        selectedUnitGroupVisible: true,
-        selectedUnitGroupId: pageState.unitGroupInUnitDetails?.id,
-        disabledUnitGroupId: null,
-        itemIdsSelectedForRemoval: const [],
-        removalModeEnabled: false,
-        removalModeAllowed: false,
-        editableUnitGroupsVisible: false,
-        floatingButton: null,
-      );
-    });
+    final unitGroupsBloc =
+        BlocProvider.of<UnitGroupsBlocForUnitDetails>(context);
+    final unitGroupSelectionBloc =
+        BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context);
+    final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
+
+    return unitGroupsBlocBuilder(
+      bloc: unitGroupsBloc,
+      builderFunc: (pageState) {
+        return itemsSelectionBlocBuilder(
+            bloc: unitGroupSelectionBloc,
+            builderFunc: (itemsSelectionState) {
+              return ConvertouchUnitGroupsPage(
+                pageTitle: "Group of New Unit",
+                customLeadingIcon: null,
+                unitGroups: pageState.unitGroups,
+                onSearchStringChanged: (text) {
+                  unitGroupsBloc.add(
+                    FetchUnitGroups(
+                      searchString: text,
+                    ),
+                  );
+                },
+                onSearchReset: () {
+                  unitGroupsBloc.add(
+                    const FetchUnitGroups(),
+                  );
+                },
+                onUnitGroupTap: (unitGroup) {
+                  unitDetailsBloc.add(
+                    ChangeGroupInUnitDetails(
+                      unitGroup: unitGroup,
+                    ),
+                  );
+                },
+                onUnitGroupTapForRemoval: null,
+                onUnitGroupLongPress: null,
+                onUnitGroupsRemove: null,
+                appBarRightWidgets: const [],
+                selectedUnitGroupVisible: true,
+                selectedUnitGroupId: itemsSelectionState.selectedId,
+                disabledUnitGroupIds: null,
+                itemIdsSelectedForRemoval: const [],
+                removalModeEnabled: false,
+                removalModeAllowed: false,
+                editableUnitGroupsVisible: false,
+                floatingButton: null,
+              );
+            });
+      },
+    );
   }
 }

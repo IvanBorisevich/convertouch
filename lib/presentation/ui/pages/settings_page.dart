@@ -15,72 +15,74 @@ class ConvertouchSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      return ConvertouchPage(
-        title: "Settings",
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              ConvertouchSettingsGroup(
-                name: "UI Theme",
-                items: [
-                  for (final value in ConvertouchUITheme.values)
-                    SettingItem<ConvertouchUITheme>.radio(
-                      value: value,
-                      titleMapper: (value) => value.value,
-                      selectedValue: appState.theme,
-                      theme: appState.theme,
-                      onChanged: (ConvertouchUITheme? newValue) {
-                        if (newValue != null) {
-                          BlocProvider.of<AppBloc>(context).add(
-                            ChangeSetting(
-                              settingKey: SettingKeys.theme,
-                              settingValue: newValue.value,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                ],
-                theme: appState.theme,
-              ),
-              // refreshingJobsBlocBuilder((jobState) {
-              //   return ConvertouchSettingsGroup(
-              //     name: "Data Refreshing",
-              //     items: [
-              //       for (final item in jobState.jobs.values)
-              //         SettingItem.regular(
-              //           title: item.name,
-              //           theme: appState.theme,
-              //           onTap: () {
-              //             BlocProvider.of<RefreshingJobsBloc>(context).add(
-              //               OpenJobDetails(
-              //                 unitGroupName: item.unitGroupName,
-              //               ),
-              //             );
-              //           },
-              //         ),
-              //     ],
-              //     theme: appState.theme,
-              //   );
-              // }),
-              ConvertouchSettingsGroup(
-                name: "About",
-                onHeaderTap: () {
-                  showAboutDialog(
-                    context: context,
-                    applicationName: appName,
-                    applicationVersion: "Version: ${appState.appVersion}",
-                    applicationLegalese: "©2024, Made by johnbor7",
-                  );
-                },
-                theme: appState.theme,
-              ),
-            ],
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        return ConvertouchPage(
+          title: "Settings",
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                ConvertouchSettingsGroup(
+                  name: "UI Theme",
+                  items: [
+                    for (final value in ConvertouchUITheme.values)
+                      SettingItem<ConvertouchUITheme>.radio(
+                        value: value,
+                        titleMapper: (value) => value.value,
+                        selectedValue: appState.theme,
+                        theme: appState.theme,
+                        onChanged: (ConvertouchUITheme? newValue) {
+                          if (newValue != null) {
+                            BlocProvider.of<AppBloc>(context).add(
+                              ChangeSetting(
+                                settingKey: SettingKeys.theme,
+                                settingValue: newValue.value,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                  ],
+                  theme: appState.theme,
+                ),
+                // refreshingJobsBlocBuilder((jobState) {
+                //   return ConvertouchSettingsGroup(
+                //     name: "Data Refreshing",
+                //     items: [
+                //       for (final item in jobState.jobs.values)
+                //         SettingItem.regular(
+                //           title: item.name,
+                //           theme: appState.theme,
+                //           onTap: () {
+                //             BlocProvider.of<RefreshingJobsBloc>(context).add(
+                //               OpenJobDetails(
+                //                 unitGroupName: item.unitGroupName,
+                //               ),
+                //             );
+                //           },
+                //         ),
+                //     ],
+                //     theme: appState.theme,
+                //   );
+                // }),
+                ConvertouchSettingsGroup(
+                  name: "About",
+                  onHeaderTap: () {
+                    showAboutDialog(
+                      context: context,
+                      applicationName: appName,
+                      applicationVersion: "Version: ${appState.appVersion}",
+                      applicationLegalese: "©2024, Made by johnbor7",
+                    );
+                  },
+                  theme: appState.theme,
+                ),
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: null,
-      );
-    });
+          floatingActionButton: null,
+        );
+      },
+    );
   }
 }

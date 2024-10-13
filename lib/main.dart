@@ -4,19 +4,15 @@ import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/scaffold.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
@@ -30,6 +26,7 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 final logger = Logger(
   printer: PrettyPrinter(
+    methodCount: 0,
     printTime: true,
   ),
 );
@@ -61,19 +58,28 @@ class ConvertouchApp extends StatelessWidget {
           create: (context) => di.locator<NavigationBloc>(),
         ),
         BlocProvider(
-          create: (context) => di.locator<ConversionBloc>()
-            ..add(
-              const GetLastOpenedConversion(),
-            ),
+          create: (context) => di.locator<ItemsSelectionBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ItemsSelectionBlocForConversion>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConversionBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBloc>()
             ..add(
-              const FetchUnitGroups(searchString: null),
+              const FetchUnitGroups(),
             ),
         ),
         BlocProvider(
-          create: (context) => di.locator<UnitGroupsBlocForConversion>(),
+          create: (context) => di.locator<UnitGroupsBlocForConversion>()
+            ..add(
+              const FetchUnitGroups(),
+            ),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBlocForUnitDetails>(),
@@ -98,42 +104,45 @@ class ConvertouchApp extends StatelessWidget {
         ),
       ],
       child: DismissKeyboard(
-        child: appBlocBuilder((appState) {
-          final statusBarColor =
-              pageColors[appState.theme]!.appBar.background.regular;
-          final systemNavbarColor =
-              pageColors[appState.theme]!.bottomBar.background.regular;
-          Brightness iconBrightness = appState.theme == ConvertouchUITheme.dark
-              ? Brightness.light
-              : Brightness.dark;
+        child: appBlocBuilder(
+          builderFunc: (appState) {
+            final statusBarColor =
+                pageColors[appState.theme]!.appBar.background.regular;
+            final systemNavbarColor =
+                pageColors[appState.theme]!.bottomBar.background.regular;
+            Brightness iconBrightness =
+                appState.theme == ConvertouchUITheme.dark
+                    ? Brightness.light
+                    : Brightness.dark;
 
-          SystemChrome.setSystemUIOverlayStyle(
-            SystemUiOverlayStyle(
-              statusBarColor: statusBarColor,
-              statusBarIconBrightness: iconBrightness,
-              systemNavigationBarColor: systemNavbarColor,
-              systemNavigationBarIconBrightness: iconBrightness,
-              systemNavigationBarDividerColor: systemNavbarColor,
-            ),
-          );
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                statusBarColor: statusBarColor,
+                statusBarIconBrightness: iconBrightness,
+                systemNavigationBarColor: systemNavbarColor,
+                systemNavigationBarIconBrightness: iconBrightness,
+                systemNavigationBarDividerColor: systemNavbarColor,
+              ),
+            );
 
-          return MaterialApp(
-            title: appName,
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: quicksandFontFamily,
-              brightness: Brightness.light,
-            ),
-            darkTheme: ThemeData(
-              fontFamily: quicksandFontFamily,
-              brightness: Brightness.dark,
-            ),
-            themeMode: appState.theme == ConvertouchUITheme.dark
-                ? ThemeMode.dark
-                : ThemeMode.light,
-            home: const ConvertouchScaffold(),
-          );
-        }),
+            return MaterialApp(
+              title: appName,
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                fontFamily: quicksandFontFamily,
+                brightness: Brightness.light,
+              ),
+              darkTheme: ThemeData(
+                fontFamily: quicksandFontFamily,
+                brightness: Brightness.dark,
+              ),
+              themeMode: appState.theme == ConvertouchUITheme.dark
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              home: const ConvertouchScaffold(),
+            );
+          },
+        ),
       ),
     );
   }

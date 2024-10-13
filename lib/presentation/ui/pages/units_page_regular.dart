@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
@@ -19,135 +20,146 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-      ConvertouchColorScheme floatingButtonColor =
-          unitsPageFloatingButtonColors[appState.theme]!;
-      ConvertouchColorScheme removalButtonColor =
-          removalFloatingButtonColors[appState.theme]!;
+    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
+    final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
+    final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
 
-      return unitsBlocBuilder((pageState) {
-        return ConvertouchUnitsPage(
-          pageTitle: pageState.unitGroup.name,
-          units: pageState.units,
-          customLeadingIcon: pageState.removalMode
-              ? IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: pageColorScheme.appBar.foreground.regular,
-                  ),
-                  onPressed: () {
-                    BlocProvider.of<UnitsBloc>(context).add(
-                      DisableUnitsRemovalMode(
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+        ConvertouchColorScheme floatingButtonColor =
+            unitsPageFloatingButtonColors[appState.theme]!;
+        ConvertouchColorScheme removalButtonColor =
+            removalFloatingButtonColors[appState.theme]!;
+
+        return unitsBlocBuilder(
+          bloc: unitsBloc,
+          builderFunc: (pageState) {
+            return itemsSelectionBlocBuilder(
+              bloc: unitsSelectionBloc,
+              builderFunc: (itemsSelectionState) {
+                return ConvertouchUnitsPage(
+                  pageTitle: pageState.unitGroup.name,
+                  units: pageState.units,
+                  customLeadingIcon: itemsSelectionState.showCancelIcon
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: pageColorScheme.appBar.foreground.regular,
+                          ),
+                          onPressed: () {
+                            unitsSelectionBloc.add(
+                              const CancelItemsMarking(),
+                            );
+                          },
+                        )
+                      : null,
+                  appBarRightWidgets: [
+                    IconButton(
+                      onPressed: () {
+                        unitGroupDetailsBloc.add(
+                          GetExistingUnitGroupDetails(
+                            unitGroup: pageState.unitGroup,
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        pageState.unitGroup.oob
+                            ? Icons.info_outline_rounded
+                            : Icons.edit_outlined,
+                        color: pageColorScheme.appBar.foreground.regular,
+                      ),
+                    )
+                  ],
+                  onSearchStringChanged: (text) {
+                    unitsBloc.add(
+                      FetchUnits(
+                        unitGroup: pageState.unitGroup,
+                        searchString: text,
+                      ),
+                    );
+                  },
+                  onSearchReset: () {
+                    unitsBloc.add(
+                      FetchUnits(
                         unitGroup: pageState.unitGroup,
                       ),
                     );
                   },
-                )
-              : null,
-          appBarRightWidgets: [
-            IconButton(
-              onPressed: () {
-                BlocProvider.of<UnitGroupDetailsBloc>(context).add(
-                  GetExistingUnitGroupDetails(
-                    unitGroup: pageState.unitGroup,
-                  ),
+                  onUnitTap: (unit) {
+                    unitDetailsBloc.add(
+                      GetExistingUnitDetails(
+                        unit: unit,
+                        unitGroup: pageState.unitGroup,
+                      ),
+                    );
+                  },
+                  onUnitTapForRemoval: (unit) {
+                    unitsSelectionBloc.add(
+                      SelectItem(
+                        id: unit.id,
+                      ),
+                    );
+                  },
+                  onUnitLongPress: (unit) {
+                    if (!itemsSelectionState.showCancelIcon) {
+                      unitsSelectionBloc.add(
+                        StartItemsMarking(
+                          showCancelIcon: true,
+                          previouslyMarkedIds: [unit.id],
+                          excludedIds: pageState.units
+                              .where((unit) => unit.oob)
+                              .map((unit) => unit.id)
+                              .toList(),
+                        ),
+                      );
+                    }
+                  },
+                  onUnitsRemove: null,
+                  itemIdsSelectedForRemoval: itemsSelectionState.markedIds,
+                  removalModeAllowed: true,
+                  removalModeEnabled: itemsSelectionState.showCancelIcon,
+                  editableUnitsVisible: true,
+                  markedUnitsForConversionVisible: false,
+                  markedUnitIdsForConversion: null,
+                  selectedUnitVisible: false,
+                  selectedUnitId: null,
+                  disabledUnitIds: null,
+                  floatingButton: itemsSelectionState.showCancelIcon
+                      ? ConvertouchFloatingActionButton.removal(
+                          visible: itemsSelectionState.markedIds.isNotEmpty,
+                          extraLabelText:
+                              itemsSelectionState.markedIds.length.toString(),
+                          colorScheme: removalButtonColor,
+                          onClick: () {
+                            unitsBloc.add(
+                              RemoveUnits(
+                                ids: itemsSelectionState.markedIds,
+                                unitGroup: pageState.unitGroup,
+                              ),
+                            );
+                          },
+                        )
+                      : ConvertouchFloatingActionButton.adding(
+                          visible: !pageState.unitGroup.refreshable &&
+                              pageState.unitGroup.conversionType !=
+                                  ConversionType.formula,
+                          onClick: () {
+                            unitDetailsBloc.add(
+                              GetNewUnitDetails(
+                                unitGroup: pageState.unitGroup,
+                              ),
+                            );
+                          },
+                          colorScheme: floatingButtonColor,
+                        ),
                 );
               },
-              icon: Icon(
-                pageState.unitGroup.oob
-                    ? Icons.info_outline_rounded
-                    : Icons.edit_outlined,
-                color: pageColorScheme.appBar.foreground.regular,
-              ),
-            )
-          ],
-          onSearchStringChanged: (text) {
-            BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnitsOnSearchStringChange(
-                unitGroup: pageState.unitGroup,
-                searchString: text,
-              ),
             );
           },
-          onSearchReset: () {
-            BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnitsOnSearchStringChange(
-                unitGroup: pageState.unitGroup,
-                searchString: null,
-              ),
-            );
-          },
-          onUnitTap: (unit) {
-            BlocProvider.of<UnitDetailsBloc>(context).add(
-              GetExistingUnitDetails(
-                unit: unit as UnitModel,
-                unitGroup: pageState.unitGroup,
-              ),
-            );
-          },
-          onUnitTapForRemoval: (unit) {
-            BlocProvider.of<UnitsBloc>(context).add(
-              FetchUnitsToMarkForRemoval(
-                unitGroup: pageState.unitGroup,
-                searchString: pageState.searchString,
-                newMarkedId: unit.id,
-                alreadyMarkedIds: pageState.markedIdsForRemoval,
-              ),
-            );
-          },
-          onUnitLongPress: (unit) {
-            if (!pageState.removalMode) {
-              BlocProvider.of<UnitsBloc>(context).add(
-                FetchUnitsToMarkForRemoval(
-                  unitGroup: pageState.unitGroup,
-                  searchString: pageState.searchString,
-                  newMarkedId: unit.id,
-                  alreadyMarkedIds: pageState.markedIdsForRemoval,
-                ),
-              );
-            }
-          },
-          onUnitsRemove: null,
-          itemIdsSelectedForRemoval: pageState.markedIdsForRemoval,
-          removalModeAllowed: true,
-          removalModeEnabled: pageState.removalMode,
-          editableUnitsVisible: true,
-          markedUnitsForConversionVisible: false,
-          markedUnitIdsForConversion: null,
-          selectedUnitVisible: false,
-          selectedUnitId: null,
-          disabledUnitId: null,
-          floatingButton: pageState.removalMode
-              ? ConvertouchFloatingActionButton.removal(
-                  visible: pageState.markedIdsForRemoval.isNotEmpty,
-                  extraLabelText:
-                      pageState.markedIdsForRemoval.length.toString(),
-                  colorScheme: removalButtonColor,
-                  onClick: () {
-                    BlocProvider.of<UnitsBloc>(context).add(
-                      RemoveUnits(
-                        ids: pageState.markedIdsForRemoval,
-                        unitGroup: pageState.unitGroup,
-                      ),
-                    );
-                  },
-                )
-              : ConvertouchFloatingActionButton.adding(
-                  visible: !pageState.unitGroup.refreshable &&
-                      pageState.unitGroup.conversionType !=
-                          ConversionType.formula,
-                  onClick: () {
-                    BlocProvider.of<UnitDetailsBloc>(context).add(
-                      GetNewUnitDetails(
-                        unitGroup: pageState.unitGroup,
-                      ),
-                    );
-                  },
-                  colorScheme: floatingButtonColor,
-                ),
         );
-      });
-    });
+      },
+    );
   }
 }

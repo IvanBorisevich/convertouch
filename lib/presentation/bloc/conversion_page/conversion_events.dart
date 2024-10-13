@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
@@ -11,22 +10,39 @@ abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion();
 }
 
-class BuildNewConversion extends ConversionEvent {
-  final InputConversionModel inputParams;
+class GetConversion extends ConversionEvent {
+  final UnitGroupModel unitGroup;
 
-  const BuildNewConversion({
-    required this.inputParams,
+  const GetConversion({
+    required this.unitGroup,
   });
 
   @override
   List<Object?> get props => [
-        inputParams,
+        unitGroup,
       ];
 
   @override
   String toString() {
-    return 'BuildNewConversion{'
-        'inputParams: $inputParams}';
+    return 'GetConversion{unitGroup: $unitGroup}';
+  }
+}
+
+class AddUnitsToConversion extends ModifyConversion {
+  final List<int> unitIds;
+
+  const AddUnitsToConversion({
+    required this.unitIds,
+  });
+
+  @override
+  List<Object?> get props => [
+        unitIds,
+      ];
+
+  @override
+  String toString() {
+    return 'AddUnitsToConversion{unitIds: $unitIds}';
   }
 }
 
@@ -168,14 +184,5 @@ class RemoveConversions extends ConversionEvent {
   @override
   String toString() {
     return 'RemoveConversions{removedGroupIds: $removedGroupIds}';
-  }
-}
-
-class GetLastOpenedConversion extends ConversionEvent {
-  const GetLastOpenedConversion();
-
-  @override
-  String toString() {
-    return 'GetLastOpenedConversion{}';
   }
 }

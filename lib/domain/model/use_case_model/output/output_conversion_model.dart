@@ -3,20 +3,17 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
 class OutputConversionModel extends Equatable {
-  final UnitGroupModel? unitGroup;
+  static const none = OutputConversionModel.noItems(UnitGroupModel.none);
+
+  final UnitGroupModel unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<ConversionItemModel> targetConversionItems;
 
   const OutputConversionModel({
-    this.unitGroup,
+    this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
     this.targetConversionItems = const [],
   });
-
-  const OutputConversionModel.none()
-      : unitGroup = null,
-        sourceConversionItem = null,
-        targetConversionItems = const [];
 
   const OutputConversionModel.noItems(this.unitGroup)
       : sourceConversionItem = null,
@@ -24,7 +21,7 @@ class OutputConversionModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      "unitGroup": unitGroup?.toJson(),
+      "unitGroup": unitGroup.toJson(),
       "sourceItem": sourceConversionItem?.toJson(),
       "targetItems":
           targetConversionItems.map((item) => item.toJson()).toList(),
@@ -36,7 +33,8 @@ class OutputConversionModel extends Equatable {
       return null;
     }
     return OutputConversionModel(
-      unitGroup: UnitGroupModel.fromJson(json["unitGroup"]),
+      unitGroup:
+          UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
       sourceConversionItem: ConversionItemModel.fromJson(json["sourceItem"]),
       targetConversionItems: (json["targetItems"] as List)
           .map((unitMap) => ConversionItemModel.fromJson(unitMap)!)

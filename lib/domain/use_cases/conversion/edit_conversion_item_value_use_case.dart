@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -12,34 +11,31 @@ class EditConversionItemValueUseCase
   });
 
   @override
-  UnitGroupModel modifyConversionGroup(
-    UnitGroupModel unitGroup,
-    EditConversionItemValueDelta delta,
-  ) {
-    return unitGroup;
-  }
+  ConversionItemModel? modifySourceConversionItem({
+    required ConversionItemModel? sourceItem,
+    required Map<int, UnitModel> targetUnits,
+    required EditConversionItemValueDelta delta,
+  }) {
+    ValueModel? newValue = delta.newValue != null
+        ? ValueModel.ofString(delta.newValue)
+        : sourceItem?.value;
 
-  @override
-  ConversionItemModel? modifySourceConversionItem(
-    ConversionItemModel? sourceItem,
-    EditConversionItemValueDelta delta,
-  ) {
-    return ConversionItemModel.coalesce(
-      sourceItem,
-      value: delta.newValue != null
-          ? ValueModel.ofString(delta.newValue)
-          : sourceItem?.value,
-      defaultValue: delta.newDefaultValue != null
-          ? ValueModel.ofString(delta.newDefaultValue)
-          : ValueModel.one,
-    );
-  }
+    ValueModel? newDefaultValue = delta.newDefaultValue != null
+        ? ValueModel.ofString(delta.newDefaultValue)
+        : ValueModel.one;
 
-  @override
-  Map<int, UnitModel> modifyTargetUnits(
-    Map<int, UnitModel> targetUnits,
-    EditConversionItemValueDelta delta,
-  ) {
-    return targetUnits;
+    if (delta.unitId == sourceItem?.unit.id) {
+      return ConversionItemModel.coalesce(
+        sourceItem,
+        value: newValue,
+        defaultValue: newDefaultValue,
+      );
+    } else {
+      return ConversionItemModel(
+        unit: targetUnits[delta.unitId]!,
+        value: newValue ?? ValueModel.none,
+        defaultValue: newDefaultValue,
+      );
+    }
   }
 }

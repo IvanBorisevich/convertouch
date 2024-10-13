@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -26,42 +28,47 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         item.unit.id: item.unit
     };
 
-    if (input.rebuildConversion) {
-      final updatedSourceItem = modifySourceConversionItem(
-            input.conversion.sourceConversionItem,
-            input.delta,
-          ) ??
-          input.conversion.targetConversionItems.firstOrNull;
+    final updatedUnitGroup = modifyConversionGroup(
+      input.conversion.unitGroup,
+      input.delta,
+    );
 
-      final updatedTargetUnits =
-          modifyTargetUnits(targetUnitsMap, input.delta).values.toList();
+    final updatedTargetUnitsMap = await modifyTargetUnits(
+      targetUnitsMap,
+      input.delta,
+    );
+
+    var updatedSourceItem = modifySourceConversionItem(
+      sourceItem: input.conversion.sourceConversionItem,
+      targetUnits: updatedTargetUnitsMap,
+      delta: input.delta,
+    );
+
+    if (input.rebuildConversion) {
+      updatedSourceItem ??= input.conversion.targetConversionItems.firstOrNull;
 
       InputConversionModel inputParams = InputConversionModel(
-        unitGroup: modifyConversionGroup(
-          input.conversion.unitGroup!,
-          input.delta,
-        ),
+        unitGroup: updatedUnitGroup,
         sourceConversionItem: updatedSourceItem,
-        targetUnits: updatedTargetUnits,
+        targetUnits: updatedTargetUnitsMap.values.toList(),
       );
+
+      log("Input conversion params: $inputParams");
+
       return buildNewConversionUseCase.execute(inputParams);
     } else {
       try {
-        final updatedUnitGroup = modifyConversionGroup(
-          input.conversion.unitGroup!,
-          input.delta,
-        );
+        final updatedTargetConversionItems =
+            input.conversion.targetConversionItems
+                .map(
+                  (item) => ConversionItemModel.coalesce(
+                    item,
+                    unit: updatedTargetUnitsMap[item.unit.id],
+                  ),
+                )
+                .toList();
 
-        final updatedTargetConversionItems = _modifyTargetConversionItems(
-          input.conversion.targetConversionItems,
-          modifyTargetUnits(targetUnitsMap, input.delta),
-        );
-
-        final updatedSourceItem = modifySourceConversionItem(
-              input.conversion.sourceConversionItem,
-              input.delta,
-            ) ??
-            updatedTargetConversionItems.firstOrNull;
+        updatedSourceItem ??= updatedTargetConversionItems.firstOrNull;
 
         return Right(
           OutputConversionModel(
@@ -82,29 +89,25 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
-  List<ConversionItemModel> _modifyTargetConversionItems(
-    List<ConversionItemModel> currentTargetItems,
-    Map<int, UnitModel> targetUnitMapsUpdated,
-  ) {
-    return currentTargetItems
-        .map(
-          (item) => ConversionItemModel.coalesce(
-            item,
-            unit: targetUnitMapsUpdated[item.unit.id],
-          ),
-        )
-        .toList();
+  ConversionItemModel? modifySourceConversionItem({
+    required ConversionItemModel? sourceItem,
+    required Map<int, UnitModel> targetUnits,
+    required D delta,
+  }) {
+    return sourceItem;
   }
 
-  ConversionItemModel? modifySourceConversionItem(
-    ConversionItemModel? sourceItem,
+  UnitGroupModel modifyConversionGroup(
+    UnitGroupModel unitGroup,
     D delta,
-  );
+  ) {
+    return unitGroup;
+  }
 
-  UnitGroupModel modifyConversionGroup(UnitGroupModel unitGroup, D delta);
-
-  Map<int, UnitModel> modifyTargetUnits(
+  Future<Map<int, UnitModel>> modifyTargetUnits(
     Map<int, UnitModel> targetUnits,
     D delta,
-  );
+  ) async {
+    return targetUnits;
+  }
 }

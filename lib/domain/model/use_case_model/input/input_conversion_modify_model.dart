@@ -10,12 +10,20 @@ class InputConversionModifyModel<T extends ConversionModifyDelta> {
   const InputConversionModifyModel({
     required this.conversion,
     required this.delta,
-    this.rebuildConversion = false,
+    this.rebuildConversion = true,
   });
 }
 
 abstract class ConversionModifyDelta {
   const ConversionModifyDelta();
+}
+
+class AddUnitsToConversionDelta extends ConversionModifyDelta {
+  final List<int> unitIds;
+
+  const AddUnitsToConversionDelta({
+    required this.unitIds,
+  });
 }
 
 class EditConversionGroupDelta extends ConversionModifyDelta {

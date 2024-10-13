@@ -30,52 +30,54 @@ class ConvertouchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder((appState) {
-      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: pageColorScheme.page.background.regular,
-          appBar: AppBar(
-            leading: Builder(
-              builder: (context) {
-                if (customLeadingIcon != null) {
-                  return customLeadingIcon!;
-                } else if (ModalRoute.of(context)?.canPop == true) {
-                  return IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: pageColorScheme.appBar.foreground.regular,
-                    ),
-                    onPressed: () {
-                      BlocProvider.of<NavigationBloc>(context).add(
-                        const NavigateBack(),
-                      );
-                    },
-                  );
-                } else {
-                  return empty();
-                }
-              },
-            ),
-            bottom: secondaryAppBar,
-            centerTitle: true,
-            title: Text(
-              title,
-              style: TextStyle(
-                color: pageColorScheme.appBar.foreground.regular,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: pageColorScheme.page.background.regular,
+            appBar: AppBar(
+              leading: Builder(
+                builder: (context) {
+                  if (customLeadingIcon != null) {
+                    return customLeadingIcon!;
+                  } else if (ModalRoute.of(context)?.canPop == true) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: pageColorScheme.appBar.foreground.regular,
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<NavigationBloc>(context).add(
+                          const NavigateBack(),
+                        );
+                      },
+                    );
+                  } else {
+                    return empty();
+                  }
+                },
               ),
+              bottom: secondaryAppBar,
+              centerTitle: true,
+              title: Text(
+                title,
+                style: TextStyle(
+                  color: pageColorScheme.appBar.foreground.regular,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: pageColorScheme.appBar.background.regular,
+              elevation: 0,
+              actions: appBarRightWidgets,
             ),
-            backgroundColor: pageColorScheme.appBar.background.regular,
-            elevation: 0,
-            actions: appBarRightWidgets,
+            body: body,
+            floatingActionButton: floatingActionButton,
           ),
-          body: body,
-          floatingActionButton: floatingActionButton,
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 

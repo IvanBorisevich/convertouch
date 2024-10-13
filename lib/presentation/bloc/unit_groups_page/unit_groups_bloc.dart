@@ -1,9 +1,6 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_items_removal_mark_model.dart';
-import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -19,7 +16,6 @@ class UnitGroupsBloc
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
-  final MarkItemsForRemovalUseCase markItemsForRemovalUseCase;
   final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
@@ -27,22 +23,18 @@ class UnitGroupsBloc
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
-    required this.markItemsForRemovalUseCase,
     required this.conversionBloc,
     required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
     on<RemoveUnitGroups>(_onUnitGroupsRemove);
     on<SaveUnitGroup>(_onUnitGroupSave);
-    on<DisableUnitGroupsRemovalMode>(_onUnitGroupsRemovalModeDisable);
   }
 
   _onUnitGroupsFetch(
     FetchUnitGroups event,
     Emitter<UnitGroupsState> emit,
   ) async {
-    UnitGroupsFetched currentState = state as UnitGroupsFetched;
-
     final result = await fetchUnitGroupsUseCase.execute(event.searchString);
 
     if (result.isLeft) {
@@ -50,48 +42,12 @@ class UnitGroupsBloc
         ShowException(exception: result.left),
       );
     } else {
-      if (event is FetchUnitGroupsToMarkForRemoval) {
-        final markedIdsResult = await markItemsForRemovalUseCase.execute(
-          InputItemsRemovalMarkModel(
-            newMarkedId: event.newMarkedId,
-            alreadyMarkedIds: event.alreadyMarkedIds,
-            oobIds: result.right.where((e) => e.oob).map((e) => e.id).toList(),
-          ),
-        );
-
-        final markedIds = ObjectUtils.tryGet(markedIdsResult).markedIds;
-
-        emit(const UnitGroupsFetching());
-        emit(
-          UnitGroupsFetched(
-            unitGroups: result.right,
-            searchString: event.searchString,
-            removalMode: markedIds.isNotEmpty,
-            markedIdsForRemoval: markedIds,
-          ),
-        );
-      } else if (event is FetchUnitGroupsAfterRemoval) {
-        emit(
-          UnitGroupsFetched(
-            unitGroups: result.right,
-            searchString: event.searchString,
-            removalMode: false,
-            rebuildConversion: event.rebuildConversion,
-            removedIds: event.removedIds,
-          ),
-        );
-      } else {
-        emit(
-          UnitGroupsFetched(
-            unitGroups: result.right,
-            searchString: event.searchString,
-            modifiedUnitGroup: event.modifiedUnitGroup,
-            rebuildConversion: event.rebuildConversion,
-            removalMode: currentState.removalMode,
-            markedIdsForRemoval: currentState.markedIdsForRemoval,
-          ),
-        );
-      }
+      emit(
+        UnitGroupsFetched(
+          unitGroups: result.right,
+          searchString: event.searchString,
+        ),
+      );
     }
   }
 
@@ -108,14 +64,14 @@ class UnitGroupsBloc
       );
     } else {
       add(
-        FetchUnitGroupsAfterRemoval(
+        FetchUnitGroups(
           searchString: currentState.searchString,
-          removedIds: event.ids,
-          rebuildConversion: event.ids.isNotEmpty,
         ),
       );
 
-      conversionBloc.add(RemoveConversions(removedGroupIds: event.ids));
+      conversionBloc.add(
+        RemoveConversions(removedGroupIds: event.ids),
+      );
     }
   }
 
@@ -132,12 +88,7 @@ class UnitGroupsBloc
       );
     } else {
       add(
-        FetchUnitGroups(
-          searchString: null,
-          modifiedUnitGroup: saveUnitGroupResult.right,
-          rebuildConversion:
-              event.conversionGroupId == saveUnitGroupResult.right.id,
-        ),
+        const FetchUnitGroups(),
       );
 
       conversionBloc.add(
@@ -149,18 +100,24 @@ class UnitGroupsBloc
       );
     }
   }
+}
 
-  _onUnitGroupsRemovalModeDisable(
-    DisableUnitGroupsRemovalMode event,
-    Emitter<UnitGroupsState> emit,
-  ) async {
-    UnitGroupsFetched currentState = state as UnitGroupsFetched;
-    emit(
-      UnitGroupsFetched(
-        unitGroups: currentState.unitGroups,
-        searchString: currentState.searchString,
-        removalMode: false,
-      ),
-    );
-  }
+class UnitGroupsBlocForConversion extends UnitGroupsBloc {
+  UnitGroupsBlocForConversion({
+    required super.fetchUnitGroupsUseCase,
+    required super.saveUnitGroupUseCase,
+    required super.removeUnitGroupsUseCase,
+    required super.conversionBloc,
+    required super.navigationBloc,
+  });
+}
+
+class UnitGroupsBlocForUnitDetails extends UnitGroupsBloc {
+  UnitGroupsBlocForUnitDetails({
+    required super.fetchUnitGroupsUseCase,
+    required super.saveUnitGroupUseCase,
+    required super.removeUnitGroupsUseCase,
+    required super.conversionBloc,
+    required super.navigationBloc,
+  });
 }

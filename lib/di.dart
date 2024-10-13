@@ -18,11 +18,13 @@ import 'package:convertouch/domain/repositories/job_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
-import 'package:convertouch/domain/use_cases/common/mark_items_for_removal_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -40,16 +42,13 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc_for_unit_details.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_conversion.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc_for_unit_details.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -77,65 +76,90 @@ Future<void> init() async {
 
   // bloc
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<AppBloc>(
     () => AppBloc(),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<NavigationBloc>(
     () => NavigationBloc(),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<ItemsSelectionBloc>(
+    () => ItemsSelectionBloc(
+      markItemsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ItemsSelectionBlocForConversion>(
+    () => ItemsSelectionBlocForConversion(
+      markItemsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ItemsSelectionBlocForUnitDetails>(
+    () => ItemsSelectionBlocForUnitDetails(
+      markItemsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<UnitGroupsBloc>(
     () => UnitGroupsBloc(
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
-      markItemsForRemovalUseCase: locator(),
       conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitGroupsBlocForConversion>(
     () => UnitGroupsBlocForConversion(
       fetchUnitGroupsUseCase: locator(),
+      saveUnitGroupUseCase: locator(),
+      removeUnitGroupsUseCase: locator(),
+      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitGroupsBlocForUnitDetails>(
     () => UnitGroupsBlocForUnitDetails(
       fetchUnitGroupsUseCase: locator(),
+      saveUnitGroupUseCase: locator(),
+      removeUnitGroupsUseCase: locator(),
+      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitsBloc>(
     () => UnitsBloc(
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
-      markItemsForRemovalUseCase: locator(),
-      conversionBloc: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitsBlocForConversion>(
     () => UnitsBlocForConversion(
+      saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
+      removeUnitsUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitsBlocForUnitDetails>(
     () => UnitsBlocForUnitDetails(
+      saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
+      removeUnitsUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitDetailsBloc>(
     () => UnitDetailsBloc(
       buildUnitDetailsUseCase: locator(),
       modifyUnitDetailsUseCase: locator(),
@@ -143,15 +167,17 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UnitGroupDetailsBloc>(
     () => UnitGroupDetailsBloc(
       navigationBloc: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<ConversionBloc>(
     () => ConversionBloc(
       buildNewConversionUseCase: locator(),
+      getConversionUseCase: locator(),
+      addUnitsToConversionUseCase: locator(),
       editConversionGroupUseCase: locator(),
       editConversionItemUnitUseCase: locator(),
       editConversionItemValueUseCase: locator(),
@@ -163,7 +189,7 @@ Future<void> init() async {
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<RefreshingJobsBloc>(
     () => RefreshingJobsBloc(
       startJobUseCase: locator(),
       stopJobUseCase: locator(),
@@ -216,6 +242,17 @@ Future<void> init() async {
   locator.registerLazySingleton<BuildNewConversionUseCase>(
     () => BuildNewConversionUseCase(
       dynamicValueRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetConversionUseCase>(
+    () => const GetConversionUseCase(),
+  );
+
+  locator.registerLazySingleton<AddUnitsToConversionUseCase>(
+    () => AddUnitsToConversionUseCase(
+      buildNewConversionUseCase: locator(),
+      unitRepository: locator(),
     ),
   );
 
@@ -273,8 +310,8 @@ Future<void> init() async {
     () => const StopJobUseCase(),
   );
 
-  locator.registerLazySingleton<MarkItemsForRemovalUseCase>(
-    () => MarkItemsForRemovalUseCase(),
+  locator.registerLazySingleton<MarkItemsUseCase>(
+    () => MarkItemsUseCase(),
   );
 
   // repositories
