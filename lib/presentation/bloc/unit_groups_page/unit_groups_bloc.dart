@@ -5,8 +5,6 @@ import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,14 +14,12 @@ class UnitGroupsBloc
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
-  final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
-    required this.conversionBloc,
     required this.navigationBloc,
   }) : super(const UnitGroupsFetched(unitGroups: [])) {
     on<FetchUnitGroups>(_onUnitGroupsFetch);
@@ -69,9 +65,7 @@ class UnitGroupsBloc
         ),
       );
 
-      conversionBloc.add(
-        RemoveConversions(removedGroupIds: event.ids),
-      );
+      event.onComplete?.call();
     }
   }
 
@@ -91,23 +85,16 @@ class UnitGroupsBloc
         const FetchUnitGroups(),
       );
 
-      conversionBloc.add(
-        EditConversionGroup(editedGroup: saveUnitGroupResult.right),
-      );
-
-      navigationBloc.add(
-        const NavigateBack(),
-      );
+      event.onSaveGroup?.call(saveUnitGroupResult.right);
     }
   }
 }
 
-class UnitGroupsBlocForConversion extends UnitGroupsBloc {
-  UnitGroupsBlocForConversion({
+class ConversionGroupsBloc extends UnitGroupsBloc {
+  ConversionGroupsBloc({
     required super.fetchUnitGroupsUseCase,
     required super.saveUnitGroupUseCase,
     required super.removeUnitGroupsUseCase,
-    required super.conversionBloc,
     required super.navigationBloc,
   });
 }
@@ -117,7 +104,6 @@ class UnitGroupsBlocForUnitDetails extends UnitGroupsBloc {
     required super.fetchUnitGroupsUseCase,
     required super.saveUnitGroupUseCase,
     required super.removeUnitGroupsUseCase,
-    required super.conversionBloc,
     required super.navigationBloc,
   });
 }

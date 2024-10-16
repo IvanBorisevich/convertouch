@@ -88,7 +88,7 @@ BlocListener<BlocType, AbstractStateType> blocListenerWrap<
 const unitGroupsBlocListener =
     blocListenerWrap<UnitGroupsBloc, UnitGroupsState>;
 const unitGroupsBlocListenerForConversion =
-    blocListenerWrap<UnitGroupsBlocForConversion, UnitGroupsState>;
+    blocListenerWrap<ConversionGroupsBloc, UnitGroupsState>;
 const unitsBlocListener = blocListenerWrap<UnitsBloc, UnitsState>;
 const unitsBlocListenerForConversion =
     blocListenerWrap<UnitsBlocForConversion, UnitsState>;

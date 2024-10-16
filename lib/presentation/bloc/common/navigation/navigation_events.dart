@@ -17,9 +17,9 @@ class SelectBottomNavbarItem extends NavigationEvent {
 
   @override
   List<Object?> get props => [
-    targetItem,
-    selectedItem,
-  ];
+        targetItem,
+        selectedItem,
+      ];
 
   @override
   String toString() {
@@ -38,8 +38,8 @@ class NavigateToPage extends NavigationEvent {
 
   @override
   List<Object?> get props => [
-    pageName,
-  ];
+        pageName,
+      ];
 
   @override
   String toString() {
@@ -56,8 +56,8 @@ class ShowException extends NavigationEvent {
 
   @override
   List<Object?> get props => [
-    exception,
-  ];
+        exception,
+      ];
 
   @override
   String toString() {

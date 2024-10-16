@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_marking_model.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -24,7 +25,9 @@ class ItemsSelectionBloc
     StartItemsMarking event,
     Emitter<ItemsSelectionDone> emit,
   ) async {
-    var markedIds = event.previouslyMarkedIds ?? [];
+    var markedIds = (event.previouslyMarkedIds ?? [])
+        .whereNot((id) => event.excludedIds.contains(id))
+        .toList();
     var canMarkedItemsBeSelected =
         markedIds.length >= event.markedItemsMinNumForSelection;
 
@@ -46,9 +49,7 @@ class ItemsSelectionBloc
   ) async {
     emit(
       ItemsSelectionDone(
-        markedIds: state.markedIds,
         markedItemsMinNumForSelection: state.markedItemsMinNumForSelection,
-        canMarkedItemsBeSelected: state.canMarkedItemsBeSelected,
         singleItemSelectionMode: false,
         excludedIds: state.excludedIds,
         showCancelIcon: false,
@@ -73,6 +74,10 @@ class ItemsSelectionBloc
     SelectItem event,
     Emitter<ItemsSelectionDone> emit,
   ) async {
+    if (state.excludedIds.contains(event.id) || event.id == state.selectedId) {
+      return;
+    }
+
     if (state.singleItemSelectionMode) {
       emit(
         ItemsSelectionDone(
@@ -102,6 +107,7 @@ class ItemsSelectionBloc
           canMarkedItemsBeSelected: canMarkedItemsBeSelected,
           singleItemSelectionMode: false,
           excludedIds: state.excludedIds,
+          showCancelIcon: state.showCancelIcon,
         ),
       );
     }

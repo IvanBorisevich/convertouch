@@ -63,6 +63,15 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                         id: unit.id,
                       ),
                     );
+                    if (itemsSelectionState.singleItemSelectionMode) {
+                      conversionBloc.add(
+                        ReplaceConversionItemUnit(
+                          newUnit: unit,
+                          oldUnitId: itemsSelectionState.selectedId!,
+                        ),
+                      );
+                      navigationBloc.add(const NavigateBack());
+                    }
                   },
                   onUnitTapForRemoval: null,
                   onUnitLongPress: null,
@@ -77,7 +86,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                   selectedUnitVisible:
                       itemsSelectionState.singleItemSelectionMode,
                   selectedUnitId: itemsSelectionState.selectedId,
-                  disabledUnitIds: null,
+                  disabledUnitIds: itemsSelectionState.excludedIds,
                   floatingButton: ConvertouchFloatingActionButton(
                     icon: Icons.check_outlined,
                     visible: itemsSelectionState.canMarkedItemsBeSelected,

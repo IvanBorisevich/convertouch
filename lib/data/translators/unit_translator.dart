@@ -14,7 +14,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       return null;
     }
     return UnitEntity(
-      id: model.id,
+      id: model.id != -1 ? model.id : null,
       name: model.name,
       code: model.code,
       symbol: model.symbol,

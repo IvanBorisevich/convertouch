@@ -11,6 +11,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,16 +44,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   pageTitle: pageState.unitGroup.name,
                   units: pageState.units,
                   customLeadingIcon: itemsSelectionState.showCancelIcon
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: pageColorScheme.appBar.foreground.regular,
-                          ),
-                          onPressed: () {
-                            unitsSelectionBloc.add(
-                              const CancelItemsMarking(),
-                            );
-                          },
+                      ? CancelItemsSelectionIcon(
+                          bloc: unitsSelectionBloc,
+                          pageColorScheme: pageColorScheme,
                         )
                       : null,
                   appBarRightWidgets: [

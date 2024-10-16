@@ -61,7 +61,9 @@ class StartItemSelection extends ItemsSelectionEvent {
 
   @override
   String toString() {
-    return 'StartItemSelection{previouslySelectedId: $previouslySelectedId}';
+    return 'StartItemSelection{'
+        'previouslySelectedId: $previouslySelectedId, '
+        'excludedIds: $excludedIds}';
   }
 }
 

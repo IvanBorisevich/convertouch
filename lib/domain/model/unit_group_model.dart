@@ -121,6 +121,14 @@ class UnitGroupModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'UnitGroupModel{$name $valueType}';
+    return 'UnitGroupModel{'
+        'id: $id, '
+        'name: $name, '
+        'iconName: $iconName, '
+        'conversionType: $conversionType, '
+        'refreshable: $refreshable, '
+        'valueType: $valueType, '
+        'minValue: $minValue, '
+        'maxValue: $maxValue}';
   }
 }

@@ -28,6 +28,24 @@ class GetConversion extends ConversionEvent {
   }
 }
 
+class EditConversionGroup extends ModifyConversion {
+  final UnitGroupModel editedGroup;
+
+  const EditConversionGroup({
+    required this.editedGroup,
+  });
+
+  @override
+  List<Object?> get props => [
+    editedGroup,
+  ];
+
+  @override
+  String toString() {
+    return 'EditConversionGroup{editedGroup: $editedGroup}';
+  }
+}
+
 class AddUnitsToConversion extends ModifyConversion {
   final List<int> unitIds;
 
@@ -43,24 +61,6 @@ class AddUnitsToConversion extends ModifyConversion {
   @override
   String toString() {
     return 'AddUnitsToConversion{unitIds: $unitIds}';
-  }
-}
-
-class EditConversionGroup extends ModifyConversion {
-  final UnitGroupModel editedGroup;
-
-  const EditConversionGroup({
-    required this.editedGroup,
-  });
-
-  @override
-  List<Object?> get props => [
-        editedGroup,
-      ];
-
-  @override
-  String toString() {
-    return 'EditConversionGroup{editedGroup: $editedGroup}';
   }
 }
 
@@ -166,23 +166,5 @@ class ReplaceConversionItemUnit extends ModifyConversion {
     return 'ReplaceConversionItemUnit{'
         'newUnit: $newUnit, '
         'oldUnitId: $oldUnitId}';
-  }
-}
-
-class RemoveConversions extends ConversionEvent {
-  final List<int> removedGroupIds;
-
-  const RemoveConversions({
-    required this.removedGroupIds,
-  });
-
-  @override
-  List<Object?> get props => [
-        removedGroupIds,
-      ];
-
-  @override
-  String toString() {
-    return 'RemoveConversions{removedGroupIds: $removedGroupIds}';
   }
 }

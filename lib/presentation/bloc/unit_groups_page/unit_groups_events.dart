@@ -2,7 +2,9 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitGroupsEvent extends ConvertouchEvent {
-  const UnitGroupsEvent();
+  const UnitGroupsEvent({
+    super.onComplete,
+  });
 }
 
 class FetchUnitGroups extends UnitGroupsEvent {
@@ -29,6 +31,7 @@ class RemoveUnitGroups extends UnitGroupsEvent {
 
   const RemoveUnitGroups({
     required this.ids,
+    super.onComplete,
   });
 
   @override
@@ -46,23 +49,20 @@ class RemoveUnitGroups extends UnitGroupsEvent {
 
 class SaveUnitGroup extends UnitGroupsEvent {
   final UnitGroupModel unitGroupToBeSaved;
-  final int? conversionGroupId;
+  final void Function(UnitGroupModel)? onSaveGroup;
 
   const SaveUnitGroup({
     required this.unitGroupToBeSaved,
-    this.conversionGroupId,
+    this.onSaveGroup,
   });
 
   @override
   List<Object?> get props => [
         unitGroupToBeSaved,
-        conversionGroupId,
       ];
 
   @override
   String toString() {
-    return 'SaveUnitGroup{'
-        'unitGroupToBeSaved: $unitGroupToBeSaved, '
-        'conversionGroupId: $conversionGroupId}';
+    return 'SaveUnitGroup{unitGroupToBeSaved: $unitGroupToBeSaved}';
   }
 }

@@ -15,7 +15,7 @@ class UnitGroupTranslator
       return null;
     }
     return UnitGroupEntity(
-      id: model.id,
+      id: model.id != -1 ? model.id : null,
       name: model.name,
       iconName: model.iconName,
       conversionType:
@@ -34,7 +34,7 @@ class UnitGroupTranslator
       return null;
     }
     return UnitGroupModel(
-      id: entity.id!,
+      id: entity.id ?? -1,
       name: entity.name,
       iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),

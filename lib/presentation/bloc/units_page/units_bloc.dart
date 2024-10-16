@@ -25,7 +25,7 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     on<FetchUnits>(_onUnitsFetch);
     on<SaveUnit>(_onUnitSave);
     on<RemoveUnits>(_onUnitsRemove);
-    on<ModifyGroup>(_onModifyGroup);
+    on<EditOpenedGroup>(_onEditOpenedGroup);
     on<ModifyUnit>(_onModifyUnit);
   }
 
@@ -53,6 +53,8 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
           unitGroup: event.unitGroup,
         ),
       );
+
+      event.onComplete?.call();
     }
   }
 
@@ -99,21 +101,25 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     }
   }
 
-  _onModifyGroup(
-    ModifyGroup event,
+  _onEditOpenedGroup(
+    EditOpenedGroup event,
     Emitter<UnitsState> emit,
   ) async {
-    UnitsFetched currentState = state as UnitsFetched;
+    if (state is UnitsFetched) {
+      UnitsFetched current = state as UnitsFetched;
 
-    if (event.modifiedGroup.id == currentState.unitGroup.id) {
-      emit(
-        UnitsFetched(
-          units: currentState.units,
-          unitGroup: event.modifiedGroup,
-          searchString: currentState.searchString,
-        ),
-      );
+      if (event.editedGroup.id == current.unitGroup.id) {
+        emit(
+          UnitsFetched(
+            units: current.units,
+            unitGroup: event.editedGroup,
+            searchString: current.searchString,
+          ),
+        );
+      }
     }
+
+    event.onComplete?.call();
   }
 
   _onModifyUnit(

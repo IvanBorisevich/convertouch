@@ -2,7 +2,11 @@ import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ConvertouchEvent extends Equatable {
-  const ConvertouchEvent();
+  final void Function()? onComplete;
+
+  const ConvertouchEvent({
+    this.onComplete,
+  });
 
   @override
   List<Object?> get props => [];

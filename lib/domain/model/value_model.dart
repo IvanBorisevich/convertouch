@@ -53,7 +53,7 @@ class ValueModel extends Equatable {
     );
   }
 
-  bool get isDefined => this != undefined;
+  bool get isDefined => exists && this != undefined;
 
   bool get exists => this != none;
 

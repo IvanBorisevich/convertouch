@@ -3,7 +3,9 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitsEvent extends ConvertouchEvent {
-  const UnitsEvent();
+  const UnitsEvent({
+    super.onComplete,
+  });
 }
 
 class FetchUnits extends UnitsEvent {
@@ -13,6 +15,7 @@ class FetchUnits extends UnitsEvent {
   const FetchUnits({
     required this.unitGroup,
     this.searchString,
+    super.onComplete,
   });
 
   @override
@@ -96,20 +99,21 @@ class ModifyUnit extends UnitsEvent {
   }
 }
 
-class ModifyGroup extends UnitsEvent {
-  final UnitGroupModel modifiedGroup;
+class EditOpenedGroup extends UnitsEvent {
+  final UnitGroupModel editedGroup;
 
-  const ModifyGroup({
-    required this.modifiedGroup,
+  const EditOpenedGroup({
+    required this.editedGroup,
+    super.onComplete,
   });
 
   @override
   List<Object?> get props => [
-        modifiedGroup,
+        editedGroup,
       ];
 
   @override
   String toString() {
-    return 'ModifyGroup{modifiedGroup: $modifiedGroup}';
+    return 'EditOpenedGroup{editedGroup: $editedGroup}';
   }
 }

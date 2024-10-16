@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -53,20 +51,21 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         targetUnits: updatedTargetUnitsMap.values.toList(),
       );
 
-      log("Input conversion params: $inputParams");
-
       return buildNewConversionUseCase.execute(inputParams);
     } else {
       try {
-        final updatedTargetConversionItems =
-            input.conversion.targetConversionItems
-                .map(
-                  (item) => ConversionItemModel.coalesce(
-                    item,
-                    unit: updatedTargetUnitsMap[item.unit.id],
-                  ),
-                )
-                .toList();
+        List<ConversionItemModel> updatedTargetConversionItems = [];
+
+        for (final item in input.conversion.targetConversionItems) {
+          if (updatedTargetUnitsMap.containsKey(item.unit.id)) {
+            updatedTargetConversionItems.add(
+              ConversionItemModel.coalesce(
+                item,
+                unit: updatedTargetUnitsMap[item.unit.id],
+              ),
+            );
+          }
+        }
 
         updatedSourceItem ??= updatedTargetConversionItems.firstOrNull;
 

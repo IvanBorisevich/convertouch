@@ -1,9 +1,14 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -32,8 +37,14 @@ class _ConvertouchUnitGroupDetailsPageState
 
   @override
   Widget build(BuildContext context) {
+    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    final unitsBlocForConversion =
+        BlocProvider.of<UnitsBlocForConversion>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
+    final conversionGroupsBloc = BlocProvider.of<ConversionGroupsBloc>(context);
+    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return appBlocBuilder(
       builderFunc: (appState) {
@@ -41,8 +52,6 @@ class _ConvertouchUnitGroupDetailsPageState
             unitGroupTextBoxColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             unitGroupsPageFloatingButtonColors[appState.theme]!;
-        ConvertouchColorScheme infoBoxColor =
-            unitGroupPageInfoBoxColors[appState.theme]!;
 
         return unitGroupDetailsBlocBuilder(
           bloc: unitGroupDetailsBloc,
@@ -106,6 +115,8 @@ class _ConvertouchUnitGroupDetailsPageState
                         ),
                       ),
                       ConvertouchInfoBox(
+                        visible:
+                            unitGroupDetailsState.draftGroup.minValue.isDefined,
                         headerText: "Values Minimum",
                         bodyText: unitGroupDetailsState
                             .draftGroup.minValue.scientific,
@@ -115,6 +126,8 @@ class _ConvertouchUnitGroupDetailsPageState
                         ),
                       ),
                       ConvertouchInfoBox(
+                        visible:
+                            unitGroupDetailsState.draftGroup.maxValue.isDefined,
                         headerText: "Values Maximum",
                         bodyText: unitGroupDetailsState
                             .draftGroup.maxValue.scientific,
@@ -133,69 +146,46 @@ class _ConvertouchUnitGroupDetailsPageState
                           bottom: 20,
                         ),
                       ),
-                      ConvertouchInfoBox(
-                        visible: !unitGroupDetailsState.isExistingGroup &&
-                            !unitGroupDetailsState.draftGroup.oob,
-                        background: infoBoxColor.background.regular,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 14,
-                        ),
-                        margin: const EdgeInsets.only(
-                          bottom: 30,
-                        ),
-                        headerText: "Note",
-                        child: RichText(
-                          text: TextSpan(
-                            children: const <TextSpan>[
-                              TextSpan(
-                                text: 'Currently only ',
-                              ),
-                              TextSpan(
-                                text: 'static',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: ' conversion type (coefficients) and ',
-                              ),
-                              TextSpan(
-                                text: 'decimal',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: ' value type are supported for '
-                                    'custom unit groups',
-                              ),
-                            ],
-                            style: TextStyle(
-                              color: textBoxColor.foreground.regular,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: quicksandFontFamily,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
-              floatingActionButton: conversionBlocBuilder(
-                builderFunc: (conversionState) {
-                  return ConvertouchFloatingActionButton(
-                    icon: Icons.check_outlined,
-                    visible: unitGroupDetailsState.canChangedBeSaved,
-                    onClick: () {
-                      unitGroupsBloc.add(
-                        SaveUnitGroup(
-                          unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
-                          conversionGroupId:
-                              conversionState.conversion.unitGroup.id,
-                        ),
-                      );
-                    },
-                    colorScheme: floatingButtonColor,
+              floatingActionButton: ConvertouchFloatingActionButton(
+                icon: Icons.check_outlined,
+                visible: unitGroupDetailsState.canChangedBeSaved,
+                onClick: () {
+                  unitGroupsBloc.add(
+                    SaveUnitGroup(
+                      unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
+                      onSaveGroup: (savedGroup) {
+                        conversionGroupsBloc.add(
+                          const FetchUnitGroups(),
+                        );
+                        conversionBloc.add(
+                          EditConversionGroup(
+                            editedGroup: savedGroup,
+                          ),
+                        );
+                        unitsBlocForConversion.add(
+                          EditOpenedGroup(
+                            editedGroup: savedGroup,
+                          ),
+                        );
+                        unitsBloc.add(
+                          EditOpenedGroup(
+                            editedGroup: savedGroup,
+                            onComplete: () {
+                              navigationBloc.add(
+                                const NavigateBack(),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
+                colorScheme: floatingButtonColor,
               ),
             );
           },

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -41,7 +42,9 @@ class ConvertouchConversionPage extends StatelessWidget {
               return ConvertouchFloatingActionButton.adding(
                 onClick: () {
                   unitsBloc.add(
-                    FetchUnits(unitGroup: conversion.unitGroup),
+                    FetchUnits(
+                      unitGroup: conversion.unitGroup,
+                    ),
                   );
                   unitsSelectionBloc.add(
                     StartItemsMarking(
@@ -72,13 +75,22 @@ class ConvertouchConversionPage extends StatelessWidget {
                     unitsBloc.add(
                       FetchUnits(
                         unitGroup: conversion.unitGroup,
-                        searchString: null,
                       ),
                     );
 
                     unitsSelectionBloc.add(
                       StartItemSelection(
                         previouslySelectedId: item.unit.id,
+                        excludedIds: conversion.targetConversionItems
+                            .map((e) => e.unit.id)
+                            .whereNot((id) => id == item.unit.id)
+                            .toList(),
+                      ),
+                    );
+
+                    navigationBloc.add(
+                      const NavigateToPage(
+                        pageName: PageName.unitsPageForConversion,
                       ),
                     );
                   },

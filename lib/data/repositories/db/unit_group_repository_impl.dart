@@ -56,7 +56,8 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
 
   @override
   Future<Either<ConvertouchException, UnitGroupModel>> add(
-      UnitGroupModel unitGroup) async {
+    UnitGroupModel unitGroup,
+  ) async {
     try {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
       if (existingGroup == null) {

@@ -53,6 +53,7 @@ class NavigationBloc
     Emitter<NavigationState> emit,
   ) async {
     NavigationDone prev = state as NavigationDone;
+    emit(const NavigationInProgress());
     emit(
       NavigationDone(
         selectedNavbarItem: prev.selectedNavbarItem,

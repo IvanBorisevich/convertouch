@@ -16,7 +16,7 @@ class ConversionGroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unitGroupsBloc =
-        BlocProvider.of<UnitGroupsBlocForConversion>(context);
+        BlocProvider.of<ConversionGroupsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 

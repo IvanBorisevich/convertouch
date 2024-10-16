@@ -114,6 +114,9 @@ class _ConvertouchUnitDetailsPageState
                         name: 'Min Value',
                         hintText: pageState
                             .details.savedUnitData.minValue?.scientific,
+                        visible: pageState
+                                .details.savedUnitData.minValue?.isDefined ??
+                            false,
                         textBoxColor: textBoxColor,
                       ),
                       _renderUnitDetailItem(
@@ -121,6 +124,9 @@ class _ConvertouchUnitDetailsPageState
                         name: 'Max Value',
                         hintText: pageState
                             .details.savedUnitData.maxValue?.scientific,
+                        visible: pageState
+                                .details.savedUnitData.maxValue?.isDefined ??
+                            false,
                         textBoxColor: textBoxColor,
                       ),
                       _renderUnitDetailItem(
