@@ -90,15 +90,6 @@ class UnitGroupsBloc
   }
 }
 
-class ConversionGroupsBloc extends UnitGroupsBloc {
-  ConversionGroupsBloc({
-    required super.fetchUnitGroupsUseCase,
-    required super.saveUnitGroupUseCase,
-    required super.removeUnitGroupsUseCase,
-    required super.navigationBloc,
-  });
-}
-
 class UnitGroupsBlocForUnitDetails extends UnitGroupsBloc {
   UnitGroupsBlocForUnitDetails({
     required super.fetchUnitGroupsUseCase,

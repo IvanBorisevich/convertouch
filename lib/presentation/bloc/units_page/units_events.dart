@@ -36,11 +36,13 @@ class SaveUnit extends UnitsEvent {
   final UnitModel unit;
   final UnitGroupModel unitGroup;
   final bool unitGroupChanged;
+  final void Function(UnitModel)? onSaveUnit;
 
   const SaveUnit({
     required this.unit,
     required this.unitGroup,
     required this.unitGroupChanged,
+    this.onSaveUnit,
   });
 
   @override
@@ -96,24 +98,5 @@ class ModifyUnit extends UnitsEvent {
   @override
   String toString() {
     return 'ModifyUnit{modifiedUnit: $modifiedUnit}';
-  }
-}
-
-class EditOpenedGroup extends UnitsEvent {
-  final UnitGroupModel editedGroup;
-
-  const EditOpenedGroup({
-    required this.editedGroup,
-    super.onComplete,
-  });
-
-  @override
-  List<Object?> get props => [
-        editedGroup,
-      ];
-
-  @override
-  String toString() {
-    return 'EditOpenedGroup{editedGroup: $editedGroup}';
   }
 }

@@ -2,10 +2,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
@@ -23,8 +23,8 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
   Widget build(BuildContext context) {
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
-    final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
+    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
 
     return appBlocBuilder(
       builderFunc: (appState) {
@@ -41,7 +41,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
               bloc: unitsSelectionBloc,
               builderFunc: (itemsSelectionState) {
                 return ConvertouchUnitsPage(
-                  pageTitle: pageState.unitGroup.name,
+                  pageTitle: "${pageState.unitGroup.name} units",
                   units: pageState.units,
                   customLeadingIcon: itemsSelectionState.showCancelIcon
                       ? CancelItemsSelectionIcon(
@@ -49,23 +49,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                           pageColorScheme: pageColorScheme,
                         )
                       : null,
-                  appBarRightWidgets: [
-                    IconButton(
-                      onPressed: () {
-                        unitGroupDetailsBloc.add(
-                          GetExistingUnitGroupDetails(
-                            unitGroup: pageState.unitGroup,
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        pageState.unitGroup.oob
-                            ? Icons.info_outline_rounded
-                            : Icons.edit_outlined,
-                        color: pageColorScheme.appBar.foreground.regular,
-                      ),
-                    )
-                  ],
+                  appBarRightWidgets: null,
                   onSearchStringChanged: (text) {
                     unitsBloc.add(
                       FetchUnits(
@@ -132,6 +116,14 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                                 ids: itemsSelectionState.markedIds,
                                 unitGroup: pageState.unitGroup,
                               ),
+                            );
+                            conversionBloc.add(
+                              RemoveConversionItems(
+                                unitIds: itemsSelectionState.markedIds,
+                              ),
+                            );
+                            unitsSelectionBloc.add(
+                              const CancelItemsMarking(),
                             );
                           },
                         )

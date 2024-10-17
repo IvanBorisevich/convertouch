@@ -2,7 +2,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ConversionItemModel extends ItemModel {
   final UnitModel unit;
@@ -35,35 +34,17 @@ class ConversionItemModel extends ItemModel {
         );
 
   ConversionItemModel.coalesce(
-    ConversionItemModel? savedModel, {
+    ConversionItemModel? saved, {
     UnitModel? unit,
     ValueModel? value,
     ValueModel? defaultValue,
   }) : this(
-          unit: ObjectUtils.coalesce(
-                what: savedModel?.unit,
-                patchWith: unit,
-              ) ??
-              savedModel?.unit ??
-              UnitModel.none,
-          value: ObjectUtils.coalesce(
-                what: savedModel?.value,
-                patchWith: value,
-              ) ??
-              savedModel?.value ??
-              ValueModel.none,
-          defaultValue: ObjectUtils.coalesce(
-                what: savedModel?.defaultValue,
-                patchWith: defaultValue,
-              ) ??
-              savedModel?.defaultValue ??
-              ValueModel.none,
+          unit: unit ?? saved?.unit ?? UnitModel.none,
+          value: value ?? saved?.value ?? ValueModel.none,
+          defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.none,
         );
 
-  bool get valueExists => value.exists && defaultValue.exists;
-
-  bool get isUndefined =>
-      (!value.isDefined || !value.exists) && !defaultValue.isDefined;
+  bool get valueExists => value.exists || defaultValue.exists;
 
   Map<String, dynamic> toJson() {
     return {

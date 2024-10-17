@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -70,28 +72,30 @@ class BuildNewConversionUseCase
           tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
         }
 
+        log("tgt unit name: ${tgtUnit.name}, tgtValue: $tgtValue, tgtDefaultValue: $tgtDefaultValue");
+
         double? minValue = (tgtUnit.minValue ?? input.unitGroup.minValue).num;
         double? maxValue = (tgtUnit.maxValue ?? input.unitGroup.maxValue).num;
 
-        ValueModel tgtValueModel = ValueModelUtils.betweenOrUndefined(
+        ValueModel tgtValueModel = ValueModelUtils.betweenOrNone(
           rawValue: tgtValue,
           min: minValue,
           max: maxValue,
         );
 
-        ValueModel tgtDefaultValueModel = tgtValueModel.isDefined
-            ? ValueModelUtils.betweenOrUndefined(
-                rawValue: tgtDefaultValue,
-                min: minValue,
-                max: maxValue,
-              )
-            : ValueModel.undefined;
+        ValueModel tgtDefaultValueModel = ValueModelUtils.betweenOrNone(
+          rawValue: tgtDefaultValue,
+          min: minValue,
+          max: maxValue,
+        );
 
         convertedUnitValues.add(
           ConversionItemModel(
             unit: tgtUnit,
-            value: tgtValueModel.isDefined ? tgtValueModel : ValueModel.none,
-            defaultValue: tgtDefaultValueModel,
+            value: tgtValueModel.exists ? tgtValueModel : ValueModel.none,
+            defaultValue: tgtDefaultValueModel.exists
+                ? tgtDefaultValueModel
+                : ValueModel.undefined,
           ),
         );
       }
@@ -127,7 +131,8 @@ class BuildNewConversionUseCase
     return ConversionItemModel(
       unit: srcUnit,
       value: srcValue,
-      defaultValue: srcDefaultValue,
+      defaultValue:
+          srcDefaultValue.exists ? srcDefaultValue : ValueModel.undefined,
     );
   }
 }

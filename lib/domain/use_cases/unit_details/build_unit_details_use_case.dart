@@ -9,6 +9,7 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/unit_details_utils.dart';
+import 'package:convertouch/domain/utils/value_model_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildUnitDetailsUseCase
@@ -24,7 +25,29 @@ class BuildUnitDetailsUseCase
     InputUnitDetailsBuildModel input,
   ) async {
     try {
-      UnitModel unit = getUnit(input);
+      bool existingUnit = input is InputExistingUnitDetailsBuildModel;
+
+      UnitModel unit = existingUnit
+          ? UnitModel.coalesce(
+              input.unit,
+              valueType: input.unit.valueType ?? input.unitGroup.valueType,
+              minValue: ValueModelUtils.coalesce(
+                v1: input.unit.minValue,
+                v2: input.unitGroup.minValue,
+              ),
+              maxValue: ValueModelUtils.coalesce(
+                v1: input.unit.maxValue,
+                v2: input.unitGroup.maxValue,
+              ),
+            )
+          : UnitModel(
+              name: "",
+              code: "",
+              unitGroupId: input.unitGroup.id,
+              valueType: input.unitGroup.valueType,
+              minValue: input.unitGroup.minValue,
+              maxValue: input.unitGroup.maxValue,
+            );
 
       List<UnitModel> baseUnits = ObjectUtils.tryGet(
         await unitRepository.getBaseUnits(input.unitGroup.id),
@@ -63,12 +86,14 @@ class BuildUnitDetailsUseCase
 
       return Right(
         UnitDetailsModel(
-          editMode: !unit.oob,
+          editMode: !unit.oob || !unit.exists,
+          existingUnit: existingUnit,
           unitGroup: input.unitGroup,
           draftUnitData: unit,
           savedUnitData: unit,
           unitGroupChanged: false,
-          unitToSave: UnitModel.none,
+          deltaDetected: false,
+          resultUnit: unit,
           conversionRule: ConversionRule.build(
             unitGroup: input.unitGroup,
             mandatoryParamsFilled: mandatoryParamsFilled,
@@ -91,25 +116,5 @@ class BuildUnitDetailsUseCase
         ),
       );
     }
-  }
-
-  UnitModel getUnit(InputUnitDetailsBuildModel input) {
-    bool existingUnit = input is InputExistingUnitDetailsBuildModel;
-
-    return existingUnit
-        ? UnitModel.coalesce(
-            input.unit,
-            valueType: input.unit.valueType ?? input.unitGroup.valueType,
-            minValue: input.unit.minValue ?? input.unitGroup.minValue,
-            maxValue: input.unit.maxValue ?? input.unitGroup.maxValue,
-          )
-        : UnitModel(
-            name: "",
-            code: "",
-            unitGroupId: input.unitGroup.id,
-            valueType: input.unitGroup.valueType,
-            minValue: input.unitGroup.minValue,
-            maxValue: input.unitGroup.maxValue,
-          );
   }
 }

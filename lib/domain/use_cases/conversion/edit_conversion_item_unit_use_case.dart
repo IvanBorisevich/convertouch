@@ -30,7 +30,7 @@ class EditConversionItemUnitUseCase
     EditConversionItemUnitDelta delta,
   ) async {
     if (targetUnits[delta.editedUnit.id] != null) {
-      targetUnits[delta.editedUnit.id] = delta.editedUnit;
+      targetUnits.update(delta.editedUnit.id, (value) => delta.editedUnit);
     }
     return targetUnits;
   }

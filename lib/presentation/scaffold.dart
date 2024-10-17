@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
@@ -13,9 +14,7 @@ import 'package:convertouch/presentation/ui/pages/settings_page.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
-import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_details.dart';
-import 'package:convertouch/presentation/ui/pages/unit_groups_page_regular.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
@@ -35,25 +34,21 @@ class ConvertouchScaffold extends StatefulWidget {
 class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   final _screenNavigatorKeys = {
     BottomNavbarItem.home: GlobalKey<NavigatorState>(),
-    BottomNavbarItem.unitsBook: GlobalKey<NavigatorState>(),
     BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
   static final _navBarIcons = {
     BottomNavbarItem.home: const Icon(Icons.home_outlined),
-    BottomNavbarItem.unitsBook: const Icon(Icons.dashboard_customize_outlined),
     BottomNavbarItem.settings: const Icon(Icons.settings_outlined),
   };
 
   static final _navBarIconsSelected = {
     BottomNavbarItem.home: const Icon(Icons.home_rounded),
-    BottomNavbarItem.unitsBook: const Icon(Icons.dashboard_customize_rounded),
     BottomNavbarItem.settings: const Icon(Icons.settings_rounded),
   };
 
   static const _navBarLabels = {
     BottomNavbarItem.home: "Home",
-    BottomNavbarItem.unitsBook: "Units Book",
     BottomNavbarItem.settings: "Settings",
   };
 
@@ -149,17 +144,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                                 const ConversionGroupsPage(),
                             PageName.unitsPageForConversion.name:
                                 const ConvertouchUnitsPageForConversion(),
-                          },
-                        ),
-                        ConvertouchRootScreen(
-                          navigatorKey:
-                              _screenNavigatorKeys[BottomNavbarItem.unitsBook],
-                          bottomNavbarItem: BottomNavbarItem.unitsBook,
-                          rootPageId: PageName.unitGroupsPageRegular,
-                          selected: selectedItem == BottomNavbarItem.unitsBook,
-                          routesMap: {
-                            PageName.unitGroupsPageRegular.name:
-                                const ConvertouchUnitGroupsPageRegular(),
                             PageName.unitsPageRegular.name:
                                 const ConvertouchUnitsPageRegular(),
                             PageName.unitGroupsPageForUnitDetails.name:
@@ -197,10 +181,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                       items: [
                         _buildNavbarItem(
                           bottomNavbarItem: BottomNavbarItem.home,
-                          selectedItem: selectedItem,
-                        ),
-                        _buildNavbarItem(
-                          bottomNavbarItem: BottomNavbarItem.unitsBook,
                           selectedItem: selectedItem,
                         ),
                         _buildNavbarItem(

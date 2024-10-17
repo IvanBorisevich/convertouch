@@ -61,26 +61,17 @@ class ConvertouchInfoBox extends StatelessWidget {
                       ),
                     )
                   : empty(),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (child != null) {
-                    return child!;
-                  }
-
-                  if (bodyText != null) {
-                    return Text(
+              bodyText != null
+                  ? Text(
                       bodyText!,
                       style: TextStyle(
                         fontSize: bodyFontSize,
                         fontWeight: bodyFontWeight,
                         color: bodyColor,
                       ),
-                    );
-                  }
-
-                  return empty();
-                },
-              ),
+                    )
+                  : empty(),
+              child ?? empty(),
             ],
           ),
         ),

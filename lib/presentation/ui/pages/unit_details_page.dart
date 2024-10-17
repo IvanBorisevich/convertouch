@@ -7,6 +7,10 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
@@ -51,7 +55,7 @@ class _ConvertouchUnitDetailsPageState
             _unitCodeTextController.text = pageState.details.draftUnitData.code;
 
             return ConvertouchPage(
-              title: pageState.details.editMode
+              title: pageState.details.existingUnit
                   ? pageState.details.savedUnitData.name
                   : 'New Unit',
               body: SingleChildScrollView(
@@ -68,6 +72,7 @@ class _ConvertouchUnitDetailsPageState
                         context,
                         state: pageState,
                         appState: appState,
+                        textBoxColor: textBoxColor,
                       ),
                       _renderUnitDetailItem(
                         context,
@@ -114,9 +119,9 @@ class _ConvertouchUnitDetailsPageState
                         name: 'Min Value',
                         hintText: pageState
                             .details.savedUnitData.minValue?.scientific,
-                        visible: pageState
-                                .details.savedUnitData.minValue?.isDefined ??
-                            false,
+                        visible:
+                            pageState.details.savedUnitData.minValue?.exists ??
+                                false,
                         textBoxColor: textBoxColor,
                       ),
                       _renderUnitDetailItem(
@@ -124,22 +129,15 @@ class _ConvertouchUnitDetailsPageState
                         name: 'Max Value',
                         hintText: pageState
                             .details.savedUnitData.maxValue?.scientific,
-                        visible: pageState
-                                .details.savedUnitData.maxValue?.isDefined ??
-                            false,
-                        textBoxColor: textBoxColor,
-                      ),
-                      _renderUnitDetailItem(
-                        context,
-                        name: 'Unit Group',
-                        hintText: pageState.details.unitGroup.name,
-                        visible: !pageState.details.editMode,
+                        visible:
+                            pageState.details.savedUnitData.maxValue?.exists ??
+                                false,
                         textBoxColor: textBoxColor,
                       ),
                       _renderConversionRule(
                         context,
                         unitGroup: pageState.details.unitGroup,
-                        unit: pageState.details.draftUnitData,
+                        unit: pageState.details.resultUnit,
                         conversionRule: pageState.details.conversionRule,
                         textBoxColor: textBoxColor,
                         editMode: pageState.details.editMode,
@@ -153,14 +151,24 @@ class _ConvertouchUnitDetailsPageState
                 builderFunc: (conversionState) {
                   return ConvertouchFloatingActionButton(
                     icon: Icons.check_outlined,
-                    visible: pageState.details.unitToSave.exists,
+                    visible: pageState.details.deltaDetected,
                     onClick: () {
                       FocusScope.of(context).unfocus();
                       BlocProvider.of<UnitsBloc>(context).add(
                         SaveUnit(
-                          unit: pageState.details.draftUnitData,
+                          unit: pageState.details.resultUnit,
                           unitGroup: pageState.details.unitGroup,
                           unitGroupChanged: pageState.details.unitGroupChanged,
+                          onSaveUnit: (savedUnit) {
+                            BlocProvider.of<ConversionBloc>(context).add(
+                              EditConversionItemUnit(
+                                editedUnit: savedUnit,
+                              ),
+                            );
+                            BlocProvider.of<NavigationBloc>(context).add(
+                              const NavigateBack(),
+                            );
+                          },
                         ),
                       );
                     },
@@ -179,29 +187,37 @@ class _ConvertouchUnitDetailsPageState
     BuildContext context, {
     required UnitDetailsReady state,
     required AppStateReady appState,
+    required TextBoxColorScheme textBoxColor,
   }) {
-    if (state.details.unitGroup.exists || state.details.editMode) {
-      return empty();
-    }
-
-    return Column(
-      children: [
-        ConvertouchMenuItem(
-          state.details.unitGroup,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-            BlocProvider.of<UnitGroupsBlocForUnitDetails>(
-              context,
-            ).add(
-              const FetchUnitGroups(),
-            );
-          },
-          theme: appState.theme,
-          itemsViewMode: ItemsViewMode.list,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
+    return state.details.editMode
+        ? Padding(
+            padding: const EdgeInsets.only(
+              bottom: 20,
+            ),
+            child: ConvertouchMenuItem(
+              state.details.unitGroup,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
+                  const FetchUnitGroups(),
+                );
+                BlocProvider.of<NavigationBloc>(context).add(
+                  const NavigateToPage(
+                    pageName: PageName.unitGroupsPageForUnitDetails,
+                  ),
+                );
+              },
+              theme: appState.theme,
+              itemsViewMode: ItemsViewMode.list,
+            ),
+          )
+        : _renderUnitDetailItem(
+            context,
+            name: 'Unit Group',
+            hintText: state.details.unitGroup.name,
+            visible: true,
+            textBoxColor: textBoxColor,
+          );
   }
 
   Widget _renderUnitDetailItem(
@@ -251,80 +267,68 @@ class _ConvertouchUnitDetailsPageState
     required AppStateReady appState,
     required TextBoxColorScheme textBoxColor,
   }) {
-    if (editMode) {
-      return Visibility(
-        visible: conversionRule.configVisible,
-        child: Column(
-          children: [
-            ConvertouchInfoBox(
-              child: Center(
-                child: Text(
-                  "Conversion Rule",
-                  style: TextStyle(
-                    color: textBoxColor.foreground.regular,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: quicksandFontFamily,
+    return ConvertouchInfoBox(
+      headerText: conversionRule.configVisible ||
+              conversionRule.readOnlyDescription != null
+          ? 'Conversion Rule'
+          : null,
+      bodyText: conversionRule.readOnlyDescription,
+      bodyColor: textBoxColor.foreground.regular,
+      child: editMode
+          ? Visibility(
+              visible: conversionRule.configVisible,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  ConvertouchConversionItem(
+                    ConversionItemModel(
+                      unit: unit,
+                      value: conversionRule.unitValue,
+                      defaultValue: ValueModel.one,
+                    ),
+                    valueType: unit.valueType ?? unitGroup.valueType,
+                    disabled: !conversionRule.configEditable,
+                    onValueChanged: (value) {
+                      BlocProvider.of<UnitDetailsBloc>(context).add(
+                        UpdateUnitValueInUnitDetails(
+                          newValue: value,
+                        ),
+                      );
+                    },
+                    theme: appState.theme,
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  ConvertouchConversionItem(
+                    ConversionItemModel(
+                      unit: conversionRule.argUnit,
+                      value: conversionRule.draftArgValue,
+                      defaultValue: conversionRule.savedArgValue,
+                    ),
+                    valueType:
+                        conversionRule.argUnit.valueType ?? unitGroup.valueType,
+                    disabled: !conversionRule.configEditable,
+                    onValueChanged: (value) {
+                      BlocProvider.of<UnitDetailsBloc>(context).add(
+                        UpdateArgumentUnitValueInUnitDetails(
+                          newValue: value,
+                        ),
+                      );
+                    },
+                    onTap: () {
+                      BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
+                        FetchUnits(
+                          unitGroup: unitGroup,
+                        ),
+                      );
+                    },
+                    theme: appState.theme,
+                  ),
+                  const SizedBox(height: 25),
+                ],
               ),
-            ),
-            ConvertouchConversionItem(
-              ConversionItemModel(
-                unit: unit,
-                value: conversionRule.unitValue,
-                defaultValue: ValueModel.one,
-              ),
-              valueType: unit.valueType ?? unitGroup.valueType,
-              disabled: !conversionRule.configEditable,
-              onValueChanged: (value) {
-                BlocProvider.of<UnitDetailsBloc>(context).add(
-                  UpdateUnitValueInUnitDetails(
-                    newValue: value,
-                  ),
-                );
-              },
-              theme: appState.theme,
-            ),
-            const SizedBox(height: 12),
-            ConvertouchConversionItem(
-              ConversionItemModel(
-                unit: unit,
-                value: conversionRule.draftArgValue,
-                defaultValue: conversionRule.savedArgValue,
-              ),
-              valueType: unit.valueType ?? unitGroup.valueType,
-              disabled: !conversionRule.configEditable,
-              onValueChanged: (value) {
-                BlocProvider.of<UnitDetailsBloc>(context).add(
-                  UpdateArgumentUnitValueInUnitDetails(
-                    newValue: value,
-                  ),
-                );
-              },
-              onTap: () {
-                BlocProvider.of<UnitsBlocForUnitDetails>(
-                  context,
-                ).add(
-                  FetchUnits(
-                    unitGroup: unitGroup,
-                  ),
-                );
-              },
-              theme: appState.theme,
-            ),
-            const SizedBox(height: 25),
-          ],
-        ),
-      );
-    } else {
-      return _renderUnitDetailItem(
-        context,
-        name: 'Conversion Rule',
-        hintText: conversionRule.readOnlyDescription,
-        visible: conversionRule.readOnlyDescription != null,
-        textBoxColor: textBoxColor,
-      );
-    }
+            )
+          : null,
+    );
   }
 
   @override

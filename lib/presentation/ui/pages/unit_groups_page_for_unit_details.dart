@@ -26,7 +26,7 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
             bloc: unitGroupSelectionBloc,
             builderFunc: (itemsSelectionState) {
               return ConvertouchUnitGroupsPage(
-                pageTitle: "Group of New Unit",
+                pageTitle: "Select Group",
                 customLeadingIcon: null,
                 unitGroups: pageState.unitGroups,
                 onSearchStringChanged: (text) {

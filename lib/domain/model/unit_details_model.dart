@@ -9,35 +9,41 @@ class UnitDetailsModel extends Equatable {
   final UnitGroupModel unitGroup;
   final UnitModel draftUnitData;
   final UnitModel savedUnitData;
+  final bool existingUnit;
   final bool editMode;
   final bool unitGroupChanged;
+  final bool deltaDetected;
   final ConversionRule conversionRule;
-  final UnitModel unitToSave;
+  final UnitModel resultUnit;
 
   const UnitDetailsModel({
     required this.unitGroup,
     this.draftUnitData = UnitModel.none,
     this.savedUnitData = UnitModel.none,
+    this.existingUnit = false,
     this.editMode = false,
     this.unitGroupChanged = false,
+    this.deltaDetected = false,
     this.conversionRule = ConversionRule.none,
-    this.unitToSave = UnitModel.none,
+    this.resultUnit = UnitModel.none,
   });
 
   UnitDetailsModel.coalesce(
-    UnitDetailsModel model, {
+    UnitDetailsModel saved, {
     UnitGroupModel? unitGroup,
     UnitModel? draftUnit,
     UnitModel? savedUnit,
     ConversionRule? conversionRule,
   }) : this(
-          editMode: model.editMode,
-          unitGroupChanged: model.unitGroupChanged,
-          unitGroup: unitGroup ?? model.unitGroup,
-          draftUnitData: draftUnit ?? model.draftUnitData,
-          savedUnitData: savedUnit ?? model.savedUnitData,
-          conversionRule: conversionRule ?? model.conversionRule,
-          unitToSave: model.unitToSave,
+          editMode: saved.editMode,
+          existingUnit: saved.existingUnit,
+          unitGroupChanged: saved.unitGroupChanged,
+          deltaDetected: saved.deltaDetected,
+          unitGroup: unitGroup ?? saved.unitGroup,
+          draftUnitData: draftUnit ?? saved.draftUnitData,
+          savedUnitData: savedUnit ?? saved.savedUnitData,
+          conversionRule: conversionRule ?? saved.conversionRule,
+          resultUnit: saved.resultUnit,
         );
 
   @override
@@ -45,19 +51,25 @@ class UnitDetailsModel extends Equatable {
         unitGroup,
         draftUnitData,
         savedUnitData,
+        existingUnit,
         editMode,
         unitGroupChanged,
+        deltaDetected,
         conversionRule,
-        unitToSave,
+        resultUnit,
       ];
 
   @override
   String toString() {
     return 'UnitDetailsModel{'
         'unitGroup: $unitGroup, '
-        'draft: $draftUnitData, '
-        'saved: $savedUnitData, '
+        'draftUnitData: $draftUnitData, '
+        'savedUnitData: $savedUnitData, '
+        'existingUnit: $existingUnit, '
+        'editMode: $editMode, '
         'unitGroupChanged: $unitGroupChanged, '
-        'unitToSave: $unitToSave}';
+        'deltaDetected: $deltaDetected, '
+        'conversionRule: $conversionRule, '
+        'resultUnit: $resultUnit}';
   }
 }

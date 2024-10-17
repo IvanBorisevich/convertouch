@@ -3,11 +3,15 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
-  const ConversionEvent();
+  const ConversionEvent({
+    super.onComplete,
+  });
 }
 
 abstract class ModifyConversion extends ConversionEvent {
-  const ModifyConversion();
+  const ModifyConversion({
+    super.onComplete,
+  });
 }
 
 class GetConversion extends ConversionEvent {
@@ -33,12 +37,13 @@ class EditConversionGroup extends ModifyConversion {
 
   const EditConversionGroup({
     required this.editedGroup,
+    super.onComplete,
   });
 
   @override
   List<Object?> get props => [
-    editedGroup,
-  ];
+        editedGroup,
+      ];
 
   @override
   String toString() {

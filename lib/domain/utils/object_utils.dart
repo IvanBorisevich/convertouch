@@ -13,13 +13,6 @@ class ObjectUtils {
     return either.right;
   }
 
-  static T coalesce<T>({
-    required T what,
-    required T? patchWith,
-  }) {
-    return patchWith ?? what;
-  }
-
   static Map<String, T> convertToMap<T>(
     Map<String, dynamic>? map, {
     T Function(dynamic)? valueMapFunc,

@@ -259,12 +259,6 @@ Future<void> _initBloc() async {
     ),
   );
 
-  locator.registerLazySingleton<ItemsSelectionBlocForConversion>(
-    () => ItemsSelectionBlocForConversion(
-      markItemsUseCase: locator(),
-    ),
-  );
-
   locator.registerLazySingleton<ItemsSelectionBlocForUnitDetails>(
     () => ItemsSelectionBlocForUnitDetails(
       markItemsUseCase: locator(),
@@ -273,15 +267,6 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<UnitGroupsBloc>(
     () => UnitGroupsBloc(
-      fetchUnitGroupsUseCase: locator(),
-      saveUnitGroupUseCase: locator(),
-      removeUnitGroupsUseCase: locator(),
-      navigationBloc: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ConversionGroupsBloc>(
-    () => ConversionGroupsBloc(
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
@@ -300,15 +285,6 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<UnitsBloc>(
     () => UnitsBloc(
-      saveUnitUseCase: locator(),
-      fetchUnitsUseCase: locator(),
-      removeUnitsUseCase: locator(),
-      navigationBloc: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<UnitsBlocForConversion>(
-    () => UnitsBlocForConversion(
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),

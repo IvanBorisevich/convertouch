@@ -61,9 +61,6 @@ class ConvertouchApp extends StatelessWidget {
           create: (context) => di.locator<ItemsSelectionBloc>(),
         ),
         BlocProvider(
-          create: (context) => di.locator<ItemsSelectionBlocForConversion>(),
-        ),
-        BlocProvider(
           create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
         ),
         BlocProvider(
@@ -76,19 +73,10 @@ class ConvertouchApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => di.locator<ConversionGroupsBloc>()
-            ..add(
-              const FetchUnitGroups(),
-            ),
-        ),
-        BlocProvider(
           create: (context) => di.locator<UnitGroupsBlocForUnitDetails>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitsBlocForConversion>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitsBlocForUnitDetails>(),

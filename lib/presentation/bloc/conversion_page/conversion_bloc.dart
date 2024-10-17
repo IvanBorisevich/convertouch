@@ -93,6 +93,8 @@ class ConversionBloc
         ),
       );
     }
+
+    event.onComplete?.call();
   }
 
   _onAddUnitsToConversion(
@@ -125,7 +127,6 @@ class ConversionBloc
           editedUnit: event.editedUnit,
         ),
         conversion: current.conversion,
-        rebuildConversion: false,
       ),
     );
 

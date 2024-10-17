@@ -13,6 +13,7 @@ class ValueModel extends Equatable {
   );
 
   static const ValueModel one = ValueModel(
+    num: 1,
     str: "1",
     scientific: "1",
   );
@@ -53,9 +54,7 @@ class ValueModel extends Equatable {
     );
   }
 
-  bool get isDefined => exists && this != undefined;
-
-  bool get exists => this != none;
+  bool get exists => this != none && this != undefined;
 
   Map<String, dynamic> toJson() {
     return {
@@ -86,6 +85,9 @@ class ValueModel extends Equatable {
 
   @override
   String toString() {
-    return "{num: $num; str: $str; sc: $scientific}";
+    if (!exists) {
+      return "ValueModel.none";
+    }
+    return "ValueModel{num: $num; str: $str; sc: $scientific}";
   }
 }

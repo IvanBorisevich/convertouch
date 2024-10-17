@@ -121,21 +121,21 @@ class ConversionRule extends Equatable {
   }
 
   ConversionRule.coalesce(
-    ConversionRule model, {
+    ConversionRule saved, {
     ValueModel? unitValue,
     UnitModel? argUnit,
     ValueModel? draftArgValue,
     ValueModel? savedArgValue,
   }) : this._(
-          unitValue: unitValue ?? model.unitValue,
-          argUnit: argUnit ?? model.argUnit,
-          draftArgValue: draftArgValue ?? model.draftArgValue,
-          savedArgValue: savedArgValue ?? model.savedArgValue,
-          configVisible: model.configVisible,
-          configEditable: model.configEditable,
-          readOnlyDescription: model.readOnlyDescription,
-          primaryBaseUnit: model.primaryBaseUnit,
-          secondaryBaseUnit: model.secondaryBaseUnit,
+          unitValue: unitValue ?? saved.unitValue,
+          argUnit: argUnit ?? saved.argUnit,
+          draftArgValue: draftArgValue ?? saved.draftArgValue,
+          savedArgValue: savedArgValue ?? saved.savedArgValue,
+          configVisible: saved.configVisible,
+          configEditable: saved.configEditable,
+          readOnlyDescription: saved.readOnlyDescription,
+          primaryBaseUnit: saved.primaryBaseUnit,
+          secondaryBaseUnit: saved.secondaryBaseUnit,
         );
 
   @override
@@ -150,4 +150,18 @@ class ConversionRule extends Equatable {
         primaryBaseUnit,
         secondaryBaseUnit,
       ];
+
+  @override
+  String toString() {
+    return 'ConversionRule{'
+        'unitValue: $unitValue, '
+        'argUnit: $argUnit, '
+        'draftArgValue: $draftArgValue, '
+        'savedArgValue: $savedArgValue, '
+        'configVisible: $configVisible, '
+        'configEditable: $configEditable, '
+        'readOnlyDescription: $readOnlyDescription, '
+        'primaryBaseUnit: $primaryBaseUnit, '
+        'secondaryBaseUnit: $secondaryBaseUnit}';
+  }
 }

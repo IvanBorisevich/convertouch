@@ -4,7 +4,7 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 class ValueModelUtils {
   const ValueModelUtils._();
 
-  static ValueModel betweenOrUndefined({
+  static ValueModel betweenOrNone({
     required double? rawValue,
     double? min,
     double? max,
@@ -15,6 +15,21 @@ class ValueModelUtils {
       max: max,
     )
         ? ValueModel.ofDouble(rawValue)
-        : ValueModel.undefined;
+        : ValueModel.none;
+  }
+
+  static ValueModel coalesce({
+    required ValueModel? v1,
+    required ValueModel? v2,
+  }) {
+    if (v1?.exists == true) {
+      return v1!;
+    }
+
+    if (v2?.exists == true) {
+      return v2!;
+    }
+
+    return ValueModel.none;
   }
 }

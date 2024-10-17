@@ -26,65 +26,89 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         item.unit.id: item.unit
     };
 
-    final updatedUnitGroup = modifyConversionGroup(
+    final modifiedUnitGroup = modifyConversionGroup(
       input.conversion.unitGroup,
       input.delta,
     );
 
-    final updatedTargetUnitsMap = await modifyTargetUnits(
+    final modifiedTargetUnitsMap = await modifyTargetUnits(
       targetUnitsMap,
       input.delta,
     );
 
-    var updatedSourceItem = modifySourceConversionItem(
+    var modifiedSourceItem = modifySourceConversionItem(
       sourceItem: input.conversion.sourceConversionItem,
-      targetUnits: updatedTargetUnitsMap,
+      targetUnits: modifiedTargetUnitsMap,
       delta: input.delta,
     );
 
     if (input.rebuildConversion) {
-      updatedSourceItem ??= input.conversion.targetConversionItems.firstOrNull;
-
-      InputConversionModel inputParams = InputConversionModel(
-        unitGroup: updatedUnitGroup,
-        sourceConversionItem: updatedSourceItem,
-        targetUnits: updatedTargetUnitsMap.values.toList(),
+      return _rebuild(
+        modifiedUnitGroup: modifiedUnitGroup,
+        modifiedSourceItem: modifiedSourceItem ??
+            input.conversion.targetConversionItems.firstOrNull,
+        modifiedTargetUnitsMap: modifiedTargetUnitsMap,
       );
-
-      return buildNewConversionUseCase.execute(inputParams);
     } else {
-      try {
-        List<ConversionItemModel> updatedTargetConversionItems = [];
+      return _modify(
+        modifiedUnitGroup: modifiedUnitGroup,
+        modifiedSourceItem: modifiedSourceItem,
+        currentTargetItems: input.conversion.targetConversionItems,
+        modifiedTargetUnitsMap: modifiedTargetUnitsMap,
+      );
+    }
+  }
 
-        for (final item in input.conversion.targetConversionItems) {
-          if (updatedTargetUnitsMap.containsKey(item.unit.id)) {
-            updatedTargetConversionItems.add(
-              ConversionItemModel.coalesce(
-                item,
-                unit: updatedTargetUnitsMap[item.unit.id],
-              ),
-            );
-          }
+  Future<Either<ConvertouchException, OutputConversionModel>> _rebuild({
+    required UnitGroupModel modifiedUnitGroup,
+    required ConversionItemModel? modifiedSourceItem,
+    required Map<int, UnitModel> modifiedTargetUnitsMap,
+  }) async {
+    InputConversionModel inputParams = InputConversionModel(
+      unitGroup: modifiedUnitGroup,
+      sourceConversionItem: modifiedSourceItem,
+      targetUnits: modifiedTargetUnitsMap.values.toList(),
+    );
+
+    return buildNewConversionUseCase.execute(inputParams);
+  }
+
+  Future<Either<ConvertouchException, OutputConversionModel>> _modify({
+    required UnitGroupModel modifiedUnitGroup,
+    required ConversionItemModel? modifiedSourceItem,
+    required List<ConversionItemModel> currentTargetItems,
+    required Map<int, UnitModel> modifiedTargetUnitsMap,
+  }) async {
+    try {
+      List<ConversionItemModel> modifiedTargetConversionItems = [];
+
+      for (final item in currentTargetItems) {
+        if (modifiedTargetUnitsMap.containsKey(item.unit.id)) {
+          modifiedTargetConversionItems.add(
+            ConversionItemModel.coalesce(
+              item,
+              unit: modifiedTargetUnitsMap[item.unit.id],
+            ),
+          );
         }
-
-        updatedSourceItem ??= updatedTargetConversionItems.firstOrNull;
-
-        return Right(
-          OutputConversionModel(
-            unitGroup: updatedUnitGroup,
-            sourceConversionItem: updatedSourceItem,
-            targetConversionItems: updatedTargetConversionItems,
-          ),
-        );
-      } catch (e, stackTrace) {
-        return Left(
-          InternalException(
-            message: "Error when modifying the existing conversion",
-            stackTrace: stackTrace,
-            dateTime: DateTime.now(),
-          ),
-        );
       }
+
+      return Right(
+        OutputConversionModel(
+          unitGroup: modifiedUnitGroup,
+          sourceConversionItem:
+              modifiedSourceItem ?? modifiedTargetConversionItems.firstOrNull,
+          targetConversionItems: modifiedTargetConversionItems,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Left(
+        InternalException(
+          message: "Error when modifying the existing conversion",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
     }
   }
 

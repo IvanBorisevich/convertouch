@@ -24,6 +24,7 @@ class ModifyUnitDetailsUseCase
     UnitDetailsModel input,
   ) async {
     try {
+      bool existingUnit = input.savedUnitData.hasId;
       final unitGroupChanged =
           input.unitGroup.id != input.draftUnitData.unitGroupId;
 
@@ -65,10 +66,10 @@ class ModifyUnitDetailsUseCase
         str2: input.savedUnitData.name,
       );
 
-      final savedUnitCode = ObjectUtils.coalesceStringOrDefault(
-        str1: input.savedUnitData.code,
-        str2: UnitDetailsUtils.calcInitialUnitCode(input.draftUnitData.name),
-      );
+      final savedUnitCode = existingUnit
+          ? input.savedUnitData.code
+          : UnitDetailsUtils.calcInitialUnitCode(input.draftUnitData.name);
+
       final resultUnitCode = ObjectUtils.coalesceStringOrDefault(
         str1: input.draftUnitData.code,
         str2: savedUnitCode,
@@ -103,17 +104,15 @@ class ModifyUnitDetailsUseCase
               unitSymbolChanged ||
               coefficientChanged);
 
-      final unitToSave = deltaDetected
-          ? UnitModel(
-              id: input.savedUnitData.id,
-              name: resultUnitName,
-              code: resultUnitCode,
-              symbol: resultUnitSymbol,
-              valueType: input.draftUnitData.valueType,
-              coefficient: draftCoefficient,
-              unitGroupId: input.unitGroup.id,
-            )
-          : UnitModel.none;
+      final resultUnit = UnitModel(
+        id: input.savedUnitData.id,
+        name: resultUnitName,
+        code: resultUnitCode,
+        symbol: resultUnitSymbol,
+        valueType: input.draftUnitData.valueType,
+        coefficient: draftCoefficient,
+        unitGroupId: input.unitGroup.id,
+      );
 
       return Right(
         UnitDetailsModel(
@@ -123,9 +122,11 @@ class ModifyUnitDetailsUseCase
             input.savedUnitData,
             code: savedUnitCode,
           ),
-          unitToSave: unitToSave,
+          existingUnit: existingUnit,
           editMode: true,
           unitGroupChanged: unitGroupChanged,
+          deltaDetected: deltaDetected,
+          resultUnit: resultUnit,
           conversionRule: ConversionRule.build(
             unitGroup: input.unitGroup,
             mandatoryParamsFilled: mandatoryParamsFilled,

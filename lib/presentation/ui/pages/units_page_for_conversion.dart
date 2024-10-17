@@ -19,9 +19,8 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final unitsBloc = BlocProvider.of<UnitsBlocForConversion>(context);
-    final unitsSelectionBloc =
-        BlocProvider.of<ItemsSelectionBlocForConversion>(context);
+    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 

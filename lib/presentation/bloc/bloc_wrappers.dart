@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
@@ -56,45 +55,3 @@ const conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
 const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
-
-class StateHandler<T> {
-  final Type stateType;
-  final void Function(dynamic) handlerFunc;
-
-  StateHandler(void Function(T) func)
-      : stateType = T,
-        handlerFunc = _castFunc(func);
-
-  static void Function(dynamic) _castFunc<T>(void Function(T) func) {
-    return (value) {
-      func.call(value as T);
-    };
-  }
-}
-
-BlocListener<BlocType, AbstractStateType> blocListenerWrap<
-    BlocType extends Bloc<ConvertouchEvent, AbstractStateType>,
-    AbstractStateType extends ConvertouchState>(List<StateHandler> handlers) {
-  return BlocListener<BlocType, AbstractStateType>(
-    listener: (_, state) {
-      StateHandler? handler = handlers.firstWhereOrNull(
-        (handler) => handler.stateType == state.runtimeType,
-      );
-      handler?.handlerFunc.call(state);
-    },
-  );
-}
-
-const unitGroupsBlocListener =
-    blocListenerWrap<UnitGroupsBloc, UnitGroupsState>;
-const unitGroupsBlocListenerForConversion =
-    blocListenerWrap<ConversionGroupsBloc, UnitGroupsState>;
-const unitsBlocListener = blocListenerWrap<UnitsBloc, UnitsState>;
-const unitsBlocListenerForConversion =
-    blocListenerWrap<UnitsBlocForConversion, UnitsState>;
-const unitDetailsBlocListener =
-    blocListenerWrap<UnitDetailsBloc, UnitDetailsState>;
-const conversionBlocListener =
-    blocListenerWrap<ConversionBloc, ConversionState>;
-const refreshingJobsBlocListener =
-    blocListenerWrap<RefreshingJobsBloc, RefreshingJobsState>;

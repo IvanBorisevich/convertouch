@@ -7,6 +7,8 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
@@ -23,14 +25,15 @@ class ConvertouchConversionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final unitsBloc = BlocProvider.of<UnitsBlocForConversion>(context);
-    final unitsSelectionBloc =
-        BlocProvider.of<ItemsSelectionBlocForConversion>(context);
+    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
+    final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
+    final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return appBlocBuilder(
       builderFunc: (appState) {
+        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             conversionPageFloatingButtonColors[appState.theme]!;
 
@@ -38,34 +41,43 @@ class ConvertouchConversionPage extends StatelessWidget {
           builderFunc: (pageState) {
             final conversion = pageState.conversion;
 
-            Widget addingButton() {
-              return ConvertouchFloatingActionButton.adding(
-                onClick: () {
-                  unitsBloc.add(
-                    FetchUnits(
-                      unitGroup: conversion.unitGroup,
-                    ),
-                  );
-                  unitsSelectionBloc.add(
-                    StartItemsMarking(
-                      previouslyMarkedIds: conversion.targetConversionItems
-                          .map((unitValue) => unitValue.unit.id)
-                          .toList(),
-                      markedItemsMinNumForSelection: 2,
-                    ),
-                  );
-                  navigationBloc.add(
-                    const NavigateToPage(
-                      pageName: PageName.unitsPageForConversion,
-                    ),
-                  );
-                },
-                colorScheme: floatingButtonColor,
-              );
-            }
-
             return ConvertouchPage(
               title: pageState.conversion.unitGroup.name,
+              appBarRightWidgets: [
+                IconButton(
+                  onPressed: () {
+                    unitGroupDetailsBloc.add(
+                      GetExistingUnitGroupDetails(
+                        unitGroup: pageState.conversion.unitGroup,
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    pageState.conversion.unitGroup.oob
+                        ? Icons.info_outline_rounded
+                        : Icons.edit_outlined,
+                    color: pageColorScheme.appBar.foreground.regular,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    unitsBloc.add(
+                      FetchUnits(
+                        unitGroup: pageState.conversion.unitGroup,
+                      ),
+                    );
+                    navigationBloc.add(
+                      const NavigateToPage(
+                        pageName: PageName.unitsPageRegular,
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.dashboard_customize_outlined,
+                    color: pageColorScheme.appBar.foreground.regular,
+                  ),
+                ),
+              ],
               body: Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: ConvertouchConversionItemsView(
@@ -126,7 +138,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        addingButton(),
                       ],
                     ),
                   ),
@@ -137,9 +148,29 @@ class ConvertouchConversionPage extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
                   const ConvertouchRefreshFloatingButton(),
-                  conversion.targetConversionItems.isNotEmpty
-                      ? addingButton()
-                      : empty(),
+                  ConvertouchFloatingActionButton.adding(
+                    onClick: () {
+                      unitsBloc.add(
+                        FetchUnits(
+                          unitGroup: conversion.unitGroup,
+                        ),
+                      );
+                      unitsSelectionBloc.add(
+                        StartItemsMarking(
+                          previouslyMarkedIds: conversion.targetConversionItems
+                              .map((unitValue) => unitValue.unit.id)
+                              .toList(),
+                          markedItemsMinNumForSelection: 2,
+                        ),
+                      );
+                      navigationBloc.add(
+                        const NavigateToPage(
+                          pageName: PageName.unitsPageForConversion,
+                        ),
+                      );
+                    },
+                    colorScheme: floatingButtonColor,
+                  ),
                 ],
               ),
             );

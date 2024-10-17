@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 
 class UnitGroupModel extends IdNameItemModel {
   static const UnitGroupModel none = UnitGroupModel._();
@@ -22,47 +21,31 @@ class UnitGroupModel extends IdNameItemModel {
     this.conversionType = ConversionType.static,
     this.refreshable = false,
     this.valueType = defaultValueType,
-    this.minValue = ValueModel.undefined,
-    this.maxValue = ValueModel.undefined,
+    this.minValue = ValueModel.none,
+    this.maxValue = ValueModel.none,
     super.oob,
   }) : super(
           itemType: ItemType.unitGroup,
         );
 
   UnitGroupModel.coalesce(
-    UnitGroupModel savedUnitGroup, {
+    UnitGroupModel saved, {
     int? id,
     String? name,
     String? iconName,
     ConvertouchValueType? valueType,
-    double? minValue,
-    double? maxValue,
+    ValueModel? minValue,
+    ValueModel? maxValue,
   }) : this(
-          id: ObjectUtils.coalesce(
-            what: savedUnitGroup.id,
-            patchWith: id,
-          ),
-          name: ObjectUtils.coalesce(
-                what: savedUnitGroup.name,
-                patchWith: name,
-              ) ??
-              "",
-          iconName: ObjectUtils.coalesce(
-            what: savedUnitGroup.iconName,
-            patchWith: iconName,
-          ),
-          conversionType: savedUnitGroup.conversionType,
-          refreshable: savedUnitGroup.refreshable,
-          valueType: valueType ?? savedUnitGroup.valueType,
-          minValue: ObjectUtils.coalesce(
-            what: savedUnitGroup.minValue,
-            patchWith: ValueModel.ofDouble(minValue),
-          ),
-          maxValue: ObjectUtils.coalesce(
-            what: savedUnitGroup.maxValue,
-            patchWith: ValueModel.ofDouble(maxValue),
-          ),
-          oob: savedUnitGroup.oob,
+          id: id ?? saved.id,
+          name: name ?? saved.name,
+          iconName: iconName ?? saved.iconName,
+          conversionType: saved.conversionType,
+          refreshable: saved.refreshable,
+          valueType: valueType ?? saved.valueType,
+          minValue: minValue?.exists == true ? minValue! : saved.minValue,
+          maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
+          oob: saved.oob,
         );
 
   const UnitGroupModel._()
@@ -71,7 +54,7 @@ class UnitGroupModel extends IdNameItemModel {
           valueType: defaultValueType,
         );
 
-  bool get exists => this == none;
+  bool get exists => this != none;
 
   @override
   List<Object?> get props => [
@@ -121,6 +104,9 @@ class UnitGroupModel extends IdNameItemModel {
 
   @override
   String toString() {
+    if (!exists) {
+      return "UnitGroupModel.none";
+    }
     return 'UnitGroupModel{'
         'id: $id, '
         'name: $name, '

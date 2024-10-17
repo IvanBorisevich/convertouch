@@ -7,8 +7,6 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
 import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -37,12 +35,8 @@ class _ConvertouchUnitGroupDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    final unitsBlocForConversion =
-        BlocProvider.of<UnitsBlocForConversion>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
-    final conversionGroupsBloc = BlocProvider.of<ConversionGroupsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
@@ -116,7 +110,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       ),
                       ConvertouchInfoBox(
                         visible:
-                            unitGroupDetailsState.draftGroup.minValue.isDefined,
+                            unitGroupDetailsState.draftGroup.minValue.exists,
                         headerText: "Values Minimum",
                         bodyText: unitGroupDetailsState
                             .draftGroup.minValue.scientific,
@@ -127,7 +121,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       ),
                       ConvertouchInfoBox(
                         visible:
-                            unitGroupDetailsState.draftGroup.maxValue.isDefined,
+                            unitGroupDetailsState.draftGroup.maxValue.exists,
                         headerText: "Values Maximum",
                         bodyText: unitGroupDetailsState
                             .draftGroup.maxValue.scientific,
@@ -158,21 +152,11 @@ class _ConvertouchUnitGroupDetailsPageState
                     SaveUnitGroup(
                       unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
                       onSaveGroup: (savedGroup) {
-                        conversionGroupsBloc.add(
+                        unitGroupsBloc.add(
                           const FetchUnitGroups(),
                         );
                         conversionBloc.add(
                           EditConversionGroup(
-                            editedGroup: savedGroup,
-                          ),
-                        );
-                        unitsBlocForConversion.add(
-                          EditOpenedGroup(
-                            editedGroup: savedGroup,
-                          ),
-                        );
-                        unitsBloc.add(
-                          EditOpenedGroup(
                             editedGroup: savedGroup,
                             onComplete: () {
                               navigationBloc.add(

@@ -114,12 +114,6 @@ class ItemsSelectionBloc
   }
 }
 
-class ItemsSelectionBlocForConversion extends ItemsSelectionBloc {
-  ItemsSelectionBlocForConversion({
-    required super.markItemsUseCase,
-  });
-}
-
 class ItemsSelectionBlocForUnitDetails extends ItemsSelectionBloc {
   ItemsSelectionBlocForUnitDetails({
     required super.markItemsUseCase,

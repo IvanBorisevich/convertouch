@@ -1,6 +1,5 @@
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:floor/floor.dart';
 
 const String unitsTableName = 'units';
@@ -64,10 +63,7 @@ class UnitEntity {
           name: savedEntity.name,
           code: savedEntity.code,
           unitGroupId: savedEntity.unitGroupId,
-          coefficient: ObjectUtils.coalesce(
-            what: savedEntity.coefficient,
-            patchWith: coefficient,
-          ),
+          coefficient: coefficient ?? savedEntity.coefficient,
           symbol: savedEntity.symbol,
           valueType: savedEntity.valueType,
           minValue: savedEntity.minValue,

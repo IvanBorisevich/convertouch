@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 
 class UnitModel extends IdNameItemModel {
   static const UnitModel none = UnitModel._();
@@ -23,8 +22,8 @@ class UnitModel extends IdNameItemModel {
     this.symbol,
     this.unitGroupId = -1,
     this.valueType,
-    this.minValue = ValueModel.undefined,
-    this.maxValue = ValueModel.undefined,
+    this.minValue = ValueModel.none,
+    this.maxValue = ValueModel.none,
     this.invertible = true,
     super.oob,
   }) : super(
@@ -38,7 +37,7 @@ class UnitModel extends IdNameItemModel {
         );
 
   UnitModel.coalesce(
-    UnitModel savedUnit, {
+    UnitModel saved, {
     int? id,
     String? name,
     String? code,
@@ -50,47 +49,17 @@ class UnitModel extends IdNameItemModel {
     ValueModel? maxValue,
     bool? invertible,
   }) : this(
-          id: ObjectUtils.coalesce(
-            what: savedUnit.id,
-            patchWith: id,
-          ),
-          name: ObjectUtils.coalesce(
-                what: savedUnit.name,
-                patchWith: name,
-              ) ??
-              "",
-          code: ObjectUtils.coalesce(
-                what: savedUnit.code,
-                patchWith: code,
-              ) ??
-              "",
-          coefficient: ObjectUtils.coalesce(
-            what: savedUnit.coefficient,
-            patchWith: coefficient,
-          ),
-          symbol: ObjectUtils.coalesce(
-            what: savedUnit.symbol,
-            patchWith: symbol,
-          ),
-          valueType: ObjectUtils.coalesce(
-            what: savedUnit.valueType,
-            patchWith: valueType,
-          ),
-          minValue: ObjectUtils.coalesce(
-            what: savedUnit.minValue,
-            patchWith: minValue,
-          ),
-          maxValue: ObjectUtils.coalesce(
-            what: savedUnit.maxValue,
-            patchWith: maxValue,
-          ),
-          unitGroupId: ObjectUtils.coalesce(
-                what: savedUnit.unitGroupId,
-                patchWith: unitGroupId,
-              ) ??
-              -1,
-          invertible: savedUnit.invertible,
-          oob: savedUnit.oob,
+          id: id ?? saved.id,
+          name: name ?? saved.name,
+          code: code ?? saved.code,
+          coefficient: coefficient ?? saved.coefficient,
+          symbol: symbol ?? saved.symbol,
+          valueType: valueType ?? saved.valueType,
+          minValue: minValue?.exists == true ? minValue! : saved.minValue,
+          maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
+          unitGroupId: unitGroupId ?? saved.unitGroupId,
+          invertible: saved.invertible,
+          oob: saved.oob,
         );
 
   bool get exists => this != none;

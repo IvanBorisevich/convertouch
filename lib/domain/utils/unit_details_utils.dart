@@ -40,18 +40,16 @@ class UnitDetailsUtils {
         : ValueModel.none;
   }
 
-  static double? calcUnitCoefficient({
+  static double calcUnitCoefficient({
     required ValueModel value,
     required UnitModel argUnit,
     required ValueModel argValue,
   }) {
     double valueNum = double.tryParse(value.str) ?? 1;
     double argValueNum = double.tryParse(argValue.str) ?? 1;
-    double? argUnitCoefficient = argUnit.coefficient;
+    double argUnitCoefficient = argUnit.coefficient ?? 1;
 
-    return argUnitCoefficient != null
-        ? argValueNum * argUnitCoefficient / valueNum
-        : null;
+    return argValueNum * argUnitCoefficient / valueNum;
   }
 
   static ValueModel calcNewArgValue({

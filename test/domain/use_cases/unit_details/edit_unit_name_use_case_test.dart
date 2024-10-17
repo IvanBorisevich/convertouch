@@ -64,7 +64,7 @@ void main() {
         expect(result.draftUnitData.code, 'code');
         expect(result.savedUnitData.name, '');
         expect(result.savedUnitData.code, '');
-        expect(result.unitToSave.exists, false);
+        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -84,7 +84,7 @@ void main() {
         expect(result.draftUnitData.code, 'code');
         expect(result.savedUnitData.name, '');
         expect(result.savedUnitData.code, 'unitN');
-        expect(result.unitToSave.exists, true);
+        expect(result.resultUnit.exists, true);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -121,7 +121,7 @@ void main() {
         expect(result.draftUnitData.code, 'code');
         expect(result.savedUnitData.name, '');
         expect(result.savedUnitData.code, '');
-        expect(result.unitToSave.exists, false);
+        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false); // name is empty
         expect(result.conversionRule.configEditable, false);
@@ -153,7 +153,7 @@ void main() {
         expect(result.draftUnitData.code, 'code');
         expect(result.savedUnitData.name, '');
         expect(result.savedUnitData.code, 'unitN');
-        expect(result.unitToSave.exists, true);
+        expect(result.resultUnit.exists, true);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
@@ -190,7 +190,7 @@ void main() {
         expect(result.draftUnitData.code, 'b1');
         expect(result.savedUnitData.name, 'base1');
         expect(result.savedUnitData.code, 'b1');
-        expect(result.unitToSave.exists, false);
+        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -226,7 +226,7 @@ void main() {
         expect(result.draftUnitData.code, 'b1');
         expect(result.savedUnitData.name, 'base1');
         expect(result.savedUnitData.code, 'b1');
-        expect(result.unitToSave.exists, true);
+        expect(result.resultUnit.exists, true);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -265,7 +265,7 @@ void main() {
         expect(result.draftUnitData.code, 'b1');
         expect(result.savedUnitData.name, 'base1');
         expect(result.savedUnitData.code, 'b1');
-        expect(result.unitToSave.exists, false);
+        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
@@ -299,7 +299,7 @@ void main() {
         expect(result.draftUnitData.code, 'b1');
         expect(result.savedUnitData.name, 'base2');
         expect(result.savedUnitData.code, 'b2');
-        expect(result.unitToSave.exists, true);
+        expect(result.resultUnit.exists, true);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
