@@ -66,23 +66,24 @@ class ConversionBloc
     GetConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
+    ConversionBuilt prev = state as ConversionBuilt;
 
-    var result = await getConversionUseCase.execute(event.unitGroup.id);
+    if (event.unitGroup.id != prev.conversion.unitGroup.id) {
+      var result = await getConversionUseCase.execute(event.unitGroup.id);
 
-    if (result.isRight && result.right == ConversionModel.none) {
-      result = await buildNewConversionUseCase.execute(
-        InputConversionModel(unitGroup: event.unitGroup),
-      );
-    }
+      if (result.isRight && !result.right.exists) {
+        result = await buildNewConversionUseCase.execute(
+          InputConversionModel(unitGroup: event.unitGroup),
+        );
+      }
 
-    await _handleAndEmit(result, emit);
-
-    if (result.isRight &&
-        current.conversion.unitGroup.id != result.right.unitGroup.id) {
-      log("Processing the previous conversion of the group "
-          "${current.conversion.unitGroup.name}");
-      event.processPrevConversion?.call(current.conversion);
+      await _handleAndEmit(result, emit, onSuccess: () {
+        log("Processing previous conversion state of the group "
+            "'${prev.conversion.unitGroup.name}'");
+        event.processPrevConversion?.call(prev.conversion);
+      });
+    } else {
+      emit(prev);
     }
   }
 
@@ -235,8 +236,9 @@ class ConversionBloc
 
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
-    Emitter<ConversionState> emit,
-  ) async {
+    Emitter<ConversionState> emit, {
+    void Function()? onSuccess,
+  }) async {
     if (result.isLeft) {
       navigationBloc.add(
         ShowException(exception: result.left),
@@ -249,6 +251,7 @@ class ConversionBloc
               result.right.targetConversionItems.isNotEmpty,
         ),
       );
+      onSuccess?.call();
     }
   }
 

@@ -49,6 +49,8 @@ class ConversionModel extends Equatable {
         targetConversionItems,
       ];
 
+  bool get exists => this != none;
+
   @override
   String toString() {
     return 'OutputConversionModel{'
