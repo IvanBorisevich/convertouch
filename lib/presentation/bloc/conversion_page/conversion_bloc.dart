@@ -23,7 +23,7 @@ import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversionBloc
-    extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
+    extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionBuilt> {
   final BuildNewConversionUseCase buildNewConversionUseCase;
   final GetConversionUseCase getConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
@@ -66,9 +66,7 @@ class ConversionBloc
     GetConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt prev = state as ConversionBuilt;
-
-    if (event.unitGroup.id != prev.conversion.unitGroup.id) {
+    if (event.unitGroup.id != state.conversion.unitGroup.id) {
       var result = await getConversionUseCase.execute(event.unitGroup.id);
 
       if (result.isRight && !result.right.exists) {
@@ -79,11 +77,11 @@ class ConversionBloc
 
       await _handleAndEmit(result, emit, onSuccess: () {
         log("Processing previous conversion state of the group "
-            "'${prev.conversion.unitGroup.name}'");
-        event.processPrevConversion?.call(prev.conversion);
+            "'${state.conversion.unitGroup.name}'");
+        event.processPrevConversion?.call(state.conversion);
       });
     } else {
-      emit(prev);
+      emit(state);
     }
   }
 
@@ -104,17 +102,15 @@ class ConversionBloc
     EditConversionGroup event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
-    if (current.conversion.unitGroup.id == event.editedGroup.id) {
+    if (state.conversion.unitGroup.id == event.editedGroup.id) {
       emit(
         ConversionBuilt(
           conversion: ConversionModel(
             unitGroup: event.editedGroup,
-            sourceConversionItem: current.conversion.sourceConversionItem,
-            targetConversionItems: current.conversion.targetConversionItems,
+            sourceConversionItem: state.conversion.sourceConversionItem,
+            targetConversionItems: state.conversion.targetConversionItems,
           ),
-          showRefreshButton: current.showRefreshButton,
+          showRefreshButton: state.showRefreshButton,
         ),
       );
     }
@@ -126,14 +122,12 @@ class ConversionBloc
     AddUnitsToConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
     final result = await addUnitsToConversionUseCase.execute(
       InputConversionModifyModel<AddUnitsToConversionDelta>(
         delta: AddUnitsToConversionDelta(
           unitIds: event.unitIds,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
       ),
     );
 
@@ -144,14 +138,12 @@ class ConversionBloc
     EditConversionItemUnit event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
     final result = await editConversionItemUnitUseCase.execute(
       InputConversionModifyModel<EditConversionItemUnitDelta>(
         delta: EditConversionItemUnitDelta(
           editedUnit: event.editedUnit,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
       ),
     );
 
@@ -162,8 +154,6 @@ class ConversionBloc
     EditConversionItemValue event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
     final result = await editConversionItemValueUseCase.execute(
       InputConversionModifyModel<EditConversionItemValueDelta>(
         delta: EditConversionItemValueDelta(
@@ -171,7 +161,7 @@ class ConversionBloc
           newDefaultValue: event.newDefaultValue,
           unitId: event.unitId,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
       ),
     );
 
@@ -182,14 +172,12 @@ class ConversionBloc
     UpdateConversionCoefficients event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
     final result = await updateConversionCoefficientsUseCase.execute(
       InputConversionModifyModel<UpdateConversionCoefficientsDelta>(
         delta: UpdateConversionCoefficientsDelta(
           updatedUnitCoefs: event.updatedUnitCoefs,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
       ),
     );
 
@@ -200,16 +188,12 @@ class ConversionBloc
     RemoveConversionItems event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
-    // emit(const ConversionInProgress());
-
     final result = await removeConversionItemsUseCase.execute(
       InputConversionModifyModel<RemoveConversionItemsDelta>(
         delta: RemoveConversionItemsDelta(
           unitIds: event.unitIds,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
         rebuildConversion: false,
       ),
     );
@@ -220,15 +204,13 @@ class ConversionBloc
     ReplaceConversionItemUnit event,
     Emitter<ConversionState> emit,
   ) async {
-    ConversionBuilt current = state as ConversionBuilt;
-
     final result = await replaceConversionItemUnitUseCase.execute(
       InputConversionModifyModel<ReplaceConversionItemUnitDelta>(
         delta: ReplaceConversionItemUnitDelta(
           newUnit: event.newUnit,
           oldUnitId: event.oldUnitId,
         ),
-        conversion: current.conversion,
+        conversion: state.conversion,
       ),
     );
     await _handleAndEmit(result, emit);
@@ -256,15 +238,12 @@ class ConversionBloc
   }
 
   @override
-  ConversionState? fromJson(Map<String, dynamic> json) {
+  ConversionBuilt? fromJson(Map<String, dynamic> json) {
     return ConversionBuilt.fromJson(json);
   }
 
   @override
-  Map<String, dynamic>? toJson(ConversionState state) {
-    if (state is ConversionBuilt) {
-      return state.toJson();
-    }
-    return const {};
+  Map<String, dynamic>? toJson(ConversionBuilt state) {
+    return state.toJson();
   }
 }

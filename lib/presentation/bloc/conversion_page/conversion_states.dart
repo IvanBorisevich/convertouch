@@ -5,15 +5,6 @@ abstract class ConversionState extends ConvertouchState {
   const ConversionState();
 }
 
-class ConversionInProgress extends ConversionState {
-  const ConversionInProgress();
-
-  @override
-  String toString() {
-    return 'ConversionInProgress{}';
-  }
-}
-
 class ConversionBuilt extends ConversionState {
   final ConversionModel conversion;
   final bool showRefreshButton;
