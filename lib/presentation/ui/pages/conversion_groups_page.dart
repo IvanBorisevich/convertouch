@@ -66,7 +66,14 @@ class ConversionGroupsPage extends StatelessWidget {
                   },
                   onUnitGroupTap: (unitGroup) {
                     conversionBloc.add(
-                      GetConversion(unitGroup: unitGroup),
+                      GetConversion(
+                        unitGroup: unitGroup,
+                        processPrevConversion: (prevConversion) {
+                          conversionBloc.add(
+                            SaveConversion(conversion: prevConversion),
+                          );
+                        },
+                      ),
                     );
                     navigationBloc.add(
                       const NavigateToPage(pageName: PageName.conversionPage),

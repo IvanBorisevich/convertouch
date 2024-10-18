@@ -2,6 +2,7 @@ import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
+import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
@@ -12,6 +13,7 @@ import 'package:convertouch/data/translators/data_source_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
+import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/repositories/job_repository.dart';
@@ -26,6 +28,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_val
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/get_dynamic_data_for_conversion.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
@@ -94,6 +97,12 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       unitDao: database.unitDao,
       unitGroupDao: database.unitGroupDao,
       database: database.database.database,
+    ),
+  );
+
+  locator.registerLazySingleton<ConversionRepository>(
+    () => ConversionRepositoryImpl(
+      unitGroupRepository: locator(),
     ),
   );
 
@@ -185,7 +194,15 @@ Future<void> _initUseCases() async {
   );
 
   locator.registerLazySingleton<GetConversionUseCase>(
-    () => const GetConversionUseCase(),
+    () => GetConversionUseCase(
+      conversionRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SaveConversionUseCase>(
+    () => SaveConversionUseCase(
+      conversionRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<AddUnitsToConversionUseCase>(
@@ -319,6 +336,7 @@ Future<void> _initBloc() async {
     () => ConversionBloc(
       buildNewConversionUseCase: locator(),
       getConversionUseCase: locator(),
+      saveConversionUseCase: locator(),
       addUnitsToConversionUseCase: locator(),
       editConversionItemUnitUseCase: locator(),
       editConversionItemValueUseCase: locator(),

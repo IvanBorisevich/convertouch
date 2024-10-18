@@ -2,20 +2,20 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:equatable/equatable.dart';
 
-class OutputConversionModel extends Equatable {
-  static const none = OutputConversionModel.noItems(UnitGroupModel.none);
+class ConversionModel extends Equatable {
+  static const none = ConversionModel.noItems(UnitGroupModel.none);
 
   final UnitGroupModel unitGroup;
   final ConversionItemModel? sourceConversionItem;
   final List<ConversionItemModel> targetConversionItems;
 
-  const OutputConversionModel({
+  const ConversionModel({
     this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
     this.targetConversionItems = const [],
   });
 
-  const OutputConversionModel.noItems(this.unitGroup)
+  const ConversionModel.noItems(this.unitGroup)
       : sourceConversionItem = null,
         targetConversionItems = const [];
 
@@ -28,11 +28,11 @@ class OutputConversionModel extends Equatable {
     };
   }
 
-  static OutputConversionModel? fromJson(Map<String, dynamic>? json) {
+  static ConversionModel? fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return null;
     }
-    return OutputConversionModel(
+    return ConversionModel(
       unitGroup:
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
       sourceConversionItem: ConversionItemModel.fromJson(json["sourceItem"]),

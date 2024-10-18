@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
@@ -15,7 +15,7 @@ import 'package:convertouch/domain/utils/value_model_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildNewConversionUseCase
-    extends UseCase<InputConversionModel, OutputConversionModel> {
+    extends UseCase<InputConversionModel, ConversionModel> {
   final DynamicValueRepository dynamicValueRepository;
 
   const BuildNewConversionUseCase({
@@ -23,12 +23,12 @@ class BuildNewConversionUseCase
   });
 
   @override
-  Future<Either<ConvertouchException, OutputConversionModel>> execute(
+  Future<Either<ConvertouchException, ConversionModel>> execute(
     InputConversionModel input,
   ) async {
     try {
       if (input.targetUnits.isEmpty) {
-        return Right(OutputConversionModel.noItems(input.unitGroup));
+        return Right(ConversionModel.noItems(input.unitGroup));
       }
 
       ConversionItemModel srcItem = await _getSourceConversionItem(input);
@@ -101,7 +101,7 @@ class BuildNewConversionUseCase
       }
 
       return Right(
-        OutputConversionModel(
+        ConversionModel(
           unitGroup: input.unitGroup,
           sourceConversionItem: srcItem,
           targetConversionItems: convertedUnitValues,

@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ConversionState extends ConvertouchState {
@@ -15,7 +15,7 @@ class ConversionInProgress extends ConversionState {
 }
 
 class ConversionBuilt extends ConversionState {
-  final OutputConversionModel conversion;
+  final ConversionModel conversion;
   final bool showRefreshButton;
 
   const ConversionBuilt({
@@ -41,8 +41,8 @@ class ConversionBuilt extends ConversionState {
       return null;
     }
     return ConversionBuilt(
-      conversion: OutputConversionModel.fromJson(json["conversion"]) ??
-          const OutputConversionModel(),
+      conversion: ConversionModel.fromJson(json["conversion"]) ??
+          const ConversionModel(),
       showRefreshButton: json["showRefreshButton"] ?? false,
     );
   }

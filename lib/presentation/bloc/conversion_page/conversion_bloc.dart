@@ -1,7 +1,9 @@
+import 'dart:developer';
+
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
@@ -9,6 +11,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_val
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -23,6 +26,7 @@ class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionState> {
   final BuildNewConversionUseCase buildNewConversionUseCase;
   final GetConversionUseCase getConversionUseCase;
+  final SaveConversionUseCase saveConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
   final EditConversionItemUnitUseCase editConversionItemUnitUseCase;
   final EditConversionItemValueUseCase editConversionItemValueUseCase;
@@ -34,6 +38,7 @@ class ConversionBloc
   ConversionBloc({
     required this.buildNewConversionUseCase,
     required this.getConversionUseCase,
+    required this.saveConversionUseCase,
     required this.addUnitsToConversionUseCase,
     required this.editConversionItemUnitUseCase,
     required this.editConversionItemValueUseCase,
@@ -43,10 +48,11 @@ class ConversionBloc
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
-            conversion: OutputConversionModel(),
+            conversion: ConversionModel.none,
           ),
         ) {
     on<GetConversion>(_onGetConversion);
+    on<SaveConversion>(_onSaveConversion);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<AddUnitsToConversion>(_onAddUnitsToConversion);
     on<EditConversionItemUnit>(_onEditConversionItemUnit);
@@ -60,19 +66,37 @@ class ConversionBloc
     GetConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    var result = await getConversionUseCase.execute(event.unitGroup);
+    ConversionBuilt current = state as ConversionBuilt;
 
-    if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
-    } else if (result.right == OutputConversionModel.none) {
+    var result = await getConversionUseCase.execute(event.unitGroup.id);
+
+    if (result.isRight && result.right == ConversionModel.none) {
       result = await buildNewConversionUseCase.execute(
         InputConversionModel(unitGroup: event.unitGroup),
       );
     }
 
     await _handleAndEmit(result, emit);
+
+    if (result.isRight &&
+        current.conversion.unitGroup.id != result.right.unitGroup.id) {
+      log("Processing the previous conversion of the group "
+          "${current.conversion.unitGroup.name}");
+      event.processPrevConversion?.call(current.conversion);
+    }
+  }
+
+  _onSaveConversion(
+    SaveConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    var result = await saveConversionUseCase.execute(event.conversion);
+
+    if (result.isLeft) {
+      navigationBloc.add(
+        ShowException(exception: result.left),
+      );
+    }
   }
 
   _onEditConversionGroup(
@@ -84,7 +108,7 @@ class ConversionBloc
     if (current.conversion.unitGroup.id == event.editedGroup.id) {
       emit(
         ConversionBuilt(
-          conversion: OutputConversionModel(
+          conversion: ConversionModel(
             unitGroup: event.editedGroup,
             sourceConversionItem: current.conversion.sourceConversionItem,
             targetConversionItems: current.conversion.targetConversionItems,
@@ -177,7 +201,7 @@ class ConversionBloc
   ) async {
     ConversionBuilt current = state as ConversionBuilt;
 
-    emit(const ConversionInProgress());
+    // emit(const ConversionInProgress());
 
     final result = await removeConversionItemsUseCase.execute(
       InputConversionModifyModel<RemoveConversionItemsDelta>(
@@ -210,7 +234,7 @@ class ConversionBloc
   }
 
   _handleAndEmit(
-    Either<ConvertouchException, OutputConversionModel> result,
+    Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit,
   ) async {
     if (result.isLeft) {

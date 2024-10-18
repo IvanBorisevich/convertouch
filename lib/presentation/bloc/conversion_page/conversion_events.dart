@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -16,9 +17,11 @@ abstract class ModifyConversion extends ConversionEvent {
 
 class GetConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
+  final void Function(ConversionModel)? processPrevConversion;
 
   const GetConversion({
     required this.unitGroup,
+    this.processPrevConversion,
   });
 
   @override
@@ -29,6 +32,19 @@ class GetConversion extends ConversionEvent {
   @override
   String toString() {
     return 'GetConversion{unitGroup: $unitGroup}';
+  }
+}
+
+class SaveConversion extends ConversionEvent {
+  final ConversionModel conversion;
+
+  const SaveConversion({
+    required this.conversion,
+  });
+
+  @override
+  String toString() {
+    return 'SaveConversion{conversion: $conversion}';
   }
 }
 

@@ -4,13 +4,13 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
-    extends UseCase<InputConversionModifyModel<D>, OutputConversionModel> {
+    extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
   final BuildNewConversionUseCase buildNewConversionUseCase;
 
   const AbstractModifyConversionUseCase({
@@ -18,7 +18,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
   });
 
   @override
-  Future<Either<ConvertouchException, OutputConversionModel>> execute(
+  Future<Either<ConvertouchException, ConversionModel>> execute(
     InputConversionModifyModel<D> input,
   ) async {
     final targetUnitsMap = {
@@ -59,7 +59,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
-  Future<Either<ConvertouchException, OutputConversionModel>> _rebuild({
+  Future<Either<ConvertouchException, ConversionModel>> _rebuild({
     required UnitGroupModel modifiedUnitGroup,
     required ConversionItemModel? modifiedSourceItem,
     required Map<int, UnitModel> modifiedTargetUnitsMap,
@@ -73,7 +73,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return buildNewConversionUseCase.execute(inputParams);
   }
 
-  Future<Either<ConvertouchException, OutputConversionModel>> _modify({
+  Future<Either<ConvertouchException, ConversionModel>> _modify({
     required UnitGroupModel modifiedUnitGroup,
     required ConversionItemModel? modifiedSourceItem,
     required List<ConversionItemModel> currentTargetItems,
@@ -94,7 +94,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       return Right(
-        OutputConversionModel(
+        ConversionModel(
           unitGroup: modifiedUnitGroup,
           sourceConversionItem:
               modifiedSourceItem ?? modifiedTargetConversionItems.firstOrNull,

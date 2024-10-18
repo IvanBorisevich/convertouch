@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
-  final OutputConversionModel conversion;
+  final ConversionModel conversion;
   final T delta;
   final bool rebuildConversion;
 

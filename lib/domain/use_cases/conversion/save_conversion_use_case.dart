@@ -4,17 +4,17 @@ import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class GetConversionUseCase extends UseCase<int, ConversionModel> {
+class SaveConversionUseCase extends UseCase<ConversionModel, void> {
   final ConversionRepository conversionRepository;
 
-  const GetConversionUseCase({
+  const SaveConversionUseCase({
     required this.conversionRepository,
   });
 
   @override
-  Future<Either<ConvertouchException, ConversionModel>> execute(
-    int input,
+  Future<Either<ConvertouchException, void>> execute(
+    ConversionModel input,
   ) async {
-    return await conversionRepository.get(input);
+    return await conversionRepository.upsert(input);
   }
 }
