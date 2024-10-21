@@ -30,7 +30,7 @@ class DynamicValueEntity {
     this.value,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toDbRow() {
     return {
       'id': id,
       'unit_id': unitId,

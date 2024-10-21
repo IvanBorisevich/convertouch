@@ -9,7 +9,7 @@ abstract class ConversionRepository {
 
   Future<Either<ConvertouchException, void>> remove(List<int> unitGroupIds);
 
-  Future<Either<ConvertouchException, ConversionModel>> upsert(
+  Future<Either<ConvertouchException, ConversionModel>> merge(
     ConversionModel conversion,
   );
 }

@@ -89,7 +89,7 @@ class UnitGroupModel extends IdNameItemModel {
       return null;
     }
     return UnitGroupModel(
-      id: json["id"],
+      id: json["id"] ?? -1,
       name: json["name"],
       iconName: json["iconName"],
       conversionType: ConversionType.valueOf(json["conversionType"]),

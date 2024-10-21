@@ -56,6 +56,7 @@ enum PageName {
 enum ItemType {
   unit,
   unitGroup,
+  conversion,
   conversionItem,
   job,
   dynamicValue,

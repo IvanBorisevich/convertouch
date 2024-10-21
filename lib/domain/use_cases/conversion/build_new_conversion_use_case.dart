@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
@@ -33,14 +31,14 @@ class BuildNewConversionUseCase
 
       ConversionItemModel srcItem = await _getSourceConversionItem(input);
 
-      List<ConversionItemModel> convertedUnitValues = [];
+      List<ConversionItemModel> convertedItems = [];
       double? srcValue = double.tryParse(srcItem.value.str);
       double srcDefaultValue = double.parse(srcItem.defaultValue.str);
       double srcCoefficient = srcItem.unit.coefficient!;
 
       for (UnitModel tgtUnit in input.targetUnits) {
         if (tgtUnit.id == srcItem.unit.id) {
-          convertedUnitValues.add(srcItem);
+          convertedItems.add(srcItem);
           continue;
         }
 
@@ -72,8 +70,6 @@ class BuildNewConversionUseCase
           tgtDefaultValue = baseToTgt.applyReverse(normalizedBaseValue)!;
         }
 
-        log("tgt unit name: ${tgtUnit.name}, tgtValue: $tgtValue, tgtDefaultValue: $tgtDefaultValue");
-
         double? minValue = (tgtUnit.minValue ?? input.unitGroup.minValue).num;
         double? maxValue = (tgtUnit.maxValue ?? input.unitGroup.maxValue).num;
 
@@ -89,7 +85,7 @@ class BuildNewConversionUseCase
           max: maxValue,
         );
 
-        convertedUnitValues.add(
+        convertedItems.add(
           ConversionItemModel(
             unit: tgtUnit,
             value: tgtValueModel.exists ? tgtValueModel : ValueModel.none,
@@ -103,8 +99,7 @@ class BuildNewConversionUseCase
       return Right(
         ConversionModel(
           unitGroup: input.unitGroup,
-          sourceConversionItem: srcItem,
-          targetConversionItems: convertedUnitValues,
+          targetConversionItems: convertedItems,
         ),
       );
     } catch (e, stackTrace) {

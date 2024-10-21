@@ -95,14 +95,16 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
   locator.registerLazySingleton<UnitRepository>(
     () => UnitRepositoryImpl(
       unitDao: database.unitDao,
-      unitGroupDao: database.unitGroupDao,
-      database: database.database.database,
     ),
   );
 
   locator.registerLazySingleton<ConversionRepository>(
     () => ConversionRepositoryImpl(
+      conversionDao: database.conversionDao,
+      conversionItemDao: database.conversionItemDao,
       unitGroupRepository: locator(),
+      unitRepository: locator(),
+      database: database.database.database,
     ),
   );
 

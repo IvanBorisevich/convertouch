@@ -93,7 +93,7 @@ class UnitModel extends IdNameItemModel {
       return null;
     }
     return UnitModel(
-      id: json["id"],
+      id: json["id"] ?? -1,
       name: json["name"],
       code: json["code"],
       coefficient: json["coefficient"],

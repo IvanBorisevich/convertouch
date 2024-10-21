@@ -15,6 +15,6 @@ class SaveConversionUseCase extends UseCase<ConversionModel, void> {
   Future<Either<ConvertouchException, void>> execute(
     ConversionModel input,
   ) async {
-    return await conversionRepository.upsert(input);
+    return await conversionRepository.merge(input);
   }
 }

@@ -1,22 +1,16 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
-import 'package:convertouch/data/dao/unit_group_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:either_dart/either.dart';
-import 'package:sqflite/sqflite.dart' as sqlite;
 
 class UnitRepositoryImpl extends UnitRepository {
   final UnitDao unitDao;
-  final UnitGroupDao unitGroupDao;
-  final sqlite.Database database;
 
   const UnitRepositoryImpl({
     required this.unitDao,
-    required this.unitGroupDao,
-    required this.database,
   });
 
   @override
