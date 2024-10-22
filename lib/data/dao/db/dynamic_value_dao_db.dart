@@ -23,13 +23,13 @@ abstract class DynamicValueDaoDb extends DynamicValueDao {
   ) async {
     var batch = db.batch();
     for (DynamicValueEntity entity in entities) {
-      db.insert(
+      batch.insert(
         dynamicValuesTableName,
         entity.toDbRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.ignore,
       );
     }
-    batch.commit(noResult: true);
+    await batch.commit(noResult: true);
   }
 
   @override
@@ -39,12 +39,12 @@ abstract class DynamicValueDaoDb extends DynamicValueDao {
   ) async {
     var batch = db.batch();
     for (DynamicValueEntity entity in entities) {
-      db.update(
+      batch.update(
         dynamicValuesTableName,
         entity.toDbRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.ignore,
       );
     }
-    batch.commit(noResult: true);
+    await batch.commit(noResult: true);
   }
 }

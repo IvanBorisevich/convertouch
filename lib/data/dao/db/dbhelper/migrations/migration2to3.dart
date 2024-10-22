@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:convertouch/data/const/oob_units.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
+import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Migration2to3 extends ConvertouchDbMigration {
@@ -31,12 +33,27 @@ class Migration2to3 extends ConvertouchDbMigration {
     );
 
     await database.execute(
-      'CREATE UNIQUE INDEX `index_conversions_last_modified` '
+      'CREATE UNIQUE INDEX IF NOT EXISTS '
+      '   `index_conversions_last_modified` '
       'ON `conversions` (`last_modified`)',
     );
     await database.execute(
-      'CREATE UNIQUE INDEX `index_conversion_items_unit_id_conversion_id` '
+      'CREATE UNIQUE INDEX IF NOT EXISTS '
+      '   `index_conversion_items_unit_id_conversion_id` '
       'ON `conversion_items` (`unit_id`, `conversion_id`)',
+    );
+
+    await SqlUtils.updateUnitColumn(
+      database,
+      unitCode: 'dm³',
+      groupName: 'Volume',
+      columnName: 'name',
+      newColumnValue: 'Cubic Decimeter',
+    );
+
+    await SqlUtils.mergeGroupsAndUnits(
+      database,
+      entities: unitsV2,
     );
   }
 }

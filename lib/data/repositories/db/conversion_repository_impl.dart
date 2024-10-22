@@ -140,7 +140,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         log("Inserting conversion items");
         log("Source unit id = ${conversion.sourceConversionItem?.unit.id}");
 
-        conversionItemDao.insertBatch(
+        await conversionItemDao.insertBatch(
           database,
           conversion.targetConversionItems
               .mapIndexed(

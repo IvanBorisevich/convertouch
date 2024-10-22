@@ -36,15 +36,6 @@ abstract class UnitGroupDaoDb extends UnitGroupDao {
   Future<int> update(UnitGroupEntity unitGroupEntity);
 
   @override
-  Future<int> merge(UnitGroupEntity unitGroupEntity) {
-    return Future.sync(
-      () => insert(unitGroupEntity),
-    ).onError(
-      (error, stackTrace) => update(unitGroupEntity),
-    );
-  }
-
-  @override
   @Query("delete from $unitGroupsTableName where id in (:ids)")
   Future<void> remove(List<int> ids);
 }

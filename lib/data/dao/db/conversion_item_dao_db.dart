@@ -18,14 +18,14 @@ abstract class ConversionItemDaoDb extends ConversionItemDao {
   ) async {
     var batch = db.batch();
     for (ConversionItemEntity entity in conversionItems) {
-      db.insert(
+      batch.insert(
         conversionItemsTableName,
         entity.toDbRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.fail,
       );
     }
 
-    batch.commit(noResult: true);
+    await batch.commit(noResult: true);
   }
 
   @override

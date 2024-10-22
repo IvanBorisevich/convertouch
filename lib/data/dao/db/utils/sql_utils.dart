@@ -79,8 +79,9 @@ class SqlUtils {
   }) async {
     Map<String, int> existingGroupNames =
         await _getExistingGroupIdsNames(database);
+
     for (Map<String, dynamic> entity in entities) {
-      database.transaction(
+      await database.transaction(
         (txn) async {
           int unitGroupId = await _mergeGroup(
             txn: txn,
@@ -88,8 +89,10 @@ class SqlUtils {
             existingGroupNames: existingGroupNames,
           );
 
-          Map<String, int> existingUnitCodes =
-              await _getExistingUnitIdsCodes(database, unitGroupId);
+          Map<String, int> existingUnitCodes = await _getExistingUnitIdsCodes(
+            txn: txn,
+            unitGroupId: unitGroupId,
+          );
 
           List<int> unitIds = await _mergeUnits(
             txn: txn,
@@ -101,7 +104,7 @@ class SqlUtils {
           bool valuesAreRefreshable = entity['refreshable'] == true &&
               entity['conversionType'] == ConversionType.formula;
           if (valuesAreRefreshable) {
-            _insertDynamicUnits(txn, unitIds);
+            await _insertDynamicUnits(txn, unitIds);
           }
         },
       );
@@ -116,11 +119,11 @@ class SqlUtils {
     return {for (var item in result) item["name"]: item["id"]};
   }
 
-  static Future<Map<String, int>> _getExistingUnitIdsCodes(
-    Database database,
-    int unitGroupId,
-  ) async {
-    List<Map<String, dynamic>> result = await database.rawQuery(
+  static Future<Map<String, int>> _getExistingUnitIdsCodes({
+    required Transaction txn,
+    required int unitGroupId,
+  }) async {
+    List<Map<String, dynamic>> result = await txn.rawQuery(
         "SELECT id, code FROM units WHERE unit_group_id = $unitGroupId");
     return {for (var item in result) item["code"]: item["id"]};
   }

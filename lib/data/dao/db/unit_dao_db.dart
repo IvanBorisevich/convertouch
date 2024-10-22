@@ -86,7 +86,7 @@ abstract class UnitDaoDb extends UnitDao {
   Future<void> updateBatch(sqlite.Database db, List<UnitEntity> units) async {
     var batch = db.batch();
     for (UnitEntity entity in units) {
-      db.update(
+      batch.update(
         unitsTableName,
         {
           'coefficient': entity.coefficient,
@@ -99,21 +99,12 @@ abstract class UnitDaoDb extends UnitDao {
         conflictAlgorithm: sqlite.ConflictAlgorithm.fail,
       );
     }
-    batch.commit(noResult: true);
+    await batch.commit(noResult: true);
   }
 
   @override
   @Update()
   Future<int> update(UnitEntity unit);
-
-  @override
-  Future<int> merge(UnitEntity unit) {
-    return Future.sync(
-      () => insert(unit),
-    ).onError(
-      (error, stackTrace) => update(unit),
-    );
-  }
 
   @override
   @Query("delete from $unitsTableName where id in (:ids)")

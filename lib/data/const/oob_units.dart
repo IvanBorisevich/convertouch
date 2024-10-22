@@ -924,3 +924,13 @@ const unitsV1 = [
     ]
   },
 ];
+
+const unitsV2 = [
+  {
+    "groupName": "Volume",
+    "units": [
+      {"code": "mL", "name": "Milliliter", "coefficient": 1E-6},
+      {"code": "L", "name": "Liter", "coefficient": 1E-3},
+    ]
+  },
+];
