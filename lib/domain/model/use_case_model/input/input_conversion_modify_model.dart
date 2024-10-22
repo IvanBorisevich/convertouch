@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 
@@ -22,6 +23,14 @@ class AddUnitsToConversionDelta extends ConversionModifyDelta {
 
   const AddUnitsToConversionDelta({
     required this.unitIds,
+  });
+}
+
+class EditConversionGroupDelta extends ConversionModifyDelta {
+  final UnitGroupModel editedGroup;
+
+  const EditConversionGroupDelta({
+    required this.editedGroup,
   });
 }
 

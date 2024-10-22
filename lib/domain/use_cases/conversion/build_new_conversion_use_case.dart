@@ -29,7 +29,16 @@ class BuildNewConversionUseCase
         return Right(ConversionModel.noItems(input.unitGroup));
       }
 
-      ConversionItemModel srcItem = await _getSourceConversionItem(input);
+      ValueModel dynamicValue = ValueModel.ofString(
+        ObjectUtils.tryGet(
+          await dynamicValueRepository.get(input.sourceConversionItem.unit.id),
+        ).value,
+      );
+
+      ConversionItemModel srcItem = ConversionItemModel.coalesce(
+        input.sourceConversionItem,
+        defaultValue: dynamicValue,
+      );
 
       List<ConversionItemModel> convertedItems = [];
       double? srcValue = double.tryParse(srcItem.value.str);
@@ -112,30 +121,5 @@ class BuildNewConversionUseCase
         ),
       );
     }
-  }
-
-  Future<ConversionItemModel> _getSourceConversionItem(
-    InputConversionModel input,
-  ) async {
-    UnitModel srcUnit;
-    ValueModel srcValue;
-
-    if (input.sourceConversionItem != null) {
-      srcUnit = input.sourceConversionItem!.unit;
-      srcValue = input.sourceConversionItem!.value;
-    } else {
-      srcUnit = input.targetUnits.first;
-      srcValue = ValueModel.none;
-    }
-
-    ValueModel srcDefaultValue = ValueModel.ofString(
-      ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id)).value,
-    );
-
-    return ConversionItemModel(
-      unit: srcUnit,
-      value: srcValue,
-      defaultValue: srcDefaultValue,
-    );
   }
 }

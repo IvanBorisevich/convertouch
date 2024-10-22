@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -14,18 +14,21 @@ class AddUnitsToConversionUseCase
   });
 
   @override
-  Future<Map<int, UnitModel>> modifyTargetUnits(
-    Map<int, UnitModel> targetUnits,
+  Future<Map<int, ConversionItemModel>> modifyConversionItems(
+    Map<int, ConversionItemModel> conversionItemsMap,
     AddUnitsToConversionDelta delta,
   ) async {
     final newUnits = ObjectUtils.tryGet(
       await unitRepository.getByIds(delta.unitIds),
     );
 
-    final newUnitsMap = {for (var unit in newUnits) unit.id: unit};
+    final addedConversionItemsMap = {
+      for (var unit in newUnits)
+        unit.id: ConversionItemModel.fromUnit(unit: unit)
+    };
     return {
-      ...targetUnits,
-      ...newUnitsMap,
+      ...conversionItemsMap,
+      ...addedConversionItemsMap,
     };
   }
 }

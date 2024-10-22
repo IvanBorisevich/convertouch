@@ -40,9 +40,12 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.ofString(String? value) {
+  factory ValueModel.ofString(
+    String? value, {
+    ValueModel defaultValue = ValueModel.none,
+  }) {
     if (value == null) {
-      return ValueModel.none;
+      return defaultValue;
     }
 
     var numVal = double.tryParse(value);

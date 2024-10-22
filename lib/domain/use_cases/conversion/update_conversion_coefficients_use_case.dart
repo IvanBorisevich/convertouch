@@ -10,35 +10,19 @@ class UpdateConversionCoefficientsUseCase
   });
 
   @override
-  ConversionItemModel? modifySourceConversionItem({
-    required ConversionItemModel? sourceItem,
-    required Map<int, UnitModel> targetUnits,
-    required UpdateConversionCoefficientsDelta delta,
-  }) {
-    if (delta.updatedUnitCoefs.containsKey(sourceItem?.unit.code)) {
-      return ConversionItemModel.coalesce(
-        sourceItem,
-        unit: UnitModel.coalesce(
-          sourceItem!.unit,
-          coefficient: delta.updatedUnitCoefs[sourceItem.unit.code],
-        ),
-      );
-    } else {
-      return sourceItem;
-    }
-  }
-
-  @override
-  Future<Map<int, UnitModel>> modifyTargetUnits(
-    Map<int, UnitModel> targetUnits,
+  Future<Map<int, ConversionItemModel>> modifyConversionItems(
+    Map<int, ConversionItemModel> conversionItemsMap,
     UpdateConversionCoefficientsDelta delta,
   ) async {
-    targetUnits.updateAll(
-      (key, value) => UnitModel.coalesce(
-        value,
-        coefficient: delta.updatedUnitCoefs[value.code],
+    conversionItemsMap.updateAll(
+      (key, item) => ConversionItemModel.coalesce(
+        item,
+        unit: UnitModel.coalesce(
+          item.unit,
+          coefficient: delta.updatedUnitCoefs[item.unit.code],
+        ),
       ),
     );
-    return targetUnits;
+    return conversionItemsMap;
   }
 }

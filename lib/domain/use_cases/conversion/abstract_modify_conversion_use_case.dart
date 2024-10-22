@@ -2,7 +2,6 @@ import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
@@ -23,36 +22,54 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     InputConversionModifyModel<D> input,
   ) async {
     try {
-      final targetUnitsMap = {
+      final modifiedGroup = input.delta is EditConversionGroupDelta
+          ? input.delta as UnitGroupModel
+          : input.conversion.unitGroup;
+
+      final conversionItemsMap = {
         for (var item in input.conversion.targetConversionItems)
-          item.unit.id: item.unit
+          item.unit.id: item
       };
 
-      final modifiedTargetUnitsMap = await modifyTargetUnits(
-        targetUnitsMap,
+      final modifiedConversionItemsMap = await modifyConversionItems(
+        conversionItemsMap,
         input.delta,
       );
 
-      var modifiedSourceItem = modifySourceConversionItem(
-        sourceItem: input.conversion.sourceConversionItem,
-        targetUnits: modifiedTargetUnitsMap,
+      if (modifiedConversionItemsMap.isEmpty) {
+        return Right(
+          ConversionModel(
+            id: input.conversion.id,
+            unitGroup: modifiedGroup,
+          ),
+        );
+      }
+
+      var modifiedSourceItem = getModifiedSourceItem(
+        currentSourceItem: input.conversion.sourceConversionItem ??
+            modifiedConversionItemsMap.values.first,
+        modifiedConversionItemsMap: modifiedConversionItemsMap,
         delta: input.delta,
       );
 
       ConversionModel result;
       if (input.rebuildConversion) {
-        result = await _rebuild(
-          modifiedUnitGroup: input.conversion.unitGroup,
-          modifiedSourceItem: modifiedSourceItem ??
-              input.conversion.targetConversionItems.firstOrNull,
-          modifiedTargetUnitsMap: modifiedTargetUnitsMap,
+        result = ObjectUtils.tryGet(
+          await buildNewConversionUseCase.execute(
+            InputConversionModel(
+              unitGroup: modifiedGroup,
+              sourceConversionItem: modifiedSourceItem,
+              targetUnits: modifiedConversionItemsMap.values
+                  .map((conversionItem) => conversionItem.unit)
+                  .toList(),
+            ),
+          ),
         );
       } else {
-        result = await _modify(
-          modifiedUnitGroup: input.conversion.unitGroup,
-          modifiedSourceItem: modifiedSourceItem,
-          currentTargetItems: input.conversion.targetConversionItems,
-          modifiedTargetUnitsMap: modifiedTargetUnitsMap,
+        result = ConversionModel(
+          unitGroup: modifiedGroup,
+          sourceConversionItem: modifiedSourceItem,
+          targetConversionItems: modifiedConversionItemsMap.values.toList(),
         );
       }
 
@@ -74,61 +91,22 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
-  Future<ConversionModel> _rebuild({
-    required UnitGroupModel modifiedUnitGroup,
-    required ConversionItemModel? modifiedSourceItem,
-    required Map<int, UnitModel> modifiedTargetUnitsMap,
-  }) async {
-    InputConversionModel inputParams = InputConversionModel(
-      unitGroup: modifiedUnitGroup,
-      sourceConversionItem: modifiedSourceItem,
-      targetUnits: modifiedTargetUnitsMap.values.toList(),
-    );
-
-    return ObjectUtils.tryGet(
-      await buildNewConversionUseCase.execute(inputParams),
-    );
-  }
-
-  Future<ConversionModel> _modify({
-    required UnitGroupModel modifiedUnitGroup,
-    required ConversionItemModel? modifiedSourceItem,
-    required List<ConversionItemModel> currentTargetItems,
-    required Map<int, UnitModel> modifiedTargetUnitsMap,
-  }) async {
-    List<ConversionItemModel> modifiedTargetConversionItems = [];
-
-    for (final item in currentTargetItems) {
-      if (modifiedTargetUnitsMap.containsKey(item.unit.id)) {
-        modifiedTargetConversionItems.add(
-          ConversionItemModel.coalesce(
-            item,
-            unit: modifiedTargetUnitsMap[item.unit.id],
-          ),
-        );
-      }
-    }
-
-    return ConversionModel(
-      unitGroup: modifiedUnitGroup,
-      sourceConversionItem:
-          modifiedSourceItem ?? modifiedTargetConversionItems.firstOrNull,
-      targetConversionItems: modifiedTargetConversionItems,
-    );
-  }
-
-  ConversionItemModel? modifySourceConversionItem({
-    required ConversionItemModel? sourceItem,
-    required Map<int, UnitModel> targetUnits,
+  ConversionItemModel getModifiedSourceItem({
+    required ConversionItemModel? currentSourceItem,
+    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
     required D delta,
   }) {
-    return sourceItem;
+    if (currentSourceItem != null &&
+        modifiedConversionItemsMap.containsKey(currentSourceItem.unit.id)) {
+      return modifiedConversionItemsMap[currentSourceItem.unit.id]!;
+    }
+    return modifiedConversionItemsMap.values.first;
   }
 
-  Future<Map<int, UnitModel>> modifyTargetUnits(
-    Map<int, UnitModel> targetUnits,
+  Future<Map<int, ConversionItemModel>> modifyConversionItems(
+    Map<int, ConversionItemModel> conversionItemsMap,
     D delta,
   ) async {
-    return targetUnits;
+    return conversionItemsMap;
   }
 }
