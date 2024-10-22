@@ -2,10 +2,8 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
@@ -24,7 +22,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionBuilt> {
-  final BuildNewConversionUseCase buildNewConversionUseCase;
   final GetConversionUseCase getConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
@@ -36,7 +33,6 @@ class ConversionBloc
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
-    required this.buildNewConversionUseCase,
     required this.getConversionUseCase,
     required this.saveConversionUseCase,
     required this.addUnitsToConversionUseCase,
@@ -70,17 +66,22 @@ class ConversionBloc
       var result = await getConversionUseCase.execute(event.unitGroup.id);
 
       if (result.isRight && !result.right.exists) {
-        result = await buildNewConversionUseCase.execute(
-          InputConversionModel(unitGroup: event.unitGroup),
-        );
+        log("No conversion found in db by group id = ${event.unitGroup.id}");
+        result = Right(ConversionModel.noItems(event.unitGroup));
       }
 
+      ConversionBuilt prev = state;
       await _handleAndEmit(result, emit, onSuccess: () {
-        log("Processing previous conversion state of the group "
-            "'${state.conversion.unitGroup.name}'");
-        event.processPrevConversion?.call(state.conversion);
+        if (prev.conversion.exists) {
+          log("Processing previous conversion state of the group "
+              "'${prev.conversion.unitGroup.name}'");
+          event.processPrevConversion?.call(prev.conversion);
+        } else {
+          log("No previous conversion");
+        }
       });
     } else {
+      log("Get existing conversion state from cache");
       emit(state);
     }
   }

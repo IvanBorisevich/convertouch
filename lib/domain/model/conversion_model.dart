@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
 class ConversionModel extends IdNameItemModel {
-  static const none = ConversionModel();
+  static const none = ConversionModel.noItems(UnitGroupModel.none);
 
   final UnitGroupModel unitGroup;
   final ConversionItemModel? sourceConversionItem;
@@ -16,8 +16,9 @@ class ConversionModel extends IdNameItemModel {
     this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
     this.targetConversionItems = const [],
-    super.itemType = ItemType.conversion,
-  });
+  }) : super(
+          itemType: ItemType.conversion,
+        );
 
   const ConversionModel.noItems(UnitGroupModel unitGroup)
       : this(
@@ -73,7 +74,7 @@ class ConversionModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'OutputConversionModel{'
+    return 'ConversionModel{'
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
         'targetConversionItems: $targetConversionItems}';

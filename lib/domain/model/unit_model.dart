@@ -84,7 +84,6 @@ class UnitModel extends IdNameItemModel {
     };
 
     result.removeWhere((key, value) => value == null);
-
     return result;
   }
 

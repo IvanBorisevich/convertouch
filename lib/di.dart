@@ -9,6 +9,8 @@ import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/job_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
+import 'package:convertouch/data/translators/conversion_item_translator.dart';
+import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/data/translators/data_source_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -149,6 +151,14 @@ Future<void> _initTranslators() async {
 
   locator.registerLazySingleton<DataSourceTranslator>(
     () => DataSourceTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionTranslator>(
+    () => ConversionTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionItemTranslator>(
+    () => ConversionItemTranslator(),
   );
 }
 
@@ -336,7 +346,6 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<ConversionBloc>(
     () => ConversionBloc(
-      buildNewConversionUseCase: locator(),
       getConversionUseCase: locator(),
       saveConversionUseCase: locator(),
       addUnitsToConversionUseCase: locator(),

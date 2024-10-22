@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/conversion_dao.dart';
 import 'package:convertouch/data/dao/conversion_item_dao.dart';
@@ -99,35 +101,43 @@ class ConversionRepositoryImpl extends ConversionRepository {
   ) async {
     try {
       ConversionEntity entity = ConversionTranslator.I.fromModel(conversion)!;
-      ConversionModel result;
+      ConversionModel resultConversion = ConversionModel.none;
 
       if (conversion.hasId) {
+        log("Updating an existing conversion");
         await conversionDao.update(entity);
         await conversionItemDao.removeByConversionId(conversion.id);
-        result = conversion;
-      } else {
+        resultConversion = conversion;
+      } else if (conversion.targetConversionItems.isNotEmpty) {
+        log("Inserting a new conversion");
         int id = await conversionDao.insert(entity);
-        result = ConversionModel.coalesce(
+        resultConversion = ConversionModel.coalesce(
           conversion,
           id: id,
         );
       }
 
-      conversionItemDao.insertBatch(
-        database,
-        conversion.targetConversionItems
-            .mapIndexed(
-              (index, item) => ConversionItemTranslator.I.fromModel(
-                item,
-                sourceItemUnitId: conversion.sourceConversionItem?.unit.id,
-                sequenceNum: index,
-                conversionId: conversion.id,
-              )!,
-            )
-            .toList(),
-      );
+      if (conversion.targetConversionItems.isNotEmpty) {
+        log("Inserting conversion items");
+        log("Source unit id = ${conversion.sourceConversionItem?.unit.id}");
 
-      return Right(result);
+        conversionItemDao.insertBatch(
+          database,
+          conversion.targetConversionItems
+              .mapIndexed(
+                (index, item) => ConversionItemTranslator.I.fromModel(
+                  item,
+                  isSource:
+                      item.unit.id == conversion.sourceConversionItem?.unit.id,
+                  sequenceNum: index,
+                  conversionId: resultConversion.id,
+                )!,
+              )
+              .toList(),
+        );
+      }
+
+      return Right(resultConversion);
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(

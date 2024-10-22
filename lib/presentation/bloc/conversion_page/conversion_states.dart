@@ -32,8 +32,8 @@ class ConversionBuilt extends ConversionState {
       return null;
     }
     return ConversionBuilt(
-      conversion: ConversionModel.fromJson(json["conversion"]) ??
-          const ConversionModel(),
+      conversion:
+          ConversionModel.fromJson(json["conversion"]) ?? ConversionModel.none,
       showRefreshButton: json["showRefreshButton"] ?? false,
     );
   }

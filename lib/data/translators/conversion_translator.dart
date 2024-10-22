@@ -18,7 +18,7 @@ class ConversionTranslator
       return null;
     }
     return ConversionEntity(
-      id: model.id,
+      id: model.id != -1 ? model.id : null,
       unitGroupId: model.unitGroup.id,
       lastModified: DateTime.now().millisecondsSinceEpoch,
     );
@@ -43,8 +43,10 @@ class ConversionTranslator
     return ConversionModel(
       id: entity.id ?? -1,
       unitGroup: unitGroup ?? UnitGroupModel.none,
-      sourceConversionItem:
-          ConversionItemTranslator.I.toModel(sourceItemEntity),
+      sourceConversionItem: ConversionItemTranslator.I.toModel(
+        sourceItemEntity,
+        unit: conversionItemUnitsMap[sourceItemEntity!.unitId],
+      ),
       targetConversionItems: conversionItemEntities
           .map(
             (entity) => ConversionItemTranslator.I.toModel(

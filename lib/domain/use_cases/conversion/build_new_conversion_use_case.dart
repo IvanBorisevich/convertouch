@@ -99,6 +99,7 @@ class BuildNewConversionUseCase
       return Right(
         ConversionModel(
           unitGroup: input.unitGroup,
+          sourceConversionItem: srcItem,
           targetConversionItems: convertedItems,
         ),
       );
@@ -116,9 +117,17 @@ class BuildNewConversionUseCase
   Future<ConversionItemModel> _getSourceConversionItem(
     InputConversionModel input,
   ) async {
-    UnitModel srcUnit =
-        input.sourceConversionItem?.unit ?? input.targetUnits.first;
-    ValueModel srcValue = input.sourceConversionItem?.value ?? ValueModel.none;
+    UnitModel srcUnit;
+    ValueModel srcValue;
+
+    if (input.sourceConversionItem != null) {
+      srcUnit = input.sourceConversionItem!.unit;
+      srcValue = input.sourceConversionItem!.value;
+    } else {
+      srcUnit = input.targetUnits.first;
+      srcValue = ValueModel.none;
+    }
+
     ValueModel srcDefaultValue = ValueModel.ofString(
       ObjectUtils.tryGet(await dynamicValueRepository.get(srcUnit.id)).value,
     );
@@ -126,8 +135,7 @@ class BuildNewConversionUseCase
     return ConversionItemModel(
       unit: srcUnit,
       value: srcValue,
-      defaultValue:
-          srcDefaultValue.exists ? srcDefaultValue : ValueModel.undefined,
+      defaultValue: srcDefaultValue,
     );
   }
 }

@@ -13,7 +13,7 @@ class ConversionItemTranslator
   @override
   ConversionItemEntity? fromModel(
     ConversionItemModel? model, {
-    int? sourceItemUnitId,
+    bool isSource = false,
     int? sequenceNum,
     int? conversionId,
   }) {
@@ -22,9 +22,9 @@ class ConversionItemTranslator
     }
     return ConversionItemEntity(
       unitId: model.unit.id,
-      value: model.value.str,
-      defaultValue: model.defaultValue.str,
-      isSource: model.unit.id == sourceItemUnitId ? 1 : null,
+      value: model.value.exists ? model.value.str : null,
+      defaultValue: model.defaultValue.exists ? model.defaultValue.str : null,
+      isSource: isSource ? 1 : null,
       sequenceNum: sequenceNum ?? 0,
       conversionId: conversionId ?? model.unit.unitGroupId,
     );

@@ -33,6 +33,7 @@ class ConversionEntity {
 
   static Map<String, Object?> entityToRow(Map<String, dynamic> entity) {
     return {
+      'id': entity['id'],
       'unit_group_id': entity['unitGroupId'],
       'last_modified': DateTime.now().millisecondsSinceEpoch,
     };
