@@ -29,12 +29,17 @@ class ConversionModel extends IdNameItemModel {
     ConversionModel saved, {
     int? id,
     String? name,
+    UnitGroupModel? unitGroup,
+    ConversionItemModel? sourceConversionItem,
+    List<ConversionItemModel>? targetConversionItems,
   }) : this(
           id: id ?? saved.id,
           name: name ?? saved.name,
-          unitGroup: saved.unitGroup,
-          sourceConversionItem: saved.sourceConversionItem,
-          targetConversionItems: saved.targetConversionItems,
+          unitGroup: unitGroup ?? saved.unitGroup,
+          sourceConversionItem:
+              sourceConversionItem ?? saved.sourceConversionItem,
+          targetConversionItems:
+              targetConversionItems ?? saved.targetConversionItems,
         );
 
   Map<String, dynamic> toJson() {

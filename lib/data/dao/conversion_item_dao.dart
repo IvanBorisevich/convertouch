@@ -6,8 +6,6 @@ abstract class ConversionItemDao {
 
   Future<List<ConversionItemEntity>> getByConversionId(int conversionId);
 
-  Future<ConversionItemEntity?> getSourceItem(int conversionId);
-
   Future<void> insertBatch(
     sqlite.Database db,
     List<ConversionItemEntity> conversionItems,

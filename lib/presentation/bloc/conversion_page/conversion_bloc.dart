@@ -63,12 +63,7 @@ class ConversionBloc
     Emitter<ConversionState> emit,
   ) async {
     if (event.unitGroup.id != state.conversion.unitGroup.id) {
-      var result = await getConversionUseCase.execute(event.unitGroup.id);
-
-      if (result.isRight && !result.right.exists) {
-        log("No conversion found in db by group id = ${event.unitGroup.id}");
-        result = Right(ConversionModel.noItems(event.unitGroup));
-      }
+      var result = await getConversionUseCase.execute(event.unitGroup);
 
       ConversionBuilt prev = state;
       await _handleAndEmit(result, emit, onSuccess: () {

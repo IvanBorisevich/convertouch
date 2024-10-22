@@ -12,6 +12,8 @@ class Migration2to3 extends ConvertouchDbMigration {
       'CREATE TABLE IF NOT EXISTS `conversions` ('
       '`id` INTEGER PRIMARY KEY AUTOINCREMENT, '
       '`unit_group_id` INTEGER NOT NULL, '
+      '`source_unit_id` INTEGER, '
+      '`source_value` TEXT, '
       '`last_modified` INTEGER NOT NULL, '
       'FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) '
       ' ON UPDATE NO ACTION ON DELETE CASCADE)',
@@ -23,7 +25,6 @@ class Migration2to3 extends ConvertouchDbMigration {
       '`value` TEXT, '
       '`default_value` TEXT, '
       '`sequence_num` INTEGER NOT NULL, '
-      '`is_source` INTEGER, '
       '`conversion_id` INTEGER NOT NULL, '
       'FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) '
       ' ON UPDATE NO ACTION ON DELETE CASCADE)',

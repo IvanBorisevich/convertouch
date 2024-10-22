@@ -27,8 +27,6 @@ class ConversionItemEntity {
   final String? defaultValue;
   @ColumnInfo(name: 'sequence_num')
   final int sequenceNum;
-  @ColumnInfo(name: "is_source")
-  final int? isSource;
   @ColumnInfo(name: 'conversion_id')
   final int conversionId;
 
@@ -38,7 +36,6 @@ class ConversionItemEntity {
     this.value,
     this.defaultValue,
     required this.sequenceNum,
-    this.isSource,
     required this.conversionId,
   });
 
@@ -48,7 +45,6 @@ class ConversionItemEntity {
       'value': value,
       'default_value': defaultValue,
       'sequence_num': sequenceNum,
-      'is_source': isSource,
       'conversion_id': conversionId,
     };
   }

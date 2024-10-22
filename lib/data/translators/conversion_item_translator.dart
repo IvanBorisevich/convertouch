@@ -13,7 +13,6 @@ class ConversionItemTranslator
   @override
   ConversionItemEntity? fromModel(
     ConversionItemModel? model, {
-    bool isSource = false,
     int? sequenceNum,
     int? conversionId,
   }) {
@@ -24,7 +23,6 @@ class ConversionItemTranslator
       unitId: model.unit.id,
       value: model.value.exists ? model.value.str : null,
       defaultValue: model.defaultValue.exists ? model.defaultValue.str : null,
-      isSource: isSource ? 1 : null,
       sequenceNum: sequenceNum ?? 0,
       conversionId: conversionId ?? model.unit.unitGroupId,
     );
@@ -35,18 +33,17 @@ class ConversionItemTranslator
     ConversionItemEntity? entity, {
     UnitModel? unit,
   }) {
-    if (entity == null) {
+    if (entity == null || unit == null) {
       return null;
     }
+
     ValueModel value = ValueModel.ofString(entity.value);
     ValueModel defaultValue = ValueModel.ofString(entity.defaultValue);
-    return unit != null
-        ? ConversionItemModel(
-            unit: unit,
-            value: value.exists ? value : ValueModel.none,
-            defaultValue:
-                defaultValue.exists ? defaultValue : ValueModel.undefined,
-          )
-        : null;
+
+    return ConversionItemModel(
+      unit: unit,
+      value: value.exists ? value : ValueModel.none,
+      defaultValue: defaultValue.exists ? defaultValue : ValueModel.one,
+    );
   }
 }

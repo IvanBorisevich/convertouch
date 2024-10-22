@@ -99,9 +99,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_group_id` INTEGER NOT NULL, `last_modified` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_group_id` INTEGER NOT NULL, `source_unit_id` INTEGER, `source_value` TEXT, `last_modified` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `is_source` INTEGER, `conversion_id` INTEGER NOT NULL, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -542,6 +542,8 @@ class _$ConversionDaoDb extends ConversionDaoDb {
             (ConversionEntity item) => <String, Object?>{
                   'id': item.id,
                   'unit_group_id': item.unitGroupId,
+                  'source_unit_id': item.sourceUnitId,
+                  'source_value': item.sourceValue,
                   'last_modified': item.lastModified
                 }),
         _conversionEntityUpdateAdapter = UpdateAdapter(
@@ -551,6 +553,8 @@ class _$ConversionDaoDb extends ConversionDaoDb {
             (ConversionEntity item) => <String, Object?>{
                   'id': item.id,
                   'unit_group_id': item.unitGroupId,
+                  'source_unit_id': item.sourceUnitId,
+                  'source_value': item.sourceValue,
                   'last_modified': item.lastModified
                 });
 
@@ -568,7 +572,7 @@ class _$ConversionDaoDb extends ConversionDaoDb {
   Future<ConversionEntity?> getLast(int unitGroupId) async {
     return _queryAdapter.query(
         'SELECT c.* FROM conversions c INNER JOIN ( SELECT id, MAX(last_modified) as latest_modified FROM conversions WHERE unit_group_id = ?1 GROUP BY id LIMIT 1) mc ON c.id = mc.id AND c.last_modified = mc.latest_modified',
-        mapper: (Map<String, Object?> row) => ConversionEntity(id: row['id'] as int?, unitGroupId: row['unit_group_id'] as int, lastModified: row['last_modified'] as int),
+        mapper: (Map<String, Object?> row) => ConversionEntity(id: row['id'] as int?, unitGroupId: row['unit_group_id'] as int, sourceUnitId: row['source_unit_id'] as int?, sourceValue: row['source_value'] as String?, lastModified: row['last_modified'] as int),
         arguments: [unitGroupId]);
   }
 
@@ -614,15 +618,7 @@ class _$ConversionItemDaoDb extends ConversionItemDaoDb {
   Future<List<ConversionItemEntity>> getByConversionId(int conversionId) async {
     return _queryAdapter.queryList(
         'select * from conversion_items where conversion_id = ?1 order by sequence_num',
-        mapper: (Map<String, Object?> row) => ConversionItemEntity(id: row['id'] as int?, unitId: row['unit_id'] as int, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, isSource: row['is_source'] as int?, conversionId: row['conversion_id'] as int),
-        arguments: [conversionId]);
-  }
-
-  @override
-  Future<ConversionItemEntity?> getSourceItem(int conversionId) async {
-    return _queryAdapter.query(
-        'select * from conversion_items where conversion_id = ?1 and is_source = 1 limit 1',
-        mapper: (Map<String, Object?> row) => ConversionItemEntity(id: row['id'] as int?, unitId: row['unit_id'] as int, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, isSource: row['is_source'] as int?, conversionId: row['conversion_id'] as int),
+        mapper: (Map<String, Object?> row) => ConversionItemEntity(id: row['id'] as int?, unitId: row['unit_id'] as int, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
         arguments: [conversionId]);
   }
 

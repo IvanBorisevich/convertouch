@@ -5,7 +5,7 @@ import 'package:either_dart/either.dart';
 abstract class ConversionRepository {
   const ConversionRepository();
 
-  Future<Either<ConvertouchException, ConversionModel>> get(int unitGroupId);
+  Future<Either<ConvertouchException, ConversionModel?>> get(int unitGroupId);
 
   Future<Either<ConvertouchException, void>> remove(List<int> unitGroupIds);
 

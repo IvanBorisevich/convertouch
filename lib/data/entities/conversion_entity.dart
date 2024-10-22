@@ -22,12 +22,18 @@ class ConversionEntity {
   final int? id;
   @ColumnInfo(name: 'unit_group_id')
   final int unitGroupId;
+  @ColumnInfo(name: 'source_unit_id')
+  final int? sourceUnitId;
+  @ColumnInfo(name: 'source_value')
+  final String? sourceValue;
   @ColumnInfo(name: 'last_modified')
   final int lastModified;
 
   const ConversionEntity({
     this.id,
     required this.unitGroupId,
+    this.sourceUnitId,
+    this.sourceValue,
     required this.lastModified,
   });
 
@@ -35,6 +41,8 @@ class ConversionEntity {
     return {
       'id': entity['id'],
       'unit_group_id': entity['unitGroupId'],
+      'source_unit_id': entity['sourceUnitId'],
+      'source_value': entity['source_value'],
       'last_modified': DateTime.now().millisecondsSinceEpoch,
     };
   }

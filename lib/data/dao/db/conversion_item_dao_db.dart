@@ -12,13 +12,6 @@ abstract class ConversionItemDaoDb extends ConversionItemDao {
   Future<List<ConversionItemEntity>> getByConversionId(int conversionId);
 
   @override
-  @Query('select * from $conversionItemsTableName '
-      'where conversion_id = :conversionId '
-      'and is_source = 1 '
-      'limit 1')
-  Future<ConversionItemEntity?> getSourceItem(int conversionId);
-
-  @override
   Future<void> insertBatch(
     sqlite.Database db,
     List<ConversionItemEntity> conversionItems,

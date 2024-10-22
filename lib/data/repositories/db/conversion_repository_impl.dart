@@ -9,7 +9,6 @@ import 'package:convertouch/data/translators/conversion_item_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
@@ -34,21 +33,24 @@ class ConversionRepositoryImpl extends ConversionRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, ConversionModel>> get(
+  Future<Either<ConvertouchException, ConversionModel?>> get(
     int unitGroupId,
   ) async {
     try {
       ConversionEntity? conversion = await conversionDao.getLast(unitGroupId);
 
-      if (conversion == null) {
-        return const Right(ConversionModel.none);
+      if (conversion == null || conversion.sourceUnitId == null) {
+        return const Right(null);
       }
 
-      UnitGroupModel unitGroup = ObjectUtils.tryGet(
-        await unitGroupRepository.get(unitGroupId),
-      )!;
-      ConversionItemEntity? sourceItemEntity =
-          await conversionItemDao.getSourceItem(conversion.id!);
+      UnitModel? sourceItemUnit = ObjectUtils.tryGet(
+        await unitRepository.get(conversion.sourceUnitId!),
+      );
+
+      if (sourceItemUnit == null) {
+        return const Right(null);
+      }
+
       List<ConversionItemEntity> conversionItemEntities =
           await conversionItemDao.getByConversionId(conversion.id!);
       List<UnitModel> conversionItemUnits = ObjectUtils.tryGet(
@@ -56,15 +58,32 @@ class ConversionRepositoryImpl extends ConversionRepository {
           conversionItemEntities.map((e) => e.unitId).toList(),
         ),
       );
+      Map<int, UnitModel> conversionItemUnitsMap = {
+        for (var unit in conversionItemUnits) unit.id: unit
+      };
 
       return Right(
-        ConversionTranslator.I.toModel(
-          conversion,
-          unitGroup: unitGroup,
-          sourceItemEntity: sourceItemEntity,
-          conversionItemEntities: conversionItemEntities,
-          conversionItemUnits: conversionItemUnits,
-        )!,
+        ConversionModel.coalesce(
+          ConversionTranslator.I.toModel(conversion)!,
+          sourceConversionItem: ConversionItemTranslator.I.toModel(
+            ConversionItemEntity(
+              conversionId: conversion.id!,
+              value: conversion.sourceValue,
+              sequenceNum: 0,
+              unitId: sourceItemUnit.id,
+            ),
+            unit: sourceItemUnit,
+          ),
+          targetConversionItems: conversionItemEntities
+              .map(
+                (entity) => ConversionItemTranslator.I.toModel(
+                  entity,
+                  unit: conversionItemUnitsMap[entity.unitId],
+                ),
+              )
+              .whereNotNull()
+              .toList(),
+        ),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -127,8 +146,6 @@ class ConversionRepositoryImpl extends ConversionRepository {
               .mapIndexed(
                 (index, item) => ConversionItemTranslator.I.fromModel(
                   item,
-                  isSource:
-                      item.unit.id == conversion.sourceConversionItem?.unit.id,
                   sequenceNum: index,
                   conversionId: resultConversion.id,
                 )!,
