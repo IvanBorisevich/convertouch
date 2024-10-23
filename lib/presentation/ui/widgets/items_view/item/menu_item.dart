@@ -13,6 +13,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   static const double gridItemWidth = 80;
   static const double gridItemHeight = 80;
   static const double listItemHeight = 50;
+  static const double defaultLogoIconSize = 29;
 
   final T item;
   final ItemsViewMode itemsViewMode;
@@ -21,6 +22,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final void Function()? onTapForRemoval;
   final double? width;
   final double? height;
+  final double? logoIconSize;
   final bool marked;
   final bool selected;
   final bool disabled;
@@ -44,6 +46,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     this.markedForRemoval = false,
     this.width,
     this.height,
+    this.logoIconSize,
     required this.theme,
     this.customColors,
     super.key,
@@ -94,22 +97,19 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     switch (item.runtimeType) {
       case UnitGroupModel:
         UnitGroupModel unitGroup = item as UnitGroupModel;
-        itemLogo = IconButton(
-          onPressed: null,
-          icon: IconUtils.getUnitGroupIcon(
-            iconName: unitGroup.iconName,
-            color: foregroundColor,
-          ),
+        itemLogo = IconUtils.getUnitGroupIcon(
+          iconName: unitGroup.iconName,
+          color: foregroundColor,
+          size: logoIconSize ?? defaultLogoIconSize,
         );
         itemName = unitGroup.name;
         break;
       case UnitModel:
         UnitModel unit = item as UnitModel;
-        itemLogo = SizedBox(
-          width: 65,
-          child: Center(
-            child: Text(unit.code),
-          ),
+        itemLogo = Text(
+          unit.code,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         );
         itemName =
             unit.symbol != null ? "${unit.name} (${unit.symbol})" : unit.name;
@@ -148,6 +148,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
+                dividerColor: dividerColor,
                 removalIconColors: colorScheme.removalIcon,
                 modeIconColors: colorScheme.modeIcon,
                 width: width ?? gridItemWidth,
@@ -233,7 +234,13 @@ class ConvertouchMenuListItem extends StatelessWidget {
                       fontFamily: quicksandFontFamily,
                       fontSize: 16,
                     ),
-                    child: logo,
+                    child: Container(
+                      width: height * 1.4,
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 7,
+                      ),
+                      child: Center(child: logo),
+                    ),
                   ),
                   VerticalDivider(
                     width: 1,
@@ -244,10 +251,9 @@ class ConvertouchMenuListItem extends StatelessWidget {
                   ),
                   Expanded(
                     child: Align(
-                      alignment: const AlignmentDirectional(-1, 0),
+                      alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
+                        padding: const EdgeInsets.only(left: 15, right: 15),
                         child: Text(
                           itemName,
                           style: TextStyle(
@@ -307,6 +313,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
+  final Color dividerColor;
   final ConvertouchColorScheme removalIconColors;
   final ConvertouchColorScheme modeIconColors;
 
@@ -319,6 +326,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     required this.borderColor,
+    required this.dividerColor,
     required this.removalIconColors,
     required this.modeIconColors,
     this.markedForRemoval = false,
@@ -339,11 +347,11 @@ class ConvertouchMenuGridItem extends StatelessWidget {
           color: borderColor,
         ),
       ),
-      padding: const EdgeInsets.only(bottom: 5),
       child: Column(
         children: [
-          Flexible(
-            flex: 5,
+          SizedBox(
+            width: width,
+            height: height * 0.6,
             child: Stack(
               children: [
                 DefaultTextStyle(
@@ -354,9 +362,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                     fontSize: 16,
                   ),
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                    alignment: Alignment.center,
+                    width: width,
                     child: logo,
                   ),
                 ),
@@ -387,27 +394,28 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: 5,
-                top: 0,
-                right: 5,
-                bottom: 0,
+          Divider(
+            height: 1,
+            color: foregroundColor,
+            indent: 7,
+            endIndent: 7,
+          ),
+          Container(
+            width: width,
+            height: height * 0.3,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Text(
+              itemName,
+              style: TextStyle(
+                fontFamily: quicksandFontFamily,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: foregroundColor,
               ),
-              child: Text(
-                itemName,
-                style: TextStyle(
-                  fontFamily: quicksandFontFamily,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: foregroundColor,
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: _getGridItemNameLinesNumToWrap(itemName),
-              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ],
@@ -416,11 +424,11 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   }
 }
 
-final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
-const int _minGridItemWordSizeToWrap = 10;
-
-int _getGridItemNameLinesNumToWrap(String gridItemName) {
-  return gridItemName.indexOf(_spaceOrEndOfWord) > _minGridItemWordSizeToWrap
-      ? 1
-      : 2;
-}
+// final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
+// const int _minGridItemWordSizeToWrap = 10;
+//
+// int _getGridItemNameLinesNumToWrap(String gridItemName) {
+//   return gridItemName.indexOf(_spaceOrEndOfWord) > _minGridItemWordSizeToWrap
+//       ? 1
+//       : 2;
+// }
