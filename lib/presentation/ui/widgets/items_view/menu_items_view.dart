@@ -99,6 +99,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                           itemCount: items.length,
                           gridDelegate:
                               SliverGridDelegateWithMaxCrossAxisExtent(
+                            mainAxisExtent: ConvertouchMenuItem.gridItemHeight,
                             maxCrossAxisExtent:
                                 ConvertouchMenuItem.gridItemWidth,
                             mainAxisSpacing: itemsSpacing,
