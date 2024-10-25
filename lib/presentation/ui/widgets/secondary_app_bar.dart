@@ -17,7 +17,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       left: 7,
       top: 0,
       right: 7,
-      bottom: 7,
+      bottom: 8,
     ),
     this.color = Colors.transparent,
     required this.theme,
