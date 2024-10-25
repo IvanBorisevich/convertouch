@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:convertouch/data/const/oob_units.dart';
-import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
 import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -49,6 +49,22 @@ class Migration2to3 extends ConvertouchDbMigration {
       groupName: 'Volume',
       columnName: 'name',
       newColumnValue: 'Cubic Decimeter',
+    );
+
+    await SqlUtils.updateUnitColumn(
+      database,
+      unitCode: 'arcmin',
+      groupName: 'Angle',
+      columnName: 'symbol',
+      newColumnValue: "'",
+    );
+
+    await SqlUtils.updateUnitColumn(
+      database,
+      unitCode: 'arcsec',
+      groupName: 'Angle',
+      columnName: 'symbol',
+      newColumnValue: '"',
     );
 
     await SqlUtils.mergeGroupsAndUnits(

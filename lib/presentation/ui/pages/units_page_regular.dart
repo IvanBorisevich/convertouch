@@ -95,15 +95,12 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                     }
                   },
                   onUnitsRemove: null,
-                  itemIdsSelectedForRemoval: itemsSelectionState.markedIds,
-                  removalModeAllowed: true,
                   removalModeEnabled: itemsSelectionState.showCancelIcon,
+                  checkableUnitsVisible: itemsSelectionState.showCancelIcon,
                   editableUnitsVisible: true,
-                  markedUnitsForConversionVisible: false,
-                  markedUnitIdsForConversion: null,
-                  selectedUnitVisible: false,
+                  checkedUnitIds: itemsSelectionState.markedIds,
                   selectedUnitId: null,
-                  disabledUnitIds: null,
+                  disabledUnitIds: const [],
                   floatingButton: itemsSelectionState.showCancelIcon
                       ? ConvertouchFloatingActionButton.removal(
                           visible: itemsSelectionState.markedIds.isNotEmpty,

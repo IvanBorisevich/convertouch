@@ -8,32 +8,36 @@ import 'package:flutter/material.dart';
 class ConvertouchMenuListItem extends StatelessWidget {
   final IdNameItemModel item;
   final String itemName;
-  final bool removalMode;
+  final bool checkIconVisible;
+  final bool checkIconVisibleIfUnchecked;
+  final bool checked;
   final bool editIconVisible;
   final Widget logo;
   final double height;
-  final bool markedForRemoval;
+  final double borderRadius;
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
   final Color dividerColor;
-  final ConvertouchColorScheme removalIconColors;
+  final ConvertouchColorScheme checkBoxIconColors;
   final ConvertouchColorScheme modeIconColors;
 
   const ConvertouchMenuListItem(
     this.item, {
     required this.itemName,
-    required this.removalMode,
+    required this.checkIconVisible,
+    required this.checkIconVisibleIfUnchecked,
+    required this.checked,
     required this.editIconVisible,
     required this.logo,
-    this.height = 50,
+    required this.height,
     required this.backgroundColor,
     required this.foregroundColor,
     required this.borderColor,
     required this.dividerColor,
-    required this.removalIconColors,
+    required this.checkBoxIconColors,
     required this.modeIconColors,
-    this.markedForRemoval = false,
+    this.borderRadius = 7,
     super.key,
   });
 
@@ -47,7 +51,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(borderRadius),
                 border: Border.all(
                   color: borderColor,
                 ),
@@ -97,14 +101,11 @@ class ConvertouchMenuListItem extends StatelessWidget {
                   ),
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      if (item.oob) {
-                        return empty();
-                      }
-
-                      if (removalMode) {
+                      if (checkIconVisible &&
+                          (checkIconVisibleIfUnchecked || checked)) {
                         return ConvertouchItemModeIcon.checkbox(
-                          active: markedForRemoval,
-                          colors: removalIconColors,
+                          active: checked,
+                          colors: checkBoxIconColors,
                           padding: const EdgeInsets.only(right: 10),
                         );
                       }

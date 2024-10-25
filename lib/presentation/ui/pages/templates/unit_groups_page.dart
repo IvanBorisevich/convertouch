@@ -20,14 +20,13 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
   final void Function(String)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final void Function()? onUnitGroupsRemove;
-  final List<int> itemIdsSelectedForRemoval;
+  final List<int> checkedUnitGroupIds;
+  final List<int> disabledUnitGroupIds;
   final List<Widget>? appBarRightWidgets;
-  final bool selectedUnitGroupVisible;
+  final bool checkableUnitGroupsVisible;
   final bool editableUnitGroupsVisible;
   final int? selectedUnitGroupId;
-  final List<int>? disabledUnitGroupIds;
   final bool removalModeEnabled;
-  final bool removalModeAllowed;
   final Widget? floatingButton;
   final String searchBarPlaceholder;
 
@@ -41,14 +40,13 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
     required this.onSearchStringChanged,
     required this.onSearchReset,
     required this.onUnitGroupsRemove,
-    required this.itemIdsSelectedForRemoval,
+    required this.checkedUnitGroupIds,
     required this.appBarRightWidgets,
-    required this.selectedUnitGroupVisible,
+    required this.checkableUnitGroupsVisible,
     required this.editableUnitGroupsVisible,
     required this.selectedUnitGroupId,
     required this.disabledUnitGroupIds,
     required this.removalModeEnabled,
-    required this.removalModeAllowed,
     required this.floatingButton,
     this.searchBarPlaceholder = "Search unit groups...",
     super.key,
@@ -82,12 +80,11 @@ class ConvertouchUnitGroupsPage extends StatelessWidget {
           ),
           body: ConvertouchMenuItemsView(
             unitGroups,
-            selectedItemId: selectedUnitGroupId,
+            checkedItemIds: checkedUnitGroupIds,
             disabledItemIds: disabledUnitGroupIds,
-            showSelectedItem: selectedUnitGroupVisible,
-            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
+            selectedItemId: selectedUnitGroupId,
             removalModeEnabled: removalModeEnabled,
-            removalModeAllowed: removalModeAllowed,
+            checkableItemsVisible: checkableUnitGroupsVisible,
             editableItemsVisible: editableUnitGroupsVisible,
             onItemTap: onUnitGroupTap,
             onItemTapForRemoval: onUnitGroupTapForRemoval,

@@ -57,11 +57,6 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                     );
                   },
                   onUnitTap: (unit) {
-                    unitsSelectionBloc.add(
-                      SelectItem(
-                        id: unit.id,
-                      ),
-                    );
                     if (itemsSelectionState.singleItemSelectionMode) {
                       conversionBloc.add(
                         ReplaceConversionItemUnit(
@@ -70,20 +65,22 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                         ),
                       );
                       navigationBloc.add(const NavigateBack());
+                    } else {
+                      unitsSelectionBloc.add(
+                        SelectItem(
+                          id: unit.id,
+                        ),
+                      );
                     }
                   },
                   onUnitTapForRemoval: null,
                   onUnitLongPress: null,
                   onUnitsRemove: null,
-                  itemIdsSelectedForRemoval: const [],
-                  removalModeAllowed: false,
                   removalModeEnabled: false,
+                  checkableUnitsVisible: true,
                   editableUnitsVisible: false,
                   appBarRightWidgets: const [],
-                  markedUnitsForConversionVisible: true,
-                  markedUnitIdsForConversion: itemsSelectionState.markedIds,
-                  selectedUnitVisible:
-                      itemsSelectionState.singleItemSelectionMode,
+                  checkedUnitIds: itemsSelectionState.markedIds,
                   selectedUnitId: itemsSelectionState.selectedId,
                   disabledUnitIds: itemsSelectionState.excludedIds,
                   floatingButton: ConvertouchFloatingActionButton(

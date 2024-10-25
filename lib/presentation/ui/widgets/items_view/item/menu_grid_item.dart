@@ -8,34 +8,40 @@ import 'package:flutter/material.dart';
 class ConvertouchMenuGridItem extends StatelessWidget {
   final IdNameItemModel item;
   final String itemName;
-  final bool removalMode;
+  final bool checkIconVisible;
+  final bool checkIconVisibleIfUnchecked;
+  final bool checked;
   final bool editIconVisible;
   final Widget logo;
-  final bool markedForRemoval;
   final double width;
   final double height;
+  final double borderRadius;
   final Color backgroundColor;
+  final Color titleBackgroundColor;
   final Color foregroundColor;
   final Color borderColor;
   final Color dividerColor;
-  final ConvertouchColorScheme removalIconColors;
+  final ConvertouchColorScheme checkBoxIconColors;
   final ConvertouchColorScheme modeIconColors;
 
   const ConvertouchMenuGridItem(
     this.item, {
     required this.itemName,
-    required this.removalMode,
+    required this.checkIconVisible,
+    required this.checkIconVisibleIfUnchecked,
+    required this.checked,
     required this.editIconVisible,
     required this.logo,
     required this.backgroundColor,
+    required this.titleBackgroundColor,
     required this.foregroundColor,
     required this.borderColor,
     required this.dividerColor,
-    required this.removalIconColors,
+    required this.checkBoxIconColors,
     required this.modeIconColors,
-    this.markedForRemoval = false,
     required this.width,
     required this.height,
+    this.borderRadius = 7,
     super.key,
   });
 
@@ -46,9 +52,10 @@ class ConvertouchMenuGridItem extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(7),
+        borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
           color: borderColor,
+          width: 0,
         ),
       ),
       child: Column(
@@ -73,15 +80,12 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 ),
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    if (item.oob) {
-                      return empty();
-                    }
-
-                    if (removalMode) {
+                    if (checkIconVisible &&
+                        (checkIconVisibleIfUnchecked || checked)) {
                       return ConvertouchItemModeIcon.checkbox(
-                        active: markedForRemoval,
-                        colors: removalIconColors,
-                        padding: const EdgeInsets.only(left: 3, top: 3),
+                        active: checked,
+                        colors: checkBoxIconColors,
+                        padding: const EdgeInsets.only(left: 1, top: 1),
                       );
                     }
 
@@ -98,15 +102,20 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               ],
             ),
           ),
-          Divider(
-            height: 1,
-            color: foregroundColor,
-            indent: 7,
-            endIndent: 7,
-          ),
           Container(
+            decoration: BoxDecoration(
+              color: titleBackgroundColor,
+              border: Border.all(
+                width: 0,
+                color: borderColor,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(borderRadius),
+                bottomRight: Radius.circular(borderRadius),
+              ),
+            ),
             width: width,
-            height: height * 0.3,
+            height: height * (1 - 0.6),
             alignment: Alignment.center,
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: Text(

@@ -50,6 +50,10 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xffc6d7fd),
     selected: Color(0xff9db3ea),
   ),
+  titleBackground: ColorVariation(
+    regular: Color(0xffb8caf6),
+    selected: Color(0xffaabce8),
+  ),
   foreground: ColorVariation(
     regular: Color(0xFF303073),
     selected: Color(0xFF303073),
@@ -58,7 +62,7 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF353D69),
     selected: Color(0xFF303073),
   ),
-  removalIcon: ConvertouchColorScheme(
+  checkBox: ConvertouchColorScheme(
     border: ColorVariation(
       regular: Color(0xFF303073),
     ),
@@ -84,39 +88,28 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
   ),
 );
 
-const unitGroupItemInAppBarColorSchemeLight = ListItemColorScheme(
-  border: ColorVariation.only(Color(0xffc4d6ff)),
-  background: ColorVariation.only(Color(0xffc4d6ff)),
-  foreground: ColorVariation.only(Color(0xFF353D69)),
-  divider: ColorVariation.only(Color(0xFF353D69)),
-);
-
 const unitItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xE57AB2F8),
-    selected: Color(0xFF26537E),
     disabled: Color(0xAEB1CFF5),
   ),
   background: ColorVariation(
     regular: Color(0xFFAAC9F1),
-    marked: Color(0xE57AB2F8),
-    selected: Color(0xE57AB2F8),
-    disabled: Color(0x9EAAC9F1),
+    disabled: Color(0x9EBFD8FA),
+  ),
+  titleBackground: ColorVariation(
+    regular: Color(0xFF99C1EF),
+    disabled: Color(0x9EB1CBEF),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
-    marked: Color(0xFF1E4770),
-    selected: Color(0xFF26537E),
-    disabled: Color(0xB2366C9F),
+    disabled: Color(0xB25086BB),
   ),
   divider: ColorVariation(
     regular: Color(0xFF2C6396),
-    marked: Color(0xFF26537E),
-    selected: Color(0xFF26537E),
     disabled: Color(0xB2366C9F),
   ),
-  removalIcon: ConvertouchColorScheme(
+  checkBox: ConvertouchColorScheme(
     border: ColorVariation(
       regular: Color(0xFF2C6396),
     ),

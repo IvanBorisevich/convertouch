@@ -100,12 +100,12 @@ class ConversionGroupsPage extends StatelessWidget {
                   },
                   onUnitGroupsRemove: null,
                   appBarRightWidgets: const [],
-                  selectedUnitGroupVisible: false,
+                  disabledUnitGroupIds: const [],
                   selectedUnitGroupId: null,
-                  disabledUnitGroupIds: null,
-                  itemIdsSelectedForRemoval: itemsSelectionState.markedIds,
+                  checkedUnitGroupIds: itemsSelectionState.markedIds,
                   removalModeEnabled: itemsSelectionState.showCancelIcon,
-                  removalModeAllowed: true,
+                  checkableUnitGroupsVisible:
+                      itemsSelectionState.showCancelIcon,
                   editableUnitGroupsVisible: true,
                   floatingButton: itemsSelectionState.showCancelIcon
                       ? ConvertouchFloatingActionButton.removal(

@@ -20,11 +20,6 @@ const unitGroupItemColors = {
   ConvertouchUITheme.dark: unitGroupItemColorSchemeDark,
 };
 
-const unitGroupItemInAppBarColors = {
-  ConvertouchUITheme.light: unitGroupItemInAppBarColorSchemeLight,
-  ConvertouchUITheme.dark: unitGroupItemInAppBarColorSchemeDark,
-};
-
 const unitItemColors = {
   ConvertouchUITheme.light: unitItemColorSchemeLight,
   ConvertouchUITheme.dark: unitItemColorSchemeDark,

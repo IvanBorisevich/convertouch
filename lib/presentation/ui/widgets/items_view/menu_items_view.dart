@@ -12,14 +12,11 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final void Function(T)? onItemTap;
   final void Function(T)? onItemTapForRemoval;
   final void Function(T)? onItemLongPress;
-  final List<int>? itemIdsMarkedForConversion;
-  final List<int> itemIdsMarkedForRemoval;
-  final bool showMarkedItems;
+  final List<int> checkedItemIds;
+  final List<int> disabledItemIds;
   final int? selectedItemId;
-  final List<int>? disabledItemIds;
-  final bool showSelectedItem;
   final bool editableItemsVisible;
-  final bool removalModeAllowed;
+  final bool checkableItemsVisible;
   final bool removalModeEnabled;
   final double itemsSpacing;
   final double itemsSpacingBottom;
@@ -31,14 +28,11 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,
-    this.itemIdsMarkedForConversion,
-    this.itemIdsMarkedForRemoval = const [],
-    this.showMarkedItems = false,
+    this.checkedItemIds = const [],
+    this.disabledItemIds = const [],
     this.selectedItemId,
-    this.disabledItemIds,
-    this.showSelectedItem = false,
     this.editableItemsVisible = false,
-    this.removalModeAllowed = false,
+    this.checkableItemsVisible = false,
     this.removalModeEnabled = false,
     this.itemsSpacing = 8,
     this.itemsSpacingBottom = 85,
@@ -56,31 +50,33 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
           if (items.isNotEmpty) {
             Widget? itemBuilder(context, index) {
               T item = items[index];
-              bool selected = showSelectedItem && item.id == selectedItemId;
-              bool disabled =
-                  disabledItemIds != null && disabledItemIds!.contains(item.id);
-              bool marked = showMarkedItems &&
-                  itemIdsMarkedForConversion != null &&
-                  itemIdsMarkedForConversion!.contains(item.id);
+              bool selected = item.id == selectedItemId;
+              bool disabled = disabledItemIds.contains(item.id);
+              bool checked = checkedItemIds.contains(item.id);
 
               return ConvertouchMenuItem(
                 item,
                 itemsViewMode: itemsViewMode,
                 onTap: () {
-                  onItemTap?.call(item);
+                  if (removalModeEnabled) {
+                    if (!item.oob) {
+                      onItemTapForRemoval?.call(item);
+                    }
+                  } else {
+                    if (!selected && !disabled) {
+                      FocusScope.of(context).unfocus();
+                      onItemTap?.call(item);
+                    }
+                  }
                 },
                 onLongPress: () {
                   onItemLongPress?.call(item);
                 },
-                onTapForRemoval: () {
-                  onItemTapForRemoval?.call(item);
-                },
-                marked: marked,
-                selected: selected,
+                checked: checked || selected,
                 disabled: disabled,
-                removalMode: removalModeAllowed && removalModeEnabled,
-                editIconVisible: editableItemsVisible,
-                markedForRemoval: itemIdsMarkedForRemoval.contains(item.id),
+                checkIconVisible: checkableItemsVisible || removalModeEnabled,
+                checkIconVisibleIfUnchecked: !item.oob && removalModeEnabled,
+                editIconVisible: !item.oob && editableItemsVisible,
                 theme: theme,
               );
             }

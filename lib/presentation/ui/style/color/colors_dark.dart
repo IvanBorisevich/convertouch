@@ -50,13 +50,17 @@ const unitGroupItemColorSchemeDark = ListItemColorScheme(
     regular: Color(0xff434c60),
     selected: Color(0xff475065),
   ),
+  titleBackground: ColorVariation(
+    regular: Color(0xff4b5369),
+    selected: Color(0xff475065),
+  ),
   foreground: ColorVariation(
     regular: Color(0xffa6baee),
   ),
   divider: ColorVariation(
     regular: Color(0xffa6baee),
   ),
-  removalIcon: ConvertouchColorScheme(
+  checkBox: ConvertouchColorScheme(
     border: ColorVariation(
       regular: Color(0xff99ade0),
     ),
@@ -92,29 +96,25 @@ const unitGroupItemInAppBarColorSchemeDark = ListItemColorScheme(
 const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFF435064),
-    marked: Color(0xE4415F7E),
-    selected: Color(0xFFA0CAF1),
     disabled: Color(0x9B424E62),
   ),
   background: ColorVariation(
     regular: Color(0xFF435064),
-    marked: Color(0xE4415F7E),
-    selected: Color(0xE4415F7E),
-    disabled: Color(0x9B424E62),
+    disabled: Color(0x9B3C485B),
+  ),
+  titleBackground: ColorVariation(
+    regular: Color(0xFF4B586C),
+    disabled: Color(0x9B3F4B5E),
   ),
   foreground: ColorVariation(
     regular: Color(0xFF85B3DC),
-    marked: Color(0xFF95B8D7),
-    selected: Color(0xFFA0CAF1),
     disabled: Color(0x867FACD5),
   ),
   divider: ColorVariation(
     regular: Color(0xFF7DAAD3),
-    marked: Color(0xFF95B8D7),
-    selected: Color(0xFFA0CAF1),
     disabled: Color(0x867FACD5),
   ),
-  removalIcon: ConvertouchColorScheme(
+  checkBox: ConvertouchColorScheme(
     border: ColorVariation(
       regular: Color(0xFF85B3DC),
     ),

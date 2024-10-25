@@ -20,16 +20,14 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;
-  final void Function()? onTapForRemoval;
   final double? width;
   final double? height;
   final double? logoIconSize;
-  final bool marked;
-  final bool selected;
+  final bool checked;
   final bool disabled;
   final bool editIconVisible;
-  final bool removalMode;
-  final bool markedForRemoval;
+  final bool checkIconVisible;
+  final bool checkIconVisibleIfUnchecked;
   final ConvertouchUITheme theme;
   final ListItemColorScheme? customColors;
 
@@ -38,13 +36,11 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     required this.itemsViewMode,
     this.onTap,
     this.onLongPress,
-    this.onTapForRemoval,
-    this.marked = false,
-    this.selected = false,
+    this.checked = false,
     this.disabled = false,
     this.editIconVisible = false,
-    this.removalMode = false,
-    this.markedForRemoval = false,
+    this.checkIconVisible = false,
+    this.checkIconVisibleIfUnchecked = false,
     this.width,
     this.height,
     this.logoIconSize,
@@ -69,27 +65,20 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     Color foregroundColor;
     Color borderColor;
     Color dividerColor;
+    Color titleBackgroundColor;
 
-    if (selected) {
-      backgroundColor = colorScheme.background.selected;
-      foregroundColor = colorScheme.foreground.selected;
-      borderColor = colorScheme.border.selected;
-      dividerColor = colorScheme.divider.selected;
-    } else if (marked) {
-      backgroundColor = colorScheme.background.marked;
-      foregroundColor = colorScheme.foreground.marked;
-      borderColor = colorScheme.border.marked;
-      dividerColor = colorScheme.divider.marked;
-    } else if (disabled) {
+    if (disabled) {
       backgroundColor = colorScheme.background.disabled;
       foregroundColor = colorScheme.foreground.disabled;
       borderColor = colorScheme.border.disabled;
       dividerColor = colorScheme.divider.disabled;
+      titleBackgroundColor = colorScheme.titleBackground.disabled;
     } else {
       backgroundColor = colorScheme.background.regular;
       foregroundColor = colorScheme.foreground.regular;
       borderColor = colorScheme.border.regular;
       dividerColor = colorScheme.divider.regular;
+      titleBackgroundColor = colorScheme.titleBackground.regular;
     }
 
     Widget itemLogo;
@@ -122,18 +111,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () {
-        if (removalMode) {
-          if (!item.oob) {
-            onTapForRemoval?.call();
-          }
-        } else {
-          if (!selected && !disabled) {
-            FocusScope.of(context).unfocus();
-            onTap?.call();
-          }
-        }
-      },
+      onTap: onTap,
       onLongPress: onLongPress,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -142,15 +120,17 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
               return ConvertouchMenuGridItem(
                 item,
                 itemName: itemName,
-                removalMode: removalMode,
+                checkIconVisible: checkIconVisible,
+                checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
+                checked: checked,
                 editIconVisible: editIconVisible,
-                markedForRemoval: markedForRemoval,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
+                titleBackgroundColor: titleBackgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
                 dividerColor: dividerColor,
-                removalIconColors: colorScheme.removalIcon,
+                checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
                 width: width ?? gridItemWidth,
                 height: height ?? gridItemHeight,
@@ -159,17 +139,18 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
               return ConvertouchMenuListItem(
                 item,
                 itemName: itemName,
-                height: height ?? listItemHeight,
-                removalMode: removalMode,
+                checkIconVisible: checkIconVisible,
+                checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
+                checked: checked,
                 editIconVisible: editIconVisible,
-                markedForRemoval: markedForRemoval,
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
                 borderColor: borderColor,
                 dividerColor: dividerColor,
-                removalIconColors: colorScheme.removalIcon,
+                checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
+                height: height ?? listItemHeight,
               );
           }
         },

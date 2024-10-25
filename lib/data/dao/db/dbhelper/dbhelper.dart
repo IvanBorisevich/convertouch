@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
-import 'package:convertouch/data/dao/db/dbhelper/migration.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/init_migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration1to2.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration2to3.dart';

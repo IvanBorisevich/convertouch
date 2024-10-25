@@ -1,6 +1,5 @@
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -42,15 +41,10 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
                 unitsBloc.add(
                   FetchUnits(
                     unitGroup: pageState.unitGroup,
-                    // selectedArgUnit: pageState.selectedArgUnit,
-                    // unitIdBeingEdited: pageState.currentEditedUnitId,
                   ),
                 );
               },
               onUnitTap: (unit) {
-                itemsSelectionBloc.add(
-                  SelectItem(id: unit.id),
-                );
                 unitDetailsBloc.add(
                   ChangeArgumentUnitInUnitDetails(
                     argumentUnit: unit,
@@ -60,13 +54,10 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
               onUnitsRemove: null,
               onUnitTapForRemoval: null,
               onUnitLongPress: null,
-              itemIdsSelectedForRemoval: const [],
-              removalModeAllowed: false,
               removalModeEnabled: false,
+              checkableUnitsVisible: true,
               editableUnitsVisible: false,
-              markedUnitsForConversionVisible: false,
-              markedUnitIdsForConversion: null,
-              selectedUnitVisible: true,
+              checkedUnitIds: const [],
               selectedUnitId: itemsSelectionState.selectedId,
               disabledUnitIds: itemsSelectionState.excludedIds,
               floatingButton: null,

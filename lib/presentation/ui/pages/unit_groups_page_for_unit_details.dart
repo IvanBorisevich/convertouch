@@ -23,45 +23,45 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
       bloc: unitGroupsBloc,
       builderFunc: (pageState) {
         return itemsSelectionBlocBuilder(
-            bloc: unitGroupSelectionBloc,
-            builderFunc: (itemsSelectionState) {
-              return ConvertouchUnitGroupsPage(
-                pageTitle: "Select Group",
-                customLeadingIcon: null,
-                unitGroups: pageState.unitGroups,
-                onSearchStringChanged: (text) {
-                  unitGroupsBloc.add(
-                    FetchUnitGroups(
-                      searchString: text,
-                    ),
-                  );
-                },
-                onSearchReset: () {
-                  unitGroupsBloc.add(
-                    const FetchUnitGroups(),
-                  );
-                },
-                onUnitGroupTap: (unitGroup) {
-                  unitDetailsBloc.add(
-                    ChangeGroupInUnitDetails(
-                      unitGroup: unitGroup,
-                    ),
-                  );
-                },
-                onUnitGroupTapForRemoval: null,
-                onUnitGroupLongPress: null,
-                onUnitGroupsRemove: null,
-                appBarRightWidgets: const [],
-                selectedUnitGroupVisible: true,
-                selectedUnitGroupId: itemsSelectionState.selectedId,
-                disabledUnitGroupIds: null,
-                itemIdsSelectedForRemoval: const [],
-                removalModeEnabled: false,
-                removalModeAllowed: false,
-                editableUnitGroupsVisible: false,
-                floatingButton: null,
-              );
-            });
+          bloc: unitGroupSelectionBloc,
+          builderFunc: (itemsSelectionState) {
+            return ConvertouchUnitGroupsPage(
+              pageTitle: "Select Group",
+              customLeadingIcon: null,
+              unitGroups: pageState.unitGroups,
+              onSearchStringChanged: (text) {
+                unitGroupsBloc.add(
+                  FetchUnitGroups(
+                    searchString: text,
+                  ),
+                );
+              },
+              onSearchReset: () {
+                unitGroupsBloc.add(
+                  const FetchUnitGroups(),
+                );
+              },
+              onUnitGroupTap: (unitGroup) {
+                unitDetailsBloc.add(
+                  ChangeGroupInUnitDetails(
+                    unitGroup: unitGroup,
+                  ),
+                );
+              },
+              onUnitGroupTapForRemoval: null,
+              onUnitGroupLongPress: null,
+              onUnitGroupsRemove: null,
+              appBarRightWidgets: const [],
+              disabledUnitGroupIds: const [],
+              checkedUnitGroupIds: const [],
+              selectedUnitGroupId: itemsSelectionState.selectedId,
+              removalModeEnabled: false,
+              checkableUnitGroupsVisible: true,
+              editableUnitGroupsVisible: false,
+              floatingButton: null,
+            );
+          },
+        );
       },
     );
   }

@@ -40,7 +40,7 @@ const unitsV1 = [
     "units": [
       {"code": "mm³", "name": "Cubic Millimeter", "coefficient": 1E-9},
       {"code": "cm³", "name": "Cubic Centimeter", "coefficient": 1E-6},
-      {"code": "dm³", "name": "Cubic Decimeter (Liter)", "coefficient": 1E-3},
+      {"code": "dm³", "name": "Cubic Decimeter", "coefficient": 1E-3},
       {"code": "m³", "name": "Cubic Meter", "coefficient": 1},
       {"code": "gal", "name": "Gallon USA", "coefficient": 3.785411784E-3},
       {"code": "bbls", "name": "Oil Barrel", "coefficient": 158.987E-3}
@@ -893,13 +893,13 @@ const unitsV1 = [
         "code": "arcmin",
         "name": "arcminute",
         "coefficient": 1 / 60,
-        "symbol": "′",
+        "symbol": "'",
       },
       {
         "code": "arcsec",
         "name": "arcsecond",
         "coefficient": 1 / 3600,
-        "symbol": "″",
+        "symbol": "\"",
       },
       {
         "code": "tr",

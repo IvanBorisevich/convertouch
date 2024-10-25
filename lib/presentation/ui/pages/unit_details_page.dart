@@ -7,6 +7,8 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -201,6 +203,13 @@ class _ConvertouchUnitDetailsPageState
                 BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
                   const FetchUnitGroups(),
                 );
+
+                BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context).add(
+                  StartItemSelection(
+                    previouslySelectedId: state.details.unitGroup.id,
+                  ),
+                );
+
                 BlocProvider.of<NavigationBloc>(context).add(
                   const NavigateToPage(
                     pageName: PageName.unitGroupsPageForUnitDetails,
@@ -318,6 +327,18 @@ class _ConvertouchUnitDetailsPageState
                       BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
                         FetchUnits(
                           unitGroup: unitGroup,
+                        ),
+                      );
+                      BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context)
+                          .add(
+                        StartItemSelection(
+                          previouslySelectedId: conversionRule.argUnit.id,
+                          excludedIds: [unit.id],
+                        ),
+                      );
+                      BlocProvider.of<NavigationBloc>(context).add(
+                        const NavigateToPage(
+                          pageName: PageName.unitsPageForUnitDetails,
                         ),
                       );
                     },

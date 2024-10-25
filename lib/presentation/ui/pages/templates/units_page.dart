@@ -14,21 +14,18 @@ class ConvertouchUnitsPage extends StatelessWidget {
   final String pageTitle;
   final Widget? customLeadingIcon;
   final List<UnitModel> units;
+  final List<int> checkedUnitIds;
+  final List<int> disabledUnitIds;
   final void Function(UnitModel)? onUnitTap;
   final void Function(UnitModel)? onUnitTapForRemoval;
   final void Function(UnitModel)? onUnitLongPress;
   final void Function(String)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final void Function()? onUnitsRemove;
-  final List<int> itemIdsSelectedForRemoval;
   final List<Widget>? appBarRightWidgets;
-  final bool markedUnitsForConversionVisible;
-  final List<int>? markedUnitIdsForConversion;
-  final bool selectedUnitVisible;
+  final bool checkableUnitsVisible;
   final bool editableUnitsVisible;
   final int? selectedUnitId;
-  final List<int>? disabledUnitIds;
-  final bool removalModeAllowed;
   final bool removalModeEnabled;
   final Widget? floatingButton;
 
@@ -42,15 +39,12 @@ class ConvertouchUnitsPage extends StatelessWidget {
     required this.onSearchStringChanged,
     required this.onSearchReset,
     required this.onUnitsRemove,
-    required this.itemIdsSelectedForRemoval,
     required this.appBarRightWidgets,
-    required this.markedUnitsForConversionVisible,
-    required this.markedUnitIdsForConversion,
-    required this.selectedUnitVisible,
+    required this.checkedUnitIds,
+    required this.checkableUnitsVisible,
     required this.editableUnitsVisible,
     required this.selectedUnitId,
     required this.disabledUnitIds,
-    required this.removalModeAllowed,
     required this.removalModeEnabled,
     required this.floatingButton,
     super.key,
@@ -84,14 +78,11 @@ class ConvertouchUnitsPage extends StatelessWidget {
           ),
           body: ConvertouchMenuItemsView(
             units,
-            itemIdsMarkedForConversion: markedUnitIdsForConversion,
-            itemIdsMarkedForRemoval: itemIdsSelectedForRemoval,
-            showMarkedItems: markedUnitsForConversionVisible,
+            checkedItemIds: checkedUnitIds,
             selectedItemId: selectedUnitId,
             disabledItemIds: disabledUnitIds,
-            showSelectedItem: selectedUnitVisible,
-            removalModeAllowed: removalModeAllowed,
             removalModeEnabled: removalModeEnabled,
+            checkableItemsVisible: checkableUnitsVisible,
             editableItemsVisible: editableUnitsVisible,
             onItemTap: onUnitTap,
             onItemTapForRemoval: onUnitTapForRemoval,
