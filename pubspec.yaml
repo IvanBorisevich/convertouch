@@ -58,6 +58,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   mockito: ^5.4.4
   basic_utils: ^5.7.0
+  decimal: ^2.3.3
 
 dev_dependencies:
   flutter_test:

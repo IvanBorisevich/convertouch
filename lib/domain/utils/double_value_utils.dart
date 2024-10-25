@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
 
 const _exponentSuperscripts = {
@@ -72,7 +74,7 @@ class DoubleValueUtils {
 
   static String toPlain(
     double? value, {
-    int fractionDigits = defaultFractionDigits,
+    int? fractionDigits,
   }) {
     if (value == null) {
       return "";
@@ -81,10 +83,15 @@ class DoubleValueUtils {
       return "0";
     }
 
-    fractionDigits = fractionDigits >= 0 ? fractionDigits : 0;
-    String valueStr = value.toStringAsFixed(
-      value.truncateToDouble() == value ? 0 : fractionDigits,
-    );
+    String valueStr;
+    if (fractionDigits == null) {
+      valueStr = "${Decimal.parse(value.toString())}";
+    } else {
+      fractionDigits = fractionDigits < 0 ? 0 : fractionDigits;
+      valueStr = value.toStringAsFixed(
+        value.truncateToDouble() == value ? 0 : fractionDigits,
+      );
+    }
 
     return _trimTrailingZerosInDouble(valueStr);
   }

@@ -65,16 +65,23 @@ void main() {
   });
 
   group("Format to a plain string", () {
-    test('Fraction digits should be as maximum 10 by default', () {
-      expect(DoubleValueUtils.toPlain(56746345631111.000), "56746345631111");
-      expect(DoubleValueUtils.toPlain(1.0), "1");
-    });
+    test(
+      'Fraction digits should not be trimmed without the explicit parameter',
+      () {
+        expect(
+          DoubleValueUtils.toPlain(0.00000000000000000000000001),
+          "0.00000000000000000000000001",
+        );
+        expect(DoubleValueUtils.toPlain(56746345631111.000), "56746345631111");
+        expect(DoubleValueUtils.toPlain(1.0), "1");
+      },
+    );
 
     test('Value null should be formatted to the empty string', () {
       expect(DoubleValueUtils.toPlain(null), "");
     });
 
-    test('Fraction digits should be trimmed by explicit parameter', () {
+    test('Fraction digits should be trimmed by the explicit parameter', () {
       expect(DoubleValueUtils.toPlain(0.56746, fractionDigits: 5), "0.56746");
       expect(
         DoubleValueUtils.toPlain(5674634563.0012, fractionDigits: 3),
