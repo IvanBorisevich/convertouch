@@ -35,8 +35,8 @@ class ValueModel extends Equatable {
 
     return ValueModel(
       num: value,
-      str: DoubleValueUtils.format(value),
-      scientific: DoubleValueUtils.formatScientific(value),
+      str: DoubleValueUtils.toPlain(value),
+      scientific: DoubleValueUtils.toScientific(value),
     );
   }
 
@@ -53,7 +53,7 @@ class ValueModel extends Equatable {
     return ValueModel(
       num: numVal,
       str: value,
-      scientific: DoubleValueUtils.formatScientific(numVal),
+      scientific: DoubleValueUtils.toScientific(numVal),
     );
   }
 

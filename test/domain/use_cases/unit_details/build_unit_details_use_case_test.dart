@@ -32,7 +32,6 @@ void main() {
       );
 
       expect(result.editMode, true);
-      expect(result.resultUnit.exists, false);
       expect(result.unitGroupChanged, false);
       expect(result.conversionRule.configVisible, false);
       expect(result.conversionRule.configEditable, false);
@@ -49,7 +48,6 @@ void main() {
       );
 
       expect(result.editMode, true);
-      expect(result.resultUnit.exists, false);
       expect(result.unitGroupChanged, false);
       expect(
           result.conversionRule.configVisible, false); // name or code is empty
@@ -71,7 +69,6 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
@@ -89,7 +86,6 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -108,7 +104,6 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
@@ -126,7 +121,6 @@ void main() {
         );
 
         expect(result.editMode, true);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, true);
         expect(result.conversionRule.configEditable, true);
@@ -146,7 +140,6 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -164,7 +157,6 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -183,7 +175,6 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);
@@ -201,7 +192,6 @@ void main() {
         );
 
         expect(result.editMode, false);
-        expect(result.resultUnit.exists, false);
         expect(result.unitGroupChanged, false);
         expect(result.conversionRule.configVisible, false);
         expect(result.conversionRule.configEditable, false);

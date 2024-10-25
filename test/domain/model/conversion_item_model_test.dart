@@ -22,7 +22,7 @@ void main() {
     },
     "value": {
       "num": 0.00009,
-      "raw": "0",
+      "raw": "0.00009",
       "scientific": "9 · 10¯⁵",
     },
     "defaultValue": {

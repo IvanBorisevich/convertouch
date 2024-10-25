@@ -2,14 +2,14 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test(
-    'Build value model from raw string value',
-    () {
-      String inputValue = "0.0098";
-      ValueModel result = ValueModel.ofString(inputValue);
+  void testForInput({required String raw, required String expectedScientificValue,}) {
+    ValueModel result = ValueModel.ofString(raw);
 
-      expect(result.str, inputValue);
-      expect(result.scientific, "0.01");
-    },
-  );
+    expect(result.str, raw);
+    expect(result.scientific, expectedScientificValue);
+  }
+
+  test('Build value model from raw string value', () {
+    testForInput(raw: "0.0098", expectedScientificValue: "0.0098");
+  });
 }
