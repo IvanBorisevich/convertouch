@@ -99,10 +99,7 @@ class _ConvertouchConversionItemsViewState
                   height: _removalHandlerHeight,
                   child: IconButton(
                     splashColor: Colors.transparent,
-                    // on tap effect color
                     highlightColor: Colors.transparent,
-                    // on long pressed effect color
-                    // padding: const EdgeInsets.only(left: 0),
                     onPressed: () {
                       widget.onItemRemoveTap
                           ?.call(widget.convertedItems[index]);

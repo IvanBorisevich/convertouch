@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
@@ -94,15 +95,36 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   _isFocused = false;
                 });
               },
-              suffixIcon: !widget.item.unit.invertible
-                  ? Padding(
-                      padding: const EdgeInsets.all(9),
-                      child: IconUtils.getSuffixSvgIcon(
-                        IconNames.oneWayConversion,
-                        color: itemColor.textBox.foreground.regular,
-                      ),
-                    )
-                  : null,
+              suffixIcon: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  !widget.item.unit.invertible
+                      ? Padding(
+                          padding: const EdgeInsets.all(9),
+                          child: IconUtils.getSuffixSvgIcon(
+                            IconNames.oneWayConversion,
+                            color: itemColor.textBox.foreground.regular,
+                          ),
+                        )
+                      : empty(),
+                  widget.item.value.str.isNotEmpty && _isFocused
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: itemColor.textBox.foreground.regular,
+                            size: 17,
+                          ),
+                          onPressed: () {
+                            widget.onValueChanged?.call("");
+                            setState(() {
+                              _unitValueController.clear();
+                            });
+                          },
+                        )
+                      : empty(),
+                ],
+              ),
               colors: unitTextBoxColors[widget.theme]!,
             ),
           ),
