@@ -13,13 +13,15 @@ class EditConversionItemUnitUseCase
     Map<int, ConversionItemModel> conversionItemsMap,
     EditConversionItemUnitDelta delta,
   ) async {
-    conversionItemsMap.update(
-      delta.editedUnit.id,
-      (value) => ConversionItemModel.coalesce(
-        value,
-        unit: delta.editedUnit,
-      ),
-    );
+    if (conversionItemsMap.containsKey(delta.editedUnit.id)) {
+      conversionItemsMap.update(
+        delta.editedUnit.id,
+        (value) => ConversionItemModel.coalesce(
+          value,
+          unit: delta.editedUnit,
+        ),
+      );
+    }
     return conversionItemsMap;
   }
 }
