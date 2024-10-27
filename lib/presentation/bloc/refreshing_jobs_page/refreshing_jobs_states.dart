@@ -8,23 +8,31 @@ abstract class RefreshingJobsState extends ConvertouchState {
 
 class RefreshingJobsFetched extends RefreshingJobsState {
   final Map<String, JobModel> jobs;
-  final Map<String, String> currentDataSources;
+  final Map<String, String> currentDataSourceKeys;
+  final String? currentDataSourceUrl;
+  final String? currentCompletedAt;
 
   const RefreshingJobsFetched({
     required this.jobs,
-    required this.currentDataSources,
+    required this.currentDataSourceKeys,
+    this.currentDataSourceUrl,
+    this.currentCompletedAt,
   });
 
   @override
   List<Object?> get props => [
         jobs.entries,
-        currentDataSources.entries,
+        currentDataSourceKeys.entries,
+        currentDataSourceUrl,
+        currentCompletedAt,
       ];
 
   Map<String, dynamic> toJson() {
     return {
       "jobs": jobs.map((key, value) => MapEntry(key, value.toJson())),
-      "currentDataSources": currentDataSources,
+      "currentDataSources": currentDataSourceKeys,
+      "currentDataSourceUrl": currentDataSourceUrl,
+      "currentCompletedAt": currentCompletedAt,
     };
   }
 
@@ -38,7 +46,10 @@ class RefreshingJobsFetched extends RefreshingJobsState {
         json["jobs"],
         valueMapFunc: (value) => JobModel.fromJson(value)!,
       ),
-      currentDataSources: ObjectUtils.convertToMap(json["currentDataSources"]),
+      currentDataSourceKeys:
+          ObjectUtils.convertToMap(json["currentDataSources"]),
+      currentDataSourceUrl: json["currentDataSourceUrl"],
+      currentCompletedAt: json["currentCompletedAt"],
     );
   }
 
@@ -46,6 +57,8 @@ class RefreshingJobsFetched extends RefreshingJobsState {
   String toString() {
     return 'RefreshingJobsFetched{'
         'jobs: $jobs, '
-        'currentDataSources: $currentDataSources}';
+        'currentDataSources: $currentDataSourceKeys, '
+        'currentDataSourceName: $currentDataSourceUrl, '
+        'currentCompletedAt: $currentCompletedAt}';
   }
 }

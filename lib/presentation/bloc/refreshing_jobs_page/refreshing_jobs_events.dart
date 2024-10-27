@@ -27,6 +27,17 @@ class FetchRefreshingJobs extends RefreshingJobsEvent {
   }
 }
 
+class FetchRefreshingJob extends SingleJobEvent {
+  const FetchRefreshingJob({
+    required super.unitGroupName,
+  });
+
+  @override
+  String toString() {
+    return 'FetchRefreshingJob{unitGroupName: $unitGroupName}';
+  }
+}
+
 class ChangeRefreshingJobCron extends SingleJobEvent {
   final Cron newCron;
 

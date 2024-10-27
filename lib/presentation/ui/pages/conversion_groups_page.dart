@@ -6,6 +6,8 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
+import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -26,6 +28,7 @@ class ConversionGroupsPage extends StatelessWidget {
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+    final refreshingJobsBloc = BlocProvider.of<RefreshingJobsBloc>(context);
     final itemsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
@@ -73,10 +76,21 @@ class ConversionGroupsPage extends StatelessWidget {
                             SaveConversion(conversion: prevConversion),
                           );
                         },
+                        onComplete: () {
+                          if (unitGroup.refreshable) {
+                            refreshingJobsBloc.add(
+                              FetchRefreshingJob(
+                                unitGroupName: unitGroup.name,
+                              ),
+                            );
+                          }
+                          navigationBloc.add(
+                            const NavigateToPage(
+                              pageName: PageName.conversionPage,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                    navigationBloc.add(
-                      const NavigateToPage(pageName: PageName.conversionPage),
                     );
                   },
                   onUnitGroupTapForRemoval: (unitGroup) {

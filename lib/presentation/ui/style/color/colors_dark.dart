@@ -207,33 +207,33 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
 );
 
 const unitGroupsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xC7616491)),
+  background: ColorVariation.only(Color(0xFF616491)),
   foreground: ColorVariation.only(Color(0xFFD1CFD3)),
 );
 
 const unitsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xDB446F96)),
+  background: ColorVariation.only(Color(0xFF446F96)),
   foreground: ColorVariation.only(Color(0xFFD1CFD3)),
 );
 
 const conversionPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xA83D6C98)),
+  background: ColorVariation.only(Color(0xFF4D90D0)),
   foreground: ColorVariation.only(Color(0xFFDEE0FF)),
 );
 
 const refreshButtonColorSchemeDark = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xC821677C),
+    regular: Color(0xFF39889F),
   ),
   foreground: ColorVariation(
-    regular: Color(0xC8BFEFFF),
+    regular: Color(0xFFBFEFFF),
   ),
-  background: ColorVariation.only(Color(0xC821677C)),
+  background: ColorVariation.only(Color(0xFF39889F)),
 );
 
 const removalFloatingButtonColorDark = ConvertouchColorScheme(
   border: ColorVariation.only(Color(0xFF373F4B)),
-  background: ColorVariation.only(Color(0xDA9D5225)),
+  background: ColorVariation.only(Color(0xFF9D5225)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 

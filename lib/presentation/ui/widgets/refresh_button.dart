@@ -32,7 +32,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 return ConvertouchProgressButton(
                   visible: conversionState.showRefreshButton,
                   determinate: determinate,
-                  buttonWidget: ConvertouchFloatingActionButton(
+                  buttonWidget: ConvertouchFloatingActionButton.refresh(
                     onClick: () {
                       jobsBloc.add(
                         StartRefreshingJobForConversion(
@@ -41,7 +41,6 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                         ),
                       );
                     },
-                    assetIconName: "currency-rates-refresh.png",
                     colorScheme: refreshButtonColor,
                   ),
                   radius: 28,

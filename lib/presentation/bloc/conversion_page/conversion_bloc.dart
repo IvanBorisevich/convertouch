@@ -79,6 +79,8 @@ class ConversionBloc
       log("Get existing conversion state from cache");
       emit(state);
     }
+
+    event.onComplete?.call();
   }
 
   _onSaveConversion(

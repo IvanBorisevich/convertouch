@@ -130,15 +130,44 @@ class _ConvertouchUnitGroupDetailsPageState
                           bottom: 20,
                         ),
                       ),
-                      ConvertouchInfoBox(
-                        headerText: "Refreshable",
-                        bodyText: unitGroupDetailsState.draftGroup.refreshable
-                            ? "Yes"
-                            : "No",
-                        bodyColor: textBoxColor.foreground.regular,
-                        margin: const EdgeInsets.only(
-                          bottom: 20,
-                        ),
+                      refreshingJobsBlocBuilder(
+                        builderFunc: (jobState) {
+                          if (!unitGroupDetailsState.draftGroup.refreshable) {
+                            return empty();
+                          }
+                          return Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 30,
+                                ),
+                                child: Divider(
+                                  height: 1,
+                                  indent: 5,
+                                  endIndent: 5,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                              ConvertouchInfoBox(
+                                headerText: "Last refreshed",
+                                bodyText: jobState.currentCompletedAt,
+                                bodyColor: textBoxColor.foreground.regular,
+                                margin: const EdgeInsets.only(
+                                  bottom: 20,
+                                ),
+                              ),
+                              ConvertouchInfoBox(
+                                headerText: "Data Source",
+                                bodyText: jobState.currentDataSourceUrl,
+                                bodyColor: textBoxColor.foreground.regular,
+                                margin: const EdgeInsets.only(
+                                  bottom: 20,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),

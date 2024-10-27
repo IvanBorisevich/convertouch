@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/job_result_model.dart';
 class JobModel<P, R> extends IdNameItemModel {
   final P? params;
   final Cron selectedCron;
-  final String? lastRefreshTime;
+  final String? completedAt;
   final StreamController<JobResultModel>? progressController;
   final bool alreadyRunning;
   final Future<void> Function(R?)? onComplete;
@@ -15,7 +15,7 @@ class JobModel<P, R> extends IdNameItemModel {
   const JobModel({
     this.params,
     this.selectedCron = Cron.never,
-    this.lastRefreshTime,
+    this.completedAt,
     this.progressController,
     this.alreadyRunning = false,
     this.onComplete,
@@ -34,7 +34,7 @@ class JobModel<P, R> extends IdNameItemModel {
     bool? alreadyRunning,
   }) : this(
           params: params ?? savedModel.params,
-          lastRefreshTime: lastRefreshTime ?? savedModel.lastRefreshTime,
+          completedAt: lastRefreshTime ?? savedModel.completedAt,
           selectedCron: selectedCron ?? savedModel.selectedCron,
           progressController:
               progressController ?? savedModel.progressController,
@@ -45,7 +45,7 @@ class JobModel<P, R> extends IdNameItemModel {
   List<Object?> get props => [
         params,
         selectedCron,
-        lastRefreshTime,
+        completedAt,
         progressController,
         alreadyRunning,
         itemType,
@@ -58,14 +58,14 @@ class JobModel<P, R> extends IdNameItemModel {
 
     return JobModel(
       selectedCron: Cron.valueOf(json["selectedCron"]),
-      lastRefreshTime: json["lastRefreshTime"],
+      completedAt: json["lastRefreshTime"],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "selectedCron": selectedCron.name,
-      "lastRefreshTime": lastRefreshTime,
+      "lastRefreshTime": completedAt,
     };
   }
 
@@ -73,7 +73,7 @@ class JobModel<P, R> extends IdNameItemModel {
   String toString() {
     return 'JobModel{'
         'selectedCron: $selectedCron, '
-        'lastRefreshTime: $lastRefreshTime, '
+        'completedAt: $completedAt, '
         'progressController: $progressController}';
   }
 }

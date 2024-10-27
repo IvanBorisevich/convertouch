@@ -188,29 +188,29 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
 );
 
 const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xCF6A69D5)),
+  background: ColorVariation.only(Color(0xFF6A69D5)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 
 const unitsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xD25189BE)),
+  background: ColorVariation.only(Color(0xFF5189BE)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 
 const conversionPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xC55980A6)),
+  background: ColorVariation.only(Color(0xFF5980A6)),
   foreground: ColorVariation.only(Color(0xFFF5F7FF)),
 );
 
 const refreshButtonColorSchemeLight = ConvertouchColorScheme(
   border: ColorVariation(
-    regular: Color(0xC82095B7),
+    regular: Color(0xFF2095B7),
   ),
   foreground: ColorVariation(
     regular: Color(0xFFE8E8FF),
-    selected: Color(0xC82095B7),
+    selected: Color(0xFF2095B7),
   ),
-  background: ColorVariation.only(Color(0xC82095B7)),
+  background: ColorVariation.only(Color(0xFF2095B7)),
 );
 
 const removalFloatingButtonColorLight = ConvertouchColorScheme(

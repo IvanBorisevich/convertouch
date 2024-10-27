@@ -146,6 +146,7 @@ class ConvertouchConversionPage extends StatelessWidget {
               ),
               floatingActionButton: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
+                alignment: WrapAlignment.end,
                 children: [
                   const ConvertouchRefreshFloatingButton(),
                   ConvertouchFloatingActionButton.adding(

@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/data_source_model.dart';
 import 'package:convertouch/domain/model/network_data_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_data_refresh_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_data_source_model.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class StartRefreshingJobUseCase
-    extends StartJobUseCase<InputDataRefreshModel, NetworkDataModel> {
+    extends StartJobUseCase<InputDataSourceModel, NetworkDataModel> {
   final NetworkRepository networkRepository;
   final DataSourceRepository dataSourceRepository;
 
@@ -19,7 +19,7 @@ class StartRefreshingJobUseCase
   });
 
   @override
-  Future<NetworkDataModel?> onExecute(InputDataRefreshModel? params) async {
+  Future<NetworkDataModel?> onExecute(InputDataSourceModel? params) async {
     log("Job func start");
 
     if (params == null) {
@@ -29,7 +29,7 @@ class StartRefreshingJobUseCase
     DataSourceModel dataSource = ObjectUtils.tryGet(
       await dataSourceRepository.get(
         unitGroupName: params.unitGroupName,
-        dataSourceName: params.dataSourceName,
+        dataSourceName: params.dataSourceKey,
       ),
     );
 

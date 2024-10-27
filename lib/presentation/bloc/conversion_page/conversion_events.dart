@@ -22,6 +22,7 @@ class GetConversion extends ConversionEvent {
   const GetConversion({
     required this.unitGroup,
     this.processPrevConversion,
+    super.onComplete,
   });
 
   @override

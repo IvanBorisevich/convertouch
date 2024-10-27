@@ -4,7 +4,7 @@ import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
-  static const double buttonHeight = 70;
+  static const double defaultHeight = 70;
 
   final IconData? icon;
   final String? assetIconName;
@@ -16,6 +16,17 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   const ConvertouchFloatingActionButton({
     this.icon,
+    this.assetIconName,
+    this.onClick,
+    this.visible = true,
+    this.extraLabelVisible = false,
+    this.extraLabelText = "",
+    required this.colorScheme,
+    super.key,
+  });
+
+  const ConvertouchFloatingActionButton.refresh({
+    this.icon = Icons.refresh_rounded,
     this.assetIconName,
     this.onClick,
     this.visible = true,
@@ -52,7 +63,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     return Visibility(
       visible: visible,
       child: SizedBox(
-        height: buttonHeight,
+        height: defaultHeight,
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [

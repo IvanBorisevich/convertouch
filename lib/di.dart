@@ -29,6 +29,7 @@ import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
+import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
@@ -253,6 +254,12 @@ Future<void> _initUseCases() async {
     () => const StopJobUseCase(),
   );
 
+  locator.registerLazySingleton<GetDataSourceUseCase>(
+    () => GetDataSourceUseCase(
+      dataSourceRepository: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<MarkItemsUseCase>(
     () => MarkItemsUseCase(),
   );
@@ -347,6 +354,7 @@ Future<void> _initBloc() async {
     () => RefreshingJobsBloc(
       startRefreshingJobUseCase: locator(),
       stopJobUseCase: locator(),
+      getDataSourceUseCase: locator(),
       conversionBloc: locator(),
       navigationBloc: locator(),
     ),

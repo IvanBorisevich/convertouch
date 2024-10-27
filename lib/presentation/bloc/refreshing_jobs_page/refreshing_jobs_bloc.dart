@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/model/data_source_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/network_data_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_data_refresh_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_data_source_model.dart';
+import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -20,16 +23,24 @@ class RefreshingJobsBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsFetched> {
   final StartRefreshingJobUseCase startRefreshingJobUseCase;
   final StopJobUseCase stopJobUseCase;
+  final GetDataSourceUseCase getDataSourceUseCase;
   final ConversionBloc conversionBloc;
   final NavigationBloc navigationBloc;
 
   RefreshingJobsBloc({
     required this.startRefreshingJobUseCase,
     required this.stopJobUseCase,
+    required this.getDataSourceUseCase,
     required this.conversionBloc,
     required this.navigationBloc,
-  }) : super(const RefreshingJobsFetched(jobs: {}, currentDataSources: {})) {
+  }) : super(
+          const RefreshingJobsFetched(
+            jobs: {},
+            currentDataSourceKeys: {},
+          ),
+        ) {
     on<FetchRefreshingJobs>(_onJobsFetch);
+    on<FetchRefreshingJob>(_onJobFetch);
     on<StartRefreshingJobForConversion>(_onStartRefreshingJobForConversion);
     on<StopRefreshingJobForConversion>(_onStopRefreshingJobForConversion);
   }
@@ -41,16 +52,40 @@ class RefreshingJobsBloc
     emit(state);
   }
 
+  _onJobFetch(
+    FetchRefreshingJob event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    DataSourceModel currentDataSource = ObjectUtils.tryGet(
+      await getDataSourceUseCase.execute(
+        InputDataSourceModel(
+          unitGroupName: event.unitGroupName,
+          dataSourceKey: state.currentDataSourceKeys[event.unitGroupName],
+        ),
+      ),
+    );
+
+    emit(
+      RefreshingJobsFetched(
+        jobs: state.jobs,
+        currentDataSourceKeys: state.currentDataSourceKeys,
+        currentDataSourceUrl: currentDataSource.url,
+        currentCompletedAt:
+            state.jobs[event.unitGroupName]?.completedAt ?? 'Never',
+      ),
+    );
+  }
+
   _onStartRefreshingJobForConversion(
     StartRefreshingJobForConversion event,
     Emitter<RefreshingJobsState> emit,
   ) async {
     Map<String, JobModel> activeJobs = Map.of(state.jobs);
 
-    JobModel<InputDataRefreshModel, NetworkDataModel> job = JobModel(
-      params: InputDataRefreshModel(
+    JobModel<InputDataSourceModel, NetworkDataModel> job = JobModel(
+      params: InputDataSourceModel(
         unitGroupName: event.unitGroupName,
-        dataSourceName: state.currentDataSources[event.unitGroupName],
+        dataSourceKey: state.currentDataSourceKeys[event.unitGroupName],
       ),
       onComplete: (networkData) async {
         log("onComplete start");
@@ -111,7 +146,7 @@ class RefreshingJobsBloc
     emit(
       RefreshingJobsFetched(
         jobs: activeJobs,
-        currentDataSources: state.currentDataSources,
+        currentDataSourceKeys: state.currentDataSourceKeys,
       ),
     );
   }
@@ -139,7 +174,7 @@ class RefreshingJobsBloc
     emit(
       RefreshingJobsFetched(
         jobs: activeJobs,
-        currentDataSources: state.currentDataSources,
+        currentDataSourceKeys: state.currentDataSourceKeys,
       ),
     );
   }

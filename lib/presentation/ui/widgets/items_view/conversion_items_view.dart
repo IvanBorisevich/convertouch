@@ -14,6 +14,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final void Function(ConversionItemModel, String)? onTextValueChanged;
   final void Function(ConversionItemModel)? onItemRemoveTap;
   final Widget noItemsView;
+  final double listItemSpacingAfterLast;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
@@ -23,6 +24,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.onTextValueChanged,
     this.onItemRemoveTap,
     required this.noItemsView,
+    this.listItemSpacingAfterLast = 90,
     required this.theme,
     super.key,
   });
@@ -54,8 +56,10 @@ class _ConvertouchConversionItemsViewState
           color: Colors.transparent,
           shadowColor: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: _listItemSpacing,
+            padding: EdgeInsets.only(
+              bottom: index == widget.convertedItems.length - 1
+                  ? widget.listItemSpacingAfterLast
+                  : _listItemSpacing,
             ),
             child: Row(
               children: [

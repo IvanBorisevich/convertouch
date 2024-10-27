@@ -23,7 +23,7 @@ class ConvertouchInfoBox extends StatelessWidget {
     this.headerFontSize = 13,
     this.bodyColor,
     this.bodyText,
-    this.bodyFontSize = 18,
+    this.bodyFontSize = 17,
     this.bodyFontWeight = FontWeight.w500,
     this.padding,
     this.margin,
