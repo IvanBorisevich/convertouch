@@ -7,18 +7,15 @@ import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.d
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
-import 'package:convertouch/data/repositories/local/job_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
 import 'package:convertouch/data/translators/conversion_item_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
-import 'package:convertouch/data/translators/data_source_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
-import 'package:convertouch/domain/repositories/job_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
@@ -32,8 +29,7 @@ import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/dynamic_data/get_dynamic_data_for_conversion.dart';
-import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
@@ -123,10 +119,6 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
     () => const DataSourceRepositoryImpl(),
   );
 
-  locator.registerLazySingleton<JobRepository>(
-    () => const JobRepositoryImpl(),
-  );
-
   locator.registerLazySingleton<DynamicValueRepository>(
     () => DynamicValueRepositoryImpl(
       dynamicValueDao: database.dynamicValueDao,
@@ -147,10 +139,6 @@ Future<void> _initTranslators() async {
 
   locator.registerLazySingleton<DynamicValueTranslator>(
     () => DynamicValueTranslator(),
-  );
-
-  locator.registerLazySingleton<DataSourceTranslator>(
-    () => DataSourceTranslator(),
   );
 
   locator.registerLazySingleton<ConversionTranslator>(
@@ -254,14 +242,11 @@ Future<void> _initUseCases() async {
     ),
   );
 
-  locator.registerLazySingleton<GetDynamicDataForConversionUseCase>(
-    () => GetDynamicDataForConversionUseCase(
+  locator.registerLazySingleton<StartRefreshingJobUseCase>(
+    () => StartRefreshingJobUseCase(
       networkRepository: locator(),
+      dataSourceRepository: locator(),
     ),
-  );
-
-  locator.registerLazySingleton<StartJobUseCase>(
-    () => const StartJobUseCase(),
   );
 
   locator.registerLazySingleton<StopJobUseCase>(
@@ -360,11 +345,8 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<RefreshingJobsBloc>(
     () => RefreshingJobsBloc(
-      startJobUseCase: locator(),
+      startRefreshingJobUseCase: locator(),
       stopJobUseCase: locator(),
-      getDynamicDataForConversionUseCase: locator(),
-      dataSourceRepository: locator(),
-      jobRepository: locator(),
       conversionBloc: locator(),
       navigationBloc: locator(),
     ),

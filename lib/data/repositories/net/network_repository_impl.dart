@@ -74,12 +74,15 @@ class NetworkRepositoryImpl extends NetworkRepository {
           dynamicValue: dynamicValue,
         ),
       );
-    } catch (e, stackTrace) {
+    } on NetworkException catch (e) {
+      return Left(e);
+    } on Exception catch (e, stackTrace) {
       return Left(
         NetworkException(
-          message: "Error when checking connectivity",
+          message: "Error when retrieving dynamic data",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
+          severity: ExceptionSeverity.warning,
         ),
       );
     }

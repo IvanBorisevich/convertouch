@@ -5,9 +5,8 @@ import 'package:either_dart/either.dart';
 abstract class DataSourceRepository {
   const DataSourceRepository();
 
-  Future<Either<ConvertouchException, Map<String, String>>> getAllSelected();
-
-  Future<Either<ConvertouchException, DataSourceModel>> getSelected(
-    String unitGroupName,
-  );
+  Future<Either<ConvertouchException, DataSourceModel>> get({
+    required String unitGroupName,
+    String? dataSourceName,
+  });
 }

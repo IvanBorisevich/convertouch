@@ -8,12 +8,13 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 
-class StartJobUseCase<R> extends UseCase<JobModel<R>, JobModel> {
+abstract class StartJobUseCase<P, R>
+    extends UseCase<JobModel<P, R>, JobModel<P, R>> {
   const StartJobUseCase();
 
   @override
-  Future<Either<ConvertouchException, JobModel<R>>> execute(
-    JobModel<R> input,
+  Future<Either<ConvertouchException, JobModel<P, R>>> execute(
+    JobModel<P, R> input,
   ) async {
     StreamController<JobResultModel>? jobProgressController;
 
@@ -28,9 +29,7 @@ class StartJobUseCase<R> extends UseCase<JobModel<R>, JobModel> {
         );
       }
 
-      input.beforeStart?.call();
-
-      jobProgressController = createJobProgressStream(
+      jobProgressController = _createJobProgressStream(
         jobFunc: (jobProgressController) async {
           if (!jobProgressController.isClosed) {
             jobProgressController.add(const JobResultModel.start());
@@ -39,15 +38,13 @@ class StartJobUseCase<R> extends UseCase<JobModel<R>, JobModel> {
             return null;
           }
 
-          R? result = await input.jobFunc?.call();
+          R? result = await onExecute(input.params);
 
           if (!jobProgressController.isClosed) {
             log("Add finish result to the stream");
             jobProgressController.add(
               const JobResultModel.finish(),
             );
-          } else {
-            log("At finish: stream controller is already closed");
           }
           return result;
         },
@@ -61,15 +58,11 @@ class StartJobUseCase<R> extends UseCase<JobModel<R>, JobModel> {
         ),
       );
     } catch (e, stackTrace) {
-      log("Closing the stream from use case");
-      jobProgressController?.close();
-
-      log("Error when starting the refreshing job '${input.name}': "
-          "$e, $stackTrace");
+      log("Error when starting the job: $e, $stackTrace");
 
       return Left(
         InternalException(
-          message: "Error when starting the refreshing job '${input.name}'",
+          message: "Error when starting the job: $e",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -77,31 +70,31 @@ class StartJobUseCase<R> extends UseCase<JobModel<R>, JobModel> {
     }
   }
 
-  StreamController<JobResultModel> createJobProgressStream({
-    required Future<R?> Function(StreamController<JobResultModel>) jobFunc,
-    void Function(R?)? onComplete,
+  StreamController<JobResultModel> _createJobProgressStream({
+    required Future<R?> Function(
+      StreamController<JobResultModel>,
+    ) jobFunc,
+    Future<void> Function(R?)? onComplete,
   }) {
     late final BehaviorSubject<JobResultModel> jobProgressController;
     jobProgressController = BehaviorSubject<JobResultModel>(
       onListen: () async {
-        try {
-          await jobFunc.call(jobProgressController).then((result) {
-            if (!jobProgressController.isClosed) {
-              log("Closing the stream once job has been completed");
-              jobProgressController.close();
-              log("onComplete callback function calling");
-              onComplete?.call(result);
-            } else {
-              log("After finish: stream controller is already closed");
-            }
-          });
-        } catch (e) {
-          log("Closing the stream when error during job execution");
-          await jobProgressController.close();
-        }
+        await jobFunc.call(jobProgressController).then((result) async {
+          log("onComplete callback function calling");
+          await onComplete?.call(result);
+        }).catchError((err) {
+          log("onError callback function calling: $err");
+          jobProgressController.addError(err);
+        }).whenComplete(() async {
+          if (!jobProgressController.isClosed) {
+            await jobProgressController.close();
+          }
+        });
       },
     );
 
     return jobProgressController;
   }
+
+  Future<R?> onExecute(P? params);
 }

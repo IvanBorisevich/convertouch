@@ -122,14 +122,15 @@ enum ConversionType {
 }
 
 enum RefreshableDataPart {
-  value,
-  coefficient;
+  value(0),
+  coefficient(1);
 
-  static RefreshableDataPart valueOf(dynamic value) {
-    if (value is RefreshableDataPart) {
-      return value;
-    }
-    return values.firstWhere((element) => value == element.name);
+  final int val;
+
+  const RefreshableDataPart(this.val);
+
+  static RefreshableDataPart valueOf(int value) {
+    return values.firstWhere((element) => value == element.val);
   }
 
   @override

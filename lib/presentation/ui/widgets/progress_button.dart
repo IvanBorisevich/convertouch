@@ -1,7 +1,11 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ConvertouchProgressButton extends StatelessWidget {
@@ -50,15 +54,24 @@ class ConvertouchProgressButton extends StatelessWidget {
                       "data: ${snapshot.data?.progressPercent}");
 
                   if (snapshot.hasError) {
-                    log("Snapshot contains an error");
-                    return IconButton(
-                      onPressed: onProgressIndicatorErrorIconClick,
-                      icon: Icon(
-                        Icons.error_outline,
-                        color: progressIndicatorErrorIconColor,
-                        size: radius,
-                      ),
-                    );
+                    log("Snapshot contains an error: ${snapshot.error}");
+                    if (snapshot.error is ConvertouchException) {
+                      BlocProvider.of<NavigationBloc>(context).add(
+                        ShowException(
+                          exception: snapshot.error as ConvertouchException,
+                        ),
+                      );
+                      return buttonWidget;
+                    } else {
+                      return IconButton(
+                        onPressed: onProgressIndicatorErrorIconClick,
+                        icon: Icon(
+                          Icons.error_outline,
+                          color: progressIndicatorErrorIconColor,
+                          size: radius,
+                        ),
+                      );
+                    }
                   } else if (snapshot.data == null) {
                     return buttonWidget;
                   } else if (snapshot.connectionState == ConnectionState.done) {

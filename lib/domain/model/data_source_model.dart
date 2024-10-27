@@ -24,27 +24,6 @@ class DataSourceModel extends IdNameItemModel {
         itemType,
       ];
 
-  static DataSourceModel? fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return null;
-    }
-    return DataSourceModel(
-      name: json["name"],
-      url: json["url"],
-      responseTransformerClassName: json["responseTransformerClassName"],
-      refreshablePart: RefreshableDataPart.valueOf(json["refreshablePart"]),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "url": url,
-      "responseTransformerClassName": responseTransformerClassName,
-      "refreshablePart": refreshablePart.name,
-    };
-  }
-
   @override
   String toString() {
     return 'DataSourceModel{'
