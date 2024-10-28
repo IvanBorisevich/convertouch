@@ -43,7 +43,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.maxTextLength,
     this.textLengthCounterVisible = false,
     this.hintText,
-    this.borderRadius = 8,
+    this.borderRadius = 15,
     required this.colors,
     this.suffixIcon,
     super.key,
@@ -195,6 +195,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     return TextField(
       readOnly: widget.disabled,
       maxLength: widget.maxTextLength,
+      textAlignVertical: TextAlignVertical.center,
       obscureText: false,
       keyboardType: inputValueTypeToKeyboardTypeMap[inputType],
       autofocus: widget.autofocus,
@@ -232,21 +233,18 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             maxLines: 1,
             softWrap: false,
             overflow: TextOverflow.fade,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
+              foreground: Paint()..color = borderColor,
             ),
           ),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        labelStyle: TextStyle(
-          color: borderColor,
-        ),
         hintText: widget.hintText,
         hintStyle: TextStyle(
           color: hintColor,
         ),
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 15.0,
           horizontal: 15.0,
         ),
         counterText: "",
@@ -257,7 +255,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
       ),
       style: TextStyle(
-        color: foregroundColor,
+        foreground: Paint()..color = foregroundColor,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

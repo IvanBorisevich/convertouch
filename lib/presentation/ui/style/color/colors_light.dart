@@ -153,8 +153,8 @@ const unitPageEmptyViewColorLight = ConvertouchColorScheme(
 
 const unitTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF5E7993),
-    focused: Color(0xFF375067),
+    regular: Color(0xFF45688A),
+    focused: Color(0xFF233B50),
     disabled: Color(0xFF90A8C0),
   ),
   foreground: ColorVariation(

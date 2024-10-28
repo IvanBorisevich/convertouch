@@ -86,13 +86,6 @@ const unitGroupItemColorSchemeDark = ListItemColorScheme(
   ),
 );
 
-const unitGroupItemInAppBarColorSchemeDark = ListItemColorScheme(
-  border: ColorVariation.only(Color(0xff434c60)),
-  divider: ColorVariation.only(Color(0xff5e6981)),
-  background: ColorVariation.only(Color(0xff434c60)),
-  foreground: ColorVariation.only(Color(0xffa6baee)),
-);
-
 const unitItemColorSchemeDark = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xFF435064),
@@ -103,7 +96,7 @@ const unitItemColorSchemeDark = ListItemColorScheme(
     disabled: Color(0x9B3C485B),
   ),
   titleBackground: ColorVariation(
-    regular: Color(0xFF4B586C),
+    regular: Color(0xFF495972),
     disabled: Color(0x9B3F4B5E),
   ),
   foreground: ColorVariation(
@@ -163,7 +156,7 @@ const unitTextBoxColorDark = TextBoxColorScheme(
     disabled: Color(0xFF687A8C),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF98BAD9),
+    regular: Color(0xFFA3C2DE),
     disabled: Color(0xFF687A8C),
   ),
   hint: ColorVariation(
@@ -191,11 +184,11 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xE44B6B8C), //Color(0xFF708EA8),
+      regular: Color(0xFF495972), //Color(0xFF708EA8),
       focused: Color(0xFF8FB1D0),
     ),
     background: ColorVariation(
-      regular: Color(0xE44B6B8C),
+      regular: Color(0xFF495972),
     ),
     foreground: ColorVariation(
       regular: Color(0xFFADCEEC),

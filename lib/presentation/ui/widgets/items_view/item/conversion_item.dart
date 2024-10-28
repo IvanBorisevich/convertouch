@@ -25,7 +25,7 @@ class ConvertouchConversionItem extends StatefulWidget {
     this.disabled = false,
     required this.theme,
     this.customColors,
-    this.spacing = 11,
+    this.spacing = 10,
     super.key,
   });
 
@@ -36,10 +36,9 @@ class ConvertouchConversionItem extends StatefulWidget {
 
 class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   static const double _unitButtonWidth = 75;
-  static const double _unitButtonHeight = 50;
+  static const double _unitButtonHeight = 48;
   static const double _containerHeight = _unitButtonHeight;
-  static const BorderRadius _elementsBorderRadius =
-      BorderRadius.all(Radius.circular(8));
+  static const double _elementsBorderRadius = 15;
 
   late final TextEditingController _unitValueController;
 
@@ -56,6 +55,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   Widget build(BuildContext context) {
     var itemColor = widget.customColors ?? conversionItemColors[widget.theme]!;
     var unitButtonColor = itemColor.unitButton;
+    var unitTextBoxColor = itemColor.textBox;
 
     if (_isFocused && !widget.disabled) {
       _unitValueController.text = widget.item.value.str;
@@ -66,7 +66,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     return Container(
       height: _containerHeight,
       decoration: const BoxDecoration(
-        borderRadius: _elementsBorderRadius,
+        borderRadius: BorderRadius.all(Radius.circular(_elementsBorderRadius)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,6 +79,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               hintText: _isFocused && !widget.disabled
                   ? widget.item.defaultValue.str
                   : widget.item.defaultValue.scientific,
+              borderRadius: 15,
               inputType: widget.valueType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
@@ -125,7 +126,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                       : empty(),
                 ],
               ),
-              colors: unitTextBoxColors[widget.theme]!,
+              colors: unitTextBoxColor,
             ),
           ),
           SizedBox(width: widget.spacing),
@@ -152,7 +153,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                             : unitButtonColor.border.regular,
                         width: 1,
                       ),
-                      borderRadius: _elementsBorderRadius,
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
                     ),
                   ),
                 ),
