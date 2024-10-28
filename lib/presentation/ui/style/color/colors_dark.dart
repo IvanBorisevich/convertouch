@@ -24,6 +24,7 @@ const pageColorSchemeDark = PageColorScheme(
     background: ColorVariation.only(Color(0xFF2B2F38)),
     foreground: ColorVariation(
       regular: Color(0xFFCCD7E0),
+      selected: Color(0xFF85B3D9),
       disabled: Color(0xFF8D8D8D),
     ),
   ),

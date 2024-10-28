@@ -23,7 +23,8 @@ const pageColorSchemeLight = PageColorScheme(
   bottomBar: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffa7c2ff)),
     foreground: ColorVariation(
-      regular: Color(0xFF38638A),
+      regular: Color(0xFF2B679D),
+      selected: Color(0xFF244360),
       disabled: Color(0xFFA0C4F5),
     ),
   ),

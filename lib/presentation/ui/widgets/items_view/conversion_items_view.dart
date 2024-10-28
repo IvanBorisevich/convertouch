@@ -36,7 +36,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
   static const double _listSpacingTop = 5;
-  static const double _listItemSpacing = 11;
+  static const double _listItemSpacing = 12;
   static const double _dragHandlerWidth = 38;
   static const double _dragHandlerHeight = 50;
   static const double _removalHandlerWidth = 41;

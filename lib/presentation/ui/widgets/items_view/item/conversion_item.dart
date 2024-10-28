@@ -25,7 +25,7 @@ class ConvertouchConversionItem extends StatefulWidget {
     this.disabled = false,
     required this.theme,
     this.customColors,
-    this.spacing = 10,
+    this.spacing = 11,
     super.key,
   });
 
