@@ -159,11 +159,11 @@ const unitTextBoxColorLight = TextBoxColorScheme(
     disabled: Color(0xFF90A8C0),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFF345C81),
+    regular: Color(0xBE183C5E),
     disabled: Color(0xFF90A8C0),
   ),
   hint: ColorVariation(
-    regular: Color(0xBE345C81),
+    regular: Color(0xBE7EA0C0),
     disabled: Color(0xFF90A8C0),
   ),
 );

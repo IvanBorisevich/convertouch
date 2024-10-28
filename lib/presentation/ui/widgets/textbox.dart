@@ -242,7 +242,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: widget.hintText,
         hintStyle: TextStyle(
-          color: hintColor,
+          foreground: Paint()..color = hintColor,
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 15.0,

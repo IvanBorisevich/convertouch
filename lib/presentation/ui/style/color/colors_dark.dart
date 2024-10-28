@@ -161,7 +161,7 @@ const unitTextBoxColorDark = TextBoxColorScheme(
     disabled: Color(0xFF687A8C),
   ),
   hint: ColorVariation(
-    regular: Color(0xFF84A1BD),
+    regular: Color(0xFF73899D),
     disabled: Color(0xFF687A8C),
   ),
 );
