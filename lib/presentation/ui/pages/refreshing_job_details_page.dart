@@ -1,5 +1,4 @@
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
@@ -51,7 +50,10 @@ class ConvertouchRefreshingJobDetailsPage extends StatelessWidget {
             // } else {
             //   return empty();
             // }
-            return empty();
+            return const SizedBox(
+              height: 0,
+              width: 0,
+            );
           },
         );
       },

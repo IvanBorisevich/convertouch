@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +95,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                       );
                     }
 
-                    return empty();
+                    return const SizedBox();
                   },
                 ),
               ],

@@ -47,8 +47,11 @@ class MockUnitRepository extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getByGroupId(
-      int unitGroupId) {
+  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
+    required int unitGroupId,
+    required int pageNum,
+    required int pageSize,
+  }) {
     // TODO: implement getByGroupId
     throw UnimplementedError();
   }
@@ -67,8 +70,12 @@ class MockUnitRepository extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search(
-      int unitGroupId, String searchString) {
+  Future<Either<ConvertouchException, List<UnitModel>>> search({
+    required int unitGroupId,
+    required String searchString,
+    required int pageNum,
+    required int pageSize,
+  }) {
     // TODO: implement search
     throw UnimplementedError();
   }

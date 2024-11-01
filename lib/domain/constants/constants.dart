@@ -181,3 +181,5 @@ enum ConvertouchValueType {
     return values.firstWhereOrNull((element) => value == element.val);
   }
 }
+
+enum FetchingStatus { success, failure }

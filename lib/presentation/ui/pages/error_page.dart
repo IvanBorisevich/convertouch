@@ -2,7 +2,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';

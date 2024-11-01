@@ -6,14 +6,24 @@ import 'package:floor/floor.dart';
 abstract class UnitGroupDaoDb extends UnitGroupDao {
   @override
   @Query('select * from $unitGroupsTableName '
-      'order by name')
-  Future<List<UnitGroupEntity>> getAll();
+      'order by name '
+      'limit :pageSize offset :offset')
+  Future<List<UnitGroupEntity>> getAll({
+    required int pageSize,
+    required int offset,
+  });
 
   @override
   @Query('select * from $unitGroupsTableName '
       'where name like :searchString '
-      'order by name')
-  Future<List<UnitGroupEntity>> getBySearchString(String searchString);
+      'order by name '
+      'limit :pageSize offset :offset'
+  )
+  Future<List<UnitGroupEntity>> getBySearchString({
+    required String searchString,
+    required int pageSize,
+    required int offset,
+  });
 
   @override
   @Query('select * from $unitGroupsTableName where refreshable is not null')

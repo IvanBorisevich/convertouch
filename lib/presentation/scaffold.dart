@@ -6,12 +6,12 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/settings_page.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_details.dart';
@@ -210,7 +210,10 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                 ),
               );
             }
-            return empty();
+            return const SizedBox(
+    height: 0,
+    width: 0,
+  );
           },
         );
       },

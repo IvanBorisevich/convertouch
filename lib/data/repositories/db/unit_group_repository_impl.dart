@@ -12,9 +12,16 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> getAll() async {
+  Future<Either<ConvertouchException, List<UnitGroupModel>>> getPage({
+    int pageNum = 0,
+    required int pageSize,
+  }) async {
     try {
-      final result = await unitGroupDao.getAll();
+      List<UnitGroupEntity> result = await unitGroupDao.getAll(
+        pageSize: pageSize,
+        offset: pageNum * pageSize,
+      );
+
       return Right(
         result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
       );
@@ -30,13 +37,19 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> search(
-    String searchString,
-  ) async {
+  Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
+    required String searchString,
+    required int pageNum,
+    required int pageSize,
+  }) async {
     try {
       List<UnitGroupEntity> result;
       if (searchString.isNotEmpty) {
-        result = await unitGroupDao.getBySearchString('%$searchString%');
+        result = await unitGroupDao.getBySearchString(
+          searchString: '%$searchString%',
+          pageSize: pageSize,
+          offset: pageNum * pageSize,
+        );
       } else {
         result = [];
       }

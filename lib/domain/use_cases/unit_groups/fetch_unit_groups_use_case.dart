@@ -1,22 +1,31 @@
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchUnitGroupsUseCase extends UseCase<String?, List<UnitGroupModel>> {
+class FetchUnitGroupsUseCase
+    extends UseCase<InputItemsFetchModel, List<UnitGroupModel>> {
   final UnitGroupRepository unitGroupRepository;
 
   const FetchUnitGroupsUseCase(this.unitGroupRepository);
 
   @override
   Future<Either<ConvertouchException, List<UnitGroupModel>>> execute(
-    String? input,
+    InputItemsFetchModel input,
   ) async {
-    if (input == null || input.isEmpty) {
-      return await unitGroupRepository.getAll();
+    if (input.searchString == null || input.searchString!.isEmpty) {
+      return await unitGroupRepository.getPage(
+        pageNum: input.pageNum,
+        pageSize: input.pageSize,
+      );
     } else {
-      return await unitGroupRepository.search(input);
+      return await unitGroupRepository.search(
+        searchString: input.searchString!,
+        pageNum: input.pageNum,
+        pageSize: input.pageSize,
+      );
     }
   }
 }

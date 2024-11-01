@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class SettingItem<T> extends StatelessWidget {
   final bool disabled;
   final ConvertouchUITheme theme;
 
-  SettingItem.regular({
+  const SettingItem.regular({
     required this.title,
     this.onTap,
     this.showDivider = true,
@@ -29,7 +28,10 @@ class SettingItem<T> extends StatelessWidget {
     super.key,
   })  : pointerSide = PointerSide.none,
         selected = false,
-        child = empty();
+        child = const SizedBox(
+          height: 0,
+          width: 0,
+        );
 
   SettingItem.radio({
     required T value,
@@ -174,7 +176,10 @@ class SettingItem<T> extends StatelessWidget {
                   indent: pointerSide != PointerSide.left ? 15 : 47,
                   color: colorScheme.divider.regular,
                 )
-              : empty(),
+              : const SizedBox(
+                  height: 0,
+                  width: 0,
+                ),
           pointerSide != PointerSide.left
               ? Row(
                   children: [

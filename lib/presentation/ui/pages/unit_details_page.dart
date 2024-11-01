@@ -7,6 +7,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -17,10 +18,8 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -157,11 +156,9 @@ class _ConvertouchUnitDetailsPageState
                     onClick: () {
                       FocusScope.of(context).unfocus();
                       BlocProvider.of<UnitsBloc>(context).add(
-                        SaveUnit(
-                          unit: pageState.details.resultUnit,
-                          unitGroup: pageState.details.unitGroup,
-                          unitGroupChanged: pageState.details.unitGroupChanged,
-                          onSaveUnit: (savedUnit) {
+                        SaveItem(
+                          item: pageState.details.resultUnit,
+                          onItemSave: (savedUnit) {
                             BlocProvider.of<ConversionBloc>(context).add(
                               EditConversionItemUnit(
                                 editedUnit: savedUnit,
@@ -201,7 +198,7 @@ class _ConvertouchUnitDetailsPageState
               onTap: () {
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
-                  const FetchUnitGroups(),
+                  const FetchItems(),
                 );
 
                 BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context).add(
@@ -243,7 +240,10 @@ class _ConvertouchUnitDetailsPageState
     bool editableValueLengthVisible = false,
   }) {
     if (!visible) {
-      return empty();
+      return const SizedBox(
+    height: 0,
+    width: 0,
+  );
     }
 
     return editable
@@ -325,8 +325,8 @@ class _ConvertouchUnitDetailsPageState
                     },
                     onTap: () {
                       BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
-                        FetchUnits(
-                          unitGroup: unitGroup,
+                        FetchItems(
+                          parentItemId: unitGroup.id,
                         ),
                       );
                       BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context)

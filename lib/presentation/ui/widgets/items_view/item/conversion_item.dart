@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
@@ -108,7 +107,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                             color: itemColor.textBox.foreground.regular,
                           ),
                         )
-                      : empty(),
+                      : const SizedBox(
+                          height: 0,
+                          width: 0,
+                        ),
                   widget.item.value.str.isNotEmpty && _isFocused
                       ? IconButton(
                           icon: Icon(
@@ -123,7 +125,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                             });
                           },
                         )
-                      : empty(),
+                      : const SizedBox(
+                          height: 0,
+                          width: 0,
+                        ),
                 ],
               ),
               colors: unitTextBoxColor,

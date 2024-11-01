@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/widgets/setting_item.dart';
 import 'package:convertouch/presentation/ui/widgets/settings_group.dart';
 import 'package:flutter/material.dart';

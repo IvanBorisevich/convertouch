@@ -1,4 +1,8 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -6,11 +10,13 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/units_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_reactive_view.dart';
+import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
+import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +25,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
@@ -35,55 +42,72 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             return itemsSelectionBlocBuilder(
               bloc: unitsSelectionBloc,
               builderFunc: (itemsSelectionState) {
-                return ConvertouchUnitsPage(
-                  pageTitle: itemsSelectionState.singleItemSelectionMode
+                return ConvertouchPage(
+                  title: itemsSelectionState.singleItemSelectionMode
                       ? 'Change Unit'
                       : 'Add Units To Conversion',
-                  customLeadingIcon: null,
-                  units: pageState.units,
-                  onSearchStringChanged: (text) {
-                    unitsBloc.add(
-                      FetchUnits(
-                        unitGroup: pageState.unitGroup,
-                        searchString: text,
-                      ),
-                    );
-                  },
-                  onSearchReset: () {
-                    unitsBloc.add(
-                      FetchUnits(
-                        unitGroup: pageState.unitGroup,
-                      ),
-                    );
-                  },
-                  onUnitTap: (unit) {
-                    if (itemsSelectionState.singleItemSelectionMode) {
-                      conversionBloc.add(
-                        ReplaceConversionItemUnit(
-                          newUnit: unit,
-                          oldUnitId: itemsSelectionState.selectedId!,
-                        ),
-                      );
-                      navigationBloc.add(const NavigateBack());
-                    } else {
-                      unitsSelectionBloc.add(
-                        SelectItem(
-                          id: unit.id,
-                        ),
-                      );
-                    }
-                  },
-                  onUnitTapForRemoval: null,
-                  onUnitLongPress: null,
-                  onUnitsRemove: null,
-                  removalModeEnabled: false,
-                  checkableUnitsVisible: true,
-                  editableUnitsVisible: false,
-                  appBarRightWidgets: const [],
-                  checkedUnitIds: itemsSelectionState.markedIds,
-                  selectedUnitId: itemsSelectionState.selectedId,
-                  disabledUnitIds: itemsSelectionState.excludedIds,
-                  floatingButton: ConvertouchFloatingActionButton(
+                  secondaryAppBar: SecondaryAppBar(
+                    theme: appState.theme,
+                    child: ConvertouchSearchBar(
+                      placeholder: "Search units...",
+                      theme: appState.theme,
+                      pageViewMode: appState.unitsViewMode,
+                      onViewModeChange: () {
+                        appBloc.add(
+                          ChangeSetting(
+                            settingKey: SettingKeys.unitsViewMode,
+                            settingValue: appState.unitsViewMode.next.value,
+                          ),
+                        );
+                      },
+                      onSearchStringChanged: (text) {
+                        unitsBloc.add(
+                          FetchItems(
+                            parentItemId: pageState.parentItemId,
+                            searchString: text,
+                          ),
+                        );
+                      },
+                      onSearchReset: () {
+                        unitsBloc.add(
+                          FetchItems(
+                            parentItemId: pageState.parentItemId,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  body: ConvertouchMenuItemsReactiveView(
+                    itemsListBloc: unitsBloc,
+                    onItemTap: (unit) {
+                      if (itemsSelectionState.singleItemSelectionMode) {
+                        conversionBloc.add(
+                          ReplaceConversionItemUnit(
+                            newUnit: unit,
+                            oldUnitId: itemsSelectionState.selectedId!,
+                          ),
+                        );
+                        navigationBloc.add(const NavigateBack());
+                      } else {
+                        unitsSelectionBloc.add(
+                          SelectItem(
+                            id: unit.id,
+                          ),
+                        );
+                      }
+                    },
+                    onItemTapForRemoval: null,
+                    onItemLongPress: null,
+                    checkedItemIds: itemsSelectionState.markedIds,
+                    disabledItemIds: itemsSelectionState.excludedIds,
+                    selectedItemId: itemsSelectionState.selectedId,
+                    editableItemsVisible: false,
+                    checkableItemsVisible: true,
+                    removalModeEnabled: false,
+                    itemsViewMode: appState.unitsViewMode,
+                    theme: appState.theme,
+                  ),
+                  floatingActionButton: ConvertouchFloatingActionButton(
                     icon: Icons.check_outlined,
                     visible: itemsSelectionState.canMarkedItemsBeSelected,
                     onClick: () {

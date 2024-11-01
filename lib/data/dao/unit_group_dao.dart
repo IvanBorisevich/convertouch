@@ -3,9 +3,16 @@ import 'package:convertouch/data/entities/unit_group_entity.dart';
 abstract class UnitGroupDao {
   const UnitGroupDao();
 
-  Future<List<UnitGroupEntity>> getAll();
+  Future<List<UnitGroupEntity>> getAll({
+    required int pageSize,
+    required int offset,
+  });
 
-  Future<List<UnitGroupEntity>> getBySearchString(String searchString);
+  Future<List<UnitGroupEntity>> getBySearchString({
+    required String searchString,
+    required int pageSize,
+    required int offset,
+  });
 
   Future<List<UnitGroupEntity>> getRefreshableGroups();
 

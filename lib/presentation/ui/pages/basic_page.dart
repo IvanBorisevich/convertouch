@@ -56,7 +56,10 @@ class ConvertouchPage extends StatelessWidget {
                       },
                     );
                   } else {
-                    return empty();
+                    return const SizedBox(
+                      height: 0,
+                      width: 0,
+                    );
                   }
                 },
               ),
@@ -126,12 +129,5 @@ void showSnackBar(
         ),
       ),
     ),
-  );
-}
-
-Widget empty() {
-  return const SizedBox(
-    height: 0,
-    width: 0,
   );
 }

@@ -14,10 +14,18 @@ class UnitRepositoryImpl extends UnitRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getByGroupId(
-      int unitGroupId) async {
+  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
+    required int unitGroupId,
+    required int pageNum,
+    required int pageSize,
+  }) async {
     try {
-      final result = await unitDao.getAll(unitGroupId);
+      final result = await unitDao.getAll(
+        unitGroupId: unitGroupId,
+        pageSize: pageSize,
+        offset: pageNum * pageSize,
+      );
+
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
       );
@@ -34,14 +42,20 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search(
-      int unitGroupId, String searchString) async {
+  Future<Either<ConvertouchException, List<UnitModel>>> search({
+    required int unitGroupId,
+    required String searchString,
+    int pageNum = 0,
+    required int pageSize,
+  }) async {
     try {
       List<UnitEntity> result;
       if (searchString.isNotEmpty) {
         result = await unitDao.getBySearchString(
-          unitGroupId,
-          '%$searchString%',
+          unitGroupId: unitGroupId,
+          searchString: '%$searchString%',
+          pageSize: pageSize,
+          offset: pageNum * pageSize,
         );
       } else {
         result = [];

@@ -4,6 +4,7 @@ import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -11,7 +12,7 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -69,8 +70,11 @@ class ConvertouchApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBloc>()
             ..add(
-              const FetchUnitGroups(),
+              const FetchItems(),
             ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<SingleGroupBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBlocForUnitDetails>(),

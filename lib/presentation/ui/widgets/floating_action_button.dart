@@ -1,4 +1,3 @@
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +113,10 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                       ),
                     ),
                   )
-                : empty(),
+                : const SizedBox(
+    height: 0,
+    width: 0,
+  ),
           ],
         ),
       ),

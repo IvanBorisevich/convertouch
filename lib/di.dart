@@ -48,6 +48,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -302,6 +303,10 @@ Future<void> _initBloc() async {
       removeUnitGroupsUseCase: locator(),
       navigationBloc: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<SingleGroupBloc>(
+    () => SingleGroupBloc(),
   );
 
   locator.registerLazySingleton<UnitsBloc>(

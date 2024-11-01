@@ -1,16 +1,15 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_fetch_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
-import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
-import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_events.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:either_dart/either.dart';
 
-class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
+class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>> {
   final FetchUnitsUseCase fetchUnitsUseCase;
   final SaveUnitUseCase saveUnitUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
@@ -21,100 +20,25 @@ class UnitsBloc extends ConvertouchBloc<ConvertouchEvent, UnitsState> {
     required this.fetchUnitsUseCase,
     required this.removeUnitsUseCase,
     required this.navigationBloc,
-  }) : super(const UnitsInitialState()) {
-    on<FetchUnits>(_onUnitsFetch);
-    on<SaveUnit>(_onUnitSave);
-    on<RemoveUnits>(_onUnitsRemove);
-    on<ModifyUnit>(_onModifyUnit);
+  });
+
+  @override
+  Future<Either<ConvertouchException, List<UnitModel>>> fetchItems(
+    InputItemsFetchModel input,
+  ) async {
+    return fetchUnitsUseCase.execute(input);
   }
 
-  _onUnitsFetch(
-    FetchUnits event,
-    Emitter<UnitsState> emit,
+  @override
+  Future<Either<ConvertouchException, UnitModel>> saveItem(
+    UnitModel item,
   ) async {
-    final result = await fetchUnitsUseCase.execute(
-      InputUnitFetchModel(
-        searchString: event.searchString,
-        unitGroupId: event.unitGroup.id,
-      ),
-    );
-
-    if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(
-          exception: result.left,
-        ),
-      );
-    } else {
-      emit(
-        UnitsFetched(
-          units: result.right,
-          unitGroup: event.unitGroup,
-        ),
-      );
-
-      event.onComplete?.call();
-    }
+    return saveUnitUseCase.execute(item);
   }
 
-  _onUnitSave(
-    SaveUnit event,
-    Emitter<UnitsState> emit,
-  ) async {
-    final result = await saveUnitUseCase.execute(event.unit);
-
-    if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
-    } else {
-      add(
-        FetchUnits(
-          unitGroup: event.unitGroup,
-          searchString: null,
-        ),
-      );
-
-      event.onSaveUnit?.call(result.right);
-    }
-  }
-
-  _onUnitsRemove(
-    RemoveUnits event,
-    Emitter<UnitsState> emit,
-  ) async {
-    UnitsFetched currentState = state as UnitsFetched;
-
-    final result = await removeUnitsUseCase.execute(event.ids);
-    if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(
-          exception: result.left,
-        ),
-      );
-    } else {
-      add(
-        FetchUnits(
-          unitGroup: event.unitGroup,
-          searchString: currentState.searchString,
-        ),
-      );
-    }
-  }
-
-  _onModifyUnit(
-    ModifyUnit event,
-    Emitter<UnitsState> emit,
-  ) async {
-    UnitsFetched currentState = state as UnitsFetched;
-
-    await _onUnitsFetch(
-      FetchUnits(
-        unitGroup: currentState.unitGroup,
-        searchString: currentState.searchString,
-      ),
-      emit,
-    );
+  @override
+  Future<Either<ConvertouchException, void>> removeItems(List<int> ids) async {
+    return removeUnitsUseCase.execute(ids);
   }
 }
 

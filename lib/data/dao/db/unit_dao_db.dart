@@ -7,18 +7,28 @@ import 'package:sqflite/sqflite.dart' as sqlite;
 @dao
 abstract class UnitDaoDb extends UnitDao {
   @override
-  @Query('select * from $unitsTableName where unit_group_id = :unitGroupId '
-      'order by code')
-  Future<List<UnitEntity>> getAll(int unitGroupId);
+  @Query('select * from $unitsTableName '
+      'where unit_group_id = :unitGroupId '
+      'order by code '
+      'limit :pageSize offset :offset')
+  Future<List<UnitEntity>> getAll({
+    required int unitGroupId,
+    required int pageSize,
+    required int offset,
+  });
 
   @override
-  @Query('select * from $unitsTableName where unit_group_id = :unitGroupId '
+  @Query('select * from $unitsTableName '
+      'where unit_group_id = :unitGroupId '
       'and (name like :searchString or code like :searchString) '
-      'order by code')
-  Future<List<UnitEntity>> getBySearchString(
-    int unitGroupId,
-    String searchString,
-  );
+      'order by code '
+      'limit :pageSize offset :offset')
+  Future<List<UnitEntity>> getBySearchString({
+    required String searchString,
+    required int unitGroupId,
+    required int pageSize,
+    required int offset,
+  });
 
   @override
   @Query('select * from $unitsTableName '

@@ -1,4 +1,3 @@
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +59,10 @@ class ConvertouchInfoBox extends StatelessWidget {
                         ),
                       ),
                     )
-                  : empty(),
+                  : const SizedBox(
+    height: 0,
+    width: 0,
+  ),
               bodyText != null
                   ? Text(
                       bodyText!,
@@ -70,8 +72,14 @@ class ConvertouchInfoBox extends StatelessWidget {
                         color: bodyColor,
                       ),
                     )
-                  : empty(),
-              child ?? empty(),
+                  : const SizedBox(
+    height: 0,
+    width: 0,
+  ),
+              child ?? const SizedBox(
+    height: 0,
+    width: 0,
+  ),
             ],
           ),
         ),

@@ -2,7 +2,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
@@ -22,7 +21,6 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final void Function()? onLongPress;
   final double? width;
   final double? height;
-  final double? logoIconSize;
   final bool checked;
   final bool disabled;
   final bool editIconVisible;
@@ -43,7 +41,6 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     this.checkIconVisibleIfUnchecked = false,
     this.width,
     this.height,
-    this.logoIconSize,
     required this.theme,
     this.customColors,
     super.key,
@@ -90,7 +87,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
         itemLogo = IconUtils.getUnitGroupIcon(
           iconName: unitGroup.iconName,
           color: foregroundColor,
-          size: logoIconSize ?? defaultLogoIconSize,
+          size: defaultLogoIconSize,
         );
         itemName = unitGroup.name;
         break;
@@ -105,7 +102,10 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
             unit.symbol != null ? "${unit.name} (${unit.symbol})" : unit.name;
         break;
       default:
-        itemLogo = empty();
+        itemLogo = const SizedBox(
+          height: 0,
+          width: 0,
+        );
         itemName = item.name;
         break;
     }

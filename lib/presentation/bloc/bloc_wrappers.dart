@@ -1,7 +1,11 @@
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -13,10 +17,8 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_sta
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_states.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_states.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_states.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +38,10 @@ Widget blocBuilderWrap<
       if (state is PageStateType) {
         return builderFunc.call(state);
       }
-      return empty();
+      return const SizedBox(
+        height: 0,
+        width: 0,
+      );
     },
   );
 }
@@ -44,9 +49,14 @@ Widget blocBuilderWrap<
 const appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppStateReady>;
 const itemsSelectionBlocBuilder = blocBuilderWrap<ItemsSelectionBloc,
     ItemsSelectionState, ItemsSelectionDone>;
-const unitGroupsBlocBuilder =
-    blocBuilderWrap<UnitGroupsBloc, UnitGroupsState, UnitGroupsFetched>;
-const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, UnitsState, UnitsFetched>;
+const itemsListBlocBuilder =
+    blocBuilderWrap<ItemsListBloc, ItemsFetched, ItemsFetched>;
+const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, ItemsFetched<UnitModel>,
+    ItemsFetched<UnitModel>>;
+const unitGroupsBlocBuilder = blocBuilderWrap<UnitGroupsBloc,
+    ItemsFetched<UnitGroupModel>, ItemsFetched<UnitGroupModel>>;
+const singleGroupBlocBuilder =
+    blocBuilderWrap<SingleGroupBloc, SingleGroupState, SingleGroupState>;
 const unitDetailsBlocBuilder =
     blocBuilderWrap<UnitDetailsBloc, UnitDetailsState, UnitDetailsReady>;
 const unitGroupDetailsBlocBuilder = blocBuilderWrap<UnitGroupDetailsBloc,

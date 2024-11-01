@@ -194,24 +194,12 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   final UpdateAdapter<UnitGroupEntity> _unitGroupEntityUpdateAdapter;
 
   @override
-  Future<List<UnitGroupEntity>> getAll() async {
-    return _queryAdapter.queryList('select * from unit_groups order by name',
-        mapper: (Map<String, Object?> row) => UnitGroupEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?,
-            valueType: row['value_type'] as int,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            oob: row['oob'] as int?));
-  }
-
-  @override
-  Future<List<UnitGroupEntity>> getBySearchString(String searchString) async {
+  Future<List<UnitGroupEntity>> getAll({
+    required int pageSize,
+    required int offset,
+  }) async {
     return _queryAdapter.queryList(
-        'select * from unit_groups where name like ?1 order by name',
+        'select * from unit_groups order by name limit ?1 offset ?2',
         mapper: (Map<String, Object?> row) => UnitGroupEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
@@ -222,7 +210,19 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             minValue: row['min_value'] as double?,
             maxValue: row['max_value'] as double?,
             oob: row['oob'] as int?),
-        arguments: [searchString]);
+        arguments: [pageSize, offset]);
+  }
+
+  @override
+  Future<List<UnitGroupEntity>> getBySearchString({
+    required String searchString,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'select * from unit_groups where name like ?1 order by name limit ?2 offset ?3',
+        mapper: (Map<String, Object?> row) => UnitGroupEntity(id: row['id'] as int?, name: row['name'] as String, iconName: row['icon_name'] as String?, conversionType: row['conversion_type'] as int?, refreshable: row['refreshable'] as int?, valueType: row['value_type'] as int, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, oob: row['oob'] as int?),
+        arguments: [searchString, pageSize, offset]);
   }
 
   @override
@@ -349,33 +349,28 @@ class _$UnitDaoDb extends UnitDaoDb {
   final UpdateAdapter<UnitEntity> _unitEntityUpdateAdapter;
 
   @override
-  Future<List<UnitEntity>> getAll(int unitGroupId) async {
+  Future<List<UnitEntity>> getAll({
+    required int unitGroupId,
+    required int pageSize,
+    required int offset,
+  }) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 order by code',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            valueType: row['value_type'] as int?,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            invertible: row['invertible'] as int?,
-            oob: row['oob'] as int?),
-        arguments: [unitGroupId]);
+        'select * from units where unit_group_id = ?1 order by code limit ?2 offset ?3',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        arguments: [unitGroupId, pageSize, offset]);
   }
 
   @override
-  Future<List<UnitEntity>> getBySearchString(
-    int unitGroupId,
-    String searchString,
-  ) async {
+  Future<List<UnitEntity>> getBySearchString({
+    required String searchString,
+    required int unitGroupId,
+    required int pageSize,
+    required int offset,
+  }) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 and (name like ?2 or code like ?2) order by code',
+        'select * from units where unit_group_id = ?2 and (name like ?1 or code like ?1) order by code limit ?3 offset ?4',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
-        arguments: [unitGroupId, searchString]);
+        arguments: [searchString, unitGroupId, pageSize, offset]);
   }
 
   @override

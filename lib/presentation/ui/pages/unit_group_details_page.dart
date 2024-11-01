@@ -1,4 +1,5 @@
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -6,8 +7,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_events.dart';
-import 'package:convertouch/presentation/ui/pages/templates/basic_page.dart';
+import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -133,7 +133,10 @@ class _ConvertouchUnitGroupDetailsPageState
                       refreshingJobsBlocBuilder(
                         builderFunc: (jobState) {
                           if (!unitGroupDetailsState.draftGroup.refreshable) {
-                            return empty();
+                            return const SizedBox(
+    height: 0,
+    width: 0,
+  );
                           }
                           return Column(
                             children: [
@@ -178,11 +181,11 @@ class _ConvertouchUnitGroupDetailsPageState
                 visible: unitGroupDetailsState.canChangedBeSaved,
                 onClick: () {
                   unitGroupsBloc.add(
-                    SaveUnitGroup(
-                      unitGroupToBeSaved: unitGroupDetailsState.draftGroup,
-                      onSaveGroup: (savedGroup) {
+                    SaveItem(
+                      item: unitGroupDetailsState.draftGroup,
+                      onItemSave: (savedGroup) {
                         unitGroupsBloc.add(
-                          const FetchUnitGroups(),
+                          const FetchItems(),
                         );
                         conversionBloc.add(
                           EditConversionGroup(
