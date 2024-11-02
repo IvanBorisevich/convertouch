@@ -8,7 +8,7 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_reactive_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +66,7 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
                       },
                     ),
                   ),
-                  body: ConvertouchMenuItemsReactiveView(
+                  body: ConvertouchMenuItemsView(
                     itemsListBloc: unitsBloc,
                     onItemTap: (unit) {
                       unitDetailsBloc.add(

@@ -17,7 +17,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_reactive_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                       },
                     ),
                   ),
-                  body: ConvertouchMenuItemsReactiveView(
+                  body: ConvertouchMenuItemsView(
                     itemsListBloc: unitsBloc,
                     checkedItemIds: itemsSelectionState.markedIds,
                     selectedItemId: null,

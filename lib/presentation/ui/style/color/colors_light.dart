@@ -42,6 +42,16 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
   ),
 );
 
+const unitBottomLoaderLight = ListItemColorScheme(
+  background: ColorVariation.only(Color(0xFFC7DDFA)),
+  foreground: ColorVariation.only(Color(0xFF2C6396)),
+);
+
+const unitGroupBottomLoaderLight = ListItemColorScheme(
+  background: ColorVariation.only(Color(0xffccd9f8)),
+  foreground: ColorVariation.only(Color(0xFF303073)),
+);
+
 const unitGroupItemColorSchemeLight = ListItemColorScheme(
   border: ColorVariation(
     regular: Color(0xffc6d7fd),

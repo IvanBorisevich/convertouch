@@ -14,6 +14,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   static const double gridItemHeight = 80;
   static const double listItemHeight = 50;
   static const double defaultLogoIconSize = 29;
+  static const double defaultBorderRadius = 7;
 
   final T item;
   final ItemsViewMode itemsViewMode;
@@ -132,6 +133,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
+                borderRadius: defaultBorderRadius,
                 width: width ?? gridItemWidth,
                 height: height ?? gridItemHeight,
               );
@@ -150,6 +152,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
+                borderRadius: defaultBorderRadius,
                 height: height ?? listItemHeight,
               );
           }

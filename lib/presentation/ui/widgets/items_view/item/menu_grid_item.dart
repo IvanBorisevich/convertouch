@@ -40,7 +40,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.modeIconColors,
     required this.width,
     required this.height,
-    this.borderRadius = 7,
+    required this.borderRadius,
     super.key,
   });
 

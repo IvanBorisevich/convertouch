@@ -36,7 +36,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
     required this.dividerColor,
     required this.checkBoxIconColors,
     required this.modeIconColors,
-    this.borderRadius = 7,
+    required this.borderRadius,
     super.key,
   });
 

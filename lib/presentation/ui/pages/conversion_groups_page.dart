@@ -19,7 +19,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_reactive_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class ConversionGroupsPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  body: ConvertouchMenuItemsReactiveView(
+                  body: ConvertouchMenuItemsView(
                     itemsListBloc: unitGroupsBloc,
                     onItemTap: (unitGroup) {
                       conversionBloc.add(
@@ -140,7 +140,7 @@ class ConversionGroupsPage extends StatelessWidget {
                     editableItemsVisible: true,
                     checkableItemsVisible: itemsSelectionState.showCancelIcon,
                     removalModeEnabled: itemsSelectionState.showCancelIcon,
-                    itemsViewMode: appState.unitsViewMode,
+                    itemsViewMode: appState.unitGroupsViewMode,
                     theme: appState.theme,
                   ),
                   floatingActionButton: itemsSelectionState.showCancelIcon
