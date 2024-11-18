@@ -5,26 +5,79 @@ import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:sqflite/sqflite.dart';
 
+class QueryParams {
+  static const noQuery = QueryParams(sqlQuery: null);
+
+  final String? sqlQuery;
+  final List<Object?> params;
+
+  const QueryParams({
+    required this.sqlQuery,
+    this.params = const [],
+  });
+}
+
 class SqlUtils {
   const SqlUtils._();
 
-  static String? buildUpdateQuery({
+  static QueryParams prepareUpdate({
     required String tableName,
     required int id,
     required Map<String, Object?> row,
     List<String> excludedColumns = const [],
   }) {
-    mappingFunc(MapEntry<String, Object?> e) {
-      String name = e.key;
-      Object? value;
-      if (!excludedColumns.contains(e.key)) {
-        value = e.value.runtimeType == String ? "'${e.value}'" : e.value;
-        return '$name = $value';
-      }
-      return null;
+    List<MapEntry<String, Object?>> rowEntries = row.entries
+        .whereNot((element) => excludedColumns.contains(element.key))
+        .toList();
+
+    if (rowEntries.isEmpty) {
+      return QueryParams.noQuery;
     }
 
-    List<String> setClauses = row.entries.map(mappingFunc).nonNulls.toList();
+    List<String> columnNamesToUpdate = rowEntries.map((e) => e.key).toList();
+    List<Object?> newColumnValues = rowEntries.map((e) => e.value).toList();
+
+    String? sqlQuery = buildUpdateQuery(
+      tableName: tableName,
+      id: id,
+      columnNamesToUpdate: columnNamesToUpdate,
+    );
+
+    if (sqlQuery == null) {
+      return QueryParams.noQuery;
+    }
+
+    return QueryParams(sqlQuery: sqlQuery, params: newColumnValues);
+  }
+
+  static Future<int> update({
+    required DatabaseExecutor executor,
+    required QueryParams queryParams,
+  }) async {
+    if (queryParams.sqlQuery == null) {
+      return 0;
+    }
+    return await executor.rawUpdate(queryParams.sqlQuery!, queryParams.params);
+  }
+
+  static void addToBatchUpdate({
+    required Batch batch,
+    required QueryParams queryParams,
+  }) {
+    if (queryParams.sqlQuery == null) {
+      return;
+    }
+    batch.rawUpdate(queryParams.sqlQuery!, queryParams.params);
+  }
+
+  static String? buildUpdateQuery({
+    required String tableName,
+    required int id,
+    required List<String> columnNamesToUpdate,
+  }) {
+    List<String> setClauses =
+        columnNamesToUpdate.map((columnName) => '$columnName = ?').toList();
+
     return setClauses.isNotEmpty
         ? 'UPDATE $tableName SET '
             '${setClauses.join(', ')}'
@@ -61,14 +114,15 @@ class SqlUtils {
     if (result.isNotEmpty) {
       int unitId = result.first['id'];
 
-      await database.rawUpdate(
-        buildUpdateQuery(
+      await update(
+        executor: database,
+        queryParams: prepareUpdate(
           tableName: unitsTableName,
           id: unitId,
           row: {
             columnName: newColumnValue,
           },
-        )!,
+        ),
       );
     }
   }
@@ -136,18 +190,21 @@ class SqlUtils {
     int groupId;
     if (existingGroupNames.containsKey(entity['groupName'])) {
       groupId = existingGroupNames[entity['groupName']]!;
-      String? query = buildUpdateQuery(
-        tableName: unitGroupsTableName,
-        id: groupId,
-        row: UnitGroupEntity.entityToRow(
-          entity,
-          initDefaults: false,
-        ),
-        excludedColumns: ['name', 'oob'],
+
+      Map<String, Object?> row = UnitGroupEntity.entityToRow(
+        entity,
+        initDefaults: false,
       );
-      if (query != null) {
-        await txn.rawUpdate(query);
-      }
+
+      await update(
+        executor: txn,
+        queryParams: prepareUpdate(
+          tableName: unitGroupsTableName,
+          id: groupId,
+          row: row,
+          excludedColumns: ['name', 'oob'],
+        ),
+      );
     } else {
       groupId = await txn.insert(
         unitGroupsTableName,
@@ -187,19 +244,20 @@ class SqlUtils {
   }) {
     if (existingUnitCodes.containsKey(entity['code'])) {
       int unitId = existingUnitCodes[entity['code']]!;
-      String? query = buildUpdateQuery(
-        tableName: unitsTableName,
-        id: unitId,
-        row: UnitEntity.entityToRow(
-          entity,
-          unitGroupId: unitGroupId,
-          initDefaults: false,
+
+      addToBatchUpdate(
+        batch: batch,
+        queryParams: prepareUpdate(
+          tableName: unitsTableName,
+          id: unitId,
+          row: UnitEntity.entityToRow(
+            entity,
+            unitGroupId: unitGroupId,
+            initDefaults: false,
+          ),
+          excludedColumns: ['code', 'oob', 'unit_group_id'],
         ),
-        excludedColumns: ['code', 'oob', 'unit_group_id'],
       );
-      if (query != null) {
-        batch.rawUpdate(query);
-      }
     } else {
       batch.insert(
         unitsTableName,
