@@ -16,6 +16,7 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
+import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:flutter/material.dart';
@@ -132,15 +133,9 @@ class ConvertouchConversionPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Center(
-                          child: Text(
-                            "No Conversion Items Added",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: unitPageEmptyViewColor[appState.theme]!
-                                  .foreground
-                                  .regular,
-                            ),
+                          child: InfoBoxNoItems(
+                            text: "No conversion items added",
+                            colors: unitPageEmptyViewColor[appState.theme]!,
                           ),
                         ),
                       ],

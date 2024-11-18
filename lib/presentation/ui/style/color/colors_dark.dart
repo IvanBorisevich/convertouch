@@ -153,10 +153,12 @@ const unitPageInfoBoxColorDark = ConvertouchColorScheme(
 );
 
 const unitGroupPageEmptyViewColorDark = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xff434b5d)),
   foreground: ColorVariation.only(Color(0xffa6baee)),
 );
 
 const unitPageEmptyViewColorDark = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xFF3B4556)),
   foreground: ColorVariation.only(Color(0xFF7DAAD3)),
 );
 

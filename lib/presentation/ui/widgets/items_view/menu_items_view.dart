@@ -1,15 +1,16 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/bottom_loader.dart';
+import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
@@ -123,30 +124,30 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
             builderFunc: (itemsState) {
               switch (itemsState.status) {
                 case FetchingStatus.failure:
-                  return const Center(
-                    child: Text('Failed to fetch new items'),
+                  return Center(
+                    child: InfoBoxNoItems(
+                      text: "Failed to fetch new "
+                          "${T == UnitGroupModel ? 'unit groups' : 'units'}",
+                      colors: T == UnitGroupModel
+                          ? unitGroupPageEmptyViewColor[appState.theme]!
+                          : unitPageEmptyViewColor[appState.theme]!,
+                    ),
                   );
                 case FetchingStatus.success:
                   if (itemsState.items.isEmpty) {
-                    Color? foreground;
+                    ConvertouchColorScheme colors;
                     if (T == UnitGroupModel) {
-                      foreground = unitGroupPageEmptyViewColor[appState.theme]!
-                          .foreground
-                          .regular;
-                    } else if (T == UnitModel) {
-                      foreground = unitPageEmptyViewColor[appState.theme]!
-                          .foreground
-                          .regular;
+                      colors = unitGroupPageEmptyViewColor[appState.theme]!;
+                    } else {
+                      colors = unitPageEmptyViewColor[appState.theme]!;
                     }
 
                     return Center(
-                      child: Text(
-                        'No items',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: foreground,
-                        ),
+                      child: InfoBoxNoItems(
+                        text: T == UnitGroupModel
+                            ? "No unit groups added"
+                            : "No units added",
+                        colors: colors,
                       ),
                     );
                   }

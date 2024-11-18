@@ -155,10 +155,12 @@ const unitPageInfoBoxColorLight = ConvertouchColorScheme(
 );
 
 const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xFFE6DFF6)),
   foreground: ColorVariation.only(Color(0xFF45459A)),
 );
 
 const unitPageEmptyViewColorLight = ConvertouchColorScheme(
+  background: ColorVariation.only(Color(0xFFD4E5FC)),
   foreground: ColorVariation.only(Color(0xFF3B6083)),
 );
 
