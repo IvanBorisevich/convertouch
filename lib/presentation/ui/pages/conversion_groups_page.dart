@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
@@ -30,7 +29,6 @@ class ConversionGroupsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBloc = BlocProvider.of<AppBloc>(context);
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
@@ -38,141 +36,123 @@ class ConversionGroupsPage extends StatelessWidget {
     final itemsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
-    return appBlocBuilder(
-      builderFunc: (appState) {
-        ConvertouchColorScheme floatingButtonColor =
-            unitGroupsPageFloatingButtonColors[appState.theme]!;
-        ConvertouchColorScheme removalButtonColor =
-            removalFloatingButtonColors[appState.theme]!;
-
-        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-
-        return unitGroupsBlocBuilder(
-          bloc: unitGroupsBloc,
-          builderFunc: (pageState) {
-            return itemsSelectionBlocBuilder(
-              bloc: itemsSelectionBloc,
-              builderFunc: (itemsSelectionState) {
-                return ConvertouchPage(
-                  title: 'Conversion Groups',
-                  customLeadingIcon: itemsSelectionState.showCancelIcon
-                      ? CancelItemsSelectionIcon(
-                          bloc: itemsSelectionBloc,
-                          pageColorScheme: pageColorScheme,
-                        )
-                      : null,
-                  secondaryAppBar: SecondaryAppBar(
-                    theme: appState.theme,
-                    child: ConvertouchSearchBar(
-                      placeholder: 'Search conversion groups...',
-                      theme: appState.theme,
-                      pageViewMode: appState.unitGroupsViewMode,
-                      onViewModeChange: () {
-                        appBloc.add(
-                          ChangeSetting(
-                            settingKey: SettingKeys.unitGroupsViewMode,
-                            settingValue:
-                                appState.unitGroupsViewMode.next.value,
-                          ),
-                        );
-                      },
-                      onSearchStringChanged: (text) {
-                        unitGroupsBloc.add(
-                          FetchItems(searchString: text),
-                        );
-                      },
-                      onSearchReset: () {
-                        unitGroupsBloc.add(
-                          const FetchItems(searchString: null),
-                        );
-                      },
-                    ),
-                  ),
-                  body: ConvertouchMenuItemsView(
-                    itemsListBloc: unitGroupsBloc,
-                    onItemTap: (unitGroup) {
-                      conversionBloc.add(
-                        GetConversion(
-                          unitGroup: unitGroup,
-                          processPrevConversion: (prevConversion) {
-                            conversionBloc.add(
-                              SaveConversion(conversion: prevConversion),
-                            );
-                          },
-                          onComplete: () {
-                            if (unitGroup.refreshable) {
-                              refreshingJobsBloc.add(
-                                FetchRefreshingJob(
-                                  unitGroupName: unitGroup.name,
-                                ),
-                              );
-                            }
-                            navigationBloc.add(
-                              const NavigateToPage(
-                                pageName: PageName.conversionPage,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    onItemTapForRemoval: (unitGroup) {
-                      itemsSelectionBloc.add(
-                        SelectItem(id: unitGroup.id),
-                      );
-                    },
-                    onItemLongPress: (unitGroup) {
-                      if (!itemsSelectionState.showCancelIcon) {
-                        itemsSelectionBloc.add(
-                          StartItemsMarking(
-                            showCancelIcon: true,
-                            previouslyMarkedIds: [unitGroup.id],
-                            excludedIds: pageState.items
-                                .where((gr) => gr.oob)
-                                .map((gr) => gr.id)
-                                .toList(),
-                          ),
-                        );
-                      }
-                    },
-                    checkedItemIds: itemsSelectionState.markedIds,
-                    disabledItemIds: const [],
-                    editableItemsVisible: true,
-                    checkableItemsVisible: itemsSelectionState.showCancelIcon,
-                    removalModeEnabled: itemsSelectionState.showCancelIcon,
-                    itemsViewMode: appState.unitGroupsViewMode,
-                    theme: appState.theme,
-                  ),
-                  floatingActionButton: itemsSelectionState.showCancelIcon
-                      ? ConvertouchFloatingActionButton.removal(
-                          visible: itemsSelectionState.markedIds.isNotEmpty,
-                          extraLabelText:
-                              itemsSelectionState.markedIds.length.toString(),
-                          colorScheme: removalButtonColor,
-                          onClick: () {
-                            unitGroupsBloc.add(
-                              RemoveItems(
-                                ids: itemsSelectionState.markedIds,
-                              ),
-                            );
-                            itemsSelectionBloc.add(
-                              const CancelItemsMarking(),
-                            );
-                          },
-                        )
-                      : ConvertouchFloatingActionButton.adding(
-                          onClick: () {
-                            unitGroupDetailsBloc.add(
-                              const GetNewUnitGroupDetails(),
-                            );
-                          },
-                          visible: true,
-                          colorScheme: floatingButtonColor,
-                        ),
+    return itemsSelectionBlocBuilder(
+      bloc: itemsSelectionBloc,
+      builderFunc: (itemsSelectionState) {
+        return ConvertouchPage(
+          title: 'Conversion Groups',
+          customLeadingIcon: itemsSelectionState.showCancelIcon
+              ? CancelItemsSelectionIcon(
+                  bloc: itemsSelectionBloc,
+                )
+              : null,
+          secondaryAppBar: SecondaryAppBar(
+            child: ConvertouchSearchBar(
+              placeholder: 'Search conversion groups...',
+              pageName: PageName.conversionGroupsPage,
+              viewModeSettingKey: SettingKey.unitGroupsViewMode,
+              onSearchStringChanged: (text) {
+                unitGroupsBloc.add(
+                  FetchItems(searchString: text),
                 );
               },
-            );
-          },
+              onSearchReset: () {
+                unitGroupsBloc.add(
+                  const FetchItems(searchString: null),
+                );
+              },
+            ),
+          ),
+          body: ConvertouchMenuItemsView(
+            itemsListBloc: unitGroupsBloc,
+            appBloc: BlocProvider.of<AppBloc>(context),
+            pageName: PageName.conversionGroupsPage,
+            onItemTap: (unitGroup) {
+              conversionBloc.add(
+                GetConversion(
+                  unitGroup: unitGroup,
+                  processPrevConversion: (prevConversion) {
+                    conversionBloc.add(
+                      SaveConversion(conversion: prevConversion),
+                    );
+                  },
+                  onComplete: () {
+                    if (unitGroup.refreshable) {
+                      refreshingJobsBloc.add(
+                        FetchRefreshingJob(
+                          unitGroupName: unitGroup.name,
+                        ),
+                      );
+                    }
+                    navigationBloc.add(
+                      const NavigateToPage(
+                        pageName: PageName.conversionPage,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+            onItemTapForRemoval: (unitGroup) {
+              itemsSelectionBloc.add(
+                SelectItem(id: unitGroup.id),
+              );
+            },
+            onItemLongPress: (unitGroup) {
+              if (!itemsSelectionState.showCancelIcon) {
+                itemsSelectionBloc.add(
+                  StartItemsMarking(
+                    showCancelIcon: true,
+                    previouslyMarkedIds: [unitGroup.id],
+                    excludedIds: unitGroupsBloc.state.items
+                        .where((gr) => gr.oob)
+                        .map((gr) => gr.id)
+                        .toList(),
+                  ),
+                );
+              }
+            },
+            checkedItemIds: itemsSelectionState.markedIds,
+            disabledItemIds: const [],
+            editableItemsVisible: true,
+            checkableItemsVisible: itemsSelectionState.showCancelIcon,
+            removalModeEnabled: itemsSelectionState.showCancelIcon,
+          ),
+          floatingActionButton: appBlocBuilder(
+            builderFunc: (appState) {
+              ConvertouchColorScheme floatingButtonColor =
+                  unitGroupsPageFloatingButtonColors[appState.theme]!;
+              ConvertouchColorScheme removalButtonColor =
+                  removalFloatingButtonColors[appState.theme]!;
+
+              return itemsSelectionState.showCancelIcon
+                  ? ConvertouchFloatingActionButton.removal(
+                      visible: itemsSelectionState.markedIds.isNotEmpty,
+                      extraLabelText:
+                          itemsSelectionState.markedIds.length.toString(),
+                      colorScheme: removalButtonColor,
+                      onClick: () {
+                        unitGroupsBloc.add(
+                          RemoveItems(
+                            ids: itemsSelectionState.markedIds,
+                          ),
+                        );
+                        itemsSelectionBloc.add(
+                          const CancelItemsMarking(),
+                        );
+                      },
+                    )
+                  : ConvertouchFloatingActionButton.adding(
+                      onClick: () {
+                        unitGroupDetailsBloc.add(
+                          const GetNewUnitGroupDetails(),
+                        );
+                      },
+                      visible: true,
+                      colorScheme: floatingButtonColor,
+                    );
+            },
+          ),
         );
       },
     );

@@ -3,42 +3,55 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/bottom_loader.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchMenuItemsView<T extends IdNameItemModel>
     extends StatefulWidget {
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
+  final AppBloc appBloc;
+  final PageName pageName;
   final void Function(T)? onItemTap;
   final void Function(T)? onItemTapForRemoval;
   final void Function(T)? onItemLongPress;
   final List<int> checkedItemIds;
   final List<int> disabledItemIds;
   final int? selectedItemId;
+  final int batchSize;
+  final int numOfGridItemsInRow;
   final bool editableItemsVisible;
   final bool checkableItemsVisible;
   final bool removalModeEnabled;
-  final ItemsViewMode itemsViewMode;
-  final ConvertouchUITheme theme;
+  final double itemsSpacing;
+  final double itemsBottomSpacing;
 
   const ConvertouchMenuItemsView({
     required this.itemsListBloc,
+    required this.appBloc,
+    required this.pageName,
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,
     this.checkedItemIds = const [],
     this.disabledItemIds = const [],
     this.selectedItemId,
+    this.batchSize = 40,
+    this.numOfGridItemsInRow = 4,
     this.editableItemsVisible = false,
     this.checkableItemsVisible = false,
     this.removalModeEnabled = false,
-    required this.itemsViewMode,
-    required this.theme,
+    this.itemsSpacing = 8,
+    this.itemsBottomSpacing = 85,
     super.key,
   });
 
@@ -48,85 +61,155 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
 
 class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
     extends State<ConvertouchMenuItemsView<T>> {
-  static const double _itemsSpacing = 8;
-  static const double _itemsBottomSpacing = 85;
-
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+
+    ItemsViewMode itemsViewMode = T == UnitGroupModel
+        ? (widget.appBloc.state as AppStateReady).unitGroupsViewMode
+        : (widget.appBloc.state as AppStateReady).unitsViewMode;
+
+    switch (itemsViewMode) {
+      case ItemsViewMode.list:
+        _scrollController.addListener(_onListScroll);
+        break;
+      case ItemsViewMode.grid:
+        _scrollController.addListener(_onGridScroll);
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return itemsListBlocBuilder(
-      bloc: widget.itemsListBloc,
-      builderFunc: (itemsState) {
-        switch (itemsState.status) {
-          case FetchingStatus.failure:
-            return const Center(child: Text('Failed to fetch new items'));
-          case FetchingStatus.success:
-            if (itemsState.items.isEmpty) {
-              Color? foreground;
-              if (T == UnitGroupModel) {
-                foreground = unitGroupPageEmptyViewColor[widget.theme]!
-                    .foreground
-                    .regular;
-              } else if (T == UnitModel) {
-                foreground =
-                    unitPageEmptyViewColor[widget.theme]!.foreground.regular;
+    return BlocConsumer<AppBloc, AppState>(
+      listenWhen: (prev, next) {
+        return prev is AppStateReady &&
+            next is AppStateReady &&
+            next.changedFromPage == widget.pageName &&
+            (next.unitsViewMode != prev.unitsViewMode ||
+                next.unitGroupsViewMode != prev.unitGroupsViewMode);
+      },
+      listener: (_, appState) {
+        if (appState is AppStateReady &&
+            appState.changedFromPage == widget.pageName) {
+          ItemsViewMode itemsViewMode = T == UnitGroupModel
+              ? appState.unitGroupsViewMode
+              : appState.unitsViewMode;
+
+          switch (itemsViewMode) {
+            case ItemsViewMode.list:
+              _scrollController.removeListener(_onGridScroll);
+              _scrollController.addListener(_onListScroll);
+              _onListScroll();
+              break;
+            case ItemsViewMode.grid:
+              _scrollController.removeListener(_onListScroll);
+              _scrollController.addListener(_onGridScroll);
+              _onGridScroll();
+              break;
+          }
+        }
+      },
+      builder: (_, appState) {
+        if (appState is AppStateReady) {
+          ItemsViewMode itemsViewMode = T == UnitGroupModel
+              ? appState.unitGroupsViewMode
+              : appState.unitsViewMode;
+
+          return itemsListBlocBuilder(
+            bloc: widget.itemsListBloc,
+            builderFunc: (itemsState) {
+              switch (itemsState.status) {
+                case FetchingStatus.failure:
+                  return const Center(
+                    child: Text('Failed to fetch new items'),
+                  );
+                case FetchingStatus.success:
+                  if (itemsState.items.isEmpty) {
+                    Color? foreground;
+                    if (T == UnitGroupModel) {
+                      foreground = unitGroupPageEmptyViewColor[appState.theme]!
+                          .foreground
+                          .regular;
+                    } else if (T == UnitModel) {
+                      foreground = unitPageEmptyViewColor[appState.theme]!
+                          .foreground
+                          .regular;
+                    }
+
+                    return Center(
+                      child: Text(
+                        'No items',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: foreground,
+                        ),
+                      ),
+                    );
+                  }
+
+                  double itemWidth = itemsViewMode == ItemsViewMode.list
+                      ? MediaQuery.of(context).size.width
+                      : ConvertouchMenuGridItem.defaultWidth;
+                  double itemHeight = itemsViewMode == ItemsViewMode.list
+                      ? ConvertouchMenuListItem.defaultHeight
+                      : ConvertouchMenuGridItem.defaultHeight;
+
+                  return CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top: widget.itemsSpacing,
+                          left: widget.itemsSpacing,
+                          right: widget.itemsSpacing,
+                          bottom: widget.itemsBottomSpacing,
+                        ),
+                        sliver: SliverGrid.builder(
+                          itemCount: itemsState.hasReachedMax
+                              ? itemsState.items.length
+                              : itemsState.items.length + 1,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            mainAxisExtent: itemHeight,
+                            maxCrossAxisExtent: itemWidth,
+                            mainAxisSpacing: widget.itemsSpacing,
+                            crossAxisSpacing: widget.itemsSpacing,
+                          ),
+                          itemBuilder: _itemBuilder(
+                            items: itemsState.items,
+                            itemWidth: itemWidth,
+                            itemHeight: itemHeight,
+                            itemsViewMode: itemsViewMode,
+                            theme: appState.theme,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
               }
-
-              return Center(
-                child: Text(
-                  'No items',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: foreground,
-                  ),
-                ),
-              );
-            }
-
-            return CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.only(
-                    top: _itemsSpacing,
-                    left: _itemsSpacing,
-                    right: _itemsSpacing,
-                    bottom: _itemsBottomSpacing,
-                  ),
-                  sliver: SliverGrid.builder(
-                    itemCount: itemsState.hasReachedMax
-                        ? itemsState.items.length
-                        : itemsState.items.length + 1,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      mainAxisExtent: widget.itemsViewMode == ItemsViewMode.list
-                          ? ConvertouchMenuItem.listItemHeight
-                          : ConvertouchMenuItem.gridItemHeight,
-                      maxCrossAxisExtent:
-                          widget.itemsViewMode == ItemsViewMode.list
-                              ? MediaQuery.of(context).size.width
-                              : ConvertouchMenuItem.gridItemWidth,
-                      mainAxisSpacing: _itemsSpacing,
-                      crossAxisSpacing: _itemsSpacing,
-                    ),
-                    itemBuilder: _itemBuilder(itemsState.items),
-                  ),
-                ),
-              ],
-            );
+            },
+          );
+        } else {
+          return const SizedBox(
+            height: 0,
+            width: 0,
+          );
         }
       },
     );
   }
 
-  Widget? Function(BuildContext, int) _itemBuilder(items) {
+  Widget? Function(BuildContext, int) _itemBuilder({
+    required List<IdNameItemModel> items,
+    required double itemWidth,
+    required double itemHeight,
+    required ItemsViewMode itemsViewMode,
+    required ConvertouchUITheme theme,
+  }) {
     return (BuildContext context, int index) {
       if (index < items.length) {
         T item = items[index] as T;
@@ -137,7 +220,9 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
 
         return ConvertouchMenuItem(
           item,
-          itemsViewMode: widget.itemsViewMode,
+          width: itemWidth,
+          height: itemHeight,
+          itemsViewMode: itemsViewMode,
           onTap: () {
             if (widget.removalModeEnabled) {
               if (!item.oob) {
@@ -159,7 +244,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
               widget.checkableItemsVisible || widget.removalModeEnabled,
           checkIconVisibleIfUnchecked: !item.oob && widget.removalModeEnabled,
           editIconVisible: !item.oob && widget.editableItemsVisible,
-          theme: widget.theme,
+          theme: theme,
         );
       } else {
         return BottomLoader(
@@ -169,8 +254,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
             );
           },
           colors: T == UnitGroupModel
-              ? unitGroupBottomLoaderColors[widget.theme]
-              : unitBottomLoaderColors[widget.theme],
+              ? unitGroupBottomLoaderColors[theme]
+              : unitBottomLoaderColors[theme],
         );
       }
     };
@@ -178,24 +263,58 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onListScroll);
+    _scrollController.removeListener(_onGridScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
+  void _onListScroll() {
+    _onScroll(ItemsViewMode.list);
+  }
+
+  void _onGridScroll() {
+    _onScroll(ItemsViewMode.grid);
+  }
+
+  void _onScroll(ItemsViewMode viewMode) {
     bool hasReachedMax = widget.itemsListBloc.state.hasReachedMax;
 
-    if (!hasReachedMax && _isBottom) {
+    if (!hasReachedMax && _isBottom(viewMode)) {
       widget.itemsListBloc.add(
-        const FetchItems(firstFetch: false),
+        FetchItems(
+          firstFetch: false,
+          pageSize: widget.batchSize,
+        ),
       );
     }
   }
 
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= maxScroll * 0.9;
+  bool _isBottom(ItemsViewMode itemsViewMode) {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    double seenExtent = _scrollController.position.pixels +
+        _scrollController.position.viewportDimension;
+    double filledExtent = _calculateFilledExtent(itemsViewMode);
+
+    return filledExtent <= seenExtent;
+  }
+
+  double _calculateFilledExtent(ItemsViewMode itemsViewMode) {
+    double itemHeight = itemsViewMode == ItemsViewMode.grid
+        ? ConvertouchMenuGridItem.defaultHeight
+        : ConvertouchMenuListItem.defaultHeight;
+
+    int itemsNum = widget.itemsListBloc.state.items.length;
+
+    int itemsInRow =
+        itemsViewMode == ItemsViewMode.grid ? widget.numOfGridItemsInRow : 1;
+
+    int numOfFullRows = (itemsNum / itemsInRow).floor();
+    double rowHeight = itemHeight + widget.itemsSpacing;
+
+    return rowHeight * numOfFullRows;
   }
 }

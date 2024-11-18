@@ -25,17 +25,15 @@ abstract class IconNames {
   static const String oneWayConversion = "one_way_conversion.svg";
 }
 
-abstract class SettingKeys {
-  const SettingKeys._();
-
-  static const String sourceUnitId = 'sourceUnitId';
-  static const String sourceValue = 'sourceValue';
-  static const String targetUnitIds = 'targetUnitIds';
-  static const String conversionUnitGroupId = 'conversionUnitGroupId';
-  static const String theme = "theme";
-  static const String unitGroupsViewMode = "unitGroupsViewMode";
-  static const String unitsViewMode = "unitsViewMode";
-  static const String appVersion = "appVersion";
+enum SettingKey {
+  sourceUnitId,
+  sourceValue,
+  targetUnitIds,
+  conversionUnitGroupId,
+  theme,
+  unitGroupsViewMode,
+  unitsViewMode,
+  appVersion,
 }
 
 enum PageName {
@@ -50,7 +48,11 @@ enum PageName {
   unitDetailsPage,
   settingsPage,
   refreshingJobDetailsPage,
-  errorPage,
+  errorPage;
+
+  static PageName? valueOf(String? name) {
+    return values.firstWhereOrNull((element) => name == element.name);
+  }
 }
 
 enum ItemType {

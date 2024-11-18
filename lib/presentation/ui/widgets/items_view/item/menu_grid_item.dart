@@ -5,6 +5,9 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuGridItem extends StatelessWidget {
+  static const double defaultWidth = 80;
+  static const double defaultHeight = 80;
+
   final IdNameItemModel item;
   final String itemName;
   final bool checkIconVisible;

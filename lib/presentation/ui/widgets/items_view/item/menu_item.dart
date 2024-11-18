@@ -10,9 +10,6 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_it
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
-  static const double gridItemWidth = 80;
-  static const double gridItemHeight = 80;
-  static const double listItemHeight = 50;
   static const double defaultLogoIconSize = 29;
   static const double defaultBorderRadius = 7;
 
@@ -22,6 +19,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   final void Function()? onLongPress;
   final double? width;
   final double? height;
+  final double borderRadius;
   final bool checked;
   final bool disabled;
   final bool editIconVisible;
@@ -42,6 +40,7 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     this.checkIconVisibleIfUnchecked = false,
     this.width,
     this.height,
+    this.borderRadius = defaultBorderRadius,
     required this.theme,
     this.customColors,
     super.key,
@@ -133,9 +132,9 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
-                borderRadius: defaultBorderRadius,
-                width: width ?? gridItemWidth,
-                height: height ?? gridItemHeight,
+                borderRadius: borderRadius,
+                width: width ?? ConvertouchMenuGridItem.defaultWidth,
+                height: height ?? ConvertouchMenuGridItem.defaultHeight,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
@@ -152,8 +151,8 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
-                borderRadius: defaultBorderRadius,
-                height: height ?? listItemHeight,
+                borderRadius: borderRadius,
+                height: height ?? ConvertouchMenuListItem.defaultHeight,
               );
           }
         },

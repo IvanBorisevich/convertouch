@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
@@ -25,105 +24,95 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBloc = BlocProvider.of<AppBloc>(context);
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
-    return appBlocBuilder(
-      builderFunc: (appState) {
-        ConvertouchColorScheme floatingButtonColor =
-            unitsPageFloatingButtonColors[appState.theme]!;
-
-        return unitsBlocBuilder(
-          bloc: unitsBloc,
-          builderFunc: (pageState) {
-            return itemsSelectionBlocBuilder(
-              bloc: unitsSelectionBloc,
-              builderFunc: (itemsSelectionState) {
-                return ConvertouchPage(
-                  title: itemsSelectionState.singleItemSelectionMode
-                      ? 'Change Unit'
-                      : 'Add Units To Conversion',
-                  secondaryAppBar: SecondaryAppBar(
-                    theme: appState.theme,
-                    child: ConvertouchSearchBar(
-                      placeholder: "Search units...",
-                      theme: appState.theme,
-                      pageViewMode: appState.unitsViewMode,
-                      onViewModeChange: () {
-                        appBloc.add(
-                          ChangeSetting(
-                            settingKey: SettingKeys.unitsViewMode,
-                            settingValue: appState.unitsViewMode.next.value,
-                          ),
-                        );
-                      },
-                      onSearchStringChanged: (text) {
-                        unitsBloc.add(
-                          FetchItems(
-                            parentItemId: pageState.parentItemId,
-                            searchString: text,
-                          ),
-                        );
-                      },
-                      onSearchReset: () {
-                        unitsBloc.add(
-                          FetchItems(
-                            parentItemId: pageState.parentItemId,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  body: ConvertouchMenuItemsView(
-                    itemsListBloc: unitsBloc,
-                    onItemTap: (unit) {
-                      if (itemsSelectionState.singleItemSelectionMode) {
-                        conversionBloc.add(
-                          ReplaceConversionItemUnit(
-                            newUnit: unit,
-                            oldUnitId: itemsSelectionState.selectedId!,
-                          ),
-                        );
-                        navigationBloc.add(const NavigateBack());
-                      } else {
-                        unitsSelectionBloc.add(
-                          SelectItem(
-                            id: unit.id,
-                          ),
-                        );
-                      }
-                    },
-                    onItemTapForRemoval: null,
-                    onItemLongPress: null,
-                    checkedItemIds: itemsSelectionState.markedIds,
-                    disabledItemIds: itemsSelectionState.excludedIds,
-                    selectedItemId: itemsSelectionState.selectedId,
-                    editableItemsVisible: false,
-                    checkableItemsVisible: true,
-                    removalModeEnabled: false,
-                    itemsViewMode: appState.unitsViewMode,
-                    theme: appState.theme,
-                  ),
-                  floatingActionButton: ConvertouchFloatingActionButton(
-                    icon: Icons.check_outlined,
-                    visible: itemsSelectionState.canMarkedItemsBeSelected,
-                    onClick: () {
-                      conversionBloc.add(
-                        AddUnitsToConversion(
-                          unitIds: itemsSelectionState.markedIds,
-                        ),
-                      );
-                      navigationBloc.add(const NavigateBack());
-                    },
-                    colorScheme: floatingButtonColor,
-                  ),
+    return itemsSelectionBlocBuilder(
+      bloc: unitsSelectionBloc,
+      builderFunc: (itemsSelectionState) {
+        return ConvertouchPage(
+          title: itemsSelectionState.singleItemSelectionMode
+              ? 'Change Unit'
+              : 'Add Units To Conversion',
+          secondaryAppBar: SecondaryAppBar(
+            child: unitsBlocBuilder(
+              bloc: unitsBloc,
+              builderFunc: (pageState) {
+                return ConvertouchSearchBar(
+                  placeholder: "Search units...",
+                  pageName: PageName.unitsPageForConversion,
+                  viewModeSettingKey: SettingKey.unitsViewMode,
+                  onSearchStringChanged: (text) {
+                    unitsBloc.add(
+                      FetchItems(
+                        parentItemId: pageState.parentItemId,
+                        searchString: text,
+                      ),
+                    );
+                  },
+                  onSearchReset: () {
+                    unitsBloc.add(
+                      FetchItems(
+                        parentItemId: pageState.parentItemId,
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
+            ),
+          ),
+          body: ConvertouchMenuItemsView(
+            itemsListBloc: unitsBloc,
+            appBloc: BlocProvider.of<AppBloc>(context),
+            pageName: PageName.unitsPageForConversion,
+            onItemTap: (unit) {
+              if (itemsSelectionState.singleItemSelectionMode) {
+                conversionBloc.add(
+                  ReplaceConversionItemUnit(
+                    newUnit: unit,
+                    oldUnitId: itemsSelectionState.selectedId!,
+                  ),
+                );
+                navigationBloc.add(const NavigateBack());
+              } else {
+                unitsSelectionBloc.add(
+                  SelectItem(
+                    id: unit.id,
+                  ),
+                );
+              }
+            },
+            onItemTapForRemoval: null,
+            onItemLongPress: null,
+            checkedItemIds: itemsSelectionState.markedIds,
+            disabledItemIds: itemsSelectionState.excludedIds,
+            selectedItemId: itemsSelectionState.selectedId,
+            editableItemsVisible: false,
+            checkableItemsVisible: true,
+            removalModeEnabled: false,
+          ),
+          floatingActionButton: appBlocBuilder(
+            builderFunc: (appState) {
+              ConvertouchColorScheme floatingButtonColor =
+                  unitsPageFloatingButtonColors[appState.theme]!;
+
+              return ConvertouchFloatingActionButton(
+                icon: Icons.check_outlined,
+                visible: itemsSelectionState.canMarkedItemsBeSelected,
+                onClick: () {
+                  conversionBloc.add(
+                    AddUnitsToConversion(
+                      unitIds: itemsSelectionState.markedIds,
+                    ),
+                  );
+                  navigationBloc.add(const NavigateBack());
+                },
+                colorScheme: floatingButtonColor,
+              );
+            },
+          ),
         );
       },
     );

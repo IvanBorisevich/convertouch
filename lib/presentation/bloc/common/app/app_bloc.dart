@@ -17,7 +17,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
         ) {
     on<GetAppSettingsInit>(_onInitialSettingsGet);
     on<GetAppSettings>(_onSettingsGet);
-    on<ChangeSetting>(_onSettingSave);
+    on<ChangeSetting>(_onSettingChange);
   }
 
   _onInitialSettingsGet(
@@ -28,7 +28,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
     String appVersion = await _getAppVersion();
 
     currentStateMap.update(
-      SettingKeys.appVersion,
+      SettingKey.appVersion.name,
       (value) => appVersion,
       ifAbsent: () => appVersion,
     );
@@ -51,7 +51,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
     emit(state);
   }
 
-  _onSettingSave(
+  _onSettingChange(
     ChangeSetting event,
     Emitter<AppState> emit,
   ) async {
@@ -63,17 +63,24 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
       ifAbsent: () => event.settingValue,
     );
 
+    currentStateMap.update(
+      'changedFromPage',
+      (value) => event.fromPage,
+      ifAbsent: () => event.fromPage,
+    );
+
     emit(fromJson(currentStateMap));
   }
 
   @override
   AppState fromJson(Map<String, dynamic> json) {
     return AppStateReady(
-      theme: ConvertouchUITheme.valueOf(json[SettingKeys.theme]),
+      theme: ConvertouchUITheme.valueOf(json[SettingKey.theme.name]),
       unitGroupsViewMode:
-          ItemsViewMode.valueOf(json[SettingKeys.unitGroupsViewMode]),
-      unitsViewMode: ItemsViewMode.valueOf(json[SettingKeys.unitsViewMode]),
-      appVersion: json[SettingKeys.appVersion] ?? unknownAppVersion,
+          ItemsViewMode.valueOf(json[SettingKey.unitGroupsViewMode.name]),
+      unitsViewMode: ItemsViewMode.valueOf(json[SettingKey.unitsViewMode.name]),
+      appVersion: json[SettingKey.appVersion.name] ?? unknownAppVersion,
+      changedFromPage: json['changedFromPage'],
     );
   }
 
@@ -81,10 +88,10 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
   Map<String, dynamic> toJson(AppState state) {
     if (state is AppStateReady) {
       return {
-        SettingKeys.theme: state.theme.value,
-        SettingKeys.unitGroupsViewMode: state.unitGroupsViewMode.value,
-        SettingKeys.unitsViewMode: state.unitsViewMode.value,
-        SettingKeys.appVersion: state.appVersion,
+        SettingKey.theme.name: state.theme.value,
+        SettingKey.unitGroupsViewMode.name: state.unitGroupsViewMode.value,
+        SettingKey.unitsViewMode.name: state.unitsViewMode.value,
+        SettingKey.appVersion.name: state.appVersion,
       };
     }
     return const {};

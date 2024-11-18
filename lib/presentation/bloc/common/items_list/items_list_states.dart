@@ -26,7 +26,7 @@ class ItemsFetched<T extends IdNameItemModel> extends ItemsListState {
   @override
   List<Object?> get props => [
         items,
-    parentItemId,
+        parentItemId,
         searchString,
         status,
         hasReachedMax,

@@ -1,27 +1,29 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/keyboard/model/keyboard_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSearchBar extends StatefulWidget {
+  final PageName pageName;
   final String placeholder;
-  final ItemsViewMode pageViewMode;
-  final void Function()? onViewModeChange;
+  final SettingKey viewModeSettingKey;
   final void Function(String)? onSearchStringChanged;
   final void Function()? onSearchReset;
-  final ConvertouchUITheme theme;
   final SearchBarColorScheme? customColor;
 
   const ConvertouchSearchBar({
+    required this.pageName,
     required this.placeholder,
-    required this.pageViewMode,
-    this.onViewModeChange,
+    required this.viewModeSettingKey,
     this.onSearchStringChanged,
     this.onSearchReset,
-    required this.theme,
     this.customColor,
     super.key,
   });
@@ -41,17 +43,29 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    SearchBarColorScheme searchBarColorScheme =
-        widget.customColor ?? searchBarColors[widget.theme]!;
+    return appBlocBuilder(builderFunc: (appState) {
+      SearchBarColorScheme searchBarColorScheme =
+          widget.customColor ?? searchBarColors[appState.theme]!;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSearchTextBox(context, searchBarColorScheme.textBox),
-        const SizedBox(width: 7),
-        _buildViewModeButton(context, searchBarColorScheme.viewModeButton),
-      ],
-    );
+      ItemsViewMode pageViewMode =
+          widget.viewModeSettingKey == SettingKey.unitGroupsViewMode
+              ? appState.unitGroupsViewMode
+              : appState.unitsViewMode;
+
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSearchTextBox(context, searchBarColorScheme.textBox),
+          const SizedBox(width: 7),
+          _buildViewModeButton(
+            context,
+            color: searchBarColorScheme.viewModeButton,
+            viewModeSettingKey: widget.viewModeSettingKey,
+            pageViewMode: pageViewMode,
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildSearchTextBox(
@@ -110,9 +124,11 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
   }
 
   Widget _buildViewModeButton(
-    BuildContext context,
-    ConvertouchColorScheme color,
-  ) {
+    BuildContext context, {
+    required ConvertouchColorScheme color,
+    required SettingKey viewModeSettingKey,
+    required ItemsViewMode pageViewMode,
+  }) {
     return SizedBox(
       width: 50,
       child: Container(
@@ -123,13 +139,21 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         child: IconButton(
           icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
             Icon(
-              itemViewModeIconMap[widget.pageViewMode.next],
-              key: ValueKey(widget.pageViewMode),
+              itemViewModeIconMap[pageViewMode.next],
+              key: ValueKey(pageViewMode),
             ),
           ),
           splashColor: noColor,
           highlightColor: noColor,
-          onPressed: widget.onViewModeChange,
+          onPressed: () {
+            BlocProvider.of<AppBloc>(context).add(
+              ChangeSetting(
+                settingKey: viewModeSettingKey.name,
+                settingValue: pageViewMode.next.value,
+                fromPage: widget.pageName,
+              ),
+            );
+          },
           color: color.foreground.regular,
         ),
       ),

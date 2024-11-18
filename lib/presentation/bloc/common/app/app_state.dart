@@ -9,12 +9,14 @@ class AppStateReady extends AppState {
   final ConvertouchUITheme theme;
   final ItemsViewMode unitGroupsViewMode;
   final ItemsViewMode unitsViewMode;
+  final PageName? changedFromPage;
   final String appVersion;
 
   const AppStateReady({
     required this.theme,
     required this.unitGroupsViewMode,
     required this.unitsViewMode,
+    this.changedFromPage,
     required this.appVersion,
   });
 
@@ -23,6 +25,7 @@ class AppStateReady extends AppState {
     theme,
     unitGroupsViewMode,
     unitsViewMode,
+    changedFromPage,
     appVersion,
   ];
 
@@ -32,6 +35,7 @@ class AppStateReady extends AppState {
         'theme: $theme, '
         'unitGroupsViewMode: $unitGroupsViewMode, '
         'unitsViewMode: $unitsViewMode, '
+        'changedFromPage: $changedFromPage, '
         'appVersion: $appVersion}';
   }
 }

@@ -5,6 +5,8 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem extends StatelessWidget {
+  static const double defaultHeight = 50;
+
   final IdNameItemModel item;
   final String itemName;
   final bool checkIconVisible;
@@ -117,9 +119,9 @@ class ConvertouchMenuListItem extends StatelessWidget {
                       }
 
                       return const SizedBox(
-    height: 0,
-    width: 0,
-  );
+                        height: 0,
+                        width: 0,
+                      );
                     },
                   ),
                 ],

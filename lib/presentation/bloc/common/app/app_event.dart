@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class AppEvent extends ConvertouchEvent {
@@ -25,16 +26,26 @@ class GetAppSettings extends AppEvent {
 class ChangeSetting<T> extends AppEvent {
   final String settingKey;
   final T settingValue;
+  final PageName? fromPage;
 
   const ChangeSetting({
     required this.settingKey,
     required this.settingValue,
+    this.fromPage,
   });
+
+  @override
+  List<Object?> get props => [
+        settingKey,
+        settingValue,
+        fromPage,
+      ];
 
   @override
   String toString() {
     return 'ChangeSetting{'
         'settingKey: $settingKey, '
-        'settingValue: $settingValue}';
+        'settingValue: $settingValue, '
+        'fromPage: $fromPage}';
   }
 }

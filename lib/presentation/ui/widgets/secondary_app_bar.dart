@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,7 +7,6 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool visible;
   final EdgeInsetsGeometry? padding;
   final Color color;
-  final ConvertouchUITheme theme;
 
   const SecondaryAppBar({
     required this.child,
@@ -20,7 +18,6 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: 8,
     ),
     this.color = Colors.transparent,
-    required this.theme,
     super.key,
   });
 
