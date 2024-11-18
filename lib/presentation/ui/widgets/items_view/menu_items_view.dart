@@ -122,26 +122,25 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
           return itemsListBlocBuilder(
             bloc: widget.itemsListBloc,
             builderFunc: (itemsState) {
+              ConvertouchColorScheme colors;
+              if (T == UnitGroupModel) {
+                colors = unitGroupPageEmptyViewColor[appState.theme]!;
+              } else {
+                colors = unitPageEmptyViewColor[appState.theme]!;
+              }
+
               switch (itemsState.status) {
                 case FetchingStatus.failure:
                   return Center(
                     child: InfoBoxNoItems(
-                      text: "Failed to fetch new "
-                          "${T == UnitGroupModel ? 'unit groups' : 'units'}",
-                      colors: T == UnitGroupModel
-                          ? unitGroupPageEmptyViewColor[appState.theme]!
-                          : unitPageEmptyViewColor[appState.theme]!,
+                      text: T == UnitGroupModel
+                          ? "Failed to fetch new unit groups"
+                          : "Failed to fetch new units",
+                      colors: colors,
                     ),
                   );
                 case FetchingStatus.success:
                   if (itemsState.items.isEmpty) {
-                    ConvertouchColorScheme colors;
-                    if (T == UnitGroupModel) {
-                      colors = unitGroupPageEmptyViewColor[appState.theme]!;
-                    } else {
-                      colors = unitPageEmptyViewColor[appState.theme]!;
-                    }
-
                     return Center(
                       child: InfoBoxNoItems(
                         text: T == UnitGroupModel
