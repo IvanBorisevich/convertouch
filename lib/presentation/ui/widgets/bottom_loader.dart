@@ -1,8 +1,9 @@
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
 import 'package:flutter/material.dart';
 
 class BottomLoader extends StatelessWidget {
+  static const double defaultBorderRadius = 7;
+
   final void Function()? onTap;
   final ListItemColorScheme? colors;
 
@@ -22,9 +23,7 @@ class BottomLoader extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             color: colors?.background.regular,
-            borderRadius: BorderRadius.circular(
-              ConvertouchMenuItem.defaultBorderRadius,
-            ),
+            borderRadius: BorderRadius.circular(defaultBorderRadius),
           ),
           child: Icon(
             Icons.refresh_rounded,

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class ConvertouchMenuGridItem extends StatelessWidget {
   static const double defaultWidth = 80;
   static const double defaultHeight = 80;
+  static const double defaultBorderRadius = 7;
 
   final IdNameItemModel item;
   final String itemName;
@@ -15,13 +16,9 @@ class ConvertouchMenuGridItem extends StatelessWidget {
   final bool checked;
   final bool editIconVisible;
   final Widget logo;
-  final double width;
-  final double height;
-  final double borderRadius;
   final Color backgroundColor;
   final Color titleBackgroundColor;
   final Color foregroundColor;
-  final Color borderColor;
   final Color dividerColor;
   final ConvertouchColorScheme checkBoxIconColors;
   final ConvertouchColorScheme modeIconColors;
@@ -37,113 +34,75 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.backgroundColor,
     required this.titleBackgroundColor,
     required this.foregroundColor,
-    required this.borderColor,
     required this.dividerColor,
     required this.checkBoxIconColors,
     required this.modeIconColors,
-    required this.width,
-    required this.height,
-    required this.borderRadius,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
-      height: height,
+      width: defaultWidth,
+      height: defaultHeight,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: borderColor,
-          width: 0,
-        ),
+        borderRadius: BorderRadius.circular(defaultBorderRadius),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          SizedBox(
-            width: width,
-            height: height * 0.6,
-            child: Stack(
-              children: [
-                DefaultTextStyle(
+          checkIconVisible && (checkIconVisibleIfUnchecked || checked)
+              ? ConvertouchItemModeIcon.checkbox(
+                  active: checked,
+                  colors: checkBoxIconColors,
+                  padding: const EdgeInsets.only(left: 1, top: 1),
+                )
+              : const SizedBox(
+                  width: 0,
+                  height: 0,
+                ),
+          editIconVisible
+              ? ConvertouchItemModeIcon.edit(
+                  colors: modeIconColors,
+                  padding: const EdgeInsets.only(left: 2, top: 2),
+                )
+              : const SizedBox(width: 0, height: 0),
+          Column(
+            children: [
+              SizedBox(
+                width: defaultWidth,
+                height: defaultHeight * 0.6,
+                child: Center(child: logo),
+              ),
+              Container(
+                width: defaultWidth,
+                height: defaultHeight * (1 - 0.6),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: titleBackgroundColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(defaultBorderRadius),
+                    bottomRight: Radius.circular(defaultBorderRadius),
+                  ),
+                ),
+                child: Text(
+                  itemName,
                   style: TextStyle(
-                    color: foregroundColor,
-                    fontWeight: FontWeight.w700,
                     fontFamily: quicksandFontFamily,
-                    fontSize: 16,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: foregroundColor,
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: width,
-                    child: logo,
-                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (checkIconVisible &&
-                        (checkIconVisibleIfUnchecked || checked)) {
-                      return ConvertouchItemModeIcon.checkbox(
-                        active: checked,
-                        colors: checkBoxIconColors,
-                        padding: const EdgeInsets.only(left: 1, top: 1),
-                      );
-                    }
-
-                    if (editIconVisible) {
-                      return ConvertouchItemModeIcon.edit(
-                        colors: modeIconColors,
-                        padding: const EdgeInsets.only(left: 2, top: 2),
-                      );
-                    }
-
-                    return const SizedBox();
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: titleBackgroundColor,
-              border: Border.all(
-                width: 0,
-                color: borderColor,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(borderRadius),
-                bottomRight: Radius.circular(borderRadius),
-              ),
-            ),
-            width: width,
-            height: height * (1 - 0.6),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: Text(
-              itemName,
-              style: TextStyle(
-                fontFamily: quicksandFontFamily,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: foregroundColor,
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
+              )
+            ],
           ),
         ],
       ),
     );
   }
 }
-
-// final RegExp _spaceOrEndOfWord = RegExp(r'\s+|$');
-// const int _minGridItemWordSizeToWrap = 10;
-//
-// int _getGridItemNameLinesNumToWrap(String gridItemName) {
-//   return gridItemName.indexOf(_spaceOrEndOfWord) > _minGridItemWordSizeToWrap
-//       ? 1
-//       : 2;
-// }

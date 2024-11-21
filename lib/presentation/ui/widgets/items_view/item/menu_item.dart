@@ -11,15 +11,11 @@ import 'package:flutter/material.dart';
 
 class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
   static const double defaultLogoIconSize = 29;
-  static const double defaultBorderRadius = 7;
 
   final T item;
   final ItemsViewMode itemsViewMode;
   final void Function()? onTap;
   final void Function()? onLongPress;
-  final double? width;
-  final double? height;
-  final double borderRadius;
   final bool checked;
   final bool disabled;
   final bool editIconVisible;
@@ -38,9 +34,6 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
     this.editIconVisible = false,
     this.checkIconVisible = false,
     this.checkIconVisibleIfUnchecked = false,
-    this.width,
-    this.height,
-    this.borderRadius = defaultBorderRadius,
     required this.theme,
     this.customColors,
     super.key,
@@ -60,20 +53,17 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
 
     Color backgroundColor;
     Color foregroundColor;
-    Color borderColor;
     Color dividerColor;
     Color titleBackgroundColor;
 
     if (disabled) {
       backgroundColor = colorScheme.background.disabled;
       foregroundColor = colorScheme.foreground.disabled;
-      borderColor = colorScheme.border.disabled;
       dividerColor = colorScheme.divider.disabled;
       titleBackgroundColor = colorScheme.titleBackground.disabled;
     } else {
       backgroundColor = colorScheme.background.regular;
       foregroundColor = colorScheme.foreground.regular;
-      borderColor = colorScheme.border.regular;
       dividerColor = colorScheme.divider.regular;
       titleBackgroundColor = colorScheme.titleBackground.regular;
     }
@@ -97,6 +87,12 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
           unit.code,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
+          style: TextStyle(
+            color: foregroundColor,
+            fontWeight: FontWeight.w700,
+            fontFamily: quicksandFontFamily,
+            fontSize: 16,
+          ),
         );
         itemName =
             unit.symbol != null ? "${unit.name} (${unit.symbol})" : unit.name;
@@ -128,13 +124,9 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 backgroundColor: backgroundColor,
                 titleBackgroundColor: titleBackgroundColor,
                 foregroundColor: foregroundColor,
-                borderColor: borderColor,
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
-                borderRadius: borderRadius,
-                width: width ?? ConvertouchMenuGridItem.defaultWidth,
-                height: height ?? ConvertouchMenuGridItem.defaultHeight,
               );
             case ItemsViewMode.list:
               return ConvertouchMenuListItem(
@@ -147,12 +139,9 @@ class ConvertouchMenuItem<T extends IdNameItemModel> extends StatelessWidget {
                 logo: itemLogo,
                 backgroundColor: backgroundColor,
                 foregroundColor: foregroundColor,
-                borderColor: borderColor,
                 dividerColor: dividerColor,
                 checkBoxIconColors: colorScheme.checkBox,
                 modeIconColors: colorScheme.modeIcon,
-                borderRadius: borderRadius,
-                height: height ?? ConvertouchMenuListItem.defaultHeight,
               );
           }
         },

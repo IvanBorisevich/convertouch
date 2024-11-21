@@ -181,8 +181,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
                           ),
                           itemBuilder: _itemBuilder(
                             items: itemsState.items,
-                            itemWidth: itemWidth,
-                            itemHeight: itemHeight,
                             itemsViewMode: itemsViewMode,
                             theme: appState.theme,
                           ),
@@ -205,8 +203,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
 
   Widget? Function(BuildContext, int) _itemBuilder({
     required List<IdNameItemModel> items,
-    required double itemWidth,
-    required double itemHeight,
     required ItemsViewMode itemsViewMode,
     required ConvertouchUITheme theme,
   }) {
@@ -220,8 +216,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
 
         return ConvertouchMenuItem(
           item,
-          width: itemWidth,
-          height: itemHeight,
           itemsViewMode: itemsViewMode,
           onTap: () {
             if (widget.removalModeEnabled) {
