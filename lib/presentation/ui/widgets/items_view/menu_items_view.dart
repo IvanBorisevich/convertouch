@@ -192,37 +192,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
                         },
                       );
                   }
-
-                //   CustomScrollView(
-                //   controller: _scrollController,
-                //   slivers: [
-                //     SliverPadding(
-                //       padding: EdgeInsets.only(
-                //         top: widget.itemsSpacing,
-                //         left: widget.itemsSpacing,
-                //         right: widget.itemsSpacing,
-                //         bottom: widget.itemsBottomSpacing,
-                //       ),
-                //       sliver: SliverGrid.builder(
-                //         itemCount: itemsState.hasReachedMax
-                //             ? itemsState.items.length
-                //             : itemsState.items.length + 1,
-                //         gridDelegate:
-                //             SliverGridDelegateWithMaxCrossAxisExtent(
-                //           mainAxisExtent: itemHeight,
-                //           maxCrossAxisExtent: itemWidth,
-                //           mainAxisSpacing: widget.itemsSpacing,
-                //           crossAxisSpacing: widget.itemsSpacing,
-                //         ),
-                //         itemBuilder: _itemBuilder(
-                //           items: itemsState.items,
-                //           itemsViewMode: itemsViewMode,
-                //           theme: appState.theme,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // );
               }
             },
           );
