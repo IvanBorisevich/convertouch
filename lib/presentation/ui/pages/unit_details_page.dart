@@ -22,10 +22,11 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/info_box.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -193,8 +194,7 @@ class _ConvertouchUnitDetailsPageState
             padding: const EdgeInsets.only(
               bottom: 20,
             ),
-            child: ConvertouchMenuItem(
-              state.details.unitGroup,
+            child: GestureDetector(
               onTap: () {
                 FocusScope.of(context).unfocus();
                 BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
@@ -213,8 +213,23 @@ class _ConvertouchUnitDetailsPageState
                   ),
                 );
               },
-              theme: appState.theme,
-              itemsViewMode: ItemsViewMode.list,
+              child: ConvertouchMenuListItem(
+                state.details.unitGroup,
+                itemName: state.details.unitGroup.name,
+                checkIconVisible: false,
+                checkIconVisibleIfUnchecked: false,
+                checked: false,
+                colors: unitGroupItemColors[appState.theme]!,
+                disabled: false,
+                editIconVisible: false,
+                logoFunc: (item, color) {
+                  return IconUtils.getUnitGroupIcon(
+                    iconName: item.iconName,
+                    color: color,
+                    size: 29,
+                  );
+                },
+              ),
             ),
           )
         : _renderUnitDetailItem(
@@ -241,9 +256,9 @@ class _ConvertouchUnitDetailsPageState
   }) {
     if (!visible) {
       return const SizedBox(
-    height: 0,
-    width: 0,
-  );
+        height: 0,
+        width: 0,
+      );
     }
 
     return editable

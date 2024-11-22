@@ -4,24 +4,21 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuGridItem extends StatelessWidget {
+class ConvertouchMenuGridItem<T extends IdNameItemModel>
+    extends StatelessWidget {
   static const double defaultWidth = 80;
   static const double defaultHeight = 80;
   static const double defaultBorderRadius = 7;
 
-  final IdNameItemModel item;
+  final T item;
   final String itemName;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
   final bool checked;
+  final bool disabled;
   final bool editIconVisible;
-  final Widget logo;
-  final Color backgroundColor;
-  final Color titleBackgroundColor;
-  final Color foregroundColor;
-  final Color dividerColor;
-  final ConvertouchColorScheme checkBoxIconColors;
-  final ConvertouchColorScheme modeIconColors;
+  final Widget Function(T, Color) logoFunc;
+  final ListItemColorScheme colors;
 
   const ConvertouchMenuGridItem(
     this.item, {
@@ -29,14 +26,10 @@ class ConvertouchMenuGridItem extends StatelessWidget {
     required this.checkIconVisible,
     required this.checkIconVisibleIfUnchecked,
     required this.checked,
+    required this.disabled,
     required this.editIconVisible,
-    required this.logo,
-    required this.backgroundColor,
-    required this.titleBackgroundColor,
-    required this.foregroundColor,
-    required this.dividerColor,
-    required this.checkBoxIconColors,
-    required this.modeIconColors,
+    required this.logoFunc,
+    required this.colors,
     super.key,
   });
 
@@ -46,7 +39,8 @@ class ConvertouchMenuGridItem extends StatelessWidget {
       width: defaultWidth,
       height: defaultHeight,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color:
+            disabled ? colors.background.disabled : colors.background.regular,
         borderRadius: BorderRadius.circular(defaultBorderRadius),
       ),
       child: Stack(
@@ -54,7 +48,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
           checkIconVisible && (checkIconVisibleIfUnchecked || checked)
               ? ConvertouchItemModeIcon.checkbox(
                   active: checked,
-                  colors: checkBoxIconColors,
+                  colors: colors.checkBox,
                   padding: const EdgeInsets.only(left: 1, top: 1),
                 )
               : const SizedBox(
@@ -63,7 +57,7 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 ),
           editIconVisible
               ? ConvertouchItemModeIcon.edit(
-                  colors: modeIconColors,
+                  colors: colors.modeIcon,
                   padding: const EdgeInsets.only(left: 2, top: 2),
                 )
               : const SizedBox(width: 0, height: 0),
@@ -72,7 +66,14 @@ class ConvertouchMenuGridItem extends StatelessWidget {
               SizedBox(
                 width: defaultWidth,
                 height: defaultHeight * 0.6,
-                child: Center(child: logo),
+                child: Center(
+                  child: logoFunc.call(
+                    item,
+                    disabled
+                        ? colors.foreground.disabled
+                        : colors.foreground.regular,
+                  ),
+                ),
               ),
               Container(
                 width: defaultWidth,
@@ -80,7 +81,9 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
-                  color: titleBackgroundColor,
+                  color: disabled
+                      ? colors.titleBackground.disabled
+                      : colors.titleBackground.regular,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(defaultBorderRadius),
                     bottomRight: Radius.circular(defaultBorderRadius),
@@ -92,7 +95,9 @@ class ConvertouchMenuGridItem extends StatelessWidget {
                     fontFamily: quicksandFontFamily,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: foregroundColor,
+                    color: disabled
+                        ? colors.foreground.disabled
+                        : colors.foreground.regular,
                   ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,

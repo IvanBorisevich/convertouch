@@ -4,22 +4,20 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuListItem extends StatelessWidget {
+class ConvertouchMenuListItem<T extends IdNameItemModel>
+    extends StatelessWidget {
   static const double defaultHeight = 50;
   static const double defaultBorderRadius = 7;
 
-  final IdNameItemModel item;
+  final T item;
   final String itemName;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
   final bool checked;
+  final bool disabled;
   final bool editIconVisible;
-  final Widget logo;
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final Color dividerColor;
-  final ConvertouchColorScheme checkBoxIconColors;
-  final ConvertouchColorScheme modeIconColors;
+  final Widget Function(T, Color) logoFunc;
+  final ListItemColorScheme colors;
 
   const ConvertouchMenuListItem(
     this.item, {
@@ -27,13 +25,10 @@ class ConvertouchMenuListItem extends StatelessWidget {
     required this.checkIconVisible,
     required this.checkIconVisibleIfUnchecked,
     required this.checked,
+    required this.disabled,
     required this.editIconVisible,
-    required this.logo,
-    required this.backgroundColor,
-    required this.foregroundColor,
-    required this.dividerColor,
-    required this.checkBoxIconColors,
-    required this.modeIconColors,
+    required this.logoFunc,
+    required this.colors,
     super.key,
   });
 
@@ -43,7 +38,8 @@ class ConvertouchMenuListItem extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: defaultHeight,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color:
+            disabled ? colors.background.disabled : colors.background.regular,
         borderRadius: BorderRadius.circular(defaultBorderRadius),
       ),
       child: Row(
@@ -54,7 +50,14 @@ class ConvertouchMenuListItem extends StatelessWidget {
               padding: const EdgeInsetsDirectional.symmetric(
                 horizontal: 7,
               ),
-              child: Center(child: logo),
+              child: Center(
+                child: logoFunc.call(
+                  item,
+                  disabled
+                      ? colors.foreground.disabled
+                      : colors.foreground.regular,
+                ),
+              ),
             ),
           ),
           VerticalDivider(
@@ -62,7 +65,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
             thickness: 1,
             indent: 5,
             endIndent: 5,
-            color: dividerColor,
+            color: disabled ? colors.divider.disabled : colors.divider.regular,
           ),
           Expanded(
             child: Container(
@@ -72,7 +75,9 @@ class ConvertouchMenuListItem extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: quicksandFontFamily,
                   fontWeight: FontWeight.w600,
-                  color: foregroundColor,
+                  color: disabled
+                      ? colors.foreground.disabled
+                      : colors.foreground.regular,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -82,7 +87,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
           checkIconVisible && (checkIconVisibleIfUnchecked || checked)
               ? ConvertouchItemModeIcon.checkbox(
                   active: checked,
-                  colors: checkBoxIconColors,
+                  colors: colors.checkBox,
                   padding: const EdgeInsets.only(right: 10),
                 )
               : const SizedBox(
@@ -91,7 +96,7 @@ class ConvertouchMenuListItem extends StatelessWidget {
                 ),
           editIconVisible
               ? ConvertouchItemModeIcon.edit(
-                  colors: modeIconColors,
+                  colors: colors.modeIcon,
                   padding: const EdgeInsets.only(right: 10),
                 )
               : const SizedBox(
