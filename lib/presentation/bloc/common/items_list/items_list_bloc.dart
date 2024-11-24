@@ -24,7 +24,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 abstract class ItemsListBloc<T extends IdNameItemModel,
         S extends ItemsFetched<T>>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T>> {
-  ItemsListBloc() : super(ItemsFetched<T>(items: const [])) {
+  ItemsListBloc() : super(ItemsFetched<T>(pageItems: const [])) {
     on<FetchItems>(
       _onFetchItems,
       transformer: throttleDroppable(throttleDuration),
@@ -37,22 +37,28 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
     FetchItems event,
     Emitter<ItemsFetched<T>> emit,
   ) async {
-    if (state.hasReachedMax && !event.firstFetch) {
-      return;
-    }
-
     int pageNum;
     int parentItemId;
     String? searchString;
+    bool hasReachedMax;
+    List<int> oobIds;
 
     if (event.firstFetch) {
       pageNum = 0;
       parentItemId = event.parentItemId;
       searchString = event.searchString;
+      hasReachedMax = false;
+      oobIds = [];
     } else {
       pageNum = state.pageNum;
       parentItemId = state.parentItemId;
       searchString = state.searchString;
+      hasReachedMax = state.hasReachedMax;
+      oobIds = state.oobIds;
+    }
+
+    if (hasReachedMax) {
+      return;
     }
 
     try {
@@ -67,35 +73,41 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
         ),
       );
 
+      oobIds.addAll(
+        newItems.where((item) => item.oob).map((item) => item.id).toList(),
+      );
+
       if (newItems.isNotEmpty) {
         pageNum++;
       }
 
-      final hasReachedMax = newItems.length < event.pageSize;
-      final allItems = event.firstFetch
-          ? newItems
-          : [
-              ...state.items,
-              ...newItems,
-            ];
+      hasReachedMax = newItems.length < event.pageSize;
 
       emit(
-        state.copyWith(
+        ItemsFetched<T>(
+          status: FetchingStatus.success,
           hasReachedMax: hasReachedMax,
           parentItemId: parentItemId,
-          items: allItems,
+          pageItems: newItems,
+          oobIds: oobIds,
           searchString: searchString,
-          status: FetchingStatus.success,
           pageNum: pageNum,
         ),
       );
+
+      if (event.firstFetch) {
+        event.onFirstFetch?.call();
+      }
     } catch (e, stacktrace) {
       log("Error when fetching items: $e\n$stacktrace");
       emit(
-        state.copyWith(
+        ItemsFetched<T>(
           status: FetchingStatus.failure,
-          searchString: searchString,
+          hasReachedMax: hasReachedMax,
           parentItemId: parentItemId,
+          pageItems: const [],
+          searchString: searchString,
+          pageNum: pageNum,
         ),
       );
     }

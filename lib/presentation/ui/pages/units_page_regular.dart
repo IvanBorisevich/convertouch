@@ -103,10 +103,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                   StartItemsMarking(
                     showCancelIcon: true,
                     previouslyMarkedIds: [unit.id],
-                    excludedIds: unitsBloc.state.items
-                        .where((unit) => unit.oob)
-                        .map((unit) => unit.id)
-                        .toList(),
+                    excludedIds: unitsBloc.state.oobIds,
                   ),
                 );
               }

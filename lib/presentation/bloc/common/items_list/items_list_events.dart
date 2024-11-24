@@ -12,12 +12,14 @@ class FetchItems extends ItemsListEvent {
   final int pageSize;
   final bool firstFetch;
   final int parentItemId;
+  final void Function()? onFirstFetch;
 
   const FetchItems({
     this.searchString,
     this.pageSize = 40,
     this.firstFetch = true,
     this.parentItemId = -1,
+    this.onFirstFetch,
   });
 
   @override

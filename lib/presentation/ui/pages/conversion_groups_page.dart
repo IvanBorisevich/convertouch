@@ -104,10 +104,7 @@ class ConversionGroupsPage extends StatelessWidget {
                   StartItemsMarking(
                     showCancelIcon: true,
                     previouslyMarkedIds: [unitGroup.id],
-                    excludedIds: unitGroupsBloc.state.items
-                        .where((gr) => gr.oob)
-                        .map((gr) => gr.id)
-                        .toList(),
+                    excludedIds: unitGroupsBloc.state.oobIds,
                   ),
                 );
               }

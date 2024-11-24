@@ -70,11 +70,13 @@ class ConvertouchConversionPage extends StatelessWidget {
                     unitsBloc.add(
                       FetchItems(
                         parentItemId: conversion.unitGroup.id,
-                      ),
-                    );
-                    navigationBloc.add(
-                      const NavigateToPage(
-                        pageName: PageName.unitsPageRegular,
+                        onFirstFetch: () {
+                          navigationBloc.add(
+                            const NavigateToPage(
+                              pageName: PageName.unitsPageRegular,
+                            ),
+                          );
+                        }
                       ),
                     );
                   },
