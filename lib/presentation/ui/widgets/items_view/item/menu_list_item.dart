@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem<T extends IdNameItemModel>
     extends StatelessWidget {
-  static const double defaultHeight = 50;
-  static const double defaultBorderRadius = 7;
+  static const double defaultHeight = 60;
+  static const double _borderRadius = 15;
 
   final T item;
   final String itemName;
@@ -17,6 +17,8 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
   final bool disabled;
   final bool editIconVisible;
   final Widget Function(T, Color) logoFunc;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
   final ListItemColorScheme colors;
 
   const ConvertouchMenuListItem(
@@ -28,48 +30,55 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
     required this.disabled,
     required this.editIconVisible,
     required this.logoFunc,
+    this.onTap,
+    this.onLongPress,
     required this.colors,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: defaultHeight,
-      decoration: BoxDecoration(
-        color:
-            disabled ? colors.background.disabled : colors.background.regular,
-        borderRadius: BorderRadius.circular(defaultBorderRadius),
-      ),
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(
-            width: defaultHeight * 1.4,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 7,
-              ),
-              child: Center(
-                child: logoFunc.call(
-                  item,
-                  disabled
-                      ? colors.foreground.disabled
-                      : colors.foreground.regular,
-                ),
+          Container(
+            width: defaultHeight * 1.5,
+            height: defaultHeight,
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: 7,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: disabled
+                  ? colors.background.disabled
+                  : colors.background.regular,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(_borderRadius),
+                bottomLeft: Radius.circular(_borderRadius),
               ),
             ),
-          ),
-          VerticalDivider(
-            width: 1,
-            thickness: 1,
-            indent: 5,
-            endIndent: 5,
-            color: disabled ? colors.divider.disabled : colors.divider.regular,
+            child: logoFunc.call(
+              item,
+              disabled ? colors.foreground.disabled : colors.foreground.regular,
+            ),
           ),
           Expanded(
             child: Container(
+              height: defaultHeight,
               padding: const EdgeInsets.symmetric(horizontal: 15),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: disabled
+                    ? colors.background.disabled
+                    : colors.background.regular,
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(_borderRadius),
+                  bottomRight: Radius.circular(_borderRadius),
+                ),
+              ),
               child: Text(
                 itemName,
                 style: TextStyle(

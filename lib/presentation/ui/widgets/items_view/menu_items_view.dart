@@ -31,8 +31,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final bool editableItemsVisible;
   final bool checkableItemsVisible;
   final bool removalModeEnabled;
-  final double itemsSpacing;
-  final double itemsBottomSpacing;
 
   const ConvertouchMenuItemsView({
     required this.itemsListBloc,
@@ -49,8 +47,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.editableItemsVisible = false,
     this.checkableItemsVisible = false,
     this.removalModeEnabled = false,
-    this.itemsSpacing = 8,
-    this.itemsBottomSpacing = 85,
     super.key,
   });
 
@@ -125,7 +121,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
                   color: color,
                   fontWeight: FontWeight.w700,
                   fontFamily: quicksandFontFamily,
-                  fontSize: 16,
+                  fontSize: 17,
                 ),
               );
             };
@@ -144,8 +140,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
             onItemTapForRemoval: onItemTapForRemoval,
             logoFunc: itemLogoFunc,
             colors: itemColors,
-            itemsSpacing: itemsSpacing,
-            itemsBottomSpacing: itemsBottomSpacing,
             selectedItemId: selectedItemId,
             itemNameFunc: itemNameFunc,
             onLoadMore: () {

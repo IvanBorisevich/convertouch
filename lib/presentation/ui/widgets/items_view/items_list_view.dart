@@ -2,7 +2,6 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/bottom_loader.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +12,6 @@ class ConvertouchItemsListView<T extends IdNameItemModel>
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
   final void Function() onLoadMore;
   final ListItemColorScheme colors;
-  final double itemsSpacing;
-  final double itemsBottomSpacing;
   final int? selectedItemId;
   final List<int> checkedItemIds;
   final List<int> disabledItemIds;
@@ -32,8 +29,6 @@ class ConvertouchItemsListView<T extends IdNameItemModel>
     required this.onLoadMore,
     required this.logoFunc,
     required this.colors,
-    required this.itemsSpacing,
-    required this.itemsBottomSpacing,
     required this.selectedItemId,
     this.onItemTap,
     this.onItemTapForRemoval,
@@ -53,6 +48,9 @@ class ConvertouchItemsListView<T extends IdNameItemModel>
 
 class _ConvertouchItemsListViewState<T extends IdNameItemModel>
     extends State<ConvertouchItemsListView<T>> with ItemsLazyLoadingMixin {
+  static const double _itemsSpacing = 8;
+  static const double _bottomSpacing = 85;
+
   late final ScrollController _scrollController;
   late final List<T> _itemsFullList;
 
@@ -70,7 +68,7 @@ class _ConvertouchItemsListViewState<T extends IdNameItemModel>
         itemsNum: _itemsFullList.length,
         itemsNumInRow: 1,
         itemHeight: ConvertouchMenuListItem.defaultHeight,
-        itemsSpacing: 8,
+        itemsSpacing: _itemsSpacing,
         onLoad: widget.onLoadMore,
       );
     });
@@ -90,12 +88,14 @@ class _ConvertouchItemsListViewState<T extends IdNameItemModel>
       },
       child: ListView.builder(
         controller: _scrollController,
-        itemCount: _itemsFullList.length,
-        padding: EdgeInsets.only(
-          top: widget.itemsSpacing,
-          left: widget.itemsSpacing,
-          right: widget.itemsSpacing,
-          bottom: widget.itemsBottomSpacing,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemExtent: ConvertouchMenuListItem.defaultHeight + _itemsSpacing,
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(
+          top: _itemsSpacing,
+          left: _itemsSpacing,
+          right: _itemsSpacing,
+          bottom: _bottomSpacing,
         ),
         itemBuilder: (context, index) {
           if (index < _itemsFullList.length) {
@@ -106,10 +106,21 @@ class _ConvertouchItemsListViewState<T extends IdNameItemModel>
             bool checked = widget.checkedItemIds.contains(item.id);
 
             return Padding(
-              padding: EdgeInsets.only(
-                bottom: widget.itemsSpacing,
+              padding: const EdgeInsets.only(
+                bottom: _itemsSpacing,
               ),
-              child: GestureDetector(
+              child: ConvertouchMenuListItem(
+                item,
+                checked: checked || selected,
+                colors: widget.colors,
+                disabled: disabled,
+                logoFunc: widget.logoFunc,
+                itemName: widget.itemNameFunc.call(item),
+                checkIconVisible:
+                    widget.checkableItemsVisible || widget.removalModeEnabled,
+                checkIconVisibleIfUnchecked:
+                    !item.oob && widget.removalModeEnabled,
+                editIconVisible: !item.oob && widget.editableItemsVisible,
                 onTap: () {
                   if (widget.removalModeEnabled) {
                     if (!item.oob) {
@@ -125,27 +136,11 @@ class _ConvertouchItemsListViewState<T extends IdNameItemModel>
                 onLongPress: () {
                   widget.onItemLongPress?.call(item);
                 },
-                child: ConvertouchMenuListItem(
-                  item,
-                  checked: checked || selected,
-                  colors: widget.colors,
-                  disabled: disabled,
-                  logoFunc: widget.logoFunc,
-                  itemName: widget.itemNameFunc.call(item),
-                  checkIconVisible:
-                      widget.checkableItemsVisible || widget.removalModeEnabled,
-                  checkIconVisibleIfUnchecked:
-                      !item.oob && widget.removalModeEnabled,
-                  editIconVisible: !item.oob && widget.editableItemsVisible,
-                ),
               ),
-            );
-          } else {
-            return BottomLoader(
-              onTap: widget.onLoadMore,
-              colors: widget.colors,
+              // ),
             );
           }
+          return null;
         },
       ),
     );

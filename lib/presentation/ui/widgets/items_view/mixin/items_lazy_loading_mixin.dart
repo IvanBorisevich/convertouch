@@ -23,7 +23,7 @@ mixin ItemsLazyLoadingMixin {
       itemsSpacing: itemsSpacing,
     );
 
-    if (filledExtent <= seenExtent) {
+    if (filledExtent * 0.9 <= seenExtent) {
       onLoad?.call();
     }
   }
