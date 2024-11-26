@@ -39,80 +39,83 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
 
   @override
   Widget build(BuildContext context) {
+    Color background =
+        disabled ? colors.background.disabled : colors.background.regular;
+    Color foreground =
+        disabled ? colors.foreground.disabled : colors.foreground.regular;
+    Color titleBackground = disabled
+        ? colors.titleBackground.disabled
+        : colors.titleBackground.regular;
+
     return GestureDetector(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Stack(
-        children: [
-          checkIconVisible && (checkIconVisibleIfUnchecked || checked)
-              ? ConvertouchItemModeIcon.checkbox(
-                  active: checked,
-                  colors: colors.checkBox,
-                  padding: const EdgeInsets.only(left: 1, top: 1),
-                )
-              : const SizedBox(
-                  width: 0,
-                  height: 0,
-                ),
-          editIconVisible
-              ? ConvertouchItemModeIcon.edit(
-                  colors: colors.modeIcon,
-                  padding: const EdgeInsets.only(left: 2, top: 2),
-                )
-              : const SizedBox(width: 0, height: 0),
-          Column(
-            children: [
-              Container(
-                width: defaultWidth,
-                height: defaultHeight * 0.6,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: disabled
-                      ? colors.background.disabled
-                      : colors.background.regular,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(defaultBorderRadius),
-                    topRight: Radius.circular(defaultBorderRadius),
-                  ),
-                ),
-                child: logoFunc.call(
-                  item,
-                  disabled
-                      ? colors.foreground.disabled
-                      : colors.foreground.regular,
-                ),
-              ),
-              Container(
-                width: defaultWidth,
-                height: defaultHeight * (1 - 0.6),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 7),
-                decoration: BoxDecoration(
-                  color: disabled
-                      ? colors.titleBackground.disabled
-                      : colors.titleBackground.regular,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(defaultBorderRadius),
-                    bottomRight: Radius.circular(defaultBorderRadius),
-                  ),
-                ),
-                child: Text(
-                  itemName,
-                  style: TextStyle(
-                    fontFamily: quicksandFontFamily,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: disabled
-                        ? colors.foreground.disabled
-                        : colors.foreground.regular,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-            ],
+      child: Container(
+        width: defaultWidth,
+        height: defaultHeight,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(defaultBorderRadius),
           ),
-        ],
+        ),
+        child: Stack(
+          children: [
+            checkIconVisible && (checkIconVisibleIfUnchecked || checked)
+                ? ConvertouchItemModeIcon.checkbox(
+                    active: checked,
+                    colors: colors.checkBox,
+                    padding: const EdgeInsets.only(left: 1, top: 1),
+                  )
+                : Column(
+                    children: [
+                      editIconVisible
+                          ? ConvertouchItemModeIcon.edit(
+                              colors: colors.modeIcon,
+                              padding: const EdgeInsets.only(left: 2, top: 2),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+            Column(
+              children: [
+                Container(
+                  width: defaultWidth,
+                  height: defaultHeight * 0.6,
+                  alignment: Alignment.center,
+                  child: logoFunc.call(
+                    item,
+                    foreground,
+                  ),
+                ),
+                Container(
+                  width: defaultWidth,
+                  height: defaultHeight * (1 - 0.6),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 7),
+                  decoration: BoxDecoration(
+                    color: titleBackground,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(defaultBorderRadius),
+                      bottomRight: Radius.circular(defaultBorderRadius),
+                    ),
+                  ),
+                  child: Text(
+                    itemName,
+                    style: TextStyle(
+                      fontFamily: quicksandFontFamily,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: foreground,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
