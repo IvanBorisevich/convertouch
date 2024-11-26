@@ -18,6 +18,8 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
   final bool disabled;
   final bool editIconVisible;
   final Widget Function(T, Color) logoFunc;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
   final ListItemColorScheme colors;
 
   const ConvertouchMenuGridItem(
@@ -29,20 +31,17 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
     required this.disabled,
     required this.editIconVisible,
     required this.logoFunc,
+    this.onTap,
+    this.onLongPress,
     required this.colors,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: defaultWidth,
-      height: defaultHeight,
-      decoration: BoxDecoration(
-        color:
-            disabled ? colors.background.disabled : colors.background.regular,
-        borderRadius: BorderRadius.circular(defaultBorderRadius),
-      ),
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: Stack(
         children: [
           checkIconVisible && (checkIconVisibleIfUnchecked || checked)
@@ -63,23 +62,31 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
               : const SizedBox(width: 0, height: 0),
           Column(
             children: [
-              SizedBox(
+              Container(
                 width: defaultWidth,
                 height: defaultHeight * 0.6,
-                child: Center(
-                  child: logoFunc.call(
-                    item,
-                    disabled
-                        ? colors.foreground.disabled
-                        : colors.foreground.regular,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: disabled
+                      ? colors.background.disabled
+                      : colors.background.regular,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(defaultBorderRadius),
+                    topRight: Radius.circular(defaultBorderRadius),
                   ),
+                ),
+                child: logoFunc.call(
+                  item,
+                  disabled
+                      ? colors.foreground.disabled
+                      : colors.foreground.regular,
                 ),
               ),
               Container(
                 width: defaultWidth,
                 height: defaultHeight * (1 - 0.6),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 7),
                 decoration: BoxDecoration(
                   color: disabled
                       ? colors.titleBackground.disabled
@@ -99,11 +106,10 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
                         ? colors.foreground.disabled
                         : colors.foreground.regular,
                   ),
-                  textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-              )
+              ),
             ],
           ),
         ],

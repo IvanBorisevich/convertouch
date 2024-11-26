@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchMenuListItem<T extends IdNameItemModel>
     extends StatelessWidget {
-  static const double defaultHeight = 60;
+  static const double defaultHeight = 50;
   static const double _borderRadius = 15;
 
   final T item;
@@ -68,7 +68,7 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
           Expanded(
             child: Container(
               height: defaultHeight,
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.only(right: 15),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: disabled

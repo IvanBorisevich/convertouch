@@ -16,7 +16,7 @@ class FetchItems extends ItemsListEvent {
 
   const FetchItems({
     this.searchString,
-    this.pageSize = 200,
+    this.pageSize = 100,
     this.firstFetch = true,
     this.parentItemId = -1,
     this.onFirstFetch,

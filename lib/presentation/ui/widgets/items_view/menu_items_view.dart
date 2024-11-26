@@ -2,8 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
@@ -11,12 +11,15 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/items_list_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchMenuItemsView<T extends IdNameItemModel>
-    extends StatelessWidget {
+    extends StatefulWidget {
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
   final AppBloc appBloc;
   final PageName pageName;
@@ -26,8 +29,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final List<int> checkedItemIds;
   final List<int> disabledItemIds;
   final int? selectedItemId;
-  final int batchSize;
-  final int numOfGridItemsInRow;
   final bool editableItemsVisible;
   final bool checkableItemsVisible;
   final bool removalModeEnabled;
@@ -42,8 +43,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.checkedItemIds = const [],
     this.disabledItemIds = const [],
     this.selectedItemId,
-    this.batchSize = 40,
-    this.numOfGridItemsInRow = 4,
     this.editableItemsVisible = false,
     this.checkableItemsVisible = false,
     this.removalModeEnabled = false,
@@ -51,149 +50,269 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   });
 
   @override
+  State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T>();
+}
+
+class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
+    extends State<ConvertouchMenuItemsView<T>> with ItemsLazyLoadingMixin {
+  static const double _itemsSpacing = 8;
+  static const double _bottomSpacing = 85;
+
+  late Widget Function(T, Color) _itemLogoFunc;
+  late String Function(T) _itemNameFunc;
+
+  late final List<T> _itemsFullList;
+  late final Map<ConvertouchUITheme, ListItemColorScheme> _itemColors;
+  late final Map<ConvertouchUITheme, ConvertouchColorScheme> _emptyViewColors;
+  late final ScrollController _listScrollController;
+  late final ScrollController _gridScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _itemsFullList = widget.itemsListBloc.state.pageItems.isNotEmpty
+        ? widget.itemsListBloc.state.pageItems
+        : [];
+
+    onLoadMore() {
+      widget.itemsListBloc.add(
+        const FetchItems(firstFetch: false),
+      );
+    }
+
+    _listScrollController = ScrollController();
+    _listScrollController.addListener(() {
+      onScroll(
+        controller: _listScrollController,
+        hasReachedMax: widget.itemsListBloc.state.hasReachedMax,
+        itemsNum: _itemsFullList.length,
+        itemsNumInRow: 1,
+        itemHeight: ConvertouchMenuListItem.defaultHeight,
+        itemsSpacing: _itemsSpacing,
+        onLoad: onLoadMore,
+      );
+    });
+
+    _gridScrollController = ScrollController();
+    _gridScrollController.addListener(() {
+      onScroll(
+        controller: _gridScrollController,
+        hasReachedMax: widget.itemsListBloc.state.hasReachedMax,
+        itemsNum: _itemsFullList.length,
+        itemsNumInRow: 4,
+        itemHeight: ConvertouchMenuGridItem.defaultHeight,
+        itemsSpacing: _itemsSpacing,
+        onLoad: onLoadMore,
+      );
+    });
+
+    if (T == UnitGroupModel) {
+      _itemColors = unitGroupItemColors;
+      _emptyViewColors = unitGroupPageEmptyViewColor;
+
+      _itemLogoFunc = (T item, Color color) {
+        UnitGroupModel unitGroup = item as UnitGroupModel;
+        return IconUtils.getUnitGroupIcon(
+          iconName: unitGroup.iconName,
+          color: color,
+          size: 29,
+        );
+      };
+
+      _itemNameFunc = (T item) {
+        return item.name;
+      };
+    } else {
+      _itemColors = unitItemColors;
+      _emptyViewColors = unitPageEmptyViewColor;
+
+      _itemLogoFunc = (T item, Color color) {
+        UnitModel unit = item as UnitModel;
+        return Text(
+          unit.code,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.w700,
+            fontFamily: quicksandFontFamily,
+            fontSize: 17,
+          ),
+        );
+      };
+
+      _itemNameFunc = (T item) {
+        UnitModel unit = item as UnitModel;
+        return unit.symbol != null
+            ? "${unit.name} (${unit.symbol})"
+            : unit.name;
+      };
+    }
+  }
+
+  @override
+  void dispose() {
+    _itemsFullList.clear();
+    _listScrollController.dispose();
+    _gridScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
-      builder: (_, appState) {
-        if (appState is AppStateReady) {
-          ItemsViewMode itemsViewMode = T == UnitGroupModel
-              ? appState.unitGroupsViewMode
-              : appState.unitsViewMode;
-
-          ConvertouchColorScheme emptyViewColors;
-          if (T == UnitGroupModel) {
-            emptyViewColors = unitGroupPageEmptyViewColor[appState.theme]!;
-          } else {
-            emptyViewColors = unitPageEmptyViewColor[appState.theme]!;
-          }
-
-          var itemsState = itemsListBloc.state;
-
-          switch (itemsState.status) {
-            case FetchingStatus.failure:
+    return ScrollConfiguration(
+      behavior: NoGlowScrollBehavior(),
+      child: BlocListener<ItemsListBloc<T, ItemsFetched<T>>, ItemsFetched<T>>(
+        bloc: widget.itemsListBloc,
+        listener: (_, state) {
+          setState(() {
+            if (state.pageNum <= 1) {
+              _itemsFullList.clear();
+            }
+            _itemsFullList.addAll(state.pageItems);
+          });
+        },
+        child: appBlocBuilder(
+          builderFunc: (appState) {
+            if (_itemsFullList.isEmpty) {
               return Center(
                 child: InfoBoxNoItems(
                   text: T == UnitGroupModel
-                      ? "Failed to fetch new unit groups"
-                      : "Failed to fetch new units",
-                  colors: emptyViewColors,
+                      ? "No unit groups added"
+                      : "No units added",
+                  colors: _emptyViewColors[appState.theme]!,
                 ),
               );
-            case FetchingStatus.success:
-              if (itemsState.pageItems.isEmpty && itemsState.pageNum == 0) {
-                return Center(
-                  child: InfoBoxNoItems(
-                    text: T == UnitGroupModel
-                        ? "No unit groups added"
-                        : "No units added",
-                    colors: emptyViewColors,
+            }
+
+            ItemsViewMode itemsViewMode = T == UnitGroupModel
+                ? appState.unitGroupsViewMode
+                : appState.unitsViewMode;
+
+            switch (itemsViewMode) {
+              case ItemsViewMode.list:
+                return ListView.builder(
+                  controller: _listScrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _itemsFullList.length,
+                  itemExtent:
+                      ConvertouchMenuListItem.defaultHeight + _itemsSpacing,
+                  padding: const EdgeInsets.only(
+                    top: _itemsSpacing,
+                    left: _itemsSpacing,
+                    right: _itemsSpacing,
+                    bottom: _bottomSpacing,
                   ),
+                  itemBuilder: (context, index) {
+                    if (index < _itemsFullList.length) {
+                      T item = _itemsFullList[index];
+
+                      bool selected = item.id == widget.selectedItemId;
+                      bool disabled = widget.disabledItemIds.contains(item.id);
+                      bool checked = widget.checkedItemIds.contains(item.id);
+
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: _itemsSpacing,
+                        ),
+                        child: ConvertouchMenuListItem(
+                          item,
+                          checked: checked || selected,
+                          colors: _itemColors[appState.theme]!,
+                          disabled: disabled,
+                          logoFunc: _itemLogoFunc,
+                          itemName: _itemNameFunc.call(item),
+                          checkIconVisible: widget.checkableItemsVisible ||
+                              widget.removalModeEnabled,
+                          checkIconVisibleIfUnchecked:
+                              !item.oob && widget.removalModeEnabled,
+                          editIconVisible:
+                              !item.oob && widget.editableItemsVisible,
+                          onTap: () {
+                            if (widget.removalModeEnabled) {
+                              if (!item.oob) {
+                                widget.onItemTapForRemoval?.call(item);
+                              }
+                            } else {
+                              if (!selected && !disabled) {
+                                FocusScope.of(context).unfocus();
+                                widget.onItemTap?.call(item);
+                              }
+                            }
+                          },
+                          onLongPress: () {
+                            widget.onItemLongPress?.call(item);
+                          },
+                        ),
+                      );
+                    }
+                    return null;
+                  },
                 );
-              }
-              break;
-          }
+              case ItemsViewMode.grid:
+                return GridView.builder(
+                  controller: _gridScrollController,
+                  itemCount: _itemsFullList.length,
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(
+                    top: _itemsSpacing,
+                    left: _itemsSpacing,
+                    right: _itemsSpacing,
+                    bottom: _bottomSpacing,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: _itemsSpacing,
+                    mainAxisSpacing: _itemsSpacing,
+                  ),
+                  itemBuilder: (context, index) {
+                    if (index < _itemsFullList.length) {
+                      T item = _itemsFullList[index];
 
-          ListItemColorScheme itemColors;
-          Widget Function(T, Color) itemLogoFunc;
-          String Function(T) itemNameFunc;
+                      bool selected = item.id == widget.selectedItemId;
+                      bool disabled = widget.disabledItemIds.contains(item.id);
+                      bool checked = widget.checkedItemIds.contains(item.id);
 
-          if (T == UnitGroupModel) {
-            itemColors = unitGroupItemColors[appState.theme]!;
-            itemLogoFunc = (T item, Color color) {
-              UnitGroupModel unitGroup = item as UnitGroupModel;
-              return IconUtils.getUnitGroupIcon(
-                iconName: unitGroup.iconName,
-                color: color,
-                size: 29,
-              );
-            };
-            itemNameFunc = (T item) {
-              return item.name;
-            };
-          } else {
-            itemColors = unitItemColors[appState.theme]!;
-            itemLogoFunc = (T item, Color color) {
-              UnitModel unit = item as UnitModel;
-              return Text(
-                unit.code,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: quicksandFontFamily,
-                  fontSize: 17,
-                ),
-              );
-            };
-            itemNameFunc = (T item) {
-              UnitModel unit = item as UnitModel;
-              return unit.symbol != null
-                  ? "${unit.name} (${unit.symbol})"
-                  : unit.name;
-            };
-          }
-
-          return ConvertouchItemsListView<T>(
-            itemsListBloc: itemsListBloc,
-            onItemTap: onItemTap,
-            onItemLongPress: onItemLongPress,
-            onItemTapForRemoval: onItemTapForRemoval,
-            logoFunc: itemLogoFunc,
-            colors: itemColors,
-            selectedItemId: selectedItemId,
-            itemNameFunc: itemNameFunc,
-            onLoadMore: () {
-              itemsListBloc.add(
-                const FetchItems(firstFetch: false),
-              );
-            },
-          );
-
-          // switch (itemsViewMode) {
-          //   case ItemsViewMode.list:
-          //     return ConvertouchItemsListView<T>(
-          //       itemsListBloc: itemsListBloc,
-          //       onItemTap: onItemTap,
-          //       onItemLongPress: onItemLongPress,
-          //       onItemTapForRemoval: onItemTapForRemoval,
-          //       logoFunc: itemLogoFunc,
-          //       colors: itemColors,
-          //       itemsSpacing: itemsSpacing,
-          //       itemsBottomSpacing: itemsBottomSpacing,
-          //       selectedItemId: selectedItemId,
-          //       itemNameFunc: itemNameFunc,
-          //       onLoadMore: () {
-          //         itemsListBloc.add(
-          //           const FetchItems(firstFetch: false),
-          //         );
-          //       },
-          //     );
-          //   case ItemsViewMode.grid:
-          //     return ConvertouchItemsGridView<T>(
-          //       itemsListBloc: itemsListBloc,
-          //       onItemTap: onItemTap,
-          //       onItemLongPress: onItemLongPress,
-          //       onItemTapForRemoval: onItemTapForRemoval,
-          //       logoFunc: itemLogoFunc,
-          //       colors: itemColors,
-          //       itemsSpacing: itemsSpacing,
-          //       itemsBottomSpacing: itemsBottomSpacing,
-          //       selectedItemId: selectedItemId,
-          //       itemNameFunc: itemNameFunc,
-          //       onLoadMore: () {
-          //         itemsListBloc.add(
-          //           const FetchItems(firstFetch: false),
-          //         );
-          //       },
-          //     );
-          // }
-        } else {
-          return const SizedBox(
-            height: 0,
-            width: 0,
-          );
-        }
-      },
+                      return ConvertouchMenuGridItem(
+                        item,
+                        checked: checked || selected,
+                        colors: _itemColors[appState.theme]!,
+                        disabled: disabled,
+                        logoFunc: _itemLogoFunc,
+                        itemName: _itemNameFunc.call(item),
+                        checkIconVisible: widget.checkableItemsVisible ||
+                            widget.removalModeEnabled,
+                        checkIconVisibleIfUnchecked:
+                            !item.oob && widget.removalModeEnabled,
+                        editIconVisible:
+                            !item.oob && widget.editableItemsVisible,
+                        onTap: () {
+                          if (widget.removalModeEnabled) {
+                            if (!item.oob) {
+                              widget.onItemTapForRemoval?.call(item);
+                            }
+                          } else {
+                            if (!selected && !disabled) {
+                              FocusScope.of(context).unfocus();
+                              widget.onItemTap?.call(item);
+                            }
+                          }
+                        },
+                        onLongPress: () {
+                          widget.onItemLongPress?.call(item);
+                        },
+                      );
+                    }
+                    return null;
+                  },
+                );
+            }
+          },
+        ),
+      ),
     );
   }
 }
