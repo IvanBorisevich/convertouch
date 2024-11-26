@@ -38,81 +38,64 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
 
   @override
   Widget build(BuildContext context) {
+    Color background =
+        disabled ? colors.background.disabled : colors.background.regular;
+    Color foreground =
+        disabled ? colors.foreground.disabled : colors.foreground.regular;
+
     return GestureDetector(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(
-            width: defaultHeight * 1.5,
-            height: defaultHeight,
-            padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: 7,
-            ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: disabled
-                  ? colors.background.disabled
-                  : colors.background.regular,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(_borderRadius),
-                bottomLeft: Radius.circular(_borderRadius),
+      child: Container(
+        height: defaultHeight,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: const BorderRadius.all(Radius.circular(_borderRadius)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: defaultHeight * 1.5,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: logoFunc.call(
+                item,
+                foreground,
               ),
             ),
-            child: logoFunc.call(
-              item,
-              disabled ? colors.foreground.disabled : colors.foreground.regular,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              height: defaultHeight,
-              padding: const EdgeInsets.only(right: 15),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: disabled
-                    ? colors.background.disabled
-                    : colors.background.regular,
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(_borderRadius),
-                  bottomRight: Radius.circular(_borderRadius),
-                ),
-              ),
+            Expanded(
               child: Text(
                 itemName,
                 style: TextStyle(
                   fontFamily: quicksandFontFamily,
                   fontWeight: FontWeight.w600,
-                  color: disabled
-                      ? colors.foreground.disabled
-                      : colors.foreground.regular,
+                  color: foreground,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
             ),
-          ),
-          checkIconVisible && (checkIconVisibleIfUnchecked || checked)
-              ? ConvertouchItemModeIcon.checkbox(
-                  active: checked,
-                  colors: colors.checkBox,
-                  padding: const EdgeInsets.only(right: 10),
-                )
-              : const SizedBox(
-                  width: 0,
-                  height: 0,
-                ),
-          editIconVisible
-              ? ConvertouchItemModeIcon.edit(
-                  colors: colors.modeIcon,
-                  padding: const EdgeInsets.only(right: 10),
-                )
-              : const SizedBox(
-                  width: 0,
-                  height: 0,
-                ),
-        ],
+            checkIconVisible && (checkIconVisibleIfUnchecked || checked)
+                ? ConvertouchItemModeIcon.checkbox(
+                    active: checked,
+                    colors: colors.checkBox,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                  )
+                : Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        editIconVisible
+                            ? ConvertouchItemModeIcon.edit(
+                                colors: colors.modeIcon,
+                                size: 11,
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
+          ],
+        ),
       ),
     );
   }
