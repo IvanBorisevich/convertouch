@@ -68,6 +68,13 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
   late final ScrollController _gridScrollController;
 
   late final void Function(BuildContext, T, {bool callable}) _onItemTap;
+  late final Widget? Function(
+    BuildContext,
+    int, {
+    required ListItemColorScheme itemColors,
+    required ItemsViewMode itemsViewMode,
+    required bool checkIconVisible,
+  }) _itemBuilder;
 
   @override
   void initState() {
@@ -76,6 +83,74 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
     _itemsFullList = widget.itemsListBloc.state.pageItems.isNotEmpty
         ? widget.itemsListBloc.state.pageItems
         : [];
+
+    _itemBuilder = (
+      context,
+      index, {
+      required ListItemColorScheme itemColors,
+      required ItemsViewMode itemsViewMode,
+      required bool checkIconVisible,
+    }) {
+      if (index < _itemsFullList.length) {
+        T item = _itemsFullList[index];
+
+        bool selected = item.id == widget.selectedItemId;
+        bool disabled = widget.disabledItemIds.contains(item.id);
+        bool checked = widget.checkedItemIds.contains(item.id);
+        bool checkIconVisibleIfUnchecked =
+            !item.oob && widget.removalModeEnabled;
+        bool editIconVisible = !item.oob && widget.editableItemsVisible;
+
+        onTap() {
+          _onItemTap(
+            context,
+            item,
+            callable: !selected && !disabled,
+          );
+        }
+
+        onLongPress() {
+          widget.onItemLongPress?.call(item);
+        }
+
+        switch (itemsViewMode) {
+          case ItemsViewMode.list:
+            return Padding(
+              padding: const EdgeInsets.only(
+                bottom: _itemsSpacing,
+              ),
+              child: ConvertouchMenuListItem(
+                item,
+                checked: checked || selected,
+                colors: itemColors,
+                disabled: disabled,
+                logoFunc: _itemLogoFunc,
+                itemName: _itemNameFunc.call(item),
+                checkIconVisible: checkIconVisible,
+                checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
+                editIconVisible: editIconVisible,
+                onTap: onTap,
+                onLongPress: onLongPress,
+              ),
+            );
+          case ItemsViewMode.grid:
+            return ConvertouchMenuGridItem(
+              item,
+              checked: checked || selected,
+              colors: itemColors,
+              disabled: disabled,
+              logoFunc: _itemLogoFunc,
+              itemName: _itemNameFunc.call(item),
+              checkIconVisible: checkIconVisible,
+              checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
+              editIconVisible: editIconVisible,
+              onTap: onTap,
+              onLongPress: onLongPress,
+            );
+        }
+      }
+      return null;
+    };
 
     onLoadMore() {
       widget.itemsListBloc.add(
@@ -226,47 +301,13 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
                     bottom: _bottomSpacing,
                   ),
                   itemBuilder: (context, index) {
-                    if (index < _itemsFullList.length) {
-                      T item = _itemsFullList[index];
-
-                      bool selected = item.id == widget.selectedItemId;
-                      bool disabled = widget.disabledItemIds.contains(item.id);
-                      bool checked = widget.checkedItemIds.contains(item.id);
-                      bool checkIconVisibleIfUnchecked =
-                          !item.oob && widget.removalModeEnabled;
-                      bool editIconVisible =
-                          !item.oob && widget.editableItemsVisible;
-
-                      onTap() {
-                        _onItemTap(context, item,
-                            callable: !selected && !disabled);
-                      }
-
-                      onLongPress() {
-                        widget.onItemLongPress?.call(item);
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: _itemsSpacing,
-                        ),
-                        child: ConvertouchMenuListItem(
-                          item,
-                          checked: checked || selected,
-                          colors: itemColors,
-                          disabled: disabled,
-                          logoFunc: _itemLogoFunc,
-                          itemName: _itemNameFunc.call(item),
-                          checkIconVisible: checkIconVisible,
-                          checkIconVisibleIfUnchecked:
-                              checkIconVisibleIfUnchecked,
-                          editIconVisible: editIconVisible,
-                          onTap: onTap,
-                          onLongPress: onLongPress,
-                        ),
-                      );
-                    }
-                    return null;
+                    return _itemBuilder.call(
+                      context,
+                      index,
+                      itemColors: itemColors,
+                      itemsViewMode: itemsViewMode,
+                      checkIconVisible: checkIconVisible,
+                    );
                   },
                 );
               case ItemsViewMode.grid:
@@ -287,42 +328,13 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
                     mainAxisSpacing: _itemsSpacing,
                   ),
                   itemBuilder: (context, index) {
-                    if (index < _itemsFullList.length) {
-                      T item = _itemsFullList[index];
-
-                      bool selected = item.id == widget.selectedItemId;
-                      bool disabled = widget.disabledItemIds.contains(item.id);
-                      bool checked = widget.checkedItemIds.contains(item.id);
-                      bool checkIconVisibleIfUnchecked =
-                          !item.oob && widget.removalModeEnabled;
-                      bool editIconVisible =
-                          !item.oob && widget.editableItemsVisible;
-
-                      onTap() {
-                        _onItemTap(context, item,
-                            callable: !selected && !disabled);
-                      }
-
-                      onLongPress() {
-                        widget.onItemLongPress?.call(item);
-                      }
-
-                      return ConvertouchMenuGridItem(
-                        item,
-                        checked: checked || selected,
-                        colors: itemColors,
-                        disabled: disabled,
-                        logoFunc: _itemLogoFunc,
-                        itemName: _itemNameFunc.call(item),
-                        checkIconVisible: checkIconVisible,
-                        checkIconVisibleIfUnchecked:
-                            checkIconVisibleIfUnchecked,
-                        editIconVisible: editIconVisible,
-                        onTap: onTap,
-                        onLongPress: onLongPress,
-                      );
-                    }
-                    return null;
+                    return _itemBuilder.call(
+                      context,
+                      index,
+                      itemColors: itemColors,
+                      itemsViewMode: itemsViewMode,
+                      checkIconVisible: checkIconVisible,
+                    );
                   },
                 );
             }
