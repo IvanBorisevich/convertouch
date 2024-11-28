@@ -310,7 +310,7 @@ class _ConvertouchUnitDetailsPageState
                       value: conversionRule.unitValue,
                       defaultValue: ValueModel.one,
                     ),
-                    valueType: unit.valueType ?? unitGroup.valueType,
+                    inputType: unit.valueType ?? unitGroup.valueType,
                     disabled: !conversionRule.configEditable,
                     onValueChanged: (value) {
                       BlocProvider.of<UnitDetailsBloc>(context).add(
@@ -319,7 +319,7 @@ class _ConvertouchUnitDetailsPageState
                         ),
                       );
                     },
-                    theme: appState.theme,
+                    colors: conversionItemColors[appState.theme]!,
                   ),
                   const SizedBox(height: 12),
                   ConvertouchConversionItem(
@@ -328,7 +328,7 @@ class _ConvertouchUnitDetailsPageState
                       value: conversionRule.draftArgValue,
                       defaultValue: conversionRule.savedArgValue,
                     ),
-                    valueType:
+                    inputType:
                         conversionRule.argUnit.valueType ?? unitGroup.valueType,
                     disabled: !conversionRule.configEditable,
                     onValueChanged: (value) {
@@ -357,7 +357,7 @@ class _ConvertouchUnitDetailsPageState
                         ),
                       );
                     },
-                    theme: appState.theme,
+                    colors: conversionItemColors[appState.theme]!,
                   ),
                   const SizedBox(height: 25),
                 ],

@@ -1,30 +1,29 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
   final ConversionItemModel item;
-  final ConvertouchValueType valueType;
+  final int? index;
+  final ConvertouchValueType inputType;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
+  final void Function()? onRemove;
   final bool disabled;
-  final ConvertouchUITheme theme;
-  final ConversionItemColorScheme? customColors;
-  final double spacing;
+  final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
     this.item, {
-    required this.valueType,
+    this.index,
+    required this.inputType,
     this.onTap,
     this.onValueChanged,
+    this.onRemove,
     this.disabled = false,
-    required this.theme,
-    this.customColors,
-    this.spacing = 11,
+    required this.colors,
     super.key,
   });
 
@@ -34,10 +33,10 @@ class ConvertouchConversionItem extends StatefulWidget {
 }
 
 class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
-  static const double _unitButtonWidth = 75;
-  static const double _unitButtonHeight = 48;
-  static const double _containerHeight = _unitButtonHeight;
+  static const double _unitButtonWidth = 90;
+  static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
   static const double _elementsBorderRadius = 15;
+  static const double _spacing = 11;
 
   late final TextEditingController _unitValueController;
 
@@ -51,10 +50,17 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   }
 
   @override
+  void dispose() {
+    _unitValueController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var itemColor = widget.customColors ?? conversionItemColors[widget.theme]!;
+    var itemColor = widget.colors;
     var unitButtonColor = itemColor.unitButton;
     var unitTextBoxColor = itemColor.textBox;
+    var handlerColor = itemColor.handler;
 
     if (_isFocused && !widget.disabled) {
       _unitValueController.text = widget.item.value.str;
@@ -62,14 +68,20 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
       _unitValueController.text = widget.item.value.scientific;
     }
 
-    return Container(
-      height: _containerHeight,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(_elementsBorderRadius)),
-      ),
+    return SizedBox(
+      height: _defaultHeight,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          wrapIntoDragListener(
+            index: widget.index,
+            child: Container(
+              padding: const EdgeInsets.only(right: 6),
+              child: Icon(
+                Icons.drag_indicator_outlined,
+                color: handlerColor.foreground.regular,
+              ),
+            ),
+          ),
           Expanded(
             child: ConvertouchTextBox(
               controller: _unitValueController,
@@ -79,7 +91,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   ? widget.item.defaultValue.str
                   : widget.item.defaultValue.scientific,
               borderRadius: 15,
-              inputType: widget.valueType,
+              inputType: widget.inputType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
@@ -107,10 +119,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                             color: itemColor.textBox.foreground.regular,
                           ),
                         )
-                      : const SizedBox(
-                          height: 0,
-                          width: 0,
-                        ),
+                      : const SizedBox.shrink(),
                   widget.item.value.str.isNotEmpty && _isFocused
                       ? IconButton(
                           icon: Icon(
@@ -125,55 +134,61 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                             });
                           },
                         )
-                      : const SizedBox(
-                          height: 0,
-                          width: 0,
-                        ),
+                      : const SizedBox.shrink(),
                 ],
               ),
               colors: unitTextBoxColor,
             ),
           ),
-          SizedBox(width: widget.spacing),
-          GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-              widget.onTap?.call();
-            },
-            child: SizedBox(
-              width: _unitButtonWidth,
-              height: _unitButtonHeight,
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    _isFocused && !widget.disabled
-                        ? unitButtonColor.background.focused
-                        : unitButtonColor.background.regular,
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: _isFocused && !widget.disabled
-                            ? unitButtonColor.border.focused
-                            : unitButtonColor.border.regular,
-                        width: 1,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+          Container(
+            width: _unitButtonWidth,
+            height: _defaultHeight,
+            padding: const EdgeInsets.only(left: _spacing),
+            child: TextButton(
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                widget.onTap?.call();
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  _isFocused && !widget.disabled
+                      ? unitButtonColor.background.focused
+                      : unitButtonColor.background.regular,
+                ),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: _isFocused && !widget.disabled
+                          ? unitButtonColor.border.focused
+                          : unitButtonColor.border.regular,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(_elementsBorderRadius),
                     ),
                   ),
                 ),
-                onPressed: null,
-                child: Text(
-                  widget.item.unit.code,
-                  style: TextStyle(
-                    color: _isFocused && !widget.disabled
-                        ? unitButtonColor.foreground.focused
-                        : unitButtonColor.foreground.regular,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  maxLines: 1,
+              ),
+              child: Text(
+                widget.item.unit.code,
+                style: TextStyle(
+                  color: _isFocused && !widget.disabled
+                      ? unitButtonColor.foreground.focused
+                      : unitButtonColor.foreground.regular,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
                 ),
+                maxLines: 1,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 9, right: 1),
+            child: GestureDetector(
+              onTap: widget.onRemove,
+              child: Icon(
+                Icons.remove_circle_outline,
+                color: handlerColor.foreground.regular,
               ),
             ),
           ),
@@ -182,9 +197,15 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     );
   }
 
-  @override
-  void dispose() {
-    _unitValueController.dispose();
-    super.dispose();
+  Widget wrapIntoDragListener({
+    int? index,
+    required Widget child,
+  }) {
+    return index != null
+        ? ReorderableDragStartListener(
+            index: index,
+            child: child,
+          )
+        : child;
   }
 }

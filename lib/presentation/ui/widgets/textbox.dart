@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ConvertouchTextBox extends StatefulWidget {
+  static const double defaultHeight = 55;
+
   final TextEditingController? controller;
   final String? text;
   final FocusNode? focusNode;
   final ValueNotifier<String?>? notifier;
   final ConvertouchValueType inputType;
   final bool useCustomKeyboard;
-  final double height;
   final String label;
   final bool autofocus;
   final bool disabled;
@@ -24,6 +25,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final String? hintText;
   final double borderRadius;
   final TextBoxColorScheme colors;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
 
   const ConvertouchTextBox({
@@ -33,7 +35,6 @@ class ConvertouchTextBox extends StatefulWidget {
     this.notifier,
     this.useCustomKeyboard = false,
     this.inputType = ConvertouchValueType.text,
-    this.height = 70,
     this.label = "",
     this.autofocus = false,
     this.disabled = false,
@@ -45,6 +46,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.hintText,
     this.borderRadius = 15,
     required this.colors,
+    this.prefixIcon,
     this.suffixIcon,
     super.key,
   });
@@ -148,12 +150,17 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     }
 
     return SizedBox(
-      height: widget.height,
+      height: ConvertouchTextBox.defaultHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (widget.useCustomKeyboard) {
             return Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(7, 5, 7, 0),
+              padding: const EdgeInsets.only(
+                left: 7,
+                top: 5,
+                right: 7,
+                bottom: 0,
+              ),
               child: KeyboardActionsWrapper(
                 inputType: widget.inputType,
                 controller: _controller,
@@ -244,10 +251,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         hintStyle: TextStyle(
           foreground: Paint()..color = hintColor,
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15.0,
-        ),
+        contentPadding: const EdgeInsets.all(17),
         counterText: "",
+        prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
         suffixIconColor: foregroundColor,
         suffixText: widget.textLengthCounterVisible

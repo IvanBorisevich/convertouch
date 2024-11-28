@@ -16,7 +16,6 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:flutter/material.dart';
@@ -69,15 +68,14 @@ class ConvertouchConversionPage extends StatelessWidget {
                     );
                     unitsBloc.add(
                       FetchItems(
-                        parentItemId: conversion.unitGroup.id,
-                        onFirstFetch: () {
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.unitsPageRegular,
-                            ),
-                          );
-                        }
-                      ),
+                          parentItemId: conversion.unitGroup.id,
+                          onFirstFetch: () {
+                            navigationBloc.add(
+                              const NavigateToPage(
+                                pageName: PageName.unitsPageRegular,
+                              ),
+                            );
+                          }),
                     );
                   },
                   icon: Icon(
@@ -90,7 +88,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 12),
                 child: ConvertouchConversionItemsView(
                   conversion.targetConversionItems,
-                  valueType: conversion.unitGroup.valueType,
+                  parentValueType: conversion.unitGroup.valueType,
                   onUnitItemTap: (item) {
                     unitsBloc.add(
                       FetchItems(
@@ -129,20 +127,6 @@ class ConvertouchConversionPage extends StatelessWidget {
                       ),
                     );
                   },
-                  noItemsView: SizedBox(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: InfoBoxNoItems(
-                            text: "No conversion items added",
-                            colors: unitPageEmptyViewColor[appState.theme]!,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   theme: appState.theme,
                 ),
               ),
