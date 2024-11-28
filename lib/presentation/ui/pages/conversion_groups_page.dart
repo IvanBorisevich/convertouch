@@ -13,6 +13,7 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -32,6 +33,7 @@ class ConversionGroupsPage extends StatelessWidget {
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+    final singleGroupBloc = BlocProvider.of<SingleGroupBloc>(context);
     final refreshingJobsBloc = BlocProvider.of<RefreshingJobsBloc>(context);
     final itemsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
@@ -68,6 +70,9 @@ class ConversionGroupsPage extends StatelessWidget {
             appBloc: BlocProvider.of<AppBloc>(context),
             pageName: PageName.conversionGroupsPage,
             onItemTap: (unitGroup) {
+              singleGroupBloc.add(
+                ShowGroup(unitGroup: unitGroup),
+              );
               conversionBloc.add(
                 GetConversion(
                   unitGroup: unitGroup,

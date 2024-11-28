@@ -9,10 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchRefreshFloatingButton extends StatelessWidget {
+  final String unitGroupName;
   final bool determinate;
+  final bool visible;
 
   const ConvertouchRefreshFloatingButton({
+    required this.unitGroupName,
     this.determinate = false,
+    this.visible = true,
     super.key,
   });
 
@@ -25,42 +29,33 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
         ConvertouchColorScheme refreshButtonColor =
             refreshButtonColors[appState.theme]!;
 
-        return conversionBlocBuilder(
-          builderFunc: (conversionState) {
-            return refreshingJobsBlocBuilder(
-              builderFunc: (jobsState) {
-                return ConvertouchProgressButton(
-                  visible: conversionState.showRefreshButton,
-                  determinate: determinate,
-                  buttonWidget: ConvertouchFloatingActionButton.refresh(
-                    onClick: () {
-                      jobsBloc.add(
-                        StartRefreshingJobForConversion(
-                          unitGroupName:
-                              conversionState.conversion.unitGroup.name,
-                        ),
-                      );
-                    },
-                    colorScheme: refreshButtonColor,
+        return refreshingJobsBlocBuilder(
+          builderFunc: (jobsState) {
+            return ConvertouchProgressButton(
+              visible: visible,
+              determinate: determinate,
+              buttonWidget: ConvertouchFloatingActionButton.refresh(
+                onClick: () {
+                  jobsBloc.add(
+                    StartRefreshingJobForConversion(
+                      unitGroupName: unitGroupName,
+                    ),
+                  );
+                },
+                colorScheme: refreshButtonColor,
+              ),
+              radius: 28,
+              onProgressIndicatorClick: () {
+                jobsBloc.add(
+                  StopRefreshingJobForConversion(
+                    unitGroupName: unitGroupName,
                   ),
-                  radius: 28,
-                  onProgressIndicatorClick: () {
-                    jobsBloc.add(
-                      StopRefreshingJobForConversion(
-                        unitGroupName:
-                            conversionState.conversion.unitGroup.name,
-                      ),
-                    );
-                  },
-                  margin: const EdgeInsets.only(right: 7),
-                  progressStream: jobsState
-                      .jobs[conversionState.conversion.unitGroup.name]
-                      ?.progressController
-                      ?.stream,
-                  progressIndicatorColor:
-                      refreshButtonColor.foreground.selected,
                 );
               },
+              margin: const EdgeInsets.only(right: 7),
+              progressStream:
+                  jobsState.jobs[unitGroupName]?.progressController?.stream,
+              progressIndicatorColor: refreshButtonColor.foreground.selected,
             );
           },
         );
