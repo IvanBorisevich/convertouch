@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -68,15 +66,10 @@ class ConversionBloc
       ConversionBuilt prev = state;
       await _handleAndEmit(result, emit, onSuccess: () {
         if (prev.conversion.exists) {
-          log("Processing previous conversion state of the group "
-              "'${prev.conversion.unitGroup.name}'");
           event.processPrevConversion?.call(prev.conversion);
-        } else {
-          log("No previous conversion");
         }
       });
     } else {
-      log("Get existing conversion state from cache");
       emit(state);
     }
 

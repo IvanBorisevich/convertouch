@@ -3,7 +3,6 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
@@ -21,7 +20,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchMenuItemsView<T extends IdNameItemModel>
     extends StatefulWidget {
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
-  final AppBloc appBloc;
   final PageName pageName;
   final void Function(T)? onItemTap;
   final void Function(T)? onItemTapForRemoval;
@@ -35,7 +33,6 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
 
   const ConvertouchMenuItemsView({
     required this.itemsListBloc,
-    required this.appBloc,
     required this.pageName,
     this.onItemTap,
     this.onItemTapForRemoval,

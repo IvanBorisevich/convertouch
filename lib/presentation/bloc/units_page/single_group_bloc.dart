@@ -8,6 +8,7 @@ class ShowGroup extends ConvertouchEvent {
 
   const ShowGroup({
     required this.unitGroup,
+    super.onComplete,
   });
 
   @override
@@ -46,6 +47,8 @@ class SingleGroupBloc
       emit(
         SingleGroupState(unitGroup: event.unitGroup),
       );
+
+      event.onComplete?.call();
     });
   }
 }

@@ -210,10 +210,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                 ),
               );
             }
-            return const SizedBox(
-    height: 0,
-    width: 0,
-  );
+            return const SizedBox.shrink();
           },
         );
       },
