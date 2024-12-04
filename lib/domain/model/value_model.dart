@@ -7,7 +7,7 @@ class ValueModel extends Equatable {
     scientific: "",
   );
 
-  static const ValueModel undefined = ValueModel(
+  static const ValueModel nan = ValueModel(
     str: "-",
     scientific: "-",
   );
@@ -57,7 +57,7 @@ class ValueModel extends Equatable {
     );
   }
 
-  bool get exists => this != none && this != undefined;
+  bool get exists => this != none && this != nan;
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,17 +1,19 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/build_new_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
-  final BuildNewConversionUseCase buildNewConversionUseCase;
+  final CreateConversionUseCase buildNewConversionUseCase;
 
   const AbstractModifyConversionUseCase({
     required this.buildNewConversionUseCase,
@@ -80,6 +82,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         ),
       );
     } catch (e, stackTrace) {
+      log("Error when modifying the conversion: $e");
       return Left(
         InternalException(
           message: "Error when modifying the conversion of the group "
