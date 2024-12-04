@@ -24,9 +24,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     InputConversionModifyModel<D> input,
   ) async {
     try {
-      final modifiedGroup = input.delta is EditConversionGroupDelta
-          ? input.delta as UnitGroupModel
-          : input.conversion.unitGroup;
+      final modifiedGroup = getModifiedGroup(
+        unitGroup: input.conversion.unitGroup,
+        delta: input.delta,
+      );
 
       final conversionItemsMap = {
         for (var item in input.conversion.targetConversionItems)
@@ -34,8 +35,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       };
 
       final modifiedConversionItemsMap = await modifyConversionItems(
-        conversionItemsMap,
-        input.delta,
+        conversionItemsMap: conversionItemsMap,
+        delta: input.delta,
       );
 
       if (modifiedConversionItemsMap.isEmpty) {
@@ -94,6 +95,13 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
+  UnitGroupModel getModifiedGroup({
+    required UnitGroupModel unitGroup,
+    required D delta,
+  }) {
+    return unitGroup;
+  }
+
   ConversionItemModel getModifiedSourceItem({
     required ConversionItemModel? currentSourceItem,
     required Map<int, ConversionItemModel> modifiedConversionItemsMap,
@@ -106,10 +114,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return modifiedConversionItemsMap.values.first;
   }
 
-  Future<Map<int, ConversionItemModel>> modifyConversionItems(
-    Map<int, ConversionItemModel> conversionItemsMap,
-    D delta,
-  ) async {
+  Future<Map<int, ConversionItemModel>> modifyConversionItems({
+    required Map<int, ConversionItemModel> conversionItemsMap,
+    required D delta,
+  }) async {
     return conversionItemsMap;
   }
 }

@@ -9,10 +9,10 @@ class EditConversionItemUnitUseCase
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems(
-    Map<int, ConversionItemModel> conversionItemsMap,
-    EditConversionItemUnitDelta delta,
-  ) async {
+  Future<Map<int, ConversionItemModel>> modifyConversionItems({
+    required Map<int, ConversionItemModel> conversionItemsMap,
+    required EditConversionItemUnitDelta delta,
+  }) async {
     if (conversionItemsMap.containsKey(delta.editedUnit.id)) {
       conversionItemsMap.update(
         delta.editedUnit.id,

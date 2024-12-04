@@ -19,7 +19,7 @@ class UnitGroupDetailsBloc
             savedGroup: UnitGroupModel.none,
             draftGroup: UnitGroupModel.none,
             isExistingGroup: false,
-            canChangedBeSaved: false,
+            canChangesBeSaved: false,
           ),
         ) {
     on<GetNewUnitGroupDetails>(_onNewUnitGroupDetailsGet);
@@ -36,7 +36,7 @@ class UnitGroupDetailsBloc
         savedGroup: UnitGroupModel.none,
         draftGroup: UnitGroupModel.none,
         isExistingGroup: false,
-        canChangedBeSaved: false,
+        canChangesBeSaved: false,
       ),
     );
     navigationBloc.add(
@@ -53,7 +53,7 @@ class UnitGroupDetailsBloc
         savedGroup: event.unitGroup,
         draftGroup: event.unitGroup,
         isExistingGroup: true,
-        canChangedBeSaved: false,
+        canChangesBeSaved: false,
       ),
     );
 
@@ -80,7 +80,7 @@ class UnitGroupDetailsBloc
         savedGroup: savedGroup,
         draftGroup: draftGroup,
         isExistingGroup: savedGroup != UnitGroupModel.none,
-        canChangedBeSaved: await _checkIfChangesCanBeSaved(
+        canChangesBeSaved: await _checkIfChangesCanBeSaved(
           savedGroup: savedGroup,
           draftGroup: draftGroup,
         ),

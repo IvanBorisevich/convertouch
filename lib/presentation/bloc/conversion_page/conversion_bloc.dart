@@ -2,6 +2,7 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
@@ -23,6 +24,7 @@ class ConversionBloc
   final GetConversionUseCase getConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
+  final EditConversionGroupUseCase editConversionGroupUseCase;
   final EditConversionItemUnitUseCase editConversionItemUnitUseCase;
   final EditConversionItemValueUseCase editConversionItemValueUseCase;
   final UpdateConversionCoefficientsUseCase updateConversionCoefficientsUseCase;
@@ -34,6 +36,7 @@ class ConversionBloc
     required this.getConversionUseCase,
     required this.saveConversionUseCase,
     required this.addUnitsToConversionUseCase,
+    required this.editConversionGroupUseCase,
     required this.editConversionItemUnitUseCase,
     required this.editConversionItemValueUseCase,
     required this.updateConversionCoefficientsUseCase,
@@ -93,19 +96,17 @@ class ConversionBloc
     EditConversionGroup event,
     Emitter<ConversionState> emit,
   ) async {
-    if (state.conversion.unitGroup.id == event.editedGroup.id) {
-      emit(
-        ConversionBuilt(
-          conversion: ConversionModel(
-            unitGroup: event.editedGroup,
-            sourceConversionItem: state.conversion.sourceConversionItem,
-            targetConversionItems: state.conversion.targetConversionItems,
-          ),
-          showRefreshButton: state.showRefreshButton,
+    final result = await editConversionGroupUseCase.execute(
+      InputConversionModifyModel<EditConversionGroupDelta>(
+        delta: EditConversionGroupDelta(
+          editedGroup: event.editedGroup,
         ),
-      );
-    }
+        conversion: state.conversion,
+        rebuildConversion: false,
+      ),
+    );
 
+    await _handleAndEmit(result, emit);
     event.onComplete?.call();
   }
 

@@ -10,10 +10,10 @@ class UpdateConversionCoefficientsUseCase
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems(
-    Map<int, ConversionItemModel> conversionItemsMap,
-    UpdateConversionCoefficientsDelta delta,
-  ) async {
+  Future<Map<int, ConversionItemModel>> modifyConversionItems({
+    required Map<int, ConversionItemModel> conversionItemsMap,
+    required UpdateConversionCoefficientsDelta delta,
+  }) async {
     conversionItemsMap.updateAll(
       (key, item) => ConversionItemModel.coalesce(
         item,

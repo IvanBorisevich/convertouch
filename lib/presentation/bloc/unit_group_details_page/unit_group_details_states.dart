@@ -9,13 +9,13 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
   final UnitGroupModel savedGroup;
   final UnitGroupModel draftGroup;
   final bool isExistingGroup;
-  final bool canChangedBeSaved;
+  final bool canChangesBeSaved;
 
   const UnitGroupDetailsReady({
     required this.savedGroup,
     required this.draftGroup,
     required this.isExistingGroup,
-    required this.canChangedBeSaved,
+    required this.canChangesBeSaved,
   });
 
   @override
@@ -23,7 +23,7 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
     savedGroup,
     draftGroup,
     isExistingGroup,
-    canChangedBeSaved,
+    canChangesBeSaved,
   ];
 
   @override
@@ -32,6 +32,6 @@ class UnitGroupDetailsReady extends UnitGroupDetailsState {
         'savedGroup: $savedGroup, '
         'draftGroup: $draftGroup, '
         'isExistingGroup: $isExistingGroup, '
-        'canChangedBeSaved: $canChangedBeSaved}';
+        'canChangesBeSaved: $canChangesBeSaved}';
   }
 }

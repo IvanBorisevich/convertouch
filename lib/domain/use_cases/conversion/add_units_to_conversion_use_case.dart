@@ -14,10 +14,10 @@ class AddUnitsToConversionUseCase
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems(
-    Map<int, ConversionItemModel> conversionItemsMap,
-    AddUnitsToConversionDelta delta,
-  ) async {
+  Future<Map<int, ConversionItemModel>> modifyConversionItems({
+    required Map<int, ConversionItemModel> conversionItemsMap,
+    required AddUnitsToConversionDelta delta,
+  }) async {
     final newUnits = ObjectUtils.tryGet(
       await unitRepository.getByIds(delta.unitIds),
     );

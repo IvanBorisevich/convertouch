@@ -89,11 +89,11 @@ class ConvertouchConversionPage extends StatelessWidget {
 
                     return ConvertouchConversionItemsView(
                       conversion.targetConversionItems,
-                      parentValueType: unitGroup.valueType,
+                      parentValueType: conversion.unitGroup.valueType,
                       onUnitItemTap: (item) {
                         unitsBloc.add(
                           FetchItems(
-                            parentItemId: unitGroup.id,
+                            parentItemId: conversion.unitGroup.id,
                           ),
                         );
 

@@ -23,6 +23,7 @@ import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
@@ -220,6 +221,12 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<EditConversionGroupUseCase>(
+    () => EditConversionGroupUseCase(
+      buildNewConversionUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
     () => EditConversionItemUnitUseCase(
       buildNewConversionUseCase: locator(),
@@ -352,6 +359,7 @@ Future<void> _initBloc() async {
       getConversionUseCase: locator(),
       saveConversionUseCase: locator(),
       addUnitsToConversionUseCase: locator(),
+      editConversionGroupUseCase: locator(),
       editConversionItemUnitUseCase: locator(),
       editConversionItemValueUseCase: locator(),
       updateConversionCoefficientsUseCase: locator(),

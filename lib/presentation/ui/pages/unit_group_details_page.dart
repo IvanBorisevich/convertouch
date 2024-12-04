@@ -7,6 +7,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -37,6 +38,7 @@ class _ConvertouchUnitGroupDetailsPageState
   Widget build(BuildContext context) {
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
+    final singleGroupBloc = BlocProvider.of<SingleGroupBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
@@ -133,10 +135,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       refreshingJobsBlocBuilder(
                         builderFunc: (jobState) {
                           if (!unitGroupDetailsState.draftGroup.refreshable) {
-                            return const SizedBox(
-    height: 0,
-    width: 0,
-  );
+                            return const SizedBox.shrink();
                           }
                           return Column(
                             children: [
@@ -178,7 +177,7 @@ class _ConvertouchUnitGroupDetailsPageState
               ),
               floatingActionButton: ConvertouchFloatingActionButton(
                 icon: Icons.check_outlined,
-                visible: unitGroupDetailsState.canChangedBeSaved,
+                visible: unitGroupDetailsState.canChangesBeSaved,
                 onClick: () {
                   unitGroupsBloc.add(
                     SaveItem(
@@ -186,6 +185,9 @@ class _ConvertouchUnitGroupDetailsPageState
                       onItemSave: (savedGroup) {
                         unitGroupsBloc.add(
                           const FetchItems(),
+                        );
+                        singleGroupBloc.add(
+                          ShowGroup(unitGroup: savedGroup),
                         );
                         conversionBloc.add(
                           EditConversionGroup(

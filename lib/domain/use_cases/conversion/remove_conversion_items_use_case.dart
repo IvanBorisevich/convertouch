@@ -9,10 +9,10 @@ class RemoveConversionItemsUseCase
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems(
-    Map<int, ConversionItemModel> conversionItemsMap,
-    RemoveConversionItemsDelta delta,
-  ) async {
+  Future<Map<int, ConversionItemModel>> modifyConversionItems({
+    required Map<int, ConversionItemModel> conversionItemsMap,
+    required RemoveConversionItemsDelta delta,
+  }) async {
     conversionItemsMap.removeWhere(
       (unitId, item) => delta.unitIds.contains(unitId),
     );
