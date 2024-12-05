@@ -185,3 +185,11 @@ enum ConvertouchValueType {
 }
 
 enum FetchingStatus { success, failure }
+
+enum ConvertouchSysAction {
+  connection("SETTINGS");
+
+  final String label;
+
+  const ConvertouchSysAction(this.label);
+}

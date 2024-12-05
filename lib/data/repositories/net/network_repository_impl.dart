@@ -44,6 +44,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
             severity: ExceptionSeverity.warning,
             stackTrace: null,
             dateTime: DateTime.now(),
+            handlingAction: ConvertouchSysAction.connection,
           ),
         );
       }

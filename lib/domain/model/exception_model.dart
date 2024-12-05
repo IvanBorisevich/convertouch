@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
 enum ExceptionSeverity {
@@ -11,21 +12,24 @@ class ConvertouchException extends Equatable {
   final ExceptionSeverity severity;
   final StackTrace? stackTrace;
   final DateTime dateTime;
+  final ConvertouchSysAction? handlingAction;
 
   const ConvertouchException({
     required this.message,
     this.severity = ExceptionSeverity.error,
     required this.stackTrace,
     required this.dateTime,
+    this.handlingAction,
   });
 
   @override
   List<Object?> get props => [
-    message,
-    severity,
-    stackTrace,
-    dateTime,
-  ];
+        message,
+        severity,
+        stackTrace,
+        dateTime,
+        handlingAction,
+      ];
 
   bool get isError => severity == ExceptionSeverity.error;
 
@@ -48,6 +52,7 @@ class DatabaseException extends ConvertouchException {
     super.severity,
     required super.stackTrace,
     required super.dateTime,
+    super.handlingAction,
   });
 }
 
@@ -57,6 +62,7 @@ class InternalException extends ConvertouchException {
     super.severity,
     required super.stackTrace,
     required super.dateTime,
+    super.handlingAction,
   });
 }
 
@@ -66,5 +72,6 @@ class NetworkException extends ConvertouchException {
     super.severity,
     required super.stackTrace,
     required super.dateTime,
+    super.handlingAction,
   });
 }

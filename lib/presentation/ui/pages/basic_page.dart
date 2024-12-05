@@ -1,5 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
@@ -88,51 +86,4 @@ class ConvertouchPage extends StatelessWidget {
       },
     );
   }
-}
-
-void showSnackBar(
-  BuildContext context, {
-  required ConvertouchException exception,
-  required ConvertouchUITheme theme,
-  int durationInSec = 1,
-}) {
-  SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
-
-  Color foreground;
-
-  switch (exception.severity) {
-    case ExceptionSeverity.warning:
-      foreground = snackBarColor.foregroundWarning.regular;
-      break;
-    case ExceptionSeverity.error:
-      foreground = snackBarColor.foregroundError.regular;
-      break;
-    case ExceptionSeverity.info:
-      foreground = snackBarColor.foregroundInfo.regular;
-      break;
-  }
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      showCloseIcon: true,
-      closeIconColor: foreground,
-      backgroundColor: snackBarColor.background.regular,
-      duration: Duration(seconds: durationInSec),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(7),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
-      ),
-      content: Center(
-        child: Text(
-          exception.message,
-          style: TextStyle(
-            color: foreground,
-            fontFamily: quicksandFontFamily,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    ),
-  );
 }

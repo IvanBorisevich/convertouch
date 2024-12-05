@@ -1,4 +1,6 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/main.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -6,7 +8,6 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
-import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
@@ -228,4 +229,66 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
       label: _navBarLabels[bottomNavbarItem],
     );
   }
+
+  void showSnackBar(
+    BuildContext context, {
+    required ConvertouchException exception,
+    required ConvertouchUITheme theme,
+    int durationInSec = 2,
+  }) {
+    SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
+
+    Color foreground;
+    switch (exception.severity) {
+      case ExceptionSeverity.warning:
+        foreground = snackBarColor.foregroundWarning.regular;
+        break;
+      case ExceptionSeverity.error:
+        foreground = snackBarColor.foregroundError.regular;
+        break;
+      case ExceptionSeverity.info:
+        foreground = snackBarColor.foregroundInfo.regular;
+        break;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        showCloseIcon: exception.handlingAction == null,
+        closeIconColor: foreground,
+        backgroundColor: snackBarColor.background.regular,
+        duration: Duration(seconds: durationInSec),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(7),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(7)),
+        ),
+        action: exception.handlingAction != null
+            ? SnackBarAction(
+                label: exception.handlingAction!.label,
+                textColor: snackBarColor.action.regular,
+                onPressed: _snackBarActions[exception.handlingAction!] ?? () {},
+              )
+            : null,
+        content: Text(
+          exception.message,
+          style: TextStyle(
+            color: foreground,
+            fontFamily: quicksandFontFamily,
+            fontWeight: FontWeight.w600,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
 }
+
+final Map<ConvertouchSysAction, void Function()> _snackBarActions = {
+  ConvertouchSysAction.connection: () {
+    AppSettings.openAppSettings(
+      type: AppSettingsType.wireless,
+      asAnotherTask: true,
+    );
+  },
+};

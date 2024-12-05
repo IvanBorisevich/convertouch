@@ -57,6 +57,7 @@ class SnackBarColorScheme extends ConvertouchColorScheme {
   final ColorVariation foregroundError;
   final ColorVariation foregroundWarning;
   final ColorVariation foregroundInfo;
+  final ColorVariation action;
 
   const SnackBarColorScheme({
     super.border,
@@ -64,6 +65,7 @@ class SnackBarColorScheme extends ConvertouchColorScheme {
     this.foregroundError = ColorVariation.none,
     this.foregroundWarning = ColorVariation.none,
     this.foregroundInfo = ColorVariation.none,
+    this.action = ColorVariation.none,
   });
 }
 
