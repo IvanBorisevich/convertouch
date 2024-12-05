@@ -120,7 +120,9 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
     final result = ObjectUtils.tryGet(await saveItem(event.item));
 
     add(
-      const FetchItems(),
+      FetchItems(
+        parentItemId: state.parentItemId,
+      ),
     );
 
     event.onItemSave?.call(result);
@@ -133,7 +135,10 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
     ObjectUtils.tryGet(await removeItems(event.ids));
 
     add(
-      FetchItems(searchString: state.searchString),
+      FetchItems(
+        searchString: state.searchString,
+        parentItemId: state.parentItemId,
+      ),
     );
 
     event.onComplete?.call();

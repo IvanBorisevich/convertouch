@@ -13,6 +13,7 @@ class ConvertouchConversionItem extends StatefulWidget {
   final void Function(String)? onValueChanged;
   final void Function()? onRemove;
   final bool disabled;
+  final bool controlsVisible;
   final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
@@ -23,6 +24,7 @@ class ConvertouchConversionItem extends StatefulWidget {
     this.onValueChanged,
     this.onRemove,
     this.disabled = false,
+    this.controlsVisible = true,
     required this.colors,
     super.key,
   });
@@ -72,16 +74,18 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
       height: _defaultHeight,
       child: Row(
         children: [
-          wrapIntoDragListener(
-            index: widget.index,
-            child: Container(
-              padding: const EdgeInsets.only(right: 6),
-              child: Icon(
-                Icons.drag_indicator_outlined,
-                color: handlerColor.foreground.regular,
-              ),
-            ),
-          ),
+          widget.controlsVisible
+              ? wrapIntoDragListener(
+                  index: widget.index,
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Icon(
+                      Icons.drag_indicator_outlined,
+                      color: handlerColor.foreground.regular,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
           Expanded(
             child: ConvertouchTextBox(
               controller: _unitValueController,
@@ -182,16 +186,18 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(left: 9, right: 1),
-            child: GestureDetector(
-              onTap: widget.onRemove,
-              child: Icon(
-                Icons.remove_circle_outline,
-                color: handlerColor.foreground.regular,
-              ),
-            ),
-          ),
+          widget.controlsVisible
+              ? Container(
+                  padding: const EdgeInsets.only(left: 9, right: 1),
+                  child: GestureDetector(
+                    onTap: widget.onRemove,
+                    child: Icon(
+                      Icons.remove_circle_outline,
+                      color: handlerColor.foreground.regular,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ],
       ),
     );
