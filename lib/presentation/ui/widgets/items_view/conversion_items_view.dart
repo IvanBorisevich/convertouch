@@ -55,6 +55,7 @@ class _ConvertouchConversionItemsViewState
         shrinkWrap: true,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(
+          top: _itemPadding,
           left: _itemPadding,
           right: _itemPadding,
           bottom: _bottomSpacing,

@@ -81,57 +81,54 @@ class ConvertouchConversionPage extends StatelessWidget {
                   },
                 ),
               ],
-              body: Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: conversionBlocBuilder(
-                  builderFunc: (pageState) {
-                    final conversion = pageState.conversion;
+              body: conversionBlocBuilder(
+                builderFunc: (pageState) {
+                  final conversion = pageState.conversion;
 
-                    return ConvertouchConversionItemsView(
-                      conversion.targetConversionItems,
-                      parentValueType: conversion.unitGroup.valueType,
-                      onUnitItemTap: (item) {
-                        unitsBloc.add(
-                          FetchItems(
-                            parentItemId: conversion.unitGroup.id,
-                          ),
-                        );
+                  return ConvertouchConversionItemsView(
+                    conversion.targetConversionItems,
+                    parentValueType: conversion.unitGroup.valueType,
+                    onUnitItemTap: (item) {
+                      unitsBloc.add(
+                        FetchItems(
+                          parentItemId: conversion.unitGroup.id,
+                        ),
+                      );
 
-                        unitsSelectionBloc.add(
-                          StartItemSelection(
-                            previouslySelectedId: item.unit.id,
-                            excludedIds: conversion.targetConversionItems
-                                .map((e) => e.unit.id)
-                                .whereNot((id) => id == item.unit.id)
-                                .toList(),
-                          ),
-                        );
+                      unitsSelectionBloc.add(
+                        StartItemSelection(
+                          previouslySelectedId: item.unit.id,
+                          excludedIds: conversion.targetConversionItems
+                              .map((e) => e.unit.id)
+                              .whereNot((id) => id == item.unit.id)
+                              .toList(),
+                        ),
+                      );
 
-                        navigationBloc.add(
-                          const NavigateToPage(
-                            pageName: PageName.unitsPageForConversion,
-                          ),
-                        );
-                      },
-                      onTextValueChanged: (item, value) {
-                        conversionBloc.add(
-                          EditConversionItemValue(
-                            newValue: value,
-                            unitId: item.unit.id,
-                          ),
-                        );
-                      },
-                      onItemRemoveTap: (item) {
-                        conversionBloc.add(
-                          RemoveConversionItems(
-                            unitIds: [item.unit.id],
-                          ),
-                        );
-                      },
-                      theme: appState.theme,
-                    );
-                  },
-                ),
+                      navigationBloc.add(
+                        const NavigateToPage(
+                          pageName: PageName.unitsPageForConversion,
+                        ),
+                      );
+                    },
+                    onTextValueChanged: (item, value) {
+                      conversionBloc.add(
+                        EditConversionItemValue(
+                          newValue: value,
+                          unitId: item.unit.id,
+                        ),
+                      );
+                    },
+                    onItemRemoveTap: (item) {
+                      conversionBloc.add(
+                        RemoveConversionItems(
+                          unitIds: [item.unit.id],
+                        ),
+                      );
+                    },
+                    theme: appState.theme,
+                  );
+                },
               ),
               floatingActionButton: conversionBlocBuilder(
                 builderFunc: (pageState) {
