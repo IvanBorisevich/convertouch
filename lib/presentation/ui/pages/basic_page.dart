@@ -94,7 +94,7 @@ void showSnackBar(
   BuildContext context, {
   required ConvertouchException exception,
   required ConvertouchUITheme theme,
-  int durationInSec = 2,
+  int durationInSec = 1,
 }) {
   SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
 
@@ -118,6 +118,11 @@ void showSnackBar(
       closeIconColor: foreground,
       backgroundColor: snackBarColor.background.regular,
       duration: Duration(seconds: durationInSec),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(7),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+      ),
       content: Center(
         child: Text(
           exception.message,
