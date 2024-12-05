@@ -1,11 +1,11 @@
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:flutter/material.dart';
 
-class InfoBoxNoItems extends StatelessWidget {
+class NoItemsInfoLabel extends StatelessWidget {
   final String text;
   final ConvertouchColorScheme colors;
 
-  const InfoBoxNoItems({
+  const NoItemsInfoLabel({
     required this.text,
     required this.colors,
     super.key,

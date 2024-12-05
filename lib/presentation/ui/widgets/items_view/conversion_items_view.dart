@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
+import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,7 @@ class _ConvertouchConversionItemsViewState
   Widget build(BuildContext context) {
     if (widget.convertedItems.isEmpty) {
       return Center(
-        child: InfoBoxNoItems(
+        child: NoItemsInfoLabel(
           text: "No conversion items added",
           colors: unitPageEmptyViewColor[widget.theme]!,
         ),

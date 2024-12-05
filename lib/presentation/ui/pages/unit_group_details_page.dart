@@ -12,8 +12,7 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/widgets/info_box.dart';
-import 'package:convertouch/presentation/ui/widgets/textbox.dart';
+import 'package:convertouch/presentation/ui/widgets/parameter_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,68 +68,52 @@ class _ConvertouchUnitGroupDetailsPageState
                   ),
                   child: Column(
                     children: [
-                      unitGroupDetailsState.savedGroup.oob
-                          ? ConvertouchInfoBox(
-                              headerText: "Name",
-                              bodyText: unitGroupDetailsState.savedGroup.name,
-                              bodyColor: textBoxColor.foreground.regular,
-                              margin: const EdgeInsets.only(
-                                bottom: 20,
-                              ),
-                            )
-                          : ConvertouchTextBox(
-                              controller: _unitGroupNameController,
-                              onChanged: (value) {
-                                unitGroupDetailsBloc.add(
-                                  UpdateUnitGroupName(
-                                    newValue: value,
-                                  ),
-                                );
-                              },
-                              label: "Name",
-                              hintText: unitGroupDetailsState.savedGroup.name,
-                              colors: textBoxColor,
-                              disabled: unitGroupDetailsState.draftGroup.oob,
+                      ConvertouchParameterItem(
+                        name: "Name",
+                        value: unitGroupDetailsState.savedGroup.name,
+                        editable: !unitGroupDetailsState.savedGroup.oob,
+                        valueChangeController: _unitGroupNameController,
+                        onValueChange: (value) {
+                          unitGroupDetailsBloc.add(
+                            UpdateUnitGroupName(
+                              newValue: value,
                             ),
-                      ConvertouchInfoBox(
-                        headerText: "Conversion Type",
-                        bodyText: unitGroupDetailsState
+                          );
+                        },
+                        textBoxColor: textBoxColor,
+                      ),
+                      ConvertouchParameterItem(
+                        name: "Conversion Type",
+                        value: unitGroupDetailsState
                             .draftGroup.conversionType.name,
-                        bodyColor: textBoxColor.foreground.regular,
-                        margin: const EdgeInsets.only(
-                          bottom: 20,
-                        ),
+                        textBoxColor: textBoxColor,
                       ),
-                      ConvertouchInfoBox(
-                        headerText: "Values Type",
-                        bodyText:
-                            unitGroupDetailsState.draftGroup.valueType.name,
-                        bodyColor: textBoxColor.foreground.regular,
-                        margin: const EdgeInsets.only(
-                          bottom: 20,
-                        ),
+                      ConvertouchParameterItem(
+                        name: "Conversion Type",
+                        value: unitGroupDetailsState
+                            .draftGroup.conversionType.name,
+                        textBoxColor: textBoxColor,
                       ),
-                      ConvertouchInfoBox(
+                      ConvertouchParameterItem(
+                        name: "Values Type",
+                        value: unitGroupDetailsState.draftGroup.valueType.name,
+                        textBoxColor: textBoxColor,
+                      ),
+                      ConvertouchParameterItem(
+                        name: "Values Minimum",
                         visible:
                             unitGroupDetailsState.draftGroup.minValue.exists,
-                        headerText: "Values Minimum",
-                        bodyText: unitGroupDetailsState
+                        value: unitGroupDetailsState
                             .draftGroup.minValue.scientific,
-                        bodyColor: textBoxColor.foreground.regular,
-                        margin: const EdgeInsets.only(
-                          bottom: 20,
-                        ),
+                        textBoxColor: textBoxColor,
                       ),
-                      ConvertouchInfoBox(
+                      ConvertouchParameterItem(
+                        name: "Values Maximum",
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue.exists,
-                        headerText: "Values Maximum",
-                        bodyText: unitGroupDetailsState
+                        value: unitGroupDetailsState
                             .draftGroup.maxValue.scientific,
-                        bodyColor: textBoxColor.foreground.regular,
-                        margin: const EdgeInsets.only(
-                          bottom: 20,
-                        ),
+                        textBoxColor: textBoxColor,
                       ),
                       refreshingJobsBlocBuilder(
                         builderFunc: (jobState) {
@@ -151,21 +134,15 @@ class _ConvertouchUnitGroupDetailsPageState
                                   color: Colors.white70,
                                 ),
                               ),
-                              ConvertouchInfoBox(
-                                headerText: "Last refreshed",
-                                bodyText: jobState.currentCompletedAt,
-                                bodyColor: textBoxColor.foreground.regular,
-                                margin: const EdgeInsets.only(
-                                  bottom: 20,
-                                ),
+                              ConvertouchParameterItem(
+                                name: "Last refreshed",
+                                value: jobState.currentCompletedAt,
+                                textBoxColor: textBoxColor,
                               ),
-                              ConvertouchInfoBox(
-                                headerText: "Data Source",
-                                bodyText: jobState.currentDataSourceUrl,
-                                bodyColor: textBoxColor.foreground.regular,
-                                margin: const EdgeInsets.only(
-                                  bottom: 20,
-                                ),
+                              ConvertouchParameterItem(
+                                name: "Data Source",
+                                value: jobState.currentDataSourceUrl,
+                                textBoxColor: textBoxColor,
                               ),
                             ],
                           );

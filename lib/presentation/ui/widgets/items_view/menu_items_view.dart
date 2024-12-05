@@ -9,7 +9,7 @@ import 'package:convertouch/presentation/bloc/common/items_list/items_list_state
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/info_box_no_items.dart';
+import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
@@ -267,7 +267,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
           builderFunc: (appState) {
             if (_itemsFullList.isEmpty) {
               return Center(
-                child: InfoBoxNoItems(
+                child: NoItemsInfoLabel(
                   text: T == UnitGroupModel
                       ? "No unit groups added"
                       : "No units added",
