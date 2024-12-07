@@ -89,6 +89,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
             selectedItemId: itemsSelectionState.selectedId,
             editableItemsVisible: false,
             checkableItemsVisible: true,
+            checkIconVisibleIfUnchecked: true,
             removalModeEnabled: false,
           ),
           floatingActionButton: appBlocBuilder(

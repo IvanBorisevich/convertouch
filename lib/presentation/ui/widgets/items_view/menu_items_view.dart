@@ -29,6 +29,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   final int? selectedItemId;
   final bool editableItemsVisible;
   final bool checkableItemsVisible;
+  final bool checkIconVisibleIfUnchecked;
   final bool removalModeEnabled;
 
   const ConvertouchMenuItemsView({
@@ -42,6 +43,7 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
     this.selectedItemId,
     this.editableItemsVisible = false,
     this.checkableItemsVisible = false,
+    this.checkIconVisibleIfUnchecked = false,
     this.removalModeEnabled = false,
     super.key,
   });
@@ -94,7 +96,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
         bool selected = item.id == widget.selectedItemId;
         bool disabled = widget.disabledItemIds.contains(item.id);
         bool checked = widget.checkedItemIds.contains(item.id);
-        bool checkIconVisibleIfUnchecked =
+        bool checkIconVisibleIfUnchecked = widget.checkIconVisibleIfUnchecked ||
             !item.oob && widget.removalModeEnabled;
         bool editIconVisible = !item.oob && widget.editableItemsVisible;
 
