@@ -9,10 +9,10 @@ import 'package:convertouch/presentation/bloc/common/items_list/items_list_state
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,8 +96,9 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
         bool selected = item.id == widget.selectedItemId;
         bool disabled = widget.disabledItemIds.contains(item.id);
         bool checked = widget.checkedItemIds.contains(item.id);
-        bool checkIconVisibleIfUnchecked = widget.checkIconVisibleIfUnchecked ||
-            !item.oob && widget.removalModeEnabled;
+        bool checkIconVisibleIfUnchecked = !disabled &&
+            (widget.checkIconVisibleIfUnchecked ||
+                !item.oob && widget.removalModeEnabled);
         bool editIconVisible = !item.oob && widget.editableItemsVisible;
 
         onTap() {
