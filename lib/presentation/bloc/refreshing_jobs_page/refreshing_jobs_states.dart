@@ -53,6 +53,21 @@ class RefreshingJobsFetched extends RefreshingJobsState {
     );
   }
 
+  RefreshingJobsFetched copyWith({
+    Map<String, JobModel>? jobs,
+    Map<String, String>? currentDataSourceKeys,
+    String? currentDataSourceUrl,
+    String? currentCompletedAt,
+  }) {
+    return RefreshingJobsFetched(
+      jobs: jobs ?? this.jobs,
+      currentDataSourceKeys:
+          currentDataSourceKeys ?? this.currentDataSourceKeys,
+      currentDataSourceUrl: currentDataSourceUrl ?? this.currentDataSourceUrl,
+      currentCompletedAt: currentCompletedAt ?? this.currentCompletedAt,
+    );
+  }
+
   @override
   String toString() {
     return 'RefreshingJobsFetched{'

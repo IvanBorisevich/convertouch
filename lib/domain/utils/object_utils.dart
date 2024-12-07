@@ -65,4 +65,20 @@ class ObjectUtils {
   }) {
     return coalesceStringOrNull(str1: str1, str2: str2) ?? defaultStr;
   }
+
+  static T? patch<T>(T? what, Patchable<T>? patch) {
+    return patch != null && patch.value == null && patch.forcePatchNull
+        ? null
+        : (patch?.value ?? what);
+  }
+}
+
+class Patchable<T> {
+  final T? value;
+  final bool forcePatchNull;
+
+  const Patchable(
+    this.value, {
+    this.forcePatchNull = false,
+  });
 }

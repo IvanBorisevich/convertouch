@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,37 +25,27 @@ abstract class StartJobUseCase<P, R>
         return Right(
           JobModel.coalesce(
             input,
-            alreadyRunning: true,
+            alreadyRunning: const Patchable(true),
           ),
         );
       }
 
-      jobProgressController = _createJobProgressStream(
-        jobFunc: (jobProgressController) async {
-          if (!jobProgressController.isClosed) {
-            jobProgressController.add(const JobResultModel.start());
-          } else {
-            log("On start: stream controller is already closed");
-            return null;
-          }
-
-          R? result = await onExecute(input.params);
-
-          if (!jobProgressController.isClosed) {
-            log("Add finish result to the stream");
-            jobProgressController.add(
-              const JobResultModel.finish(),
-            );
-          }
-          return result;
+      jobProgressController = _startJob(
+        onExecute: () async {
+          return onExecute(input.params);
         },
-        onComplete: input.onComplete,
+        onSuccess: (result) {
+          if (result != null) {
+            input.onSuccess?.call(result);
+          }
+        },
+        onError: input.onError,
       );
 
       return Right(
         JobModel.coalesce(
           input,
-          progressController: jobProgressController,
+          progressController: Patchable(jobProgressController),
         ),
       );
     } catch (e, stackTrace) {
@@ -70,23 +61,35 @@ abstract class StartJobUseCase<P, R>
     }
   }
 
-  StreamController<JobResultModel> _createJobProgressStream({
-    required Future<R?> Function(
-      StreamController<JobResultModel>,
-    ) jobFunc,
-    Future<void> Function(R?)? onComplete,
+  StreamController<JobResultModel> _startJob({
+    required Future<R?> Function() onExecute,
+    void Function(ConvertouchException)? onError,
+    void Function(R?)? onSuccess,
   }) {
     late final BehaviorSubject<JobResultModel> jobProgressController;
     jobProgressController = BehaviorSubject<JobResultModel>(
       onListen: () async {
-        await jobFunc.call(jobProgressController).then((result) async {
+        await Future.sync(() async {
+          if (jobProgressController.isClosed) {
+            log("Stream controller has already been closed");
+            return null;
+          }
+
+          jobProgressController.add(const JobResultModel.start());
+          R? result = await onExecute.call();
+          jobProgressController.add(const JobResultModel.finish());
+          return result;
+        }).then((result) {
           log("onComplete callback function calling");
-          await onComplete?.call(result);
+          onSuccess?.call(result);
         }).catchError((err) {
           log("onError callback function calling: $err");
           jobProgressController.addError(err);
+          onError?.call(err);
         }).whenComplete(() async {
+          log("whenComplete callback function calling");
           if (!jobProgressController.isClosed) {
+            log("whenComplete: closing the stream controller");
             await jobProgressController.close();
           }
         });

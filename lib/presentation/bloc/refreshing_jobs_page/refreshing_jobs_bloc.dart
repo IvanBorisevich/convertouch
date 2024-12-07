@@ -37,9 +37,12 @@ class RefreshingJobsBloc
           const RefreshingJobsFetched(
             jobs: {},
             currentDataSourceKeys: {},
+            currentDataSourceUrl: null,
+            currentCompletedAt: 'Never',
           ),
         ) {
     on<FetchRefreshingJobs>(_onJobsFetch);
+    on<ChangeJobInfo>(_onChangeJobInfo);
     on<FetchRefreshingJob>(_onJobFetch);
     on<StartRefreshingJobForConversion>(_onStartRefreshingJobForConversion);
     on<StopRefreshingJobForConversion>(_onStopRefreshingJobForConversion);
@@ -50,6 +53,18 @@ class RefreshingJobsBloc
     Emitter<RefreshingJobsState> emit,
   ) async {
     emit(state);
+  }
+
+  _onChangeJobInfo(
+    ChangeJobInfo event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    await _patchJobAndEmit(
+      activeJobs: Map.of(state.jobs),
+      unitGroupName: event.unitGroupName,
+      jobPatch: event.jobPatch,
+      emit: emit,
+    );
   }
 
   _onJobFetch(
@@ -66,9 +81,7 @@ class RefreshingJobsBloc
     );
 
     emit(
-      RefreshingJobsFetched(
-        jobs: state.jobs,
-        currentDataSourceKeys: state.currentDataSourceKeys,
+      state.copyWith(
         currentDataSourceUrl: currentDataSource.url,
         currentCompletedAt:
             state.jobs[event.unitGroupName]?.completedAt ?? 'Never',
@@ -87,12 +100,8 @@ class RefreshingJobsBloc
         unitGroupName: event.unitGroupName,
         dataSourceKey: state.currentDataSourceKeys[event.unitGroupName],
       ),
-      onComplete: (networkData) async {
+      onSuccess: (networkData) {
         log("onComplete start");
-        if (networkData == null) {
-          log("onComplete finish, network data = null");
-          return;
-        }
 
         if (networkData.dynamicCoefficients != null) {
           conversionBloc.add(
@@ -112,7 +121,33 @@ class RefreshingJobsBloc
           );
         }
 
+        add(
+          ChangeJobInfo(
+            jobPatch: JobModel(
+              progressController: null,
+              completedAt: DateTime.now().toString(),
+            ),
+            unitGroupName: event.unitGroupName,
+          ),
+        );
+
         log("onComplete finish");
+      },
+      onError: (exception) {
+        add(
+          ChangeJobInfo(
+            jobPatch: const JobModel(
+              progressController: null,
+            ),
+            unitGroupName: event.unitGroupName,
+          ),
+        );
+
+        navigationBloc.add(
+          ShowException(
+            exception: exception,
+          ),
+        );
       },
     );
 
@@ -124,8 +159,7 @@ class RefreshingJobsBloc
           exception: startedJobResult.left,
         ),
       );
-    }
-    if (startedJobResult.right.alreadyRunning) {
+    } else if (startedJobResult.right.alreadyRunning) {
       navigationBloc.add(
         ShowException(
           exception: InternalException(
@@ -137,6 +171,7 @@ class RefreshingJobsBloc
         ),
       );
     } else {
+      log("Update active jobs info");
       activeJobs.update(
         event.unitGroupName,
         (value) => startedJobResult.right,
@@ -144,9 +179,8 @@ class RefreshingJobsBloc
     }
 
     emit(
-      RefreshingJobsFetched(
+      state.copyWith(
         jobs: activeJobs,
-        currentDataSourceKeys: state.currentDataSourceKeys,
       ),
     );
   }
@@ -172,9 +206,37 @@ class RefreshingJobsBloc
     }
 
     emit(
-      RefreshingJobsFetched(
+      state.copyWith(
         jobs: activeJobs,
-        currentDataSourceKeys: state.currentDataSourceKeys,
+      ),
+    );
+  }
+
+  _patchJobAndEmit({
+    required Map<String, JobModel> activeJobs,
+    required String unitGroupName,
+    required JobModel jobPatch,
+    required Emitter<RefreshingJobsState> emit,
+  }) async {
+    activeJobs.update(
+      unitGroupName,
+      (value) => JobModel.coalesce(
+        value,
+        params: Patchable(jobPatch.params),
+        completedAt: Patchable(jobPatch.completedAt),
+        selectedCron: Patchable(jobPatch.selectedCron),
+        progressController: Patchable(
+          jobPatch.progressController,
+          forcePatchNull: true,
+        ),
+        alreadyRunning: Patchable(jobPatch.alreadyRunning),
+      ),
+    );
+
+    emit(
+      state.copyWith(
+        jobs: activeJobs,
+        currentCompletedAt: jobPatch.completedAt,
       ),
     );
   }

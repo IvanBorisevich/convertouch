@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 class JobModel<P, R> extends IdNameItemModel {
   final P? params;
@@ -10,7 +12,8 @@ class JobModel<P, R> extends IdNameItemModel {
   final String? completedAt;
   final StreamController<JobResultModel>? progressController;
   final bool alreadyRunning;
-  final Future<void> Function(R?)? onComplete;
+  final void Function(R)? onSuccess;
+  final void Function(ConvertouchException)? onError;
 
   const JobModel({
     this.params,
@@ -18,7 +21,8 @@ class JobModel<P, R> extends IdNameItemModel {
     this.completedAt,
     this.progressController,
     this.alreadyRunning = false,
-    this.onComplete,
+    this.onSuccess,
+    this.onError,
   }) : super(
           name: "",
           itemType: ItemType.job,
@@ -27,18 +31,20 @@ class JobModel<P, R> extends IdNameItemModel {
 
   JobModel.coalesce(
     JobModel savedModel, {
-    P? params,
-    String? lastRefreshTime,
-    Cron? selectedCron,
-    StreamController<JobResultModel>? progressController,
-    bool? alreadyRunning,
+    Patchable<P>? params,
+    Patchable<String>? completedAt,
+    Patchable<Cron>? selectedCron,
+    Patchable<StreamController<JobResultModel>>? progressController,
+    Patchable<bool>? alreadyRunning,
   }) : this(
-          params: params ?? savedModel.params,
-          completedAt: lastRefreshTime ?? savedModel.completedAt,
-          selectedCron: selectedCron ?? savedModel.selectedCron,
-          progressController:
-              progressController ?? savedModel.progressController,
-          alreadyRunning: alreadyRunning ?? savedModel.alreadyRunning,
+          params: ObjectUtils.patch(savedModel.params, params),
+          completedAt: ObjectUtils.patch(savedModel.completedAt, completedAt),
+          selectedCron:
+              ObjectUtils.patch(savedModel.selectedCron, selectedCron)!,
+          progressController: ObjectUtils.patch(
+              savedModel.progressController, progressController),
+          alreadyRunning:
+              ObjectUtils.patch(savedModel.alreadyRunning, alreadyRunning)!,
         );
 
   @override
