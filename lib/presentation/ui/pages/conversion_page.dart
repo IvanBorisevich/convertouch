@@ -17,6 +17,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
+import 'package:convertouch/presentation/ui/widgets/popup_menu_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,40 +46,43 @@ class ConvertouchConversionPage extends StatelessWidget {
             return ConvertouchPage(
               title: unitGroup.name,
               appBarRightWidgets: [
-                IconButton(
-                  icon: Icon(
-                    unitGroup.oob
-                        ? Icons.info_outline_rounded
-                        : Icons.edit_outlined,
-                    color: pageColorScheme.appBar.foreground.regular,
-                  ),
-                  onPressed: () {
-                    unitGroupDetailsBloc.add(
-                      GetExistingUnitGroupDetails(
-                        unitGroup: unitGroup,
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.dashboard_customize_outlined,
-                    color: pageColorScheme.appBar.foreground.regular,
-                  ),
-                  onPressed: () {
-                    unitsBloc.add(
-                      FetchItems(
-                        parentItemId: unitGroup.id,
-                        onFirstFetch: () {
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.unitsPageRegular,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                ConvertouchPopupMenu(
+                  items: [
+                    PopupMenuItemModel(
+                      text: unitGroup.oob ? 'Group Info' : 'Edit Group',
+                      icon: unitGroup.oob
+                          ? Icons.info_outline_rounded
+                          : Icons.edit_outlined,
+                      onTap: () {
+                        unitGroupDetailsBloc.add(
+                          GetExistingUnitGroupDetails(
+                            unitGroup: unitGroup,
+                          ),
+                        );
+                      },
+                    ),
+                    PopupMenuItemModel(
+                      text: "Units Dictionary",
+                      icon: Icons.dashboard_customize_outlined,
+                      onTap: () {
+                        unitsBloc.add(
+                          FetchItems(
+                            parentItemId: unitGroup.id,
+                            onFirstFetch: () {
+                              navigationBloc.add(
+                                const NavigateToPage(
+                                  pageName: PageName.unitsPageRegular,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                  backgroundColor: pageColorScheme.appBar.background.regular,
+                  iconColor: pageColorScheme.appBar.foreground.regular,
+                  textColor: pageColorScheme.appBar.foreground.regular,
                 ),
               ],
               body: conversionBlocBuilder(

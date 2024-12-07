@@ -62,6 +62,7 @@ dependencies:
   stream_transform: ^2.0.0
   bloc_concurrency: ^0.1.0
   app_settings: ^5.1.1
+  dropdown_button2: ^2.3.8
 
 dev_dependencies:
   flutter_test:
