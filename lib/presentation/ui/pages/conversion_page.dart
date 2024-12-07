@@ -47,6 +47,7 @@ class ConvertouchConversionPage extends StatelessWidget {
               title: unitGroup.name,
               appBarRightWidgets: [
                 ConvertouchPopupMenu(
+                  width: 210,
                   items: [
                     PopupMenuItemModel(
                       text: unitGroup.oob ? 'Group Info' : 'Edit Group',
@@ -77,6 +78,13 @@ class ConvertouchConversionPage extends StatelessWidget {
                             },
                           ),
                         );
+                      },
+                    ),
+                    PopupMenuItemModel(
+                      text: "Clear Conversion",
+                      icon: Icons.delete_outline_rounded,
+                      onTap: () {
+                        conversionBloc.add(const ClearConversion());
                       },
                     ),
                   ],

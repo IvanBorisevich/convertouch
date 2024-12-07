@@ -50,6 +50,7 @@ class ConversionBloc
         ) {
     on<GetConversion>(_onGetConversion);
     on<SaveConversion>(_onSaveConversion);
+    on<ClearConversion>(_onClearConversion);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<AddUnitsToConversion>(_onAddUnitsToConversion);
     on<EditConversionItemUnit>(_onEditConversionItemUnit);
@@ -90,6 +91,17 @@ class ConversionBloc
         ShowException(exception: result.left),
       );
     }
+  }
+
+  _onClearConversion(
+    ClearConversion event,
+    Emitter<ConversionState> emit,
+  ) {
+    emit(
+      ConversionBuilt(
+        conversion: ConversionModel.noItems(state.conversion.unitGroup),
+      ),
+    );
   }
 
   _onEditConversionGroup(

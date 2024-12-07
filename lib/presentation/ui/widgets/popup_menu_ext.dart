@@ -56,6 +56,8 @@ class ConvertouchPopupMenu extends StatelessWidget {
                             color: item.textColor ?? textColor,
                             fontWeight: FontWeight.w600,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),

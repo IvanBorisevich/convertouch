@@ -49,6 +49,15 @@ class SaveConversion extends ConversionEvent {
   }
 }
 
+class ClearConversion extends ConversionEvent {
+  const ClearConversion();
+
+  @override
+  String toString() {
+    return 'ClearConversion{}';
+  }
+}
+
 class EditConversionGroup extends ModifyConversion {
   final UnitGroupModel editedGroup;
 
