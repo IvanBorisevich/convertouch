@@ -64,7 +64,7 @@ class _ConvertouchUnitDetailsPageState
 
             return ConvertouchPage(
               title: pageState.details.existingUnit
-                  ? pageState.details.savedUnitData.name
+                  ? 'Unit Info'
                   : 'New Unit',
               body: SingleChildScrollView(
                 child: Container(

@@ -56,8 +56,8 @@ class _ConvertouchUnitGroupDetailsPageState
 
             return ConvertouchPage(
               title: unitGroupDetailsState.isExistingGroup
-                  ? unitGroupDetailsState.savedGroup.name
-                  : "New Group",
+                  ? 'Group Info'
+                  : 'New Group',
               body: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.only(
