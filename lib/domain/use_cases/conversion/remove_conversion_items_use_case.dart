@@ -5,7 +5,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class RemoveConversionItemsUseCase
     extends AbstractModifyConversionUseCase<RemoveConversionItemsDelta> {
   const RemoveConversionItemsUseCase({
-    required super.buildNewConversionUseCase,
+    required super.createConversionUseCase,
   });
 
   @override

@@ -6,7 +6,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class UpdateConversionCoefficientsUseCase
     extends AbstractModifyConversionUseCase<UpdateConversionCoefficientsDelta> {
   const UpdateConversionCoefficientsUseCase({
-    required super.buildNewConversionUseCase,
+    required super.createConversionUseCase,
   });
 
   @override

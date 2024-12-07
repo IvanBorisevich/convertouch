@@ -4,7 +4,10 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
 class ConversionModel extends IdNameItemModel {
-  static const none = ConversionModel.noItems(UnitGroupModel.none);
+  static const none = ConversionModel.noItems(
+    id: -1,
+    unitGroup: UnitGroupModel.none,
+  );
 
   final UnitGroupModel unitGroup;
   final ConversionItemModel? sourceConversionItem;
@@ -20,8 +23,11 @@ class ConversionModel extends IdNameItemModel {
           itemType: ItemType.conversion,
         );
 
-  const ConversionModel.noItems(UnitGroupModel unitGroup)
-      : this(
+  const ConversionModel.noItems({
+    required int id,
+    required UnitGroupModel unitGroup,
+  }) : this(
+          id: id,
           unitGroup: unitGroup,
         );
 

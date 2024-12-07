@@ -68,6 +68,7 @@ class ConversionBloc
       var result = await getConversionUseCase.execute(event.unitGroup);
 
       ConversionBuilt prev = state;
+      print("Prev conversion state: $prev");
       await _handleAndEmit(result, emit, onSuccess: () {
         if (prev.conversion.exists) {
           event.processPrevConversion?.call(prev.conversion);
@@ -84,6 +85,7 @@ class ConversionBloc
     SaveConversion event,
     Emitter<ConversionState> emit,
   ) async {
+    print("Save conversion to db: ${event.conversion}");
     var result = await saveConversionUseCase.execute(event.conversion);
 
     if (result.isLeft) {
@@ -99,7 +101,10 @@ class ConversionBloc
   ) {
     emit(
       ConversionBuilt(
-        conversion: ConversionModel.noItems(state.conversion.unitGroup),
+        conversion: ConversionModel.noItems(
+          id: state.conversion.id,
+          unitGroup: state.conversion.unitGroup,
+        ),
       ),
     );
   }

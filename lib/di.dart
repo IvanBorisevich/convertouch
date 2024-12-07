@@ -216,44 +216,44 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<AddUnitsToConversionUseCase>(
     () => AddUnitsToConversionUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
       unitRepository: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionGroupUseCase>(
     () => EditConversionGroupUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
     () => EditConversionItemUnitUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionItemValueUseCase>(
     () => EditConversionItemValueUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
     () => RemoveConversionItemsUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
     () => ReplaceConversionItemUnitUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
     () => UpdateConversionCoefficientsUseCase(
-      buildNewConversionUseCase: locator(),
+      createConversionUseCase: locator(),
     ),
   );
 

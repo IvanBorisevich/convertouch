@@ -23,7 +23,12 @@ class GetConversionUseCase extends UseCase<UnitGroupModel, ConversionModel> {
       );
 
       if (conversion == null) {
-        return Right(ConversionModel.noItems(input));
+        return Right(
+          ConversionModel.noItems(
+            id: -1,
+            unitGroup: input,
+          ),
+        );
       }
 
       return Right(

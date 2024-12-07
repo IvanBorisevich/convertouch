@@ -27,7 +27,12 @@ class CreateConversionUseCase
   ) async {
     try {
       if (input.targetUnits.isEmpty) {
-        return Right(ConversionModel.noItems(input.unitGroup));
+        return Right(
+          ConversionModel.noItems(
+            id: input.conversionId ?? -1,
+            unitGroup: input.unitGroup,
+          ),
+        );
       }
 
       ValueModel dynamicValue = ValueModel.ofString(
@@ -58,6 +63,7 @@ class CreateConversionUseCase
 
       return Right(
         ConversionModel(
+          id: input.conversionId ?? -1,
           unitGroup: input.unitGroup,
           sourceConversionItem: srcItem,
           targetConversionItems: convertedItems,

@@ -46,4 +46,9 @@ class ConversionEntity {
       'last_modified': DateTime.now().millisecondsSinceEpoch,
     };
   }
+
+  @override
+  String toString() {
+    return 'ConversionEntity{id: $id, unitGroupId: $unitGroupId, sourceUnitId: $sourceUnitId, sourceValue: $sourceValue, lastModified: $lastModified}';
+  }
 }

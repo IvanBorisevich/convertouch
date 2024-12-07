@@ -5,7 +5,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class EditConversionGroupUseCase
     extends AbstractModifyConversionUseCase<EditConversionGroupDelta> {
   const EditConversionGroupUseCase({
-    required super.buildNewConversionUseCase,
+    required super.createConversionUseCase,
   });
 
   @override

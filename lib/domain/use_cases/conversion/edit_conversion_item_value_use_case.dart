@@ -6,7 +6,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class EditConversionItemValueUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemValueDelta> {
   const EditConversionItemValueUseCase({
-    required super.buildNewConversionUseCase,
+    required super.createConversionUseCase,
   });
 
   @override

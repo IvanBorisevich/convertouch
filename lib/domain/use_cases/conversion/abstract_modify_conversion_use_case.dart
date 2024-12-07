@@ -13,10 +13,10 @@ import 'package:either_dart/either.dart';
 
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
-  final CreateConversionUseCase buildNewConversionUseCase;
+  final CreateConversionUseCase createConversionUseCase;
 
   const AbstractModifyConversionUseCase({
-    required this.buildNewConversionUseCase,
+    required this.createConversionUseCase,
   });
 
   @override
@@ -58,8 +58,9 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       ConversionModel result;
       if (input.rebuildConversion) {
         result = ObjectUtils.tryGet(
-          await buildNewConversionUseCase.execute(
+          await createConversionUseCase.execute(
             InputConversionModel(
+              conversionId: input.conversion.id,
               unitGroup: modifiedGroup,
               sourceConversionItem: modifiedSourceItem,
               targetUnits: modifiedConversionItemsMap.values

@@ -119,11 +119,13 @@ class ConversionRepositoryImpl extends ConversionRepository {
     ConversionModel conversion,
   ) async {
     try {
+      log("Saving the conversion: $conversion");
+
       ConversionEntity entity = ConversionTranslator.I.fromModel(conversion)!;
       ConversionModel resultConversion = ConversionModel.none;
 
       if (conversion.hasId) {
-        log("Updating an existing conversion");
+        log("Updating an existing conversion: $entity");
         await conversionDao.update(entity);
         await conversionItemDao.removeByConversionId(conversion.id);
         resultConversion = conversion;

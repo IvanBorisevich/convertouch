@@ -9,7 +9,7 @@ class AddUnitsToConversionUseCase
   final UnitRepository unitRepository;
 
   const AddUnitsToConversionUseCase({
-    required super.buildNewConversionUseCase,
+    required super.createConversionUseCase,
     required this.unitRepository,
   });
 
