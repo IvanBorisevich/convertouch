@@ -1,5 +1,6 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:either_dart/either.dart';
 
 class ObjectUtils {
@@ -70,6 +71,29 @@ class ObjectUtils {
     return patch != null && patch.value == null && patch.forcePatchNull
         ? null
         : (patch?.value ?? what);
+  }
+
+  static ItemSearchMatch toSearchMatch(String source, String searchString) {
+    RegExp pattern = RegExp(searchString, caseSensitive: false);
+    int matchIndex = source.indexOf(pattern);
+
+    if (matchIndex == -1) {
+      return ItemSearchMatch.none;
+    }
+
+    List<String> lexemes = [];
+    lexemes.add(source.substring(0, matchIndex));
+    lexemes.add(source.substring(matchIndex, matchIndex + searchString.length));
+    lexemes.add(source.substring(matchIndex + searchString.length));
+
+    lexemes = lexemes.where((lexeme) => lexeme.isNotEmpty).toList();
+    int matchedLexemeIndex =
+        lexemes.indexWhere((lexeme) => pattern.hasMatch(lexeme));
+
+    return ItemSearchMatch(
+      lexemes: lexemes,
+      matchedLexemeIndex: matchedLexemeIndex,
+    );
   }
 }
 

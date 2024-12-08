@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuListItem<T extends IdNameItemModel>
+class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   static const double defaultHeight = 50;
   static const double _borderRadius = 15;
@@ -16,7 +16,12 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
   final bool checked;
   final bool disabled;
   final bool editIconVisible;
-  final Widget Function(T, Color) logoFunc;
+  final Widget Function(
+    T, {
+    required Color foreground,
+    required Color matchForeground,
+    required Color matchBackground,
+  }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final ListItemColorScheme colors;
@@ -42,6 +47,10 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
         disabled ? colors.background.disabled : colors.background.regular;
     Color foreground =
         disabled ? colors.foreground.disabled : colors.foreground.regular;
+    Color divider = disabled ? colors.divider.disabled : colors.divider.regular;
+
+    Color matchBackground = colors.matchBackground.regular;
+    Color matchForeground = colors.matchForeground.regular;
 
     return GestureDetector(
       onTap: onTap,
@@ -55,23 +64,31 @@ class ConvertouchMenuListItem<T extends IdNameItemModel>
         child: Row(
           children: [
             Container(
-              width: defaultHeight * 1.5,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              width: defaultHeight * 1.7,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: logoFunc.call(
                 item,
-                foreground,
+                foreground: foreground,
+                matchForeground: matchForeground,
+                matchBackground: matchBackground,
               ),
             ),
+            VerticalDivider(
+              width: 1,
+              thickness: 1,
+              indent: 10,
+              endIndent: 10,
+              color: divider,
+            ),
+            const SizedBox(width: 15,),
             Expanded(
-              child: Text(
-                itemName,
-                style: TextStyle(
-                  fontFamily: quicksandFontFamily,
-                  fontWeight: FontWeight.w600,
-                  color: foreground,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              child: TextSearchMatch(
+                sourceString: itemName,
+                match: item.nameMatch,
+                foreground: foreground,
+                matchBackground: matchBackground,
+                matchForeground: matchForeground,
               ),
             ),
             checkIconVisible && (checkIconVisibleIfUnchecked || checked)

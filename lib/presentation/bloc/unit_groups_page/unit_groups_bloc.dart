@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -42,6 +43,14 @@ class UnitGroupsBloc
     List<int> ids,
   ) async {
     return removeUnitGroupsUseCase.execute(ids);
+  }
+
+  @override
+  UnitGroupModel addSearchMatch(UnitGroupModel item, String searchString) {
+    return UnitGroupModel.coalesce(
+      item,
+      nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
+    );
   }
 }
 

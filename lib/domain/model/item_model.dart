@@ -24,3 +24,27 @@ abstract class IdNameItemModel extends ItemModel {
 
   bool get hasId => id != -1;
 }
+
+class ItemSearchMatch {
+  static const none = ItemSearchMatch();
+
+  final List<String> lexemes;
+  final int matchedLexemeIndex;
+
+  const ItemSearchMatch({
+    this.lexemes = const [],
+    this.matchedLexemeIndex = -1,
+  });
+}
+
+abstract class IdNameSearchableItemModel extends IdNameItemModel {
+  final ItemSearchMatch nameMatch;
+
+  const IdNameSearchableItemModel({
+    this.nameMatch = ItemSearchMatch.none,
+    super.id,
+    required super.name,
+    required super.itemType,
+    super.oob,
+  });
+}

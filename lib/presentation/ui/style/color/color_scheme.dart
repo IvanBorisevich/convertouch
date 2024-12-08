@@ -19,6 +19,8 @@ class ListItemColorScheme extends ConvertouchColorScheme {
   final ColorVariation titleBackground;
   final ConvertouchColorScheme modeIcon;
   final ConvertouchColorScheme checkBox;
+  final ColorVariation matchBackground;
+  final ColorVariation matchForeground;
 
   const ListItemColorScheme({
     super.border,
@@ -28,6 +30,8 @@ class ListItemColorScheme extends ConvertouchColorScheme {
     this.modeIcon = ConvertouchColorScheme.none,
     this.checkBox = ConvertouchColorScheme.none,
     this.divider = ColorVariation.none,
+    this.matchForeground = ColorVariation.none,
+    this.matchBackground = ColorVariation.none,
   });
 }
 

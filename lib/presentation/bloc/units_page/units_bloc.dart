@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -39,6 +40,15 @@ class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>> {
   @override
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids) async {
     return removeUnitsUseCase.execute(ids);
+  }
+
+  @override
+  UnitModel addSearchMatch(UnitModel item, String searchString) {
+    return UnitModel.coalesce(
+      item,
+      nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
+      codeMatch: ObjectUtils.toSearchMatch(item.code, searchString),
+    );
   }
 }
 

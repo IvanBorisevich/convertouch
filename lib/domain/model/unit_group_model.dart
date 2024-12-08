@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-class UnitGroupModel extends IdNameItemModel {
+class UnitGroupModel extends IdNameSearchableItemModel {
   static const UnitGroupModel none = UnitGroupModel._();
   static const ConvertouchValueType defaultValueType =
       ConvertouchValueType.decimal;
@@ -23,6 +23,7 @@ class UnitGroupModel extends IdNameItemModel {
     this.valueType = defaultValueType,
     this.minValue = ValueModel.none,
     this.maxValue = ValueModel.none,
+    super.nameMatch,
     super.oob,
   }) : super(
           itemType: ItemType.unitGroup,
@@ -36,6 +37,7 @@ class UnitGroupModel extends IdNameItemModel {
     ConvertouchValueType? valueType,
     ValueModel? minValue,
     ValueModel? maxValue,
+    ItemSearchMatch? nameMatch,
   }) : this(
           id: id ?? saved.id,
           name: name ?? saved.name,
@@ -45,6 +47,7 @@ class UnitGroupModel extends IdNameItemModel {
           valueType: valueType ?? saved.valueType,
           minValue: minValue?.exists == true ? minValue! : saved.minValue,
           maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
+          nameMatch: nameMatch ?? saved.nameMatch,
           oob: saved.oob,
         );
 
@@ -67,6 +70,7 @@ class UnitGroupModel extends IdNameItemModel {
         valueType,
         minValue,
         maxValue,
+        nameMatch,
         oob,
       ];
 
@@ -115,6 +119,7 @@ class UnitGroupModel extends IdNameItemModel {
         'refreshable: $refreshable, '
         'valueType: $valueType, '
         'minValue: $minValue, '
-        'maxValue: $maxValue}';
+        'maxValue: $maxValue, '
+        'nameMatch: $nameMatch}';
   }
 }

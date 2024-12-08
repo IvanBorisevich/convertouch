@@ -6,7 +6,7 @@ abstract class ItemsListState extends ConvertouchState {
   const ItemsListState();
 }
 
-class ItemsFetched<T extends IdNameItemModel> extends ItemsListState {
+class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   final List<T> pageItems;
   final List<int> oobIds;
   final int parentItemId;

@@ -14,10 +14,11 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_it
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
+import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchMenuItemsView<T extends IdNameItemModel>
+class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
     extends StatefulWidget {
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
   final PageName pageName;
@@ -52,12 +53,18 @@ class ConvertouchMenuItemsView<T extends IdNameItemModel>
   State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T>();
 }
 
-class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
+class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
     extends State<ConvertouchMenuItemsView<T>> with ItemsLazyLoadingMixin {
   static const double _itemsSpacing = 8;
   static const double _bottomSpacing = 85;
 
-  late Widget Function(T, Color) _itemLogoFunc;
+  late Widget Function(
+    T, {
+    required Color foreground,
+    required Color matchForeground,
+    required Color matchBackground,
+  }) _itemLogoFunc;
+
   late String Function(T) _itemNameFunc;
 
   late final List<T> _itemsFullList;
@@ -82,6 +89,57 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
     _itemsFullList = widget.itemsListBloc.state.pageItems.isNotEmpty
         ? widget.itemsListBloc.state.pageItems
         : [];
+
+    if (T == UnitGroupModel) {
+      _itemColors = unitGroupItemColors;
+      _emptyViewColors = unitGroupPageEmptyViewColor;
+
+      _itemLogoFunc = (
+        T item, {
+        required Color foreground,
+        required Color matchForeground,
+        required Color matchBackground,
+      }) {
+        UnitGroupModel unitGroup = item as UnitGroupModel;
+        return IconUtils.getUnitGroupIcon(
+          iconName: unitGroup.iconName,
+          color: foreground,
+          size: 29,
+        );
+      };
+
+      _itemNameFunc = (T item) {
+        return item.name;
+      };
+    } else {
+      _itemColors = unitItemColors;
+      _emptyViewColors = unitPageEmptyViewColor;
+
+      _itemLogoFunc = (
+        T item, {
+        required Color foreground,
+        required Color matchForeground,
+        required Color matchBackground,
+      }) {
+        UnitModel unit = item as UnitModel;
+        return TextSearchMatch(
+          sourceString: unit.code,
+          match: item.codeMatch,
+          foreground: foreground,
+          fontSize: 17,
+          fontWeight: FontWeight.w700,
+          matchBackground: matchBackground,
+          matchForeground: matchForeground,
+        );
+      };
+
+      _itemNameFunc = (T item) {
+        UnitModel unit = item as UnitModel;
+        return unit.symbol != null
+            ? "${unit.name} (${unit.symbol})"
+            : unit.name;
+      };
+    }
 
     _itemBuilder = (
       context,
@@ -183,49 +241,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameItemModel>
         onLoad: onLoadMore,
       );
     });
-
-    if (T == UnitGroupModel) {
-      _itemColors = unitGroupItemColors;
-      _emptyViewColors = unitGroupPageEmptyViewColor;
-
-      _itemLogoFunc = (T item, Color color) {
-        UnitGroupModel unitGroup = item as UnitGroupModel;
-        return IconUtils.getUnitGroupIcon(
-          iconName: unitGroup.iconName,
-          color: color,
-          size: 29,
-        );
-      };
-
-      _itemNameFunc = (T item) {
-        return item.name;
-      };
-    } else {
-      _itemColors = unitItemColors;
-      _emptyViewColors = unitPageEmptyViewColor;
-
-      _itemLogoFunc = (T item, Color color) {
-        UnitModel unit = item as UnitModel;
-        return Text(
-          unit.code,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.w700,
-            fontFamily: quicksandFontFamily,
-            fontSize: 17,
-          ),
-        );
-      };
-
-      _itemNameFunc = (T item) {
-        UnitModel unit = item as UnitModel;
-        return unit.symbol != null
-            ? "${unit.name} (${unit.symbol})"
-            : unit.name;
-      };
-    }
 
     _onItemTap = (context, item, {bool callable = true}) {
       if (widget.removalModeEnabled) {

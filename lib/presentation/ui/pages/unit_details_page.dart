@@ -39,15 +39,14 @@ class _ConvertouchUnitDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final unitGroupsBlocForDetails = BlocProvider.of<UnitGroupsBlocForUnitDetails>(
-        context);
-    final unitsBlocForDetails = BlocProvider.of<UnitsBlocForUnitDetails>(
-        context);
+    final unitGroupsBlocForDetails =
+        BlocProvider.of<UnitGroupsBlocForUnitDetails>(context);
+    final unitsBlocForDetails =
+        BlocProvider.of<UnitsBlocForUnitDetails>(context);
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
-    final itemsSelectionBloc = BlocProvider.of<
-        ItemsSelectionBlocForUnitDetails>(
-        context);
+    final itemsSelectionBloc =
+        BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
@@ -63,9 +62,7 @@ class _ConvertouchUnitDetailsPageState
             _unitCodeTextController.text = pageState.details.draftUnitData.code;
 
             return ConvertouchPage(
-              title: pageState.details.existingUnit
-                  ? 'Unit Info'
-                  : 'New Unit',
+              title: pageState.details.existingUnit ? 'Unit Info' : 'New Unit',
               body: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.only(
@@ -88,22 +85,25 @@ class _ConvertouchUnitDetailsPageState
                                 colors: unitGroupItemColors[appState.theme]!,
                                 disabled: false,
                                 editIconVisible: false,
-                                logoFunc: (item, color) {
+                                logoFunc: (
+                                  item, {
+                                  required Color foreground,
+                                  required Color matchForeground,
+                                  required Color matchBackground,
+                                }) {
                                   return IconUtils.getUnitGroupIcon(
                                     iconName: item.iconName,
-                                    color: color,
+                                    color: foreground,
                                     size: 29,
                                   );
                                 },
                                 onTap: () {
                                   FocusScope.of(context).unfocus();
-                                  unitGroupsBlocForDetails
-                                      .add(
+                                  unitGroupsBlocForDetails.add(
                                     const FetchItems(),
                                   );
 
-                                  itemsSelectionBloc
-                                      .add(
+                                  itemsSelectionBloc.add(
                                     StartItemSelection(
                                       previouslySelectedId:
                                           pageState.details.unitGroup.id,
@@ -240,15 +240,13 @@ class _ConvertouchUnitDetailsPageState
                                   );
                                 },
                                 onTap: () {
-                                  unitsBlocForDetails
-                                      .add(
+                                  unitsBlocForDetails.add(
                                     FetchItems(
                                       parentItemId:
                                           pageState.details.unitGroup.id,
                                     ),
                                   );
-                                  itemsSelectionBloc
-                                      .add(
+                                  itemsSelectionBloc.add(
                                     StartItemSelection(
                                       previouslySelectedId: pageState
                                           .details.conversionRule.argUnit.id,

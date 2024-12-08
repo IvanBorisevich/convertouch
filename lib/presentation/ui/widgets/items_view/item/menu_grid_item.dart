@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchMenuGridItem<T extends IdNameItemModel>
+class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   static const double defaultWidth = 80;
   static const double defaultHeight = 80;
@@ -17,7 +17,12 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
   final bool checked;
   final bool disabled;
   final bool editIconVisible;
-  final Widget Function(T, Color) logoFunc;
+  final Widget Function(
+    T, {
+    required Color foreground,
+    required Color matchForeground,
+    required Color matchBackground,
+  }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final ListItemColorScheme colors;
@@ -46,6 +51,8 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
     Color titleBackground = disabled
         ? colors.titleBackground.disabled
         : colors.titleBackground.regular;
+    Color matchBackground = colors.matchBackground.regular;
+    Color matchForeground = colors.matchForeground.regular;
 
     return GestureDetector(
       onTap: onTap,
@@ -85,7 +92,9 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
                   alignment: Alignment.center,
                   child: logoFunc.call(
                     item,
-                    foreground,
+                    foreground: foreground,
+                    matchForeground: matchForeground,
+                    matchBackground: matchBackground,
                   ),
                 ),
                 Container(
@@ -100,16 +109,13 @@ class ConvertouchMenuGridItem<T extends IdNameItemModel>
                       bottomRight: Radius.circular(defaultBorderRadius),
                     ),
                   ),
-                  child: Text(
-                    itemName,
-                    style: TextStyle(
-                      fontFamily: quicksandFontFamily,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: foreground,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  child: TextSearchMatch(
+                    sourceString: itemName,
+                    match: item.nameMatch,
+                    foreground: foreground,
+                    matchBackground: matchBackground,
+                    matchForeground: matchForeground,
+                    fontSize: 11,
                   ),
                 ),
               ],

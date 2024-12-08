@@ -21,7 +21,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
   };
 }
 
-abstract class ItemsListBloc<T extends IdNameItemModel,
+abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         S extends ItemsFetched<T>>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T>> {
   ItemsListBloc() : super(ItemsFetched<T>(pageItems: const [])) {
@@ -73,6 +73,13 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
         ),
       );
 
+      final itemsWithMatch = newItems
+          .map((item) =>
+              searchString != null && searchString.isNotEmpty
+                  ? addSearchMatch(item, searchString)
+                  : item)
+          .toList();
+
       oobIds.addAll(
         newItems.where((item) => item.oob).map((item) => item.id).toList(),
       );
@@ -88,7 +95,7 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
           status: FetchingStatus.success,
           hasReachedMax: hasReachedMax,
           parentItemId: parentItemId,
-          pageItems: newItems,
+          pageItems: itemsWithMatch,
           oobIds: oobIds,
           searchString: searchString,
           pageNum: pageNum,
@@ -151,4 +158,6 @@ abstract class ItemsListBloc<T extends IdNameItemModel,
   Future<Either<ConvertouchException, T>> saveItem(T item);
 
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids);
+
+  T addSearchMatch(T item, String searchString);
 }

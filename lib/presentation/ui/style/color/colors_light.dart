@@ -66,6 +66,8 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xffb8caf6),
     selected: Color(0xffaabce8),
   ),
+  matchBackground: ColorVariation.only(Color(0xffa4b7e3)),
+  matchForeground: ColorVariation.only(Color(0xFF1E1E3D)),
   foreground: ColorVariation(
     regular: Color(0xFF303073),
     selected: Color(0xFF303073),
@@ -113,6 +115,8 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF99C1EF),
     disabled: Color(0x9EB1CBEF),
   ),
+  matchBackground: ColorVariation.only(Color(0xFF8AA8D0)),
+  matchForeground: ColorVariation.only(Color(0xFF274F73)),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
     disabled: Color(0xB25086BB),
