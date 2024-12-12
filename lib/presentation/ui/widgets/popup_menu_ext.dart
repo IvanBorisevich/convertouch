@@ -10,6 +10,7 @@ class ConvertouchPopupMenu extends StatelessWidget {
   final Color iconColor;
   final Color highlightColor;
   final double? width;
+  final void Function(bool)? onMenuStateChange;
 
   const ConvertouchPopupMenu({
     required this.items,
@@ -18,6 +19,7 @@ class ConvertouchPopupMenu extends StatelessWidget {
     required this.iconColor,
     this.width,
     this.highlightColor = Colors.transparent,
+    this.onMenuStateChange,
     super.key,
   });
 
@@ -32,6 +34,7 @@ class ConvertouchPopupMenu extends StatelessWidget {
           ),
           onPressed: null,
         ),
+        onMenuStateChange: onMenuStateChange,
         items: items
             .map(
               (item) => DropdownMenuItem<PopupMenuItemModel>(
