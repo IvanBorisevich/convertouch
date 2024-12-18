@@ -122,8 +122,8 @@ class _ConvertouchUnitGroupDetailsPageState
                           }
                           return Column(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(
+                              Padding(
+                                padding: const EdgeInsets.only(
                                   top: 10,
                                   bottom: 30,
                                 ),
@@ -131,7 +131,7 @@ class _ConvertouchUnitGroupDetailsPageState
                                   height: 1,
                                   indent: 5,
                                   endIndent: 5,
-                                  color: Colors.white70,
+                                  color: textBoxColor.border.regular,
                                 ),
                               ),
                               ConvertouchParameterItem(

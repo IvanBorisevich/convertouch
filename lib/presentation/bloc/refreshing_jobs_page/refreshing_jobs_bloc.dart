@@ -131,6 +131,17 @@ class RefreshingJobsBloc
           ),
         );
 
+        navigationBloc.add(
+          ShowException(
+            exception: ConvertouchException(
+              message: "Refreshed successfully!",
+              severity: ExceptionSeverity.info,
+              stackTrace: null,
+              dateTime: DateTime.now(),
+            ),
+          ),
+        );
+
         log("onComplete finish");
       },
       onError: (exception) {
