@@ -29,6 +29,15 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         delta: input.delta,
       );
 
+      if (input.conversion.unitGroup.id != modifiedGroup.id) {
+        return Right(
+          ConversionModel.coalesce(
+            input.conversion,
+            id: input.conversion.id,
+          ),
+        );
+      }
+
       final conversionItemsMap = {
         for (var item in input.conversion.targetConversionItems)
           item.unit.id: item

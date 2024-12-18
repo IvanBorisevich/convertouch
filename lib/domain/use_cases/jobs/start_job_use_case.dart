@@ -70,14 +70,16 @@ abstract class StartJobUseCase<P, R>
     jobProgressController = BehaviorSubject<JobResultModel>(
       onListen: () async {
         await Future.sync(() async {
-          if (jobProgressController.isClosed) {
-            log("Stream controller has already been closed");
-            return null;
-          }
-
-          jobProgressController.add(const JobResultModel.start());
+          _addToController(
+            controller: jobProgressController,
+            result: const JobResultModel.start(),
+          );
           R? result = await onExecute.call();
-          jobProgressController.add(const JobResultModel.finish());
+
+          _addToController(
+            controller: jobProgressController,
+            result: const JobResultModel.finish(),
+          );
           return result;
         }).then((result) {
           log("onComplete callback function calling");
@@ -97,6 +99,18 @@ abstract class StartJobUseCase<P, R>
     );
 
     return jobProgressController;
+  }
+
+  void _addToController({
+    required BehaviorSubject<JobResultModel> controller,
+    required JobResultModel result,
+  }) {
+    if (controller.isClosed) {
+      log("Stream controller has already been closed");
+      return;
+    }
+
+    controller.add(result);
   }
 
   Future<R?> onExecute(P? params);

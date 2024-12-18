@@ -175,6 +175,7 @@ class RefreshingJobsBloc
       activeJobs.update(
         event.unitGroupName,
         (value) => startedJobResult.right,
+        ifAbsent: () => startedJobResult.right,
       );
     }
 
