@@ -10,13 +10,15 @@ class RefreshingJobsFetched extends RefreshingJobsState {
   final Map<String, JobModel> jobs;
   final Map<String, String> currentDataSourceKeys;
   final String? currentDataSourceUrl;
-  final String? currentCompletedAt;
+  final DateTime? currentLastRefreshed;
+  final String? currentLastRefreshedStr;
 
   const RefreshingJobsFetched({
     required this.jobs,
     required this.currentDataSourceKeys,
     this.currentDataSourceUrl,
-    this.currentCompletedAt,
+    this.currentLastRefreshed,
+    this.currentLastRefreshedStr,
   });
 
   @override
@@ -24,7 +26,7 @@ class RefreshingJobsFetched extends RefreshingJobsState {
         jobs.entries,
         currentDataSourceKeys.entries,
         currentDataSourceUrl,
-        currentCompletedAt,
+        currentLastRefreshed,
       ];
 
   Map<String, dynamic> toJson() {
@@ -32,7 +34,7 @@ class RefreshingJobsFetched extends RefreshingJobsState {
       "jobs": jobs.map((key, value) => MapEntry(key, value.toJson())),
       "currentDataSources": currentDataSourceKeys,
       "currentDataSourceUrl": currentDataSourceUrl,
-      "currentCompletedAt": currentCompletedAt,
+      "currentCompletedAt": currentLastRefreshed.toString(),
     };
   }
 
@@ -49,7 +51,9 @@ class RefreshingJobsFetched extends RefreshingJobsState {
       currentDataSourceKeys:
           ObjectUtils.convertToMap(json["currentDataSources"]),
       currentDataSourceUrl: json["currentDataSourceUrl"],
-      currentCompletedAt: json["currentCompletedAt"],
+      currentLastRefreshed: json["currentCompletedAt"] != null
+          ? DateTime.parse(json["currentCompletedAt"])
+          : null,
     );
   }
 
@@ -57,14 +61,17 @@ class RefreshingJobsFetched extends RefreshingJobsState {
     Map<String, JobModel>? jobs,
     Map<String, String>? currentDataSourceKeys,
     String? currentDataSourceUrl,
-    String? currentCompletedAt,
+    DateTime? currentLastRefreshed,
+    String? currentLastRefreshedStr,
   }) {
     return RefreshingJobsFetched(
       jobs: jobs ?? this.jobs,
       currentDataSourceKeys:
           currentDataSourceKeys ?? this.currentDataSourceKeys,
       currentDataSourceUrl: currentDataSourceUrl ?? this.currentDataSourceUrl,
-      currentCompletedAt: currentCompletedAt ?? this.currentCompletedAt,
+      currentLastRefreshed: currentLastRefreshed ?? this.currentLastRefreshed,
+      currentLastRefreshedStr:
+          currentLastRefreshedStr ?? this.currentLastRefreshedStr,
     );
   }
 
@@ -74,6 +81,6 @@ class RefreshingJobsFetched extends RefreshingJobsState {
         'jobs: $jobs, '
         'currentDataSources: $currentDataSourceKeys, '
         'currentDataSourceName: $currentDataSourceUrl, '
-        'currentCompletedAt: $currentCompletedAt}';
+        'currentCompletedAt: $currentLastRefreshed}';
   }
 }

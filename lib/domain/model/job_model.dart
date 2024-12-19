@@ -9,7 +9,7 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 class JobModel<P, R> extends IdNameItemModel {
   final P? params;
   final Cron selectedCron;
-  final String? completedAt;
+  final DateTime? completedAt;
   final StreamController<JobResultModel>? progressController;
   final bool alreadyRunning;
   final void Function(R)? onSuccess;
@@ -32,7 +32,7 @@ class JobModel<P, R> extends IdNameItemModel {
   JobModel.coalesce(
     JobModel savedModel, {
     Patchable<P>? params,
-    Patchable<String>? completedAt,
+    Patchable<DateTime>? completedAt,
     Patchable<Cron>? selectedCron,
     Patchable<StreamController<JobResultModel>>? progressController,
     Patchable<bool>? alreadyRunning,
@@ -64,14 +64,16 @@ class JobModel<P, R> extends IdNameItemModel {
 
     return JobModel(
       selectedCron: Cron.valueOf(json["selectedCron"]),
-      completedAt: json["lastRefreshTime"],
+      completedAt: json["lastRefreshTime"] != null
+          ? DateTime.parse(json["lastRefreshTime"])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "selectedCron": selectedCron.name,
-      "lastRefreshTime": completedAt,
+      "lastRefreshTime": completedAt?.toString(),
     };
   }
 

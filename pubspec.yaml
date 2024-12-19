@@ -63,6 +63,7 @@ dependencies:
   bloc_concurrency: ^0.1.0
   app_settings: ^5.1.1
   dropdown_button2: ^2.3.8
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_test:

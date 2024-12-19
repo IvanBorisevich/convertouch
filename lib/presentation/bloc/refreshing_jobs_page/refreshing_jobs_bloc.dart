@@ -18,6 +18,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class RefreshingJobsBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsFetched> {
@@ -38,7 +39,6 @@ class RefreshingJobsBloc
             jobs: {},
             currentDataSourceKeys: {},
             currentDataSourceUrl: null,
-            currentCompletedAt: 'Never',
           ),
         ) {
     on<FetchRefreshingJobs>(_onJobsFetch);
@@ -80,11 +80,14 @@ class RefreshingJobsBloc
       ),
     );
 
+    var completedAt = state.jobs[event.unitGroupName]?.completedAt;
+
     emit(
       state.copyWith(
         currentDataSourceUrl: currentDataSource.url,
-        currentCompletedAt:
-            state.jobs[event.unitGroupName]?.completedAt ?? 'Never',
+        currentLastRefreshed: completedAt,
+        currentLastRefreshedStr:
+            completedAt != null ? timeago.format(completedAt) : null,
       ),
     );
   }
@@ -125,7 +128,7 @@ class RefreshingJobsBloc
           ChangeJobInfo(
             jobPatch: JobModel(
               progressController: null,
-              completedAt: DateTime.now().toString(),
+              completedAt: DateTime.now(),
             ),
             unitGroupName: event.unitGroupName,
           ),
@@ -248,7 +251,8 @@ class RefreshingJobsBloc
     emit(
       state.copyWith(
         jobs: activeJobs,
-        currentCompletedAt: jobPatch.completedAt,
+        currentLastRefreshed: jobPatch.completedAt,
+        currentLastRefreshedStr: jobPatch.completedAt != null ? timeago.format(jobPatch.completedAt!) : null,
       ),
     );
   }

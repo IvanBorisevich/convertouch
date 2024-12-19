@@ -129,8 +129,9 @@ class _ConvertouchUnitGroupDetailsPageState
                                 ),
                               ),
                               ConvertouchParameterItem(
-                                name: "Last refreshed",
-                                value: jobState.currentCompletedAt,
+                                name: "Last Refreshed",
+                                value:
+                                    jobState.currentLastRefreshedStr ?? 'Never',
                                 textBoxColor: textBoxColor,
                               ),
                               ConvertouchParameterItem(
