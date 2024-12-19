@@ -38,7 +38,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   static const double _unitButtonWidth = 90;
   static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
   static const double _elementsBorderRadius = 15;
-  static const double _spacing = 12;
+  static const double _spacing = 11;
 
   late final TextEditingController _unitValueController;
 
@@ -75,14 +75,12 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
       child: Row(
         children: [
           widget.controlsVisible
-              ? wrapIntoDragListener(
+              ? _wrapIntoDragListener(
                   index: widget.index,
-                  child: Container(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Icon(
-                      Icons.drag_indicator_outlined,
-                      color: handlerColor.foreground.regular,
-                    ),
+                  child: _handler(
+                    icon: Icons.drag_indicator_outlined,
+                    background: handlerColor.background.regular,
+                    foreground: handlerColor.foreground.regular,
                   ),
                 )
               : const SizedBox.shrink(),
@@ -187,15 +185,11 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
             ),
           ),
           widget.controlsVisible
-              ? Container(
-                  padding: const EdgeInsets.only(left: 9, right: 1),
-                  child: GestureDetector(
-                    onTap: widget.onRemove,
-                    child: Icon(
-                      Icons.remove_circle_outline,
-                      color: handlerColor.foreground.regular,
-                    ),
-                  ),
+              ? _handler(
+                  icon: Icons.remove,
+                  background: handlerColor.background.regular,
+                  foreground: handlerColor.foreground.regular,
+                  onTap: widget.onRemove,
                 )
               : const SizedBox.shrink(),
         ],
@@ -203,7 +197,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
     );
   }
 
-  Widget wrapIntoDragListener({
+  Widget _wrapIntoDragListener({
     int? index,
     required Widget child,
   }) {
@@ -213,5 +207,31 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
             child: child,
           )
         : child;
+  }
+
+  Widget _handler({
+    required IconData icon,
+    required Color foreground,
+    required Color background,
+    void Function()? onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 9),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+          ),
+          child: Icon(
+            icon,
+            color: foreground,
+          ),
+        ),
+      ),
+    );
   }
 }

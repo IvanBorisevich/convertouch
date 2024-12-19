@@ -180,8 +180,8 @@ const unitTextBoxColorLight = TextBoxColorScheme(
     disabled: Color(0xFF90A8C0),
   ),
   hint: ColorVariation(
-    regular: Color(0xBE7EA0C0),
-    disabled: Color(0xFF90A8C0),
+    regular: Color(0xBE5994CE),
+    disabled: Color(0xBE73ACE5),
   ),
 );
 
@@ -201,7 +201,8 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
     ),
   ),
   handler: ConvertouchColorScheme(
-    foreground: ColorVariation.only(Color(0xFF5E7993)),
+    background: ColorVariation.only(Color(0xffccdeff)),
+    foreground: ColorVariation.only(Color(0xFF4D657C)),
   ),
 );
 

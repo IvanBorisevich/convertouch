@@ -178,8 +178,8 @@ const unitTextBoxColorDark = TextBoxColorScheme(
     disabled: Color(0xFF687A8C),
   ),
   hint: ColorVariation(
-    regular: Color(0xFF73899D),
-    disabled: Color(0xFF687A8C),
+    regular: Color(0xFF6891B6),
+    disabled: Color(0xFF7C9EBE),
   ),
 );
 
@@ -213,7 +213,8 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
     ),
   ),
   handler: ConvertouchColorScheme(
-    foreground: ColorVariation.only(Color(0xFF718EA9)),
+    background: ColorVariation.only(Color(0xFF3C4554)),
+    foreground: ColorVariation.only(Color(0xFF7E9CB7)),
   ),
 );
 
