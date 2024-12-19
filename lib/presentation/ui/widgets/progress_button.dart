@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -12,10 +13,9 @@ class ConvertouchProgressButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final void Function()? onProgressIndicatorClick;
-  final void Function()? onProgressIndicatorInterrupt;
   final void Function()? onProgressIndicatorErrorIconClick;
   final EdgeInsets? margin;
-  final Color? progressIndicatorColor;
+  final ConvertouchColorScheme colorsInProgress;
   final Color? progressIndicatorErrorIconColor;
 
   const ConvertouchProgressButton({
@@ -25,10 +25,9 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.visible = true,
     this.onProgressIndicatorClick,
-    this.onProgressIndicatorInterrupt,
     this.onProgressIndicatorErrorIconClick,
     this.margin,
-    this.progressIndicatorColor,
+    required this.colorsInProgress,
     this.progressIndicatorErrorIconColor = Colors.red,
     super.key,
   });
@@ -67,19 +66,10 @@ class ConvertouchProgressButton extends StatelessWidget {
                   } else if (snapshot.data == null) {
                     return buttonWidget;
                   } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data!.progressPercent != 1.0) {
-                      onProgressIndicatorInterrupt?.call();
-                    }
                     return buttonWidget;
                   } else {
                     return GestureDetector(
-                      onTap: () {
-                        if (onProgressIndicatorClick != null) {
-                          onProgressIndicatorClick!.call();
-                        } else {
-                          onProgressIndicatorInterrupt?.call();
-                        }
-                      },
+                      onTap: onProgressIndicatorClick,
                       child: determinate
                           ? CircularPercentIndicator(
                               radius: radius,
@@ -90,18 +80,32 @@ class ConvertouchProgressButton extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10,
-                                  color: progressIndicatorColor,
+                                  color: colorsInProgress.foreground.selected,
                                 ),
                               ),
                               circularStrokeCap: CircularStrokeCap.round,
-                              progressColor: progressIndicatorColor,
+                              progressColor:
+                                  colorsInProgress.foreground.selected,
                               animation: true,
                               animateFromLastPercent: true,
                             )
-                          : CircularProgressIndicator(
-                              value: null,
-                              strokeWidth: 5.0,
-                              color: progressIndicatorColor,
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height,
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(30)),
+                                border: Border.all(
+                                  color: colorsInProgress.border.selected,
+                                ),
+                              ),
+                              child: CircularProgressIndicator(
+                                value: null,
+                                strokeWidth: 3.0,
+                                strokeCap: StrokeCap.round,
+                                color: colorsInProgress.foreground.selected,
+                              ),
                             ),
                     );
                   }
