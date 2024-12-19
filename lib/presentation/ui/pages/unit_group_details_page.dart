@@ -89,12 +89,6 @@ class _ConvertouchUnitGroupDetailsPageState
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
-                        name: "Conversion Type",
-                        value: unitGroupDetailsState
-                            .draftGroup.conversionType.name,
-                        textBoxColor: textBoxColor,
-                      ),
-                      ConvertouchParameterItem(
                         name: "Values Type",
                         value: unitGroupDetailsState.draftGroup.valueType.name,
                         textBoxColor: textBoxColor,
