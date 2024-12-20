@@ -259,6 +259,7 @@ class RefreshingJobsBloc
 
   @override
   RefreshingJobsFetched? fromJson(Map<String, dynamic> json) {
+    log("Serialized refreshing job json map: $json");
     return RefreshingJobsFetched.fromJson(json);
   }
 

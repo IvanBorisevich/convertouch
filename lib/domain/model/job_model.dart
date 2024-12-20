@@ -64,7 +64,7 @@ class JobModel<P, R> extends IdNameItemModel {
 
     return JobModel(
       selectedCron: Cron.valueOf(json["selectedCron"]),
-      completedAt: json["lastRefreshTime"] != null
+      completedAt: ObjectUtils.isNotNullOrEmpty(json["lastRefreshTime"])
           ? DateTime.parse(json["lastRefreshTime"])
           : null,
     );

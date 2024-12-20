@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -68,7 +70,7 @@ class ConversionBloc
       var result = await getConversionUseCase.execute(event.unitGroup);
 
       ConversionBuilt prev = state;
-      print("Prev conversion state: $prev");
+      log("Prev conversion state: $prev");
       await _handleAndEmit(result, emit, onSuccess: () {
         if (prev.conversion.exists) {
           event.processPrevConversion?.call(prev.conversion);
@@ -85,7 +87,7 @@ class ConversionBloc
     SaveConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    print("Save conversion to db: ${event.conversion}");
+    log("Save conversion to db: ${event.conversion}");
     var result = await saveConversionUseCase.execute(event.conversion);
 
     if (result.isLeft) {
@@ -248,6 +250,7 @@ class ConversionBloc
 
   @override
   ConversionBuilt? fromJson(Map<String, dynamic> json) {
+    log("Serialized conversion json map: $json");
     return ConversionBuilt.fromJson(json);
   }
 

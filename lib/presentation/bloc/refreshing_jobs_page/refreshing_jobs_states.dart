@@ -51,9 +51,10 @@ class RefreshingJobsFetched extends RefreshingJobsState {
       currentDataSourceKeys:
           ObjectUtils.convertToMap(json["currentDataSources"]),
       currentDataSourceUrl: json["currentDataSourceUrl"],
-      currentLastRefreshed: json["currentCompletedAt"] != null
-          ? DateTime.parse(json["currentCompletedAt"])
-          : null,
+      currentLastRefreshed:
+          ObjectUtils.isNotNullOrEmpty(json["currentCompletedAt"])
+              ? DateTime.parse(json["currentCompletedAt"])
+              : null,
     );
   }
 

@@ -67,6 +67,10 @@ class ObjectUtils {
     return coalesceStringOrNull(str1: str1, str2: str2) ?? defaultStr;
   }
 
+  static bool isNotNullOrEmpty(String? str) {
+    return str != null && str.isNotEmpty && str.toLowerCase() != "null";
+  }
+
   static T? patch<T>(T? what, Patchable<T>? patch) {
     return patch != null && patch.value == null && patch.forcePatchNull
         ? null
