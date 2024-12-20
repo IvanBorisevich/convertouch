@@ -89,7 +89,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                   ),
                 );
               } else if (state.exception != null && !state.exception!.isError) {
-                print("Show snackbar with exception: ${state.exception?.message}");
                 showSnackBar(
                   context,
                   exception: state.exception!,
