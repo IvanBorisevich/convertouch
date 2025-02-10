@@ -15,8 +15,6 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
-import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
-import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,37 +42,12 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                       bloc: unitsSelectionBloc,
                     )
                   : null,
-              secondaryAppBar: SecondaryAppBar(
-                child: unitsBlocBuilder(
-                  bloc: unitsBloc,
-                  builderFunc: (pageState) {
-                    return ConvertouchSearchBar(
-                      placeholder: "Search units...",
-                      pageName: PageName.unitsPageRegular,
-                      viewModeSettingKey: SettingKey.unitsViewMode,
-                      onSearchStringChanged: (text) {
-                        unitsBloc.add(
-                          FetchItems(
-                            parentItemId: pageState.parentItemId,
-                            searchString: text,
-                          ),
-                        );
-                      },
-                      onSearchReset: () {
-                        unitsBloc.add(
-                          FetchItems(
-                            parentItemId: pageState.parentItemId,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
               body: ConvertouchMenuItemsView(
                 itemsListBloc: unitsBloc,
                 pageName: PageName.unitsPageRegular,
+                viewModeSettingKey: SettingKey.unitsViewMode,
                 checkedItemIds: itemsSelectionState.markedIds,
+                searchBarPlaceholder: "Search units...",
                 selectedItemId: null,
                 disabledItemIds: const [],
                 removalModeEnabled: itemsSelectionState.showCancelIcon,

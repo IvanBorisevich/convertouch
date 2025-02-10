@@ -11,7 +11,6 @@ class ConvertouchPage extends StatelessWidget {
   final String title;
   final Widget? customLeadingIcon;
   final List<Widget>? appBarRightWidgets;
-  final PreferredSizeWidget? secondaryAppBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation floatingButtonLocation;
   final void Function()? onItemsRemove;
@@ -21,7 +20,6 @@ class ConvertouchPage extends StatelessWidget {
     required this.title,
     this.customLeadingIcon,
     this.appBarRightWidgets,
-    this.secondaryAppBar,
     this.floatingActionButton,
     this.floatingButtonLocation = FloatingActionButtonLocation.endFloat,
     this.onItemsRemove,
@@ -54,14 +52,10 @@ class ConvertouchPage extends StatelessWidget {
                       },
                     );
                   } else {
-                    return const SizedBox(
-                      height: 0,
-                      width: 0,
-                    );
+                    return const SizedBox.shrink();
                   }
                 },
               ),
-              bottom: secondaryAppBar,
               centerTitle: true,
               title: Text(
                 title,

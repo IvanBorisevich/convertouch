@@ -27,6 +27,9 @@ class ConvertouchTextBox extends StatefulWidget {
   final TextBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final EdgeInsetsGeometry contentPadding;
+  final double height;
+  final double fontSize;
 
   const ConvertouchTextBox({
     this.controller,
@@ -48,6 +51,9 @@ class ConvertouchTextBox extends StatefulWidget {
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
+    this.contentPadding = const EdgeInsets.all(17),
+    this.height = defaultHeight,
+    this.fontSize = 17,
     super.key,
   });
 
@@ -150,7 +156,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     }
 
     return SizedBox(
-      height: ConvertouchTextBox.defaultHeight,
+      height: widget.height,
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (widget.useCustomKeyboard) {
@@ -251,7 +257,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         hintStyle: TextStyle(
           foreground: Paint()..color = hintColor,
         ),
-        contentPadding: const EdgeInsets.all(17),
+        contentPadding: widget.contentPadding,
         counterText: "",
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
@@ -259,10 +265,12 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         suffixText: widget.textLengthCounterVisible
             ? '${_controller.text.length}/${widget.maxTextLength}'
             : null,
+        filled: true,
+        fillColor: widget.colors.background.regular,
       ),
       style: TextStyle(
         foreground: Paint()..color = foregroundColor,
-        fontSize: 17,
+        fontSize: widget.fontSize,
         fontWeight: FontWeight.w500,
       ),
       textAlign: TextAlign.start,

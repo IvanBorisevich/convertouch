@@ -14,6 +14,7 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_it
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
+import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,8 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
     extends StatefulWidget {
   final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
   final PageName pageName;
+  final SettingKey viewModeSettingKey;
+  final String? searchBarPlaceholder;
   final void Function(T)? onItemTap;
   final void Function(T)? onItemTapForRemoval;
   final void Function(T)? onItemLongPress;
@@ -36,6 +39,8 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
   const ConvertouchMenuItemsView({
     required this.itemsListBloc,
     required this.pageName,
+    required this.viewModeSettingKey,
+    this.searchBarPlaceholder,
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,
@@ -269,93 +274,124 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
     final checkIconVisible =
         widget.checkableItemsVisible || widget.removalModeEnabled;
 
-    return ScrollConfiguration(
-      behavior: NoGlowScrollBehavior(),
-      child: BlocListener<ItemsListBloc<T, ItemsFetched<T>>, ItemsFetched<T>>(
-        bloc: widget.itemsListBloc,
-        listener: (_, state) {
-          setState(() {
-            if (state.pageNum <= 1) {
-              _itemsFullList.clear();
-            }
-            _itemsFullList.addAll(state.pageItems);
-          });
-        },
-        child: appBlocBuilder(
-          builderFunc: (appState) {
-            if (_itemsFullList.isEmpty) {
-              return Center(
-                child: NoItemsInfoLabel(
-                  text: T == UnitGroupModel
-                      ? "No unit groups added"
-                      : "No units added",
-                  colors: _emptyViewColors[appState.theme]!,
-                ),
-              );
-            }
-
-            ItemsViewMode itemsViewMode = T == UnitGroupModel
-                ? appState.unitGroupsViewMode
-                : appState.unitsViewMode;
-
-            var itemColors = _itemColors[appState.theme]!;
-
-            switch (itemsViewMode) {
-              case ItemsViewMode.list:
-                return ListView.builder(
-                  controller: _listScrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _itemsFullList.length,
-                  itemExtent:
-                      ConvertouchMenuListItem.defaultHeight + _itemsSpacing,
-                  padding: const EdgeInsets.only(
-                    top: _itemsSpacing,
-                    left: _itemsSpacing,
-                    right: _itemsSpacing,
-                    bottom: _bottomSpacing,
+    return Column(
+      children: [
+        itemsListBlocBuilder(
+          bloc: widget.itemsListBloc,
+          builderFunc: (state) {
+            return ConvertouchSearchBar(
+              placeholder: widget.searchBarPlaceholder,
+              pageName: widget.pageName,
+              viewModeSettingKey: widget.viewModeSettingKey,
+              onSearchStringChanged: (text) {
+                widget.itemsListBloc.add(
+                  FetchItems(
+                    searchString: text,
+                    parentItemId: state.parentItemId,
                   ),
-                  itemBuilder: (context, index) {
-                    return _itemBuilder.call(
-                      context,
-                      index,
-                      itemColors: itemColors,
-                      itemsViewMode: itemsViewMode,
-                      checkIconVisible: checkIconVisible,
-                    );
-                  },
                 );
-              case ItemsViewMode.grid:
-                return GridView.builder(
-                  controller: _gridScrollController,
-                  itemCount: _itemsFullList.length,
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(
-                    top: _itemsSpacing,
-                    left: _itemsSpacing,
-                    right: _itemsSpacing,
-                    bottom: _bottomSpacing,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: _itemsSpacing,
-                    mainAxisSpacing: _itemsSpacing,
-                  ),
-                  itemBuilder: (context, index) {
-                    return _itemBuilder.call(
-                      context,
-                      index,
-                      itemColors: itemColors,
-                      itemsViewMode: itemsViewMode,
-                      checkIconVisible: checkIconVisible,
-                    );
-                  },
+              },
+              onSearchReset: () {
+                widget.itemsListBloc.add(
+                  FetchItems(parentItemId: state.parentItemId),
                 );
-            }
+              },
+            );
           },
         ),
-      ),
+        Expanded(
+          child: ScrollConfiguration(
+            behavior: NoGlowScrollBehavior(),
+            child: BlocListener<ItemsListBloc<T, ItemsFetched<T>>,
+                ItemsFetched<T>>(
+              bloc: widget.itemsListBloc,
+              listener: (_, state) {
+                setState(() {
+                  if (state.pageNum <= 1) {
+                    _itemsFullList.clear();
+                  }
+                  _itemsFullList.addAll(state.pageItems);
+                });
+              },
+              child: appBlocBuilder(
+                builderFunc: (appState) {
+                  if (_itemsFullList.isEmpty) {
+                    return Center(
+                      child: NoItemsInfoLabel(
+                        text: T == UnitGroupModel
+                            ? "No unit groups added"
+                            : "No units added",
+                        colors: _emptyViewColors[appState.theme]!,
+                      ),
+                    );
+                  }
+
+                  ItemsViewMode itemsViewMode = T == UnitGroupModel
+                      ? appState.unitGroupsViewMode
+                      : appState.unitsViewMode;
+
+                  var itemColors = _itemColors[appState.theme]!;
+
+                  switch (itemsViewMode) {
+                    case ItemsViewMode.list:
+                      return ListView.builder(
+                        controller: _listScrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _itemsFullList.length,
+                        itemExtent: ConvertouchMenuListItem.defaultHeight +
+                            _itemsSpacing,
+                        padding: const EdgeInsets.only(
+                          top: _itemsSpacing,
+                          left: _itemsSpacing,
+                          right: _itemsSpacing,
+                          bottom: _bottomSpacing,
+                        ),
+                        itemBuilder: (context, index) {
+                          return _itemBuilder.call(
+                            context,
+                            index,
+                            itemColors: itemColors,
+                            itemsViewMode: itemsViewMode,
+                            checkIconVisible: checkIconVisible,
+                          );
+                        },
+                      );
+                    case ItemsViewMode.grid:
+                      return GridView.builder(
+                        controller: _gridScrollController,
+                        itemCount: _itemsFullList.length,
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(
+                          top: _itemsSpacing,
+                          left: _itemsSpacing,
+                          right: _itemsSpacing,
+                          bottom: _bottomSpacing,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: _itemsSpacing,
+                          mainAxisSpacing: _itemsSpacing,
+                        ),
+                        itemBuilder: (context, index) {
+                          return _itemBuilder.call(
+                            context,
+                            index,
+                            itemColors: itemColors,
+                            itemsViewMode: itemsViewMode,
+                            checkIconVisible: checkIconVisible,
+                          );
+                        },
+                      );
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

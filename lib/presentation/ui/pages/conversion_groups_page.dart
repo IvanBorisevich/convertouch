@@ -19,8 +19,6 @@ import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
-import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
-import 'package:convertouch/presentation/ui/widgets/secondary_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,26 +45,11 @@ class ConversionGroupsPage extends StatelessWidget {
                   bloc: itemsSelectionBloc,
                 )
               : null,
-          secondaryAppBar: SecondaryAppBar(
-            child: ConvertouchSearchBar(
-              placeholder: 'Search conversion groups...',
-              pageName: PageName.conversionGroupsPage,
-              viewModeSettingKey: SettingKey.unitGroupsViewMode,
-              onSearchStringChanged: (text) {
-                unitGroupsBloc.add(
-                  FetchItems(searchString: text),
-                );
-              },
-              onSearchReset: () {
-                unitGroupsBloc.add(
-                  const FetchItems(searchString: null),
-                );
-              },
-            ),
-          ),
           body: ConvertouchMenuItemsView(
             itemsListBloc: unitGroupsBloc,
             pageName: PageName.conversionGroupsPage,
+            viewModeSettingKey: SettingKey.unitGroupsViewMode,
+            searchBarPlaceholder: 'Search conversion groups...',
             onItemTap: (unitGroup) {
               singleGroupBloc.add(
                 ShowGroup(unitGroup: unitGroup),
