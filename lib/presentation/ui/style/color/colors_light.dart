@@ -171,19 +171,34 @@ const unitPageEmptyViewColorLight = ConvertouchColorScheme(
 
 const unitTextBoxColorLight = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFF45688A),
+    regular: Color(0xFF4F7498),
     focused: Color(0xFF233B50),
     disabled: Color(0xFF90A8C0),
   ),
   foreground: ColorVariation(
-    regular: Color(0xBE183C5E),
+    regular: Color(0xBE143656),
     disabled: Color(0xFF90A8C0),
   ),
   hint: ColorVariation(
-    regular: Color(0xBE5994CE),
+    regular: Color(0xFF799BBB),
     disabled: Color(0xBE73ACE5),
   ),
 );
+
+const unitGroupTextBoxColorLight = TextBoxColorScheme(
+  border: ColorVariation(
+    regular: Color(0xFF6766D3),
+    disabled: Color(0xFF6160BE),
+  ),
+  foreground: ColorVariation(
+    regular: Color(0xFF4544AB),
+    disabled: Color(0xFF414194),
+  ),
+  hint: ColorVariation(
+    regular: Color(0xFF7574E1),
+  ),
+);
+
 
 const conversionItemColorSchemeLight = ConversionItemColorScheme(
   textBox: unitTextBoxColorLight,
@@ -236,20 +251,6 @@ const removalFloatingButtonColorLight = ConvertouchColorScheme(
   border: ColorVariation.only(Color(0xFFFCFEFF)),
   background: ColorVariation.only(Color(0xFFD36422)),
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
-);
-
-const unitGroupTextBoxColorLight = TextBoxColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFF5F4299),
-    disabled: Color(0xB561449B),
-  ),
-  foreground: ColorVariation(
-    regular: Color(0xFF5F4299),
-    disabled: Color(0xB561449B),
-  ),
-  hint: ColorVariation(
-    regular: Color(0xB561449B),
-  ),
 );
 
 const settingItemColorLight = SettingItemColorScheme(

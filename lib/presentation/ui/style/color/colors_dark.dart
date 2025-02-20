@@ -178,22 +178,22 @@ const unitTextBoxColorDark = TextBoxColorScheme(
     disabled: Color(0xFF687A8C),
   ),
   hint: ColorVariation(
-    regular: Color(0xFF6891B6),
+    regular: Color(0xFF84A1BD),
     disabled: Color(0xFF7C9EBE),
   ),
 );
 
 const unitGroupTextBoxColorDark = TextBoxColorScheme(
   border: ColorVariation(
-    regular: Color(0xFFA5B2FF),
+    regular: Color(0xFF8594F1),
     disabled: Color(0x90A5B2FF),
   ),
   foreground: ColorVariation(
-    regular: Color(0xFFA5B2FF),
+    regular: Color(0xFFA7B2F5),
     disabled: Color(0x90A5B2FF),
   ),
   hint: ColorVariation(
-    regular: Color(0x90A5B2FF),
+    regular: Color(0xFF8594F1),
   ),
 );
 
@@ -219,7 +219,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
 );
 
 const unitGroupsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF616491)),
+  background: ColorVariation.only(Color(0xFF5E63A8)),
   foreground: ColorVariation.only(Color(0xFFD1CFD3)),
 );
 

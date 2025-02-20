@@ -62,9 +62,10 @@ class ConvertouchParameterItem extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 3),
                           child: Text(
                             headerTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
+                              color: textBoxColor.border.regular,
                             ),
                           ),
                         )
