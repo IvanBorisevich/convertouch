@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
@@ -64,7 +65,9 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
         child: Row(
           children: [
             Container(
-              width: defaultHeight * 1.7,
+              width: T == UnitGroupModel
+                  ? defaultHeight * 1.1
+                  : defaultHeight * 1.7,
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: logoFunc.call(
@@ -81,7 +84,9 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
               endIndent: 10,
               color: divider,
             ),
-            const SizedBox(width: 15,),
+            const SizedBox(
+              width: 15,
+            ),
             Expanded(
               child: TextSearchMatch(
                 sourceString: itemName,

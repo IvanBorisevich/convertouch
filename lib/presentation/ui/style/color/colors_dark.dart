@@ -38,7 +38,7 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
     hint: ColorVariation.only(Color(0xFF8791A1)),
   ),
   viewModeButton: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF444C59)),
+    background: ColorVariation.only(Color(0xFF383D46)),
     foreground: ColorVariation.only(Color(0xFFCCD7E0)),
   ),
 );

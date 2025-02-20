@@ -59,18 +59,18 @@ class TextSearchMatch extends StatelessWidget {
                             Radius.circular(5),
                           ),
                         ),
-                        child: Text(lexeme,
-                            style: TextStyle(
-                              color: matchForeground ?? foreground,
-                              fontFamily: quicksandFontFamily,
-                              fontSize: fontSize,
-                              fontWeight: fontWeight,
-                            )),
+                        child: Text(
+                          lexeme,
+                          style: TextStyle(
+                            color: matchForeground ?? foreground,
+                            fontFamily: quicksandFontFamily,
+                            fontSize: fontSize,
+                            fontWeight: fontWeight,
+                          ),
+                        ),
                       ),
                     )
-                  : TextSpan(
-                      text: lexeme,
-                    ),
+                  : TextSpan(text: lexeme),
             )
             .toList(),
       ),

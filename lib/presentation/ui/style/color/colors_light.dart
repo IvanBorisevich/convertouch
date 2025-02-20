@@ -38,8 +38,8 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
     hint: ColorVariation.only(Color(0xFF5C93C7)),
   ),
   viewModeButton: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFFF6F9FF)),
-    foreground: ColorVariation.only(Color(0xFF426F99)),
+    background: ColorVariation.only(Color(0xffc1d7ff)),
+    foreground: ColorVariation.only(Color(0xFF4D79A1)),
   ),
 );
 
@@ -66,7 +66,7 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xffb8caf6),
     selected: Color(0xffaabce8),
   ),
-  matchBackground: ColorVariation.only(Color(0xffa4b7e3)),
+  matchBackground: ColorVariation.only(Color(0xff9aafe0)),
   matchForeground: ColorVariation.only(Color(0xFF1E1E3D)),
   foreground: ColorVariation(
     regular: Color(0xFF303073),
@@ -115,8 +115,8 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF99C1EF),
     disabled: Color(0x9EB1CBEF),
   ),
-  matchBackground: ColorVariation.only(Color(0xFF8AA8D0)),
-  matchForeground: ColorVariation.only(Color(0xFF274F73)),
+  matchBackground: ColorVariation.only(Color(0xFF4E79B2)),
+  matchForeground: ColorVariation.only(Color(0xFF668847)),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
     disabled: Color(0xB25086BB),

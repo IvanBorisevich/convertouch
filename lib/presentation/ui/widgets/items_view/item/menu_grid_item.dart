@@ -8,7 +8,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   static const double defaultWidth = 80;
   static const double defaultHeight = 80;
-  static const double defaultBorderRadius = 7;
+  static const double defaultBorderRadius = 15;
 
   final T item;
   final String itemName;

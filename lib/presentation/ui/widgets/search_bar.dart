@@ -33,8 +33,8 @@ class ConvertouchSearchBar extends StatefulWidget {
 
 class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
   static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
-    ItemsViewMode.list: Icons.view_list_rounded,
-    ItemsViewMode.grid: Icons.grid_view_rounded
+    ItemsViewMode.list: Icons.table_rows_rounded,
+    ItemsViewMode.grid: Icons.grid_view_rounded,
   };
 
   final TextEditingController _searchFieldController = TextEditingController();
@@ -59,6 +59,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         padding: const EdgeInsets.only(
           left: 7,
           bottom: 8,
+          right: 7,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,25 +89,34 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                 fontSize: 16,
               ),
             ),
-            IconButton(
-              icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                Icon(
-                  itemViewModeIconMap[pageViewMode.next],
-                  key: ValueKey(pageViewMode),
-                ),
+            const SizedBox(width: 7),
+            Container(
+              width: 43,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                color: searchBarColorScheme.viewModeButton.background.regular,
               ),
-              splashColor: noColor,
-              highlightColor: noColor,
-              onPressed: () {
-                BlocProvider.of<AppBloc>(context).add(
-                  ChangeSetting(
-                    settingKey: widget.viewModeSettingKey.name,
-                    settingValue: pageViewMode.next.value,
-                    fromPage: widget.pageName,
+              child: IconButton(
+                icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                  Icon(
+                    itemViewModeIconMap[pageViewMode.next],
+                    size: 22,
+                    key: ValueKey(pageViewMode),
                   ),
-                );
-              },
-              color: searchBarColorScheme.viewModeButton.foreground.regular,
+                ),
+                splashColor: noColor,
+                highlightColor: noColor,
+                onPressed: () {
+                  BlocProvider.of<AppBloc>(context).add(
+                    ChangeSetting(
+                      settingKey: widget.viewModeSettingKey.name,
+                      settingValue: pageViewMode.next.value,
+                      fromPage: widget.pageName,
+                    ),
+                  );
+                },
+                color: searchBarColorScheme.viewModeButton.foreground.regular,
+              ),
             ),
           ],
         ),
