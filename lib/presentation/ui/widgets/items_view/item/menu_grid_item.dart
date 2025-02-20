@@ -72,14 +72,13 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                 ? ConvertouchItemModeIcon.checkbox(
                     active: checked,
                     colors: colors.checkBox,
-                    padding: const EdgeInsets.only(left: 1, top: 1),
                   )
                 : Column(
                     children: [
                       editIconVisible
                           ? ConvertouchItemModeIcon.edit(
                               colors: colors.modeIcon,
-                              padding: const EdgeInsets.only(left: 2, top: 2),
+                              padding: const EdgeInsets.only(left: 3, top: 3),
                             )
                           : const SizedBox.shrink(),
                     ],

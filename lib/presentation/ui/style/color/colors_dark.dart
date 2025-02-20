@@ -76,11 +76,11 @@ const unitGroupItemColorSchemeDark = ListItemColorScheme(
   ),
   checkBox: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xff99ade0),
+      regular: Color(0xff849ad2),
     ),
     background: ColorVariation(
-      regular: noColor,
-      selected: Color(0xff99ade0),
+      regular: Color(0xFF363D48),
+      selected: Color(0xff849ad2),
     ),
     foreground: ColorVariation(
       regular: noColor,
@@ -125,11 +125,11 @@ const unitItemColorSchemeDark = ListItemColorScheme(
   ),
   checkBox: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xFF85B3DC),
+      regular: Color(0xFF6F98BD),
     ),
     background: ColorVariation(
-      regular: noColor,
-      selected: Color(0xFF85B3DC),
+      regular: Color(0xFF363D48),
+      selected: Color(0xFF6F98BD),
     ),
     foreground: ColorVariation(
       regular: noColor,
@@ -229,7 +229,7 @@ const unitsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
 );
 
 const conversionPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF4D90D0)),
+  background: ColorVariation.only(Color(0xFF4079B0)),
   foreground: ColorVariation.only(Color(0xFFDEE0FF)),
 );
 

@@ -81,7 +81,7 @@ const unitGroupItemColorSchemeLight = ListItemColorScheme(
       regular: Color(0xFF303073),
     ),
     background: ColorVariation(
-      regular: noColor,
+      regular: Color(0xffe8efff),
       selected: Color(0xFF303073),
     ),
     foreground: ColorVariation(
@@ -116,7 +116,7 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     disabled: Color(0x9EB1CBEF),
   ),
   matchBackground: ColorVariation.only(Color(0xFF4E79B2)),
-  matchForeground: ColorVariation.only(Color(0xFF668847)),
+  matchForeground: ColorVariation.only(Color(0xFF264E72)),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
     disabled: Color(0xB25086BB),
@@ -127,11 +127,11 @@ const unitItemColorSchemeLight = ListItemColorScheme(
   ),
   checkBox: ConvertouchColorScheme(
     border: ColorVariation(
-      regular: Color(0xFF2C6396),
+      regular: Color(0xFF467CAD),
     ),
     background: ColorVariation(
-      regular: noColor,
-      selected: Color(0xFF2C6396),
+      regular: Color(0xffe8efff),
+      selected: Color(0xFF467CAD),
     ),
     foreground: ColorVariation(
       regular: noColor,
