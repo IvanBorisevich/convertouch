@@ -9,6 +9,8 @@ abstract class ItemModel extends Equatable {
     required this.itemType,
     this.oob = false,
   });
+
+  Map<String, dynamic> toJson();
 }
 
 abstract class IdNameItemModel extends ItemModel {

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -39,7 +39,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       final conversionItemsMap = {
-        for (var item in input.conversion.targetConversionItems)
+        for (var item in input.conversion.conversionUnitValues)
           item.unit.id: item
       };
 
@@ -82,7 +82,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         result = ConversionModel(
           unitGroup: modifiedGroup,
           sourceConversionItem: modifiedSourceItem,
-          targetConversionItems: modifiedConversionItemsMap.values.toList(),
+          conversionUnitValues: modifiedConversionItemsMap.values.toList(),
         );
       }
 
@@ -112,9 +112,9 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return unitGroup;
   }
 
-  ConversionItemModel getModifiedSourceItem({
-    required ConversionItemModel? currentSourceItem,
-    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
+  ConversionUnitValueModel getModifiedSourceItem({
+    required ConversionUnitValueModel? currentSourceItem,
+    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required D delta,
   }) {
     if (currentSourceItem != null &&
@@ -124,8 +124,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return modifiedConversionItemsMap.values.first;
   }
 
-  Future<Map<int, ConversionItemModel>> modifyConversionItems({
-    required Map<int, ConversionItemModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> modifyConversionItems({
+    required Map<int, ConversionUnitValueModel> conversionItemsMap,
     required D delta,
   }) async {
     return conversionItemsMap;

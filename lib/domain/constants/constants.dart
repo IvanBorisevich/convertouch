@@ -5,8 +5,11 @@ const String unknownAppVersion = "Unknown";
 const String iconAssetsPathPrefix = "assets/icons";
 const String quicksandFontFamily = "Quicksand";
 
+const lengthGroup = "Length";
 const currencyGroup = "Currency";
 const temperatureGroup = "Temperature";
+const clothingSizeGroup = "Clothing Size";
+
 const degreeCelsiusCode = "°C";
 const degreeFahrenheitCode = "°F";
 const degreeKelvinCode = "K";
@@ -60,6 +63,8 @@ enum ItemType {
   unitGroup,
   conversion,
   conversionItem,
+  conversionParamSet,
+  conversionParam,
   job,
   dynamicValue,
   cron,

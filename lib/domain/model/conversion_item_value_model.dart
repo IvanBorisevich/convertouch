@@ -1,0 +1,138 @@
+import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
+
+abstract class ConversionItemValueModel extends ItemModel {
+  final ValueModel value;
+  final ValueModel defaultValue;
+
+  const ConversionItemValueModel({
+    required this.value,
+    this.defaultValue = ValueModel.one,    // TODO: replace with more general (maybe ValueModel.none)
+  }) : super(
+          itemType: ItemType.conversionItem,
+        );
+
+  @override
+  List<Object?> get props => [
+        itemType,
+        value,
+        defaultValue,
+      ];
+}
+
+class ConversionUnitValueModel extends ConversionItemValueModel {
+  final UnitModel unit;
+
+  const ConversionUnitValueModel({
+    required this.unit,
+    required super.value,
+    super.defaultValue,
+  });
+
+  ConversionUnitValueModel.fromStrValue({
+    required UnitModel unit,
+    String strValue = "",
+  }) : this(
+          unit: unit,
+          value: ValueModel.ofString(strValue),
+          defaultValue: ValueModel.one,
+        );
+
+  const ConversionUnitValueModel.fromUnit({
+    required UnitModel unit,
+  }) : this(
+          unit: unit,
+          value: ValueModel.none,
+          defaultValue: ValueModel.one,
+        );
+
+  ConversionUnitValueModel.coalesce(
+    ConversionUnitValueModel? saved, {
+    UnitModel? unit,
+    ValueModel? value,
+    ValueModel? defaultValue,
+  }) : this(
+          unit: unit ?? saved?.unit ?? UnitModel.none,
+          value: value ?? saved?.value ?? ValueModel.none,
+          defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.none,
+        );
+
+  bool get valueExists => value.exists || defaultValue.exists;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "unit": unit.toJson(),
+      "value": value.toJson(),
+      "defaultValue": defaultValue.toJson(),
+    };
+  }
+
+  static ConversionUnitValueModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return ConversionUnitValueModel(
+      unit: UnitModel.fromJson(json["unit"])!,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      defaultValue:
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        unit,
+        super.props,
+      ];
+
+  @override
+  String toString() {
+    return 'ConversionUnitValueModel{'
+        'unit id: ${unit.id}, '
+        'name: ${unit.name}, '
+        'coefficient: ${unit.coefficient}, '
+        'value: $value, '
+        'default: $defaultValue';
+  }
+}
+
+class ConversionParamValueModel extends ConversionItemValueModel {
+  final ConversionParamModel param;
+
+  const ConversionParamValueModel({
+    required this.param,
+    required super.value,
+    super.defaultValue,
+  });
+
+  @override
+  List<Object?> get props => [
+        param,
+        super.props,
+      ];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "param": param,
+      "value": value.toJson(),
+      "defaultValue": defaultValue.toJson(),
+    };
+  }
+
+  static ConversionParamValueModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    return ConversionParamValueModel(
+      param: ConversionParamModel.fromJson(json["param"])!,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      defaultValue:
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
+    );
+  }
+}

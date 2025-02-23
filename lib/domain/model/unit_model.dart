@@ -75,6 +75,7 @@ class UnitModel extends IdNameSearchableItemModel {
 
   bool get unnamed => name.isEmpty;
 
+  @override
   Map<String, dynamic> toJson() {
     var result = {
       "id": id,

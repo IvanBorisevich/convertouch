@@ -129,7 +129,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         await conversionDao.update(entity);
         await conversionItemDao.removeByConversionId(conversion.id);
         resultConversion = conversion;
-      } else if (conversion.targetConversionItems.isNotEmpty) {
+      } else if (conversion.conversionUnitValues.isNotEmpty) {
         log("Inserting a new conversion");
         int id = await conversionDao.insert(entity);
         resultConversion = ConversionModel.coalesce(
@@ -138,13 +138,13 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
-      if (conversion.targetConversionItems.isNotEmpty) {
+      if (conversion.conversionUnitValues.isNotEmpty) {
         log("Inserting conversion items");
         log("Source unit id = ${conversion.sourceConversionItem?.unit.id}");
 
         await conversionItemDao.insertBatch(
           database,
-          conversion.targetConversionItems
+          conversion.conversionUnitValues
               .mapIndexed(
                 (index, item) => ConversionItemTranslator.I.fromModel(
                   item,

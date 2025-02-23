@@ -125,7 +125,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       final conversion = pageState.conversion;
 
                       return ConvertouchConversionItemsView(
-                        conversion.targetConversionItems,
+                        conversion.conversionUnitValues,
                         parentValueType: conversion.unitGroup.valueType,
                         onUnitItemTap: (item) {
                           unitsBloc.add(
@@ -137,7 +137,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                           unitsSelectionBloc.add(
                             StartItemSelection(
                               previouslySelectedId: item.unit.id,
-                              excludedIds: conversion.targetConversionItems
+                              excludedIds: conversion.conversionUnitValues
                                   .map((e) => e.unit.id)
                                   .whereNot((id) => id == item.unit.id)
                                   .toList(),
@@ -192,7 +192,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                             unitsSelectionBloc.add(
                               StartItemsMarking(
                                 previouslyMarkedIds: conversion
-                                    .targetConversionItems
+                                    .conversionUnitValues
                                     .map((unitValue) => unitValue.unit.id)
                                     .toList(),
                                 markedItemsMinNumForSelection: 2,

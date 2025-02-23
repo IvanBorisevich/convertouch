@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
@@ -7,11 +7,11 @@ import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavi
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
-  final List<ConversionItemModel> convertedItems;
+  final List<ConversionUnitValueModel> convertedItems;
   final ConvertouchValueType parentValueType;
-  final void Function(ConversionItemModel)? onUnitItemTap;
-  final void Function(ConversionItemModel, String)? onTextValueChanged;
-  final void Function(ConversionItemModel)? onItemRemoveTap;
+  final void Function(ConversionUnitValueModel)? onUnitItemTap;
+  final void Function(ConversionUnitValueModel, String)? onTextValueChanged;
+  final void Function(ConversionUnitValueModel)? onItemRemoveTap;
   final double listItemSpacingAfterLast;
   final ConvertouchUITheme theme;
 
@@ -59,7 +59,7 @@ class _ConvertouchConversionItemsViewState
           bottom: _bottomSpacing,
         ),
         itemBuilder: (context, index) {
-          ConversionItemModel item = widget.convertedItems[index];
+          ConversionUnitValueModel item = widget.convertedItems[index];
 
           return Padding(
             key: Key('$index'),
@@ -93,7 +93,7 @@ class _ConvertouchConversionItemsViewState
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            final ConversionItemModel item =
+            final ConversionUnitValueModel item =
                 widget.convertedItems.removeAt(oldIndex);
             widget.convertedItems.insert(newIndex, item);
           });

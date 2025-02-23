@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
 class InputConversionModel {
   final UnitGroupModel unitGroup;
-  final ConversionItemModel sourceConversionItem;
+  final ConversionUnitValueModel sourceConversionItem;
   final List<UnitModel> targetUnits;
   final int? conversionId;
 

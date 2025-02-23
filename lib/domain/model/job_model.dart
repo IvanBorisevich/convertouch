@@ -70,6 +70,7 @@ class JobModel<P, R> extends IdNameItemModel {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "selectedCron": selectedCron.name,

@@ -25,6 +25,12 @@ class DataSourceModel extends IdNameItemModel {
       ];
 
   @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+
+  @override
   String toString() {
     return 'DataSourceModel{'
         'name: $name, '

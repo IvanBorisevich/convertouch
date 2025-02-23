@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -41,12 +41,12 @@ class CreateConversionUseCase
         ).value,
       );
 
-      ConversionItemModel srcItem = ConversionItemModel.coalesce(
+      ConversionUnitValueModel srcItem = ConversionUnitValueModel.coalesce(
         input.sourceConversionItem,
         defaultValue: dynamicValue,
       );
 
-      List<ConversionItemModel> convertedItems = [];
+      List<ConversionUnitValueModel> convertedItems = [];
 
       for (UnitModel tgtUnit in input.targetUnits) {
         var item = ObjectUtils.tryGet(
@@ -66,7 +66,7 @@ class CreateConversionUseCase
           id: input.conversionId ?? -1,
           unitGroup: input.unitGroup,
           sourceConversionItem: srcItem,
-          targetConversionItems: convertedItems,
+          conversionUnitValues: convertedItems,
         ),
       );
     } catch (e, stackTrace) {

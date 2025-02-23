@@ -25,7 +25,7 @@ class ValueModel extends Equatable {
   const ValueModel({
     this.num,
     required this.str,
-    required this.scientific,
+    required this.scientific,       // TODO: rename to 'altStr' and make optional
   });
 
   factory ValueModel.ofDouble(double? value) {

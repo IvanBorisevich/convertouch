@@ -1,18 +1,18 @@
 import 'package:convertouch/data/entities/conversion_item_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 class ConversionItemTranslator
-    extends Translator<ConversionItemModel?, ConversionItemEntity?> {
+    extends Translator<ConversionUnitValueModel?, ConversionItemEntity?> {
   static final ConversionItemTranslator I =
       di.locator.get<ConversionItemTranslator>();
 
   @override
   ConversionItemEntity? fromModel(
-    ConversionItemModel? model, {
+    ConversionUnitValueModel? model, {
     int? sequenceNum,
     int? conversionId,
   }) {
@@ -29,7 +29,7 @@ class ConversionItemTranslator
   }
 
   @override
-  ConversionItemModel? toModel(
+  ConversionUnitValueModel? toModel(
     ConversionItemEntity? entity, {
     UnitModel? unit,
   }) {
@@ -40,7 +40,7 @@ class ConversionItemTranslator
     ValueModel value = ValueModel.ofString(entity.value);
     ValueModel defaultValue = ValueModel.ofString(entity.defaultValue);
 
-    return ConversionItemModel(
+    return ConversionUnitValueModel(
       unit: unit,
       value: value.exists ? value : ValueModel.none,
       defaultValue: defaultValue.exists ? defaultValue : ValueModel.one,

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
@@ -10,15 +11,17 @@ class ConversionModel extends IdNameItemModel {
   );
 
   final UnitGroupModel unitGroup;
-  final ConversionItemModel? sourceConversionItem;
-  final List<ConversionItemModel> targetConversionItems;
+  final ConversionUnitValueModel? sourceConversionItem;
+  final List<ConversionParamSetValuesModel> conversionParamSetValues;
+  final List<ConversionUnitValueModel> conversionUnitValues;
 
   const ConversionModel({
     super.id = -1,
     super.name = "",
     this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
-    this.targetConversionItems = const [],
+    this.conversionParamSetValues = const [],
+    this.conversionUnitValues = const [],
   }) : super(
           itemType: ItemType.conversion,
         );
@@ -36,25 +39,27 @@ class ConversionModel extends IdNameItemModel {
     int? id,
     String? name,
     UnitGroupModel? unitGroup,
-    ConversionItemModel? sourceConversionItem,
-    List<ConversionItemModel>? targetConversionItems,
+    ConversionUnitValueModel? sourceConversionItem,
+    List<ConversionUnitValueModel>? targetConversionItems,
   }) : this(
           id: id ?? saved.id,
           name: name ?? saved.name,
           unitGroup: unitGroup ?? saved.unitGroup,
           sourceConversionItem:
               sourceConversionItem ?? saved.sourceConversionItem,
-          targetConversionItems:
-              targetConversionItems ?? saved.targetConversionItems,
+          conversionUnitValues:
+              targetConversionItems ?? saved.conversionUnitValues,
         );
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
       "unitGroup": unitGroup.toJson(),
       "sourceItem": sourceConversionItem?.toJson(),
-      "targetItems":
-          targetConversionItems.map((item) => item.toJson()).toList(),
+      "params":
+          conversionParamSetValues.map((param) => param.toJson()).toList(),
+      "targetItems": conversionUnitValues.map((item) => item.toJson()).toList(),
     };
   }
 
@@ -66,9 +71,14 @@ class ConversionModel extends IdNameItemModel {
       id: json["id"] ?? -1,
       unitGroup:
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
-      sourceConversionItem: ConversionItemModel.fromJson(json["sourceItem"]),
-      targetConversionItems: (json["targetItems"] as List)
-          .map((unitMap) => ConversionItemModel.fromJson(unitMap)!)
+      sourceConversionItem:
+          ConversionUnitValueModel.fromJson(json["sourceItem"]),
+      conversionParamSetValues: (json["params"] as List)
+          .map((paramsSetMap) =>
+              ConversionParamSetValuesModel.fromJson(paramsSetMap)!)
+          .toList(),
+      conversionUnitValues: (json["targetItems"] as List)
+          .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)
           .toList(),
     );
   }
@@ -78,7 +88,8 @@ class ConversionModel extends IdNameItemModel {
         id,
         unitGroup,
         sourceConversionItem,
-        targetConversionItems,
+        conversionParamSetValues,
+        conversionUnitValues,
       ];
 
   bool get exists => this != none;
@@ -88,6 +99,7 @@ class ConversionModel extends IdNameItemModel {
     return 'ConversionModel{'
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
-        'targetConversionItems: $targetConversionItems}';
+        'conversionParamSetValues: $conversionParamSetValues, '
+        'targetConversionItems: $conversionUnitValues}';
   }
 }

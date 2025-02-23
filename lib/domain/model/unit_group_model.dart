@@ -74,6 +74,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
         oob,
       ];
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

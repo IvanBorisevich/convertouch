@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
@@ -9,15 +9,15 @@ class ReplaceConversionItemUnitUseCase
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems({
-    required Map<int, ConversionItemModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> modifyConversionItems({
+    required Map<int, ConversionUnitValueModel> conversionItemsMap,
     required ReplaceConversionItemUnitDelta delta,
   }) async {
     return conversionItemsMap.map(
       (key, value) => key == delta.oldUnitId
           ? MapEntry(
               delta.newUnit.id,
-              ConversionItemModel.coalesce(
+              ConversionUnitValueModel.coalesce(
                 value,
                 unit: delta.newUnit,
               ),
@@ -27,9 +27,9 @@ class ReplaceConversionItemUnitUseCase
   }
 
   @override
-  ConversionItemModel getModifiedSourceItem({
-    required ConversionItemModel? currentSourceItem,
-    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
+  ConversionUnitValueModel getModifiedSourceItem({
+    required ConversionUnitValueModel? currentSourceItem,
+    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required ReplaceConversionItemUnitDelta delta,
   }) {
     return modifiedConversionItemsMap[delta.newUnit.id]!;

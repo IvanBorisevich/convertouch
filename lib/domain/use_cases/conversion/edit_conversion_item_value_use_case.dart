@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -10,9 +10,9 @@ class EditConversionItemValueUseCase
   });
 
   @override
-  ConversionItemModel getModifiedSourceItem({
-    required ConversionItemModel? currentSourceItem,
-    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
+  ConversionUnitValueModel getModifiedSourceItem({
+    required ConversionUnitValueModel? currentSourceItem,
+    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required EditConversionItemValueDelta delta,
   }) {
     ValueModel? newValue = delta.newValue != null
@@ -23,7 +23,7 @@ class EditConversionItemValueUseCase
         ? ValueModel.ofString(delta.newDefaultValue)
         : ValueModel.one;
 
-    return ConversionItemModel.coalesce(
+    return ConversionUnitValueModel.coalesce(
       modifiedConversionItemsMap[delta.unitId]!,
       value: newValue ?? ValueModel.none,
       defaultValue: newDefaultValue,

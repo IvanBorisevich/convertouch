@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/formula.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
@@ -10,11 +10,11 @@ import 'package:convertouch/domain/utils/value_model_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ConvertSingleValueUseCase
-    extends UseCase<InputSingleValueConversionModel, ConversionItemModel> {
+    extends UseCase<InputSingleValueConversionModel, ConversionUnitValueModel> {
   const ConvertSingleValueUseCase();
 
   @override
-  Future<Either<ConvertouchException, ConversionItemModel>> execute(
+  Future<Either<ConvertouchException, ConversionUnitValueModel>> execute(
     InputSingleValueConversionModel input,
   ) async {
     double? tgtValue;
@@ -66,6 +66,12 @@ class ConvertSingleValueUseCase
         )!;
       }
 
+      /*
+       TODO:
+        1) use the pattern Chain of responsibility or similar
+        2) support generic type (not only double)
+       */
+
       double? minValue =
           (input.tgtUnit.minValue ?? input.unitGroup.minValue).num;
       double? maxValue =
@@ -84,7 +90,7 @@ class ConvertSingleValueUseCase
       );
 
       return Right(
-        ConversionItemModel(
+        ConversionUnitValueModel(
           unit: input.tgtUnit,
           value: tgtValueModel.exists ? tgtValueModel : ValueModel.none,
           defaultValue: tgtDefaultValueModel.exists

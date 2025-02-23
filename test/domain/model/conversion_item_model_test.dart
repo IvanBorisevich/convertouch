@@ -1,10 +1,10 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
 void main() {
-  ConversionItemModel item = ConversionItemModel(
+  ConversionUnitValueModel item = ConversionUnitValueModel(
     unit: const UnitModel(
       name: "testUnitName",
       code: "testUnitCode",
@@ -37,7 +37,7 @@ void main() {
   });
 
   test('Deserialize conversion item', () {
-    final actual = ConversionItemModel.fromJson(itemJson);
+    final actual = ConversionUnitValueModel.fromJson(itemJson);
     expect(actual?.unit.id, item.unit.id);
     expect(actual?.unit.name, item.unit.name);
     expect(actual?.unit.code, item.unit.code);

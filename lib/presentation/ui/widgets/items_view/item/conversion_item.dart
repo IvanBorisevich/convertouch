@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchConversionItem extends StatefulWidget {
-  final ConversionItemModel item;
+  final ConversionUnitValueModel item;
   final int? index;
   final ConvertouchValueType inputType;
   final void Function()? onTap;

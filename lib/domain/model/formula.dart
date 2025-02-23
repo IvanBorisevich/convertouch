@@ -1,8 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
 
-class ConvertouchFormula {
-  final double Function(double) forward;
-  final double Function(double) reverse;
+class ConvertouchFormula<X, Y> {
+  final Y Function(X, {ConversionParamSetValuesModel? params}) forward;
+  final X Function(Y, {ConversionParamSetValuesModel? params}) reverse;
   final String? forwardStr;
   final String? reverseStr;
 
@@ -13,22 +14,52 @@ class ConvertouchFormula {
     this.reverseStr,
   });
 
-  double? applyForward(double? x) {
-    return x != null ? forward.call(x) : null;
+  ConvertouchFormula.withParams({
+    required Y Function(X, ConversionParamSetValuesModel params) forward,
+    required X Function(Y, ConversionParamSetValuesModel params) reverse,
+    String? forwardStr,
+    String? reverseStr,
+  }) : this(
+          forward: (x, {ConversionParamSetValuesModel? params}) =>
+              forward.call(x, params!),
+          reverse: (y, {ConversionParamSetValuesModel? params}) =>
+              reverse.call(y, params!),
+          forwardStr: forwardStr,
+          reverseStr: reverseStr,
+        );
+
+  ConvertouchFormula.withoutParams({
+    required Y Function(X) forward,
+    required X Function(Y) reverse,
+    String? forwardStr,
+    String? reverseStr,
+  }) : this(
+          forward: (x, {ConversionParamSetValuesModel? params}) =>
+              forward.call(x),
+          reverse: (y, {ConversionParamSetValuesModel? params}) =>
+              reverse.call(y),
+          forwardStr: forwardStr,
+          reverseStr: reverseStr,
+        );
+
+  Y? applyForward(X? x, {ConversionParamSetValuesModel? params}) {
+    return x != null ? forward.call(x, params: params) : null;
   }
 
-  double? applyReverse(double? y) {
-    return y != null ? reverse.call(y) : null;
+  X? applyReverse(Y? y, {ConversionParamSetValuesModel? params}) {
+    return y != null ? reverse.call(y, params: params) : null;
+  }
+
+  static identity<T>() {
+    return ConvertouchFormula<T, T>(
+      forward: _identityFunc<T>,
+      reverse: _identityFunc<T>,
+      forwardStr: baseUnitConversionRule,
+      reverseStr: baseUnitConversionRule,
+    );
   }
 }
 
 typedef FormulasMap = Map<String, Map<String, ConvertouchFormula>>;
 
-double _identityFunc(double x) => x;
-
-const ConvertouchFormula identity = ConvertouchFormula(
-  forward: _identityFunc,
-  reverse: _identityFunc,
-  forwardStr: baseUnitConversionRule,
-  reverseStr: baseUnitConversionRule,
-);
+X _identityFunc<X>(X x, {ConversionParamSetValuesModel? params}) => x;

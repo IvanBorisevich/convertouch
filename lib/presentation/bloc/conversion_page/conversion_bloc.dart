@@ -241,7 +241,7 @@ class ConversionBloc
         ConversionBuilt(
           conversion: result.right,
           showRefreshButton: result.right.unitGroup.refreshable &&
-              result.right.targetConversionItems.isNotEmpty,
+              result.right.conversionUnitValues.isNotEmpty,
         ),
       );
       onSuccess?.call();

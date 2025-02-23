@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 
 const unitsV1 = [
   {
-    "groupName": "Length",
+    "groupName": lengthGroup,
     "iconName": "length-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
