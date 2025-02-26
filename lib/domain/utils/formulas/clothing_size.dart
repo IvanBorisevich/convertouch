@@ -1,52 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
 import 'package:convertouch/domain/model/formula.dart';
 import 'package:convertouch/domain/model/value_range.dart';
-
-const String genderParamName = "Gender";
-const String clothingTypeParamName = "Clothing Type";
-const String heightParamName = "Height";
-
-enum Gender {
-  man("Man"),
-  woman("Woman");
-
-  final String name;
-
-  const Gender(this.name);
-
-  static Gender? valueOf(String? name) {
-    return values.firstWhereOrNull((element) => name == element.name);
-  }
-}
-
-enum ClothingType {
-  shirt("Shirt"),
-  trousers("Trousers");
-
-  final String name;
-
-  const ClothingType(this.name);
-
-  static ClothingType? valueOf(String? name) {
-    return values.firstWhereOrNull((element) => name == element.name);
-  }
-}
-
-enum ClothingSizeCode {
-  inter("INT"),
-  ru("RU"),
-  eu("EU"),
-  uk("UK"),
-  us("US"),
-  it("IT"),
-  fr("FR"),
-  jp("JP");
-
-  final String name;
-
-  const ClothingSizeCode(this.name);
-}
 
 class ClothingSizesTuple {
   final NumValueRange height;
@@ -59,9 +15,10 @@ class ClothingSizesTuple {
   });
 }
 
-const Map<Gender, Map<ClothingType, List<ClothingSizesTuple>>> clothingSizes = {
+const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes =
+    {
   Gender.man: {
-    ClothingType.shirt: [
+    Garment.shirt: [
       ClothingSizesTuple(
         height: NumValueRange(0, 160),
         sizesMap: {
@@ -104,11 +61,18 @@ String _getInternationalClothingSize({
   required ClothingSizeCode inputSizeCode,
   required ConversionParamSetValuesModel params,
 }) {
-  Gender? gender =
-      Gender.valueOf(params.paramValues[genderParamName]!.value.str);
-  ClothingType? clothingType = ClothingType.valueOf(
-      params.paramValues[clothingTypeParamName]!.value.str);
-  double? height = params.paramValues[heightParamName]!.value.num;
+  Gender? gender = Gender.valueOf(params.values
+      .firstWhere((e) => e.param.name == genderParamName)
+      .value
+      .str);
+  Garment? clothingType = Garment.valueOf(params.values
+      .firstWhere((e) => e.param.name == garmentParamName)
+      .value
+      .str);
+  double? height = params.values
+      .firstWhere((e) => e.param.name == heightParamName)
+      .value
+      .num;
 
   if (gender == null || clothingType == null || height == null) {
     return "";
@@ -127,11 +91,18 @@ String _getClothingSizeByCode({
   required ClothingSizeCode targetSizeCode,
   required ConversionParamSetValuesModel params,
 }) {
-  Gender? gender =
-      Gender.valueOf(params.paramValues[genderParamName]!.value.str);
-  ClothingType? clothingType = ClothingType.valueOf(
-      params.paramValues[clothingTypeParamName]!.value.str);
-  double? height = params.paramValues[heightParamName]!.value.num;
+  Gender? gender = Gender.valueOf(params.values
+      .firstWhere((e) => e.param.name == genderParamName)
+      .value
+      .str);
+  Garment? clothingType = Garment.valueOf(params.values
+      .firstWhere((e) => e.param.name == garmentParamName)
+      .value
+      .str);
+  double? height = params.values
+      .firstWhere((e) => e.param.name == heightParamName)
+      .value
+      .num;
 
   if (gender == null || clothingType == null || height == null) {
     return "";

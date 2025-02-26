@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff9bb4ec)),
+    background: ColorVariation.only(Color(0xff7f9dec)),
     foreground: ColorVariation(
-      regular: Color(0xFF3B5B7A),
+      regular: Color(0xFF1D5180),
     ),
   ),
   page: ConvertouchColorScheme(
@@ -22,10 +22,10 @@ const pageColorSchemeLight = PageColorScheme(
     action: ColorVariation.only(Color(0xFFB6D5F6)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffa7c2ff)),
+    background: ColorVariation.only(Color(0xff7f9dec)),
     foreground: ColorVariation(
-      regular: Color(0xFF2B679D),
-      selected: Color(0xFF244360),
+      regular: Color(0xFF1D5180),
+      selected: Color(0xFF1C3750),
       disabled: Color(0xFFA0C4F5),
     ),
   ),

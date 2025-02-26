@@ -10,7 +10,8 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   const ConversionItemValueModel({
     required this.value,
-    this.defaultValue = ValueModel.one,    // TODO: replace with more general (maybe ValueModel.none)
+    this.defaultValue = ValueModel.one,
+    // TODO: replace with more general (maybe ValueModel.none)
   }) : super(
           itemType: ItemType.conversionItem,
         );

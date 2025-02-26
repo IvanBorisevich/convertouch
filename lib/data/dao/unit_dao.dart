@@ -10,6 +10,12 @@ abstract class UnitDao {
     required int offset,
   });
 
+  Future<List<UnitEntity>> getByParamId({
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  });
+
   Future<List<UnitEntity>> getBySearchString({
     required String searchString,
     required int unitGroupId,

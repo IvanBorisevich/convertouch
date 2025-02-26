@@ -73,10 +73,12 @@ class ConversionModel extends IdNameItemModel {
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
       sourceConversionItem:
           ConversionUnitValueModel.fromJson(json["sourceItem"]),
-      conversionParamSetValues: (json["params"] as List)
-          .map((paramsSetMap) =>
-              ConversionParamSetValuesModel.fromJson(paramsSetMap)!)
-          .toList(),
+      conversionParamSetValues: json["params"] != null
+          ? (json["params"] as List)
+              .map((paramsSetMap) =>
+                  ConversionParamSetValuesModel.fromJson(paramsSetMap)!)
+              .toList()
+          : [],
       conversionUnitValues: (json["targetItems"] as List)
           .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)
           .toList(),

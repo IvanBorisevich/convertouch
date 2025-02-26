@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/data_source_model.dart';
 const defaultDataSourceName = "default";
 
 const convertouchDataSources = {
-  currencyGroup: {
+  GroupNames.currency: {
     "floatRates": DataSourceModel(
       name: "floatrates.com",
       url: "https://www.floatrates.com/daily/usd.json",

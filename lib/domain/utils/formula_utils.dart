@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/formula.dart';
-import 'package:convertouch/domain/utils/formulas/clothing_size/formulas.dart';
-import 'package:convertouch/domain/utils/formulas/temperature/formulas.dart';
+import 'package:convertouch/domain/utils/formulas/clothing_size.dart';
+import 'package:convertouch/domain/utils/formulas/temperature.dart';
 
 class FormulaUtils {
   const FormulaUtils._();
@@ -25,9 +25,9 @@ class FormulaUtils {
     required String unitCode,
   }) {
     return getFormula(
-          unitGroupName: unitGroupName,
-          unitCode: unitCode,
-        ).forwardStr;
+      unitGroupName: unitGroupName,
+      unitCode: unitCode,
+    ).forwardStr;
   }
 
   static String? getReverseStr({
@@ -35,13 +35,13 @@ class FormulaUtils {
     required String unitCode,
   }) {
     return getFormula(
-          unitGroupName: unitGroupName,
-          unitCode: unitCode,
-        ).reverseStr;
+      unitGroupName: unitGroupName,
+      unitCode: unitCode,
+    ).reverseStr;
   }
 }
 
 final FormulasMap formulasMap = {
-  temperatureGroup: temperatureFormulas,
-  clothingSizeGroup: clothingSizeFormulas,
+  GroupNames.temperature: temperatureFormulas,
+  GroupNames.clothingSize: clothingSizeFormulas,
 };

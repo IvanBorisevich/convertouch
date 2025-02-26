@@ -5,36 +5,44 @@ import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/textbox.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchConversionItem extends StatefulWidget {
-  final ConversionUnitValueModel item;
+class ConvertouchConversionItem<T extends ConversionItemValueModel, L>
+    extends StatefulWidget {
+  final T item;
   final int? index;
   final ConvertouchValueType inputType;
+  final List<L>? listValues;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final void Function()? onRemove;
   final bool disabled;
   final bool controlsVisible;
+  final String Function(T) itemNameFunc;
+  final String Function(T)? unitItemCodeFunc;
   final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
     this.item, {
     this.index,
-    required this.inputType,
+    this.inputType = ConvertouchValueType.text,
+        this.listValues,
     this.onTap,
     this.onValueChanged,
     this.onRemove,
     this.disabled = false,
     this.controlsVisible = true,
+    required this.itemNameFunc,
+    required this.unitItemCodeFunc,
     required this.colors,
     super.key,
   });
 
   @override
-  State<ConvertouchConversionItem> createState() =>
-      _ConvertouchConversionItemState();
+  State<ConvertouchConversionItem<T, L>> createState() =>
+      _ConvertouchConversionItemState<T, L>();
 }
 
-class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
+class _ConvertouchConversionItemState<T extends ConversionItemValueModel, L>
+    extends State<ConvertouchConversionItem<T, L>> {
   static const double _unitButtonWidth = 90;
   static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
   static const double _elementsBorderRadius = 15;
@@ -88,7 +96,7 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
             child: ConvertouchTextBox(
               controller: _unitValueController,
               disabled: widget.disabled,
-              label: widget.item.unit.name,
+              label: widget.itemNameFunc.call(widget.item),
               hintText: _isFocused && !widget.disabled
                   ? widget.item.defaultValue.str
                   : widget.item.defaultValue.scientific,
@@ -113,7 +121,10 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  !widget.item.unit.invertible
+                  widget.item is ConversionUnitValueModel &&
+                          !(widget.item as ConversionUnitValueModel)
+                              .unit
+                              .invertible
                       ? Padding(
                           padding: const EdgeInsets.all(9),
                           child: IconUtils.getSuffixSvgIcon(
@@ -142,48 +153,50 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
               colors: unitTextBoxColor,
             ),
           ),
-          Container(
-            width: _unitButtonWidth,
-            height: _defaultHeight,
-            padding: const EdgeInsets.only(left: _spacing),
-            child: TextButton(
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                widget.onTap?.call();
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  _isFocused && !widget.disabled
-                      ? unitButtonColor.background.focused
-                      : unitButtonColor.background.regular,
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: _isFocused && !widget.disabled
-                          ? unitButtonColor.border.focused
-                          : unitButtonColor.border.regular,
-                      width: 1,
+          widget.unitItemCodeFunc != null
+              ? Container(
+                  width: _unitButtonWidth,
+                  height: _defaultHeight,
+                  padding: const EdgeInsets.only(left: _spacing),
+                  child: TextButton(
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      widget.onTap?.call();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        _isFocused && !widget.disabled
+                            ? unitButtonColor.background.focused
+                            : unitButtonColor.background.regular,
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: _isFocused && !widget.disabled
+                                ? unitButtonColor.border.focused
+                                : unitButtonColor.border.regular,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(_elementsBorderRadius),
+                          ),
+                        ),
+                      ),
                     ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(_elementsBorderRadius),
+                    child: Text(
+                      widget.unitItemCodeFunc!.call(widget.item),
+                      style: TextStyle(
+                        color: _isFocused && !widget.disabled
+                            ? unitButtonColor.foreground.focused
+                            : unitButtonColor.foreground.regular,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
                     ),
                   ),
-                ),
-              ),
-              child: Text(
-                widget.item.unit.code,
-                style: TextStyle(
-                  color: _isFocused && !widget.disabled
-                      ? unitButtonColor.foreground.focused
-                      : unitButtonColor.foreground.regular,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-                maxLines: 1,
-              ),
-            ),
-          ),
+                )
+              : const SizedBox.shrink(),
           widget.controlsVisible
               ? _handler(
                   icon: Icons.remove,

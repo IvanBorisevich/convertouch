@@ -71,6 +71,10 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   ConversionItemDaoDb? _conversionItemDaoInstance;
 
+  ConversionParamDaoDb? _conversionParamDaoInstance;
+
+  ConversionParamSetDaoDb? _conversionParamSetDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -103,6 +107,12 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `mandatory` INTEGER NOT NULL, `group_id` INTEGER NOT NULL, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_params` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `calculable` INTEGER NOT NULL, `unit_group_id` INTEGER, `selected_unit_id` INTEGER, `list_type` INTEGER, `param_set_id` INTEGER NOT NULL, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_units_code_unit_group_id` ON `units` (`code`, `unit_group_id`)');
@@ -112,6 +122,12 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
             'CREATE UNIQUE INDEX `index_conversions_last_modified` ON `conversions` (`last_modified`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_conversion_items_unit_id_conversion_id` ON `conversion_items` (`unit_id`, `conversion_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_conversion_param_sets_name_group_id` ON `conversion_param_sets` (`name`, `group_id`)');
+        await database.execute(
+            'CREATE INDEX `index_conversion_params_name_param_set_id` ON `conversion_params` (`name`, `param_set_id`)');
+        await database.execute(
+            'CREATE INDEX `index_conversion_param_units_param_id` ON `conversion_param_units` (`param_id`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -145,6 +161,18 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   ConversionItemDaoDb get conversionItemDao {
     return _conversionItemDaoInstance ??=
         _$ConversionItemDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamDaoDb get conversionParamDao {
+    return _conversionParamDaoInstance ??=
+        _$ConversionParamDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamSetDaoDb get conversionParamSetDao {
+    return _conversionParamSetDaoInstance ??=
+        _$ConversionParamSetDaoDb(database, changeListener);
   }
 }
 
@@ -396,6 +424,18 @@ class _$UnitDaoDb extends UnitDaoDb {
   }
 
   @override
+  Future<List<UnitEntity>> getByParamId({
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'select u.* from units u inner join conversion_param_units p on p.unit_id = u.id where p.param_id = ?1 order by u.code limit ?2 offset ?3',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        arguments: [paramId, pageSize, offset]);
+  }
+
+  @override
   Future<List<UnitEntity>> getBaseUnits(int unitGroupId) async {
     return _queryAdapter.queryList(
         'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 2',
@@ -622,5 +662,58 @@ class _$ConversionItemDaoDb extends ConversionItemDaoDb {
     await _queryAdapter.queryNoReturn(
         'delete from conversion_items where conversion_id = ?1',
         arguments: [conversionId]);
+  }
+}
+
+class _$ConversionParamDaoDb extends ConversionParamDaoDb {
+  _$ConversionParamDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamEntity>> get(int setId) async {
+    return _queryAdapter.queryList(
+        'SELECT p.* FROM conversion_params p WHERE p.param_set_id = ?1',
+        mapper: (Map<String, Object?> row) => ConversionParamEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            calculable: (row['calculable'] as int) != 0,
+            unitGroupId: row['unit_group_id'] as int?,
+            selectedUnitId: row['selected_unit_id'] as int?,
+            listType: row['list_type'] as int?,
+            paramSetId: row['param_set_id'] as int),
+        arguments: [setId]);
+  }
+}
+
+class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
+  _$ConversionParamSetDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamSetEntity>> get(int groupId) async {
+    return _queryAdapter.queryList(
+        'SELECT p.* FROM conversion_param_sets p WHERE p.group_id = ?1',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            mandatory: (row['mandatory'] as int) != 0,
+            groupId: row['group_id'] as int),
+        arguments: [groupId]);
   }
 }

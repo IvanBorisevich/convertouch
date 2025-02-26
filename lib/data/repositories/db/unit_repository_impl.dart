@@ -42,6 +42,33 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
+  Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
+    required int paramId,
+    required int pageNum,
+    required int pageSize,
+  }) async {
+    try {
+      final result = await unitDao.getByParamId(
+        paramId: paramId,
+        pageSize: pageSize,
+        offset: pageNum * pageSize,
+      );
+
+      return Right(
+        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+      );
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when fetching unit ids of the param id = $paramId",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<ConvertouchException, List<UnitModel>>> search({
     required int unitGroupId,
     required String searchString,
@@ -92,7 +119,8 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(
-      List<int>? ids) async {
+    List<int>? ids,
+  ) async {
     if (ids == null || ids.isEmpty) {
       return const Right([]);
     }

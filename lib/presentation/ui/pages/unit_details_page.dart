@@ -206,6 +206,8 @@ class _ConvertouchUnitDetailsPageState
                                         pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
+                                itemNameFunc: (item) => item.unit.name,
+                                unitItemCodeFunc: (item) => item.unit.code,
                                 controlsVisible: false,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
@@ -231,6 +233,8 @@ class _ConvertouchUnitDetailsPageState
                                     pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
+                                itemNameFunc: (item) => item.unit.name,
+                                unitItemCodeFunc: (item) => item.unit.code,
                                 controlsVisible: false,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(

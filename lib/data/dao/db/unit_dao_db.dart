@@ -1,4 +1,5 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
+import 'package:convertouch/data/entities/conversion_param_units.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';
@@ -35,6 +36,19 @@ abstract class UnitDaoDb extends UnitDao {
       'where unit_group_id = :unitGroupId '
       'and code = :code')
   Future<UnitEntity?> getByCode(int unitGroupId, String code);
+
+  @override
+  @Query('select u.* '
+      'from $unitsTableName u '
+      'inner join $conversionParamUnitsTableName p on p.unit_id = u.id '
+      'where p.param_id = :paramId '
+      'order by u.code '
+      'limit :pageSize offset :offset')
+  Future<List<UnitEntity>> getByParamId({
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  });
 
   @override
   @Query('select * from $unitsTableName '

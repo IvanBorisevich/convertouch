@@ -1,31 +1,39 @@
 import 'package:collection/collection.dart';
 
-const String appName = "Convertouch";
-const String unknownAppVersion = "Unknown";
-const String iconAssetsPathPrefix = "assets/icons";
-const String quicksandFontFamily = "Quicksand";
-
-const lengthGroup = "Length";
-const currencyGroup = "Currency";
-const temperatureGroup = "Temperature";
-const clothingSizeGroup = "Clothing Size";
-
-const degreeCelsiusCode = "°C";
-const degreeFahrenheitCode = "°F";
-const degreeKelvinCode = "K";
-const degreeRankineCode = "°R";
-const degreeDelisleCode = "°De";
-const degreeNewtonCode = "°N";
-const degreeReaumurCode = "°Ré";
-const degreeRomerCode = "°Rø";
-
+const appName = "Convertouch";
+const unknownAppVersion = "Unknown";
+const iconAssetsPathPrefix = "assets/icons";
+const quicksandFontFamily = "Quicksand";
 const baseUnitConversionRule = "Base unit";
 const noConversionRule = "-";
+
+abstract class GroupNames {
+  const GroupNames._();
+
+  static const length = "Length";
+  static const temperature = "Temperature";
+  static const currency = "Currency";
+  static const clothingSize = "Clothing Size";
+}
+
+abstract class UnitCodes {
+  const UnitCodes._();
+
+  static const degreeCelsius = "°C";
+  static const degreeFahrenheit = "°F";
+  static const degreeKelvin = "K";
+  static const degreeRankine = "°R";
+  static const degreeDelisle = "°De";
+  static const degreeNewton = "°N";
+  static const degreeReaumur = "°Ré";
+  static const degreeRomer = "°Rø";
+}
 
 abstract class IconNames {
   const IconNames._();
 
-  static const String oneWayConversion = "one_way_conversion.svg";
+  static const oneWayConversion = "one_way_conversion.svg";
+  static const preferences = "preferences.png";
 }
 
 enum SettingKey {
@@ -172,7 +180,7 @@ enum Cron {
 }
 
 enum ConvertouchValueType {
-  text(1, "Any"),
+  text(1, "Text"),
   integer(2, "Integer"),
   integerPositive(3, "Positive Integer"),
   decimal(4, "Decimal"),

@@ -3,19 +3,17 @@ import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
 class ConversionParamSetValuesModel {
   final ConversionParamSetModel paramSet;
-  final Map<String, ConversionParamValueModel> paramValues;
+  final List<ConversionParamValueModel> values;
 
   const ConversionParamSetValuesModel({
     required this.paramSet,
-    required this.paramValues,
+    required this.values,
   });
 
   Map<String, dynamic> toJson() {
     return {
       "paramSet": paramSet.toJson(),
-      "paramValues": paramValues.map(
-        (key, value) => MapEntry(key, value.toJson()),
-      ),
+      "values": values.map((value) => value.toJson()).toList(),
     };
   }
 
@@ -25,12 +23,9 @@ class ConversionParamSetValuesModel {
     }
     return ConversionParamSetValuesModel(
       paramSet: ConversionParamSetModel.fromJson(json["paramSet"])!,
-      paramValues: (json["paramValues"] as Map).map(
-        (key, value) => MapEntry(
-          key,
-          ConversionParamValueModel.fromJson(value)!,
-        ),
-      ),
+      values: (json["values"] as List)
+          .map((value) => ConversionParamValueModel.fromJson(value)!)
+          .toList(),
     );
   }
 }

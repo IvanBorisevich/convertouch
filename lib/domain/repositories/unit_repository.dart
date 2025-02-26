@@ -11,6 +11,12 @@ abstract class UnitRepository {
     required int pageSize,
   });
 
+  Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
+    required int paramId,
+    required int pageNum,
+    required int pageSize,
+  });
+
   Future<Either<ConvertouchException, List<UnitModel>>> search({
     required int unitGroupId,
     required String searchString,

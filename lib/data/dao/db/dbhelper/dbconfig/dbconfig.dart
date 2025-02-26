@@ -2,12 +2,17 @@ import 'dart:async';
 
 import 'package:convertouch/data/dao/db/conversion_dao_db.dart';
 import 'package:convertouch/data/dao/db/conversion_item_dao_db.dart';
+import 'package:convertouch/data/dao/db/conversion_param_dao_db.dart';
+import 'package:convertouch/data/dao/db/conversion_param_set_dao_db.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/db/dynamic_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_group_dao_db.dart';
 import 'package:convertouch/data/entities/conversion_entity.dart';
 import 'package:convertouch/data/entities/conversion_item_entity.dart';
+import 'package:convertouch/data/entities/conversion_param_entity.dart';
+import 'package:convertouch/data/entities/conversion_param_set_entity.dart';
+import 'package:convertouch/data/entities/conversion_param_units.dart';
 import 'package:convertouch/data/entities/dynamic_value_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
@@ -24,6 +29,9 @@ part 'dbconfig.g.dart';
     DynamicValueEntity,
     ConversionEntity,
     ConversionItemEntity,
+    ConversionParamSetEntity,
+    ConversionParamEntity,
+    ConversionParamUnitEntity,
   ],
 )
 abstract class ConvertouchDatabase extends FloorDatabase {
@@ -36,4 +44,8 @@ abstract class ConvertouchDatabase extends FloorDatabase {
   ConversionDaoDb get conversionDao;
 
   ConversionItemDaoDb get conversionItemDao;
+
+  ConversionParamDaoDb get conversionParamDao;
+
+  ConversionParamSetDaoDb get conversionParamSetDao;
 }

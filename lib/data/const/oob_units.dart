@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 
 const unitsV1 = [
   {
-    "groupName": lengthGroup,
+    "groupName": GroupNames.length,
     "iconName": "length-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
@@ -61,23 +61,23 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": temperatureGroup,
+    "groupName": GroupNames.temperature,
     "iconName": "temperature-group.png",
     "valueType": ConvertouchValueType.decimal,
     "conversionType": ConversionType.formula,
     "units": [
-      {"code": degreeCelsiusCode, "name": "Degree Celsius"},
-      {"code": degreeFahrenheitCode, "name": "Degree Fahrenheit"},
-      {"code": degreeKelvinCode, "name": "Degree Kelvin"},
-      {"code": degreeRankineCode, "name": "Degree Rankine"},
-      {"code": degreeDelisleCode, "name": "Degree Delisle"},
-      {"code": degreeNewtonCode, "name": "Degree Newton"},
-      {"code": degreeReaumurCode, "name": "Degree Réaumur"},
-      {"code": degreeRomerCode, "name": "Degree Rømer"},
+      {"code": UnitCodes.degreeCelsius, "name": "Degree Celsius"},
+      {"code": UnitCodes.degreeFahrenheit, "name": "Degree Fahrenheit"},
+      {"code": UnitCodes.degreeKelvin, "name": "Degree Kelvin"},
+      {"code": UnitCodes.degreeRankine, "name": "Degree Rankine"},
+      {"code": UnitCodes.degreeDelisle, "name": "Degree Delisle"},
+      {"code": UnitCodes.degreeNewton, "name": "Degree Newton"},
+      {"code": UnitCodes.degreeReaumur, "name": "Degree Réaumur"},
+      {"code": UnitCodes.degreeRomer, "name": "Degree Rømer"},
     ]
   },
   {
-    "groupName": currencyGroup,
+    "groupName": GroupNames.currency,
     "iconName": "currency-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
