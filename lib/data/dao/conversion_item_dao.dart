@@ -1,14 +1,14 @@
-import 'package:convertouch/data/entities/conversion_item_entity.dart';
+import 'package:convertouch/data/entities/conversion_unit_value_entity.dart';
 import 'package:sqflite/sqflite.dart' as sqlite;
 
 abstract class ConversionItemDao {
   const ConversionItemDao();
 
-  Future<List<ConversionItemEntity>> getByConversionId(int conversionId);
+  Future<List<ConversionUnitValueEntity>> getByConversionId(int conversionId);
 
   Future<void> insertBatch(
     sqlite.Database db,
-    List<ConversionItemEntity> conversionItems,
+    List<ConversionUnitValueEntity> conversionItems,
   );
 
   Future<void> removeByConversionId(int conversionId);

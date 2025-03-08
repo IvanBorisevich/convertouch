@@ -18,8 +18,8 @@ class ConversionTranslator
       sourceUnitId: model.sourceConversionItem?.unit.id != -1
           ? model.sourceConversionItem?.unit.id
           : null,
-      sourceValue: model.sourceConversionItem?.value.exists == true
-          ? model.sourceConversionItem!.value.str
+      sourceValue: model.sourceConversionItem?.value?.exists == true
+          ? model.sourceConversionItem!.value!.raw
           : null,
       lastModified: DateTime.now().millisecondsSinceEpoch,
     );

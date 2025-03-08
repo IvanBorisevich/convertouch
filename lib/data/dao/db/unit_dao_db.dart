@@ -8,9 +8,16 @@ import 'package:sqflite/sqflite.dart' as sqlite;
 @dao
 abstract class UnitDaoDb extends UnitDao {
   @override
-  @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId '
-      'order by code '
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where g.id = :unitGroupId '
+      'order by u.code '
       'limit :pageSize offset :offset')
   Future<List<UnitEntity>> getAll({
     required int unitGroupId,
@@ -19,10 +26,17 @@ abstract class UnitDaoDb extends UnitDao {
   });
 
   @override
-  @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId '
-      'and (name like :searchString or code like :searchString) '
-      'order by code '
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where g.id = :unitGroupId '
+      'and (u.name like :searchString or u.code like :searchString) '
+      'order by u.code '
       'limit :pageSize offset :offset')
   Future<List<UnitEntity>> getBySearchString({
     required String searchString,
@@ -32,15 +46,28 @@ abstract class UnitDaoDb extends UnitDao {
   });
 
   @override
-  @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId '
-      'and code = :code')
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where g.id = :unitGroupId '
+      'and u.code = :code')
   Future<UnitEntity?> getByCode(int unitGroupId, String code);
 
   @override
-  @Query('select u.* '
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
       'from $unitsTableName u '
       'inner join $conversionParamUnitsTableName p on p.unit_id = u.id '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where p.param_id = :paramId '
       'order by u.code '
       'limit :pageSize offset :offset')
@@ -51,24 +78,52 @@ abstract class UnitDaoDb extends UnitDao {
   });
 
   @override
-  @Query('select * from $unitsTableName '
-      'where unit_group_id = :unitGroupId '
-      'and cast(coefficient as int) = 1 '
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where g.id = :unitGroupId '
+      'and cast(u.coefficient as int) = 1 '
       'limit 2')
   Future<List<UnitEntity>> getBaseUnits(int unitGroupId);
 
   @override
-  @Query('select * from $unitsTableName where id = :id limit 1')
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where u.id = :id limit 1')
   Future<UnitEntity?> getUnit(int id);
 
   @override
-  @Query('select * from $unitsTableName where id in (:ids)')
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
+      'from $unitsTableName u '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
+      'where u.id in (:ids)')
   Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
 
   @override
-  @Query('select u.* '
+  @Query('select '
+      'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
+      'u.invertible, u.oob, '
+      'coalesce(u.value_type, g.value_type) value_type, '
+      'coalesce(u.min_value, g.min_value) min_value, '
+      'coalesce(u.max_value, g.max_value) max_value '
       'from $unitsTableName u '
-      'inner join $unitGroupsTableName g '
+      'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where 1=1 '
       'and g.name = :unitGroupName '
       'and u.unit_group_id = g.id '

@@ -15,8 +15,7 @@ class ClothingSizesTuple {
   });
 }
 
-const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes =
-    {
+const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes = {
   Gender.man: {
     Garment.shirt: [
       ClothingSizesTuple(
@@ -64,11 +63,11 @@ String _getInternationalClothingSize({
   Gender? gender = Gender.valueOf(params.values
       .firstWhere((e) => e.param.name == genderParamName)
       .value
-      .str);
+      .raw);
   Garment? clothingType = Garment.valueOf(params.values
       .firstWhere((e) => e.param.name == garmentParamName)
       .value
-      .str);
+      .raw);
   double? height = params.values
       .firstWhere((e) => e.param.name == heightParamName)
       .value
@@ -94,11 +93,11 @@ String _getClothingSizeByCode({
   Gender? gender = Gender.valueOf(params.values
       .firstWhere((e) => e.param.name == genderParamName)
       .value
-      .str);
+      .raw);
   Garment? clothingType = Garment.valueOf(params.values
       .firstWhere((e) => e.param.name == garmentParamName)
       .value
-      .str);
+      .raw);
   double? height = params.values
       .firstWhere((e) => e.param.name == heightParamName)
       .value

@@ -9,9 +9,8 @@ abstract class ConversionItemValueModel extends ItemModel {
   final ValueModel defaultValue;
 
   const ConversionItemValueModel({
-    required this.value,
-    this.defaultValue = ValueModel.one,
-    // TODO: replace with more general (maybe ValueModel.none)
+    this.value = ValueModel.empty,
+    this.defaultValue = ValueModel.empty,
   }) : super(
           itemType: ItemType.conversionItem,
         );
@@ -30,24 +29,15 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   const ConversionUnitValueModel({
     required this.unit,
     required super.value,
-    super.defaultValue,
+    required super.defaultValue,
   });
-
-  ConversionUnitValueModel.fromStrValue({
-    required UnitModel unit,
-    String strValue = "",
-  }) : this(
-          unit: unit,
-          value: ValueModel.ofString(strValue),
-          defaultValue: ValueModel.one,
-        );
 
   const ConversionUnitValueModel.fromUnit({
     required UnitModel unit,
   }) : this(
           unit: unit,
-          value: ValueModel.none,
-          defaultValue: ValueModel.one,
+          value: ValueModel.empty,
+          defaultValue: ValueModel.empty,
         );
 
   ConversionUnitValueModel.coalesce(
@@ -57,11 +47,13 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     ValueModel? defaultValue,
   }) : this(
           unit: unit ?? saved?.unit ?? UnitModel.none,
-          value: value ?? saved?.value ?? ValueModel.none,
-          defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.none,
+          value: value ?? saved?.value ?? ValueModel.empty,
+          defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.empty,
         );
 
-  bool get valueExists => value.exists || defaultValue.exists;
+  bool get valueExists => value.exists == true;
+
+  bool get defaultValueExists => defaultValue.exists == true;
 
   @override
   Map<String, dynamic> toJson() {
@@ -78,9 +70,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     }
     return ConversionUnitValueModel(
       unit: UnitModel.fromJson(json["unit"])!,
-      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.empty,
       defaultValue:
-          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.empty,
     );
   }
 
@@ -106,7 +98,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
 
   const ConversionParamValueModel({
     required this.param,
-    required super.value,
+    super.value,
     super.defaultValue,
   });
 
@@ -131,9 +123,9 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     }
     return ConversionParamValueModel(
       param: ConversionParamModel.fromJson(json["param"])!,
-      value: ValueModel.fromJson(json["value"]) ?? ValueModel.none,
+      value: ValueModel.fromJson(json["value"]) ?? ValueModel.empty,
       defaultValue:
-          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.none,
+          ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.empty,
     );
   }
 }

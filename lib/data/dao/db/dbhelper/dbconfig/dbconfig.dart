@@ -9,7 +9,7 @@ import 'package:convertouch/data/dao/db/dynamic_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_dao_db.dart';
 import 'package:convertouch/data/dao/db/unit_group_dao_db.dart';
 import 'package:convertouch/data/entities/conversion_entity.dart';
-import 'package:convertouch/data/entities/conversion_item_entity.dart';
+import 'package:convertouch/data/entities/conversion_unit_value_entity.dart';
 import 'package:convertouch/data/entities/conversion_param_entity.dart';
 import 'package:convertouch/data/entities/conversion_param_set_entity.dart';
 import 'package:convertouch/data/entities/conversion_param_units.dart';
@@ -28,7 +28,7 @@ part 'dbconfig.g.dart';
     UnitEntity,
     DynamicValueEntity,
     ConversionEntity,
-    ConversionItemEntity,
+    ConversionUnitValueEntity,
     ConversionParamSetEntity,
     ConversionParamEntity,
     ConversionParamUnitEntity,

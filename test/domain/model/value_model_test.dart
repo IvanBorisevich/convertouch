@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   void testForInput({required String raw, required String expectedScientificValue,}) {
-    ValueModel result = ValueModel.ofString(raw);
+    ValueModel result = ValueModel.str(raw);
 
-    expect(result.str, raw);
-    expect(result.scientific, expectedScientificValue);
+    expect(result.raw, raw);
+    expect(result.alt, expectedScientificValue);
   }
 
   test('Build value model from raw string value', () {

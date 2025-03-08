@@ -1,10 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/list_type.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_params_view.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
@@ -67,18 +65,16 @@ class _ConvertouchConversionItemsViewState
                   ConversionParamValueModel(
                     param: ConversionParamModel.listBased(
                       name: "Gender",
-                      listType: ConvertouchListType.gender,
+                      listValueType: ConvertouchListValueType.gender,
                       paramSetId: 1,
                     ),
-                    value: ValueModel.none,
                   ),
                   ConversionParamValueModel(
                     param: ConversionParamModel.listBased(
                       name: "Garment",
-                      listType: ConvertouchListType.garment,
+                      listValueType: ConvertouchListValueType.garment,
                       paramSetId: 1,
                     ),
-                    value: ValueModel.none,
                   ),
                 ]),
             theme: widget.theme,
@@ -105,7 +101,6 @@ class _ConvertouchConversionItemsViewState
                   child: ConvertouchConversionItem(
                     item,
                     index: index,
-                    inputType: item.unit.valueType ?? widget.parentValueType,
                     disabled: !widget.convertedItems[index].unit.invertible,
                     itemNameFunc: (item) => item.unit.name,
                     unitItemCodeFunc: (item) => item.unit.code,

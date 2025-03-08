@@ -158,25 +158,21 @@ class _ConvertouchUnitDetailsPageState
                       ),
                       ConvertouchParameterItem(
                         name: 'Value Type',
-                        value: pageState.details.draftUnitData.valueType!.name,
+                        value: pageState.details.draftUnitData.valueType.name,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: 'Min Value',
-                        value: pageState
-                            .details.savedUnitData.minValue?.scientific,
+                        value: pageState.details.savedUnitData.minValue.alt,
                         visible:
-                            pageState.details.savedUnitData.minValue?.exists ??
-                                false,
+                            pageState.details.savedUnitData.minValue.exists,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: 'Max Value',
-                        value: pageState
-                            .details.savedUnitData.maxValue?.scientific,
+                        value: pageState.details.savedUnitData.maxValue.alt,
                         visible:
-                            pageState.details.savedUnitData.maxValue?.exists ??
-                                false,
+                            pageState.details.savedUnitData.maxValue.exists,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
@@ -201,9 +197,6 @@ class _ConvertouchUnitDetailsPageState
                                       .details.conversionRule.unitValue,
                                   defaultValue: ValueModel.one,
                                 ),
-                                inputType:
-                                    pageState.details.resultUnit.valueType ??
-                                        pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
                                 itemNameFunc: (item) => item.unit.name,
@@ -228,9 +221,6 @@ class _ConvertouchUnitDetailsPageState
                                   defaultValue: pageState
                                       .details.conversionRule.savedArgValue,
                                 ),
-                                inputType: pageState.details.conversionRule
-                                        .argUnit.valueType ??
-                                    pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
                                 itemNameFunc: (item) => item.unit.name,

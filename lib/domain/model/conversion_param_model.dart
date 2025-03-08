@@ -1,51 +1,55 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/list_type.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
-class ConversionParamModel<T> extends IdNameItemModel {
-  final bool calculable;
+class ConversionParamModel extends IdNameItemModel {
   final int? unitGroupId;
   final UnitModel? selectedUnit;
-  final ConvertouchListType? listType;
+  final bool calculable;
+  final ConvertouchValueType valueType;
   final int paramSetId;
 
-  const ConversionParamModel({
+  const ConversionParamModel._({
     super.id,
     required super.name,
     this.unitGroupId,
     this.selectedUnit,
     this.calculable = false,
-    this.listType,
+    required this.valueType,
     required this.paramSetId,
   }) : super(itemType: ItemType.conversionParam);
 
-  const ConversionParamModel.unitBased({
-    super.id,
-    required super.name,
-    this.calculable = false,
-    required this.unitGroupId,
-    required this.selectedUnit,
-    required this.paramSetId,
-  })  : listType = null,
-        super(
-          itemType: ItemType.conversionParam,
-        );
+  factory ConversionParamModel.unitBased({
+    int id = -1,
+    required String name,
+    bool calculable = false,
+    required int unitGroupId,
+    required UnitModel selectedUnit,
+    required int paramSetId,
+  }) {
+    return ConversionParamModel._(
+      id: id,
+      name: name,
+      calculable: calculable,
+      unitGroupId: unitGroupId,
+      selectedUnit: selectedUnit,
+      valueType: selectedUnit.valueType,
+      paramSetId: paramSetId,
+    );
+  }
 
   factory ConversionParamModel.listBased({
     int id = -1,
     required String name,
     bool calculable = false,
-    required ConvertouchListType listType,
+    required ConvertouchListValueType listValueType,
     required int paramSetId,
   }) {
-    return ConversionParamModel(
+    return ConversionParamModel._(
       id: id,
       name: name,
-      unitGroupId: null,
-      selectedUnit: null,
       calculable: calculable,
-      listType: listType,
+      valueType: ConvertouchValueType.byListType(listValueType),
       paramSetId: paramSetId,
     );
   }
@@ -57,7 +61,6 @@ class ConversionParamModel<T> extends IdNameItemModel {
         unitGroupId,
         selectedUnit,
         calculable,
-        listType,
         paramSetId,
       ];
 
@@ -69,7 +72,7 @@ class ConversionParamModel<T> extends IdNameItemModel {
       "unitGroupId": unitGroupId,
       "selectedUnit": selectedUnit?.toJson(),
       "calculable": calculable,
-      "listType": listType?.val,
+      "listValueType": valueType.listValueType.val,
       "paramSetId": paramSetId,
     };
   }
@@ -78,14 +81,24 @@ class ConversionParamModel<T> extends IdNameItemModel {
     if (json == null) {
       return null;
     }
-    return ConversionParamModel(
-      id: json["id"] ?? -1,
-      name: json["name"],
-      calculable: json["calculable"],
-      unitGroupId: json["unitGroupId"],
-      selectedUnit: UnitModel.fromJson(json["selectedUnitId"]),
-      listType: ConvertouchListType.valueOf(json["listType"]),
-      paramSetId: json["paramSetId"],
-    );
+
+    if (json["selectedUnitId"] != null) {
+      return ConversionParamModel.unitBased(
+        id: json["id"] ?? -1,
+        name: json["name"],
+        calculable: json["calculable"],
+        unitGroupId: json["unitGroupId"],
+        selectedUnit: UnitModel.fromJson(json["selectedUnitId"])!,
+        paramSetId: json["paramSetId"],
+      );
+    } else {
+      return ConversionParamModel.listBased(
+        id: json["id"] ?? -1,
+        name: json["name"],
+        calculable: json["calculable"],
+        listValueType: ConvertouchListValueType.valueOf(json["valueType"]),
+        paramSetId: json["paramSetId"],
+      );
+    }
   }
 }

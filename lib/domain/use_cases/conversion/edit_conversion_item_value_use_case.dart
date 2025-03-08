@@ -16,16 +16,16 @@ class EditConversionItemValueUseCase
     required EditConversionItemValueDelta delta,
   }) {
     ValueModel? newValue = delta.newValue != null
-        ? ValueModel.ofString(delta.newValue)
+        ? ValueModel.str(delta.newValue)
         : currentSourceItem?.value;
 
     ValueModel? newDefaultValue = delta.newDefaultValue != null
-        ? ValueModel.ofString(delta.newDefaultValue)
+        ? ValueModel.str(delta.newDefaultValue)
         : ValueModel.one;
 
     return ConversionUnitValueModel.coalesce(
       modifiedConversionItemsMap[delta.unitId]!,
-      value: newValue ?? ValueModel.none,
+      value: newValue ?? ValueModel.empty,
       defaultValue: newDefaultValue,
     );
   }

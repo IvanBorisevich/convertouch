@@ -41,8 +41,8 @@ class UnitGroupTranslator
       refreshable: entity.refreshable == 1,
       valueType: ConvertouchValueType.valueOf(entity.valueType) ??
           UnitGroupModel.defaultValueType,
-      minValue: ValueModel.ofDouble(entity.minValue),
-      maxValue: ValueModel.ofDouble(entity.maxValue),
+      minValue: ValueModel.num(entity.minValue),
+      maxValue: ValueModel.num(entity.maxValue),
       oob: entity.oob == 1,
     );
   }

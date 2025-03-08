@@ -9,7 +9,6 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/unit_details_utils.dart';
-import 'package:convertouch/domain/utils/value_model_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildUnitDetailsUseCase
@@ -30,15 +29,9 @@ class BuildUnitDetailsUseCase
       UnitModel unit = existingUnit
           ? UnitModel.coalesce(
               input.unit,
-              valueType: input.unit.valueType ?? input.unitGroup.valueType,
-              minValue: ValueModelUtils.coalesce(
-                v1: input.unit.minValue,
-                v2: input.unitGroup.minValue,
-              ),
-              maxValue: ValueModelUtils.coalesce(
-                v1: input.unit.maxValue,
-                v2: input.unitGroup.maxValue,
-              ),
+              valueType: input.unit.valueType,
+              minValue: input.unit.minValue,
+              maxValue: input.unit.maxValue,
             )
           : UnitModel(
               name: "",

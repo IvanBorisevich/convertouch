@@ -4,14 +4,16 @@ import 'package:convertouch/domain/model/value_model.dart';
 
 class UnitModel extends IdNameSearchableItemModel {
   static const UnitModel none = UnitModel._();
+  static const ConvertouchValueType defaultValueType =
+      ConvertouchValueType.decimal;
 
   final String code;
   final double? coefficient;
   final String? symbol;
   final int unitGroupId;
-  final ConvertouchValueType? valueType;
-  final ValueModel? minValue;
-  final ValueModel? maxValue;
+  final ConvertouchValueType valueType;
+  final ValueModel minValue;
+  final ValueModel maxValue;
   final bool invertible;
   final ItemSearchMatch codeMatch;
 
@@ -22,9 +24,9 @@ class UnitModel extends IdNameSearchableItemModel {
     this.coefficient,
     this.symbol,
     this.unitGroupId = -1,
-    this.valueType,
-    this.minValue = ValueModel.none,
-    this.maxValue = ValueModel.none,
+    this.valueType = defaultValueType,
+    this.minValue = ValueModel.empty,
+    this.maxValue = ValueModel.empty,
     this.invertible = true,
     super.nameMatch,
     this.codeMatch = ItemSearchMatch.none,
@@ -84,9 +86,9 @@ class UnitModel extends IdNameSearchableItemModel {
       "coefficient": coefficient,
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
-      "valueType": valueType?.val,
-      "minValue": minValue?.num,
-      "maxValue": maxValue?.num,
+      "valueType": valueType.val,
+      "minValue": minValue.num,
+      "maxValue": maxValue.num,
       "invertible": invertible,
       "oob": oob == true ? true : null,
     };
@@ -106,9 +108,10 @@ class UnitModel extends IdNameSearchableItemModel {
       coefficient: json["coefficient"],
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
-      valueType: ConvertouchValueType.valueOf(json["valueType"]),
-      minValue: ValueModel.ofDouble(json["minValue"]),
-      maxValue: ValueModel.ofDouble(json["maxValue"]),
+      valueType:
+          ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
+      minValue: ValueModel.num(json["minValue"]),
+      maxValue: ValueModel.num(json["maxValue"]),
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );

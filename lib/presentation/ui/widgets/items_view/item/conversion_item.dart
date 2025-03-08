@@ -2,15 +2,13 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/textbox.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchConversionItem<T extends ConversionItemValueModel, L>
+class ConvertouchConversionItem<T extends ConversionItemValueModel>
     extends StatefulWidget {
   final T item;
   final int? index;
-  final ConvertouchValueType inputType;
-  final List<L>? listValues;
   final void Function()? onTap;
   final void Function(String)? onValueChanged;
   final void Function()? onRemove;
@@ -23,8 +21,6 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel, L>
   const ConvertouchConversionItem(
     this.item, {
     this.index,
-    this.inputType = ConvertouchValueType.text,
-        this.listValues,
     this.onTap,
     this.onValueChanged,
     this.onRemove,
@@ -37,12 +33,12 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel, L>
   });
 
   @override
-  State<ConvertouchConversionItem<T, L>> createState() =>
-      _ConvertouchConversionItemState<T, L>();
+  State<ConvertouchConversionItem<T>> createState() =>
+      _ConvertouchConversionItemState<T>();
 }
 
-class _ConvertouchConversionItemState<T extends ConversionItemValueModel, L>
-    extends State<ConvertouchConversionItem<T, L>> {
+class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
+    extends State<ConvertouchConversionItem<T>> {
   static const double _unitButtonWidth = 90;
   static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
   static const double _elementsBorderRadius = 15;
@@ -72,11 +68,30 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel, L>
     var unitTextBoxColor = itemColor.textBox;
     var handlerColor = itemColor.handler;
 
-    if (_isFocused && !widget.disabled) {
-      _unitValueController.text = widget.item.value.str;
-    } else {
-      _unitValueController.text = widget.item.value.scientific;
+    ConvertouchValueType valueType;
+
+    switch (T) {
+      case ConversionParamValueModel:
+        valueType = (widget.item as ConversionParamValueModel).param.valueType;
+        break;
+      case ConversionUnitValueModel:
+      default:
+        valueType = (widget.item as ConversionUnitValueModel).unit.valueType;
+        break;
     }
+
+    String mainText;
+    String hintText;
+
+    if (_isFocused && !widget.disabled) {
+      mainText = widget.item.value.raw;
+      hintText = widget.item.defaultValue.raw;
+    } else {
+      mainText = widget.item.value.alt;
+      hintText = widget.item.defaultValue.alt;
+    }
+
+    _unitValueController.text = mainText;
 
     return SizedBox(
       height: _defaultHeight,
@@ -95,13 +110,11 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel, L>
           Expanded(
             child: ConvertouchTextBox(
               controller: _unitValueController,
-              disabled: widget.disabled,
+              readonly: widget.disabled,
               label: widget.itemNameFunc.call(widget.item),
-              hintText: _isFocused && !widget.disabled
-                  ? widget.item.defaultValue.str
-                  : widget.item.defaultValue.scientific,
+              hintText: hintText,
               borderRadius: 15,
-              inputType: widget.inputType,
+              valueType: valueType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
@@ -133,7 +146,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel, L>
                           ),
                         )
                       : const SizedBox.shrink(),
-                  widget.item.value.str.isNotEmpty && _isFocused
+                  widget.item.value.exists && _isFocused
                       ? IconButton(
                           icon: Icon(
                             Icons.close_rounded,

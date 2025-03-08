@@ -19,10 +19,10 @@ class ConversionRule extends Equatable {
   final UnitModel secondaryBaseUnit;
 
   const ConversionRule._({
-    this.unitValue = ValueModel.none,
+    this.unitValue = ValueModel.empty,
     this.argUnit = UnitModel.none,
-    this.draftArgValue = ValueModel.none,
-    this.savedArgValue = ValueModel.none,
+    this.draftArgValue = ValueModel.empty,
+    this.savedArgValue = ValueModel.empty,
     this.configVisible = false,
     this.configEditable = false,
     this.readOnlyDescription = "",
@@ -114,7 +114,7 @@ class ConversionRule extends Equatable {
       String argUnitCode =
           draftUnit.id != argUnit.id ? argUnit.code : secondaryBaseUnit.code;
       return "$unitValue ${draftUnit.code} = "
-          "${argValue.scientific} $argUnitCode";
+          "${argValue.alt} $argUnitCode";
     }
 
     return noConversionRule;

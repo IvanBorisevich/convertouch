@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/conversion_dao.dart';
 import 'package:convertouch/data/dao/conversion_item_dao.dart';
 import 'package:convertouch/data/entities/conversion_entity.dart';
-import 'package:convertouch/data/entities/conversion_item_entity.dart';
-import 'package:convertouch/data/translators/conversion_item_translator.dart';
+import 'package:convertouch/data/entities/conversion_unit_value_entity.dart';
+import 'package:convertouch/data/translators/conversion_unit_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -51,7 +51,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         return const Right(null);
       }
 
-      List<ConversionItemEntity> conversionItemEntities =
+      List<ConversionUnitValueEntity> conversionItemEntities =
           await conversionItemDao.getByConversionId(conversion.id!);
       List<UnitModel> conversionItemUnits = ObjectUtils.tryGet(
         await unitRepository.getByIds(
@@ -65,8 +65,8 @@ class ConversionRepositoryImpl extends ConversionRepository {
       return Right(
         ConversionModel.coalesce(
           ConversionTranslator.I.toModel(conversion)!,
-          sourceConversionItem: ConversionItemTranslator.I.toModel(
-            ConversionItemEntity(
+          sourceConversionItem: ConversionUnitValueTranslator.I.toModel(
+            ConversionUnitValueEntity(
               conversionId: conversion.id!,
               value: conversion.sourceValue,
               sequenceNum: 0,
@@ -76,7 +76,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
           ),
           targetConversionItems: conversionItemEntities
               .map(
-                (entity) => ConversionItemTranslator.I.toModel(
+                (entity) => ConversionUnitValueTranslator.I.toModel(
                   entity,
                   unit: conversionItemUnitsMap[entity.unitId],
                 ),
@@ -146,7 +146,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
           database,
           conversion.conversionUnitValues
               .mapIndexed(
-                (index, item) => ConversionItemTranslator.I.fromModel(
+                (index, item) => ConversionUnitValueTranslator.I.fromModel(
                   item,
                   sequenceNum: index,
                   conversionId: resultConversion.id,

@@ -24,8 +24,8 @@ class ConvertSingleValueUseCase
       return Right(input.srcItem);
     }
 
-    double? srcValue = double.tryParse(input.srcItem.value.str);
-    double srcDefaultValue = double.parse(input.srcItem.defaultValue.str);
+    double? srcValue = input.srcItem.value.num;
+    double srcDefaultValue = input.srcItem.defaultValue.num ?? 1;
 
     try {
       if (input.unitGroup.conversionType != ConversionType.formula) {
@@ -72,10 +72,8 @@ class ConvertSingleValueUseCase
         2) support generic type (not only double)
        */
 
-      double? minValue =
-          (input.tgtUnit.minValue ?? input.unitGroup.minValue).num;
-      double? maxValue =
-          (input.tgtUnit.maxValue ?? input.unitGroup.maxValue).num;
+      double? minValue = input.tgtUnit.minValue.num;
+      double? maxValue = input.tgtUnit.maxValue.num;
 
       ValueModel tgtValueModel = ValueModelUtils.betweenOrNone(
         rawValue: tgtValue,
@@ -92,7 +90,7 @@ class ConvertSingleValueUseCase
       return Right(
         ConversionUnitValueModel(
           unit: input.tgtUnit,
-          value: tgtValueModel.exists ? tgtValueModel : ValueModel.none,
+          value: tgtValueModel.exists ? tgtValueModel : ValueModel.empty,
           defaultValue: tgtDefaultValueModel.exists
               ? tgtDefaultValueModel
               : ValueModel.nan,
@@ -101,7 +99,7 @@ class ConvertSingleValueUseCase
     } catch (e, stackTrace) {
       return Left(InternalException(
         message: "Error when converting a single value "
-            "${input.srcItem.value.str} "
+            "${input.srcItem.value.raw} "
             "from ${input.srcItem.unit.name} to ${input.tgtUnit.name}",
         stackTrace: stackTrace,
         dateTime: DateTime.now(),

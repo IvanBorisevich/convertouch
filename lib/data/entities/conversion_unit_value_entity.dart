@@ -17,7 +17,7 @@ const String conversionItemsTableName = 'conversion_items';
     ),
   ],
 )
-class ConversionItemEntity {
+class ConversionUnitValueEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   @ColumnInfo(name: 'unit_id')
@@ -30,7 +30,7 @@ class ConversionItemEntity {
   @ColumnInfo(name: 'conversion_id')
   final int conversionId;
 
-  const ConversionItemEntity({
+  const ConversionUnitValueEntity({
     this.id,
     required this.unitId,
     this.value,

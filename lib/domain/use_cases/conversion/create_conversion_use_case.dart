@@ -35,7 +35,7 @@ class CreateConversionUseCase
         );
       }
 
-      ValueModel dynamicValue = ValueModel.ofString(
+      ValueModel dynamicValue = ValueModel.str(
         ObjectUtils.tryGet(
           await dynamicValueRepository.get(input.sourceConversionItem.unit.id),
         ).value,
@@ -74,7 +74,7 @@ class CreateConversionUseCase
         InternalException(
           message: "Error when creating a conversion "
               "of the group ${input.unitGroup.name} "
-              "for the source value ${input.sourceConversionItem.value.str} "
+              "for the source value ${input.sourceConversionItem.value.raw} "
               "and the source unit ${input.sourceConversionItem.unit.name}",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),

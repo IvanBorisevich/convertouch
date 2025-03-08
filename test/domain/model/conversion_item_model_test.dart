@@ -9,8 +9,8 @@ void main() {
       name: "testUnitName",
       code: "testUnitCode",
     ),
-    value: ValueModel.ofDouble(0.00009),
-    defaultValue: ValueModel.ofDouble(0.008),
+    value: ValueModel.num(0.00009),
+    defaultValue: ValueModel.num(0.008),
   );
 
   Map<String, dynamic> itemJson = {

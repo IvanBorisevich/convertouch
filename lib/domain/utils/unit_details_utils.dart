@@ -37,7 +37,7 @@ class UnitDetailsUtils {
             unitCoefficient: unit.coefficient,
             argUnitCoefficient: argUnit.coefficient!,
           )
-        : ValueModel.none;
+        : ValueModel.empty;
   }
 
   static double calcUnitCoefficient({
@@ -45,8 +45,8 @@ class UnitDetailsUtils {
     required UnitModel argUnit,
     required ValueModel argValue,
   }) {
-    double valueNum = double.tryParse(value.str) ?? 1;
-    double argValueNum = double.tryParse(argValue.str) ?? 1;
+    double valueNum = value.num ?? 1;
+    double argValueNum = argValue.num ?? 1;
     double argUnitCoefficient = argUnit.coefficient ?? 1;
 
     return argValueNum * argUnitCoefficient / valueNum;
@@ -57,7 +57,7 @@ class UnitDetailsUtils {
     required double? unitCoefficient,
     required double argUnitCoefficient,
   }) {
-    return ValueModel.ofDouble(
+    return ValueModel.num(
       unitCoefficient != null
           ? unitCoefficient / argUnitCoefficient * unitValue
           : argUnitCoefficient,

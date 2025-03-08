@@ -144,7 +144,7 @@ class UnitDetailsBloc
       inputParam,
       conversionRule: ConversionRule.coalesce(
         inputParam.conversionRule,
-        unitValue: ValueModel.ofString(event.newValue),
+        unitValue: ValueModel.str(event.newValue),
       ),
     );
 
@@ -160,7 +160,7 @@ class UnitDetailsBloc
       inputParam,
       conversionRule: ConversionRule.coalesce(
         inputParam.conversionRule,
-        draftArgValue: ValueModel.ofString(event.newValue),
+        draftArgValue: ValueModel.str(event.newValue),
       ),
     );
 

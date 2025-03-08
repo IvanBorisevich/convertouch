@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 
@@ -14,22 +15,22 @@ class ValueModelUtils {
       min: min,
       max: max,
     )
-        ? ValueModel.ofDouble(rawValue)
-        : ValueModel.none;
+        ? ValueModel.num(rawValue)
+        : ValueModel.empty;
   }
 
-  static ValueModel coalesce({
-    required ValueModel? v1,
-    required ValueModel? v2,
-  }) {
-    if (v1?.exists == true) {
-      return v1!;
+  static ValueModel ofType(String? raw, ConvertouchValueType type) {
+    switch (type) {
+      case ConvertouchValueType.gender:
+      case ConvertouchValueType.garment:
+        return ValueModel.list(raw, type.listValueType);
+      case ConvertouchValueType.text:
+      case ConvertouchValueType.integerPositive:
+      case ConvertouchValueType.integer:
+      case ConvertouchValueType.decimalPositive:
+      case ConvertouchValueType.decimal:
+      default:
+        return ValueModel.str(raw);
     }
-
-    if (v2?.exists == true) {
-      return v2!;
-    }
-
-    return ValueModel.none;
   }
 }

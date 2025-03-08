@@ -33,7 +33,7 @@ class ConversionParamsView extends StatelessWidget {
           top: 5,
           left: 10,
           right: 10,
-          bottom: 8,
+          bottom: 10,
         ),
         title: Text(
           "Conversion Parameters",
@@ -44,16 +44,18 @@ class ConversionParamsView extends StatelessWidget {
         ),
         trailing: IconUtils.getIcon(
           IconNames.preferences,
+          size: 20,
         ),
         children: paramSetValues.values
             .mapIndexed(
               (index, item) => Container(
-                padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10),
+                padding:
+                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10),
                 child: ConvertouchConversionItem(
                   item,
                   controlsVisible: false,
                   itemNameFunc: (item) => item.param.name,
-                  unitItemCodeFunc: (item) => item.param.selectedUnit!.code,
+                  unitItemCodeFunc: null,
                   colors: conversionItemColors[theme]!,
                 ),
               ),

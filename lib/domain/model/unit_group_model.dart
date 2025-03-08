@@ -21,8 +21,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
     this.conversionType = ConversionType.static,
     this.refreshable = false,
     this.valueType = defaultValueType,
-    this.minValue = ValueModel.none,
-    this.maxValue = ValueModel.none,
+    this.minValue = ValueModel.empty,
+    this.maxValue = ValueModel.empty,
     super.nameMatch,
     super.oob,
   }) : super(
@@ -101,8 +101,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       refreshable: json["refreshable"],
       valueType:
           ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
-      minValue: ValueModel.ofDouble(json["minValue"]),
-      maxValue: ValueModel.ofDouble(json["maxValue"]),
+      minValue: ValueModel.num(json["minValue"]),
+      maxValue: ValueModel.num(json["maxValue"]),
       oob: json["oob"],
     );
   }
