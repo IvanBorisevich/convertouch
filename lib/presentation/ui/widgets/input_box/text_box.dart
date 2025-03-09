@@ -51,7 +51,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool textLengthCounterVisible;
   final String? hintText;
   final double borderRadius;
-  final TextBoxColorScheme colors;
+  final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry contentPadding;

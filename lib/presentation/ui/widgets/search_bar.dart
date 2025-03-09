@@ -13,7 +13,7 @@ class ConvertouchSearchBar extends StatefulWidget {
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String? placeholder;
-  final void Function(String)? onSearchStringChanged;
+  final void Function(String?)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final SearchBarColorScheme? customColor;
 

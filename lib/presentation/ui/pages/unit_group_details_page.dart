@@ -43,7 +43,7 @@ class _ConvertouchUnitGroupDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        TextBoxColorScheme textBoxColor =
+        InputBoxColorScheme textBoxColor =
             unitGroupTextBoxColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             unitGroupsPageFloatingButtonColors[appState.theme]!;
@@ -73,7 +73,7 @@ class _ConvertouchUnitGroupDetailsPageState
                         value: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         valueChangeController: _unitGroupNameController,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitGroupDetailsBloc.add(
                             UpdateUnitGroupName(
                               newValue: value,

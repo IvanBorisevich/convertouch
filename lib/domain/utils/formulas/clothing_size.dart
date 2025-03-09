@@ -16,7 +16,7 @@ class ClothingSizesTuple {
 }
 
 const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes = {
-  Gender.man: {
+  Gender.male: {
     Garment.shirt: [
       ClothingSizesTuple(
         height: NumValueRange(0, 160),

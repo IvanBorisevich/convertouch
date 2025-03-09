@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_dialog/list_input_dialog_content.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchListBox extends StatefulWidget {
@@ -12,15 +12,14 @@ class ConvertouchListBox extends StatefulWidget {
   final ConvertouchValueType valueType;
   final String label;
   final bool autofocus;
-  final bool readonly;
+  final bool disabled;
   final void Function(String)? onChanged;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
   final double borderRadius;
-  final TextBoxColorScheme colors;
+  final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final EdgeInsetsGeometry contentPadding;
   final double height;
   final double fontSize;
 
@@ -30,7 +29,7 @@ class ConvertouchListBox extends StatefulWidget {
     required this.valueType,
     this.label = "",
     this.autofocus = false,
-    this.readonly = false,
+    this.disabled = false,
     this.onChanged,
     this.onFocusSelected,
     this.onFocusLeft,
@@ -38,7 +37,6 @@ class ConvertouchListBox extends StatefulWidget {
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPadding = const EdgeInsets.all(17),
     this.height = defaultHeight,
     this.fontSize = 17,
     super.key,
@@ -52,8 +50,12 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
   late final FocusNode _focusNode;
   FocusNode? _defaultFocusNode;
 
+  late String? _selectedValue;
+
   @override
   void initState() {
+    _selectedValue = widget.value?.raw;
+
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
     } else {
@@ -67,23 +69,12 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
   }
 
   void _focusListener() {
-    if (widget.readonly) {
+    if (widget.disabled) {
       return;
     }
 
     if (_focusNode.hasFocus) {
       widget.onFocusSelected?.call();
-
-      if (widget.valueType.isList) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return ListInputDialogContent(
-              values: widget.valueType.listValues(),
-            );
-          },
-        );
-      }
     } else {
       widget.onFocusLeft?.call();
     }
@@ -91,6 +82,143 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    Color borderColor;
+    Color foregroundColor;
+    Color hintColor;
+    ConvertouchColorScheme dropdownMenu = widget.colors.dropdown;
+
+    if (widget.disabled) {
+      borderColor = widget.colors.border.disabled;
+      foregroundColor = widget.colors.foreground.disabled;
+      hintColor = widget.colors.hint.disabled;
+    } else if (_focusNode.hasFocus) {
+      borderColor = widget.colors.border.focused;
+      foregroundColor = widget.colors.foreground.focused;
+      hintColor = widget.colors.hint.focused;
+    } else {
+      borderColor = widget.colors.border.regular;
+      foregroundColor = widget.colors.foreground.regular;
+      hintColor = widget.colors.hint.regular;
+    }
+
+    return DropdownButtonHideUnderline(
+      child: DropdownButtonFormField2<String>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(17),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderSide: BorderSide(
+                color: borderColor, //widget.colors.border.regular,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderSide: BorderSide(
+                color: borderColor,
+              )),
+          label: Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width / 2,
+            ),
+            child: Text(
+              widget.label,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                foreground: Paint()..color = borderColor,
+              ),
+            ),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        hint: Text(
+          '- Not selected -',
+          style: TextStyle(
+            fontSize: 16,
+            color: hintColor,
+          ),
+        ),
+        value: _selectedValue,
+        items: widget.valueType
+            .listValues()
+            .map(
+              (value) => DropdownMenuItem(
+                value: value,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 17),
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: dropdownMenu.foreground.regular,
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (value) {
+          widget.onChanged?.call(value ?? "");
+          setState(() {
+            _selectedValue = value;
+          });
+        },
+        style: TextStyle(
+          // foreground: Paint()..color = foregroundColor,
+          fontSize: widget.fontSize,
+          fontWeight: FontWeight.w500,
+          fontFamily: quicksandFontFamily,
+        ),
+        /*
+        selectedItemBuilder is used as a workaround in order to align paddings between
+        DropdownButtonFormField2, its label over the border and DropdownMenuItem
+         */
+        selectedItemBuilder: _selectedValue != null
+            ? (context) {
+                return widget.valueType.listValues().map(
+                  (item) {
+                    return Container(
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        _selectedValue!,
+                        style: TextStyle(
+                          fontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w600,
+                          foreground: Paint()..color = foregroundColor,
+                        ),
+                        maxLines: 1,
+                      ),
+                    );
+                  },
+                ).toList();
+              }
+            : null,
+        iconStyleData: IconStyleData(
+          icon: Icon(
+            Icons.expand_more_rounded,
+            color: foregroundColor,
+          ),
+          iconSize: 24,
+        ),
+        dropdownStyleData: DropdownStyleData(
+          elevation: 0,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(17)),
+            color: dropdownMenu.background.regular,
+          ),
+          padding: EdgeInsets.zero,
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.zero,
+        ),
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.zero,
+        ),
+      ),
+    );
   }
 }

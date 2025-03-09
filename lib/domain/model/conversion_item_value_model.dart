@@ -15,6 +15,8 @@ abstract class ConversionItemValueModel extends ItemModel {
           itemType: ItemType.conversionItem,
         );
 
+  String get name;
+
   @override
   List<Object?> get props => [
         itemType,
@@ -56,6 +58,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   bool get defaultValueExists => defaultValue.exists == true;
 
   @override
+  String get name => unit.name;
+
+  @override
   Map<String, dynamic> toJson() {
     return {
       "unit": unit.toJson(),
@@ -89,7 +94,8 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
         'name: ${unit.name}, '
         'coefficient: ${unit.coefficient}, '
         'value: $value, '
-        'default: $defaultValue';
+        'default: $defaultValue'
+        '}';
   }
 }
 
@@ -107,6 +113,9 @@ class ConversionParamValueModel extends ConversionItemValueModel {
         param,
         super.props,
       ];
+
+  @override
+  String get name => param.fullName;
 
   @override
   Map<String, dynamic> toJson() {
@@ -127,5 +136,14 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       defaultValue:
           ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.empty,
     );
+  }
+
+  @override
+  String toString() {
+    return 'ConversionParamValueModel{'
+        'param: $param, '
+        'value: $value, '
+        'default: $defaultValue'
+        '}';
   }
 }

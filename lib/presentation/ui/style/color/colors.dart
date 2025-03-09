@@ -15,6 +15,11 @@ const searchBarColors = {
   ConvertouchUITheme.dark: searchBarColorSchemeDark,
 };
 
+const paramSetColors = {
+  ConvertouchUITheme.light: paramSetColorSchemeLight,
+  ConvertouchUITheme.dark: paramSetColorSchemeDark,
+};
+
 const unitGroupBottomLoaderColors = {
   ConvertouchUITheme.light: unitGroupBottomLoaderLight,
   ConvertouchUITheme.dark: unitGroupBottomLoaderDark,

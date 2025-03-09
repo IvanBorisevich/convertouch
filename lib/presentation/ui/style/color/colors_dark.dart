@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 const pageColorSchemeDark = PageColorScheme(
   appBar: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xFF26292F)),
-    foreground: ColorVariation(
-      regular: Color(0xFFBDCDDA),
-    ),
+    foreground: ColorVariation.only(Color(0xFFBDCDDA)),
   ),
   page: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xFF363D48)),
@@ -32,7 +30,7 @@ const pageColorSchemeDark = PageColorScheme(
 );
 
 const searchBarColorSchemeDark = SearchBarColorScheme(
-  textBox: TextBoxColorScheme(
+  textBox: InputBoxColorScheme(
     background: ColorVariation.only(Color(0xFF444C59)),
     foreground: ColorVariation.only(Color(0xFFCCD7E0)),
     hint: ColorVariation.only(Color(0xFF8791A1)),
@@ -40,6 +38,15 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
   viewModeButton: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xFF383D46)),
     foreground: ColorVariation.only(Color(0xFFCCD7E0)),
+  ),
+);
+
+const paramSetColorSchemeDark = ParamSetPanelColorScheme(
+  background: ColorVariation.only(Color(0xFF2F323A)),
+  foreground: ColorVariation.only(Color(0xFF76C1FF)),
+  icon: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xFF424756)),
+    foreground: ColorVariation.only(Color(0xFF76C1FF)),
   ),
 );
 
@@ -167,7 +174,7 @@ const unitPageEmptyViewColorDark = ConvertouchColorScheme(
   foreground: ColorVariation.only(Color(0xFF7DAAD3)),
 );
 
-const unitTextBoxColorDark = TextBoxColorScheme(
+const unitTextBoxColorDark = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF84A1BD),
     focused: Color(0xFF98BAD9),
@@ -181,9 +188,13 @@ const unitTextBoxColorDark = TextBoxColorScheme(
     regular: Color(0xFF84A1BD),
     disabled: Color(0xFF7C9EBE),
   ),
+  dropdown: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xFF3F4857)),
+    foreground: ColorVariation.only(Color(0xFFBFD3E3)),
+  ),
 );
 
-const unitGroupTextBoxColorDark = TextBoxColorScheme(
+const unitGroupTextBoxColorDark = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF8594F1),
     disabled: Color(0x90A5B2FF),

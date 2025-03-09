@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
@@ -108,8 +109,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                 )
               : const SizedBox.shrink(),
           Expanded(
-            child: ConvertouchTextBox(
-              controller: _unitValueController,
+            child: ConvertouchInputBox(
+              textController: _unitValueController,
               readonly: widget.disabled,
               label: widget.itemNameFunc.call(widget.item),
               hintText: hintText,

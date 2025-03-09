@@ -20,12 +20,36 @@ class ConvertouchInputBox extends StatefulWidget {
   final bool textLengthCounterVisible;
   final String? hintText;
   final double borderRadius;
-  final TextBoxColorScheme colors;
+  final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry contentPadding;
   final double height;
   final double fontSize;
+
+  const ConvertouchInputBox({
+    this.value,
+    this.textController,
+    this.focusNode,
+    this.valueType = ConvertouchValueType.text,
+    this.label = "",
+    this.autofocus = false,
+    this.readonly = false,
+    this.onChanged,
+    this.onFocusSelected,
+    this.onFocusLeft,
+    this.maxTextLength,
+    this.textLengthCounterVisible = false,
+    this.hintText,
+    this.borderRadius = 15,
+    required this.colors,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.contentPadding = const EdgeInsets.all(17),
+    this.height = ConvertouchTextBox.defaultHeight,
+    this.fontSize = 17,
+    super.key,
+  });
 
   ConvertouchInputBox.text({
     this.value,
@@ -92,7 +116,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
         valueType: widget.valueType,
         label: widget.label,
         autofocus: widget.autofocus,
-        readonly: widget.readonly,
+        disabled: widget.readonly,
         onChanged: widget.onChanged,
         onFocusSelected: widget.onFocusSelected,
         onFocusLeft: widget.onFocusLeft,
@@ -100,7 +124,6 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
         colors: widget.colors,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
-        contentPadding: widget.contentPadding,
         height: widget.height,
         fontSize: widget.fontSize,
       );

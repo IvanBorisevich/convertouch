@@ -54,6 +54,14 @@ class ConversionParamModel extends IdNameItemModel {
     );
   }
 
+  String get fullName {
+    if (selectedUnit != null) {
+      return "$name | ${selectedUnit!.name}";
+    }
+
+    return name;
+  }
+
   @override
   List<Object?> get props => [
         id,

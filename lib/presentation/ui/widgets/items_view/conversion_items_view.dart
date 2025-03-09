@@ -14,7 +14,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionUnitValueModel> convertedItems;
   final ConvertouchValueType parentValueType;
   final void Function(ConversionUnitValueModel)? onUnitItemTap;
-  final void Function(ConversionUnitValueModel, String)? onTextValueChanged;
+  final void Function(ConversionUnitValueModel, String?)? onTextValueChanged;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
   final double listItemSpacingAfterLast;
   final ConvertouchUITheme theme;
@@ -107,7 +107,7 @@ class _ConvertouchConversionItemsViewState
                     onTap: () {
                       widget.onUnitItemTap?.call(widget.convertedItems[index]);
                     },
-                    onValueChanged: (String value) {
+                    onValueChanged: (value) {
                       widget.onTextValueChanged?.call(
                         widget.convertedItems[index],
                         value,

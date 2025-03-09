@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xff7f9dec)),
-    foreground: ColorVariation(
-      regular: Color(0xFF1D5180),
-    ),
+    foreground: ColorVariation.only(Color(0xFF1D5180)),
   ),
   page: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffe8efff)),
@@ -32,7 +30,7 @@ const pageColorSchemeLight = PageColorScheme(
 );
 
 const searchBarColorSchemeLight = SearchBarColorScheme(
-  textBox: TextBoxColorScheme(
+  textBox: InputBoxColorScheme(
     background: ColorVariation.only(Color(0xFFF6F9FF)),
     foreground: ColorVariation.only(Color(0xFF426F99)),
     hint: ColorVariation.only(Color(0xFF5C93C7)),
@@ -42,6 +40,17 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
     foreground: ColorVariation.only(Color(0xFF4D79A1)),
   ),
 );
+
+const paramSetColorSchemeLight = ParamSetPanelColorScheme(
+  background: ColorVariation.only(Color(0xffc0d2ff)),
+  foreground: ColorVariation.only(Color(0xFF1D5180)),
+  icon: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xff9db4f1)),
+    foreground: ColorVariation.only(Color(0xFF1E5C93)),
+  ),
+);
+
+
 
 const unitBottomLoaderLight = ListItemColorScheme(
   background: ColorVariation.only(Color(0xFFC7DDFA)),
@@ -169,7 +178,7 @@ const unitPageEmptyViewColorLight = ConvertouchColorScheme(
   foreground: ColorVariation.only(Color(0xFF3B6083)),
 );
 
-const unitTextBoxColorLight = TextBoxColorScheme(
+const unitTextBoxColorLight = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF4F7498),
     focused: Color(0xFF233B50),
@@ -183,9 +192,13 @@ const unitTextBoxColorLight = TextBoxColorScheme(
     regular: Color(0xFF799BBB),
     disabled: Color(0xBE73ACE5),
   ),
+  dropdown: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xff9eb7f3)),
+    foreground: ColorVariation.only(Color(0xFF134470)),
+  ),
 );
 
-const unitGroupTextBoxColorLight = TextBoxColorScheme(
+const unitGroupTextBoxColorLight = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF6766D3),
     disabled: Color(0xFF6160BE),

@@ -52,7 +52,7 @@ class _ConvertouchUnitDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
+        InputBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             unitsPageFloatingButtonColors[appState.theme]!;
 
@@ -131,7 +131,7 @@ class _ConvertouchUnitDetailsPageState
                         valueChangeController: _unitNameTextController,
                         editable: pageState.details.editMode,
                         textBoxColor: textBoxColor,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitDetailsBloc.add(
                             UpdateUnitNameInUnitDetails(
                               newValue: value,
@@ -148,7 +148,7 @@ class _ConvertouchUnitDetailsPageState
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitDetailsBloc.add(
                             UpdateUnitCodeInUnitDetails(
                               newValue: value,

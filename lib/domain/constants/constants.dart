@@ -180,13 +180,17 @@ enum Cron {
   }
 }
 
+abstract interface class ListType {
+  String get itemName;
+}
+
 enum ConvertouchListValueType {
   none(0, []),
   gender(1, Gender.values),
   garment(2, Garment.values);
 
   final int val;
-  final List<Enum> listValues;
+  final List<ListType> listValues;
 
   const ConvertouchListValueType(this.val, this.listValues);
 
@@ -224,7 +228,7 @@ enum ConvertouchValueType {
   }
 
   List<String> listValues() {
-    return listValueType.listValues.map((e) => e.name).toList();
+    return listValueType.listValues.map((e) => e.itemName).toList();
   }
 
   bool get isList => listValueType != ConvertouchListValueType.none;

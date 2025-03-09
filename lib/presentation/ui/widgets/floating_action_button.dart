@@ -1,12 +1,10 @@
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
   static const double defaultHeight = 70;
 
-  final IconData? icon;
-  final String? assetIconName;
+  final IconData icon;
   final void Function()? onClick;
   final bool visible;
   final bool extraLabelVisible;
@@ -14,8 +12,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final ConvertouchColorScheme colorScheme;
 
   const ConvertouchFloatingActionButton({
-    this.icon,
-    this.assetIconName,
+    required this.icon,
     this.onClick,
     this.visible = true,
     this.extraLabelVisible = false,
@@ -26,7 +23,6 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   const ConvertouchFloatingActionButton.refresh({
     this.icon = Icons.refresh_rounded,
-    this.assetIconName,
     this.onClick,
     this.visible = true,
     this.extraLabelVisible = false,
@@ -37,7 +33,6 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   const ConvertouchFloatingActionButton.adding({
     this.icon = Icons.add,
-    this.assetIconName,
     this.onClick,
     this.visible = true,
     this.extraLabelVisible = false,
@@ -48,7 +43,6 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   const ConvertouchFloatingActionButton.removal({
     this.icon = Icons.delete_outline_rounded,
-    this.assetIconName,
     this.onClick,
     this.visible = true,
     this.extraLabelVisible = true,
@@ -77,15 +71,10 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                 foregroundColor: colorScheme.foreground.regular,
                 disabledElevation: 0,
                 elevation: 0,
-                child: icon != null
-                    ? Icon(
-                        icon,
-                        color: colorScheme.foreground.regular,
-                      )
-                    : IconUtils.getIcon(
-                        assetIconName,
-                        color: colorScheme.foreground.regular,
-                      ),
+                child: Icon(
+                  icon,
+                  color: colorScheme.foreground.regular,
+                ),
               ),
             ),
             extraLabelVisible
@@ -114,9 +103,9 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                     ),
                   )
                 : const SizedBox(
-    height: 0,
-    width: 0,
-  ),
+                    height: 0,
+                    width: 0,
+                  ),
           ],
         ),
       ),

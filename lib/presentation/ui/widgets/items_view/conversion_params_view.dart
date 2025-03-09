@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
@@ -18,39 +18,54 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ParamSetPanelColorScheme colors = paramSetColors[theme]!;
+
     return ExpansionTileTheme(
       data: ExpansionTileThemeData(
-        backgroundColor: Color(0xff9bb7ff),
-        collapsedBackgroundColor: Color(0xff9bb7ff),
-        textColor: Color(0xFF1D5180),
-        collapsedTextColor: Color(0xFF1D5180),
-        iconColor: Color(0xFF1E5C93),
-        collapsedIconColor: Color(0xFF1E5C93),
+        backgroundColor: colors.background.regular,
+        collapsedBackgroundColor: colors.background.regular,
+        textColor: colors.foreground.regular,
+        collapsedTextColor: colors.foreground.regular,
+        iconColor: colors.icon.foreground.regular,
+        collapsedIconColor: colors.icon.foreground.regular,
+        collapsedShape: const RoundedRectangleBorder(
+          side: BorderSide.none,
+        ),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide.none,
+        ),
       ),
       child: ExpansionTile(
-        tilePadding: EdgeInsets.only(left: 20, right: 20),
-        childrenPadding: EdgeInsets.only(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 20),
+        childrenPadding: const EdgeInsets.only(
           top: 5,
           left: 10,
           right: 10,
-          bottom: 10,
+          bottom: 12,
         ),
-        title: Text(
+        title: const Text(
           "Conversion Parameters",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 17,
           ),
         ),
-        trailing: IconUtils.getIcon(
-          IconNames.preferences,
-          size: 20,
+        trailing: GestureDetector(
+          onTap: () {},
+          child: Container(
+            decoration: BoxDecoration(
+              color: colors.icon.background.regular,
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+            ),
+            child: const Icon(Icons.chevron_right_rounded),
+          ),
         ),
         children: paramSetValues.values
             .mapIndexed(
               (index, item) => Container(
-                padding:
-                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10),
+                padding: index == 0
+                    ? EdgeInsets.zero
+                    : const EdgeInsets.only(top: 10),
                 child: ConvertouchConversionItem(
                   item,
                   controlsVisible: false,
