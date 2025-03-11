@@ -45,8 +45,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
           conversionType: saved.conversionType,
           refreshable: saved.refreshable,
           valueType: valueType ?? saved.valueType,
-          minValue: minValue?.exists == true ? minValue! : saved.minValue,
-          maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
+          minValue: minValue?.isNotEmpty == true ? minValue! : saved.minValue,
+          maxValue: maxValue?.isNotEmpty == true ? maxValue! : saved.maxValue,
           nameMatch: nameMatch ?? saved.nameMatch,
           oob: saved.oob,
         );
@@ -83,8 +83,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       "conversionType": conversionType.value,
       "refreshable": refreshable,
       "valueType": valueType.val,
-      "minValue": minValue.num,
-      "maxValue": maxValue.num,
+      "minValue": minValue.numVal,
+      "maxValue": maxValue.numVal,
       "oob": oob,
     };
   }
@@ -101,8 +101,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       refreshable: json["refreshable"],
       valueType:
           ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
-      minValue: ValueModel.num(json["minValue"]),
-      maxValue: ValueModel.num(json["maxValue"]),
+      minValue: ValueModel.numeric(json["minValue"]),
+      maxValue: ValueModel.numeric(json["maxValue"]),
       oob: json["oob"],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 class ConversionParamSetValuesModel {
   final ConversionParamSetModel paramSet;
@@ -15,6 +16,10 @@ class ConversionParamSetValuesModel {
       "paramSet": paramSet.toJson(),
       "values": values.map((value) => value.toJson()).toList(),
     };
+  }
+
+  ValueModel getValue(String paramName) {
+    return values.firstWhere((e) => e.param.name == paramName).value;
   }
 
   static ConversionParamSetValuesModel? fromJson(Map<String, dynamic>? json) {

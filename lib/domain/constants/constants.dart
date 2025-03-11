@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
+import 'package:convertouch/domain/model/list_value_type.dart';
 
 const appName = "Convertouch";
 const unknownAppVersion = "Unknown";
@@ -180,22 +181,30 @@ enum Cron {
   }
 }
 
-abstract interface class ListType {
-  String get itemName;
-}
-
-enum ConvertouchListValueType {
+enum ConvertouchListType {
   none(0, []),
   gender(1, Gender.values),
-  garment(2, Garment.values);
+  garment(2, Garment.values),
+  clothingSizeInter(3, ClothingSizeInter.values);
 
   final int val;
-  final List<ListType> listValues;
+  final List<ListValueType> listValues;
 
-  const ConvertouchListValueType(this.val, this.listValues);
+  const ConvertouchListType(this.val, this.listValues);
 
-  static ConvertouchListValueType valueOf(int? value) {
+  bool contains(String? value) {
+    return listValues.any((listType) => listType.itemName == value);
+  }
+
+  static ConvertouchListType valueOf(int? value) {
     return values.firstWhereOrNull((element) => element.val == value) ?? none;
+  }
+
+  static ConvertouchListType byListValue(ListValueType listValue) {
+    return values.firstWhereOrNull(
+          (element) => element.listValues.contains(listValue),
+        ) ??
+        none;
   }
 }
 
@@ -206,32 +215,34 @@ enum ConvertouchValueType {
   decimal(4, "Decimal"),
   decimalPositive(5, "Positive Decimal"),
   hexadecimal(6, "Hexadecimal"),
-  gender(7, "Gender", listValueType: ConvertouchListValueType.gender),
-  garment(8, "Garment", listValueType: ConvertouchListValueType.garment);
+  gender(7, "Gender", listType: ConvertouchListType.gender),
+  garment(8, "Garment", listType: ConvertouchListType.garment),
+  clothingSizeInter(9, "Clothing Size Inter",
+      listType: ConvertouchListType.clothingSizeInter);
 
   final int val;
   final String name;
-  final ConvertouchListValueType listValueType;
+  final ConvertouchListType listType;
 
   const ConvertouchValueType(
     this.val,
     this.name, {
-    this.listValueType = ConvertouchListValueType.none,
+    this.listType = ConvertouchListType.none,
   });
 
   static ConvertouchValueType? valueOf(int? value) {
     return values.firstWhereOrNull((element) => value == element.val);
   }
 
-  static ConvertouchValueType byListType(ConvertouchListValueType listType) {
-    return values.firstWhere((e) => e.listValueType == listType);
+  static ConvertouchValueType byListType(ConvertouchListType listType) {
+    return values.firstWhere((e) => e.listType == listType);
   }
 
   List<String> listValues() {
-    return listValueType.listValues.map((e) => e.itemName).toList();
+    return listType.listValues.map((e) => e.itemName).toList();
   }
 
-  bool get isList => listValueType != ConvertouchListValueType.none;
+  bool get isList => listType != ConvertouchListType.none;
 }
 
 enum FetchingStatus { success, failure }

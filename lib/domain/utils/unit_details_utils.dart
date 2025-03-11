@@ -33,7 +33,7 @@ class UnitDetailsUtils {
   }) {
     return argUnit.exists
         ? UnitDetailsUtils.calcNewArgValue(
-            unitValue: unitValue.num ?? 1,
+            unitValue: unitValue.numVal ?? 1,
             unitCoefficient: unit.coefficient,
             argUnitCoefficient: argUnit.coefficient!,
           )
@@ -45,8 +45,8 @@ class UnitDetailsUtils {
     required UnitModel argUnit,
     required ValueModel argValue,
   }) {
-    double valueNum = value.num ?? 1;
-    double argValueNum = argValue.num ?? 1;
+    double valueNum = value.numVal ?? 1;
+    double argValueNum = argValue.numVal ?? 1;
     double argUnitCoefficient = argUnit.coefficient ?? 1;
 
     return argValueNum * argUnitCoefficient / valueNum;
@@ -57,7 +57,7 @@ class UnitDetailsUtils {
     required double? unitCoefficient,
     required double argUnitCoefficient,
   }) {
-    return ValueModel.num(
+    return ValueModel.numeric(
       unitCoefficient != null
           ? unitCoefficient / argUnitCoefficient * unitValue
           : argUnitCoefficient,

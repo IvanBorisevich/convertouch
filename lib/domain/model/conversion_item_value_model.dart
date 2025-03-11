@@ -53,9 +53,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
           defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.empty,
         );
 
-  bool get valueExists => value.exists == true;
+  bool get valueExists => value.isNotEmpty == true;
 
-  bool get defaultValueExists => defaultValue.exists == true;
+  bool get defaultValueExists => defaultValue.isNotEmpty == true;
 
   @override
   String get name => unit.name;

@@ -50,7 +50,7 @@ class ConversionParamTranslator
         name: entity.name,
         calculable: entity.calculable,
         paramSetId: entity.paramSetId,
-        listValueType: ConvertouchListValueType.valueOf(entity.listType),
+        listValueType: ConvertouchListType.valueOf(entity.listType),
       );
     }
   }

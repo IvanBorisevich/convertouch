@@ -9,8 +9,8 @@ void main() {
       name: "testUnitName",
       code: "testUnitCode",
     ),
-    value: ValueModel.num(0.00009),
-    defaultValue: ValueModel.num(0.008),
+    value: ValueModel.numeric(0.00009),
+    defaultValue: ValueModel.numeric(0.008),
   );
 
   Map<String, dynamic> itemJson = {
@@ -18,17 +18,20 @@ void main() {
       "id": -1,
       "name": "testUnitName",
       "code": "testUnitCode",
+      "valueType": 4,
       "invertible": true,
     },
     "value": {
-      "num": 0.00009,
       "raw": "0.00009",
-      "scientific": "9 · 10¯⁵",
+      "alt": "9 · 10¯⁵",
+      "num": 0.00009,
+      "listType": null,
     },
     "defaultValue": {
-      "num": 0.008,
       "raw": "0.008",
-      "scientific": "0.008",
+      "alt": "0.008",
+      "num": 0.008,
+      "listType": null,
     },
   };
 

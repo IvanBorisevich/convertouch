@@ -65,14 +65,14 @@ class _ConvertouchConversionItemsViewState
                   ConversionParamValueModel(
                     param: ConversionParamModel.listBased(
                       name: "Gender",
-                      listValueType: ConvertouchListValueType.gender,
+                      listValueType: ConvertouchListType.gender,
                       paramSetId: 1,
                     ),
                   ),
                   ConversionParamValueModel(
                     param: ConversionParamModel.listBased(
                       name: "Garment",
-                      listValueType: ConvertouchListValueType.garment,
+                      listValueType: ConvertouchListType.garment,
                       paramSetId: 1,
                     ),
                   ),

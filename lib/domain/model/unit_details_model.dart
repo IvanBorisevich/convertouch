@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
@@ -13,7 +13,7 @@ class UnitDetailsModel extends Equatable {
   final bool editMode;
   final bool unitGroupChanged;
   final bool deltaDetected;
-  final ConversionRule conversionRule;
+  final ConversionRuleFormModel conversionRule;
   final UnitModel resultUnit;
 
   const UnitDetailsModel({
@@ -24,7 +24,7 @@ class UnitDetailsModel extends Equatable {
     this.editMode = false,
     this.unitGroupChanged = false,
     this.deltaDetected = false,
-    this.conversionRule = ConversionRule.none,
+    this.conversionRule = ConversionRuleFormModel.none,
     this.resultUnit = UnitModel.none,
   });
 
@@ -33,7 +33,7 @@ class UnitDetailsModel extends Equatable {
     UnitGroupModel? unitGroup,
     UnitModel? draftUnit,
     UnitModel? savedUnit,
-    ConversionRule? conversionRule,
+    ConversionRuleFormModel? conversionRule,
   }) : this(
           editMode: saved.editMode,
           existingUnit: saved.existingUnit,

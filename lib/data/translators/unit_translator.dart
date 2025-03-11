@@ -21,8 +21,8 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       coefficient: model.coefficient,
       unitGroupId: model.unitGroupId,
       valueType: model.valueType.val,
-      minValue: model.minValue.num,
-      maxValue: model.maxValue.num,
+      minValue: model.minValue.numVal,
+      maxValue: model.maxValue.numVal,
       invertible: model.invertible ? null : 0,
       oob: model.oob == true ? 1 : null,
     );
@@ -41,8 +41,8 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       coefficient: entity.coefficient,
       unitGroupId: entity.unitGroupId,
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
-      minValue: ValueModel.num(entity.minValue),
-      maxValue: ValueModel.num(entity.maxValue),
+      minValue: ValueModel.numeric(entity.minValue),
+      maxValue: ValueModel.numeric(entity.maxValue),
       invertible: entity.invertible == 0 ? false : true,
       oob: entity.oob == 1,
     );

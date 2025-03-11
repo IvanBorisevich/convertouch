@@ -96,7 +96,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       ConvertouchParameterItem(
                         name: "Values Minimum",
                         visible:
-                            unitGroupDetailsState.draftGroup.minValue.exists,
+                            unitGroupDetailsState.draftGroup.minValue.isNotEmpty,
                         value: unitGroupDetailsState
                             .draftGroup.minValue.alt,
                         textBoxColor: textBoxColor,
@@ -104,7 +104,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       ConvertouchParameterItem(
                         name: "Values Maximum",
                         visible:
-                            unitGroupDetailsState.draftGroup.maxValue.exists,
+                            unitGroupDetailsState.draftGroup.maxValue.isNotEmpty,
                         value: unitGroupDetailsState
                             .draftGroup.maxValue.alt,
                         textBoxColor: textBoxColor,

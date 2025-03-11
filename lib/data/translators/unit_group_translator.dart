@@ -22,8 +22,8 @@ class UnitGroupTranslator
           model.conversionType.value != 0 ? model.conversionType.value : null,
       refreshable: model.refreshable == true ? 1 : null,
       valueType: model.valueType.val,
-      minValue: model.minValue.num,
-      maxValue: model.maxValue.num,
+      minValue: model.minValue.numVal,
+      maxValue: model.maxValue.numVal,
       oob: model.oob == true ? 1 : null,
     );
   }
@@ -41,8 +41,8 @@ class UnitGroupTranslator
       refreshable: entity.refreshable == 1,
       valueType: ConvertouchValueType.valueOf(entity.valueType) ??
           UnitGroupModel.defaultValueType,
-      minValue: ValueModel.num(entity.minValue),
-      maxValue: ValueModel.num(entity.maxValue),
+      minValue: ValueModel.numeric(entity.minValue),
+      maxValue: ValueModel.numeric(entity.maxValue),
       oob: entity.oob == 1,
     );
   }

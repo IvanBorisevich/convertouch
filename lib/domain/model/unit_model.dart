@@ -62,8 +62,8 @@ class UnitModel extends IdNameSearchableItemModel {
           coefficient: coefficient ?? saved.coefficient,
           symbol: symbol ?? saved.symbol,
           valueType: valueType ?? saved.valueType,
-          minValue: minValue?.exists == true ? minValue! : saved.minValue,
-          maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
+          minValue: minValue?.isNotEmpty == true ? minValue! : saved.minValue,
+          maxValue: maxValue?.isNotEmpty == true ? maxValue! : saved.maxValue,
           unitGroupId: unitGroupId ?? saved.unitGroupId,
           invertible: saved.invertible,
           nameMatch: nameMatch ?? saved.nameMatch,
@@ -87,8 +87,8 @@ class UnitModel extends IdNameSearchableItemModel {
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
       "valueType": valueType.val,
-      "minValue": minValue.num,
-      "maxValue": maxValue.num,
+      "minValue": minValue.numVal,
+      "maxValue": maxValue.numVal,
       "invertible": invertible,
       "oob": oob == true ? true : null,
     };
@@ -110,8 +110,8 @@ class UnitModel extends IdNameSearchableItemModel {
       unitGroupId: json["unitGroupId"] ?? -1,
       valueType:
           ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
-      minValue: ValueModel.num(json["minValue"]),
-      maxValue: ValueModel.num(json["maxValue"]),
+      minValue: ValueModel.numeric(json["minValue"]),
+      maxValue: ValueModel.numeric(json["maxValue"]),
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );

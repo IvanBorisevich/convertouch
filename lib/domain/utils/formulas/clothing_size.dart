@@ -1,13 +1,28 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
-import 'package:convertouch/domain/model/formula.dart';
+import 'package:convertouch/domain/model/conversion_rule.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/model/value_range.dart';
+
+enum ClothingSizeCode {
+  inter("INT"),
+  ru("RU"),
+  eu("EU"),
+  uk("UK"),
+  us("US"),
+  it("IT"),
+  fr("FR"),
+  jp("JP");
+
+  final String name;
+
+  const ClothingSizeCode(this.name);
+}
 
 class ClothingSizesTuple {
   final NumValueRange height;
-
-  final Map<ClothingSizeCode, String> sizesMap;
+  final Map<ClothingSizeCode, dynamic> sizesMap;
 
   const ClothingSizesTuple({
     required this.height,
@@ -21,7 +36,7 @@ const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes = {
       ClothingSizesTuple(
         height: NumValueRange(0, 160),
         sizesMap: {
-          ClothingSizeCode.inter: "XXS",
+          ClothingSizeCode.inter: ClothingSizeInter.xxs,
           ClothingSizeCode.ru: "38",
           ClothingSizeCode.eu: "32",
           ClothingSizeCode.uk: "4",
@@ -35,19 +50,19 @@ const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes = {
   },
 };
 
-final Map<String, ConvertouchFormula<String, String>> clothingSizeFormulas = {
+final Map<String, ConversionRule> clothingSizeFormulas = {
   for (var code in ClothingSizeCode.values)
-    code.name: ConvertouchFormula.withParams(
-      forward: (x, ConversionParamSetValuesModel params) {
+    code.name: ConversionRule.withParams(
+      toBase: (x, ConversionParamSetValuesModel params) {
         return _getInternationalClothingSize(
-          inputSizeValue: x,
+          inputSizeValue: x.raw,
           inputSizeCode: code,
           params: params,
         );
       },
-      reverse: (inter, ConversionParamSetValuesModel params) {
+      fromBase: (inter, ConversionParamSetValuesModel params) {
         return _getClothingSizeByCode(
-          interSizeValue: inter,
+          interSizeValue: ClothingSizeInter.valueOf(inter.raw),
           targetSizeCode: code,
           params: params,
         );
@@ -55,56 +70,50 @@ final Map<String, ConvertouchFormula<String, String>> clothingSizeFormulas = {
     )
 };
 
-String _getInternationalClothingSize({
+ValueModel _getInternationalClothingSize({
   required String inputSizeValue,
   required ClothingSizeCode inputSizeCode,
   required ConversionParamSetValuesModel params,
 }) {
-  Gender? gender = Gender.valueOf(params.values
-      .firstWhere((e) => e.param.name == genderParamName)
-      .value
-      .raw);
-  Garment? clothingType = Garment.valueOf(params.values
-      .firstWhere((e) => e.param.name == garmentParamName)
-      .value
-      .raw);
-  double? height = params.values
-      .firstWhere((e) => e.param.name == heightParamName)
-      .value
-      .num;
+  dynamic inputSize = inputSizeCode == ClothingSizeCode.inter
+      ? ClothingSizeInter.valueOf(inputSizeValue)
+      : inputSizeValue;
+
+  Gender? gender = Gender.valueOf(params.getValue(genderParamName).raw);
+  Garment? clothingType =
+      Garment.valueOf(params.getValue(garmentParamName).raw);
+  double? height = params.getValue(heightParamName).numVal;
 
   if (gender == null || clothingType == null || height == null) {
-    return "";
+    return ValueModel.undef;
   }
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
   var foundTuple = clothingSizeTuples?.firstWhereOrNull((sizesTuple) =>
       sizesTuple.height.contains(height) &&
-      sizesTuple.sizesMap[inputSizeCode] == inputSizeValue);
+      sizesTuple.sizesMap[inputSizeCode] == inputSize);
 
-  return foundTuple?.sizesMap[ClothingSizeCode.inter] ?? "";
+  ClothingSizeInter? interSize = foundTuple?.sizesMap[ClothingSizeCode.inter];
+
+  return interSize != null ? ValueModel.listVal(interSize) : ValueModel.undef;
 }
 
-String _getClothingSizeByCode({
-  required String interSizeValue,
+ValueModel _getClothingSizeByCode({
+  required ClothingSizeInter? interSizeValue,
   required ClothingSizeCode targetSizeCode,
   required ConversionParamSetValuesModel params,
 }) {
-  Gender? gender = Gender.valueOf(params.values
-      .firstWhere((e) => e.param.name == genderParamName)
-      .value
-      .raw);
-  Garment? clothingType = Garment.valueOf(params.values
-      .firstWhere((e) => e.param.name == garmentParamName)
-      .value
-      .raw);
-  double? height = params.values
-      .firstWhere((e) => e.param.name == heightParamName)
-      .value
-      .num;
+  if (interSizeValue == null) {
+    return ValueModel.undef;
+  }
+
+  Gender? gender = Gender.valueOf(params.getValue(genderParamName).raw);
+  Garment? clothingType =
+      Garment.valueOf(params.getValue(garmentParamName).raw);
+  double? height = params.getValue(heightParamName).numVal;
 
   if (gender == null || clothingType == null || height == null) {
-    return "";
+    return ValueModel.empty;
   }
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
@@ -112,5 +121,9 @@ String _getClothingSizeByCode({
       sizesTuple.height.contains(height) &&
       sizesTuple.sizesMap[ClothingSizeCode.inter] == interSizeValue);
 
-  return foundTuple?.sizesMap[targetSizeCode] ?? "";
+  dynamic foundSize = foundTuple?.sizesMap[targetSizeCode];
+
+  return targetSizeCode == ClothingSizeCode.inter
+      ? ValueModel.listVal(foundSize)
+      : ValueModel.str(foundSize);
 }

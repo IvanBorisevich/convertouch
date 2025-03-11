@@ -1,12 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/formula.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/formula_utils.dart';
-import 'package:convertouch/domain/utils/value_model_utils.dart';
+import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ConvertSingleValueUseCase
@@ -17,83 +19,29 @@ class ConvertSingleValueUseCase
   Future<Either<ConvertouchException, ConversionUnitValueModel>> execute(
     InputSingleValueConversionModel input,
   ) async {
-    double? tgtValue;
-    double tgtDefaultValue;
-
     if (input.tgtUnit.id == input.srcItem.unit.id) {
       return Right(input.srcItem);
     }
 
-    double? srcValue = input.srcItem.value.num;
-    double srcDefaultValue = input.srcItem.defaultValue.num ?? 1;
-
     try {
-      if (input.unitGroup.conversionType != ConversionType.formula) {
-        var srcCoefficient = input.srcItem.unit.coefficient!;
-        var tgtCoefficient = input.tgtUnit.coefficient!;
-
-        tgtValue = _calculateValueByCoefficient(
-          srcValue: srcValue,
-          srcCoefficient: srcCoefficient,
-          tgtCoefficient: tgtCoefficient,
-        );
-
-        tgtDefaultValue = _calculateValueByCoefficient(
-          srcValue: srcDefaultValue,
-          srcCoefficient: srcCoefficient,
-          tgtCoefficient: tgtCoefficient,
-        )!;
-      } else {
-        var srcFormula = FormulaUtils.getFormula(
-          unitGroupName: input.unitGroup.name,
-          unitCode: input.srcItem.unit.code,
-        );
-        var tgtFormula = FormulaUtils.getFormula(
-          unitGroupName: input.unitGroup.name,
-          unitCode: input.tgtUnit.code,
-        );
-
-        tgtValue = _calculateValueByFormula(
-          srcValue: srcValue,
-          srcFormula: srcFormula,
-          tgtFormula: tgtFormula,
-        );
-
-        tgtDefaultValue = _calculateValueByFormula(
-          srcValue: srcDefaultValue,
-          srcFormula: srcFormula,
-          tgtFormula: tgtFormula,
-        )!;
-      }
-
-      /*
-       TODO:
-        1) use the pattern Chain of responsibility or similar
-        2) support generic type (not only double)
-       */
-
-      double? minValue = input.tgtUnit.minValue.num;
-      double? maxValue = input.tgtUnit.maxValue.num;
-
-      ValueModel tgtValueModel = ValueModelUtils.betweenOrNone(
-        rawValue: tgtValue,
-        min: minValue,
-        max: maxValue,
+      ValueModel? tgt = _calculate(
+        src: input.srcItem.value,
+        srcUnit: input.srcItem.unit,
+        tgtUnit: input.tgtUnit,
+        unitGroup: input.unitGroup,
       );
-
-      ValueModel tgtDefaultValueModel = ValueModelUtils.betweenOrNone(
-        rawValue: tgtDefaultValue,
-        min: minValue,
-        max: maxValue,
+      ValueModel? tgtDef = _calculate(
+        src: input.srcItem.defaultValue,
+        srcUnit: input.srcItem.unit,
+        tgtUnit: input.tgtUnit,
+        unitGroup: input.unitGroup,
       );
 
       return Right(
         ConversionUnitValueModel(
           unit: input.tgtUnit,
-          value: tgtValueModel.exists ? tgtValueModel : ValueModel.empty,
-          defaultValue: tgtDefaultValueModel.exists
-              ? tgtDefaultValueModel
-              : ValueModel.nan,
+          value: tgt ?? ValueModel.empty,
+          defaultValue: tgtDef ?? ValueModel.undef,
         ),
       );
     } catch (e, stackTrace) {
@@ -107,20 +55,43 @@ class ConvertSingleValueUseCase
     }
   }
 
-  double? _calculateValueByCoefficient({
-    required double? srcValue,
-    required double srcCoefficient,
-    required double tgtCoefficient,
+  ValueModel? _calculate({
+    required ValueModel src,
+    required UnitModel srcUnit,
+    required UnitModel tgtUnit,
+    required UnitGroupModel unitGroup,
   }) {
-    return srcValue != null ? srcValue * srcCoefficient / tgtCoefficient : null;
-  }
+    ConversionRule srcUnitRule;
+    ConversionRule tgtUnitRule;
 
-  double? _calculateValueByFormula({
-    required double? srcValue,
-    required ConvertouchFormula srcFormula,
-    required ConvertouchFormula tgtFormula,
-  }) {
-    double? baseValue = srcFormula.applyForward(srcValue);
-    return tgtFormula.applyReverse(baseValue);
+    switch (unitGroup.conversionType) {
+      case ConversionType.formula:
+        srcUnitRule = ConversionRuleUtils.getFormulaRule(
+          unitGroupName: unitGroup.name,
+          unitCode: srcUnit.code,
+        );
+        tgtUnitRule = ConversionRuleUtils.getFormulaRule(
+          unitGroupName: unitGroup.name,
+          unitCode: tgtUnit.code,
+        );
+      case ConversionType.static:
+      case ConversionType.dynamic:
+        srcUnitRule = ConversionRule.fromCoefficient(srcUnit.coefficient!);
+        tgtUnitRule = ConversionRule.fromCoefficient(tgtUnit.coefficient!);
+    }
+
+    ValueModel result = ConversionRuleUtils.calculate(
+      src,
+      srcUnitRule: srcUnitRule,
+      tgtUnitRule: tgtUnitRule,
+    );
+
+    bool isValueInRange = DoubleValueUtils.between(
+      value: result.numVal,
+      min: tgtUnit.minValue.numVal,
+      max: tgtUnit.maxValue.numVal,
+    );
+
+    return isValueInRange ? result : null;
   }
 }

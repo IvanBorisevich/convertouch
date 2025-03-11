@@ -1,5 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -127,7 +127,7 @@ class ModifyUnitDetailsUseCase
           unitGroupChanged: unitGroupChanged,
           deltaDetected: deltaDetected,
           resultUnit: resultUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: input.unitGroup,
             mandatoryParamsFilled: mandatoryParamsFilled,
             draftUnit: input.draftUnitData,

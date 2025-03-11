@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -29,7 +29,7 @@ void main() {
     required String draftUnitName,
     required String draftUnitCode,
     required UnitModel savedUnitData,
-    ConversionRule conversionRule = ConversionRule.none,
+    ConversionRuleFormModel conversionRule = ConversionRuleFormModel.none,
   }) async {
     UnitDetailsModel result = ObjectUtils.tryGet(
       await useCase.execute(
@@ -106,7 +106,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: false,
             draftUnit: draftUnit,
@@ -137,7 +137,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -173,7 +173,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -208,7 +208,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -245,7 +245,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithMultipleBaseUnits,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -278,7 +278,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit2,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithMultipleBaseUnits,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,

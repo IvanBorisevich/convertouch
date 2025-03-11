@@ -10,12 +10,12 @@ const conversionParamsV1 = [
       {
         "name": genderParamName,
         "calculable": false,
-        "listType": ConvertouchListValueType.gender,
+        "listType": ConvertouchListType.gender,
       },
       {
         "name": garmentParamName,
         "calculable": false,
-        "listType": ConvertouchListValueType.garment,
+        "listType": ConvertouchListType.garment,
       },
       {
         "name": heightParamName,

@@ -42,7 +42,7 @@ class ConversionParamModel extends IdNameItemModel {
     int id = -1,
     required String name,
     bool calculable = false,
-    required ConvertouchListValueType listValueType,
+    required ConvertouchListType listValueType,
     required int paramSetId,
   }) {
     return ConversionParamModel._(
@@ -80,7 +80,7 @@ class ConversionParamModel extends IdNameItemModel {
       "unitGroupId": unitGroupId,
       "selectedUnit": selectedUnit?.toJson(),
       "calculable": calculable,
-      "listValueType": valueType.listValueType.val,
+      "listValueType": valueType.listType.val,
       "paramSetId": paramSetId,
     };
   }
@@ -104,7 +104,7 @@ class ConversionParamModel extends IdNameItemModel {
         id: json["id"] ?? -1,
         name: json["name"],
         calculable: json["calculable"],
-        listValueType: ConvertouchListValueType.valueOf(json["valueType"]),
+        listValueType: ConvertouchListType.valueOf(json["valueType"]),
         paramSetId: json["paramSetId"],
       );
     }

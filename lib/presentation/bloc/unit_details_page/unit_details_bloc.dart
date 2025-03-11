@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
@@ -92,7 +92,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = UnitDetailsModel.coalesce(
       inputParam,
-      conversionRule: ConversionRule.coalesce(
+      conversionRule: ConversionRuleFormModel.coalesce(
         inputParam.conversionRule,
         argUnit: event.argumentUnit,
       ),
@@ -142,7 +142,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = UnitDetailsModel.coalesce(
       inputParam,
-      conversionRule: ConversionRule.coalesce(
+      conversionRule: ConversionRuleFormModel.coalesce(
         inputParam.conversionRule,
         unitValue: ValueModel.str(event.newValue),
       ),
@@ -158,7 +158,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = UnitDetailsModel.coalesce(
       inputParam,
-      conversionRule: ConversionRule.coalesce(
+      conversionRule: ConversionRuleFormModel.coalesce(
         inputParam.conversionRule,
         draftArgValue: ValueModel.str(event.newValue),
       ),

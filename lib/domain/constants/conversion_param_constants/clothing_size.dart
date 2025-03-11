@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/list_value_type.dart';
 
 const String genderParamName = "Gender";
 const String garmentParamName = "Garment";
 const String heightParamName = "Height";
 
-enum Gender implements ListType {
+enum Gender implements ListValueType {
   male("Male"),
   female("Female");
 
@@ -21,7 +21,7 @@ enum Gender implements ListType {
   }
 }
 
-enum Garment implements ListType {
+enum Garment implements ListValueType {
   shirt("Shirt"),
   trousers("Trousers");
 
@@ -37,17 +37,25 @@ enum Garment implements ListType {
   }
 }
 
-enum ClothingSizeCode {
-  inter("INT"),
-  ru("RU"),
-  eu("EU"),
-  uk("UK"),
-  us("US"),
-  it("IT"),
-  fr("FR"),
-  jp("JP");
+enum ClothingSizeInter implements ListValueType {
+  xxs("XXS"),
+  xs("XS"),
+  s("S"),
+  m("M"),
+  l("L"),
+  xl("XL"),
+  x("X"),
+  xx("XX"),
+  xxx("3X");
 
   final String name;
 
-  const ClothingSizeCode(this.name);
+  const ClothingSizeInter(this.name);
+
+  @override
+  String get itemName => name;
+
+  static ClothingSizeInter? valueOf(String? name) {
+    return values.firstWhereOrNull((element) => name == element.name);
+  }
 }

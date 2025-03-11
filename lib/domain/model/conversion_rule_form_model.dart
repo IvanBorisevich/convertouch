@@ -2,11 +2,11 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/formula_utils.dart';
+import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
 import 'package:equatable/equatable.dart';
 
-class ConversionRule extends Equatable {
-  static const ConversionRule none = ConversionRule._();
+class ConversionRuleFormModel extends Equatable {
+  static const ConversionRuleFormModel none = ConversionRuleFormModel._();
 
   final ValueModel unitValue;
   final UnitModel argUnit;
@@ -18,7 +18,7 @@ class ConversionRule extends Equatable {
   final UnitModel primaryBaseUnit;
   final UnitModel secondaryBaseUnit;
 
-  const ConversionRule._({
+  const ConversionRuleFormModel._({
     this.unitValue = ValueModel.empty,
     this.argUnit = UnitModel.none,
     this.draftArgValue = ValueModel.empty,
@@ -30,7 +30,7 @@ class ConversionRule extends Equatable {
     this.secondaryBaseUnit = UnitModel.none,
   });
 
-  factory ConversionRule.build({
+  factory ConversionRuleFormModel.build({
     required UnitGroupModel unitGroup,
     required UnitModel draftUnit,
     required bool mandatoryParamsFilled,
@@ -74,7 +74,7 @@ class ConversionRule extends Equatable {
 
     bool configEditable = configVisible;
 
-    return ConversionRule._(
+    return ConversionRuleFormModel._(
       unitValue: draftUnitValue,
       argUnit: argUnit,
       draftArgValue: draftArgValue,
@@ -99,10 +99,10 @@ class ConversionRule extends Equatable {
     required bool showNonBaseConversionRule,
   }) {
     if (unitGroup.conversionType == ConversionType.formula) {
-      String? result = FormulaUtils.getReverseStr(
+      String? result = ConversionRuleUtils.getFormulaRule(
         unitGroupName: unitGroup.name,
         unitCode: draftUnit.code,
-      );
+      ).fromBaseStr;
       return result ?? noConversionRule;
     }
 
@@ -120,8 +120,8 @@ class ConversionRule extends Equatable {
     return noConversionRule;
   }
 
-  ConversionRule.coalesce(
-    ConversionRule saved, {
+  ConversionRuleFormModel.coalesce(
+    ConversionRuleFormModel saved, {
     ValueModel? unitValue,
     UnitModel? argUnit,
     ValueModel? draftArgValue,

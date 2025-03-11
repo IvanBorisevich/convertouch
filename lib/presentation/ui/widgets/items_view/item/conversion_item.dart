@@ -147,7 +147,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                           ),
                         )
                       : const SizedBox.shrink(),
-                  widget.item.value.exists && _isFocused
+                  widget.item.value.isNotEmpty && _isFocused
                       ? IconButton(
                           icon: Icon(
                             Icons.close_rounded,
