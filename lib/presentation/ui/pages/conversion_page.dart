@@ -1,5 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -18,8 +22,10 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/conversion_params_view.dart';
 import 'package:convertouch/presentation/ui/widgets/popup_menu_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
+import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -124,48 +130,81 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                     builderFunc: (pageState) {
                       final conversion = pageState.conversion;
 
-                      return ConvertouchConversionItemsView(
-                        conversion.conversionUnitValues,
-                        parentValueType: conversion.unitGroup.valueType,
-                        onUnitItemTap: (item) {
-                          unitsBloc.add(
-                            FetchItems(
-                              parentItemId: conversion.unitGroup.id,
+                      return ScrollConfiguration(
+                        behavior: NoGlowScrollBehavior(),
+                        child: Column(
+                          children: [
+                            ConversionParamsView(
+                              paramSetValues: ConversionParamSetValuesModel(
+                                paramSet: const ConversionParamSetModel(
+                                  name: "Example 1",
+                                  groupId: 1,
+                                ),
+                                values: [
+                                  ConversionParamValueModel(
+                                    param: ConversionParamModel.listBased(
+                                      name: "Gender",
+                                      listValueType: ConvertouchListType.gender,
+                                      paramSetId: 1,
+                                    ),
+                                  ),
+                                  ConversionParamValueModel(
+                                    param: ConversionParamModel.listBased(
+                                      name: "Sizes",
+                                      listValueType:
+                                          ConvertouchListType.clothingSizeInter,
+                                      paramSetId: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              theme: appState.theme,
                             ),
-                          );
+                            ConvertouchConversionItemsView(
+                              conversion.conversionUnitValues,
+                              parentValueType: conversion.unitGroup.valueType,
+                              onUnitItemTap: (item) {
+                                unitsBloc.add(
+                                  FetchItems(
+                                    parentItemId: conversion.unitGroup.id,
+                                  ),
+                                );
 
-                          unitsSelectionBloc.add(
-                            StartItemSelection(
-                              previouslySelectedId: item.unit.id,
-                              excludedIds: conversion.conversionUnitValues
-                                  .map((e) => e.unit.id)
-                                  .whereNot((id) => id == item.unit.id)
-                                  .toList(),
-                            ),
-                          );
+                                unitsSelectionBloc.add(
+                                  StartItemSelection(
+                                    previouslySelectedId: item.unit.id,
+                                    excludedIds: conversion.conversionUnitValues
+                                        .map((e) => e.unit.id)
+                                        .whereNot((id) => id == item.unit.id)
+                                        .toList(),
+                                  ),
+                                );
 
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.unitsPageForConversion,
+                                navigationBloc.add(
+                                  const NavigateToPage(
+                                    pageName: PageName.unitsPageForConversion,
+                                  ),
+                                );
+                              },
+                              onTextValueChanged: (item, value) {
+                                conversionBloc.add(
+                                  EditConversionItemValue(
+                                    newValue: value,
+                                    unitId: item.unit.id,
+                                  ),
+                                );
+                              },
+                              onItemRemoveTap: (item) {
+                                conversionBloc.add(
+                                  RemoveConversionItems(
+                                    unitIds: [item.unit.id],
+                                  ),
+                                );
+                              },
+                              theme: appState.theme,
                             ),
-                          );
-                        },
-                        onTextValueChanged: (item, value) {
-                          conversionBloc.add(
-                            EditConversionItemValue(
-                              newValue: value,
-                              unitId: item.unit.id,
-                            ),
-                          );
-                        },
-                        onItemRemoveTap: (item) {
-                          conversionBloc.add(
-                            RemoveConversionItems(
-                              unitIds: [item.unit.id],
-                            ),
-                          );
-                        },
-                        theme: appState.theme,
+                          ],
+                        ),
                       );
                     },
                   ),
