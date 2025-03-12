@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
@@ -8,10 +10,16 @@ import 'package:flutter/material.dart';
 
 class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValuesModel paramSetValues;
+  final void Function()? onParamSetChange;
+  final void Function(ConversionParamValueModel)? onParamUnitTap;
+  final void Function(ConversionParamValueModel, ValueModel?)? onValueChanged;
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({
     required this.paramSetValues,
+    this.onParamSetChange,
+    this.onParamUnitTap,
+    this.onValueChanged,
     required this.theme,
     super.key,
   });
@@ -51,7 +59,7 @@ class ConversionParamsView extends StatelessWidget {
           ),
         ),
         trailing: GestureDetector(
-          onTap: () {},
+          onTap: onParamSetChange,
           child: Container(
             decoration: BoxDecoration(
               color: colors.icon.background.regular,
@@ -71,6 +79,12 @@ class ConversionParamsView extends StatelessWidget {
                   controlsVisible: false,
                   itemNameFunc: (item) => item.param.name,
                   unitItemCodeFunc: null,
+                  onTap: () {
+                    onParamUnitTap?.call(item);
+                  },
+                  onValueChanged: (value) {
+                    onValueChanged?.call(item, ValueModel.str(value));
+                  },
                   colors: conversionItemColors[theme]!,
                 ),
               ),

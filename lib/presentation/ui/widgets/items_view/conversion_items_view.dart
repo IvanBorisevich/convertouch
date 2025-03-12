@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionUnitValueModel> convertedItems;
-  final ConvertouchValueType parentValueType;
   final void Function(ConversionUnitValueModel)? onUnitItemTap;
   final void Function(ConversionUnitValueModel, String?)? onTextValueChanged;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
@@ -16,7 +15,6 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
   const ConvertouchConversionItemsView(
     this.convertedItems, {
-    required this.parentValueType,
     this.onUnitItemTap,
     this.onTextValueChanged,
     this.onItemRemoveTap,

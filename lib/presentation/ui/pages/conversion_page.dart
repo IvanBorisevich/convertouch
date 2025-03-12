@@ -162,7 +162,6 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                             ),
                             ConvertouchConversionItemsView(
                               conversion.conversionUnitValues,
-                              parentValueType: conversion.unitGroup.valueType,
                               onUnitItemTap: (item) {
                                 unitsBloc.add(
                                   FetchItems(
