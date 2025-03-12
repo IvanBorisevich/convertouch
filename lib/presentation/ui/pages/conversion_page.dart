@@ -1,9 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_param_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -135,29 +131,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         child: Column(
                           children: [
                             ConversionParamsView(
-                              paramSetValues: ConversionParamSetValuesModel(
-                                paramSet: const ConversionParamSetModel(
-                                  name: "Example 1",
-                                  groupId: 1,
-                                ),
-                                values: [
-                                  ConversionParamValueModel(
-                                    param: ConversionParamModel.listBased(
-                                      name: "Gender",
-                                      listValueType: ConvertouchListType.gender,
-                                      paramSetId: 1,
-                                    ),
-                                  ),
-                                  ConversionParamValueModel(
-                                    param: ConversionParamModel.listBased(
-                                      name: "Sizes",
-                                      listValueType:
-                                          ConvertouchListType.clothingSizeInter,
-                                      paramSetId: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              paramSetValues: conversion.paramSetValues,
                               theme: appState.theme,
                             ),
                             ConvertouchConversionItemsView(

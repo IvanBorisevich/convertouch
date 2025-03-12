@@ -2,21 +2,20 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 class ConversionParamsView extends StatelessWidget {
-  final ConversionParamSetValuesModel paramSetValues;
+  final ConversionParamSetValuesModel? paramSetValues;
   final void Function()? onParamSetChange;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
-  final void Function(ConversionParamValueModel, ValueModel?)? onValueChanged;
+  final void Function(ConversionParamValueModel, String)? onValueChanged;
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({
-    required this.paramSetValues,
+    this.paramSetValues,
     this.onParamSetChange,
     this.onParamUnitTap,
     this.onValueChanged,
@@ -26,6 +25,10 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (paramSetValues == null) {
+      return const SizedBox.shrink();
+    }
+
     ParamSetPanelColorScheme colors = paramSetColors[theme]!;
 
     return ExpansionTileTheme(
@@ -68,7 +71,7 @@ class ConversionParamsView extends StatelessWidget {
             child: const Icon(Icons.chevron_right_rounded),
           ),
         ),
-        children: paramSetValues.values
+        children: paramSetValues!.values
             .mapIndexed(
               (index, item) => Container(
                 padding: index == 0
@@ -83,7 +86,7 @@ class ConversionParamsView extends StatelessWidget {
                     onParamUnitTap?.call(item);
                   },
                   onValueChanged: (value) {
-                    onValueChanged?.call(item, ValueModel.str(value));
+                    onValueChanged?.call(item, value);
                   },
                   colors: conversionItemColors[theme]!,
                 ),

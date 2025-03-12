@@ -12,7 +12,7 @@ class ConversionModel extends IdNameItemModel {
 
   final UnitGroupModel unitGroup;
   final ConversionUnitValueModel? sourceConversionItem;
-  final List<ConversionParamSetValuesModel> conversionParamSetValues;
+  final ConversionParamSetValuesModel? paramSetValues;
   final List<ConversionUnitValueModel> conversionUnitValues;
 
   const ConversionModel({
@@ -20,7 +20,7 @@ class ConversionModel extends IdNameItemModel {
     super.name = "",
     this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
-    this.conversionParamSetValues = const [],
+    this.paramSetValues,
     this.conversionUnitValues = const [],
   }) : super(
           itemType: ItemType.conversion,
@@ -58,7 +58,7 @@ class ConversionModel extends IdNameItemModel {
       "unitGroup": unitGroup.toJson(),
       "sourceItem": sourceConversionItem?.toJson(),
       "params":
-          conversionParamSetValues.map((param) => param.toJson()).toList(),
+      paramSetValues?.toJson(),
       "targetItems": conversionUnitValues.map((item) => item.toJson()).toList(),
     };
   }
@@ -73,12 +73,7 @@ class ConversionModel extends IdNameItemModel {
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
       sourceConversionItem:
           ConversionUnitValueModel.fromJson(json["sourceItem"]),
-      conversionParamSetValues: json["params"] != null
-          ? (json["params"] as List)
-              .map((paramsSetMap) =>
-                  ConversionParamSetValuesModel.fromJson(paramsSetMap)!)
-              .toList()
-          : [],
+      paramSetValues: ConversionParamSetValuesModel.fromJson(json["params"]),
       conversionUnitValues: (json["targetItems"] as List)
           .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)
           .toList(),
@@ -90,7 +85,7 @@ class ConversionModel extends IdNameItemModel {
         id,
         unitGroup,
         sourceConversionItem,
-        conversionParamSetValues,
+        paramSetValues,
         conversionUnitValues,
       ];
 
@@ -101,7 +96,7 @@ class ConversionModel extends IdNameItemModel {
     return 'ConversionModel{'
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
-        'conversionParamSetValues: $conversionParamSetValues, '
+        'paramSetValues: $paramSetValues, '
         'targetConversionItems: $conversionUnitValues}';
   }
 }
