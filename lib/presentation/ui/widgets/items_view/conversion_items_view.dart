@@ -71,8 +71,8 @@ class _ConvertouchConversionItemsViewState
                   ),
                   ConversionParamValueModel(
                     param: ConversionParamModel.listBased(
-                      name: "Garment",
-                      listValueType: ConvertouchListType.garment,
+                      name: "Sizes",
+                      listValueType: ConvertouchListType.clothingSizeInter,
                       paramSetId: 1,
                     ),
                   ),

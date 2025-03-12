@@ -120,6 +120,14 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _defaultController?.dispose();
+    _focusNode.removeListener(_focusListener);
+    _defaultFocusNode?.dispose();
+    super.dispose();
+  }
+
   void _focusListener() {
     if (widget.readonly) {
       return;
@@ -238,13 +246,5 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         textAlign: TextAlign.start,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _defaultController?.dispose();
-    _focusNode.removeListener(_focusListener);
-    _defaultFocusNode?.dispose();
-    super.dispose();
   }
 }

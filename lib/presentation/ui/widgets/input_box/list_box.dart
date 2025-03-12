@@ -13,6 +13,8 @@ class ConvertouchListBox extends StatefulWidget {
   final String label;
   final bool autofocus;
   final bool disabled;
+  final bool dropdownSearchVisible;
+  final String? dropdownSearchHint;
   final void Function(String)? onChanged;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
@@ -30,6 +32,8 @@ class ConvertouchListBox extends StatefulWidget {
     this.label = "",
     this.autofocus = false,
     this.disabled = false,
+    this.dropdownSearchVisible = false,
+    this.dropdownSearchHint,
     this.onChanged,
     this.onFocusSelected,
     this.onFocusLeft,
@@ -47,6 +51,9 @@ class ConvertouchListBox extends StatefulWidget {
 }
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox> {
+  final TextEditingController dropdownSearchController =
+      TextEditingController();
+
   late final FocusNode _focusNode;
   FocusNode? _defaultFocusNode;
 
@@ -66,6 +73,14 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
     _focusNode.addListener(_focusListener);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_focusListener);
+    _defaultFocusNode?.dispose();
+    dropdownSearchController.dispose();
+    super.dispose();
   }
 
   void _focusListener() {
@@ -167,7 +182,6 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           });
         },
         style: TextStyle(
-          // foreground: Paint()..color = foregroundColor,
           fontSize: widget.fontSize,
           fontWeight: FontWeight.w500,
           fontFamily: quicksandFontFamily,
@@ -205,6 +219,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           iconSize: 24,
         ),
         dropdownStyleData: DropdownStyleData(
+          maxHeight: 250,
           elevation: 0,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(17)),
@@ -218,6 +233,48 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.zero,
         ),
+        dropdownSearchData: widget.dropdownSearchVisible
+            ? DropdownSearchData(
+                searchController: dropdownSearchController,
+                searchInnerWidgetHeight: 60,
+                searchInnerWidget: Container(
+                  height: 60,
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    bottom: 4,
+                    right: 8,
+                    left: 8,
+                  ),
+                  child: TextFormField(
+                    maxLines: 1,
+                    controller: dropdownSearchController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 17,
+                        vertical: 8,
+                      ),
+                      hintText:
+                          widget.dropdownSearchHint ?? 'Search for an item...',
+                      hintStyle: const TextStyle(fontSize: 15),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                      ),
+                    ),
+                  ),
+                ),
+                searchMatchFn: (item, searchValue) {
+                  return item.value
+                          ?.toLowerCase()
+                          .contains(searchValue.toLowerCase()) ??
+                      false;
+                },
+              )
+            : null,
+        onMenuStateChange: (isOpen) {
+          if (!isOpen) {
+            dropdownSearchController.clear();
+          }
+        },
       ),
     );
   }
