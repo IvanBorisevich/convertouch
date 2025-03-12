@@ -37,8 +37,8 @@ class ConversionUnitValueTranslator
       return null;
     }
 
-    ValueModel value = ValueModel.ofType(entity.value, unit.valueType);
-    ValueModel defaultValue = ValueModel.ofType(
+    ValueModel value = ValueModel.rawByType(entity.value, unit.valueType);
+    ValueModel defaultValue = ValueModel.rawByType(
       entity.defaultValue,
       unit.valueType,
     );

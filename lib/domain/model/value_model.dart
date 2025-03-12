@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_type.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
@@ -82,7 +83,7 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.ofType(String? raw, ConvertouchValueType type) {
+  factory ValueModel.rawByType(String? raw, ConvertouchValueType type) {
     switch (type) {
       case ConvertouchValueType.gender:
       case ConvertouchValueType.garment:
@@ -95,6 +96,30 @@ class ValueModel extends Equatable {
       default:
         return ValueModel.str(raw);
     }
+  }
+
+  factory ValueModel.any(dynamic value) {
+    if (value == null) {
+      return empty;
+    }
+
+    if (value is ListValueType) {
+      return ValueModel.listVal(value);
+    }
+
+    if (value is num) {
+      return ValueModel.numeric(value);
+    }
+
+    if (value is String) {
+      return ValueModel.str(value);
+    }
+
+    throw ConvertouchException(
+      message: "Value type is not recognized for ValueModel",
+      stackTrace: null,
+      dateTime: DateTime.now(),
+    );
   }
 
   bool get isEmpty => raw.isEmpty;

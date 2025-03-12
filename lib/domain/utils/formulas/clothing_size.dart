@@ -123,7 +123,5 @@ ValueModel _getClothingSizeByCode({
 
   dynamic foundSize = foundTuple?.sizesMap[targetSizeCode];
 
-  return targetSizeCode == ClothingSizeCode.inter
-      ? ValueModel.listVal(foundSize)
-      : ValueModel.str(foundSize);
+  return ValueModel.any(foundSize);
 }
