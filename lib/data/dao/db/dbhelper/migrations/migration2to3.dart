@@ -43,33 +43,9 @@ class Migration2to3 extends ConvertouchDbMigration {
       'ON `conversion_items` (`unit_id`, `conversion_id`)',
     );
 
-    await SqlUtils.updateUnitColumn(
-      database,
-      unitCode: 'dm³',
-      groupName: 'Volume',
-      columnName: 'name',
-      newColumnValue: 'Cubic Decimeter',
-    );
-
-    await SqlUtils.updateUnitColumn(
-      database,
-      unitCode: 'arcmin',
-      groupName: 'Angle',
-      columnName: 'symbol',
-      newColumnValue: "'",
-    );
-
-    await SqlUtils.updateUnitColumn(
-      database,
-      unitCode: 'arcsec',
-      groupName: 'Angle',
-      columnName: 'symbol',
-      newColumnValue: '"',
-    );
-
     await SqlUtils.mergeGroupsAndUnits(
       database,
-      entities: unitsV2,
+      items: unitsV3,
     );
   }
 }

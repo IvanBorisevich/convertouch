@@ -69,7 +69,9 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   ConversionDaoDb? _conversionDaoInstance;
 
-  ConversionItemDaoDb? _conversionItemDaoInstance;
+  ConversionUnitValueDaoDb? _conversionUnitValueDaoInstance;
+
+  ConversionParamValueDaoDb? _conversionParamValueDaoInstance;
 
   ConversionParamDaoDb? _conversionParamDaoInstance;
 
@@ -81,7 +83,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 3,
+      version: 4,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -97,21 +99,23 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `value_type` INTEGER NOT NULL, `min_value` REAL, `max_value` REAL, `oob` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `value_type` INTEGER NOT NULL, `min_value` REAL, `max_value` REAL, `oob` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `value_type` INTEGER, `min_value` REAL, `max_value` REAL, `invertible` INTEGER, `oob` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `value_type` INTEGER, `min_value` REAL, `max_value` REAL, `invertible` INTEGER, `oob` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`unit_id` INTEGER NOT NULL, `value` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_group_id` INTEGER NOT NULL, `source_unit_id` INTEGER, `source_value` TEXT, `last_modified` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversions` (`unit_group_id` INTEGER NOT NULL, `source_unit_id` INTEGER, `source_value` TEXT, `last_modified` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_items` (`unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `mandatory` INTEGER NOT NULL, `group_id` INTEGER NOT NULL, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`name` TEXT NOT NULL, `mandatory` INTEGER, `group_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_params` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `calculable` INTEGER NOT NULL, `unit_group_id` INTEGER, `selected_unit_id` INTEGER, `list_type` INTEGER, `param_set_id` INTEGER NOT NULL, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_params` (`name` TEXT NOT NULL, `calculable` INTEGER, `unit_group_id` INTEGER, `value_type` INTEGER NOT NULL, `param_set_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_values` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER, `calculated` INTEGER, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -125,9 +129,11 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE UNIQUE INDEX `index_conversion_param_sets_name_group_id` ON `conversion_param_sets` (`name`, `group_id`)');
         await database.execute(
-            'CREATE INDEX `index_conversion_params_name_param_set_id` ON `conversion_params` (`name`, `param_set_id`)');
+            'CREATE UNIQUE INDEX `index_conversion_params_name_param_set_id` ON `conversion_params` (`name`, `param_set_id`)');
         await database.execute(
             'CREATE INDEX `index_conversion_param_units_param_id` ON `conversion_param_units` (`param_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_conversion_param_values_param_id_conversion_id` ON `conversion_param_values` (`param_id`, `conversion_id`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -158,9 +164,15 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   }
 
   @override
-  ConversionItemDaoDb get conversionItemDao {
-    return _conversionItemDaoInstance ??=
-        _$ConversionItemDaoDb(database, changeListener);
+  ConversionUnitValueDaoDb get conversionUnitValueDao {
+    return _conversionUnitValueDaoInstance ??=
+        _$ConversionUnitValueDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamValueDaoDb get conversionParamValueDao {
+    return _conversionParamValueDaoInstance ??=
+        _$ConversionParamValueDaoDb(database, changeListener);
   }
 
   @override
@@ -185,7 +197,6 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             database,
             'unit_groups',
             (UnitGroupEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
@@ -193,14 +204,14 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'value_type': item.valueType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 }),
         _unitGroupEntityUpdateAdapter = UpdateAdapter(
             database,
             'unit_groups',
             ['id'],
             (UnitGroupEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
@@ -208,7 +219,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'value_type': item.valueType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -336,7 +348,6 @@ class _$UnitDaoDb extends UnitDaoDb {
             database,
             'units',
             (UnitEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'code': item.code,
                   'symbol': item.symbol,
@@ -346,14 +357,14 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
                   'invertible': item.invertible,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 }),
         _unitEntityUpdateAdapter = UpdateAdapter(
             database,
             'units',
             ['id'],
             (UnitEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'code': item.code,
                   'symbol': item.symbol,
@@ -363,7 +374,8 @@ class _$UnitDaoDb extends UnitDaoDb {
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
                   'invertible': item.invertible,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -545,22 +557,22 @@ class _$ConversionDaoDb extends ConversionDaoDb {
             database,
             'conversions',
             (ConversionEntity item) => <String, Object?>{
-                  'id': item.id,
                   'unit_group_id': item.unitGroupId,
                   'source_unit_id': item.sourceUnitId,
                   'source_value': item.sourceValue,
-                  'last_modified': item.lastModified
+                  'last_modified': item.lastModified,
+                  'id': item.id
                 }),
         _conversionEntityUpdateAdapter = UpdateAdapter(
             database,
             'conversions',
             ['id'],
             (ConversionEntity item) => <String, Object?>{
-                  'id': item.id,
                   'unit_group_id': item.unitGroupId,
                   'source_unit_id': item.sourceUnitId,
                   'source_value': item.sourceValue,
-                  'last_modified': item.lastModified
+                  'last_modified': item.lastModified,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -607,8 +619,8 @@ class _$ConversionDaoDb extends ConversionDaoDb {
   }
 }
 
-class _$ConversionItemDaoDb extends ConversionItemDaoDb {
-  _$ConversionItemDaoDb(
+class _$ConversionUnitValueDaoDb extends ConversionUnitValueDaoDb {
+  _$ConversionUnitValueDaoDb(
     this.database,
     this.changeListener,
   ) : _queryAdapter = QueryAdapter(database);
@@ -636,6 +648,35 @@ class _$ConversionItemDaoDb extends ConversionItemDaoDb {
   }
 }
 
+class _$ConversionParamValueDaoDb extends ConversionParamValueDaoDb {
+  _$ConversionParamValueDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamValueEntity>> getByConversionId(
+      int conversionId) async {
+    return _queryAdapter.queryList(
+        'select * from conversion_param_values where conversion_id = ?1 order by sequence_num',
+        mapper: (Map<String, Object?> row) => ConversionParamValueEntity(id: row['id'] as int?, paramId: row['param_id'] as int, unitId: row['unit_id'] as int?, calculated: row['calculated'] as int?, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
+        arguments: [conversionId]);
+  }
+
+  @override
+  Future<void> removeByConversionId(int conversionId) async {
+    await _queryAdapter.queryNoReturn(
+        'delete from conversion_param_values where conversion_id = ?1',
+        arguments: [conversionId]);
+  }
+}
+
 class _$ConversionParamDaoDb extends ConversionParamDaoDb {
   _$ConversionParamDaoDb(
     this.database,
@@ -655,10 +696,9 @@ class _$ConversionParamDaoDb extends ConversionParamDaoDb {
         mapper: (Map<String, Object?> row) => ConversionParamEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
-            calculable: (row['calculable'] as int) != 0,
+            calculable: row['calculable'] as int?,
             unitGroupId: row['unit_group_id'] as int?,
-            selectedUnitId: row['selected_unit_id'] as int?,
-            listType: row['list_type'] as int?,
+            valueType: row['value_type'] as int,
             paramSetId: row['param_set_id'] as int),
         arguments: [setId]);
   }
@@ -683,7 +723,7 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
         mapper: (Map<String, Object?> row) => ConversionParamSetEntity(
             id: row['id'] as int?,
             name: row['name'] as String,
-            mandatory: (row['mandatory'] as int) != 0,
+            mandatory: row['mandatory'] as int?,
             groupId: row['group_id'] as int),
         arguments: [groupId]);
   }

@@ -22,7 +22,7 @@ abstract class ConversionParamSetRepositoryImpl
 
       return Right(
         result
-            .map((entity) => ConversionParamSetTranslator.I.toModel(entity)!)
+            .map((entity) => ConversionParamSetTranslator.I.toModel(entity))
             .toList(),
       );
     } catch (e, stackTrace) {

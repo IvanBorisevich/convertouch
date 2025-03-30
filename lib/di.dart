@@ -8,7 +8,7 @@ import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
-import 'package:convertouch/data/translators/conversion_unit_value_translator.dart';
+import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
@@ -103,7 +103,8 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
   locator.registerLazySingleton<ConversionRepository>(
     () => ConversionRepositoryImpl(
       conversionDao: database.conversionDao,
-      conversionItemDao: database.conversionItemDao,
+      conversionUnitValueDao: database.conversionUnitValueDao,
+      conversionParamValueDao: database.conversionParamValueDao,
       unitGroupRepository: locator(),
       unitRepository: locator(),
       database: database.database.database,
@@ -151,6 +152,10 @@ Future<void> _initTranslators() async {
 
   locator.registerLazySingleton<ConversionUnitValueTranslator>(
     () => ConversionUnitValueTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamValueTranslator>(
+        () => ConversionParamValueTranslator(),
   );
 }
 

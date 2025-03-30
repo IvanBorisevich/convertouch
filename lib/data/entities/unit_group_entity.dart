@@ -1,15 +1,8 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:floor/floor.dart';
 
 const String unitGroupsTableName = 'unit_groups';
-const Map<String, String> _entityToRowFieldsMapping = {
-  'groupName': 'name',
-  'iconName': 'icon_name',
-  'conversionType': 'conversion_type',
-  'valueType': 'value_type',
-  'minValue': 'min_value',
-  'maxValue': 'max_value',
-};
 
 @Entity(
   tableName: unitGroupsTableName,
@@ -17,9 +10,7 @@ const Map<String, String> _entityToRowFieldsMapping = {
     Index(value: ['name'], unique: true),
   ],
 )
-class UnitGroupEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class UnitGroupEntity extends ConvertouchEntity {
   final String name;
   @ColumnInfo(name: 'icon_name')
   final String? iconName;
@@ -35,7 +26,7 @@ class UnitGroupEntity {
   final int? oob;
 
   const UnitGroupEntity({
-    this.id,
+    super.id,
     required this.name,
     this.iconName,
     this.conversionType,
@@ -46,28 +37,40 @@ class UnitGroupEntity {
     this.oob,
   });
 
-  static Map<String, Object?> entityToRow(
-    Map<String, dynamic> entity, {
-    bool initDefaults = true,
+  @override
+  Map<String, dynamic> toRow() {
+    return {
+      'id': id,
+      'name': name,
+      'icon_name': iconName,
+      'conversion_type': conversionType,
+      'refreshable': refreshable,
+      'value_type': valueType,
+      'min_value': minValue,
+      'max_value': maxValue,
+      'oob': oob,
+    };
+  }
+
+  static Map<String, dynamic> jsonToRow(
+    Map<String, dynamic> json, {
+    List<String> excludedColumns = const [],
   }) {
-    if (initDefaults) {
-      return {
-        'name': entity['groupName'],
-        'icon_name': entity['iconName'],
-        'conversion_type': entity['conversionType'] != null &&
-                entity['conversionType'] != ConversionType.static
-            ? (entity['conversionType'] as ConversionType).value
-            : null,
-        'refreshable': entity['refreshable'] == true ? 1 : null,
-        'value_type': (entity['valueType'] as ConvertouchValueType).val,
-        'min_value': entity['minValue'],
-        'max_value': entity['maxValue'],
-        'oob': entity['oob'] ?? 1,
-      };
-    } else {
-      return entity.map(
-        (key, value) => MapEntry(_entityToRowFieldsMapping[key] ?? key, value),
-      )..removeWhere((key, value) => key == 'units');
-    }
+    var item = json[forUpdate] ?? json;
+
+    return minify({
+      'name': item['groupName'],
+      'icon_name': item['iconName'],
+      'conversion_type': item['conversionType'] != null
+          ? (item['conversionType'] as ConversionType).value
+          : null,
+      'refreshable': bool2int(item['refreshable']),
+      'value_type': item['valueType'] != null
+          ? (item['valueType'] as ConvertouchValueType).val
+          : null,
+      'min_value': item['minValue'],
+      'max_value': item['maxValue'],
+      'oob': bool2int(item['oob'], ifNull: 1),
+    }, excludedColumns: excludedColumns);
   }
 }

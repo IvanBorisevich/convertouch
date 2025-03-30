@@ -25,8 +25,9 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
     try {
       final result = await dynamicValueDao.get(unitId);
       return Right(
-        DynamicValueTranslator.I.toModel(result) ??
-            DynamicValueModel(unitId: unitId),
+        result != null
+            ? DynamicValueTranslator.I.toModel(result)
+            : DynamicValueModel(unitId: unitId),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -47,7 +48,7 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
       final result = await dynamicValueDao.getList(unitIds);
       return Right(
         result
-            .map((entity) => DynamicValueTranslator.I.toModel(entity)!)
+            .map((entity) => DynamicValueTranslator.I.toModel(entity))
             .toList(),
       );
     } catch (e, stackTrace) {

@@ -1,13 +1,10 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:floor/floor.dart';
 
 const String unitsTableName = 'units';
-const Map<String, String> _entityToRowFieldsMapping = {
-  'valueType': 'value_type',
-  'minValue': 'min_value',
-  'maxValue': 'max_value',
-};
 
 @Entity(
   tableName: unitsTableName,
@@ -23,9 +20,7 @@ const Map<String, String> _entityToRowFieldsMapping = {
     ),
   ],
 )
-class UnitEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class UnitEntity extends ConvertouchEntity {
   final String name;
   final String code;
   final String? symbol;
@@ -42,7 +37,7 @@ class UnitEntity {
   final int? oob;
 
   const UnitEntity({
-    this.id,
+    super.id,
     required this.name,
     required this.code,
     this.symbol,
@@ -69,32 +64,48 @@ class UnitEntity {
           minValue: savedEntity.minValue,
           maxValue: savedEntity.maxValue,
           invertible: savedEntity.invertible,
+          oob: savedEntity.oob,
         );
 
-  static Map<String, Object?> entityToRow(
-    Map<String, dynamic> entity, {
-    required int unitGroupId,
-    bool initDefaults = true,
+  @override
+  Map<String, dynamic> toRow() {
+    return {
+      'id': id,
+      'name': name,
+      'code': code,
+      'symbol': symbol,
+      'coefficient': coefficient,
+      'unit_group_id': unitGroupId,
+      'value_type': valueType,
+      'min_value': minValue,
+      'max_value': maxValue,
+      'invertible': invertible,
+      'oob': oob,
+    };
+  }
+
+  static Map<String, dynamic> jsonToRow(
+    Map<String, dynamic> json, {
+    required int? unitGroupId,
+    List<String> excludedColumns = const [],
   }) {
-    if (initDefaults) {
-      return {
-        'name': entity['name'],
-        'code': entity['code'],
-        'symbol': entity['symbol'],
-        'coefficient': entity['coefficient'],
-        'unit_group_id': unitGroupId,
-        'value_type': entity['valueType'] != null
-            ? (entity['valueType'] as ConvertouchValueType).val
-            : null,
-        'min_value': entity['minValue'],
-        'max_value': entity['maxValue'],
-        'invertible': entity['invertible'],
-        'oob': entity['oob'] ?? 1,
-      };
-    } else {
-      return entity.map(
-        (key, value) => MapEntry(_entityToRowFieldsMapping[key] ?? key, value),
-      );
-    }
+    var item = json[forUpdate] ?? json;
+
+    return minify({
+      'name': item['name'],
+      'code': item['code'] is ClothingSizeCode
+          ? (item['code'] as ClothingSizeCode).name
+          : item['code'],
+      'symbol': item['symbol'],
+      'coefficient': item['coefficient'],
+      'unit_group_id': unitGroupId,
+      'value_type': item['valueType'] != null
+          ? (item['valueType'] as ConvertouchValueType).val
+          : null,
+      'min_value': item['minValue'],
+      'max_value': item['maxValue'],
+      'invertible': bool2int(item['invertible']),
+      'oob': bool2int(item['oob'], ifNull: 1),
+    }, excludedColumns: excludedColumns);
   }
 }

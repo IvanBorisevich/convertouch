@@ -1,4 +1,6 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:floor/floor.dart';
 
 const String conversionParamSetsTableName = 'conversion_param_sets';
@@ -17,18 +19,40 @@ const String conversionParamSetsTableName = 'conversion_param_sets';
     ),
   ],
 )
-class ConversionParamSetEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class ConversionParamSetEntity extends ConvertouchEntity {
   final String name;
-  final bool mandatory;
+  final int? mandatory;
   @ColumnInfo(name: 'group_id')
   final int groupId;
 
   const ConversionParamSetEntity({
-    this.id,
+    super.id,
     required this.name,
-    required this.mandatory,
+    this.mandatory,
     required this.groupId,
   });
+
+  @override
+  Map<String, dynamic> toRow() {
+    return {
+      'id': id,
+      'name': name,
+      'mandatory': mandatory,
+      'group_id': groupId,
+    };
+  }
+
+  static Map<String, dynamic> jsonToRow(
+    Map<String, dynamic> json, {
+    required int? unitGroupId,
+    List<String> excludedColumns = const [],
+  }) {
+    var item = json[forUpdate] ?? json;
+
+    return minify({
+      'name': item['name'],
+      'mandatory': bool2int(item['mandatory']),
+      'group_id': unitGroupId,
+    }, excludedColumns: excludedColumns);
+  }
 }

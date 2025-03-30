@@ -23,7 +23,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       );
 
       return Right(
-        result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -54,7 +54,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         result = [];
       }
       return Right(
-        result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -75,7 +75,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
       if (existingGroup == null) {
         final addedGroupId = await unitGroupDao
-            .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
+            .insert(UnitGroupTranslator.I.fromModel(unitGroup));
         return Right(
           UnitGroupModel.coalesce(
             unitGroup,
@@ -118,7 +118,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
           ),
         );
       }
-      return Right(UnitGroupTranslator.I.toModel(result)!);
+      return Right(UnitGroupTranslator.I.toModel(result));
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -153,7 +153,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     UnitGroupModel unitGroup,
   ) async {
     try {
-      await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup)!);
+      await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup));
       return Right(unitGroup);
     } catch (e, stackTrace) {
       return Left(

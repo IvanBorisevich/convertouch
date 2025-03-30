@@ -11,7 +11,7 @@ class InitialMigration extends ConvertouchDbMigration {
     log("Initial migration database for version 1");
     await SqlUtils.mergeGroupsAndUnits(
       database,
-      entities: unitsV1,
+      items: unitsV1,
     );
   }
 }

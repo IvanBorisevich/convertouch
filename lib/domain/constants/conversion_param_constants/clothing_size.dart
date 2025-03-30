@@ -37,6 +37,21 @@ enum Garment implements ListValueType {
   }
 }
 
+enum ClothingSizeCode {
+  inter("INT"),
+  ru("RU"),
+  eu("EU"),
+  uk("UK"),
+  us("US"),
+  it("IT"),
+  fr("FR"),
+  jp("JP");
+
+  final String name;
+
+  const ClothingSizeCode(this.name);
+}
+
 enum ClothingSizeInter implements ListValueType {
   xxs("XXS"),
   xs("XS"),

@@ -1,5 +1,5 @@
 import 'package:convertouch/data/dao/unit_dao.dart';
-import 'package:convertouch/data/entities/conversion_param_units.dart';
+import 'package:convertouch/data/entities/conversion_param_unit_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';

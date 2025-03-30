@@ -27,7 +27,7 @@ class UnitRepositoryImpl extends UnitRepository {
       );
 
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -55,7 +55,7 @@ class UnitRepositoryImpl extends UnitRepository {
       );
 
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -88,7 +88,7 @@ class UnitRepositoryImpl extends UnitRepository {
         result = [];
       }
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -104,8 +104,8 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel?>> get(int id) async {
     try {
-      final result = await unitDao.getUnit(id);
-      return Right(UnitTranslator.I.toModel(result)!);
+      final unit = await unitDao.getUnit(id);
+      return Right(unit != null ? UnitTranslator.I.toModel(unit) : null);
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -127,7 +127,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       final result = await unitDao.getUnitsByIds(ids);
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -148,7 +148,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       final result = await unitDao.getUnitsByCodes(unitGroupName, codes);
       return Right(
-        {for (var v in result) v.id!: UnitTranslator.I.toModel(v)!},
+        {for (var v in result) v.id!: UnitTranslator.I.toModel(v)},
       );
     } catch (e, stackTrace) {
       return Left(
@@ -170,7 +170,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       var result = await unitDao.getBaseUnits(unitGroupId);
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -190,7 +190,7 @@ class UnitRepositoryImpl extends UnitRepository {
       final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.code);
       if (existingUnit == null) {
         int addedUnitId =
-            await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
+            await unitDao.insert(UnitTranslator.I.fromModel(unit));
         return Right(
           UnitModel.coalesce(
             unit,
@@ -242,7 +242,7 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) async {
     try {
-      await unitDao.update(UnitTranslator.I.fromModel(unit)!);
+      await unitDao.update(UnitTranslator.I.fromModel(unit));
       return Right(unit);
     } catch (e, stackTrace) {
       return Left(

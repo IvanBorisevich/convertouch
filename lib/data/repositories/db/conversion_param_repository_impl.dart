@@ -21,7 +21,7 @@ abstract class ConversionParamRepositoryImpl extends ConversionParamRepository {
 
       return Right(
         result
-            .map((entity) => ConversionParamTranslator.I.toModel(entity)!)
+            .map((entity) => ConversionParamTranslator.I.toModel(entity))
             .toList(),
       );
     } catch (e, stackTrace) {

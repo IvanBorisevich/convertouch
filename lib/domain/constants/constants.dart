@@ -35,7 +35,6 @@ abstract class IconNames {
   const IconNames._();
 
   static const oneWayConversion = "one_way_conversion.svg";
-  static const preferences = "preferences.png";
 }
 
 enum SettingKey {

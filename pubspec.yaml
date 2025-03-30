@@ -63,6 +63,7 @@ dependencies:
   app_settings: ^5.1.1
   dropdown_button2: ^2.3.8
   timeago: ^3.7.0
+  sqflite_common_ffi: ^2.3.0+4
 
 dev_dependencies:
   flutter_test:

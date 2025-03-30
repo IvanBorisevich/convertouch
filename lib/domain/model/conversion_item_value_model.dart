@@ -101,9 +101,13 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
 
 class ConversionParamValueModel extends ConversionItemValueModel {
   final ConversionParamModel param;
+  final UnitModel? unit;
+  final bool calculated;
 
   const ConversionParamValueModel({
     required this.param,
+    this.unit,
+    this.calculated = false,
     super.value,
     super.defaultValue,
   });
@@ -111,16 +115,26 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   @override
   List<Object?> get props => [
         param,
+        unit,
+        calculated,
         super.props,
       ];
 
   @override
-  String get name => param.fullName;
+  String get name {
+    if (unit != null) {
+      return "${param.name} | ${unit!.name}";
+    }
+
+    return param.name;
+  }
 
   @override
   Map<String, dynamic> toJson() {
     return {
       "param": param,
+      "unit": unit?.toJson(),
+      "calculated": calculated,
       "value": value.toJson(),
       "defaultValue": defaultValue.toJson(),
     };
@@ -132,6 +146,8 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     }
     return ConversionParamValueModel(
       param: ConversionParamModel.fromJson(json["param"])!,
+      unit: UnitModel.fromJson(json["unit"]),
+      calculated: json["calculated"],
       value: ValueModel.fromJson(json["value"]) ?? ValueModel.empty,
       defaultValue:
           ValueModel.fromJson(json["defaultValue"]) ?? ValueModel.empty,
@@ -142,6 +158,8 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   String toString() {
     return 'ConversionParamValueModel{'
         'param: $param, '
+        'unit: $unit, '
+        'calculated: $calculated, '
         'value: $value, '
         'default: $defaultValue'
         '}';

@@ -5,21 +5,6 @@ import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/model/value_range.dart';
 
-enum ClothingSizeCode {
-  inter("INT"),
-  ru("RU"),
-  eu("EU"),
-  uk("UK"),
-  us("US"),
-  it("IT"),
-  fr("FR"),
-  jp("JP");
-
-  final String name;
-
-  const ClothingSizeCode(this.name);
-}
-
 class ClothingSizesTuple {
   final NumValueRange height;
   final Map<ClothingSizeCode, dynamic> sizesMap;

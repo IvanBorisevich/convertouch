@@ -1,4 +1,6 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 
 const unitsV1 = [
   {
@@ -929,8 +931,67 @@ const unitsV2 = [
   {
     "groupName": "Volume",
     "units": [
+      {
+        "code": "cm",
+        forUpdate: {
+          "code": "cm³",
+        },
+      }
+    ],
+  },
+];
+
+const unitsV3 = [
+  {
+    "groupName": "Volume",
+    "units": [
       {"code": "mL", "name": "Milliliter", "coefficient": 1E-6},
       {"code": "L", "name": "Liter", "coefficient": 1E-3},
+      {
+        "code": "dm³",
+        forUpdate: {
+          "name": "Cubic Decimeter",
+        },
+      }
     ]
   },
+  {
+    "groupName": "Angle",
+    "units": [
+      {
+        "code": "arcmin",
+        forUpdate: {
+          "symbol": "'",
+        },
+      },
+      {
+        "code": "arcsec",
+        forUpdate: {
+          "symbol": '"',
+        },
+      },
+    ],
+  }
+];
+
+const unitsV4 = [
+  {
+    "groupName": "Clothing Size",
+    "valueType": ConvertouchValueType.integerPositive,
+    "conversionType": ConversionType.formula,
+    "units": [
+      {
+        "code": ClothingSizeCode.inter,
+        "name": "International",
+        "valueType": ConvertouchValueType.clothingSizeInter,
+      },
+      {"code": ClothingSizeCode.jp, "name": "Japan"},
+      {"code": ClothingSizeCode.fr, "name": "France"},
+      {"code": ClothingSizeCode.eu, "name": "Europe"},
+      {"code": ClothingSizeCode.ru, "name": "Russia"},
+      {"code": ClothingSizeCode.it, "name": "Italy"},
+      {"code": ClothingSizeCode.uk, "name": "United Kingdom"},
+      {"code": ClothingSizeCode.us, "name": "USA"},
+    ],
+  }
 ];

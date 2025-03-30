@@ -5,14 +5,11 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
+class UnitTranslator extends Translator<UnitModel, UnitEntity> {
   static final UnitTranslator I = di.locator.get<UnitTranslator>();
 
   @override
-  UnitEntity? fromModel(UnitModel? model) {
-    if (model == null) {
-      return null;
-    }
+  UnitEntity fromModel(UnitModel model) {
     return UnitEntity(
       id: model.id != -1 ? model.id : null,
       name: model.name,
@@ -23,16 +20,13 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       valueType: model.valueType.val,
       minValue: model.minValue.numVal,
       maxValue: model.maxValue.numVal,
-      invertible: model.invertible ? null : 0,
-      oob: model.oob == true ? 1 : null,
+      invertible: model.invertible ? 1 : null,
+      oob: model.oob ? 1 : null,
     );
   }
 
   @override
-  UnitModel? toModel(UnitEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
+  UnitModel toModel(UnitEntity entity) {
     return UnitModel(
       id: entity.id ?? -1,
       name: entity.name,
@@ -43,7 +37,7 @@ class UnitTranslator extends Translator<UnitModel?, UnitEntity?> {
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
-      invertible: entity.invertible == 0 ? false : true,
+      invertible: entity.invertible == 1,
       oob: entity.oob == 1,
     );
   }

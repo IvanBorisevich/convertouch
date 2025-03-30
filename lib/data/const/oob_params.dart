@@ -10,18 +10,18 @@ const conversionParamsV1 = [
       {
         "name": genderParamName,
         "calculable": false,
-        "listType": ConvertouchListType.gender,
+        "valueType": ConvertouchValueType.gender,
       },
       {
         "name": garmentParamName,
         "calculable": false,
-        "listType": ConvertouchListType.garment,
+        "valueType": ConvertouchValueType.garment,
       },
       {
         "name": heightParamName,
         "calculable": false,
+        "valueType": ConvertouchValueType.decimalPositive,
         "unitGroupName": GroupNames.length,
-        "selectedUnitCode": "cm",
         "possibleUnitCodes": [
           "cm",
           "m",

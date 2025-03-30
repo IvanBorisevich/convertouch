@@ -4,34 +4,26 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
 class ConversionParamSetTranslator
-    extends Translator<ConversionParamSetModel?, ConversionParamSetEntity?> {
+    extends Translator<ConversionParamSetModel, ConversionParamSetEntity> {
   static final ConversionParamSetTranslator I =
       di.locator.get<ConversionParamSetTranslator>();
 
   @override
-  ConversionParamSetEntity? fromModel(ConversionParamSetModel? model) {
-    if (model == null) {
-      return null;
-    }
-
+  ConversionParamSetEntity fromModel(ConversionParamSetModel model) {
     return ConversionParamSetEntity(
       id: model.id != -1 ? model.id : null,
       name: model.name,
-      mandatory: model.mandatory,
+      mandatory: model.mandatory ? 1 : null,
       groupId: model.groupId,
     );
   }
 
   @override
-  ConversionParamSetModel? toModel(ConversionParamSetEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
-
+  ConversionParamSetModel toModel(ConversionParamSetEntity entity) {
     return ConversionParamSetModel(
       id: entity.id ?? -1,
       name: entity.name,
-      mandatory: entity.mandatory,
+      mandatory: entity.mandatory == 1,
       groupId: entity.groupId,
     );
   }

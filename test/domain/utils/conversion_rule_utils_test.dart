@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
-import 'package:convertouch/domain/utils/formulas/clothing_size.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -129,12 +128,13 @@ void main() {
             value: ValueModel.listVal(Garment.shirt),
           ),
           ConversionParamValueModel(
-            param: ConversionParamModel.unitBased(
+            param: const ConversionParamModel.unitBased(
               name: "Height",
               unitGroupId: -1,
-              selectedUnit: const UnitModel(name: "Centimeter", code: "cm"),
               paramSetId: -1,
+              valueType: ConvertouchValueType.decimalPositive,
             ),
+            unit: const UnitModel(name: "Centimeter", code: "cm"),
             value: ValueModel.numeric(150),
           ),
         ],

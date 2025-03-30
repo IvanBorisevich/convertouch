@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:floor/floor.dart';
 
@@ -17,20 +18,19 @@ const String dynamicValuesTableName = 'refreshable_values';
     ),
   ],
 )
-class DynamicValueEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class DynamicValueEntity extends ConvertouchEntity {
   @ColumnInfo(name: "unit_id")
   final int unitId;
   final String? value;
 
   const DynamicValueEntity({
-    this.id,
+    super.id,
     required this.unitId,
     this.value,
   });
 
-  Map<String, dynamic> toDbRow() {
+  @override
+  Map<String, dynamic> toRow() {
     return {
       'id': id,
       'unit_id': unitId,

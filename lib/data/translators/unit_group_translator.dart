@@ -6,43 +6,37 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 class UnitGroupTranslator
-    extends Translator<UnitGroupModel?, UnitGroupEntity?> {
+    extends Translator<UnitGroupModel, UnitGroupEntity> {
   static final UnitGroupTranslator I = di.locator.get<UnitGroupTranslator>();
 
   @override
-  UnitGroupEntity? fromModel(UnitGroupModel? model) {
-    if (model == null) {
-      return null;
-    }
+  UnitGroupEntity fromModel(UnitGroupModel model) {
     return UnitGroupEntity(
       id: model.id != -1 ? model.id : null,
       name: model.name,
       iconName: model.iconName,
       conversionType:
           model.conversionType.value != 0 ? model.conversionType.value : null,
-      refreshable: model.refreshable == true ? 1 : null,
       valueType: model.valueType.val,
       minValue: model.minValue.numVal,
       maxValue: model.maxValue.numVal,
-      oob: model.oob == true ? 1 : null,
+      refreshable: model.refreshable ? 1 : null,
+      oob: model.oob ? 1 : null,
     );
   }
 
   @override
-  UnitGroupModel? toModel(UnitGroupEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
+  UnitGroupModel toModel(UnitGroupEntity entity) {
     return UnitGroupModel(
       id: entity.id ?? -1,
       name: entity.name,
       iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),
-      refreshable: entity.refreshable == 1,
       valueType: ConvertouchValueType.valueOf(entity.valueType) ??
           UnitGroupModel.defaultValueType,
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
+      refreshable: entity.refreshable == 1,
       oob: entity.oob == 1,
     );
   }

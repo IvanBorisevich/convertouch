@@ -4,14 +4,11 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_model.dart';
 
 class ConversionTranslator
-    extends Translator<ConversionModel?, ConversionEntity?> {
+    extends Translator<ConversionModel, ConversionEntity> {
   static final ConversionTranslator I = di.locator.get<ConversionTranslator>();
 
   @override
-  ConversionEntity? fromModel(ConversionModel? model) {
-    if (model == null) {
-      return null;
-    }
+  ConversionEntity fromModel(ConversionModel model) {
     return ConversionEntity(
       id: model.id != -1 ? model.id : null,
       unitGroupId: model.unitGroup.id,
@@ -26,11 +23,7 @@ class ConversionTranslator
   }
 
   @override
-  ConversionModel? toModel(ConversionEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
-
+  ConversionModel toModel(ConversionEntity entity) {
     return ConversionModel(
       id: entity.id ?? -1,
     );

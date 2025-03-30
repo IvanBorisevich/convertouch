@@ -1,0 +1,73 @@
+import 'dart:developer';
+
+import 'package:convertouch/data/const/oob_params.dart';
+import 'package:convertouch/data/const/oob_units.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
+import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
+import 'package:sqflite/sqflite.dart';
+
+class Migration3to4 extends ConvertouchDbMigration {
+  @override
+  Future<void> execute(Database database) async {
+    log("Migration database from version 3 to 4");
+
+    await database.execute(
+      'CREATE TABLE IF NOT EXISTS `conversion_param_sets` ('
+      '`id` INTEGER PRIMARY KEY AUTOINCREMENT, '
+      '`name` TEXT NOT NULL, '
+      '`mandatory` INTEGER NOT NULL, '
+      '`group_id` INTEGER NOT NULL, '
+      'FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) '
+      ' ON UPDATE NO ACTION ON DELETE CASCADE)',
+    );
+    await database.execute(
+      'CREATE TABLE IF NOT EXISTS `conversion_params` ('
+      '`id` INTEGER PRIMARY KEY AUTOINCREMENT, '
+      '`name` TEXT NOT NULL, '
+      '`calculable` INTEGER NOT NULL, '
+      '`unit_group_id` INTEGER, '
+      '`selected_unit_id` INTEGER, '
+      '`list_type` INTEGER, '
+      '`param_set_id` INTEGER NOT NULL, '
+      'FOREIGN KEY (`param_set_id`) '
+      ' REFERENCES `conversion_param_sets` (`id`) '
+      ' ON UPDATE NO ACTION ON DELETE CASCADE)',
+    );
+    await database.execute(
+      'CREATE TABLE IF NOT EXISTS `conversion_param_units` ('
+      '`id` INTEGER PRIMARY KEY AUTOINCREMENT, '
+      '`param_id` INTEGER NOT NULL, '
+      '`unit_id` INTEGER NOT NULL, '
+      'FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) '
+      ' ON UPDATE NO ACTION ON DELETE CASCADE, '
+      'FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) '
+      ' ON UPDATE NO ACTION ON DELETE CASCADE)',
+    );
+
+    await database.execute(
+      'CREATE UNIQUE INDEX IF NOT EXISTS '
+          '`index_conversion_param_sets_name_group_id` '
+      'ON `conversion_param_sets` (`name`, `group_id`)',
+    );
+    await database.execute(
+      'CREATE UNIQUE INDEX IF NOT EXISTS '
+          '`index_conversion_params_name_param_set_id` '
+      'ON `conversion_params` (`name`, `param_set_id`)',
+    );
+    await database.execute(
+      'CREATE INDEX IF NOT EXISTS '
+          '`index_conversion_param_units_param_id` '
+      'ON `conversion_param_units` (`param_id`)',
+    );
+
+    await SqlUtils.mergeGroupsAndUnits(
+      database,
+      items: unitsV4,
+    );
+
+    await SqlUtils.mergeConversionParams(
+      database,
+      items: conversionParamsV1,
+    );
+  }
+}

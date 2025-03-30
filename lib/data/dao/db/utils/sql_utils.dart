@@ -1,88 +1,237 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/data/entities/conversion_param_entity.dart';
+import 'package:convertouch/data/entities/conversion_param_set_entity.dart';
+import 'package:convertouch/data/entities/conversion_param_unit_entity.dart';
 import 'package:convertouch/data/entities/dynamic_value_entity.dart';
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:sqflite/sqflite.dart';
 
-class QueryParams {
-  static const noQuery = QueryParams(sqlQuery: null);
+class QueryWithParams {
+  static const noQuery = QueryWithParams(sqlQuery: null);
 
   final String? sqlQuery;
   final List<Object?> params;
 
-  const QueryParams({
+  const QueryWithParams({
     required this.sqlQuery,
     this.params = const [],
   });
 }
 
+final argPattern = RegExp(r'\?');
+
+const getGroups = "SELECT id, name FROM unit_groups";
+const getUnitCodesByGroupId =
+    "SELECT id, code FROM units WHERE unit_group_id = ?";
+const getUnitIdsByCodesAndGroupName = "SELECT u.id "
+    "FROM units u "
+    "INNER JOIN unit_groups g ON g.id = u.unit_group_id "
+    "WHERE g.name = ? "
+    "AND u.code in (?)";
+const getExistingParamSets = "SELECT id, name FROM conversion_param_sets";
+const getExistingParamsBySetId = "SELECT id, name FROM conversion_params "
+    "WHERE param_set_id = ?";
+const getExistingParamsByIds = "SELECT id, name FROM conversion_params "
+    "WHERE id in (?)";
+const getGroupIdByName = "SELECT id FROM unit_groups WHERE name = ? limit 1";
+
+typedef ChildItemsMergeFunc = Future<List<int>> Function(
+  Transaction,
+  Map<String, dynamic>,
+  int,
+);
+
+typedef ChildItemsPostMergeFunc = Future<void> Function(
+  Transaction,
+  dynamic,
+  List<int>,
+);
+
+typedef RowFunc = Future<Map<String, dynamic>> Function(Map<String, dynamic>);
+
 class SqlUtils {
   const SqlUtils._();
 
-  static QueryParams prepareUpdate({
-    required String tableName,
-    required int id,
-    required Map<String, Object?> row,
-    List<String> excludedColumns = const [],
-  }) {
-    List<MapEntry<String, Object?>> rowEntries = row.entries
-        .whereNot((element) => excludedColumns.contains(element.key))
-        .toList();
+  static Future<void> mergeGroupsAndUnits(
+    Database database, {
+    required List<dynamic> items,
+  }) async {
+    await database.transaction((txn) async {
+      await _mergeItems(
+        txn: txn,
+        items: items,
+        existingItemsQuery: getGroups,
+        tableName: unitGroupsTableName,
+        uniqueColumnName: 'groupName',
+        rowFunc: (item) async => UnitGroupEntity.jsonToRow(
+          item,
+        ),
+        childItemsMergeFunc: (txn, parentJson, parentId) async => _mergeItems(
+          txn: txn,
+          items: parentJson['units'],
+          existingItemsQuery: getUnitCodesByGroupId,
+          existingItemsQueryArgs: [parentId],
+          existingItemNameFunc: (item) => item['code'],
+          existingItemIdFunc: (item) => item['id'],
+          tableName: unitsTableName,
+          uniqueColumnName: 'code',
+          rowFunc: (item) async => UnitEntity.jsonToRow(
+            item,
+            unitGroupId: parentId,
+          ),
+        ),
+        childItemsPostMergeFunc: (txn, parentJson, childItemIds) async {
+          if (parentJson['refreshable'] == true) {
+            Batch batch = txn.batch();
 
-    if (rowEntries.isEmpty) {
-      return QueryParams.noQuery;
+            for (int unitId in childItemIds) {
+              batch.insert(
+                dynamicValuesTableName,
+                {'unit_id': unitId},
+                conflictAlgorithm: ConflictAlgorithm.ignore,
+              );
+            }
+
+            await batch.commit(noResult: true, continueOnError: false);
+          }
+        },
+      );
+    });
+  }
+
+  static Future<void> mergeConversionParams(
+    Database database, {
+    required List<dynamic> items,
+  }) async {
+    await database.transaction((txn) async {
+      await _mergeItems(
+        txn: txn,
+        items: items,
+        existingItemsQuery: getExistingParamSets,
+        tableName: conversionParamSetsTableName,
+        rowFunc: (item) async => ConversionParamSetEntity.jsonToRow(
+          item,
+          unitGroupId: await selectFirst(
+            executor: txn,
+            query: getGroupIdByName,
+            args: [item["unitGroupName"]],
+          ),
+        ),
+        childItemsMergeFunc: (txn, parentJson, parentId) async => _mergeItems(
+          txn: txn,
+          items: parentJson['params'],
+          existingItemsQuery: getExistingParamsBySetId,
+          existingItemsQueryArgs: [parentId],
+          tableName: conversionParamsTableName,
+          rowFunc: (item) async => ConversionParamEntity.jsonToRow(
+            item,
+            paramSetId: parentId,
+            paramUnitGroupId: item["unitGroupName"] != null
+                ? await selectFirst(
+                    executor: txn,
+                    query: getGroupIdByName,
+                    args: [item["unitGroupName"]],
+                  )
+                : null,
+          ),
+        ),
+        childItemsPostMergeFunc: (txn, parentJson, childItemIds) async {
+          await _mergeParamPossibleUnits(
+            txn: txn,
+            mergedParamIds: childItemIds,
+            paramJsonItems: parentJson['params'],
+          );
+        },
+      );
+    });
+  }
+
+  static Future<List<int>> _mergeItems({
+    required Transaction txn,
+    List<dynamic>? items,
+    required String existingItemsQuery,
+    List<Object> existingItemsQueryArgs = const [],
+    String Function(Map<String, dynamic>)? existingItemNameFunc,
+    int Function(Map<String, dynamic>)? existingItemIdFunc,
+    required String tableName,
+    String uniqueColumnName = 'name',
+    required RowFunc rowFunc,
+    ChildItemsMergeFunc? childItemsMergeFunc,
+    bool childrenBatchMerge = true,
+    ChildItemsPostMergeFunc? childItemsPostMergeFunc,
+  }) async {
+    if (items == null || items.isEmpty) {
+      return [];
     }
 
-    List<String> columnNamesToUpdate = rowEntries.map((e) => e.key).toList();
-    List<Object?> newColumnValues = rowEntries.map((e) => e.value).toList();
-
-    String? sqlQuery = buildUpdateQuery(
-      tableName: tableName,
-      id: id,
-      columnNamesToUpdate: columnNamesToUpdate,
+    Map<String, int> existingItems = await selectPairs(
+      executor: txn,
+      query: existingItemsQuery,
+      args: existingItemsQueryArgs,
+      kFunc: existingItemNameFunc,
+      vFunc: existingItemIdFunc,
     );
 
-    if (sqlQuery == null) {
-      return QueryParams.noQuery;
+    List<int> itemIds = [];
+    Batch? batch;
+
+    for (Map<String, dynamic> json in items) {
+      int? existingItemId = existingItems[json[uniqueColumnName]];
+
+      if (existingItemId == null &&
+          json[forUpdate] != null &&
+          (json[forUpdate] as Map).isNotEmpty) {
+        continue;
+      }
+
+      var row = await rowFunc.call(json);
+
+      if (childrenBatchMerge) {
+        batch ??= txn.batch();
+
+        int itemId = _mergeItemBatch(
+          batch: batch,
+          tableName: tableName,
+          itemId: existingItemId,
+          row: row,
+        );
+
+        itemIds.add(itemId);
+      } else {
+        int itemId = await _mergeItem(
+          executor: txn,
+          tableName: tableName,
+          itemId: existingItemId,
+          row: row,
+        );
+
+        itemIds.add(itemId);
+
+        List<int> childItemIds =
+            await childItemsMergeFunc?.call(txn, json, itemId) ?? [];
+        await childItemsPostMergeFunc?.call(txn, json, childItemIds);
+      }
     }
 
-    return QueryParams(sqlQuery: sqlQuery, params: newColumnValues);
-  }
+    if (childrenBatchMerge && batch != null) {
+      List<Object?> result = await batch.commit(continueOnError: false);
 
-  static Future<int> update({
-    required DatabaseExecutor executor,
-    required QueryParams queryParams,
-  }) async {
-    if (queryParams.sqlQuery == null) {
-      return 0;
+      for (int i = 0; i < items.length; i++) {
+        if (itemIds[i] == -1) {
+          itemIds[i] = result[i] as int;
+        }
+
+        var json = items[i];
+
+        List<int> childItemIds =
+            await childItemsMergeFunc?.call(txn, json, itemIds[i]) ?? [];
+        await childItemsPostMergeFunc?.call(txn, json, childItemIds);
+      }
     }
-    return await executor.rawUpdate(queryParams.sqlQuery!, queryParams.params);
-  }
 
-  static void addToBatchUpdate({
-    required Batch batch,
-    required QueryParams queryParams,
-  }) {
-    if (queryParams.sqlQuery == null) {
-      return;
-    }
-    batch.rawUpdate(queryParams.sqlQuery!, queryParams.params);
-  }
-
-  static String? buildUpdateQuery({
-    required String tableName,
-    required int id,
-    required List<String> columnNamesToUpdate,
-  }) {
-    List<String> setClauses =
-        columnNamesToUpdate.map((columnName) => '$columnName = ?').toList();
-
-    return setClauses.isNotEmpty
-        ? 'UPDATE $tableName SET '
-            '${setClauses.join(', ')}'
-            ' WHERE id = $id'
-        : null;
+    return itemIds;
   }
 
   static Future<bool> isColumnNew(
@@ -96,196 +245,201 @@ class SqlUtils {
     );
   }
 
-  static Future<void> updateUnitColumn(
-    Database database, {
-    required String columnName,
-    required Object? newColumnValue,
-    required String unitCode,
-    required String groupName,
+  static Future<void> _mergeParamPossibleUnits({
+    required Transaction txn,
+    required List<int> mergedParamIds,
+    required List<Map<String, dynamic>> paramJsonItems,
   }) async {
-    List<Map<String, dynamic>> result = await database.rawQuery(
-      "SELECT u.id FROM unit_groups g, units u "
-      "WHERE 1=1 "
-      "AND u.code = ? "
-      "AND g.name = ? "
-      "AND u.unit_group_id = g.id ",
-      [unitCode, groupName],
+    Map<String, int> paramsWithUnits = await selectPairs(
+      executor: txn,
+      query: getExistingParamsByIds,
+      args: [mergedParamIds],
     );
-    if (result.isNotEmpty) {
-      int unitId = result.first['id'];
 
-      await update(
-        executor: database,
-        queryParams: prepareUpdate(
-          tableName: unitsTableName,
-          id: unitId,
-          row: {
-            columnName: newColumnValue,
-          },
-        ),
-      );
-    }
-  }
+    Batch batch = txn.batch();
 
-  static Future<void> mergeGroupsAndUnits(
-    Database database, {
-    required List<dynamic> entities,
-  }) async {
-    Map<String, int> existingGroupNames =
-        await _getExistingGroupIdsNames(database);
+    for (var json in paramJsonItems) {
+      int paramId = paramsWithUnits[json['name']]!;
+      String? paramGroupName = json['unitGroupName'];
+      List<String>? possibleUnitCodes = json['possibleUnitCodes'];
 
-    for (Map<String, dynamic> entity in entities) {
-      await database.transaction(
-        (txn) async {
-          int unitGroupId = await _mergeGroup(
-            txn: txn,
-            entity: entity,
-            existingGroupNames: existingGroupNames,
-          );
+      if (paramGroupName == null ||
+          possibleUnitCodes == null ||
+          possibleUnitCodes.isEmpty) {
+        continue;
+      }
 
-          Map<String, int> existingUnitCodes = await _getExistingUnitIdsCodes(
-            txn: txn,
-            unitGroupId: unitGroupId,
-          );
-
-          List<int> unitIds = await _mergeUnits(
-            txn: txn,
-            unitGroupId: unitGroupId,
-            entity: entity,
-            existingUnitCodes: existingUnitCodes,
-          );
-
-          bool valuesAreRefreshable = entity['refreshable'] == true &&
-              entity['conversionType'] == ConversionType.formula;
-          if (valuesAreRefreshable) {
-            await _insertDynamicUnits(txn, unitIds);
-          }
-        },
-      );
-    }
-  }
-
-  static Future<Map<String, int>> _getExistingGroupIdsNames(
-    Database database,
-  ) async {
-    List<Map<String, dynamic>> result =
-        await database.rawQuery("SELECT id, name FROM unit_groups");
-    return {for (var item in result) item["name"]: item["id"]};
-  }
-
-  static Future<Map<String, int>> _getExistingUnitIdsCodes({
-    required Transaction txn,
-    required int unitGroupId,
-  }) async {
-    List<Map<String, dynamic>> result = await txn.rawQuery(
-        "SELECT id, code FROM units WHERE unit_group_id = $unitGroupId");
-    return {for (var item in result) item["code"]: item["id"]};
-  }
-
-  static Future<int> _mergeGroup({
-    required Transaction txn,
-    required Map<String, dynamic> entity,
-    required Map<String, int> existingGroupNames,
-  }) async {
-    int groupId;
-    if (existingGroupNames.containsKey(entity['groupName'])) {
-      groupId = existingGroupNames[entity['groupName']]!;
-
-      Map<String, Object?> row = UnitGroupEntity.entityToRow(
-        entity,
-        initDefaults: false,
-      );
-
-      await update(
+      List<int> newUnitIds = await selectSingles(
         executor: txn,
-        queryParams: prepareUpdate(
-          tableName: unitGroupsTableName,
-          id: groupId,
-          row: row,
-          excludedColumns: ['name', 'oob'],
-        ),
+        query: getUnitIdsByCodesAndGroupName,
+        args: [paramGroupName, possibleUnitCodes],
       );
-    } else {
-      groupId = await txn.insert(
-        unitGroupsTableName,
-        UnitGroupEntity.entityToRow(entity),
+
+      batch.rawDelete(
+        "DELETE FROM $conversionParamUnitsTableName WHERE param_id = ?",
+        [paramId],
       );
+
+      for (int unitId in newUnitIds) {
+        batch.insert(
+          conversionParamUnitsTableName,
+          {
+            "param_id": paramId,
+            "unit_id": unitId,
+          },
+          conflictAlgorithm: ConflictAlgorithm.ignore,
+        );
+      }
     }
 
-    return groupId;
+    await batch.commit(continueOnError: false, noResult: true);
   }
 
-  static Future<List<int>> _mergeUnits({
-    required Transaction txn,
-    required int unitGroupId,
-    required Map<String, dynamic> entity,
-    required Map<String, int> existingUnitCodes,
+  static Future<int> _mergeItem({
+    required DatabaseExecutor executor,
+    required String tableName,
+    required int? itemId,
+    required Map<String, dynamic> row,
   }) async {
-    Batch batch = txn.batch();
+    if (itemId != null) {
+      var queryForUpdate = buildQueryForUpdate(
+        tableName: tableName,
+        id: itemId,
+        row: row,
+      );
 
-    for (Map<String, dynamic> unit in entity['units']) {
-      _mergeUnit(
-        batch: batch,
-        unitGroupId: unitGroupId,
-        entity: unit,
-        existingUnitCodes: existingUnitCodes,
+      if (queryForUpdate.sqlQuery == null) {
+        return itemId;
+      }
+
+      await executor.rawUpdate(queryForUpdate.sqlQuery!, queryForUpdate.params);
+
+      return itemId;
+    } else {
+      return await executor.insert(
+        tableName,
+        row,
+        conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
-
-    List<Object?> result = await batch.commit(continueOnError: false);
-    return result.map((item) => item as int).toList();
   }
 
-  static void _mergeUnit({
+  static int _mergeItemBatch({
     required Batch batch,
-    required int unitGroupId,
-    required Map<String, dynamic> entity,
-    required Map<String, int> existingUnitCodes,
+    required String tableName,
+    required int? itemId,
+    required Map<String, dynamic> row,
   }) {
-    if (existingUnitCodes.containsKey(entity['code'])) {
-      int unitId = existingUnitCodes[entity['code']]!;
-
-      addToBatchUpdate(
-        batch: batch,
-        queryParams: prepareUpdate(
-          tableName: unitsTableName,
-          id: unitId,
-          row: UnitEntity.entityToRow(
-            entity,
-            unitGroupId: unitGroupId,
-            initDefaults: false,
-          ),
-          excludedColumns: ['code', 'oob', 'unit_group_id'],
-        ),
+    if (itemId != null) {
+      var queryForUpdate = buildQueryForUpdate(
+        tableName: tableName,
+        id: itemId,
+        row: row,
       );
+
+      if (queryForUpdate.sqlQuery != null) {
+        batch.rawUpdate(queryForUpdate.sqlQuery!, queryForUpdate.params);
+      }
+
+      return itemId;
     } else {
       batch.insert(
-        unitsTableName,
-        UnitEntity.entityToRow(
-          entity,
-          unitGroupId: unitGroupId,
-        ),
+        tableName,
+        row,
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
+
+      return -1;
     }
   }
 
-  static Future<void> _insertDynamicUnits(
-    Transaction txn,
-    List<int> unitIds,
-  ) async {
-    Batch batch = txn.batch();
+  static QueryWithParams buildQueryForUpdate({
+    required String tableName,
+    required int id,
+    required Map<String, dynamic> row,
+  }) {
+    List<MapEntry<String, dynamic>> rowEntries = row.entries.toList();
 
-    for (int unitId in unitIds) {
-      batch.insert(
-        dynamicValuesTableName,
-        {
-          'unit_id': unitId,
-        },
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
+    if (rowEntries.isEmpty) {
+      return QueryWithParams.noQuery;
     }
 
-    await batch.commit(noResult: true, continueOnError: false);
+    List<String> setClauses = rowEntries.map((e) => '${e.key} = ?').toList();
+    List<Object?> newColumnValues = rowEntries.map((e) => e.value).toList();
+
+    String sqlQuery = 'UPDATE $tableName SET '
+        '${setClauses.join(', ')}'
+        ' WHERE id = $id';
+
+    return QueryWithParams(sqlQuery: sqlQuery, params: newColumnValues);
   }
+
+  static Future<V> selectFirst<V>({
+    required DatabaseExecutor executor,
+    required String query,
+    List<Object> args = const [],
+    V Function(Map<String, dynamic>)? valFunc,
+  }) async {
+    List<Map<String, dynamic>> result = await executor.rawQuery(
+      toInArgsQuery(query, args),
+      flatten(args),
+    );
+    return valFunc?.call(result.first) ?? result.first["id"];
+  }
+
+  static Future<List<V>> selectSingles<V>({
+    required DatabaseExecutor executor,
+    required String query,
+    List<Object> args = const [],
+    V Function(Map<String, dynamic>)? valFunc,
+  }) async {
+    List<Map<String, dynamic>> result = await executor.rawQuery(
+      toInArgsQuery(query, args),
+      flatten(args),
+    );
+    return result
+        .map((item) => valFunc?.call(item) ?? item['id'] as V)
+        .toList();
+  }
+
+  static Future<Map<K, V>> selectPairs<K, V>({
+    required DatabaseExecutor executor,
+    required String query,
+    List<Object> args = const [],
+    K Function(Map<String, dynamic>)? kFunc,
+    V Function(Map<String, dynamic>)? vFunc,
+  }) async {
+    List<Map<String, dynamic>> result = await executor.rawQuery(
+      toInArgsQuery(query, args),
+      flatten(args),
+    );
+    return {
+      for (var item in result)
+        kFunc?.call(item) ?? item["name"]: vFunc?.call(item) ?? item["id"]
+    };
+  }
+
+  static String toInArgsQuery(String query, List<Object> args) {
+    List<int> paramIndexes =
+        argPattern.allMatches(query).map((match) => match.start).toList();
+
+    String result = query;
+
+    for (int i = 0; i < paramIndexes.length; i++) {
+      var arg = args[i];
+
+      if (arg is Iterable) {
+        String inArgsPattern = List.filled(arg.length, '?').join(',');
+        result =
+            result.replaceFirst(argPattern, inArgsPattern, paramIndexes[i]);
+      }
+    }
+
+    return result;
+  }
+
+  static List<T> flatten<T>(Iterable<dynamic> list) => [
+        for (var element in list)
+          if (element is! Iterable) element else ...flatten(element),
+      ];
 }

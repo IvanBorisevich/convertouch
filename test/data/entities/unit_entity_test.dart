@@ -1,12 +1,14 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
+import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:test/test.dart';
 
 void main() {
   test(
-    'Build units table row from entity with init defaults',
+    'Build units table row from entity for insert',
     () {
       expect(
-        UnitEntity.entityToRow(
+        UnitEntity.jsonToRow(
           {
             "code": "g",
             "name": "Gram",
@@ -18,12 +20,23 @@ void main() {
           'name': 'Gram',
           'code': 'g',
           'coefficient': 0.001,
-          'symbol': null,
           'unit_group_id': 1,
-          'value_type': null,
-          'min_value': null,
-          'max_value': null,
-          'invertible': null,
+          'oob': 1,
+        },
+      );
+
+      expect(
+        UnitEntity.jsonToRow(
+          {
+            "code": ClothingSizeCode.it,
+            "name": "Italy",
+          },
+          unitGroupId: 10,
+        ),
+        {
+          'name': 'Italy',
+          'code': 'IT',
+          'unit_group_id': 10,
           'oob': 1,
         },
       );
@@ -31,34 +44,74 @@ void main() {
   );
 
   test(
-    'Build units table row from entity without init defaults',
+    'Build units table row from entity for update',
     () {
       expect(
-        UnitEntity.entityToRow(
+        UnitEntity.jsonToRow(
           {
             "code": "g",
+            forUpdate: {
+              "name": "Gram",
+              "coefficient": 0.001,
+              "invertible": false,
+            }
           },
           unitGroupId: 1,
-          initDefaults: false,
         ),
         {
-          'code': 'g',
+          'name': 'Gram',
+          'coefficient': 0.001,
+          'unit_group_id': 1,
+          'invertible': 0,
+          'oob': 1,
         },
       );
 
       expect(
-        UnitEntity.entityToRow(
+        UnitEntity.jsonToRow(
           {
             "code": "g",
-            "coefficient": null,
+            forUpdate: {
+              "name": "Gram",
+              "coefficient": 0.001,
+              "minValue": -1,
+            }
           },
-          unitGroupId: 1,
-          initDefaults: false,
+          unitGroupId: 2,
         ),
         {
-          'code': 'g',
-          'coefficient': null,
+          'name': 'Gram',
+          'coefficient': 0.001,
+          'unit_group_id': 2,
+          'min_value': null,
+          'oob': 1,
         },
+      );
+
+      expect(
+        UnitEntity.jsonToRow(
+          {
+            "code": "g",
+            forUpdate: {
+              "name": "Gram",
+              "coefficient": 0.001,
+              "minValue": -1,
+            }
+          },
+          unitGroupId: -1,
+        ),
+        {
+          'name': 'Gram',
+          'coefficient': 0.001,
+          'unit_group_id': null,
+          'min_value': null,
+          'oob': 1,
+        },
+      );
+
+      expect(
+        UnitEntity.jsonToRow({}, unitGroupId: null, excludedColumns: ['oob']),
+        {},
       );
     },
   );
