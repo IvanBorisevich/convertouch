@@ -49,7 +49,10 @@ typedef ChildItemsPostMergeFunc = Future<void> Function(
   List<int>,
 );
 
-typedef RowFunc = Future<Map<String, dynamic>> Function(Map<String, dynamic>);
+typedef RowFunc = Future<Map<String, dynamic>> Function(
+  Map<String, dynamic>,
+  Transaction,
+);
 
 class SqlUtils {
   const SqlUtils._();
@@ -65,23 +68,25 @@ class SqlUtils {
         existingItemsQuery: getGroups,
         tableName: unitGroupsTableName,
         uniqueColumnName: 'groupName',
-        rowFunc: (item) async => UnitGroupEntity.jsonToRow(
+        rowFunc: (item, txn) async => UnitGroupEntity.jsonToRow(
           item,
         ),
-        childItemsMergeFunc: (txn, parentJson, parentId) async => _mergeItems(
-          txn: txn,
-          items: parentJson['units'],
-          existingItemsQuery: getUnitCodesByGroupId,
-          existingItemsQueryArgs: [parentId],
-          existingItemNameFunc: (item) => item['code'],
-          existingItemIdFunc: (item) => item['id'],
-          tableName: unitsTableName,
-          uniqueColumnName: 'code',
-          rowFunc: (item) async => UnitEntity.jsonToRow(
-            item,
-            unitGroupId: parentId,
-          ),
-        ),
+        childItemsMergeFunc: (txn, parentJson, parentId) async {
+          return await _mergeItems(
+            txn: txn,
+            items: parentJson['units'],
+            existingItemsQuery: getUnitCodesByGroupId,
+            existingItemsQueryArgs: [parentId],
+            existingItemNameFunc: (item) => item['code'],
+            existingItemIdFunc: (item) => item['id'],
+            tableName: unitsTableName,
+            uniqueColumnName: 'code',
+            rowFunc: (item, txn) async => UnitEntity.jsonToRow(
+              item,
+              unitGroupId: parentId,
+            ),
+          );
+        },
         childItemsPostMergeFunc: (txn, parentJson, childItemIds) async {
           if (parentJson['refreshable'] == true) {
             Batch batch = txn.batch();
@@ -111,32 +116,34 @@ class SqlUtils {
         items: items,
         existingItemsQuery: getExistingParamSets,
         tableName: conversionParamSetsTableName,
-        rowFunc: (item) async => ConversionParamSetEntity.jsonToRow(
+        rowFunc: (item, txn) async => ConversionParamSetEntity.jsonToRow(
           item,
           unitGroupId: await selectFirst(
-            executor: txn,
+            txn: txn,
             query: getGroupIdByName,
             args: [item["unitGroupName"]],
           ),
         ),
-        childItemsMergeFunc: (txn, parentJson, parentId) async => _mergeItems(
-          txn: txn,
-          items: parentJson['params'],
-          existingItemsQuery: getExistingParamsBySetId,
-          existingItemsQueryArgs: [parentId],
-          tableName: conversionParamsTableName,
-          rowFunc: (item) async => ConversionParamEntity.jsonToRow(
-            item,
-            paramSetId: parentId,
-            paramUnitGroupId: item["unitGroupName"] != null
-                ? await selectFirst(
-                    executor: txn,
-                    query: getGroupIdByName,
-                    args: [item["unitGroupName"]],
-                  )
-                : null,
-          ),
-        ),
+        childItemsMergeFunc: (txn, parentJson, parentId) async {
+          return await _mergeItems(
+            txn: txn,
+            items: parentJson['params'],
+            existingItemsQuery: getExistingParamsBySetId,
+            existingItemsQueryArgs: [parentId],
+            tableName: conversionParamsTableName,
+            rowFunc: (item, txn) async => ConversionParamEntity.jsonToRow(
+              item,
+              paramSetId: parentId,
+              paramUnitGroupId: item["unitGroupName"] != null
+                  ? await selectFirst(
+                      txn: txn,
+                      query: getGroupIdByName,
+                      args: [item["unitGroupName"]],
+                    )
+                  : null,
+            ),
+          );
+        },
         childItemsPostMergeFunc: (txn, parentJson, childItemIds) async {
           await _mergeParamPossibleUnits(
             txn: txn,
@@ -167,7 +174,7 @@ class SqlUtils {
     }
 
     Map<String, int> existingItems = await selectPairs(
-      executor: txn,
+      txn: txn,
       query: existingItemsQuery,
       args: existingItemsQueryArgs,
       kFunc: existingItemNameFunc,
@@ -186,7 +193,7 @@ class SqlUtils {
         continue;
       }
 
-      var row = await rowFunc.call(json);
+      var row = await rowFunc.call(json, txn);
 
       if (childrenBatchMerge) {
         batch ??= txn.batch();
@@ -201,7 +208,7 @@ class SqlUtils {
         itemIds.add(itemId);
       } else {
         int itemId = await _mergeItem(
-          executor: txn,
+          txn: txn,
           tableName: tableName,
           itemId: existingItemId,
           row: row,
@@ -251,7 +258,7 @@ class SqlUtils {
     required List<Map<String, dynamic>> paramJsonItems,
   }) async {
     Map<String, int> paramsWithUnits = await selectPairs(
-      executor: txn,
+      txn: txn,
       query: getExistingParamsByIds,
       args: [mergedParamIds],
     );
@@ -270,7 +277,7 @@ class SqlUtils {
       }
 
       List<int> newUnitIds = await selectSingles(
-        executor: txn,
+        txn: txn,
         query: getUnitIdsByCodesAndGroupName,
         args: [paramGroupName, possibleUnitCodes],
       );
@@ -296,7 +303,7 @@ class SqlUtils {
   }
 
   static Future<int> _mergeItem({
-    required DatabaseExecutor executor,
+    required Transaction txn,
     required String tableName,
     required int? itemId,
     required Map<String, dynamic> row,
@@ -312,11 +319,11 @@ class SqlUtils {
         return itemId;
       }
 
-      await executor.rawUpdate(queryForUpdate.sqlQuery!, queryForUpdate.params);
+      await txn.rawUpdate(queryForUpdate.sqlQuery!, queryForUpdate.params);
 
       return itemId;
     } else {
-      return await executor.insert(
+      return await txn.insert(
         tableName,
         row,
         conflictAlgorithm: ConflictAlgorithm.fail,
@@ -375,12 +382,12 @@ class SqlUtils {
   }
 
   static Future<V> selectFirst<V>({
-    required DatabaseExecutor executor,
+    required Transaction txn,
     required String query,
     List<Object> args = const [],
     V Function(Map<String, dynamic>)? valFunc,
   }) async {
-    List<Map<String, dynamic>> result = await executor.rawQuery(
+    List<Map<String, dynamic>> result = await txn.rawQuery(
       toInArgsQuery(query, args),
       flatten(args),
     );
@@ -388,12 +395,12 @@ class SqlUtils {
   }
 
   static Future<List<V>> selectSingles<V>({
-    required DatabaseExecutor executor,
+    required Transaction txn,
     required String query,
     List<Object> args = const [],
     V Function(Map<String, dynamic>)? valFunc,
   }) async {
-    List<Map<String, dynamic>> result = await executor.rawQuery(
+    List<Map<String, dynamic>> result = await txn.rawQuery(
       toInArgsQuery(query, args),
       flatten(args),
     );
@@ -403,13 +410,13 @@ class SqlUtils {
   }
 
   static Future<Map<K, V>> selectPairs<K, V>({
-    required DatabaseExecutor executor,
+    required Transaction txn,
     required String query,
     List<Object> args = const [],
     K Function(Map<String, dynamic>)? kFunc,
     V Function(Map<String, dynamic>)? vFunc,
   }) async {
-    List<Map<String, dynamic>> result = await executor.rawQuery(
+    List<Map<String, dynamic>> result = await txn.rawQuery(
       toInArgsQuery(query, args),
       flatten(args),
     );

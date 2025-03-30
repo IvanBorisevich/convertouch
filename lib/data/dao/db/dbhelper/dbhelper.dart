@@ -21,18 +21,17 @@ import 'package:floor/floor.dart';
 /// 5) Rebuild and start the app
 
 class ConvertouchDatabaseHelper {
-  static const databaseName = "convertouch_database.db";
-  static const databaseVersion = 4;
+  static const dbName = "convertouch_database.db";
+  static const dbVersion = 4;
 
   static final ConvertouchDatabaseHelper I =
       di.locator.get<ConvertouchDatabaseHelper>();
 
   Future<ConvertouchDatabase> initDatabase() async {
-    logger.d("Initializing database $databaseName "
-        "of version ${ConvertouchDatabaseHelper.databaseVersion}");
+    logger.d("Initializing database $dbName of version $dbVersion");
     final migrations = await _initMigrations();
     return await $FloorConvertouchDatabase
-        .databaseBuilder(databaseName)
+        .databaseBuilder(dbName)
         .addCallback(_initCallback)
         .addMigrations(migrations)
         .build();
@@ -40,9 +39,10 @@ class ConvertouchDatabaseHelper {
 
   Future<List<Migration>> _initMigrations() async {
     return _rawMigrations
+        .whereIndexed((index, e) => index + 2 <= dbVersion)
         .mapIndexed(
           (index, e) => Migration(index + 1, index + 2, (database) async {
-            e.execute(database);
+            await e.execute(database);
           }),
         )
         .toList();

@@ -128,35 +128,41 @@ Future<void> main() async {
     );
 
     expect(
-      await SqlUtils.selectSingles(
-        executor: db,
-        query: getUnitIdsByCodesAndGroupName,
-        args: [
-          groupId,
-          ['code1', 'code2'],
-        ],
-      ),
+      await db.transaction((txn) async {
+        return await SqlUtils.selectSingles(
+          txn: txn,
+          query: getUnitIdsByCodesAndGroupName,
+          args: [
+            'group1',
+            ['code1', 'code2'],
+          ],
+        );
+      }),
       unitIds,
     );
 
     expect(
-      await SqlUtils.selectPairs(
-        executor: db,
-        query: getGroups,
-      ),
+      await db.transaction((txn) async {
+        return await SqlUtils.selectPairs(
+          txn: txn,
+          query: getGroups,
+        );
+      }),
       {
         'group1': 1,
       },
     );
 
     expect(
-      await SqlUtils.selectPairs(
-        executor: db,
-        query: getUnitCodesByGroupId,
-        args: [groupId],
-        kFunc: (item) => item['code'],
-        vFunc: (item) => item['id'],
-      ),
+      await db.transaction((txn) async {
+        return await SqlUtils.selectPairs(
+          txn: txn,
+          query: getUnitCodesByGroupId,
+          args: [groupId],
+          kFunc: (item) => item['code'],
+          vFunc: (item) => item['id'],
+        );
+      }),
       {
         'code1': 1,
         'code2': 2,
@@ -164,14 +170,16 @@ Future<void> main() async {
     );
 
     expect(
-      await SqlUtils.selectSingles(
-        executor: db,
-        query: getUnitIdsByCodesAndGroupName,
-        args: [
-          groupId,
-          ['code1', 'code2'],
-        ],
-      ),
+      await db.transaction((txn) async {
+        return await SqlUtils.selectSingles(
+          txn: txn,
+          query: getUnitIdsByCodesAndGroupName,
+          args: [
+            'group1',
+            ['code1', 'code2'],
+          ],
+        );
+      }),
       [1, 2],
     );
 

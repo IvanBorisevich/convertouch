@@ -23,7 +23,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 part 'dbconfig.g.dart';
 
 @Database(
-  version: ConvertouchDatabaseHelper.databaseVersion,
+  version: ConvertouchDatabaseHelper.dbVersion,
   entities: [
     UnitGroupEntity,
     UnitEntity,
