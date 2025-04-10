@@ -1,6 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -131,50 +136,106 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         child: Column(
                           children: [
                             ConversionParamsView(
-                              paramSetValue: conversion.paramSetValue,
+                              paramSetValue: //conversion.paramSetValue,
+                                  const ConversionParamSetValueModel(
+                                paramSet: ConversionParamSetModel(
+                                  id: 1,
+                                  name: "Clothing Size",
+                                  mandatory: true,
+                                  groupId: 10,
+                                ),
+                                paramValues: [
+                                  ConversionParamValueModel(
+                                    param: ConversionParamModel(
+                                      name: "Gender",
+                                      unitGroupId: null,
+                                      calculable: false,
+                                      valueType: ConvertouchValueType.text,
+                                      listType: ConvertouchListType.gender,
+                                      paramSetId: 1,
+                                    ),
+                                    unit: null,
+                                    calculated: false,
+                                    value: ValueModel.empty,
+                                    defaultValue: ValueModel.empty,
+                                  ),
+                                  ConversionParamValueModel(
+                                    param: ConversionParamModel(
+                                      name: "Garment",
+                                      unitGroupId: null,
+                                      calculable: false,
+                                      valueType: ConvertouchValueType.text,
+                                      listType: ConvertouchListType.garment,
+                                      paramSetId: 1,
+                                    ),
+                                    unit: null,
+                                    calculated: false,
+                                    value: ValueModel.empty,
+                                    defaultValue: ValueModel.empty,
+                                  ),
+                                  ConversionParamValueModel(
+                                    param: ConversionParamModel(
+                                      name: "Height",
+                                      unitGroupId: 1,
+                                      calculable: false,
+                                      valueType:
+                                          ConvertouchValueType.decimalPositive,
+                                      listType: null,
+                                      paramSetId: 1,
+                                    ),
+                                    unit: null,
+                                    calculated: false,
+                                    value: ValueModel.empty,
+                                    defaultValue: ValueModel.empty,
+                                  ),
+                                ],
+                              ),
                               theme: appState.theme,
                             ),
-                            ConvertouchConversionItemsView(
-                              conversion.conversionUnitValues,
-                              onUnitItemTap: (item) {
-                                unitsBloc.add(
-                                  FetchItems(
-                                    parentItemId: conversion.unitGroup.id,
-                                  ),
-                                );
+                            Expanded(
+                              child: ConvertouchConversionItemsView(
+                                conversion.conversionUnitValues,
+                                onUnitItemTap: (item) {
+                                  unitsBloc.add(
+                                    FetchItems(
+                                      parentItemId: conversion.unitGroup.id,
+                                    ),
+                                  );
 
-                                unitsSelectionBloc.add(
-                                  StartItemSelection(
-                                    previouslySelectedId: item.unit.id,
-                                    excludedIds: conversion.conversionUnitValues
-                                        .map((e) => e.unit.id)
-                                        .whereNot((id) => id == item.unit.id)
-                                        .toList(),
-                                  ),
-                                );
+                                  unitsSelectionBloc.add(
+                                    StartItemSelection(
+                                      previouslySelectedId: item.unit.id,
+                                      excludedIds: conversion
+                                          .conversionUnitValues
+                                          .map((e) => e.unit.id)
+                                          .whereNot((id) => id == item.unit.id)
+                                          .toList(),
+                                    ),
+                                  );
 
-                                navigationBloc.add(
-                                  const NavigateToPage(
-                                    pageName: PageName.unitsPageForConversion,
-                                  ),
-                                );
-                              },
-                              onTextValueChanged: (item, value) {
-                                conversionBloc.add(
-                                  EditConversionItemValue(
-                                    newValue: value,
-                                    unitId: item.unit.id,
-                                  ),
-                                );
-                              },
-                              onItemRemoveTap: (item) {
-                                conversionBloc.add(
-                                  RemoveConversionItems(
-                                    unitIds: [item.unit.id],
-                                  ),
-                                );
-                              },
-                              theme: appState.theme,
+                                  navigationBloc.add(
+                                    const NavigateToPage(
+                                      pageName: PageName.unitsPageForConversion,
+                                    ),
+                                  );
+                                },
+                                onTextValueChanged: (item, value) {
+                                  conversionBloc.add(
+                                    EditConversionItemValue(
+                                      newValue: value,
+                                      unitId: item.unit.id,
+                                    ),
+                                  );
+                                },
+                                onItemRemoveTap: (item) {
+                                  conversionBloc.add(
+                                    RemoveConversionItems(
+                                      unitIds: [item.unit.id],
+                                    ),
+                                  );
+                                },
+                                theme: appState.theme,
+                              ),
                             ),
                           ],
                         ),

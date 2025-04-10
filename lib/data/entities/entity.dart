@@ -13,8 +13,12 @@ abstract class ConvertouchEntity {
   Map<String, dynamic> toRow();
 }
 
-int? bool2int(bool? value, {int? ifNull}) {
+int? bool2int(bool? value, {int ifNull = 0}) {
   return value != null ? (value ? 1 : 0) : ifNull;
+}
+
+bool int2bool(int? value, {bool ifNull = false}) {
+  return value != null ? value == 1 : ifNull;
 }
 
 Map<String, dynamic> minify(

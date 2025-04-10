@@ -16,7 +16,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final bool disabled;
   final bool controlsVisible;
   final String Function(T) itemNameFunc;
-  final String Function(T)? unitItemCodeFunc;
+  final String? Function(T) unitItemCodeFunc;
   final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
@@ -69,18 +69,6 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     var unitTextBoxColor = itemColor.textBox;
     var handlerColor = itemColor.handler;
 
-    ConvertouchValueType valueType;
-
-    switch (T) {
-      case ConversionParamValueModel:
-        valueType = (widget.item as ConversionParamValueModel).param.valueType;
-        break;
-      case ConversionUnitValueModel:
-      default:
-        valueType = (widget.item as ConversionUnitValueModel).unit.valueType;
-        break;
-    }
-
     String mainText;
     String hintText;
 
@@ -93,6 +81,9 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     }
 
     _unitValueController.text = mainText;
+
+    String paramName = widget.itemNameFunc.call(widget.item);
+    String? paramUnitCode = widget.unitItemCodeFunc.call(widget.item);
 
     return SizedBox(
       height: _defaultHeight,
@@ -112,10 +103,11 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
             child: ConvertouchInputBox(
               textController: _unitValueController,
               readonly: widget.disabled,
-              label: widget.itemNameFunc.call(widget.item),
+              label: paramName,
               hintText: hintText,
               borderRadius: 15,
-              valueType: valueType,
+              valueType: widget.item.valueType,
+              listType: widget.item.listType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
@@ -167,7 +159,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               colors: unitTextBoxColor,
             ),
           ),
-          widget.unitItemCodeFunc != null
+          paramUnitCode != null
               ? Container(
                   width: _unitButtonWidth,
                   height: _defaultHeight,
@@ -198,7 +190,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                       ),
                     ),
                     child: Text(
-                      widget.unitItemCodeFunc!.call(widget.item),
+                      paramUnitCode,
                       style: TextStyle(
                         color: _isFocused && !widget.disabled
                             ? unitButtonColor.foreground.focused

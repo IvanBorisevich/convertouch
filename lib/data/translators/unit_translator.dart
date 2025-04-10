@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
@@ -21,8 +22,8 @@ class UnitTranslator extends Translator<UnitModel, UnitEntity> {
       listType: model.listType?.id,
       minValue: model.minValue.numVal,
       maxValue: model.maxValue.numVal,
-      invertible: model.invertible ? 1 : null,
-      oob: model.oob ? 1 : null,
+      invertible: bool2int(model.invertible),
+      oob: bool2int(model.oob),
     );
   }
 
@@ -39,8 +40,8 @@ class UnitTranslator extends Translator<UnitModel, UnitEntity> {
       listType: ConvertouchListType.valueOf(entity.listType),
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
-      invertible: entity.invertible == 1,
-      oob: entity.oob == 1,
+      invertible: int2bool(entity.invertible, ifNull: true),
+      oob: int2bool(entity.oob, ifNull: true),
     );
   }
 }

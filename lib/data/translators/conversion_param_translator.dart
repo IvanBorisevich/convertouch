@@ -1,4 +1,5 @@
 import 'package:convertouch/data/entities/conversion_param_entity.dart';
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
@@ -15,7 +16,7 @@ class ConversionParamTranslator
       id: model.id != -1 ? model.id : null,
       name: model.name,
       unitGroupId: model.unitGroupId,
-      calculable: model.calculable ? 1 : null,
+      calculable: bool2int(model.calculable),
       valueType: model.valueType.id,
       listType: model.listType?.id,
       paramSetId: model.paramSetId,
@@ -27,7 +28,7 @@ class ConversionParamTranslator
     return ConversionParamModel(
       id: entity.id ?? -1,
       name: entity.name,
-      calculable: entity.calculable == 1,
+      calculable: int2bool(entity.calculable),
       paramSetId: entity.paramSetId,
       unitGroupId: entity.unitGroupId,
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,

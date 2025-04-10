@@ -17,6 +17,10 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   String get name;
 
+  ConvertouchValueType get valueType;
+
+  ConvertouchListType? get listType;
+
   @override
   List<Object?> get props => [
         itemType,
@@ -59,6 +63,12 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
 
   @override
   String get name => unit.name;
+
+  @override
+  ConvertouchValueType get valueType => unit.valueType;
+
+  @override
+  ConvertouchListType? get listType => unit.listType;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
@@ -128,6 +138,12 @@ class ConversionParamValueModel extends ConversionItemValueModel {
 
     return param.name;
   }
+
+  @override
+  ConvertouchValueType get valueType => param.valueType;
+
+  @override
+  ConvertouchListType? get listType => param.listType;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {

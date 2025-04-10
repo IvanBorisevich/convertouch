@@ -1,6 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/listable.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +6,9 @@ import 'package:flutter/material.dart';
 class ConvertouchListBox extends StatefulWidget {
   static const double defaultHeight = 55;
 
-  final ValueModel? value;
+  final String? value;
   final FocusNode? focusNode;
-  final Listable listable;
+  final List<String> listValues;
   final String label;
   final bool autofocus;
   final bool disabled;
@@ -29,7 +27,7 @@ class ConvertouchListBox extends StatefulWidget {
   const ConvertouchListBox({
     this.value,
     this.focusNode,
-    required this.listable,
+    required this.listValues,
     this.label = "",
     this.autofocus = false,
     this.disabled = false,
@@ -62,7 +60,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
 
   @override
   void initState() {
-    _selectedValue = widget.value?.raw;
+    _selectedValue = widget.value;
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode!;
@@ -123,15 +121,17 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(17),
           enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(
-                color: borderColor, //widget.colors.border.regular,
-              )),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: borderColor, //widget.colors.border.regular,
+            ),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(
-                color: borderColor,
-              )),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: borderColor,
+            ),
+          ),
           label: Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width / 2,
@@ -158,10 +158,10 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           ),
         ),
         value: _selectedValue,
-        items: widget.listable.values
+        items: widget.listValues
             .map(
               (value) => DropdownMenuItem(
-                value: widget.listable.valueNameFunc.call(value),
+                value: value,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 17),
                   child: Text(
@@ -192,7 +192,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
          */
         selectedItemBuilder: _selectedValue != null
             ? (context) {
-                return widget.listable.values.map(
+                return widget.listValues.map(
                   (value) {
                     return Container(
                       padding: EdgeInsets.zero,

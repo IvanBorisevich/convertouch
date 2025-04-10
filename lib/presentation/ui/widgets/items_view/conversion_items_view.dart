@@ -44,58 +44,56 @@ class _ConvertouchConversionItemsViewState
       );
     }
 
-    return Expanded(
-      child: ReorderableListView.builder(
-        itemCount: widget.convertedItems.length,
-        buildDefaultDragHandles: false,
-        shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(
-          top: _itemPadding,
-          bottom: _bottomSpacing,
-        ),
-        itemBuilder: (context, index) {
-          ConversionUnitValueModel item = widget.convertedItems[index];
-
-          return Padding(
-            key: Key('$index'),
-            padding: const EdgeInsets.only(
-              top: _itemPadding,
-              bottom: _itemPadding,
-            ),
-            child: ConvertouchConversionItem(
-              item,
-              index: index,
-              disabled: !widget.convertedItems[index].unit.invertible,
-              itemNameFunc: (item) => item.unit.name,
-              unitItemCodeFunc: (item) => item.unit.code,
-              onTap: () {
-                widget.onUnitItemTap?.call(widget.convertedItems[index]);
-              },
-              onValueChanged: (value) {
-                widget.onTextValueChanged?.call(
-                  widget.convertedItems[index],
-                  value,
-                );
-              },
-              onRemove: () {
-                widget.onItemRemoveTap?.call(item);
-              },
-              colors: conversionItemColors[widget.theme]!,
-            ),
-          );
-        },
-        onReorder: (int oldIndex, int newIndex) {
-          setState(() {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
-            final ConversionUnitValueModel item =
-                widget.convertedItems.removeAt(oldIndex);
-            widget.convertedItems.insert(newIndex, item);
-          });
-        },
+    return ReorderableListView.builder(
+      itemCount: widget.convertedItems.length,
+      buildDefaultDragHandles: false,
+      shrinkWrap: true,
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(
+        top: _itemPadding,
+        bottom: _bottomSpacing,
       ),
+      itemBuilder: (context, index) {
+        ConversionUnitValueModel item = widget.convertedItems[index];
+
+        return Padding(
+          key: Key('$index'),
+          padding: const EdgeInsets.only(
+            top: _itemPadding,
+            bottom: _itemPadding,
+          ),
+          child: ConvertouchConversionItem(
+            item,
+            index: index,
+            disabled: !widget.convertedItems[index].unit.invertible,
+            itemNameFunc: (item) => item.unit.name,
+            unitItemCodeFunc: (item) => item.unit.code,
+            onTap: () {
+              widget.onUnitItemTap?.call(widget.convertedItems[index]);
+            },
+            onValueChanged: (value) {
+              widget.onTextValueChanged?.call(
+                widget.convertedItems[index],
+                value,
+              );
+            },
+            onRemove: () {
+              widget.onItemRemoveTap?.call(item);
+            },
+            colors: conversionItemColors[widget.theme]!,
+          ),
+        );
+      },
+      onReorder: (int oldIndex, int newIndex) {
+        setState(() {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
+          final ConversionUnitValueModel item =
+              widget.convertedItems.removeAt(oldIndex);
+          widget.convertedItems.insert(newIndex, item);
+        });
+      },
     );
   }
 }

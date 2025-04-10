@@ -67,6 +67,8 @@ class ConversionParamModel extends IdNameItemModel {
   @override
   String toString() {
     return 'ConversionParamModel{'
+        'id: $id, '
+        'name: $name, '
         'unitGroupId: $unitGroupId, '
         'calculable: $calculable, '
         'valueType: $valueType, '

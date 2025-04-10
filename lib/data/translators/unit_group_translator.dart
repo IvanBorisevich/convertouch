@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
@@ -20,8 +21,8 @@ class UnitGroupTranslator
       valueType: model.valueType.id,
       minValue: model.minValue.numVal,
       maxValue: model.maxValue.numVal,
-      refreshable: model.refreshable ? 1 : null,
-      oob: model.oob ? 1 : null,
+      refreshable: bool2int(model.refreshable),
+      oob: bool2int(model.oob),
     );
   }
 
@@ -35,8 +36,8 @@ class UnitGroupTranslator
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
-      refreshable: entity.refreshable == 1,
-      oob: entity.oob == 1,
+      refreshable: int2bool(entity.refreshable, ifNull: true),
+      oob: int2bool(entity.oob, ifNull: true),
     );
   }
 }

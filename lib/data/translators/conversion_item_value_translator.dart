@@ -1,4 +1,5 @@
 import 'package:convertouch/data/entities/conversion_item_value_entity.dart';
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
@@ -60,7 +61,7 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
     return ConversionParamValueEntity(
       paramId: model.param.id,
       unitId: model.unit?.id,
-      calculated: model.calculated ? 1 : null,
+      calculated: bool2int(model.calculated),
       value: model.value.isNotEmpty ? model.value.raw : null,
       defaultValue:
           model.defaultValue.isNotEmpty ? model.defaultValue.raw : null,
@@ -81,7 +82,7 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
     return ConversionParamValueModel(
       param: param!,
       unit: unit,
-      calculated: entity.calculated == 1,
+      calculated: int2bool(entity.calculated),
       value: value,
       defaultValue: defaultValue,
     );

@@ -1,16 +1,16 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/listable.dart';
-import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/constants/list_values.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchInputBox extends StatefulWidget {
-  final ValueModel? value;
+  final String? value;
   final TextEditingController? textController;
   final FocusNode? focusNode;
   final ConvertouchValueType valueType;
+  final ConvertouchListType? listType;
   final String label;
   final bool autofocus;
   final bool readonly;
@@ -33,6 +33,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.textController,
     this.focusNode,
     this.valueType = ConvertouchValueType.text,
+    this.listType,
     this.label = "",
     this.autofocus = false,
     this.readonly = false,
@@ -51,54 +52,6 @@ class ConvertouchInputBox extends StatefulWidget {
     this.fontSize = 17,
     super.key,
   });
-
-  const ConvertouchInputBox.text({
-    this.value,
-    this.textController,
-    this.focusNode,
-    this.valueType = ConvertouchValueType.text,
-    this.label = "",
-    this.autofocus = false,
-    this.readonly = false,
-    this.onChanged,
-    this.onFocusSelected,
-    this.onFocusLeft,
-    this.maxTextLength,
-    this.textLengthCounterVisible = false,
-    this.hintText,
-    this.borderRadius = 15,
-    required this.colors,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.contentPadding = const EdgeInsets.all(17),
-    this.height = ConvertouchTextBox.defaultHeight,
-    this.fontSize = 17,
-    super.key,
-  });
-
-  const ConvertouchInputBox.list({
-    ValueModel? listValue,
-    this.focusNode,
-    required this.valueType,
-    this.label = "",
-    this.autofocus = false,
-    this.readonly = false,
-    this.onChanged,
-    this.onFocusSelected,
-    this.onFocusLeft,
-    this.borderRadius = 15,
-    required this.colors,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.contentPadding = const EdgeInsets.all(17),
-    this.height = ConvertouchListBox.defaultHeight,
-    this.fontSize = 17,
-    super.key,
-  })  : value = listValue,
-        textController = null,
-        hintText = null,
-        maxTextLength = null,
-        textLengthCounterVisible = false;
 
   @override
   State<ConvertouchInputBox> createState() => _ConvertouchInputBoxState();
@@ -107,11 +60,11 @@ class ConvertouchInputBox extends StatefulWidget {
 class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
   @override
   Widget build(BuildContext context) {
-    if (listableSets[widget.valueType] != null) {
+    if (listableSets[widget.listType] != null) {
       return ConvertouchListBox(
         value: widget.value,
         focusNode: widget.focusNode,
-        listable: listableSets[widget.valueType]!,
+        listValues: listableSets[widget.listType]!,
         label: widget.label,
         autofocus: widget.autofocus,
         disabled: widget.readonly,
@@ -128,7 +81,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
     }
 
     return ConvertouchTextBox(
-      text: widget.value?.raw,
+      text: widget.value,
       controller: widget.textController,
       focusNode: widget.focusNode,
       valueType: widget.valueType,
