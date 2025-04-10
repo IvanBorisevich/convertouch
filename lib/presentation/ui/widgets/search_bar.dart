@@ -33,7 +33,7 @@ class ConvertouchSearchBar extends StatefulWidget {
 
 class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
   static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
-    ItemsViewMode.list: Icons.table_rows_rounded,
+    ItemsViewMode.list: Icons.reorder_outlined,
     ItemsViewMode.grid: Icons.grid_view_rounded,
   };
 

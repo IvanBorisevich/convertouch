@@ -10,7 +10,7 @@ abstract class ItemModel extends Equatable {
     this.oob = false,
   });
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson({bool removeNulls = true});
 }
 
 abstract class IdNameItemModel extends ItemModel {

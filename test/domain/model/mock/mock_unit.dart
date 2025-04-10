@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
 const mockUnit = UnitModel(
@@ -5,6 +6,7 @@ const mockUnit = UnitModel(
   name: "name1",
   code: "n1",
   coefficient: 2,
+  valueType: ConvertouchValueType.decimalPositive,
 );
 
 const mockOobUnit = UnitModel(
@@ -12,6 +14,7 @@ const mockOobUnit = UnitModel(
   name: "name1oob",
   code: "n1o",
   coefficient: 2,
+  valueType: ConvertouchValueType.decimalPositive,
   oob: true,
 );
 
@@ -20,6 +23,7 @@ const mockBaseUnit = UnitModel(
   name: "base1",
   code: "b1",
   coefficient: 1,
+  valueType: ConvertouchValueType.decimalPositive,
 );
 
 const mockOobBaseUnit = UnitModel(
@@ -27,6 +31,7 @@ const mockOobBaseUnit = UnitModel(
   name: "base1oob",
   code: "b1o",
   coefficient: 1,
+  valueType: ConvertouchValueType.decimalPositive,
   oob: true,
 );
 
@@ -35,6 +40,7 @@ const mockBaseUnit2 = UnitModel(
   name: "base2",
   code: "b2",
   coefficient: 1,
+  valueType: ConvertouchValueType.decimalPositive,
 );
 
 const mockOobBaseUnit2 = UnitModel(
@@ -42,5 +48,6 @@ const mockOobBaseUnit2 = UnitModel(
   name: "base2oob",
   code: "b2o",
   coefficient: 1,
+  valueType: ConvertouchValueType.decimalPositive,
   oob: true,
 );

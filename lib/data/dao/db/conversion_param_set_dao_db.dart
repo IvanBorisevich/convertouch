@@ -6,7 +6,14 @@ import 'package:floor/floor.dart';
 abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
 
   @override
-  @Query('SELECT p.* FROM $conversionParamSetsTableName p '
-      'WHERE p.group_id = :groupId')
+  @Query('SELECT * FROM $conversionParamSetsTableName '
+      'WHERE group_id = :groupId')
   Future<List<ConversionParamSetEntity>> get(int groupId);
+
+  @override
+  @Query('SELECT * FROM $conversionParamSetsTableName '
+      'WHERE group_id = :groupId '
+      'AND mandatory = 1 '
+      'limit 1')
+  Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
 }

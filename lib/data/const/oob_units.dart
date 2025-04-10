@@ -983,7 +983,8 @@ const unitsV4 = [
       {
         "code": ClothingSizeCode.inter,
         "name": "International",
-        "valueType": ConvertouchValueType.clothingSizeInter,
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.clothingSizeInter,
       },
       {"code": ClothingSizeCode.jp, "name": "Japan"},
       {"code": ClothingSizeCode.fr, "name": "France"},

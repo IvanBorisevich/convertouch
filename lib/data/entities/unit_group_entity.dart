@@ -66,7 +66,7 @@ class UnitGroupEntity extends ConvertouchEntity {
           : null,
       'refreshable': bool2int(item['refreshable']),
       'value_type': item['valueType'] != null
-          ? (item['valueType'] as ConvertouchValueType).val
+          ? (item['valueType'] as ConvertouchValueType).id
           : null,
       'min_value': item['minValue'],
       'max_value': item['maxValue'],

@@ -12,7 +12,7 @@ abstract class ConversionItemValueModel extends ItemModel {
     this.value = ValueModel.empty,
     this.defaultValue = ValueModel.empty,
   }) : super(
-          itemType: ItemType.conversionItem,
+          itemType: ItemType.conversionItemValue,
         );
 
   String get name;
@@ -61,7 +61,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   String get name => unit.name;
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {
       "unit": unit.toJson(),
       "value": value.toJson(),
@@ -130,14 +130,20 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      "param": param,
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
+      "param": param.toJson(),
       "unit": unit?.toJson(),
       "calculated": calculated,
       "value": value.toJson(),
       "defaultValue": defaultValue.toJson(),
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static ConversionParamValueModel? fromJson(Map<String, dynamic>? json) {

@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:either_dart/either.dart';
 
-abstract class ConversionParamRepositoryImpl extends ConversionParamRepository {
+class ConversionParamRepositoryImpl extends ConversionParamRepository {
   final ConversionParamDao conversionParamDao;
 
   const ConversionParamRepositoryImpl({

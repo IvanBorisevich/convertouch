@@ -26,6 +26,8 @@ class ConversionParamEntity extends ConvertouchEntity {
   final int? unitGroupId;
   @ColumnInfo(name: 'value_type')
   final int valueType;
+  @ColumnInfo(name: 'list_type')
+  final int? listType;
   @ColumnInfo(name: 'param_set_id')
   final int paramSetId;
 
@@ -35,6 +37,7 @@ class ConversionParamEntity extends ConvertouchEntity {
     this.calculable,
     this.unitGroupId,
     required this.valueType,
+    this.listType,
     required this.paramSetId,
   });
 
@@ -47,6 +50,7 @@ class ConversionParamEntity extends ConvertouchEntity {
       'unit_group_id': unitGroupId,
       'param_set_id': paramSetId,
       'value_type': valueType,
+      'list_type': listType,
     };
   }
 
@@ -64,7 +68,10 @@ class ConversionParamEntity extends ConvertouchEntity {
       'unit_group_id': paramUnitGroupId,
       'param_set_id': paramSetId,
       'value_type': item['valueType'] != null
-          ? (item['valueType'] as ConvertouchValueType).val
+          ? (item['valueType'] as ConvertouchValueType).id
+          : null,
+      'list_type': item['listType'] != null
+          ? (item['listType'] as ConvertouchListType).id
           : null,
     }, excludedColumns: excludedColumns);
   }

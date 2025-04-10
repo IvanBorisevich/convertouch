@@ -16,7 +16,8 @@ class ConversionParamTranslator
       name: model.name,
       unitGroupId: model.unitGroupId,
       calculable: model.calculable ? 1 : null,
-      valueType: model.valueType.val,
+      valueType: model.valueType.id,
+      listType: model.listType?.id,
       paramSetId: model.paramSetId,
     );
   }
@@ -28,8 +29,9 @@ class ConversionParamTranslator
       name: entity.name,
       calculable: entity.calculable == 1,
       paramSetId: entity.paramSetId,
-      unitGroupId: entity.unitGroupId!,
+      unitGroupId: entity.unitGroupId,
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
+      listType: ConvertouchListType.valueOf(entity.listType),
     );
   }
 }

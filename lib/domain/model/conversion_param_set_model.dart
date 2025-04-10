@@ -21,7 +21,7 @@ class ConversionParamSetModel extends IdNameItemModel {
       ];
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {
       "id": id,
       "name": name,
@@ -40,5 +40,14 @@ class ConversionParamSetModel extends IdNameItemModel {
       mandatory: json["mandatory"],
       groupId: json["groupId"],
     );
+  }
+
+  @override
+  String toString() {
+    return 'ConversionParamSetModel{'
+        'id: $id, '
+        'name: $name, '
+        'mandatory: $mandatory, '
+        'groupId: $groupId}';
   }
 }

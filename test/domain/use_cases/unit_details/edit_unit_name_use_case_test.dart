@@ -40,6 +40,7 @@ void main() {
             name: draftUnitName,
             code: draftUnitCode,
             unitGroupId: unitGroup.id,
+            valueType: ConvertouchValueType.decimalPositive,
           ),
           savedUnitData: savedUnitData,
           conversionRule: conversionRule,
@@ -99,6 +100,7 @@ void main() {
           name: '',
           code: 'code',
           unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -130,6 +132,7 @@ void main() {
           name: 'unitName',
           code: 'code',
           unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -165,6 +168,7 @@ void main() {
           id: mockBaseUnit.id,
           name: '',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -200,6 +204,7 @@ void main() {
           id: mockBaseUnit.id,
           name: 'newName',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -237,6 +242,7 @@ void main() {
           id: mockBaseUnit.id,
           name: '',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -270,6 +276,7 @@ void main() {
           id: mockBaseUnit.id,
           name: 'newName',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(

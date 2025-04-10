@@ -35,14 +35,11 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
     ConversionUnitValueEntity entity, {
     UnitModel? unit,
   }) {
-    ValueModel value = ValueModel.rawByType(entity.value, unit!.valueType);
-    ValueModel defaultValue = ValueModel.rawByType(
-      entity.defaultValue,
-      unit.valueType,
-    );
+    ValueModel value = ValueModel.str(entity.value);
+    ValueModel defaultValue = ValueModel.str(entity.defaultValue);
 
     return ConversionUnitValueModel(
-      unit: unit,
+      unit: unit!,
       value: value,
       defaultValue: defaultValue,
     );
@@ -78,11 +75,8 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
     UnitModel? unit,
     ConversionParamModel? param,
   }) {
-    ValueModel value = ValueModel.rawByType(entity.value, unit!.valueType);
-    ValueModel defaultValue = ValueModel.rawByType(
-      entity.defaultValue,
-      unit.valueType,
-    );
+    ValueModel value = ValueModel.str(entity.value);
+    ValueModel defaultValue = ValueModel.str(entity.defaultValue);
 
     return ConversionParamValueModel(
       param: param!,

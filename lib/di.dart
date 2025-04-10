@@ -2,6 +2,8 @@ import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
+import 'package:convertouch/data/repositories/db/conversion_param_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/conversion_param_set_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
@@ -9,10 +11,14 @@ import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
+import 'package:convertouch/data/translators/conversion_param_set_translator.dart';
+import 'package:convertouch/data/translators/conversion_param_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
+import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
+import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
@@ -22,6 +28,7 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/create_conversion_param_set_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
@@ -131,6 +138,18 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       database: database.database.database,
     ),
   );
+
+  locator.registerLazySingleton<ConversionParamSetRepository>(
+    () => ConversionParamSetRepositoryImpl(
+      conversionParamSetDao: database.conversionParamSetDao,
+    ),
+  );
+
+  locator.registerLazySingleton<ConversionParamRepository>(
+    () => ConversionParamRepositoryImpl(
+      conversionParamDao: database.conversionParamDao,
+    ),
+  );
 }
 
 Future<void> _initTranslators() async {
@@ -155,7 +174,15 @@ Future<void> _initTranslators() async {
   );
 
   locator.registerLazySingleton<ConversionParamValueTranslator>(
-        () => ConversionParamValueTranslator(),
+    () => ConversionParamValueTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamSetTranslator>(
+    () => ConversionParamSetTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamTranslator>(
+    () => ConversionParamTranslator(),
   );
 }
 
@@ -196,10 +223,18 @@ Future<void> _initUseCases() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
+  locator.registerLazySingleton<CreateConversionParamSetUseCase>(
+    () => CreateConversionParamSetUseCase(
+      conversionParamRepository: locator(),
+      conversionParamSetRepository: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<CreateConversionUseCase>(
     () => CreateConversionUseCase(
       convertSingleValueUseCase: locator(),
       dynamicValueRepository: locator(),
+      createConversionParamSetUseCase: locator(),
     ),
   );
 

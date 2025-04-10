@@ -5,6 +5,7 @@ class ConversionParamModel extends IdNameItemModel {
   final int? unitGroupId;
   final bool calculable;
   final ConvertouchValueType valueType;
+  final ConvertouchListType? listType;
   final int paramSetId;
 
   const ConversionParamModel({
@@ -13,35 +14,9 @@ class ConversionParamModel extends IdNameItemModel {
     this.unitGroupId,
     this.calculable = false,
     required this.valueType,
+    this.listType,
     required this.paramSetId,
   }) : super(itemType: ItemType.conversionParam);
-
-  const ConversionParamModel.unitBased({
-    super.id,
-    required super.name,
-    this.calculable = false,
-    required this.unitGroupId,
-    required this.valueType,
-    required this.paramSetId,
-  })  : assert(unitGroupId != null),
-        super(itemType: ItemType.conversionParam);
-
-  factory ConversionParamModel.listBased({
-    int id = -1,
-    required String name,
-    bool calculable = false,
-    required ConvertouchListType listValueType,
-    required int paramSetId,
-  }) {
-    return ConversionParamModel(
-      id: id,
-      name: name,
-      calculable: calculable,
-      unitGroupId: null,
-      valueType: ConvertouchValueType.byListType(listValueType),
-      paramSetId: paramSetId,
-    );
-  }
 
   @override
   List<Object?> get props => [
@@ -49,19 +24,28 @@ class ConversionParamModel extends IdNameItemModel {
         name,
         unitGroupId,
         calculable,
+        valueType,
+        listType,
         paramSetId,
       ];
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
       "id": id,
       "name": name,
       "unitGroupId": unitGroupId,
       "calculable": calculable,
-      "valueType": valueType.val,
+      "valueType": valueType.id,
+      "listType": listType?.id,
       "paramSetId": paramSetId,
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static ConversionParamModel? fromJson(Map<String, dynamic>? json) {
@@ -69,23 +53,24 @@ class ConversionParamModel extends IdNameItemModel {
       return null;
     }
 
-    if (json["unitGroupId"] != null) {
-      return ConversionParamModel.unitBased(
-        id: json["id"] ?? -1,
-        name: json["name"],
-        calculable: json["calculable"],
-        unitGroupId: json["unitGroupId"],
-        valueType: ConvertouchValueType.valueOf(json["valueType"])!,
-        paramSetId: json["paramSetId"],
-      );
-    } else {
-      return ConversionParamModel.listBased(
-        id: json["id"] ?? -1,
-        name: json["name"],
-        calculable: json["calculable"],
-        listValueType: ConvertouchListType.valueOf(json["valueType"]),
-        paramSetId: json["paramSetId"],
-      );
-    }
+    return ConversionParamModel(
+      id: json["id"] ?? -1,
+      name: json["name"],
+      valueType: ConvertouchValueType.valueOf(json["valueType"])!,
+      listType: ConvertouchListType.valueOf(json["listType"]),
+      paramSetId: json["paramSetId"],
+      calculable: json["calculable"],
+      unitGroupId: json["unitGroupId"],
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ConversionParamModel{'
+        'unitGroupId: $unitGroupId, '
+        'calculable: $calculable, '
+        'valueType: $valueType, '
+        'listType: $listType, '
+        'paramSetId: $paramSetId}';
   }
 }

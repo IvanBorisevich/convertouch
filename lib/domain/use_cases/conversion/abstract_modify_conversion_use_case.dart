@@ -53,6 +53,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           ConversionModel(
             id: input.conversion.id,
             unitGroup: modifiedGroup,
+            paramSetValue: input.conversion.paramSetValue,
           ),
         );
       }
@@ -71,7 +72,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
             InputConversionModel(
               conversionId: input.conversion.id,
               unitGroup: modifiedGroup,
-              sourceConversionItem: modifiedSourceItem,
+              sourceUnitValue: modifiedSourceItem,
               targetUnits: modifiedConversionItemsMap.values
                   .map((conversionItem) => conversionItem.unit)
                   .toList(),

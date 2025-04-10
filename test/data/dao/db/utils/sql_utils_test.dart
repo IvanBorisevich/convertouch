@@ -105,7 +105,7 @@ Future<void> main() async {
 
     int groupId = await db.insert('unit_groups', {
       'name': 'group1',
-      'value_type': ConvertouchValueType.decimal.val,
+      'value_type': ConvertouchValueType.decimal.id,
     });
 
     List<int> unitIds = [];

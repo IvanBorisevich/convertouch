@@ -3,7 +3,7 @@ import 'package:convertouch/domain/constants/conversion_param_constants/clothing
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -104,37 +104,42 @@ void main() {
     });
 
     group('With parameters', () {
-      ConversionParamSetValuesModel params = ConversionParamSetValuesModel(
+      ConversionParamSetValueModel params = ConversionParamSetValueModel(
         paramSet: const ConversionParamSetModel(
           name: "Clothing Size",
           mandatory: true,
           groupId: -1,
         ),
-        values: [
+        paramValues: [
           ConversionParamValueModel(
-            param: ConversionParamModel.listBased(
+            param: const ConversionParamModel(
               name: "Gender",
-              listValueType: ConvertouchListType.gender,
               paramSetId: 1,
+              valueType: ConvertouchValueType.text,
+              listType: ConvertouchListType.gender,
             ),
-            value: ValueModel.listVal(Gender.male),
+            value: ValueModel.str(Gender.male.name),
           ),
           ConversionParamValueModel(
-            param: ConversionParamModel.listBased(
+            param: const ConversionParamModel(
               name: "Garment",
-              listValueType: ConvertouchListType.garment,
               paramSetId: 1,
+              valueType: ConvertouchValueType.text,
+              listType: ConvertouchListType.garment,
             ),
-            value: ValueModel.listVal(Garment.shirt),
+            value: ValueModel.str(Garment.shirt.name),
           ),
           ConversionParamValueModel(
-            param: const ConversionParamModel.unitBased(
+            param: const ConversionParamModel(
               name: "Height",
-              unitGroupId: -1,
-              paramSetId: -1,
+              paramSetId: 2,
               valueType: ConvertouchValueType.decimalPositive,
             ),
-            unit: const UnitModel(name: "Centimeter", code: "cm"),
+            unit: const UnitModel(
+              name: "Centimeter",
+              code: "cm",
+              valueType: ConvertouchValueType.decimalPositive,
+            ),
             value: ValueModel.numeric(150),
           ),
         ],
@@ -180,7 +185,7 @@ void main() {
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.listVal(ClothingSizeInter.xxs),
+              ValueModel.str(ClothingSizeInter.xxs.name),
               srcUnitRule: interSizeCalc,
               tgtUnitRule: ruSizeCalc,
               params: params,
@@ -195,7 +200,7 @@ void main() {
               tgtUnitRule: interSizeCalc,
               params: params,
             ),
-            ValueModel.listVal(ClothingSizeInter.xxs),
+            ValueModel.str(ClothingSizeInter.xxs.name),
           );
 
           expect(

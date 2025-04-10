@@ -131,7 +131,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         child: Column(
                           children: [
                             ConversionParamsView(
-                              paramSetValues: conversion.paramSetValues,
+                              paramSetValue: conversion.paramSetValue,
                               theme: appState.theme,
                             ),
                             ConvertouchConversionItemsView(

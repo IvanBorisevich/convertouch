@@ -71,7 +71,7 @@ class ConvertouchPage extends StatelessWidget {
             ),
             body: body,
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 0),
+              padding: const EdgeInsets.only(right: 20, bottom: 15),
               child: floatingActionButton,
             ),
             floatingActionButtonLocation: floatingButtonLocation,

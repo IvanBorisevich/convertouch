@@ -1,21 +1,21 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 class ConversionParamsView extends StatelessWidget {
-  final ConversionParamSetValuesModel? paramSetValues;
+  final ConversionParamSetValueModel? paramSetValue;
   final void Function()? onParamSetChange;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
   final void Function(ConversionParamValueModel, String)? onValueChanged;
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({
-    this.paramSetValues,
+    this.paramSetValue,
     this.onParamSetChange,
     this.onParamUnitTap,
     this.onValueChanged,
@@ -25,7 +25,7 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (paramSetValues == null) {
+    if (paramSetValue == null) {
       return const SizedBox.shrink();
     }
 
@@ -71,7 +71,7 @@ class ConversionParamsView extends StatelessWidget {
             child: const Icon(Icons.chevron_right_rounded),
           ),
         ),
-        children: paramSetValues!.values
+        children: paramSetValue!.paramValues
             .mapIndexed(
               (index, item) => Container(
                 padding: index == 0

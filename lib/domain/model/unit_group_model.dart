@@ -4,8 +4,6 @@ import 'package:convertouch/domain/model/value_model.dart';
 
 class UnitGroupModel extends IdNameSearchableItemModel {
   static const UnitGroupModel none = UnitGroupModel._();
-  static const ConvertouchValueType defaultValueType =
-      ConvertouchValueType.decimal;
 
   final String? iconName;
   final ConversionType conversionType;
@@ -20,7 +18,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
     this.iconName,
     this.conversionType = ConversionType.static,
     this.refreshable = false,
-    this.valueType = defaultValueType,
+    required this.valueType,
     this.minValue = ValueModel.empty,
     this.maxValue = ValueModel.empty,
     super.nameMatch,
@@ -54,7 +52,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
   const UnitGroupModel._()
       : this(
           name: "",
-          valueType: defaultValueType,
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
   bool get exists => this != none;
@@ -75,18 +73,24 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       ];
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
       "id": id,
       "name": name,
       "iconName": iconName,
       "conversionType": conversionType.value,
       "refreshable": refreshable,
-      "valueType": valueType.val,
+      "valueType": valueType.id,
       "minValue": minValue.numVal,
       "maxValue": maxValue.numVal,
       "oob": oob,
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static UnitGroupModel? fromJson(Map<String, dynamic>? json) {
@@ -99,8 +103,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       iconName: json["iconName"],
       conversionType: ConversionType.valueOf(json["conversionType"]),
       refreshable: json["refreshable"],
-      valueType:
-          ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
+      valueType: ConvertouchValueType.valueOf(json["valueType"])!,
       minValue: ValueModel.numeric(json["minValue"]),
       maxValue: ValueModel.numeric(json["maxValue"]),
       oob: json["oob"],

@@ -17,7 +17,7 @@ class UnitGroupTranslator
       iconName: model.iconName,
       conversionType:
           model.conversionType.value != 0 ? model.conversionType.value : null,
-      valueType: model.valueType.val,
+      valueType: model.valueType.id,
       minValue: model.minValue.numVal,
       maxValue: model.maxValue.numVal,
       refreshable: model.refreshable ? 1 : null,
@@ -32,8 +32,7 @@ class UnitGroupTranslator
       name: entity.name,
       iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),
-      valueType: ConvertouchValueType.valueOf(entity.valueType) ??
-          UnitGroupModel.defaultValueType,
+      valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
       refreshable: entity.refreshable == 1,

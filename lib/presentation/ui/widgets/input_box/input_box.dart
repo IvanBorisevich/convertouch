@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/listable.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
@@ -51,7 +52,7 @@ class ConvertouchInputBox extends StatefulWidget {
     super.key,
   });
 
-  ConvertouchInputBox.text({
+  const ConvertouchInputBox.text({
     this.value,
     this.textController,
     this.focusNode,
@@ -73,10 +74,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.height = ConvertouchTextBox.defaultHeight,
     this.fontSize = 17,
     super.key,
-  }) : assert(
-          !valueType.isList,
-          'Value type in text box cannot be list',
-        );
+  });
 
   const ConvertouchInputBox.list({
     ValueModel? listValue,
@@ -109,11 +107,11 @@ class ConvertouchInputBox extends StatefulWidget {
 class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
   @override
   Widget build(BuildContext context) {
-    if (widget.valueType.isList) {
+    if (listableSets[widget.valueType] != null) {
       return ConvertouchListBox(
         value: widget.value,
         focusNode: widget.focusNode,
-        valueType: widget.valueType,
+        listable: listableSets[widget.valueType]!,
         label: widget.label,
         autofocus: widget.autofocus,
         disabled: widget.readonly,

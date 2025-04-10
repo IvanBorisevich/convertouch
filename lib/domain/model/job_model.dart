@@ -71,11 +71,17 @@ class JobModel<P, R> extends IdNameItemModel {
   }
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
       "selectedCron": selectedCron.name,
       "lastRefreshTime": completedAt?.toString(),
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   @override

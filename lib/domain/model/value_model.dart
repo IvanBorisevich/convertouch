@@ -1,25 +1,20 @@
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/list_value_type.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
   static const empty = ValueModel._(raw: "", numVal: null, alt: "");
-  static const undef = ValueModel._(raw: "-", numVal: double.nan, alt: "-");
+  static const undef = ValueModel._(raw: "-", numVal: null, alt: "-");
   static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
   static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
 
   final String raw;
   final String alt;
   final double? numVal;
-  final ConvertouchListType listType;
 
   const ValueModel._({
     required this.raw,
     required this.alt,
     required this.numVal,
-    this.listType = ConvertouchListType.none,
   });
 
   factory ValueModel.str(String? value) {
@@ -50,78 +45,6 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.rawListVal(
-    String? value, {
-    required ConvertouchListType listType,
-  }) {
-    if (value == null) {
-      return empty;
-    }
-
-    if (!listType.contains(value)) {
-      return undef;
-    }
-
-    return ValueModel._(
-      raw: value,
-      alt: "",
-      numVal: null,
-      listType: listType,
-    );
-  }
-
-  factory ValueModel.listVal(ListValueType? listValue) {
-    if (listValue == null) {
-      return empty;
-    }
-
-    return ValueModel._(
-      raw: listValue.itemName,
-      alt: "",
-      numVal: null,
-      listType: ConvertouchListType.byListValue(listValue),
-    );
-  }
-
-  factory ValueModel.rawByType(String? raw, ConvertouchValueType type) {
-    switch (type) {
-      case ConvertouchValueType.gender:
-      case ConvertouchValueType.garment:
-        return ValueModel.rawListVal(raw, listType: type.listType);
-      case ConvertouchValueType.text:
-      case ConvertouchValueType.integerPositive:
-      case ConvertouchValueType.integer:
-      case ConvertouchValueType.decimalPositive:
-      case ConvertouchValueType.decimal:
-      default:
-        return ValueModel.str(raw);
-    }
-  }
-
-  factory ValueModel.any(dynamic value) {
-    if (value == null) {
-      return empty;
-    }
-
-    if (value is ListValueType) {
-      return ValueModel.listVal(value);
-    }
-
-    if (value is num) {
-      return ValueModel.numeric(value);
-    }
-
-    if (value is String) {
-      return ValueModel.str(value);
-    }
-
-    throw ConvertouchException(
-      message: "Value type is not recognized for ValueModel",
-      stackTrace: null,
-      dateTime: DateTime.now(),
-    );
-  }
-
   bool get isEmpty => raw.isEmpty;
 
   bool get isNotEmpty => !isEmpty;
@@ -131,6 +54,8 @@ class ValueModel extends Equatable {
   @override
   List<Object?> get props => [
         raw,
+        alt,
+        numVal,
       ];
 
   Map<String, dynamic> toJson() {
@@ -138,7 +63,6 @@ class ValueModel extends Equatable {
       "raw": raw,
       "alt": alt,
       "num": numVal,
-      "listType": listType.val != 0 ? listType.val : null,
     };
   }
 
@@ -149,14 +73,20 @@ class ValueModel extends Equatable {
 
     return ValueModel._(
       raw: json["raw"] ?? "",
-      numVal: json["num"] ?? double.tryParse(json["raw"] ?? ""),
+      numVal: double.tryParse(json["num"]?.toString() ?? "") ??
+          double.tryParse(json["raw"] ?? ""),
       alt: json["alt"] ?? json["scientific"],
-      listType: ConvertouchListType.valueOf(json["listType"]),
     );
   }
 
   @override
   String toString() {
-    return 'ValueModel{raw: $raw, alt: $alt, num: $numVal, listType: $listType}';
+    if (isEmpty) {
+      return 'ValueModel.empty';
+    }
+    if (isUndef) {
+      return 'ValueModel.undef';
+    }
+    return 'ValueModel{raw: $raw, alt: $alt, num: $numVal}';
   }
 }

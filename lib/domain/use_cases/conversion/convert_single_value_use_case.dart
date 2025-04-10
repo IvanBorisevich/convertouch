@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -29,12 +30,14 @@ class ConvertSingleValueUseCase
         srcUnit: input.srcItem.unit,
         tgtUnit: input.tgtUnit,
         unitGroup: input.unitGroup,
+        paramSetValue: input.paramSetValue,
       );
       ValueModel? tgtDef = _calculate(
         src: input.srcItem.defaultValue,
         srcUnit: input.srcItem.unit,
         tgtUnit: input.tgtUnit,
         unitGroup: input.unitGroup,
+        paramSetValue: input.paramSetValue,
       );
 
       return Right(
@@ -60,6 +63,7 @@ class ConvertSingleValueUseCase
     required UnitModel srcUnit,
     required UnitModel tgtUnit,
     required UnitGroupModel unitGroup,
+    ConversionParamSetValueModel? paramSetValue,
   }) {
     ConversionRule srcUnitRule;
     ConversionRule tgtUnitRule;
@@ -84,6 +88,7 @@ class ConvertSingleValueUseCase
       src,
       srcUnitRule: srcUnitRule,
       tgtUnitRule: tgtUnitRule,
+      params: paramSetValue,
     );
 
     bool isValueInRange = DoubleValueUtils.between(

@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/formulas/clothing_size.dart';
@@ -26,7 +26,7 @@ class ConversionRuleUtils {
     ValueModel x, {
     required ConversionRule srcUnitRule,
     required ConversionRule tgtUnitRule,
-    ConversionParamSetValuesModel? params,
+    ConversionParamSetValueModel? params,
   }) {
     if (x.isEmpty) {
       return ValueModel.empty;

@@ -5,8 +5,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:either_dart/either.dart';
 
-abstract class ConversionParamSetRepositoryImpl
-    extends ConversionParamSetRepository {
+class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   final ConversionParamSetDao conversionParamSetDao;
 
   const ConversionParamSetRepositoryImpl({
@@ -30,6 +29,28 @@ abstract class ConversionParamSetRepositoryImpl
         DatabaseException(
           message: "Error when fetching conversion param set by group id = "
               "$groupId",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, ConversionParamSetModel?>>
+      getFirstMandatory(int groupId) async {
+    try {
+      final entity = await conversionParamSetDao.getFirstMandatory(groupId);
+
+      if (entity == null) {
+        return const Right(null);
+      }
+
+      return Right(ConversionParamSetTranslator.I.toModel(entity));
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when fetching the first conversion param set",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

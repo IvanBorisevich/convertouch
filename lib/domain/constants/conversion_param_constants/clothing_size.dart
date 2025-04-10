@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/model/list_value_type.dart';
 
 const String genderParamName = "Gender";
 const String garmentParamName = "Garment";
 const String heightParamName = "Height";
 
-enum Gender implements ListValueType {
+enum Gender {
   male("Male"),
   female("Female");
 
@@ -13,24 +12,18 @@ enum Gender implements ListValueType {
 
   const Gender(this.name);
 
-  @override
-  String get itemName => name;
-
   static Gender? valueOf(String? name) {
     return values.firstWhereOrNull((element) => name == element.name);
   }
 }
 
-enum Garment implements ListValueType {
+enum Garment {
   shirt("Shirt"),
   trousers("Trousers");
 
   final String name;
 
   const Garment(this.name);
-
-  @override
-  String get itemName => name;
 
   static Garment? valueOf(String? name) {
     return values.firstWhereOrNull((element) => name == element.name);
@@ -52,7 +45,7 @@ enum ClothingSizeCode {
   const ClothingSizeCode(this.name);
 }
 
-enum ClothingSizeInter implements ListValueType {
+enum ClothingSizeInter {
   xxs("XXS"),
   xs("XS"),
   s("S"),
@@ -67,10 +60,9 @@ enum ClothingSizeInter implements ListValueType {
 
   const ClothingSizeInter(this.name);
 
-  @override
-  String get itemName => name;
-
   static ClothingSizeInter? valueOf(String? name) {
     return values.firstWhereOrNull((element) => name == element.name);
   }
 }
+
+var t = ClothingSizeInter.xxs.name;

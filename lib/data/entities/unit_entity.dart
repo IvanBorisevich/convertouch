@@ -29,6 +29,8 @@ class UnitEntity extends ConvertouchEntity {
   final int unitGroupId;
   @ColumnInfo(name: 'value_type')
   final int? valueType;
+  @ColumnInfo(name: 'list_type')
+  final int? listType;
   @ColumnInfo(name: 'min_value')
   final double? minValue;
   @ColumnInfo(name: 'max_value')
@@ -44,6 +46,7 @@ class UnitEntity extends ConvertouchEntity {
     this.coefficient,
     required this.unitGroupId,
     this.valueType,
+    this.listType,
     this.minValue,
     this.maxValue,
     this.invertible,
@@ -61,6 +64,7 @@ class UnitEntity extends ConvertouchEntity {
           coefficient: coefficient ?? savedEntity.coefficient,
           symbol: savedEntity.symbol,
           valueType: savedEntity.valueType,
+          listType: savedEntity.listType,
           minValue: savedEntity.minValue,
           maxValue: savedEntity.maxValue,
           invertible: savedEntity.invertible,
@@ -77,6 +81,7 @@ class UnitEntity extends ConvertouchEntity {
       'coefficient': coefficient,
       'unit_group_id': unitGroupId,
       'value_type': valueType,
+      'list_type': listType,
       'min_value': minValue,
       'max_value': maxValue,
       'invertible': invertible,
@@ -100,7 +105,10 @@ class UnitEntity extends ConvertouchEntity {
       'coefficient': item['coefficient'],
       'unit_group_id': unitGroupId,
       'value_type': item['valueType'] != null
-          ? (item['valueType'] as ConvertouchValueType).val
+          ? (item['valueType'] as ConvertouchValueType).id
+          : null,
+      'list_type': item['listType'] != null
+          ? (item['listType'] as ConvertouchListType).id
           : null,
       'min_value': item['minValue'],
       'max_value': item['maxValue'],

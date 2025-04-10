@@ -4,14 +4,13 @@ import 'package:convertouch/domain/model/value_model.dart';
 
 class UnitModel extends IdNameSearchableItemModel {
   static const UnitModel none = UnitModel._();
-  static const ConvertouchValueType defaultValueType =
-      ConvertouchValueType.decimal;
 
   final String code;
   final double? coefficient;
   final String? symbol;
   final int unitGroupId;
   final ConvertouchValueType valueType;
+  final ConvertouchListType? listType;
   final ValueModel minValue;
   final ValueModel maxValue;
   final bool invertible;
@@ -24,7 +23,8 @@ class UnitModel extends IdNameSearchableItemModel {
     this.coefficient,
     this.symbol,
     this.unitGroupId = -1,
-    this.valueType = defaultValueType,
+    required this.valueType,
+    this.listType,
     this.minValue = ValueModel.empty,
     this.maxValue = ValueModel.empty,
     this.invertible = true,
@@ -39,6 +39,7 @@ class UnitModel extends IdNameSearchableItemModel {
       : this(
           name: "",
           code: "",
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
   UnitModel.coalesce(
@@ -50,6 +51,7 @@ class UnitModel extends IdNameSearchableItemModel {
     String? symbol,
     int? unitGroupId,
     ConvertouchValueType? valueType,
+        ConvertouchListType? listType,
     ValueModel? minValue,
     ValueModel? maxValue,
     ItemSearchMatch? nameMatch,
@@ -62,6 +64,7 @@ class UnitModel extends IdNameSearchableItemModel {
           coefficient: coefficient ?? saved.coefficient,
           symbol: symbol ?? saved.symbol,
           valueType: valueType ?? saved.valueType,
+          listType: listType ?? saved.listType,
           minValue: minValue?.isNotEmpty == true ? minValue! : saved.minValue,
           maxValue: maxValue?.isNotEmpty == true ? maxValue! : saved.maxValue,
           unitGroupId: unitGroupId ?? saved.unitGroupId,
@@ -78,7 +81,7 @@ class UnitModel extends IdNameSearchableItemModel {
   bool get unnamed => name.isEmpty;
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       "id": id,
       "name": name,
@@ -86,14 +89,18 @@ class UnitModel extends IdNameSearchableItemModel {
       "coefficient": coefficient,
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
-      "valueType": valueType.val,
+      "valueType": valueType.id,
+      "listType": listType?.id,
       "minValue": minValue.numVal,
       "maxValue": maxValue.numVal,
       "invertible": invertible,
-      "oob": oob == true ? true : null,
+      "oob": oob,
     };
 
-    result.removeWhere((key, value) => value == null);
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
     return result;
   }
 
@@ -108,8 +115,8 @@ class UnitModel extends IdNameSearchableItemModel {
       coefficient: json["coefficient"],
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
-      valueType:
-          ConvertouchValueType.valueOf(json["valueType"]) ?? defaultValueType,
+      valueType: ConvertouchValueType.valueOf(json["valueType"])!,
+      listType: ConvertouchListType.valueOf(json["listType"]),
       minValue: ValueModel.numeric(json["minValue"]),
       maxValue: ValueModel.numeric(json["maxValue"]),
       invertible: json["invertible"] ?? true,

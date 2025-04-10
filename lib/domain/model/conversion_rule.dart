@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_param_set_values_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 class ConversionRule {
@@ -22,11 +22,11 @@ class ConversionRule {
     String? fromBaseStr,
   }) : this(
           toBase: toBase != null
-              ? (x, {ConversionParamSetValuesModel? params}) =>
+              ? (x, {ConversionParamSetValueModel? params}) =>
                   toBase.call(x, params!)
               : null,
           fromBase: fromBase != null
-              ? (y, {ConversionParamSetValuesModel? params}) =>
+              ? (y, {ConversionParamSetValueModel? params}) =>
                   fromBase.call(y, params!)
               : null,
           toBaseStr: toBaseStr,
@@ -40,10 +40,10 @@ class ConversionRule {
     String? fromBaseStr,
   }) : this(
           toBase: toBase != null
-              ? (x, {ConversionParamSetValuesModel? params}) => toBase.call(x)
+              ? (x, {ConversionParamSetValueModel? params}) => toBase.call(x)
               : null,
           fromBase: fromBase != null
-              ? (y, {ConversionParamSetValuesModel? params}) => fromBase.call(y)
+              ? (y, {ConversionParamSetValueModel? params}) => fromBase.call(y)
               : null,
           toBaseStr: toBaseStr,
           fromBaseStr: fromBaseStr,
@@ -56,11 +56,11 @@ class ConversionRule {
     String? fromBaseStr,
   }) : this(
           toBase: toBase != null
-              ? (x, {ConversionParamSetValuesModel? params}) =>
+              ? (x, {ConversionParamSetValueModel? params}) =>
                   ValueModel.numeric(toBase.call(x.numVal!))
               : null,
           fromBase: fromBase != null
-              ? (y, {ConversionParamSetValuesModel? params}) =>
+              ? (y, {ConversionParamSetValueModel? params}) =>
                   ValueModel.numeric(fromBase.call(y.numVal!))
               : null,
           toBaseStr: toBaseStr,
@@ -78,9 +78,9 @@ class ConversionRule {
 
   static ConversionRule fromCoefficient(double c) {
     return ConversionRule(
-      toBase: (x, {ConversionParamSetValuesModel? params}) =>
+      toBase: (x, {ConversionParamSetValueModel? params}) =>
           ValueModel.numeric(x.numVal! * c),
-      fromBase: (y, {ConversionParamSetValuesModel? params}) =>
+      fromBase: (y, {ConversionParamSetValueModel? params}) =>
           ValueModel.numeric(y.numVal! / c),
     );
   }
@@ -88,14 +88,14 @@ class ConversionRule {
 
 ValueModel _identityFunc(
   ValueModel x, {
-  ConversionParamSetValuesModel? params,
+  ConversionParamSetValueModel? params,
 }) {
   return x;
 }
 
 typedef FormulasMap = Map<String, Map<String, ConversionRule>>;
 typedef FunctionWithParams = ValueModel Function(
-    ValueModel, ConversionParamSetValuesModel params);
+    ValueModel, ConversionParamSetValueModel params);
 typedef FunctionWithOptionalParams = ValueModel Function(ValueModel,
-    {ConversionParamSetValuesModel? params});
+    {ConversionParamSetValueModel? params});
 typedef FunctionWithoutParams = ValueModel Function(ValueModel);

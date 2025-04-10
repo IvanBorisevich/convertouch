@@ -16,7 +16,7 @@ void main() {
         {
           'name': 'Length',
           'icon_name': 'length-group.png',
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
           'oob': 1,
         },
@@ -33,7 +33,7 @@ void main() {
         {
           'name': 'Length',
           'icon_name': 'length-group.png',
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
           'oob': 1,
         },
@@ -53,7 +53,7 @@ void main() {
           'name': 'Length',
           'icon_name': 'length-group.png',
           'refreshable': 0,
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
           'oob': 1,
         },
@@ -70,7 +70,7 @@ void main() {
         {
           'name': 'Length',
           'icon_name': 'length-group.png',
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
           'oob': 0,
         },

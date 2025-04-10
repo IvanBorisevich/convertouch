@@ -4,4 +4,6 @@ abstract class ConversionParamSetDao {
   const ConversionParamSetDao();
 
   Future<List<ConversionParamSetEntity>> get(int groupId);
+
+  Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
 }

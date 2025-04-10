@@ -11,6 +11,18 @@ class Migration3to4 extends ConvertouchDbMigration {
   Future<void> execute(Database database) async {
     log("Migration database from version 3 to 4");
 
+    bool columnNew = await SqlUtils.isColumnNew(
+      database,
+      tableName: 'units',
+      columnName: 'list_type',
+    );
+
+    if (columnNew) {
+      await database.execute('''
+        ALTER TABLE units ADD COLUMN list_type INTEGER
+      ''');
+    }
+
     await database.execute('''
       CREATE TABLE IF NOT EXISTS `conversion_param_sets` (
         `name` TEXT NOT NULL, 
@@ -27,6 +39,7 @@ class Migration3to4 extends ConvertouchDbMigration {
         `calculable` INTEGER, 
         `unit_group_id` INTEGER, 
         `value_type` INTEGER NOT NULL, 
+        `list_type` INTEGER,
         `param_set_id` INTEGER NOT NULL, 
         `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
         FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) 

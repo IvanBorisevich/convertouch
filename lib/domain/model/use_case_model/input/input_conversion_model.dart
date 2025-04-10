@@ -4,13 +4,13 @@ import 'package:convertouch/domain/model/unit_model.dart';
 
 class InputConversionModel {
   final UnitGroupModel unitGroup;
-  final ConversionUnitValueModel sourceConversionItem;
+  final ConversionUnitValueModel sourceUnitValue;
   final List<UnitModel> targetUnits;
   final int? conversionId;
 
   const InputConversionModel({
     required this.unitGroup,
-    required this.sourceConversionItem,
+    required this.sourceUnitValue,
     this.targetUnits = const [],
     this.conversionId,
   });
@@ -19,8 +19,7 @@ class InputConversionModel {
   String toString() {
     return 'InputConversionModel{'
         'unitGroup: $unitGroup, '
-        'sourceConversionItem: $sourceConversionItem, '
+        'sourceUnitValue: $sourceUnitValue, '
         'targetUnits: $targetUnits}';
   }
 }
-

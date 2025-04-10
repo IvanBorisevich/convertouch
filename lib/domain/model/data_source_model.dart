@@ -25,7 +25,7 @@ class DataSourceModel extends IdNameItemModel {
       ];
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {
       'name': name,
       'url': url,
