@@ -64,6 +64,8 @@ dependencies:
   dropdown_button2: ^2.3.8
   timeago: ^3.7.0
   sqflite_common_ffi: ^2.3.0+4
+  sliding_up_panel: ^2.0.0+1
+  tab_container: ^3.5.3
 
 dev_dependencies:
   flutter_test:

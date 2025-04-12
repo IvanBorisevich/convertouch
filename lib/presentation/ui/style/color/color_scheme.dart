@@ -14,14 +14,18 @@ class ConvertouchColorScheme {
   });
 }
 
-class ParamSetPanelColorScheme extends ConvertouchColorScheme {
-  final ConvertouchColorScheme icon;
+class ParamSetPanelColorScheme {
+  final ConvertouchColorScheme tab;
+  final ConvertouchColorScheme toolset;
+  final ConvertouchColorScheme footer;
+  final ColorVariation removalIcon;
 
   const ParamSetPanelColorScheme({
-    super.background,
-    super.foreground,
-    this.icon = ConvertouchColorScheme.none,
-  }) : super(border: ColorVariation.none);
+    this.tab = ConvertouchColorScheme.none,
+    this.toolset = ConvertouchColorScheme.none,
+    this.footer = ConvertouchColorScheme.none,
+    this.removalIcon = ColorVariation.none,
+  });
 }
 
 class ListItemColorScheme extends ConvertouchColorScheme {

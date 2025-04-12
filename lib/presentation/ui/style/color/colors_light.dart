@@ -42,15 +42,25 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 );
 
 const paramSetColorSchemeLight = ParamSetPanelColorScheme(
-  background: ColorVariation.only(Color(0xffc0d2ff)),
-  foreground: ColorVariation.only(Color(0xFF1D5180)),
-  icon: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff9db4f1)),
-    foreground: ColorVariation.only(Color(0xFF1E5C93)),
+  tab: ConvertouchColorScheme(
+    background: ColorVariation(
+      regular: Color(0xffbed0fc),
+      selected: Color(0xffd8e3ff),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF2D6698),
+    ),
+  ),
+  toolset: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xffc7d7ff)),
+    foreground: ColorVariation.only(Color(0xFF255C8D)),
+  ),
+  removalIcon: ColorVariation.only(Color(0xFFC44D22)),
+  footer: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xffb8cbfc)),
+    foreground: ColorVariation.only(Color(0xFF6C9CC9)),
   ),
 );
-
-
 
 const unitBottomLoaderLight = ListItemColorScheme(
   background: ColorVariation.only(Color(0xFFC7DDFA)),
@@ -211,7 +221,6 @@ const unitGroupTextBoxColorLight = InputBoxColorScheme(
     regular: Color(0xFF7574E1),
   ),
 );
-
 
 const conversionItemColorSchemeLight = ConversionItemColorScheme(
   textBox: unitTextBoxColorLight,

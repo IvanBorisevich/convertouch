@@ -136,60 +136,115 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         child: Column(
                           children: [
                             ConversionParamsView(
-                              paramSetValue: //conversion.paramSetValue,
-                                  const ConversionParamSetValueModel(
-                                paramSet: ConversionParamSetModel(
-                                  id: 1,
-                                  name: "Clothing Size",
-                                  mandatory: true,
-                                  groupId: 10,
+                              paramSetValues: //conversion.paramSetValue,
+                              [
+                                const ConversionParamSetValueModel(
+                                  paramSet: ConversionParamSetModel(
+                                    id: 1,
+                                    name: "Clothing Size by Height",
+                                    mandatory: true,
+                                    groupId: 10,
+                                  ),
+                                  paramValues: [
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Gender",
+                                        unitGroupId: null,
+                                        calculable: false,
+                                        valueType: ConvertouchValueType.text,
+                                        listType: ConvertouchListType.gender,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
+                                    ),
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Garment",
+                                        unitGroupId: null,
+                                        calculable: false,
+                                        valueType: ConvertouchValueType.text,
+                                        listType: ConvertouchListType.garment,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
+                                    ),
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Height",
+                                        unitGroupId: 1,
+                                        calculable: false,
+                                        valueType:
+                                        ConvertouchValueType.decimalPositive,
+                                        listType: null,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
+                                    ),
+                                  ],
                                 ),
-                                paramValues: [
-                                  ConversionParamValueModel(
-                                    param: ConversionParamModel(
-                                      name: "Gender",
-                                      unitGroupId: null,
-                                      calculable: false,
-                                      valueType: ConvertouchValueType.text,
-                                      listType: ConvertouchListType.gender,
-                                      paramSetId: 1,
-                                    ),
-                                    unit: null,
-                                    calculated: false,
-                                    value: ValueModel.empty,
-                                    defaultValue: ValueModel.empty,
+                                const ConversionParamSetValueModel(
+                                  paramSet: ConversionParamSetModel(
+                                    id: 1,
+                                    name: "Clothing Size by Height",
+                                    mandatory: true,
+                                    groupId: 10,
                                   ),
-                                  ConversionParamValueModel(
-                                    param: ConversionParamModel(
-                                      name: "Garment",
-                                      unitGroupId: null,
-                                      calculable: false,
-                                      valueType: ConvertouchValueType.text,
-                                      listType: ConvertouchListType.garment,
-                                      paramSetId: 1,
+                                  paramValues: [
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Gender",
+                                        unitGroupId: null,
+                                        calculable: false,
+                                        valueType: ConvertouchValueType.text,
+                                        listType: ConvertouchListType.gender,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
                                     ),
-                                    unit: null,
-                                    calculated: false,
-                                    value: ValueModel.empty,
-                                    defaultValue: ValueModel.empty,
-                                  ),
-                                  ConversionParamValueModel(
-                                    param: ConversionParamModel(
-                                      name: "Height",
-                                      unitGroupId: 1,
-                                      calculable: false,
-                                      valueType:
-                                          ConvertouchValueType.decimalPositive,
-                                      listType: null,
-                                      paramSetId: 1,
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Garment",
+                                        unitGroupId: null,
+                                        calculable: false,
+                                        valueType: ConvertouchValueType.text,
+                                        listType: ConvertouchListType.garment,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
                                     ),
-                                    unit: null,
-                                    calculated: false,
-                                    value: ValueModel.empty,
-                                    defaultValue: ValueModel.empty,
-                                  ),
-                                ],
-                              ),
+                                    ConversionParamValueModel(
+                                      param: ConversionParamModel(
+                                        name: "Height",
+                                        unitGroupId: 1,
+                                        calculable: false,
+                                        valueType:
+                                        ConvertouchValueType.decimalPositive,
+                                        listType: null,
+                                        paramSetId: 1,
+                                      ),
+                                      unit: null,
+                                      calculated: false,
+                                      value: ValueModel.empty,
+                                      defaultValue: ValueModel.empty,
+                                    ),
+                                  ],
+                                ),
+                              ],
                               theme: appState.theme,
                             ),
                             Expanded(
