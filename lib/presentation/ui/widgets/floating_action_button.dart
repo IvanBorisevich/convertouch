@@ -67,6 +67,9 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                     onClick?.call();
                   }
                 },
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
                 backgroundColor: colorScheme.background.regular,
                 foregroundColor: colorScheme.foreground.regular,
                 disabledElevation: 0,

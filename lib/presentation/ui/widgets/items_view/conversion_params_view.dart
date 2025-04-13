@@ -1,14 +1,18 @@
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
+import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:tab_container/tab_container.dart';
 
 class ConversionParamsView extends StatefulWidget {
   final List<ConversionParamSetValueModel> paramSetValues;
@@ -31,7 +35,7 @@ class ConversionParamsView extends StatefulWidget {
 }
 
 class _ConversionParamsViewState extends State<ConversionParamsView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const int _toolsetItemsNum = 3;
   static const double _toolsetPanelWidth = 50;
   static const double _toolsetPanelItemHeight = 50;
@@ -42,30 +46,40 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
   static const double _footerHeight = 28;
   static const double _paramsSpacing = 10;
 
-  late final TabController? _controller;
-
+  late TabController _controller;
+  late final List<ConversionParamSetValueModel> _paramSetValues;
 
   @override
   void initState() {
-    if (widget.paramSetValues.isNotEmpty) {
-      _controller = TabController(
-        vsync: this,
-        length: widget.paramSetValues.length,
-      );
-    }
+    _paramSetValues = widget.paramSetValues;
+
+    _controller = TabController(
+      vsync: this,
+      length: _paramSetValues.length,
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.paramSetValues.isEmpty) {
+    if (_paramSetValues.isEmpty) {
       return const SizedBox.shrink();
+    }
+
+    if (_paramSetValues.length != _controller.length) {
+      final oldIndex = _controller.index;
+      _controller.dispose();
+      _controller = TabController(
+        length: _paramSetValues.length,
+        initialIndex: max(0, min(oldIndex, _paramSetValues.length - 1)),
+        vsync: this,
+      );
     }
 
     ParamSetPanelColorScheme colors = paramSetColors[widget.theme]!;
@@ -81,7 +95,7 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
 
     double paramSetMaxHeight = 0;
 
-    for (var paramSetValue in widget.paramSetValues) {
+    for (var paramSetValue in _paramSetValues) {
       int numOfParams = paramSetValue.paramValues.length;
       double paramSetHeight = numOfParams * ConvertouchTextBox.defaultHeight +
           numOfParams * _paramsSpacing +
@@ -108,66 +122,128 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
             child: Row(
               children: [
                 Expanded(
-                  child: TabContainer(
-                    borderRadius: const BorderRadius.all(Radius.zero),
-                    color: selectedTabBackgroundColor,
-                    duration: const Duration(milliseconds: 200),
-                    tabExtent: _tabPanelHeight,
-                    tabs: widget.paramSetValues
-                        .map(
-                          (item) => Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
-                            child: Text(
-                              item.paramSet.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: tabForegroundColor,
-                                fontWeight: FontWeight.w600,
+                  child: DynamicTabBarWidget(
+                    onTabControllerUpdated: (controller) {},
+                    dynamicTabs: _paramSetValues
+                        .mapIndexed(
+                          (index, item) => TabData(
+                            index: index,
+                            title: Tab(
+                              child: Text(
+                                item.paramSet.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: tabForegroundColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
-                    children: widget.paramSetValues
-                        .map(
-                          (item) => ScrollConfiguration(
-                            behavior: NoGlowScrollBehavior(),
-                            child: ListView.builder(
-                              itemCount: item.paramValues.length,
-                              itemBuilder: (context, index) {
-                                var paramItem = item.paramValues[index];
+                            content: ScrollConfiguration(
+                              behavior: NoGlowScrollBehavior(),
+                              child: ListView.builder(
+                                itemCount: item.paramValues.length,
+                                itemBuilder: (context, index) {
+                                  var paramItem = item.paramValues[index];
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: _paramsSpacing,
-                                  ),
-                                  child: ConvertouchConversionItem(
-                                    paramItem,
-                                    controlsVisible: false,
-                                    itemNameFunc: (item) => item.param.name,
-                                    unitItemCodeFunc: (item) => item.unit?.code,
-                                    onTap: () {
-                                      widget.onParamUnitTap?.call(paramItem);
-                                    },
-                                    onValueChanged: (value) {
-                                      widget.onValueChanged
-                                          ?.call(paramItem, value);
-                                    },
-                                    colors: conversionItemColors[widget.theme]!,
-                                  ),
-                                );
-                              },
-                              padding: const EdgeInsets.only(
-                                top: _paramsSpacing,
-                                left: _paramsSpacing,
-                                right: _paramsSpacing,
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: _paramsSpacing,
+                                    ),
+                                    child: ConvertouchConversionItem(
+                                      paramItem,
+                                      controlsVisible: false,
+                                      itemNameFunc: (item) => item.param.name,
+                                      unitItemCodeFunc: (item) =>
+                                          item.unit?.code,
+                                      onTap: () {
+                                        widget.onParamUnitTap?.call(paramItem);
+                                      },
+                                      onValueChanged: (value) {
+                                        widget.onValueChanged
+                                            ?.call(paramItem, value);
+                                      },
+                                      colors:
+                                          conversionItemColors[widget.theme]!,
+                                    ),
+                                  );
+                                },
+                                padding: const EdgeInsets.only(
+                                  top: _paramsSpacing,
+                                  left: _paramsSpacing,
+                                  right: _paramsSpacing,
+                                ),
                               ),
                             ),
                           ),
                         )
                         .toList(),
                   ),
+
+                  // TabContainer(
+                  //   controller: _controller,
+                  //   borderRadius: const BorderRadius.all(Radius.zero),
+                  //   color: selectedTabBackgroundColor,
+                  //   duration: const Duration(milliseconds: 200),
+                  //   tabMinLength: 100,
+                  //   tabExtent: _tabPanelHeight,
+                  //   tabs: _paramSetValues
+                  //       .map(
+                  //         (item) => Padding(
+                  //           padding: const EdgeInsets.symmetric(horizontal: 14),
+                  //           child:
+                  //           Text(
+                  //             item.paramSet.name,
+                  //             maxLines: 1,
+                  //             overflow: TextOverflow.ellipsis,
+                  //             style: TextStyle(
+                  //               color: tabForegroundColor,
+                  //               fontWeight: FontWeight.w600,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       )
+                  //       .toList(),
+                  //   children: _paramSetValues
+                  //       .map(
+                  //         (item) =>
+                  //         ScrollConfiguration(
+                  //           behavior: NoGlowScrollBehavior(),
+                  //           child: ListView.builder(
+                  //             itemCount: item.paramValues.length,
+                  //             itemBuilder: (context, index) {
+                  //               var paramItem = item.paramValues[index];
+                  //
+                  //               return Padding(
+                  //                 padding: const EdgeInsets.only(
+                  //                   bottom: _paramsSpacing,
+                  //                 ),
+                  //                 child: ConvertouchConversionItem(
+                  //                   paramItem,
+                  //                   controlsVisible: false,
+                  //                   itemNameFunc: (item) => item.param.name,
+                  //                   unitItemCodeFunc: (item) => item.unit?.code,
+                  //                   onTap: () {
+                  //                     widget.onParamUnitTap?.call(paramItem);
+                  //                   },
+                  //                   onValueChanged: (value) {
+                  //                     widget.onValueChanged
+                  //                         ?.call(paramItem, value);
+                  //                   },
+                  //                   colors: conversionItemColors[widget.theme]!,
+                  //                 ),
+                  //               );
+                  //             },
+                  //             padding: const EdgeInsets.only(
+                  //               top: _paramsSpacing,
+                  //               left: _paramsSpacing,
+                  //               right: _paramsSpacing,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       )
+                  //       .toList(),
+                  // ),
                 ),
                 Container(
                   width: _toolsetPanelWidth,
@@ -184,7 +260,20 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
                             Icons.add,
                             color: toolsetPanelForegroundColor,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _paramSetValues
+                                  .add(const ConversionParamSetValueModel(
+                                paramSet: ConversionParamSetModel(
+                                  id: 1,
+                                  name: "Clothing Size by Height",
+                                  mandatory: true,
+                                  groupId: 10,
+                                ),
+                                paramValues: [],
+                              ));
+                            });
+                          },
                         ),
                       ),
                       SizedBox(
@@ -194,7 +283,11 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
                             Icons.remove,
                             color: toolsetPanelForegroundColor,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _paramSetValues.removeAt(_controller.index);
+                            });
+                          },
                         ),
                       ),
                       Expanded(
@@ -207,7 +300,11 @@ class _ConversionParamsViewState extends State<ConversionParamsView>
                                 Icons.delete_outline_rounded,
                                 color: toolsetRemovalIconColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  _paramSetValues.clear();
+                                });
+                              },
                             ),
                           ),
                         ),

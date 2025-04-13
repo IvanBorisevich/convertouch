@@ -36,7 +36,7 @@ class UnitGroupTranslator
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       minValue: ValueModel.numeric(entity.minValue),
       maxValue: ValueModel.numeric(entity.maxValue),
-      refreshable: int2bool(entity.refreshable, ifNull: true),
+      refreshable: int2bool(entity.refreshable),
       oob: int2bool(entity.oob, ifNull: true),
     );
   }
