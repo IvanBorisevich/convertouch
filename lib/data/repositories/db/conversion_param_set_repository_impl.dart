@@ -37,8 +37,9 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, ConversionParamSetModel?>>
-      getFirstMandatory(int groupId) async {
+  Future<Either<ConvertouchException, ConversionParamSetModel?>> getMandatory(
+    int groupId,
+  ) async {
     try {
       final entity = await conversionParamSetDao.getFirstMandatory(groupId);
 

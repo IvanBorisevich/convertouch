@@ -44,8 +44,7 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 const paramSetColorSchemeLight = ParamSetPanelColorScheme(
   tab: ConvertouchColorScheme(
     background: ColorVariation(
-      regular: Color(0xffbed0fc),
-      selected: Color(0xffd8e3ff),
+      regular: Color(0xffc8d9ff),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF2D6698),
@@ -57,7 +56,7 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
   ),
   removalIcon: ColorVariation.only(Color(0xFFC44D22)),
   footer: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffb8cbfc)),
+    background: ColorVariation.only(Color(0xffb0c3f5)),
     foreground: ColorVariation.only(Color(0xFF6C9CC9)),
   ),
 );

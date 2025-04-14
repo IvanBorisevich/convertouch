@@ -9,7 +9,7 @@ class ReplaceConversionItemUnitUseCase
   });
 
   @override
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionItems({
+  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
     required Map<int, ConversionUnitValueModel> conversionItemsMap,
     required ReplaceConversionItemUnitDelta delta,
   }) async {
@@ -27,7 +27,7 @@ class ReplaceConversionItemUnitUseCase
   }
 
   @override
-  ConversionUnitValueModel getModifiedSourceItem({
+  ConversionUnitValueModel modifySourceItem({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required ReplaceConversionItemUnitDelta delta,

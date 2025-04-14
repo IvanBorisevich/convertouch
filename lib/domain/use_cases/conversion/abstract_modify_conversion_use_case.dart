@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -24,16 +25,23 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     InputConversionModifyModel<D> input,
   ) async {
     try {
-      final modifiedGroup = getModifiedGroup(
+      final modifiedGroup = modifyGroup(
         unitGroup: input.conversion.unitGroup,
+        delta: input.delta,
+      );
+
+      final conversionParams = await modifyConversionParamValues(
+        currentParams: input.conversion.params,
         delta: input.delta,
       );
 
       if (input.conversion.unitGroup.id != modifiedGroup.id) {
         return Right(
+          // TODO: probably should be replaced with input.conversion
           ConversionModel.coalesce(
             input.conversion,
             id: input.conversion.id,
+            params: conversionParams,
           ),
         );
       }
@@ -43,7 +51,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           item.unit.id: item
       };
 
-      final modifiedConversionItemsMap = await modifyConversionItems(
+      final modifiedConversionItemsMap = await modifyConversionUnitValues(
         conversionItemsMap: conversionItemsMap,
         delta: input.delta,
       );
@@ -53,12 +61,12 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           ConversionModel(
             id: input.conversion.id,
             unitGroup: modifiedGroup,
-            paramSetValue: input.conversion.paramSetValue,
+            params: conversionParams,
           ),
         );
       }
 
-      var modifiedSourceItem = getModifiedSourceItem(
+      var modifiedSourceItem = modifySourceItem(
         currentSourceItem: input.conversion.sourceConversionItem ??
             modifiedConversionItemsMap.values.first,
         modifiedConversionItemsMap: modifiedConversionItemsMap,
@@ -72,6 +80,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
             InputConversionModel(
               conversionId: input.conversion.id,
               unitGroup: modifiedGroup,
+              params: conversionParams,
               sourceUnitValue: modifiedSourceItem,
               targetUnits: modifiedConversionItemsMap.values
                   .map((conversionItem) => conversionItem.unit)
@@ -83,6 +92,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         result = ConversionModel(
           unitGroup: modifiedGroup,
           sourceConversionItem: modifiedSourceItem,
+          params: conversionParams,
           conversionUnitValues: modifiedConversionItemsMap.values.toList(),
         );
       }
@@ -106,14 +116,21 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
-  UnitGroupModel getModifiedGroup({
+  UnitGroupModel modifyGroup({
     required UnitGroupModel unitGroup,
     required D delta,
   }) {
     return unitGroup;
   }
 
-  ConversionUnitValueModel getModifiedSourceItem({
+  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
+    required ConversionParamSetValueBulkModel? currentParams,
+    required D delta,
+  }) async {
+    return currentParams;
+  }
+
+  ConversionUnitValueModel modifySourceItem({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required D delta,
@@ -125,7 +142,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return modifiedConversionItemsMap.values.first;
   }
 
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionItems({
+  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
     required Map<int, ConversionUnitValueModel> conversionItemsMap,
     required D delta,
   }) async {

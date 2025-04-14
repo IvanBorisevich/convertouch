@@ -7,12 +7,12 @@ class InputSingleValueConversionModel {
   final UnitGroupModel unitGroup;
   final UnitModel tgtUnit;
   final ConversionUnitValueModel srcItem;
-  final ConversionParamSetValueModel? paramSetValue;
+  final ConversionParamSetValueModel? params;
 
   const InputSingleValueConversionModel({
     required this.unitGroup,
     required this.srcItem,
     required this.tgtUnit,
-    this.paramSetValue,
+    this.params,
   });
 }

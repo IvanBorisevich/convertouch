@@ -10,7 +10,7 @@ class EditConversionItemValueUseCase
   });
 
   @override
-  ConversionUnitValueModel getModifiedSourceItem({
+  ConversionUnitValueModel modifySourceItem({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required EditConversionItemValueDelta delta,

@@ -9,7 +9,7 @@ class EditConversionItemUnitUseCase
   });
 
   @override
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionItems({
+  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
     required Map<int, ConversionUnitValueModel> conversionItemsMap,
     required EditConversionItemUnitDelta delta,
   }) async {

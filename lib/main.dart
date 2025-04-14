@@ -28,7 +28,7 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 final logger = Logger(
   printer: PrettyPrinter(
     methodCount: 0,
-    printTime: true,
+    dateTimeFormat: DateTimeFormat.dateAndTime,
   ),
 );
 

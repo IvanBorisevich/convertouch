@@ -30,14 +30,14 @@ class ConvertSingleValueUseCase
         srcUnit: input.srcItem.unit,
         tgtUnit: input.tgtUnit,
         unitGroup: input.unitGroup,
-        paramSetValue: input.paramSetValue,
+        paramSetValue: input.params,
       );
       ValueModel? tgtDef = _calculate(
         src: input.srcItem.defaultValue,
         srcUnit: input.srcItem.unit,
         tgtUnit: input.tgtUnit,
         unitGroup: input.unitGroup,
-        paramSetValue: input.paramSetValue,
+        paramSetValue: input.params,
       );
 
       return Right(

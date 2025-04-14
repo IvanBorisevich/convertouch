@@ -44,21 +44,20 @@ const searchBarColorSchemeDark = SearchBarColorScheme(
 const paramSetColorSchemeDark = ParamSetPanelColorScheme(
   tab: ConvertouchColorScheme(
     background: ColorVariation(
-      regular: Color(0xFF2D323A),
-      selected: Color(0xFF38404D),
+      regular: Color(0xFF38404D),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF77C1FD),
     ),
   ),
   toolset: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF333741)),
+    background: ColorVariation.only(Color(0xFF313846)),
     foreground: ColorVariation.only(Color(0xFF63A1D7)),
   ),
   removalIcon: ColorVariation.only(Color(0xFFCC683C)),
   footer: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF3D4759)),
-    foreground: ColorVariation.only(Color(0xFF586781)),
+    background: ColorVariation.only(Color(0xFF434E62)),
+    foreground: ColorVariation.only(Color(0xFF657693)),
   ),
 );
 

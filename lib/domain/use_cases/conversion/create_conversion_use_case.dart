@@ -4,12 +4,10 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/create_conversion_param_set_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -18,12 +16,10 @@ class CreateConversionUseCase
     extends UseCase<InputConversionModel, ConversionModel> {
   final ConvertSingleValueUseCase convertSingleValueUseCase;
   final DynamicValueRepository dynamicValueRepository;
-  final CreateConversionParamSetUseCase createConversionParamSetUseCase;
 
   const CreateConversionUseCase({
     required this.convertSingleValueUseCase,
     required this.dynamicValueRepository,
-    required this.createConversionParamSetUseCase,
   });
 
   @override
@@ -44,13 +40,7 @@ class CreateConversionUseCase
         input.sourceUnitValue,
       );
 
-      ConversionParamSetValueModel? paramSetValue = ObjectUtils.tryGet(
-        await createConversionParamSetUseCase.execute(
-          InputParamSetValuesCreateModel(
-            groupId: input.unitGroup.id,
-          ),
-        ),
-      );
+      ConversionParamSetValueModel? params = _composeParams(input.params);
 
       List<ConversionUnitValueModel> convertedItems = [];
 
@@ -61,7 +51,7 @@ class CreateConversionUseCase
               unitGroup: input.unitGroup,
               srcItem: srcItem,
               tgtUnit: tgtUnit,
-              paramSetValue: paramSetValue,
+              params: params,
             ),
           ),
         );
@@ -74,7 +64,6 @@ class CreateConversionUseCase
           unitGroup: input.unitGroup,
           sourceConversionItem: srcItem,
           conversionUnitValues: convertedItems,
-          paramSetValue: paramSetValue,
         ),
       );
     } catch (e, stackTrace) {
@@ -112,5 +101,13 @@ class CreateConversionUseCase
         srcDefaultValueStr ?? srcItem.defaultValue.raw,
       ),
     );
+  }
+
+  ConversionParamSetValueModel? _composeParams(
+    ConversionParamSetValueBulkModel? initialParams,
+  ) {
+    return initialParams != null
+        ? initialParams.paramSetValues[initialParams.selectedIndex]
+        : null;
   }
 }

@@ -29,23 +29,27 @@ void main() {
       value: ValueModel.one,
       defaultValue: ValueModel.one,
     ),
-    paramSetValue: ConversionParamSetValueModel(
-      paramSet: ConversionParamSetModel(
-        id: 1,
-        name: "Bank Currency Rate",
-        mandatory: true,
-        groupId: 1,
-      ),
-      paramValues: [
-        ConversionParamValueModel(
-          param: ConversionParamModel(
+    params: ConversionParamSetValueBulkModel(
+      paramSetValues: [
+        ConversionParamSetValueModel(
+          paramSet: ConversionParamSetModel(
             id: 1,
-            name: 'Bank',
-            valueType: ConvertouchValueType.text,
-            paramSetId: 1,
+            name: "Bank Currency Rate",
+            mandatory: true,
+            groupId: 1,
           ),
-          value: ValueModel.empty,
-          defaultValue: ValueModel.empty,
+          paramValues: [
+            ConversionParamValueModel(
+              param: ConversionParamModel(
+                id: 1,
+                name: 'Bank',
+                valueType: ConvertouchValueType.text,
+                paramSetId: 1,
+              ),
+              value: ValueModel.empty,
+              defaultValue: ValueModel.empty,
+            ),
+          ],
         ),
       ],
     ),
@@ -84,34 +88,39 @@ void main() {
       'oob': false,
     },
     'params': {
-      'paramSet': {
-        'id': 1,
-        'name': 'Bank Currency Rate',
-        'mandatory': true,
-        'groupId': 1,
-      },
-      'paramValues': [
+      'paramSetValues': [
         {
-          'param': {
+          'paramSet': {
             'id': 1,
-            'name': 'Bank',
-            'valueType': 1,
-            'paramSetId': 1,
-            'calculable': false,
+            'name': 'Bank Currency Rate',
+            'mandatory': true,
+            'groupId': 1,
           },
-          'value': {
-            'raw': '',
-            'num': null,
-            'alt': '',
-          },
-          'defaultValue': {
-            'raw': '',
-            'num': null,
-            'alt': '',
-          },
-          'calculated': false,
-        }
+          'paramValues': [
+            {
+              'param': {
+                'id': 1,
+                'name': 'Bank',
+                'valueType': 1,
+                'paramSetId': 1,
+                'calculable': false,
+              },
+              'value': {
+                'raw': '',
+                'num': null,
+                'alt': '',
+              },
+              'defaultValue': {
+                'raw': '',
+                'num': null,
+                'alt': '',
+              },
+              'calculated': false,
+            }
+          ],
+        },
       ],
+      'selectedIndex': 0,
     },
     'sourceItem': {
       'unit': {

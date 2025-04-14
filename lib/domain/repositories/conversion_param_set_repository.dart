@@ -9,6 +9,7 @@ abstract class ConversionParamSetRepository {
     int groupId,
   );
 
-  Future<Either<ConvertouchException, ConversionParamSetModel?>>
-      getFirstMandatory(int groupId);
+  Future<Either<ConvertouchException, ConversionParamSetModel?>> getMandatory(
+    int groupId,
+  );
 }

@@ -9,7 +9,7 @@ class EditConversionGroupUseCase
   });
 
   @override
-  UnitGroupModel getModifiedGroup({
+  UnitGroupModel modifyGroup({
     required UnitGroupModel unitGroup,
     required EditConversionGroupDelta delta,
   }) {

@@ -84,7 +84,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
                   unit: conversionItemUnitsMap[entity.unitId],
                 ),
               )
-              .whereNotNull()
+              .nonNulls
               .toList(),
         ),
       );

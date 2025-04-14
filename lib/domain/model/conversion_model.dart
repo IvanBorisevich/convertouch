@@ -12,7 +12,7 @@ class ConversionModel extends IdNameItemModel {
 
   final UnitGroupModel unitGroup;
   final ConversionUnitValueModel? sourceConversionItem;
-  final ConversionParamSetValueModel? paramSetValue;
+  final ConversionParamSetValueBulkModel? params;
   final List<ConversionUnitValueModel> conversionUnitValues;
 
   const ConversionModel({
@@ -20,7 +20,7 @@ class ConversionModel extends IdNameItemModel {
     super.name = "",
     this.unitGroup = UnitGroupModel.none,
     this.sourceConversionItem,
-    this.paramSetValue,
+    this.params,
     this.conversionUnitValues = const [],
   }) : super(
           itemType: ItemType.conversion,
@@ -29,9 +29,11 @@ class ConversionModel extends IdNameItemModel {
   const ConversionModel.noItems({
     required int id,
     required UnitGroupModel unitGroup,
+    ConversionParamSetValueBulkModel? params,
   }) : this(
           id: id,
           unitGroup: unitGroup,
+          params: params,
         );
 
   ConversionModel.coalesce(
@@ -41,7 +43,7 @@ class ConversionModel extends IdNameItemModel {
     UnitGroupModel? unitGroup,
     ConversionUnitValueModel? sourceConversionItem,
     List<ConversionUnitValueModel>? targetConversionItems,
-    ConversionParamSetValueModel? paramSetValue,
+    ConversionParamSetValueBulkModel? params,
   }) : this(
           id: id ?? saved.id,
           name: name ?? saved.name,
@@ -50,7 +52,7 @@ class ConversionModel extends IdNameItemModel {
               sourceConversionItem ?? saved.sourceConversionItem,
           conversionUnitValues:
               targetConversionItems ?? saved.conversionUnitValues,
-          paramSetValue: paramSetValue ?? saved.paramSetValue,
+          params: params ?? saved.params,
         );
 
   @override
@@ -59,7 +61,7 @@ class ConversionModel extends IdNameItemModel {
       "id": id,
       "unitGroup": unitGroup.toJson(),
       "sourceItem": sourceConversionItem?.toJson(),
-      "params": paramSetValue?.toJson(),
+      "params": params?.toJson(),
       "targetItems": conversionUnitValues.map((item) => item.toJson()).toList(),
     };
 
@@ -80,7 +82,7 @@ class ConversionModel extends IdNameItemModel {
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
       sourceConversionItem:
           ConversionUnitValueModel.fromJson(json["sourceItem"]),
-      paramSetValue: ConversionParamSetValueModel.fromJson(json["params"]),
+      params: ConversionParamSetValueBulkModel.fromJson(json["params"]),
       conversionUnitValues: (json["targetItems"] as List)
           .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)
           .toList(),
@@ -92,7 +94,7 @@ class ConversionModel extends IdNameItemModel {
         id,
         unitGroup,
         sourceConversionItem,
-        paramSetValue,
+        params,
         conversionUnitValues,
       ];
 
@@ -103,7 +105,7 @@ class ConversionModel extends IdNameItemModel {
     return 'ConversionModel{'
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
-        'paramSetValue: $paramSetValue, '
+        'params: $params, '
         'targetConversionItems: $conversionUnitValues}';
   }
 }
