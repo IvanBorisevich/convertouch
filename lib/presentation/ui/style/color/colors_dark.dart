@@ -51,8 +51,11 @@ const paramSetColorSchemeDark = ParamSetPanelColorScheme(
     ),
   ),
   toolset: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xFF313846)),
-    foreground: ColorVariation.only(Color(0xFF63A1D7)),
+    background: ColorVariation.only(Color(0xFF323944)),
+    foreground: ColorVariation(
+      regular: Color(0xFF63A1D7),
+      disabled: Color(0xFF405D77),
+    ),
   ),
   removalIcon: ColorVariation.only(Color(0xFFCC683C)),
   footer: ConvertouchColorScheme(

@@ -51,12 +51,15 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
     ),
   ),
   toolset: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffc7d7ff)),
-    foreground: ColorVariation.only(Color(0xFF255C8D)),
+    background: ColorVariation.only(Color(0xffbcceff)),
+    foreground: ColorVariation(
+        regular: Color(0xFF235475),
+      disabled: Color(0xFF7497B7),
+    ),
   ),
   removalIcon: ColorVariation.only(Color(0xFFC44D22)),
   footer: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffb0c3f5)),
+    background: ColorVariation.only(Color(0xffabbff3)),
     foreground: ColorVariation.only(Color(0xFF6C9CC9)),
   ),
 );

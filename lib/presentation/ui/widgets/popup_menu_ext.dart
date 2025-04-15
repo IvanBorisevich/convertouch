@@ -1,3 +1,4 @@
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -43,11 +44,17 @@ class ConvertouchPopupMenu extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      item.icon,
-                      color: item.iconColor ?? iconColor,
-                      size: 24,
-                    ),
+                    item.iconName != null
+                        ? IconUtils.getIcon(
+                            item.iconName!,
+                            color: item.iconColor ?? iconColor,
+                            size: 24,
+                          )
+                        : Icon(
+                            item.icon,
+                            color: item.iconColor ?? iconColor,
+                            size: 24,
+                          ),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Container(
@@ -84,7 +91,7 @@ class ConvertouchPopupMenu extends StatelessWidget {
           isOverButton: true,
         ),
         menuItemStyleData: MenuItemStyleData(
-          overlayColor: MaterialStateColor.resolveWith(
+          overlayColor: WidgetStateColor.resolveWith(
             (states) => highlightColor,
           ),
           customHeights: List.filled(items.length, 40),
@@ -97,14 +104,16 @@ class ConvertouchPopupMenu extends StatelessWidget {
 
 class PopupMenuItemModel {
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final String? iconName;
   final Color? textColor;
   final Color? iconColor;
   final void Function()? onTap;
 
   const PopupMenuItemModel({
     required this.text,
-    required this.icon,
+    this.icon,
+    this.iconName,
     this.textColor,
     this.iconColor,
     this.onTap,

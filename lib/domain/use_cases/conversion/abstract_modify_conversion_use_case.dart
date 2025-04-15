@@ -30,21 +30,14 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         delta: input.delta,
       );
 
+      if (input.conversion.unitGroup.id != modifiedGroup.id) {
+        return Right(input.conversion);
+      }
+
       final conversionParams = await modifyConversionParamValues(
         currentParams: input.conversion.params,
         delta: input.delta,
       );
-
-      if (input.conversion.unitGroup.id != modifiedGroup.id) {
-        return Right(
-          // TODO: probably should be replaced with input.conversion
-          ConversionModel.coalesce(
-            input.conversion,
-            id: input.conversion.id,
-            params: conversionParams,
-          ),
-        );
-      }
 
       final conversionItemsMap = {
         for (var item in input.conversion.conversionUnitValues)
@@ -66,7 +59,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       }
 
-      var modifiedSourceItem = modifySourceItem(
+      var modifiedSourceUnitValue = modifySourceUnitValue(
         currentSourceItem: input.conversion.sourceConversionItem ??
             modifiedConversionItemsMap.values.first,
         modifiedConversionItemsMap: modifiedConversionItemsMap,
@@ -81,7 +74,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
               conversionId: input.conversion.id,
               unitGroup: modifiedGroup,
               params: conversionParams,
-              sourceUnitValue: modifiedSourceItem,
+              sourceUnitValue: modifiedSourceUnitValue,
               targetUnits: modifiedConversionItemsMap.values
                   .map((conversionItem) => conversionItem.unit)
                   .toList(),
@@ -91,7 +84,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       } else {
         result = ConversionModel(
           unitGroup: modifiedGroup,
-          sourceConversionItem: modifiedSourceItem,
+          sourceConversionItem: modifiedSourceUnitValue,
           params: conversionParams,
           conversionUnitValues: modifiedConversionItemsMap.values.toList(),
         );
@@ -130,7 +123,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return currentParams;
   }
 
-  ConversionUnitValueModel modifySourceItem({
+  ConversionUnitValueModel modifySourceUnitValue({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required D delta,

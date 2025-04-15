@@ -20,7 +20,7 @@ class RemoveConversionItemsUseCase
   }
 
   @override
-  ConversionUnitValueModel modifySourceItem({
+  ConversionUnitValueModel modifySourceUnitValue({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required RemoveConversionItemsDelta delta,

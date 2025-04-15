@@ -108,6 +108,11 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         },
                       ),
                       PopupMenuItemModel(
+                        text: "Add Parameters",
+                        iconName: "parameters.png",
+                        onTap: () {},
+                      ),
+                      PopupMenuItemModel(
                         text: "Clear Conversion",
                         icon: Icons.delete_outline_rounded,
                         onTap: () {

@@ -25,7 +25,7 @@ class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel params;
   final bool paramSetAddingButtonVisible;
   final bool paramSetRemovalButtonVisible;
-  final bool paramSetsCleaningButtonVisible;
+  final bool paramSetBulkRemovalButtonVisible;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
   final void Function(int)? onParamSetRemove;
@@ -38,7 +38,7 @@ class ConversionParamsView extends StatelessWidget {
     required this.params,
     this.paramSetAddingButtonVisible = false,
     this.paramSetRemovalButtonVisible = false,
-    this.paramSetsCleaningButtonVisible = false,
+    this.paramSetBulkRemovalButtonVisible = false,
     this.onParamSetAdd,
     this.onParamSetSelect,
     this.onParamSetRemove,
@@ -56,14 +56,6 @@ class ConversionParamsView extends StatelessWidget {
     }
 
     ParamSetPanelColorScheme colors = paramSetColors[theme]!;
-
-    Color tabBackgroundColor = colors.tab.background.regular;
-    Color tabForegroundColor = colors.tab.foreground.regular;
-    Color toolsetPanelBackgroundColor = colors.toolset.background.regular;
-    Color toolsetPanelForegroundColor = colors.toolset.foreground.regular;
-    Color toolsetRemovalIconColor = colors.removalIcon.regular;
-    Color footerBackgroundColor = colors.footer.background.regular;
-    Color footerForegroundColor = colors.footer.foreground.regular;
 
     double paramSetMaxHeight = 0;
 
@@ -99,7 +91,7 @@ class ConversionParamsView extends StatelessWidget {
                     showBackIcon: false,
                     showNextIcon: false,
                     padding: EdgeInsets.zero,
-                    indicatorColor: tabForegroundColor,
+                    indicatorColor: colors.tab.foreground.regular,
                     dividerColor: Colors.transparent,
                     onAddTabMoveTo: MoveToTab.last,
                     onTabControllerUpdated: (controller) {
@@ -118,7 +110,7 @@ class ConversionParamsView extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: tabForegroundColor,
+                                  color: colors.tab.foreground.regular,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -165,21 +157,24 @@ class ConversionParamsView extends StatelessWidget {
                 Visibility(
                   visible: paramSetAddingButtonVisible ||
                       paramSetRemovalButtonVisible ||
-                      paramSetsCleaningButtonVisible,
+                      paramSetBulkRemovalButtonVisible,
                   child: Container(
                     width: _toolsetPanelWidth,
                     height: bodyHeight,
                     decoration: BoxDecoration(
-                      color: toolsetPanelBackgroundColor,
+                      color: colors.toolset.background.regular,
                     ),
                     child: Column(
                       children: [
                         SizedBox(
                           height: _toolsetPanelItemHeight,
                           child: IconButton(
+                            disabledColor: colors.toolset.foreground.disabled,
                             icon: Icon(
                               Icons.add,
-                              color: toolsetPanelForegroundColor,
+                              color: paramSetAddingButtonVisible
+                                  ? colors.toolset.foreground.regular
+                                  : colors.toolset.foreground.disabled,
                             ),
                             onPressed: paramSetAddingButtonVisible
                                 ? () {
@@ -191,9 +186,12 @@ class ConversionParamsView extends StatelessWidget {
                         SizedBox(
                           height: _toolsetPanelItemHeight,
                           child: IconButton(
+                            disabledColor: colors.toolset.foreground.disabled,
                             icon: Icon(
                               Icons.remove,
-                              color: toolsetPanelForegroundColor,
+                              color: paramSetRemovalButtonVisible
+                                  ? colors.toolset.foreground.regular
+                                  : colors.toolset.foreground.disabled,
                             ),
                             onPressed: paramSetRemovalButtonVisible
                                 ? () {
@@ -203,21 +201,22 @@ class ConversionParamsView extends StatelessWidget {
                                 : null,
                           ),
                         ),
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.bottomCenter,
-                            child: SizedBox(
-                              height: _toolsetPanelItemHeight,
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.delete_outline_rounded,
-                                  color: toolsetRemovalIconColor,
+                        Visibility(
+                          visible: paramSetBulkRemovalButtonVisible,
+                          child: Expanded(
+                            child: Container(
+                              alignment: Alignment.bottomCenter,
+                              child: SizedBox(
+                                height: _toolsetPanelItemHeight,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete_outline_rounded,
+                                    color: colors.removalIcon.regular,
+                                  ),
+                                  onPressed: () {
+                                    onAllParamSetsRemove?.call();
+                                  },
                                 ),
-                                onPressed: paramSetsCleaningButtonVisible
-                                    ? () {
-                                        onAllParamSetsRemove?.call();
-                                      }
-                                    : null,
                               ),
                             ),
                           ),
@@ -235,7 +234,7 @@ class ConversionParamsView extends StatelessWidget {
               height: _footerHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: footerBackgroundColor,
+                color: colors.footer.background.regular,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
@@ -245,7 +244,7 @@ class ConversionParamsView extends StatelessWidget {
                 width: 25,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: footerForegroundColor,
+                  color: colors.footer.foreground.regular,
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                 ),
               ),
@@ -256,7 +255,7 @@ class ConversionParamsView extends StatelessWidget {
       slideDirection: SlideDirection.DOWN,
       minHeight: _footerHeight,
       maxHeight: _footerHeight + bodyHeight,
-      color: tabBackgroundColor,
+      color: colors.tab.background.regular,
       boxShadow: null,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(20),
