@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
@@ -28,20 +27,17 @@ class GetConversionUseCase extends UseCase<UnitGroupModel, ConversionModel> {
         await conversionRepository.get(unitGroupId),
       );
 
-      if (conversion == null) {
-        final initialParams = ObjectUtils.tryGet(
-          await createInitialParamSetUseCase.execute(unitGroupId),
-        );
+      final params = conversion?.params ??
+          ObjectUtils.tryGet(
+            await createInitialParamSetUseCase.execute(unitGroupId),
+          );
 
+      if (conversion == null) {
         return Right(
           ConversionModel.noItems(
             id: -1,
             unitGroup: input,
-            params: initialParams != null
-                ? ConversionParamSetValueBulkModel(
-                    paramSetValues: [initialParams],
-                  )
-                : null,
+            params: params,
           ),
         );
       }
@@ -50,6 +46,7 @@ class GetConversionUseCase extends UseCase<UnitGroupModel, ConversionModel> {
         ConversionModel.coalesce(
           conversion,
           unitGroup: input,
+          params: params,
         ),
       );
     } catch (e, stackTrace) {

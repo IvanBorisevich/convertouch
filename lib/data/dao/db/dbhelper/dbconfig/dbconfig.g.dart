@@ -6,21 +6,33 @@ part of 'dbconfig.dart';
 // FloorGenerator
 // **************************************************************************
 
+abstract class $ConvertouchDatabaseBuilderContract {
+  /// Adds migrations to the builder.
+  $ConvertouchDatabaseBuilderContract addMigrations(List<Migration> migrations);
+
+  /// Adds a database [Callback] to the builder.
+  $ConvertouchDatabaseBuilderContract addCallback(Callback callback);
+
+  /// Creates the database and initializes it.
+  Future<ConvertouchDatabase> build();
+}
+
 // ignore: avoid_classes_with_only_static_members
 class $FloorConvertouchDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$ConvertouchDatabaseBuilder databaseBuilder(String name) =>
+  static $ConvertouchDatabaseBuilderContract databaseBuilder(String name) =>
       _$ConvertouchDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$ConvertouchDatabaseBuilder inMemoryDatabaseBuilder() =>
+  static $ConvertouchDatabaseBuilderContract inMemoryDatabaseBuilder() =>
       _$ConvertouchDatabaseBuilder(null);
 }
 
-class _$ConvertouchDatabaseBuilder {
+class _$ConvertouchDatabaseBuilder
+    implements $ConvertouchDatabaseBuilderContract {
   _$ConvertouchDatabaseBuilder(this.name);
 
   final String? name;
@@ -29,19 +41,20 @@ class _$ConvertouchDatabaseBuilder {
 
   Callback? _callback;
 
-  /// Adds migrations to the builder.
-  _$ConvertouchDatabaseBuilder addMigrations(List<Migration> migrations) {
+  @override
+  $ConvertouchDatabaseBuilderContract addMigrations(
+      List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
-  /// Adds a database [Callback] to the builder.
-  _$ConvertouchDatabaseBuilder addCallback(Callback callback) {
+  @override
+  $ConvertouchDatabaseBuilderContract addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
-  /// Creates the database and initializes it.
+  @override
   Future<ConvertouchDatabase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)
@@ -736,6 +749,14 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
     return _queryAdapter.query(
         'SELECT * FROM conversion_param_sets WHERE group_id = ?1 AND mandatory = 1 limit 1',
         mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        arguments: [groupId]);
+  }
+
+  @override
+  Future<int?> getNumOfOptional(int groupId) async {
+    return _queryAdapter.query(
+        'SELECT count(1) FROM conversion_param_sets WHERE group_id = ?1 AND mandatory != 1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [groupId]);
   }
 }

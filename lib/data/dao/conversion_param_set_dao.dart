@@ -6,4 +6,6 @@ abstract class ConversionParamSetDao {
   Future<List<ConversionParamSetEntity>> get(int groupId);
 
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
+
+  Future<int?> getNumOfOptional(int groupId);
 }

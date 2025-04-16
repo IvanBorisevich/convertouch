@@ -13,7 +13,6 @@ class ConvertouchPage extends StatelessWidget {
   final List<Widget>? appBarRightWidgets;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation floatingButtonLocation;
-  final void Function()? onItemsRemove;
 
   const ConvertouchPage({
     required this.body,
@@ -22,7 +21,6 @@ class ConvertouchPage extends StatelessWidget {
     this.appBarRightWidgets,
     this.floatingActionButton,
     this.floatingButtonLocation = FloatingActionButtonLocation.endFloat,
-    this.onItemsRemove,
     super.key,
   });
 

@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/conversion_param_sets_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/settings_page.dart';
@@ -155,6 +156,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                                 const ConvertouchUnitGroupDetailsPage(),
                             PageName.unitDetailsPage.name:
                                 const ConvertouchUnitDetailsPage(),
+                            PageName.paramSetsPage.name:
+                                const ConversionParamSetsPage(),
                           },
                         ),
                         ConvertouchRootScreen(

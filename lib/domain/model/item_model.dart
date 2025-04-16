@@ -49,4 +49,6 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
     required super.itemType,
     super.oob,
   });
+
+  String get itemName => name;
 }

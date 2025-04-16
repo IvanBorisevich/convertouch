@@ -22,10 +22,7 @@ class ConversionParamsView extends StatelessWidget {
   static const double _footerHeight = 28;
   static const double _paramsSpacing = 10;
 
-  final ConversionParamSetValueBulkModel params;
-  final bool paramSetAddingButtonVisible;
-  final bool paramSetRemovalButtonVisible;
-  final bool paramSetBulkRemovalButtonVisible;
+  final ConversionParamSetValueBulkModel? params;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
   final void Function(int)? onParamSetRemove;
@@ -35,10 +32,7 @@ class ConversionParamsView extends StatelessWidget {
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({
-    required this.params,
-    this.paramSetAddingButtonVisible = false,
-    this.paramSetRemovalButtonVisible = false,
-    this.paramSetBulkRemovalButtonVisible = false,
+    this.params,
     this.onParamSetAdd,
     this.onParamSetSelect,
     this.onParamSetRemove,
@@ -51,7 +45,7 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (params.paramSetValues.isEmpty) {
+    if (params == null) {
       return const SizedBox.shrink();
     }
 
@@ -59,7 +53,7 @@ class ConversionParamsView extends StatelessWidget {
 
     double paramSetMaxHeight = 0;
 
-    for (var paramSetValue in params.paramSetValues) {
+    for (var paramSetValue in params!.paramSetValues) {
       int numOfParams = paramSetValue.paramValues.length;
       double paramSetHeight = numOfParams * ConvertouchTextBox.defaultHeight +
           numOfParams * _paramsSpacing +
@@ -86,78 +80,87 @@ class ConversionParamsView extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: DynamicTabBarWidget(
-                    isScrollable: true,
-                    showBackIcon: false,
-                    showNextIcon: false,
-                    padding: EdgeInsets.zero,
-                    indicatorColor: colors.tab.foreground.regular,
-                    dividerColor: Colors.transparent,
-                    onAddTabMoveTo: MoveToTab.last,
-                    onTabControllerUpdated: (controller) {
-                      controller.index = params.selectedIndex;
-                    },
-                    onTabChanged: (index) {
-                      onParamSetSelect?.call(index ?? 0);
-                    },
-                    dynamicTabs: params.paramSetValues
-                        .mapIndexed(
-                          (index, item) => TabData(
-                            index: index,
-                            title: Tab(
-                              child: Text(
-                                item.paramSet.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: colors.tab.foreground.regular,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            content: ScrollConfiguration(
-                              behavior: NoGlowScrollBehavior(),
-                              child: ListView.builder(
-                                itemCount: item.paramValues.length,
-                                itemBuilder: (context, index) {
-                                  var paramItem = item.paramValues[index];
+                  child: params!.paramSetValues.isNotEmpty
+                      ? DynamicTabBarWidget(
+                          isScrollable: true,
+                          showBackIcon: false,
+                          showNextIcon: false,
+                          padding: EdgeInsets.zero,
+                          indicatorColor: colors.tab.foreground.regular,
+                          dividerColor: Colors.transparent,
+                          onAddTabMoveTo: MoveToTab.last,
+                          onTabControllerUpdated: (controller) {
+                            controller.index = params!.selectedIndex;
+                          },
+                          onTabChanged: (index) {
+                            onParamSetSelect?.call(index ?? 0);
+                          },
+                          dynamicTabs: params!.paramSetValues
+                              .mapIndexed(
+                                (index, item) => TabData(
+                                  index: index,
+                                  title: Tab(
+                                    child: Text(
+                                      item.paramSet.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: colors.tab.foreground.regular,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  content: ScrollConfiguration(
+                                    behavior: NoGlowScrollBehavior(),
+                                    child: ListView.builder(
+                                      itemCount: item.paramValues.length,
+                                      itemBuilder: (context, index) {
+                                        var paramItem = item.paramValues[index];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: _paramsSpacing,
-                                    ),
-                                    child: ConvertouchConversionItem(
-                                      paramItem,
-                                      controlsVisible: false,
-                                      itemNameFunc: (item) => item.param.name,
-                                      unitItemCodeFunc: (item) =>
-                                          item.unit?.code,
-                                      onTap: () {
-                                        onParamUnitTap?.call(paramItem);
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: _paramsSpacing,
+                                          ),
+                                          child: ConvertouchConversionItem(
+                                            paramItem,
+                                            controlsVisible: false,
+                                            itemNameFunc: (item) =>
+                                                item.param.name,
+                                            unitItemCodeFunc: (item) =>
+                                                item.unit?.code,
+                                            onTap: () {
+                                              onParamUnitTap?.call(paramItem);
+                                            },
+                                            onValueChanged: (value) {
+                                              onValueChanged?.call(
+                                                  paramItem, value);
+                                            },
+                                            colors:
+                                                conversionItemColors[theme]!,
+                                          ),
+                                        );
                                       },
-                                      onValueChanged: (value) {
-                                        onValueChanged?.call(paramItem, value);
-                                      },
-                                      colors: conversionItemColors[theme]!,
+                                      padding: const EdgeInsets.only(
+                                        top: _paramsSpacing,
+                                        left: _paramsSpacing,
+                                        right: _paramsSpacing,
+                                      ),
                                     ),
-                                  );
-                                },
-                                padding: const EdgeInsets.only(
-                                  top: _paramsSpacing,
-                                  left: _paramsSpacing,
-                                  right: _paramsSpacing,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              )
+                              .toList(),
                         )
-                        .toList(),
-                  ),
+                      : Center(
+                          child: Text("No params added", style: TextStyle(
+                            color: colors.tab.foreground.regular,
+                          ),),
+                        ),
                 ),
                 Visibility(
-                  visible: paramSetAddingButtonVisible ||
-                      paramSetRemovalButtonVisible ||
-                      paramSetBulkRemovalButtonVisible,
+                  visible: params!.paramSetsCanBeAdded ||
+                      params!.paramSetCanBeRemoved ||
+                      params!.paramSetsCanBeRemovedInBulk,
                   child: Container(
                     width: _toolsetPanelWidth,
                     height: bodyHeight,
@@ -172,11 +175,11 @@ class ConversionParamsView extends StatelessWidget {
                             disabledColor: colors.toolset.foreground.disabled,
                             icon: Icon(
                               Icons.add,
-                              color: paramSetAddingButtonVisible
+                              color: params!.paramSetsCanBeAdded
                                   ? colors.toolset.foreground.regular
                                   : colors.toolset.foreground.disabled,
                             ),
-                            onPressed: paramSetAddingButtonVisible
+                            onPressed: params!.paramSetsCanBeAdded
                                 ? () {
                                     onParamSetAdd?.call();
                                   }
@@ -189,20 +192,21 @@ class ConversionParamsView extends StatelessWidget {
                             disabledColor: colors.toolset.foreground.disabled,
                             icon: Icon(
                               Icons.remove,
-                              color: paramSetRemovalButtonVisible
+                              color: params!.paramSetCanBeRemoved
                                   ? colors.toolset.foreground.regular
                                   : colors.toolset.foreground.disabled,
                             ),
-                            onPressed: paramSetRemovalButtonVisible
+                            onPressed: params!.paramSetCanBeRemoved
                                 ? () {
-                                    onParamSetRemove
-                                        ?.call(params.selectedIndex);
+                                    onParamSetRemove?.call(
+                                      params!.selectedIndex,
+                                    );
                                   }
                                 : null,
                           ),
                         ),
                         Visibility(
-                          visible: paramSetBulkRemovalButtonVisible,
+                          visible: params!.paramSetsCanBeRemovedInBulk,
                           child: Expanded(
                             child: Container(
                               alignment: Alignment.bottomCenter,

@@ -12,4 +12,6 @@ abstract class ConversionParamSetRepository {
   Future<Either<ConvertouchException, ConversionParamSetModel?>> getMandatory(
     int groupId,
   );
+
+  Future<Either<ConvertouchException, bool>> checkIfOthersExist(int groupId);
 }

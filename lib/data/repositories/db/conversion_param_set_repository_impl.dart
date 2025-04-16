@@ -58,4 +58,22 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
       );
     }
   }
+
+  @override
+  Future<Either<ConvertouchException, bool>> checkIfOthersExist(
+    int groupId,
+  ) async {
+    try {
+      int? num = await conversionParamSetDao.getNumOfOptional(groupId);
+      return num != null && num > 0 ? const Right(true) : const Right(false);
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when checking for other param sets availability",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
 }

@@ -124,7 +124,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                         );
                 },
               ),
-              onItemsRemove: null,
             );
           },
         );

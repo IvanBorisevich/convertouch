@@ -16,4 +16,11 @@ abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
       'AND mandatory = 1 '
       'limit 1')
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
+
+  @override
+  @Query('SELECT count(1) '
+      'FROM $conversionParamSetsTableName '
+      'WHERE group_id = :groupId '
+      'AND mandatory != 1')
+  Future<int?> getNumOfOptional(int groupId);
 }

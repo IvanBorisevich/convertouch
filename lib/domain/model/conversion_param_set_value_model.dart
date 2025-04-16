@@ -57,26 +57,34 @@ class ConversionParamSetValueModel extends ItemModel {
 class ConversionParamSetValueBulkModel extends Equatable {
   final List<ConversionParamSetValueModel> paramSetValues;
   final int selectedIndex;
+  final bool paramSetsCanBeAdded;
+  final bool paramSetCanBeRemoved;
+  final bool paramSetsCanBeRemovedInBulk;
 
   const ConversionParamSetValueBulkModel({
     this.paramSetValues = const [],
     this.selectedIndex = 0,
+    this.paramSetsCanBeAdded = false,
+    this.paramSetCanBeRemoved = false,
+    this.paramSetsCanBeRemovedInBulk = false,
   });
 
   @override
   List<Object?> get props => [
         paramSetValues,
         selectedIndex,
+        paramSetsCanBeAdded,
+        paramSetCanBeRemoved,
+        paramSetsCanBeRemovedInBulk,
       ];
-
-  bool get hasMandatoryParamSet {
-    return paramSetValues.any((e) => e.paramSet.mandatory);
-  }
 
   Map<String, dynamic> toJson() {
     return {
       "paramSetValues": paramSetValues.map((item) => item.toJson()).toList(),
       "selectedIndex": selectedIndex,
+      "paramSetsCanBeAdded": paramSetsCanBeAdded,
+      "paramSetCanBeRemoved": paramSetCanBeRemoved,
+      "paramSetsCanBeRemovedInBulk": paramSetsCanBeRemovedInBulk,
     };
   }
 
@@ -93,6 +101,9 @@ class ConversionParamSetValueBulkModel extends Equatable {
               .toList()
           : [],
       selectedIndex: json["selectedIndex"] ?? 0,
+      paramSetsCanBeAdded: json["paramSetsCanBeAdded"] ?? false,
+      paramSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
+      paramSetsCanBeRemovedInBulk: json["paramSetsCanBeRemovedInBulk"] ?? false,
     );
   }
 
@@ -100,6 +111,9 @@ class ConversionParamSetValueBulkModel extends Equatable {
   String toString() {
     return 'ConversionParamSetValueBulkModel{'
         'paramSetValues: $paramSetValues, '
-        'selectedIndex: $selectedIndex}';
+        'selectedIndex: $selectedIndex, '
+        'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
+        'paramSetCanBeRemoved: $paramSetCanBeRemoved, '
+        'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk}';
   }
 }

@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 
-class ConversionParamSetModel extends IdNameItemModel {
+class ConversionParamSetModel extends IdNameSearchableItemModel {
   final bool mandatory;
   final int groupId;
 
@@ -10,6 +10,7 @@ class ConversionParamSetModel extends IdNameItemModel {
     required super.name,
     this.mandatory = false,
     required this.groupId,
+    super.nameMatch,
   }) : super(itemType: ItemType.conversionParamSet);
 
   @override
@@ -17,6 +18,7 @@ class ConversionParamSetModel extends IdNameItemModel {
         name,
         mandatory,
         groupId,
+        nameMatch,
         itemType,
       ];
 
@@ -42,12 +44,28 @@ class ConversionParamSetModel extends IdNameItemModel {
     );
   }
 
+  ConversionParamSetModel copyWith({
+    String? name,
+    bool? mandatory,
+    int? groupId,
+    ItemSearchMatch? nameMatch,
+  }) {
+    return ConversionParamSetModel(
+      id: id,
+      name: name ?? this.name,
+      mandatory: mandatory ?? this.mandatory,
+      groupId: groupId ?? this.groupId,
+      nameMatch: nameMatch ?? this.nameMatch,
+    );
+  }
+
   @override
   String toString() {
     return 'ConversionParamSetModel{'
         'id: $id, '
         'name: $name, '
         'mandatory: $mandatory, '
-        'groupId: $groupId}';
+        'groupId: $groupId, '
+        'nameMatch: $nameMatch}';
   }
 }

@@ -8,11 +8,10 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CreateInitialParamSetUseCase
-    extends UseCase<int, ConversionParamSetValueModel?> {
+    extends UseCase<int, ConversionParamSetValueBulkModel?> {
   final ConversionParamSetRepository conversionParamSetRepository;
   final ConversionParamRepository conversionParamRepository;
 
@@ -22,9 +21,8 @@ class CreateInitialParamSetUseCase
   });
 
   @override
-  Future<Either<ConvertouchException, ConversionParamSetValueModel?>> execute(
-    int input,
-  ) async {
+  Future<Either<ConvertouchException, ConversionParamSetValueBulkModel?>>
+      execute(int input) async {
     int conversionGroupId = input;
 
     try {
@@ -53,7 +51,7 @@ class CreateInitialParamSetUseCase
       //   paramValues: paramValues,
       // );
 
-      var paramSetValues = const ConversionParamSetValueModel(
+      var paramSetValue = const ConversionParamSetValueModel(
         paramSet: ConversionParamSetModel(
           id: 1,
           name: "Clothing Size by Height",
@@ -94,8 +92,7 @@ class CreateInitialParamSetUseCase
               name: "Height",
               unitGroupId: 1,
               calculable: false,
-              valueType:
-              ConvertouchValueType.decimalPositive,
+              valueType: ConvertouchValueType.decimalPositive,
               listType: null,
               paramSetId: 1,
             ),
@@ -107,7 +104,14 @@ class CreateInitialParamSetUseCase
         ],
       );
 
-      return Right(paramSetValues);
+      return Right(
+        ConversionParamSetValueBulkModel(
+          paramSetValues: [], //[paramSetValue],
+          paramSetsCanBeAdded: true,
+          paramSetCanBeRemoved: true,
+          paramSetsCanBeRemovedInBulk: false,
+        ),
+      );
     } catch (e, stackTrace) {
       return Left(
         InternalException(

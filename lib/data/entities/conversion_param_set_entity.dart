@@ -1,6 +1,5 @@
 import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:floor/floor.dart';
 
 const String conversionParamSetsTableName = 'conversion_param_sets';

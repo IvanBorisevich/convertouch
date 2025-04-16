@@ -46,10 +46,17 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
       SearchBarColorScheme searchBarColorScheme =
           widget.customColor ?? searchBarColors[appState.theme]!;
 
-      ItemsViewMode pageViewMode =
-          widget.viewModeSettingKey == SettingKey.unitGroupsViewMode
-              ? appState.unitGroupsViewMode
-              : appState.unitsViewMode;
+      ItemsViewMode pageViewMode;
+
+      if (widget.viewModeSettingKey == SettingKey.unitGroupsViewMode) {
+        pageViewMode = appState.unitGroupsViewMode;
+      } else if (widget.viewModeSettingKey == SettingKey.unitsViewMode) {
+        pageViewMode = appState.unitsViewMode;
+      } else if (widget.viewModeSettingKey == SettingKey.paramSetsViewMode) {
+        pageViewMode = appState.paramSetsViewMode;
+      } else {
+        pageViewMode = ItemsViewMode.grid;
+      }
 
       return Container(
         height: 50,

@@ -51,7 +51,7 @@ class UnitModel extends IdNameSearchableItemModel {
     String? symbol,
     int? unitGroupId,
     ConvertouchValueType? valueType,
-        ConvertouchListType? listType,
+    ConvertouchListType? listType,
     ValueModel? minValue,
     ValueModel? maxValue,
     ItemSearchMatch? nameMatch,
@@ -73,6 +73,11 @@ class UnitModel extends IdNameSearchableItemModel {
           codeMatch: codeMatch ?? saved.codeMatch,
           oob: saved.oob,
         );
+
+  @override
+  String get itemName {
+    return symbol != null ? "$name ($symbol)" : name;
+  }
 
   bool get exists => this != none;
 

@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -46,6 +47,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
+    final paramSetsBloc = BlocProvider.of<ConversionParamSetsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
@@ -108,11 +110,6 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         },
                       ),
                       PopupMenuItemModel(
-                        text: "Add Parameters",
-                        iconName: "parameters.png",
-                        onTap: () {},
-                      ),
-                      PopupMenuItemModel(
                         text: "Clear Conversion",
                         icon: Icons.delete_outline_rounded,
                         onTap: () {
@@ -135,12 +132,30 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
 
                         return Column(
                           children: [
-                            conversion.params != null
-                                ? ConversionParamsView(
-                                    params: conversion.params!,
-                                    theme: appState.theme,
-                                  )
-                                : const SizedBox.shrink(),
+                            ConversionParamsView(
+                              params: conversion.params,
+                              onParamSetAdd: () {
+                                paramSetsBloc.add(
+                                  FetchItems(
+                                    parentItemId: unitGroup.id,
+                                  ),
+                                );
+                                unitsSelectionBloc.add(
+                                  StartItemsMarking(
+                                    previouslyMarkedIds: conversion
+                                        .params?.paramSetValues
+                                        .map((item) => item.paramSet.id)
+                                        .toList(),
+                                  ),
+                                );
+                                navigationBloc.add(
+                                  const NavigateToPage(
+                                    pageName: PageName.paramSetsPage,
+                                  ),
+                                );
+                              },
+                              theme: appState.theme,
+                            ),
                             Expanded(
                               child: ConvertouchConversionItemsView(
                                 conversion.conversionUnitValues,
@@ -217,7 +232,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     .conversionUnitValues
                                     .map((unitValue) => unitValue.unit.id)
                                     .toList(),
-                                markedItemsMinNumForSelection: 2,
+                                markedItemsSelectionMinNum: 2,
                               ),
                             );
                             navigationBloc.add(

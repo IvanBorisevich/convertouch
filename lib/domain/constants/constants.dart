@@ -7,6 +7,8 @@ const quicksandFontFamily = "Quicksand";
 const baseUnitConversionRule = "Base unit";
 const noConversionRule = "-";
 
+const parametersIconName = "parameters.png";
+
 abstract class GroupNames {
   const GroupNames._();
 
@@ -43,6 +45,7 @@ enum SettingKey {
   theme,
   unitGroupsViewMode,
   unitsViewMode,
+  paramSetsViewMode,
   appVersion,
 }
 
@@ -56,6 +59,7 @@ enum PageName {
   unitsPageForUnitDetails,
   unitGroupDetailsPage,
   unitDetailsPage,
+  paramSetsPage,
   settingsPage,
   refreshingJobDetailsPage,
   errorPage;

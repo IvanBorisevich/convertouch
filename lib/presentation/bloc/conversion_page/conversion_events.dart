@@ -200,20 +200,20 @@ class ReplaceConversionItemUnit extends ModifyConversion {
   }
 }
 
-class AddConversionParamSet extends ModifyConversion {
-  final int paramId;
+class AddParamSetsToConversion extends ModifyConversion {
+  final List<int> paramSetIds;
 
-  const AddConversionParamSet({
-    required this.paramId,
+  const AddParamSetsToConversion({
+    required this.paramSetIds,
   });
 
   @override
   List<Object?> get props => [
-    paramId,
+    paramSetIds,
   ];
 
   @override
   String toString() {
-    return 'AddConversionParamSet{paramId: $paramId}';
+    return 'AddParamSetsToConversion{paramSetIds: $paramSetIds}';
   }
 }

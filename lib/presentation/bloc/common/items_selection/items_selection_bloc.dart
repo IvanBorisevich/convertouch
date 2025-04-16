@@ -29,12 +29,12 @@ class ItemsSelectionBloc
         .whereNot((id) => event.excludedIds.contains(id))
         .toList();
     var canMarkedItemsBeSelected =
-        markedIds.length >= event.markedItemsMinNumForSelection;
+        markedIds.length >= event.markedItemsSelectionMinNum;
 
     emit(
       ItemsSelectionDone(
         markedIds: markedIds,
-        markedItemsMinNumForSelection: event.markedItemsMinNumForSelection,
+        markedItemsMinNumForSelection: event.markedItemsSelectionMinNum,
         canMarkedItemsBeSelected: canMarkedItemsBeSelected,
         singleItemSelectionMode: false,
         excludedIds: event.excludedIds,

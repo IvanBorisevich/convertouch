@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -65,7 +66,7 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
         child: Row(
           children: [
             Container(
-              width: T == UnitGroupModel
+              width: T == UnitGroupModel || T == ConversionParamSetModel
                   ? defaultHeight * 1.1
                   : defaultHeight * 1.7,
               alignment: Alignment.center,

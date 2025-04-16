@@ -6,13 +6,13 @@ abstract class ItemsSelectionEvent extends ConvertouchEvent {
 
 class StartItemsMarking extends ItemsSelectionEvent {
   final List<int>? previouslyMarkedIds;
-  final int markedItemsMinNumForSelection;
+  final int markedItemsSelectionMinNum;
   final List<int> excludedIds;
   final bool showCancelIcon;
 
   const StartItemsMarking({
     this.previouslyMarkedIds,
-    this.markedItemsMinNumForSelection = 1,
+    this.markedItemsSelectionMinNum = 1,
     this.showCancelIcon = false,
     this.excludedIds = const [],
   });
@@ -20,7 +20,7 @@ class StartItemsMarking extends ItemsSelectionEvent {
   @override
   List<Object?> get props => [
         previouslyMarkedIds,
-        markedItemsMinNumForSelection,
+        markedItemsSelectionMinNum,
         showCancelIcon,
         excludedIds,
       ];
@@ -29,7 +29,7 @@ class StartItemsMarking extends ItemsSelectionEvent {
   String toString() {
     return 'StartItemsMarking{'
         'previouslyMarkedIds: $previouslyMarkedIds, '
-        'markedItemsMinNumForSelection: $markedItemsMinNumForSelection, '
+        'markedItemsSelectionMinNum: $markedItemsSelectionMinNum, '
         'excludedIds: $excludedIds, '
         'showCancelIcon: $showCancelIcon}';
   }

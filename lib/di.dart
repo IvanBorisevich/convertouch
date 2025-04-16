@@ -38,6 +38,7 @@ import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion_params/create_initial_param_set_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion_params/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
@@ -54,6 +55,7 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -317,6 +319,10 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<MarkItemsUseCase>(
     () => MarkItemsUseCase(),
   );
+
+  locator.registerLazySingleton<FetchParamSetsUseCase>(
+    () => const FetchParamSetsUseCase(),
+  );
 }
 
 Future<void> _initBloc() async {
@@ -406,6 +412,12 @@ Future<void> _initBloc() async {
       removeConversionItemsUseCase: locator(),
       replaceConversionItemUnitUseCase: locator(),
       navigationBloc: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ConversionParamSetsBloc>(
+    () => ConversionParamSetsBloc(
+      fetchParamSetsUseCase: locator(),
     ),
   );
 

@@ -40,6 +40,11 @@ const unitItemColors = {
   ConvertouchUITheme.dark: unitItemColorSchemeDark,
 };
 
+const paramSetItemColors = {
+  ConvertouchUITheme.light: unitItemColorSchemeLight,
+  ConvertouchUITheme.dark: unitItemColorSchemeDark,
+};
+
 const unitGroupPageInfoBoxColors = {
   ConvertouchUITheme.light: unitGroupPageInfoBoxColorLight,
   ConvertouchUITheme.dark: unitGroupPageInfoBoxColorDark,
@@ -56,6 +61,11 @@ const unitGroupPageEmptyViewColor = {
 };
 
 const unitPageEmptyViewColor = {
+  ConvertouchUITheme.light: unitPageEmptyViewColorLight,
+  ConvertouchUITheme.dark: unitPageEmptyViewColorDark,
+};
+
+const paramSetPageEmptyViewColor = {
   ConvertouchUITheme.light: unitPageEmptyViewColorLight,
   ConvertouchUITheme.dark: unitPageEmptyViewColorDark,
 };
@@ -78,6 +88,11 @@ const unitsPageFloatingButtonColors = {
 const conversionPageFloatingButtonColors = {
   ConvertouchUITheme.light: conversionPageFloatingButtonColorSchemeLight,
   ConvertouchUITheme.dark: conversionPageFloatingButtonColorSchemeDark,
+};
+
+const paramSetsPageFloatingButtonColors = {
+  ConvertouchUITheme.light: unitsPageFloatingButtonColorSchemeLight,
+  ConvertouchUITheme.dark: unitsPageFloatingButtonColorSchemeDark,
 };
 
 const refreshButtonColors = {
