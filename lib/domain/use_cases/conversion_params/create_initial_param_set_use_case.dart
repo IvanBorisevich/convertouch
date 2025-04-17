@@ -1,13 +1,12 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CreateInitialParamSetUseCase
@@ -23,93 +22,45 @@ class CreateInitialParamSetUseCase
   @override
   Future<Either<ConvertouchException, ConversionParamSetValueBulkModel?>>
       execute(int input) async {
-    int conversionGroupId = input;
+    int convGroupId = input;
+
+    List<ConversionParamSetValueModel> paramSetValues = [];
 
     try {
-      // ConversionParamSetModel? paramSet = ObjectUtils.tryGet(
-      //   await conversionParamSetRepository.getMandatory(conversionGroupId),
-      // );
-      //
-      // if (paramSet == null) {
-      //   return const Right(null);
-      // }
-      //
-      // List<ConversionParamModel> params = ObjectUtils.tryGet(
-      //   await conversionParamRepository.get(paramSet.id),
-      // );
-      //
-      // List<ConversionParamValueModel> paramValues = params
-      //     .map(
-      //       (p) => ConversionParamValueModel(
-      //         param: p,
-      //       ),
-      //     )
-      //     .toList();
-      //
-      // var paramSetValues = ConversionParamSetValueModel(
-      //   paramSet: paramSet,
-      //   paramValues: paramValues,
-      // );
+      ConversionParamSetModel? mandatoryParamSet = ObjectUtils.tryGet(
+        await conversionParamSetRepository.getMandatory(convGroupId),
+      );
 
-      var paramSetValue = const ConversionParamSetValueModel(
-        paramSet: ConversionParamSetModel(
-          id: 1,
-          name: "Clothing Size by Height",
-          mandatory: true,
-          groupId: 10,
-        ),
-        paramValues: [
-          ConversionParamValueModel(
-            param: ConversionParamModel(
-              name: "Gender",
-              unitGroupId: null,
-              calculable: false,
-              valueType: ConvertouchValueType.text,
-              listType: ConvertouchListType.gender,
-              paramSetId: 1,
-            ),
-            unit: null,
-            calculated: false,
-            value: ValueModel.empty,
-            defaultValue: ValueModel.empty,
+      if (mandatoryParamSet != null) {
+        List<ConversionParamModel> params = ObjectUtils.tryGet(
+          await conversionParamRepository.get(mandatoryParamSet.id),
+        );
+
+        List<ConversionParamValueModel> paramValues = params
+            .map(
+              (p) => ConversionParamValueModel(
+                param: p,
+              ),
+            )
+            .toList();
+
+        paramSetValues = [
+          ConversionParamSetValueModel(
+            paramSet: mandatoryParamSet,
+            paramValues: paramValues,
           ),
-          ConversionParamValueModel(
-            param: ConversionParamModel(
-              name: "Garment",
-              unitGroupId: null,
-              calculable: false,
-              valueType: ConvertouchValueType.text,
-              listType: ConvertouchListType.garment,
-              paramSetId: 1,
-            ),
-            unit: null,
-            calculated: false,
-            value: ValueModel.empty,
-            defaultValue: ValueModel.empty,
-          ),
-          ConversionParamValueModel(
-            param: ConversionParamModel(
-              name: "Height",
-              unitGroupId: 1,
-              calculable: false,
-              valueType: ConvertouchValueType.decimalPositive,
-              listType: null,
-              paramSetId: 1,
-            ),
-            unit: null,
-            calculated: false,
-            value: ValueModel.empty,
-            defaultValue: ValueModel.empty,
-          ),
-        ],
+        ];
+      }
+
+      bool otherExist = ObjectUtils.tryGet(
+        await conversionParamSetRepository.checkIfOthersExist(convGroupId),
       );
 
       return Right(
         ConversionParamSetValueBulkModel(
-          paramSetValues: [], //[paramSetValue],
-          paramSetsCanBeAdded: true,
-          paramSetCanBeRemoved: true,
-          paramSetsCanBeRemovedInBulk: false,
+          paramSetValues: paramSetValues,
+          paramSetsCanBeAdded: otherExist,
+          paramSetsCanBeRemovedInBulk: mandatoryParamSet == null,
         ),
       );
     } catch (e, stackTrace) {

@@ -7,8 +7,25 @@ abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
 
   @override
   @Query('SELECT * FROM $conversionParamSetsTableName '
-      'WHERE group_id = :groupId')
-  Future<List<ConversionParamSetEntity>> get(int groupId);
+      'WHERE group_id = :groupId '
+      'limit :pageSize offset :offset')
+  Future<List<ConversionParamSetEntity>> getAll({
+    required int groupId,
+    required int pageSize,
+    required int offset,
+  });
+
+  @override
+  @Query('SELECT * FROM $conversionParamSetsTableName '
+      'WHERE group_id = :groupId '
+      'and name like :searchString '
+      'limit :pageSize offset :offset')
+  Future<List<ConversionParamSetEntity>> getBySearchString({
+    required String searchString,
+    required int groupId,
+    required int pageSize,
+    required int offset,
+  });
 
   @override
   @Query('SELECT * FROM $conversionParamSetsTableName '

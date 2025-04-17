@@ -733,15 +733,28 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
   final QueryAdapter _queryAdapter;
 
   @override
-  Future<List<ConversionParamSetEntity>> get(int groupId) async {
+  Future<List<ConversionParamSetEntity>> getAll({
+    required int groupId,
+    required int pageSize,
+    required int offset,
+  }) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM conversion_param_sets WHERE group_id = ?1',
-        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            mandatory: row['mandatory'] as int?,
-            groupId: row['group_id'] as int),
-        arguments: [groupId]);
+        'SELECT * FROM conversion_param_sets WHERE group_id = ?1 limit ?2 offset ?3',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        arguments: [groupId, pageSize, offset]);
+  }
+
+  @override
+  Future<List<ConversionParamSetEntity>> getBySearchString({
+    required String searchString,
+    required int groupId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM conversion_param_sets WHERE group_id = ?2 and name like ?1 limit ?3 offset ?4',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        arguments: [searchString, groupId, pageSize, offset]);
   }
 
   @override

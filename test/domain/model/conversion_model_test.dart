@@ -121,6 +121,9 @@ void main() {
         },
       ],
       'selectedIndex': 0,
+      "paramSetsCanBeAdded": false,
+      "paramSetCanBeRemoved": false,
+      "paramSetsCanBeRemovedInBulk": false,
     },
     'sourceItem': {
       'unit': {

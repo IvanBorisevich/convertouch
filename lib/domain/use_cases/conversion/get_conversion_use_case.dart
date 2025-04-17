@@ -27,10 +27,13 @@ class GetConversionUseCase extends UseCase<UnitGroupModel, ConversionModel> {
         await conversionRepository.get(unitGroupId),
       );
 
-      final params = conversion?.params ??
-          ObjectUtils.tryGet(
-            await createInitialParamSetUseCase.execute(unitGroupId),
-          );
+      var params = conversion?.params;
+
+      if (params == null || params.paramSetValues.isEmpty) {
+        params = ObjectUtils.tryGet(
+          await createInitialParamSetUseCase.execute(unitGroupId),
+        );
+      }
 
       if (conversion == null) {
         return Right(

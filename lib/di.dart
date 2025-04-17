@@ -321,7 +321,9 @@ Future<void> _initUseCases() async {
   );
 
   locator.registerLazySingleton<FetchParamSetsUseCase>(
-    () => const FetchParamSetsUseCase(),
+    () => FetchParamSetsUseCase(
+      conversionParamSetRepository: locator(),
+    ),
   );
 }
 
