@@ -28,6 +28,8 @@ class ConversionParamEntity extends ConvertouchEntity {
   final int valueType;
   @ColumnInfo(name: 'list_type')
   final int? listType;
+  @ColumnInfo(name: 'default_unit_id')
+  final int? defaultUnitId;
   @ColumnInfo(name: 'param_set_id')
   final int paramSetId;
 
@@ -38,6 +40,7 @@ class ConversionParamEntity extends ConvertouchEntity {
     this.unitGroupId,
     required this.valueType,
     this.listType,
+    this.defaultUnitId,
     required this.paramSetId,
   });
 
@@ -50,6 +53,7 @@ class ConversionParamEntity extends ConvertouchEntity {
       'unit_group_id': unitGroupId,
       'param_set_id': paramSetId,
       'value_type': valueType,
+      'default_unit_id': defaultUnitId,
       'list_type': listType,
     };
   }
@@ -58,6 +62,7 @@ class ConversionParamEntity extends ConvertouchEntity {
     Map<String, dynamic> json, {
     required int? paramSetId,
     required int? paramUnitGroupId,
+    required int? defaultUnitId,
     List<String> excludedColumns = const [],
   }) {
     var item = json[forUpdate] ?? json;
@@ -67,6 +72,7 @@ class ConversionParamEntity extends ConvertouchEntity {
       'calculable': bool2int(item['calculable']),
       'unit_group_id': paramUnitGroupId,
       'param_set_id': paramSetId,
+      'default_unit_id': defaultUnitId,
       'value_type': item['valueType'] != null
           ? (item['valueType'] as ConvertouchValueType).id
           : null,

@@ -24,6 +24,7 @@ const conversionParamsV1 = [
         "calculable": false,
         "valueType": ConvertouchValueType.decimalPositive,
         "unitGroupName": GroupNames.length,
+        "defaultUnitCode": "cm",
         "possibleUnitCodes": [
           "cm",
           "m",

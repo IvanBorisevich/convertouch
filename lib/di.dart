@@ -150,6 +150,7 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
   locator.registerLazySingleton<ConversionParamRepository>(
     () => ConversionParamRepositoryImpl(
       conversionParamDao: database.conversionParamDao,
+      unitDao: database.unitDao,
     ),
   );
 }

@@ -24,53 +24,66 @@ class CreateInitialParamSetUseCase
       execute(int input) async {
     int convGroupId = input;
 
-    List<ConversionParamSetValueModel> paramSetValues = [];
-
     try {
-      ConversionParamSetModel? mandatoryParamSet = ObjectUtils.tryGet(
-        await conversionParamSetRepository.getMandatory(convGroupId),
-      );
+      List<ConversionParamSetModel> paramSets =
+          await _getParamSets(convGroupId);
 
-      if (mandatoryParamSet != null) {
+      List<ConversionParamSetValueModel> paramSetValues = [];
+      bool mandatoryParamSetExist = false;
+
+      for (ConversionParamSetModel paramSet in paramSets) {
+        if (paramSet.mandatory) {
+          mandatoryParamSetExist = true;
+        }
+
         List<ConversionParamModel> params = ObjectUtils.tryGet(
-          await conversionParamRepository.get(mandatoryParamSet.id),
+          await conversionParamRepository.get(paramSet.id),
         );
 
         List<ConversionParamValueModel> paramValues = params
             .map(
               (p) => ConversionParamValueModel(
                 param: p,
+                unit: p.defaultUnit,
               ),
             )
             .toList();
 
-        paramSetValues = [
+        paramSetValues.add(
           ConversionParamSetValueModel(
-            paramSet: mandatoryParamSet,
+            paramSet: paramSet,
             paramValues: paramValues,
           ),
-        ];
+        );
       }
 
-      bool otherExist = ObjectUtils.tryGet(
+      bool otherParamSetsExist = ObjectUtils.tryGet(
         await conversionParamSetRepository.checkIfOthersExist(convGroupId),
       );
 
       return Right(
         ConversionParamSetValueBulkModel(
           paramSetValues: paramSetValues,
-          paramSetsCanBeAdded: otherExist,
-          paramSetsCanBeRemovedInBulk: mandatoryParamSet == null,
+          paramSetsCanBeAdded: otherParamSetsExist,
+          paramSetsCanBeRemovedInBulk: mandatoryParamSetExist,
         ),
       );
     } catch (e, stackTrace) {
       return Left(
         InternalException(
-          message: "Error when creating a conversion param set",
+          message: "Error when creating an initial param set",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
       );
     }
+  }
+
+  Future<List<ConversionParamSetModel>> _getParamSets(int groupId) async {
+    ConversionParamSetModel? mandatoryParamSet = ObjectUtils.tryGet(
+      await conversionParamSetRepository.getMandatory(groupId),
+    );
+
+    return mandatoryParamSet != null ? [mandatoryParamSet] : [];
   }
 }

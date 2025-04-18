@@ -28,7 +28,6 @@ class GetConversionUseCase extends UseCase<UnitGroupModel, ConversionModel> {
       );
 
       var params = conversion?.params;
-
       if (params == null || params.paramSetValues.isEmpty) {
         params = ObjectUtils.tryGet(
           await createInitialParamSetUseCase.execute(unitGroupId),

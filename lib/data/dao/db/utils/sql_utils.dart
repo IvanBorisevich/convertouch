@@ -30,6 +30,12 @@ const getUnitIdsByCodesAndGroupName = "SELECT u.id "
     "INNER JOIN unit_groups g ON g.id = u.unit_group_id "
     "WHERE g.name = ? "
     "AND u.code in (?)";
+const getUnitIdByCodeAndGroupName = "SELECT u.id "
+    "FROM units u "
+    "INNER JOIN unit_groups g ON g.id = u.unit_group_id "
+    "WHERE g.name = ? "
+    "AND u.code = ? "
+    "LIMIT 1";
 const getExistingParamSets = "SELECT id, name FROM conversion_param_sets";
 const getExistingParamsBySetId = "SELECT id, name FROM conversion_params "
     "WHERE param_set_id = ?";
@@ -139,6 +145,16 @@ class SqlUtils {
                       txn: txn,
                       query: getGroupIdByName,
                       args: [item["unitGroupName"]],
+                    )
+                  : null,
+              defaultUnitId: item["defaultUnitCode"] != null
+                  ? await selectFirst(
+                      txn: txn,
+                      query: getUnitIdByCodeAndGroupName,
+                      args: [
+                        item["unitGroupName"],
+                        item["defaultUnitCode"],
+                      ],
                     )
                   : null,
             ),

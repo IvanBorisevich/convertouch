@@ -40,6 +40,7 @@ class Migration3to4 extends ConvertouchDbMigration {
         `unit_group_id` INTEGER, 
         `value_type` INTEGER NOT NULL, 
         `list_type` INTEGER,
+        `default_unit_id` INTEGER, 
         `param_set_id` INTEGER NOT NULL, 
         `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
         FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) 

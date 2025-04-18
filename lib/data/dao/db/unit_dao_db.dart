@@ -100,7 +100,8 @@ abstract class UnitDaoDb extends UnitDao {
       'coalesce(u.max_value, g.max_value) max_value '
       'from $unitsTableName u '
       'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
-      'where u.id = :id limit 1')
+      'where u.id = :id '
+      'limit 1')
   Future<UnitEntity?> getUnit(int id);
 
   @override

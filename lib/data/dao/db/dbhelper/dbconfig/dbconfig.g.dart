@@ -124,7 +124,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`name` TEXT NOT NULL, `mandatory` INTEGER, `group_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_params` (`name` TEXT NOT NULL, `calculable` INTEGER, `unit_group_id` INTEGER, `value_type` INTEGER NOT NULL, `list_type` INTEGER, `param_set_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_params` (`name` TEXT NOT NULL, `calculable` INTEGER, `unit_group_id` INTEGER, `value_type` INTEGER NOT NULL, `list_type` INTEGER, `default_unit_id` INTEGER, `param_set_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -715,6 +715,7 @@ class _$ConversionParamDaoDb extends ConversionParamDaoDb {
             unitGroupId: row['unit_group_id'] as int?,
             valueType: row['value_type'] as int,
             listType: row['list_type'] as int?,
+            defaultUnitId: row['default_unit_id'] as int?,
             paramSetId: row['param_set_id'] as int),
         arguments: [setId]);
   }

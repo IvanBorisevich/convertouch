@@ -55,7 +55,7 @@ class MockUnitRepository extends UnitRepository {
     // TODO: implement getByGroupId
     throw UnimplementedError();
   }
-  
+
   @override
   Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
     required int paramId,
@@ -93,6 +93,14 @@ class MockUnitRepository extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) {
     // TODO: implement update
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<ConvertouchException, Map<int, UnitModel>>> getParamInitialUnits(
+    List<int> paramIds,
+  ) {
+    // TODO: implement getInitialParamUnit
     throw UnimplementedError();
   }
 }
