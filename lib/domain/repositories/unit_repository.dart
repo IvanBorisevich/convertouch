@@ -5,21 +5,16 @@ import 'package:either_dart/either.dart';
 abstract class UnitRepository {
   const UnitRepository();
 
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
     required int unitGroupId,
+    String? searchString,
     required int pageNum,
     required int pageSize,
   });
 
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
     required int paramId,
-    required int pageNum,
-    required int pageSize,
-  });
-
-  Future<Either<ConvertouchException, List<UnitModel>>> search({
-    required int unitGroupId,
-    required String searchString,
+    String? searchString,
     required int pageNum,
     required int pageSize,
   });

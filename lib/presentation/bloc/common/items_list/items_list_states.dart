@@ -10,6 +10,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   final List<T> pageItems;
   final List<int> oobIds;
   final int parentItemId;
+  final ItemType? parentItemType;
   final String? searchString;
   final FetchingStatus status;
   final bool hasReachedMax;
@@ -19,6 +20,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
     required this.pageItems,
     this.oobIds = const [],
     this.parentItemId = -1,
+    this.parentItemType,
     this.searchString,
     this.status = FetchingStatus.success,
     this.hasReachedMax = false,
@@ -30,6 +32,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
         pageItems,
         oobIds,
         parentItemId,
+    parentItemType,
         searchString,
         status,
         hasReachedMax,
@@ -41,6 +44,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
     return 'ItemsFetched{'
         'itemsCount: ${pageItems.length}, '
         'parentItemId: $parentItemId, '
+        'parentItemType: $parentItemType, '
         'searchString: $searchString, '
         'status: $status, '
         'hasReachedMax: $hasReachedMax, '

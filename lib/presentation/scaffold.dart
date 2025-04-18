@@ -18,6 +18,7 @@ import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/units_page_for_conversion_params.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -146,6 +147,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                                 const ConversionGroupsPage(),
                             PageName.unitsPageForConversion.name:
                                 const ConvertouchUnitsPageForConversion(),
+                            PageName.unitsPageForConversionParams.name:
+                                const ConvertouchUnitsPageForConversionParams(),
                             PageName.unitsPageRegular.name:
                                 const ConvertouchUnitsPageRegular(),
                             PageName.unitGroupsPageForUnitDetails.name:

@@ -15,17 +15,10 @@ class FetchUnitGroupsUseCase
   Future<Either<ConvertouchException, List<UnitGroupModel>>> execute(
     InputItemsFetchModel input,
   ) async {
-    if (input.searchString == null || input.searchString!.isEmpty) {
-      return await unitGroupRepository.getPage(
-        pageNum: input.pageNum,
-        pageSize: input.pageSize,
-      );
-    } else {
-      return await unitGroupRepository.search(
-        searchString: input.searchString!,
-        pageNum: input.pageNum,
-        pageSize: input.pageSize,
-      );
-    }
+    return await unitGroupRepository.search(
+      searchString: input.searchString,
+      pageNum: input.pageNum,
+      pageSize: input.pageSize,
+    );
   }
 }

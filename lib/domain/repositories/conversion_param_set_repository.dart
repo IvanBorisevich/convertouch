@@ -5,15 +5,9 @@ import 'package:either_dart/either.dart';
 abstract class ConversionParamSetRepository {
   const ConversionParamSetRepository();
 
-  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> getPage({
-    required int groupId,
-    required int pageNum,
-    required int pageSize,
-  });
-
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>> search({
     required int groupId,
-    required String searchString,
+    String? searchString,
     required int pageNum,
     required int pageSize,
   });

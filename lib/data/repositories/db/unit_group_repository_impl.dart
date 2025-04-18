@@ -12,47 +12,22 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> getPage({
+  Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
+    String? searchString,
     int pageNum = 0,
     required int pageSize,
   }) async {
     try {
-      List<UnitGroupEntity> result = await unitGroupDao.getAll(
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<UnitGroupEntity> result = await unitGroupDao.getBySearchString(
+        searchString: searchPattern,
         pageSize: pageSize,
         offset: pageNum * pageSize,
       );
 
-      return Right(
-        result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
-      );
-    } catch (e, stackTrace) {
-      return Left(
-        DatabaseException(
-          message: "Error when fetching unit groups",
-          stackTrace: stackTrace,
-          dateTime: DateTime.now(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
-    required String searchString,
-    required int pageNum,
-    required int pageSize,
-  }) async {
-    try {
-      List<UnitGroupEntity> result;
-      if (searchString.isNotEmpty) {
-        result = await unitGroupDao.getBySearchString(
-          searchString: '%$searchString%',
-          pageSize: pageSize,
-          offset: pageNum * pageSize,
-        );
-      } else {
-        result = [];
-      }
       return Right(
         result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
       );

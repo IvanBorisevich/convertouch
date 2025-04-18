@@ -1,3 +1,4 @@
+import 'package:convertouch/data/dao/conversion_param_unit_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
@@ -8,92 +9,87 @@ import 'package:either_dart/either.dart';
 
 class UnitRepositoryImpl extends UnitRepository {
   final UnitDao unitDao;
+  final ConversionParamUnitDao conversionParamUnitDao;
 
   const UnitRepositoryImpl({
     required this.unitDao,
+    required this.conversionParamUnitDao,
   });
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
     required int unitGroupId,
-    required int pageNum,
-    required int pageSize,
-  }) async {
-    try {
-      final result = await unitDao.getAll(
-        unitGroupId: unitGroupId,
-        pageSize: pageSize,
-        offset: pageNum * pageSize,
-      );
-
-      return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
-      );
-    } catch (e, stackTrace) {
-      return Left(
-        DatabaseException(
-          message: "Error when fetching units of the group with id = "
-              "$unitGroupId",
-          stackTrace: stackTrace,
-          dateTime: DateTime.now(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
-    required int paramId,
-    required int pageNum,
-    required int pageSize,
-  }) async {
-    try {
-      final result = await unitDao.getByParamId(
-        paramId: paramId,
-        pageSize: pageSize,
-        offset: pageNum * pageSize,
-      );
-
-      return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
-      );
-    } catch (e, stackTrace) {
-      return Left(
-        DatabaseException(
-          message: "Error when fetching unit ids of the param id = $paramId",
-          stackTrace: stackTrace,
-          dateTime: DateTime.now(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search({
-    required int unitGroupId,
-    required String searchString,
+    String? searchString,
     int pageNum = 0,
     required int pageSize,
   }) async {
     try {
-      List<UnitEntity> result;
-      if (searchString.isNotEmpty) {
-        result = await unitDao.getBySearchString(
-          unitGroupId: unitGroupId,
-          searchString: '%$searchString%',
-          pageSize: pageSize,
-          offset: pageNum * pageSize,
-        );
-      } else {
-        result = [];
-      }
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<UnitEntity> result = await unitDao.searchWithGroupId(
+        unitGroupId: unitGroupId,
+        searchString: searchPattern,
+        pageSize: pageSize,
+        offset: pageNum * pageSize,
+      );
       return Right(
         result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when searching units",
+          message: "Error when searching units of the group id = $unitGroupId",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
+    required int paramId,
+    String? searchString,
+    int pageNum = 0,
+    required int pageSize,
+  }) async {
+    try {
+      int? possibleUnitsExistenceFlag =
+          await conversionParamUnitDao.hasPossibleUnits(paramId);
+
+      bool hasPossibleUnits =
+          possibleUnitsExistenceFlag != null && possibleUnitsExistenceFlag > 0;
+
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<UnitEntity> result;
+      if (hasPossibleUnits) {
+        result = await unitDao.searchWithParamIdAndPossibleUnits(
+          paramId: paramId,
+          searchString: searchPattern,
+          pageSize: pageSize,
+          offset: pageNum * pageSize,
+        );
+      } else {
+        result = await unitDao.searchWithParamId(
+          paramId: paramId,
+          searchString: searchPattern,
+          pageSize: pageSize,
+          offset: pageNum * pageSize,
+        );
+      }
+
+      return Right(
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
+      );
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when searching units of the param id = $paramId",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

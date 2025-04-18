@@ -56,6 +56,7 @@ enum PageName {
   unitGroupsPageForUnitDetails,
   unitsPageRegular,
   unitsPageForConversion,
+  unitsPageForConversionParams,
   unitsPageForUnitDetails,
   unitGroupDetailsPage,
   unitDetailsPage,

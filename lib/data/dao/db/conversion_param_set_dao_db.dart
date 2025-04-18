@@ -4,17 +4,6 @@ import 'package:floor/floor.dart';
 
 @dao
 abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
-
-  @override
-  @Query('SELECT * FROM $conversionParamSetsTableName '
-      'WHERE group_id = :groupId '
-      'limit :pageSize offset :offset')
-  Future<List<ConversionParamSetEntity>> getAll({
-    required int groupId,
-    required int pageSize,
-    required int offset,
-  });
-
   @override
   @Query('SELECT * FROM $conversionParamSetsTableName '
       'WHERE group_id = :groupId '

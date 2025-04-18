@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:convertouch/data/dao/db/conversion_dao_db.dart';
 import 'package:convertouch/data/dao/db/conversion_param_dao_db.dart';
 import 'package:convertouch/data/dao/db/conversion_param_set_dao_db.dart';
+import 'package:convertouch/data/dao/db/conversion_param_unit_dao_db.dart';
 import 'package:convertouch/data/dao/db/conversion_param_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/conversion_unit_value_dao_db.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
@@ -52,4 +53,6 @@ abstract class ConvertouchDatabase extends FloorDatabase {
   ConversionParamDaoDb get conversionParamDao;
 
   ConversionParamSetDaoDb get conversionParamSetDao;
+
+  ConversionParamUnitDaoDb get conversionParamUnitDao;
 }

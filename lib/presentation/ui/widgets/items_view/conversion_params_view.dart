@@ -26,7 +26,7 @@ class ConversionParamsView extends StatelessWidget {
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
   final void Function(int)? onParamSetRemove;
-  final void Function()? onAllParamSetsRemove;
+  final void Function()? onParamSetsBulkRemove;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
   final void Function(ConversionParamValueModel, String)? onValueChanged;
   final ConvertouchUITheme theme;
@@ -36,7 +36,7 @@ class ConversionParamsView extends StatelessWidget {
     this.onParamSetAdd,
     this.onParamSetSelect,
     this.onParamSetRemove,
-    this.onAllParamSetsRemove,
+    this.onParamSetsBulkRemove,
     this.onParamUnitTap,
     this.onValueChanged,
     required this.theme,
@@ -152,9 +152,12 @@ class ConversionParamsView extends StatelessWidget {
                               .toList(),
                         )
                       : Center(
-                          child: Text("No params added", style: TextStyle(
-                            color: colors.tab.foreground.regular,
-                          ),),
+                          child: Text(
+                            "No params added",
+                            style: TextStyle(
+                              color: colors.tab.foreground.regular,
+                            ),
+                          ),
                         ),
                 ),
                 Visibility(
@@ -218,7 +221,7 @@ class ConversionParamsView extends StatelessWidget {
                                     color: colors.removalIcon.regular,
                                   ),
                                   onPressed: () {
-                                    onAllParamSetsRemove?.call();
+                                    onParamSetsBulkRemove?.call();
                                   },
                                 ),
                               ),

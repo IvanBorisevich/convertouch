@@ -307,12 +307,16 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
                   FetchItems(
                     searchString: text,
                     parentItemId: state.parentItemId,
+                    parentItemType: state.parentItemType,
                   ),
                 );
               },
               onSearchReset: () {
                 widget.itemsListBloc.add(
-                  FetchItems(parentItemId: state.parentItemId),
+                  FetchItems(
+                    parentItemId: state.parentItemId,
+                    parentItemType: state.parentItemType,
+                  ),
                 );
               },
             );

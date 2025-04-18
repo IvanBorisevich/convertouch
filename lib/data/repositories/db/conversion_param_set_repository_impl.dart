@@ -14,54 +14,25 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> getPage({
+  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> search({
     required int groupId,
-    required int pageNum,
+    String? searchString,
+    int pageNum = 0,
     required int pageSize,
   }) async {
     try {
-      final result = await conversionParamSetDao.getAll(
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<ConversionParamSetEntity> result =
+          await conversionParamSetDao.getBySearchString(
         groupId: groupId,
+        searchString: searchPattern,
         pageSize: pageSize,
         offset: pageNum * pageSize,
       );
 
-      return Right(
-        result
-            .map((entity) => ConversionParamSetTranslator.I.toModel(entity))
-            .toList(),
-      );
-    } catch (e, stackTrace) {
-      return Left(
-        DatabaseException(
-          message: "Error when fetching conversion param set by group id = "
-              "$groupId",
-          stackTrace: stackTrace,
-          dateTime: DateTime.now(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> search({
-    required int groupId,
-    required String searchString,
-    required int pageNum,
-    required int pageSize,
-  }) async {
-    try {
-      List<ConversionParamSetEntity> result;
-      if (searchString.isNotEmpty) {
-        result = await conversionParamSetDao.getBySearchString(
-          groupId: groupId,
-          searchString: '%$searchString%',
-          pageSize: pageSize,
-          offset: pageNum * pageSize,
-        );
-      } else {
-        result = [];
-      }
       return Right(
         result
             .map((entity) => ConversionParamSetTranslator.I.toModel(entity))

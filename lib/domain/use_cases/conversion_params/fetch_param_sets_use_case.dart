@@ -17,19 +17,11 @@ class FetchParamSetsUseCase
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>> execute(
     InputItemsFetchModel input,
   ) async {
-    if (input.searchString == null || input.searchString!.isEmpty) {
-      return await conversionParamSetRepository.getPage(
-        groupId: input.parentItemId,
-        pageNum: input.pageNum,
-        pageSize: input.pageSize,
-      );
-    } else {
-      return await conversionParamSetRepository.search(
-        groupId: input.parentItemId,
-        searchString: input.searchString!,
-        pageNum: input.pageNum,
-        pageSize: input.pageSize,
-      );
-    }
+    return await conversionParamSetRepository.search(
+      groupId: input.parentItemId,
+      searchString: input.searchString,
+      pageNum: input.pageNum,
+      pageSize: input.pageSize,
+    );
   }
 }

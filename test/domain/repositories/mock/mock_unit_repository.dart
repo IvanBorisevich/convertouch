@@ -47,26 +47,6 @@ class MockUnitRepository extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
-    required int unitGroupId,
-    required int pageNum,
-    required int pageSize,
-  }) {
-    // TODO: implement getByGroupId
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByParamId({
-    required int paramId,
-    required int pageNum,
-    required int pageSize,
-  }) {
-    // TODO: implement getPageByParamId
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(
       List<int> ids) {
     // TODO: implement getByIds
@@ -80,27 +60,30 @@ class MockUnitRepository extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search({
-    required int unitGroupId,
-    required String searchString,
-    required int pageNum,
-    required int pageSize,
-  }) {
-    // TODO: implement search
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) {
     // TODO: implement update
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<ConvertouchException, Map<int, UnitModel>>> getParamInitialUnits(
-    List<int> paramIds,
-  ) {
-    // TODO: implement getInitialParamUnit
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
+    required int unitGroupId,
+    String? searchString,
+    required int pageNum,
+    required int pageSize,
+  }) {
+    // TODO: implement searchWithGroupId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
+    required int paramId,
+    String? searchString,
+    required int pageNum,
+    required int pageSize,
+  }) {
+    // TODO: implement searchWithParamId
     throw UnimplementedError();
   }
 }

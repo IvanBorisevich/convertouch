@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
@@ -12,6 +13,7 @@ class FetchItems extends ItemsListEvent {
   final int pageSize;
   final bool firstFetch;
   final int parentItemId;
+  final ItemType? parentItemType;
   final void Function()? onFirstFetch;
 
   const FetchItems({
@@ -19,6 +21,7 @@ class FetchItems extends ItemsListEvent {
     this.pageSize = 100,
     this.firstFetch = true,
     this.parentItemId = -1,
+    this.parentItemType,
     this.onFirstFetch,
   });
 
@@ -28,6 +31,7 @@ class FetchItems extends ItemsListEvent {
         pageSize,
         firstFetch,
         parentItemId,
+        parentItemType,
       ];
 
   @override
@@ -36,7 +40,8 @@ class FetchItems extends ItemsListEvent {
         'searchString: $searchString, '
         'parentItemId: $parentItemId, '
         'pageSize: $pageSize, '
-        'firstFetch: $firstFetch}';
+        'firstFetch: $firstFetch, '
+        'parentItemType: $parentItemType}';
   }
 }
 

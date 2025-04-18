@@ -154,6 +154,27 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   ),
                                 );
                               },
+                              onParamUnitTap: (paramValue) {
+                                unitsBloc.add(
+                                  FetchItems(
+                                    parentItemId: paramValue.param.id,
+                                    parentItemType: ItemType.conversionParam,
+                                  ),
+                                );
+
+                                unitsSelectionBloc.add(
+                                  StartItemSelection(
+                                    previouslySelectedId: paramValue.unit!.id,
+                                  ),
+                                );
+
+                                navigationBloc.add(
+                                  const NavigateToPage(
+                                    pageName:
+                                        PageName.unitsPageForConversionParams,
+                                  ),
+                                );
+                              },
                               theme: appState.theme,
                             ),
                             Expanded(
