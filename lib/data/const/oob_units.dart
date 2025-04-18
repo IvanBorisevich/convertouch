@@ -977,6 +977,7 @@ const unitsV3 = [
 const unitsV4 = [
   {
     "groupName": "Clothing Size",
+    "iconName": "clothing-size-group.png",
     "valueType": ConvertouchValueType.integerPositive,
     "conversionType": ConversionType.formula,
     "units": [
