@@ -33,6 +33,7 @@ class ConvertouchPage extends StatelessWidget {
           child: Scaffold(
             backgroundColor: pageColorScheme.page.background.regular,
             appBar: AppBar(
+              scrolledUnderElevation: 0.0,
               leading: Builder(
                 builder: (context) {
                   if (customLeadingIcon != null) {

@@ -54,13 +54,47 @@ const paramSetColorSchemeDark = ParamSetPanelColorScheme(
     background: ColorVariation.only(Color(0xFF323944)),
     foreground: ColorVariation(
       regular: Color(0xFF63A1D7),
-      disabled: Color(0xFF405D77),
+      disabled: Color(0xFF4D5F70),
     ),
   ),
-  removalIcon: ColorVariation.only(Color(0xFFCC683C)),
+  removalIcon: ColorVariation.only(Color(0xFFD56E41)),
   footer: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xFF434E62)),
     foreground: ColorVariation.only(Color(0xFF657693)),
+  ),
+  paramItem: ConversionItemColorScheme(
+    textBox: InputBoxColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFF7EA3C7),
+        focused: Color(0xFFA8D1F6),
+        disabled: Color(0xFF687A8C),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFFA3C2DE),
+        disabled: Color(0xFF687A8C),
+      ),
+      hint: ColorVariation(
+        regular: Color(0xFF84A1BD),
+        disabled: Color(0xFF7C9EBE),
+      ),
+      dropdown: ConvertouchColorScheme(
+        background: ColorVariation.only(Color(0xFF3F4857)),
+        foreground: ColorVariation.only(Color(0xFFBFD3E3)),
+      ),
+    ),
+    background: ColorVariation.only(Color(0xFF373F4B)),
+    unitButton: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFF495972), //Color(0xFF708EA8),
+        focused: Color(0xFF8FB1D0),
+      ),
+      background: ColorVariation(
+        regular: Color(0xFF495972),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFFADCEEC),
+      ),
+    ),
   ),
 );
 
@@ -179,12 +213,10 @@ const unitPageInfoBoxColorDark = ConvertouchColorScheme(
 );
 
 const unitGroupPageEmptyViewColorDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xff434b5d)),
   foreground: ColorVariation.only(Color(0xffa6baee)),
 );
 
 const unitPageEmptyViewColorDark = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF3B4556)),
   foreground: ColorVariation.only(Color(0xFF7DAAD3)),
 );
 

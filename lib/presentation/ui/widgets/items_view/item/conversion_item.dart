@@ -43,7 +43,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
   static const double _unitButtonWidth = 90;
   static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
   static const double _elementsBorderRadius = 15;
-  static const double _spacing = 11;
+  static const double _spacing = 9;
 
   late final TextEditingController _unitValueController;
 

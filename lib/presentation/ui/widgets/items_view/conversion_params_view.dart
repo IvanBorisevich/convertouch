@@ -135,8 +135,7 @@ class ConversionParamsView extends StatelessWidget {
                                               onValueChanged?.call(
                                                   paramItem, value);
                                             },
-                                            colors:
-                                                conversionItemColors[theme]!,
+                                            colors: colors.paramItem,
                                           ),
                                         );
                                       },

@@ -29,8 +29,9 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _itemsSpacing = 14;
+  static const double _itemsSpacing = 10;
   static const double _itemPadding = _itemsSpacing / 2;
+  static const double _itemTopPadding = 7;
   static const double _bottomSpacing = 85;
 
   @override
@@ -50,7 +51,7 @@ class _ConvertouchConversionItemsViewState
       shrinkWrap: true,
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(
-        top: _itemPadding,
+        top: _itemPadding + 4,
         bottom: _bottomSpacing,
       ),
       itemBuilder: (context, index) {
@@ -59,7 +60,7 @@ class _ConvertouchConversionItemsViewState
         return Padding(
           key: Key('$index'),
           padding: const EdgeInsets.only(
-            top: _itemPadding,
+            top: _itemTopPadding,
             bottom: _itemPadding,
           ),
           child: ConvertouchConversionItem(

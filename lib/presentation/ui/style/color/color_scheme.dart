@@ -19,12 +19,14 @@ class ParamSetPanelColorScheme {
   final ConvertouchColorScheme toolset;
   final ConvertouchColorScheme footer;
   final ColorVariation removalIcon;
+  final ConversionItemColorScheme paramItem;
 
   const ParamSetPanelColorScheme({
     this.tab = ConvertouchColorScheme.none,
     this.toolset = ConvertouchColorScheme.none,
     this.footer = ConvertouchColorScheme.none,
     this.removalIcon = ColorVariation.none,
+    required this.paramItem,
   });
 }
 
@@ -118,7 +120,7 @@ class ConversionItemColorScheme extends ConvertouchColorScheme {
   const ConversionItemColorScheme({
     required this.textBox,
     required this.unitButton,
-    required this.handler,
+    this.handler = ConvertouchColorScheme.none,
     super.background,
   });
 }

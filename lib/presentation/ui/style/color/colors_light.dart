@@ -44,23 +44,54 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
 const paramSetColorSchemeLight = ParamSetPanelColorScheme(
   tab: ConvertouchColorScheme(
     background: ColorVariation(
-      regular: Color(0xffc8d9ff),
+      regular: Color(0xffdae5ff),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF2D6698),
     ),
   ),
   toolset: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffbcceff)),
+    background: ColorVariation.only(Color(0xffc6d6ff)),
     foreground: ColorVariation(
-        regular: Color(0xFF235475),
-      disabled: Color(0xFF7497B7),
+      regular: Color(0xFF235475),
+      disabled: Color(0xFF97B0C7),
     ),
   ),
-  removalIcon: ColorVariation.only(Color(0xFFC44D22)),
+  removalIcon: ColorVariation.only(Color(0xFFB6441C)),
   footer: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffabbff3)),
     foreground: ColorVariation.only(Color(0xFF6C9CC9)),
+  ),
+  paramItem: ConversionItemColorScheme(
+    textBox: InputBoxColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFF2F3F75),
+        focused: Color(0xFF1C2646),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xBE143656),
+      ),
+      hint: ColorVariation(
+        regular: Color(0xBE3E5870),
+      ),
+      dropdown: ConvertouchColorScheme(
+        background: ColorVariation.only(Color(0xff9eb7f3)),
+        foreground: ColorVariation.only(Color(0xFF134470)),
+      ),
+    ),
+    background: ColorVariation.only(Color(0xffdae5ff)),
+    unitButton: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFFA2C0F3),
+        focused: Color(0xFF375067),
+      ),
+      background: ColorVariation(
+        regular: Color(0xFFA2C0F3),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFF224F79),
+      ),
+    ),
   ),
 );
 
@@ -181,12 +212,10 @@ const unitPageInfoBoxColorLight = ConvertouchColorScheme(
 );
 
 const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFE6DFF6)),
   foreground: ColorVariation.only(Color(0xFF45459A)),
 );
 
 const unitPageEmptyViewColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFD4E5FC)),
   foreground: ColorVariation.only(Color(0xFF3B6083)),
 );
 

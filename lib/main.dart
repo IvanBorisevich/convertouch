@@ -127,10 +127,14 @@ class ConvertouchApp extends StatelessWidget {
               theme: ThemeData(
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.light,
+                splashColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
               ),
               darkTheme: ThemeData(
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.dark,
+                splashColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
               ),
               themeMode: appState.theme == ConvertouchUITheme.dark
                   ? ThemeMode.dark
