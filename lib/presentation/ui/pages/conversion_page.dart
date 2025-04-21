@@ -146,6 +146,13 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                         .params?.paramSetValues
                                         .map((item) => item.paramSet.id)
                                         .toList(),
+                                    excludedIds: conversion
+                                            .params?.paramSetValues
+                                            .where((item) =>
+                                                item.paramSet.mandatory)
+                                            .map((item) => item.paramSet.id)
+                                            .toList() ??
+                                        [],
                                   ),
                                 );
                                 navigationBloc.add(

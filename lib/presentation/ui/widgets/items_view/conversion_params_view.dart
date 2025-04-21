@@ -85,6 +85,7 @@ class ConversionParamsView extends StatelessWidget {
                           isScrollable: true,
                           showBackIcon: false,
                           showNextIcon: false,
+                          tabAlignment: TabAlignment.center,
                           padding: EdgeInsets.zero,
                           indicatorColor: colors.tab.foreground.regular,
                           dividerColor: Colors.transparent,

@@ -759,7 +759,7 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
   @override
   Future<int?> getNumOfOptional(int groupId) async {
     return _queryAdapter.query(
-        'SELECT count(1) FROM conversion_param_sets WHERE group_id = ?1 AND mandatory != 1',
+        'SELECT count(1) FROM conversion_param_sets WHERE group_id = ?1 AND (mandatory != 1 or mandatory is null)',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [groupId]);
   }

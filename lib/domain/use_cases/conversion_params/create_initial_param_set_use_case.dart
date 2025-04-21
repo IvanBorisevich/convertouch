@@ -65,7 +65,8 @@ class CreateInitialParamSetUseCase
         ConversionParamSetValueBulkModel(
           paramSetValues: paramSetValues,
           paramSetsCanBeAdded: otherParamSetsExist,
-          paramSetsCanBeRemovedInBulk: mandatoryParamSetExist,
+          paramSetCanBeRemoved: false,
+          paramSetsCanBeRemovedInBulk: !mandatoryParamSetExist,
         ),
       );
     } catch (e, stackTrace) {

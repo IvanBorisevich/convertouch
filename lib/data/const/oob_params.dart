@@ -3,7 +3,7 @@ import 'package:convertouch/domain/constants/conversion_param_constants/clothing
 
 const conversionParamsV1 = [
   {
-    "name": GroupNames.clothingSize,
+    "name": "By Height",
     "unitGroupName": GroupNames.clothingSize,
     "mandatory": true,
     "params": [
@@ -32,6 +32,18 @@ const conversionParamsV1 = [
           "in",
         ],
       }
+    ],
+  },
+  {
+    "name": "By Other",
+    "unitGroupName": GroupNames.clothingSize,
+    "params": [
+      {
+        "name": genderParamName,
+        "calculable": false,
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.gender,
+      },
     ],
   }
 ];
