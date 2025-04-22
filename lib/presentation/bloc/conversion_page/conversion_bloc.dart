@@ -10,6 +10,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_uni
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
@@ -36,6 +37,8 @@ class ConversionBloc
   final RemoveConversionItemsUseCase removeConversionItemsUseCase;
   final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
   final AddParamSetsToConversionUseCase addParamSetsToConversionUseCase;
+  final RemoveParamSetsFromConversionUseCase
+      removeParamSetsFromConversionUseCase;
   final SelectParamSetInConversionUseCase selectParamSetInConversionUseCase;
   final NavigationBloc navigationBloc;
 
@@ -50,6 +53,7 @@ class ConversionBloc
     required this.removeConversionItemsUseCase,
     required this.replaceConversionItemUnitUseCase,
     required this.addParamSetsToConversionUseCase,
+    required this.removeParamSetsFromConversionUseCase,
     required this.selectParamSetInConversionUseCase,
     required this.navigationBloc,
   }) : super(
@@ -68,7 +72,9 @@ class ConversionBloc
     on<RemoveConversionItems>(_onRemoveConversionItems);
     on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
     on<AddParamSetsToConversion>(_onAddParamSetsToConversion);
-    on<RemoveParamSetFromConversion>(_onRemoveParamSetFromConversion);
+    on<RemoveSelectedParamSetFromConversion>(
+        _onRemoveSelectedParamSetFromConversion);
+    on<RemoveAllParamSetsFromConversion>(_onRemoveAllParamSetsFromConversion);
     on<SelectParamSetInConversion>(_onSelectParamSetInConversion);
   }
 
@@ -282,10 +288,31 @@ class ConversionBloc
     await _handleAndEmit(result, emit);
   }
 
-  _onRemoveParamSetFromConversion(
-    RemoveParamSetFromConversion event,
+  _onRemoveSelectedParamSetFromConversion(
+    RemoveSelectedParamSetFromConversion event,
     Emitter<ConversionState> emit,
-  ) async {}
+  ) async {
+    final result = await removeParamSetsFromConversionUseCase.execute(
+      InputConversionModifyModel<RemoveParamSetsDelta>(
+        delta: const RemoveParamSetsDelta.current(),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onRemoveAllParamSetsFromConversion(
+    RemoveAllParamSetsFromConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await removeParamSetsFromConversionUseCase.execute(
+      InputConversionModifyModel<RemoveParamSetsDelta>(
+        delta: const RemoveParamSetsDelta.all(),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
 
   _onSelectParamSetInConversion(
     SelectParamSetInConversion event,

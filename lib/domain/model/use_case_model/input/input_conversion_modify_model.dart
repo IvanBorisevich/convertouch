@@ -97,3 +97,11 @@ class SelectParamSetDelta extends ConversionModifyDelta {
     required this.newSelectedParamSetIndex,
   });
 }
+
+class RemoveParamSetsDelta extends ConversionModifyDelta {
+  final bool allOptional;
+
+  const RemoveParamSetsDelta.current() : allOptional = false;
+
+  const RemoveParamSetsDelta.all() : allOptional = true;
+}

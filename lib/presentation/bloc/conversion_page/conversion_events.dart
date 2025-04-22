@@ -218,21 +218,21 @@ class AddParamSetsToConversion extends ModifyConversion {
   }
 }
 
-class RemoveParamSetFromConversion extends ModifyConversion {
-  final int paramSetId;
-
-  const RemoveParamSetFromConversion({
-    required this.paramSetId,
-  });
-
-  @override
-  List<Object?> get props => [
-        paramSetId,
-      ];
+class RemoveSelectedParamSetFromConversion extends ModifyConversion {
+  const RemoveSelectedParamSetFromConversion();
 
   @override
   String toString() {
-    return 'RemoveParamSetFromConversion{paramSetId: $paramSetId}';
+    return 'RemoveSelectedParamSetFromConversion{}';
+  }
+}
+
+class RemoveAllParamSetsFromConversion extends ModifyConversion {
+  const RemoveAllParamSetsFromConversion();
+
+  @override
+  String toString() {
+    return 'RemoveAllParamSetsFromConversion{}';
   }
 }
 
@@ -245,8 +245,8 @@ class SelectParamSetInConversion extends ModifyConversion {
 
   @override
   List<Object?> get props => [
-    newSelectedParamSetIndex,
-  ];
+        newSelectedParamSetIndex,
+      ];
 
   @override
   String toString() {

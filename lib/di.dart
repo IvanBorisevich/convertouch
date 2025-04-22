@@ -35,6 +35,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_uni
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
@@ -302,6 +303,12 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
+    () => RemoveParamSetsFromConversionUseCase(
+      createConversionUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
     () => SelectParamSetInConversionUseCase(
       createConversionUseCase: locator(),
@@ -423,6 +430,7 @@ Future<void> _initBloc() async {
       removeConversionItemsUseCase: locator(),
       replaceConversionItemUnitUseCase: locator(),
       addParamSetsToConversionUseCase: locator(),
+      removeParamSetsFromConversionUseCase: locator(),
       selectParamSetInConversionUseCase: locator(),
       navigationBloc: locator(),
     ),

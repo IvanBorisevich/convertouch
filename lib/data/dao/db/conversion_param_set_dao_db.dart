@@ -31,7 +31,6 @@ abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
   @override
   @Query('SELECT count(1) '
       'FROM $conversionParamSetsTableName '
-      'WHERE group_id = :groupId '
-      'AND (mandatory != 1 or mandatory is null)')
-  Future<int?> getNumOfOptional(int groupId);
+      'WHERE group_id = :groupId')
+  Future<int?> getCount(int groupId);
 }

@@ -20,5 +20,5 @@ abstract class ConversionParamSetRepository {
     int groupId,
   );
 
-  Future<Either<ConvertouchException, bool>> hasOptionalParamSets(int groupId);
+  Future<Either<ConvertouchException, int>> getCount(int groupId);
 }

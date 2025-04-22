@@ -60,6 +60,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
   final bool paramSetsCanBeAdded;
   final bool selectedParamSetCanBeRemoved;
   final bool paramSetsCanBeRemovedInBulk;
+  final bool mandatoryParamSetExists;
+  final int totalCount;
 
   const ConversionParamSetValueBulkModel({
     this.paramSetValues = const [],
@@ -67,6 +69,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
     this.paramSetsCanBeAdded = false,
     this.selectedParamSetCanBeRemoved = false,
     this.paramSetsCanBeRemovedInBulk = false,
+    this.mandatoryParamSetExists = false,
+    this.totalCount = 0,
   });
 
   ConversionParamSetValueBulkModel copyWith({
@@ -75,6 +79,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
     bool? paramSetsCanBeAdded,
     bool? selectedParamSetCanBeRemoved,
     bool? paramSetsCanBeRemovedInBulk,
+    bool? mandatoryParamSetExists,
+    int? totalCount,
   }) {
     return ConversionParamSetValueBulkModel(
       paramSetValues: paramSetValues ?? this.paramSetValues,
@@ -84,6 +90,9 @@ class ConversionParamSetValueBulkModel extends Equatable {
           selectedParamSetCanBeRemoved ?? this.selectedParamSetCanBeRemoved,
       paramSetsCanBeRemovedInBulk:
           paramSetsCanBeRemovedInBulk ?? this.paramSetsCanBeRemovedInBulk,
+      mandatoryParamSetExists:
+          mandatoryParamSetExists ?? this.mandatoryParamSetExists,
+      totalCount: totalCount ?? this.totalCount,
     );
   }
 
@@ -94,6 +103,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
         paramSetsCanBeAdded,
         selectedParamSetCanBeRemoved,
         paramSetsCanBeRemovedInBulk,
+        mandatoryParamSetExists,
+        totalCount,
       ];
 
   Map<String, dynamic> toJson() {
@@ -103,6 +114,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
       "paramSetsCanBeAdded": paramSetsCanBeAdded,
       "paramSetCanBeRemoved": selectedParamSetCanBeRemoved,
       "paramSetsCanBeRemovedInBulk": paramSetsCanBeRemovedInBulk,
+      "mandatoryParamSetExists": mandatoryParamSetExists,
+      "totalCount": totalCount,
     };
   }
 
@@ -122,6 +135,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
       paramSetsCanBeAdded: json["paramSetsCanBeAdded"] ?? false,
       selectedParamSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
       paramSetsCanBeRemovedInBulk: json["paramSetsCanBeRemovedInBulk"] ?? false,
+      mandatoryParamSetExists: json["mandatoryParamSetExists"] ?? false,
+      totalCount: json["totalCount"] ?? 0,
     );
   }
 
@@ -132,6 +147,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
         'selectedIndex: $selectedIndex, '
         'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
         'paramSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
-        'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk}';
+        'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk, '
+        'mandatoryParamSetExists: $mandatoryParamSetExists, '
+        'totalCount: $totalCount}';
   }
 }

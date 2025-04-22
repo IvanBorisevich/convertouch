@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
@@ -27,31 +28,46 @@ class AddParamSetsToConversionUseCase
     required ConversionUnitValueModel? currentSourceItem,
     required AddParamSetsDelta delta,
   }) async {
-    List<ConversionParamSetModel> paramSets = [];
+    List<ConversionParamSetModel> paramSetsInConversion = [];
+
+    int paramSetsTotalCount = currentParams?.totalCount ?? 0;
+    bool mandatoryParamSetExists =
+        currentParams?.mandatoryParamSetExists ?? false;
 
     if (delta.initial) {
+      paramSetsTotalCount = ObjectUtils.tryGet(
+        await conversionParamSetRepository.getCount(unitGroup.id),
+      );
+
+      if (paramSetsTotalCount == 0) {
+        return null;
+      }
+
       var mandatoryParamSet = ObjectUtils.tryGet(
         await conversionParamSetRepository.getMandatory(unitGroup.id),
       );
 
-      paramSets = mandatoryParamSet != null ? [mandatoryParamSet] : [];
+      mandatoryParamSetExists = mandatoryParamSet != null;
+
+      paramSetsInConversion =
+          mandatoryParamSetExists ? [mandatoryParamSet] : [];
     } else {
-      paramSets = ObjectUtils.tryGet(
-        await conversionParamSetRepository.getByIds(ids: delta.paramSetIds),
+      List<int> currentParamSetIds =
+          currentParams?.paramSetValues.map((p) => p.paramSet.id).toList() ??
+              [];
+
+      List<int> newParamSetIds = delta.paramSetIds
+          .whereNot((id) => currentParamSetIds.contains(id))
+          .toList();
+
+      paramSetsInConversion = ObjectUtils.tryGet(
+        await conversionParamSetRepository.getByIds(ids: newParamSetIds),
       );
-    }
-
-    bool optionalParamSetsExist = ObjectUtils.tryGet(
-      await conversionParamSetRepository.hasOptionalParamSets(unitGroup.id),
-    );
-
-    if (paramSets.isEmpty && !optionalParamSetsExist) {
-      return null;
     }
 
     List<ConversionParamSetValueModel> paramSetValues = [];
 
-    for (ConversionParamSetModel paramSet in paramSets) {
+    for (ConversionParamSetModel paramSet in paramSetsInConversion) {
       List<ConversionParamModel> params = ObjectUtils.tryGet(
         await conversionParamRepository.get(paramSet.id),
       );
@@ -83,11 +99,15 @@ class AddParamSetsToConversionUseCase
 
     return result.copyWith(
       paramSetValues: resultParamSetValues,
-      paramSetsCanBeAdded: optionalParamSetsExist,
+      paramSetsCanBeAdded: mandatoryParamSetExists &&
+              resultParamSetValues.length < paramSetsTotalCount - 1 ||
+          resultParamSetValues.length < paramSetsTotalCount,
       selectedParamSetCanBeRemoved:
           !resultParamSetValues[result.selectedIndex].paramSet.mandatory,
       paramSetsCanBeRemovedInBulk: !(resultParamSetValues.length == 1 &&
           resultParamSetValues.first.paramSet.mandatory),
+      mandatoryParamSetExists: mandatoryParamSetExists,
+      totalCount: paramSetsTotalCount,
     );
   }
 }

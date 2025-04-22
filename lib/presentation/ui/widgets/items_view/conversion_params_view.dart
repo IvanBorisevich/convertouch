@@ -25,7 +25,7 @@ class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
-  final void Function(int)? onParamSetRemove;
+  final void Function()? onSelectedParamSetRemove;
   final void Function()? onParamSetsBulkRemove;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
   final void Function(ConversionParamValueModel, String)? onValueChanged;
@@ -35,7 +35,7 @@ class ConversionParamsView extends StatelessWidget {
     this.params,
     this.onParamSetAdd,
     this.onParamSetSelect,
-    this.onParamSetRemove,
+    this.onSelectedParamSetRemove,
     this.onParamSetsBulkRemove,
     this.onParamUnitTap,
     this.onValueChanged,
@@ -94,6 +94,7 @@ class ConversionParamsView extends StatelessWidget {
                             controller.index = params!.selectedIndex;
                           },
                           onTabChanged: (index) {
+                            print("Tab index changed to $index");
                             onParamSetSelect?.call(index ?? 0);
                           },
                           dynamicTabs: params!.paramSetValues
@@ -197,9 +198,7 @@ class ConversionParamsView extends StatelessWidget {
                           ),
                           onPressed: params!.selectedParamSetCanBeRemoved
                               ? () {
-                                  onParamSetRemove?.call(
-                                    params!.selectedIndex,
-                                  );
+                                  onSelectedParamSetRemove?.call();
                                 }
                               : null,
                         ),

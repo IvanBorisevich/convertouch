@@ -14,5 +14,5 @@ abstract class ConversionParamSetDao {
 
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
 
-  Future<int?> getNumOfOptional(int groupId);
+  Future<int?> getCount(int groupId);
 }
