@@ -161,6 +161,13 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   ),
                                 );
                               },
+                              onParamSetSelect: (newIndex) {
+                                conversionBloc.add(
+                                  SelectParamSetInConversion(
+                                    newSelectedParamSetIndex: newIndex,
+                                  ),
+                                );
+                              },
                               onParamUnitTap: (paramValue) {
                                 unitsBloc.add(
                                   FetchItems(

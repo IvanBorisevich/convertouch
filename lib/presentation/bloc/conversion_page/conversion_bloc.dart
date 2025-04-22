@@ -12,6 +12,7 @@ import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -35,6 +36,7 @@ class ConversionBloc
   final RemoveConversionItemsUseCase removeConversionItemsUseCase;
   final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
   final AddParamSetsToConversionUseCase addParamSetsToConversionUseCase;
+  final SelectParamSetInConversionUseCase selectParamSetInConversionUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -48,6 +50,7 @@ class ConversionBloc
     required this.removeConversionItemsUseCase,
     required this.replaceConversionItemUnitUseCase,
     required this.addParamSetsToConversionUseCase,
+    required this.selectParamSetInConversionUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -66,6 +69,7 @@ class ConversionBloc
     on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
     on<AddParamSetsToConversion>(_onAddParamSetsToConversion);
     on<RemoveParamSetFromConversion>(_onRemoveParamSetFromConversion);
+    on<SelectParamSetInConversion>(_onSelectParamSetInConversion);
   }
 
   _onGetConversion(
@@ -282,6 +286,21 @@ class ConversionBloc
     RemoveParamSetFromConversion event,
     Emitter<ConversionState> emit,
   ) async {}
+
+  _onSelectParamSetInConversion(
+    SelectParamSetInConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await selectParamSetInConversionUseCase.execute(
+      InputConversionModifyModel<SelectParamSetDelta>(
+        delta: SelectParamSetDelta(
+          newSelectedParamSetIndex: event.newSelectedParamSetIndex,
+        ),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
 
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,

@@ -89,3 +89,11 @@ class AddParamSetsDelta extends ConversionModifyDelta {
     this.initial = false,
   });
 }
+
+class SelectParamSetDelta extends ConversionModifyDelta {
+  final int newSelectedParamSetIndex;
+
+  const SelectParamSetDelta({
+    required this.newSelectedParamSetIndex,
+  });
+}

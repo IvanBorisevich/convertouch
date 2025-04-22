@@ -37,11 +37,12 @@ import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
@@ -301,6 +302,12 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
+    () => SelectParamSetInConversionUseCase(
+      createConversionUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
@@ -416,6 +423,7 @@ Future<void> _initBloc() async {
       removeConversionItemsUseCase: locator(),
       replaceConversionItemUnitUseCase: locator(),
       addParamSetsToConversionUseCase: locator(),
+      selectParamSetInConversionUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
