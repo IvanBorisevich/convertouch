@@ -8,6 +8,7 @@ class ConversionModel extends IdNameItemModel {
   static const none = ConversionModel.noItems(
     id: -1,
     unitGroup: UnitGroupModel.none,
+    params: null,
   );
 
   final UnitGroupModel unitGroup;
@@ -29,7 +30,7 @@ class ConversionModel extends IdNameItemModel {
   const ConversionModel.noItems({
     required int id,
     required UnitGroupModel unitGroup,
-    ConversionParamSetValueBulkModel? params,
+    required ConversionParamSetValueBulkModel? params,
   }) : this(
           id: id,
           unitGroup: unitGroup,

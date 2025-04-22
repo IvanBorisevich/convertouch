@@ -10,6 +10,8 @@ abstract class ConversionParamSetDao {
     required int offset,
   });
 
+  Future<List<ConversionParamSetEntity>> getByIds(List<int> ids);
+
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId);
 
   Future<int?> getNumOfOptional(int groupId);

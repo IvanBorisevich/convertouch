@@ -32,6 +32,7 @@ class CreateConversionUseCase
           ConversionModel.noItems(
             id: input.conversionId ?? -1,
             unitGroup: input.unitGroup,
+            params: input.params,
           ),
         );
       }

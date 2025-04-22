@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
@@ -12,6 +13,7 @@ import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -32,6 +34,7 @@ class ConversionBloc
   final UpdateConversionCoefficientsUseCase updateConversionCoefficientsUseCase;
   final RemoveConversionItemsUseCase removeConversionItemsUseCase;
   final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
+  final AddParamSetsToConversionUseCase addParamSetsToConversionUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -44,6 +47,7 @@ class ConversionBloc
     required this.updateConversionCoefficientsUseCase,
     required this.removeConversionItemsUseCase,
     required this.replaceConversionItemUnitUseCase,
+    required this.addParamSetsToConversionUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -60,6 +64,8 @@ class ConversionBloc
     on<UpdateConversionCoefficients>(_onUpdateConversionCoefficients);
     on<RemoveConversionItems>(_onRemoveConversionItems);
     on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
+    on<AddParamSetsToConversion>(_onAddParamSetsToConversion);
+    on<RemoveParamSetFromConversion>(_onRemoveParamSetFromConversion);
   }
 
   _onGetConversion(
@@ -71,11 +77,40 @@ class ConversionBloc
 
       ConversionBuilt prev = state;
       log("Prev conversion state: $prev");
-      await _handleAndEmit(result, emit, onSuccess: () {
+
+      if (result.isLeft) {
+        navigationBloc.add(
+          ShowException(exception: result.left),
+        );
+      } else {
+        ConversionModel conversion = result.right ??
+            ObjectUtils.tryGet(
+              await addParamSetsToConversionUseCase.execute(
+                InputConversionModifyModel<AddParamSetsDelta>(
+                  conversion: ConversionModel.noItems(
+                    id: -1,
+                    unitGroup: event.unitGroup,
+                    params: null,
+                  ),
+                  delta: const AddParamSetsDelta(
+                    initial: true,
+                  ),
+                ),
+              ),
+            );
+
+        emit(
+          ConversionBuilt(
+            conversion: conversion,
+            showRefreshButton: event.unitGroup.refreshable &&
+                conversion.conversionUnitValues.isNotEmpty,
+          ),
+        );
+
         if (prev.conversion.exists) {
           event.processPrevConversion?.call(prev.conversion);
         }
-      });
+      }
     } else {
       emit(state);
     }
@@ -106,6 +141,7 @@ class ConversionBloc
         conversion: ConversionModel.noItems(
           id: state.conversion.id,
           unitGroup: state.conversion.unitGroup,
+          params: state.conversion.params,
         ),
       ),
     );
@@ -226,6 +262,26 @@ class ConversionBloc
     );
     await _handleAndEmit(result, emit);
   }
+
+  _onAddParamSetsToConversion(
+    AddParamSetsToConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await addParamSetsToConversionUseCase.execute(
+      InputConversionModifyModel<AddParamSetsDelta>(
+        delta: AddParamSetsDelta(
+          paramSetIds: event.paramSetIds,
+        ),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onRemoveParamSetFromConversion(
+    RemoveParamSetFromConversion event,
+    Emitter<ConversionState> emit,
+  ) async {}
 
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,

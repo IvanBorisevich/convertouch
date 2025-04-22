@@ -58,23 +58,41 @@ class ConversionParamSetValueBulkModel extends Equatable {
   final List<ConversionParamSetValueModel> paramSetValues;
   final int selectedIndex;
   final bool paramSetsCanBeAdded;
-  final bool paramSetCanBeRemoved;
+  final bool selectedParamSetCanBeRemoved;
   final bool paramSetsCanBeRemovedInBulk;
 
   const ConversionParamSetValueBulkModel({
     this.paramSetValues = const [],
     this.selectedIndex = 0,
     this.paramSetsCanBeAdded = false,
-    this.paramSetCanBeRemoved = false,
+    this.selectedParamSetCanBeRemoved = false,
     this.paramSetsCanBeRemovedInBulk = false,
   });
+
+  ConversionParamSetValueBulkModel copyWith({
+    List<ConversionParamSetValueModel>? paramSetValues,
+    int? selectedIndex,
+    bool? paramSetsCanBeAdded,
+    bool? selectedParamSetCanBeRemoved,
+    bool? paramSetsCanBeRemovedInBulk,
+  }) {
+    return ConversionParamSetValueBulkModel(
+      paramSetValues: paramSetValues ?? this.paramSetValues,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+      paramSetsCanBeAdded: paramSetsCanBeAdded ?? this.paramSetsCanBeAdded,
+      selectedParamSetCanBeRemoved:
+          selectedParamSetCanBeRemoved ?? this.selectedParamSetCanBeRemoved,
+      paramSetsCanBeRemovedInBulk:
+          paramSetsCanBeRemovedInBulk ?? this.paramSetsCanBeRemovedInBulk,
+    );
+  }
 
   @override
   List<Object?> get props => [
         paramSetValues,
         selectedIndex,
         paramSetsCanBeAdded,
-        paramSetCanBeRemoved,
+        selectedParamSetCanBeRemoved,
         paramSetsCanBeRemovedInBulk,
       ];
 
@@ -83,7 +101,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
       "paramSetValues": paramSetValues.map((item) => item.toJson()).toList(),
       "selectedIndex": selectedIndex,
       "paramSetsCanBeAdded": paramSetsCanBeAdded,
-      "paramSetCanBeRemoved": paramSetCanBeRemoved,
+      "paramSetCanBeRemoved": selectedParamSetCanBeRemoved,
       "paramSetsCanBeRemovedInBulk": paramSetsCanBeRemovedInBulk,
     };
   }
@@ -102,7 +120,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
           : [],
       selectedIndex: json["selectedIndex"] ?? 0,
       paramSetsCanBeAdded: json["paramSetsCanBeAdded"] ?? false,
-      paramSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
+      selectedParamSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
       paramSetsCanBeRemovedInBulk: json["paramSetsCanBeRemovedInBulk"] ?? false,
     );
   }
@@ -113,7 +131,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
         'paramSetValues: $paramSetValues, '
         'selectedIndex: $selectedIndex, '
         'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
-        'paramSetCanBeRemoved: $paramSetCanBeRemoved, '
+        'paramSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
         'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk}';
   }
 }

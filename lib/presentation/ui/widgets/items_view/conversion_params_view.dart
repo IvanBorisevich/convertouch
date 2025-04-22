@@ -160,76 +160,71 @@ class ConversionParamsView extends StatelessWidget {
                           ),
                         ),
                 ),
-                Visibility(
-                  visible: params!.paramSetsCanBeAdded ||
-                      params!.paramSetCanBeRemoved ||
-                      params!.paramSetsCanBeRemovedInBulk,
-                  child: Container(
-                    width: _toolsetPanelWidth,
-                    height: bodyHeight,
-                    decoration: BoxDecoration(
-                      color: colors.toolset.background.regular,
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: _toolsetPanelItemHeight,
-                          child: IconButton(
-                            disabledColor: colors.toolset.foreground.disabled,
-                            icon: Icon(
-                              Icons.add,
-                              color: params!.paramSetsCanBeAdded
-                                  ? colors.toolset.foreground.regular
-                                  : colors.toolset.foreground.disabled,
-                            ),
-                            onPressed: params!.paramSetsCanBeAdded
-                                ? () {
-                                    onParamSetAdd?.call();
-                                  }
-                                : null,
+                Container(
+                  width: _toolsetPanelWidth,
+                  height: bodyHeight,
+                  decoration: BoxDecoration(
+                    color: colors.toolset.background.regular,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: _toolsetPanelItemHeight,
+                        child: IconButton(
+                          disabledColor: colors.toolset.foreground.disabled,
+                          icon: Icon(
+                            Icons.add,
+                            color: params!.paramSetsCanBeAdded
+                                ? colors.toolset.foreground.regular
+                                : colors.toolset.foreground.disabled,
                           ),
+                          onPressed: params!.paramSetsCanBeAdded
+                              ? () {
+                                  onParamSetAdd?.call();
+                                }
+                              : null,
                         ),
-                        SizedBox(
-                          height: _toolsetPanelItemHeight,
-                          child: IconButton(
-                            disabledColor: colors.toolset.foreground.disabled,
-                            icon: Icon(
-                              Icons.remove,
-                              color: params!.paramSetCanBeRemoved
-                                  ? colors.toolset.foreground.regular
-                                  : colors.toolset.foreground.disabled,
-                            ),
-                            onPressed: params!.paramSetCanBeRemoved
-                                ? () {
-                                    onParamSetRemove?.call(
-                                      params!.selectedIndex,
-                                    );
-                                  }
-                                : null,
+                      ),
+                      SizedBox(
+                        height: _toolsetPanelItemHeight,
+                        child: IconButton(
+                          disabledColor: colors.toolset.foreground.disabled,
+                          icon: Icon(
+                            Icons.remove,
+                            color: params!.selectedParamSetCanBeRemoved
+                                ? colors.toolset.foreground.regular
+                                : colors.toolset.foreground.disabled,
                           ),
+                          onPressed: params!.selectedParamSetCanBeRemoved
+                              ? () {
+                                  onParamSetRemove?.call(
+                                    params!.selectedIndex,
+                                  );
+                                }
+                              : null,
                         ),
-                        Visibility(
-                          visible: params!.paramSetsCanBeRemovedInBulk,
-                          child: Expanded(
-                            child: Container(
-                              alignment: Alignment.bottomCenter,
-                              child: SizedBox(
-                                height: _toolsetPanelItemHeight,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.delete_outline_rounded,
-                                    color: colors.removalIcon.regular,
-                                  ),
-                                  onPressed: () {
-                                    onParamSetsBulkRemove?.call();
-                                  },
+                      ),
+                      Visibility(
+                        visible: params!.paramSetsCanBeRemovedInBulk,
+                        child: Expanded(
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: SizedBox(
+                              height: _toolsetPanelItemHeight,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: colors.removalIcon.regular,
                                 ),
+                                onPressed: () {
+                                  onParamSetsBulkRemove?.call();
+                                },
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],

@@ -18,6 +18,11 @@ abstract class ConversionParamSetDaoDb extends ConversionParamSetDao {
 
   @override
   @Query('SELECT * FROM $conversionParamSetsTableName '
+      'WHERE id in (:ids)')
+  Future<List<ConversionParamSetEntity>> getByIds(List<int> ids);
+
+  @override
+  @Query('SELECT * FROM $conversionParamSetsTableName '
       'WHERE group_id = :groupId '
       'AND mandatory = 1 '
       'limit 1')

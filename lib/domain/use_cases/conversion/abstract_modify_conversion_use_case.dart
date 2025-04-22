@@ -36,6 +36,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
       final conversionParams = await modifyConversionParamValues(
         currentParams: input.conversion.params,
+        unitGroup: modifiedGroup,
+        currentSourceItem: input.conversion.sourceConversionItem,
         delta: input.delta,
       );
 
@@ -116,13 +118,6 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return unitGroup;
   }
 
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
-    required D delta,
-  }) async {
-    return currentParams;
-  }
-
   ConversionUnitValueModel modifySourceUnitValue({
     required ConversionUnitValueModel? currentSourceItem,
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
@@ -133,6 +128,15 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       return modifiedConversionItemsMap[currentSourceItem.unit.id]!;
     }
     return modifiedConversionItemsMap.values.first;
+  }
+
+  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
+    required ConversionParamSetValueBulkModel? currentParams,
+    required UnitGroupModel unitGroup,
+    required ConversionUnitValueModel? currentSourceItem,
+    required D delta,
+  }) async {
+    return currentParams;
   }
 
   Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({

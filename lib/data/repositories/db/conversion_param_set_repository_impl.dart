@@ -50,6 +50,34 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   }
 
   @override
+  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> getByIds({
+    required List<int> ids,
+  }) async {
+    if (ids.isEmpty) {
+      return const Right([]);
+    }
+
+    try {
+      List<ConversionParamSetEntity> result =
+          await conversionParamSetDao.getByIds(ids);
+
+      return Right(
+        result
+            .map((entity) => ConversionParamSetTranslator.I.toModel(entity))
+            .toList(),
+      );
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when getting param sets by ids",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<ConvertouchException, ConversionParamSetModel?>> getMandatory(
     int groupId,
   ) async {
@@ -73,7 +101,7 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, bool>> checkIfOthersExist(
+  Future<Either<ConvertouchException, bool>> hasOptionalParamSets(
     int groupId,
   ) async {
     try {

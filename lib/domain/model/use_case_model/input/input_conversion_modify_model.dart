@@ -1,6 +1,6 @@
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/conversion_model.dart';
 
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
@@ -77,5 +77,15 @@ class ReplaceConversionItemUnitDelta extends ConversionModifyDelta {
   const ReplaceConversionItemUnitDelta({
     required this.newUnit,
     required this.oldUnitId,
+  });
+}
+
+class AddParamSetsDelta extends ConversionModifyDelta {
+  final List<int> paramSetIds;
+  final bool initial;
+
+  const AddParamSetsDelta({
+    this.paramSetIds = const [],
+    this.initial = false,
   });
 }

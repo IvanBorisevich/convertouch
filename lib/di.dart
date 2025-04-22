@@ -26,6 +26,7 @@ import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
@@ -37,8 +38,7 @@ import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion_params/create_initial_param_set_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion_params/fetch_param_sets_use_case.dart';
+import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
@@ -227,13 +227,6 @@ Future<void> _initUseCases() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
-  locator.registerLazySingleton<CreateInitialParamSetUseCase>(
-    () => CreateInitialParamSetUseCase(
-      conversionParamRepository: locator(),
-      conversionParamSetRepository: locator(),
-    ),
-  );
-
   locator.registerLazySingleton<CreateConversionUseCase>(
     () => CreateConversionUseCase(
       convertSingleValueUseCase: locator(),
@@ -248,7 +241,6 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<GetConversionUseCase>(
     () => GetConversionUseCase(
       conversionRepository: locator(),
-      createInitialParamSetUseCase: locator(),
     ),
   );
 
@@ -298,6 +290,14 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
     () => UpdateConversionCoefficientsUseCase(
       createConversionUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<AddParamSetsToConversionUseCase>(
+    () => AddParamSetsToConversionUseCase(
+      createConversionUseCase: locator(),
+      conversionParamSetRepository: locator(),
+      conversionParamRepository: locator(),
     ),
   );
 
@@ -415,6 +415,7 @@ Future<void> _initBloc() async {
       updateConversionCoefficientsUseCase: locator(),
       removeConversionItemsUseCase: locator(),
       replaceConversionItemUnitUseCase: locator(),
+      addParamSetsToConversionUseCase: locator(),
       navigationBloc: locator(),
     ),
   );

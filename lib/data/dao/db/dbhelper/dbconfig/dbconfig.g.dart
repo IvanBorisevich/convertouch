@@ -749,6 +749,24 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
   }
 
   @override
+  Future<List<ConversionParamSetEntity>> getByIds(List<int> ids) async {
+    const offset = 1;
+    final _sqliteVariablesForIds =
+        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
+            .join(',');
+    return _queryAdapter.queryList(
+        'SELECT * FROM conversion_param_sets WHERE id in (' +
+            _sqliteVariablesForIds +
+            ')',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            mandatory: row['mandatory'] as int?,
+            groupId: row['group_id'] as int),
+        arguments: [...ids]);
+  }
+
+  @override
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId) async {
     return _queryAdapter.query(
         'SELECT * FROM conversion_param_sets WHERE group_id = ?1 AND mandatory = 1 limit 1',

@@ -209,11 +209,29 @@ class AddParamSetsToConversion extends ModifyConversion {
 
   @override
   List<Object?> get props => [
-    paramSetIds,
-  ];
+        paramSetIds,
+      ];
 
   @override
   String toString() {
     return 'AddParamSetsToConversion{paramSetIds: $paramSetIds}';
+  }
+}
+
+class RemoveParamSetFromConversion extends ModifyConversion {
+  final int paramSetId;
+
+  const RemoveParamSetFromConversion({
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        paramSetId,
+      ];
+
+  @override
+  String toString() {
+    return 'RemoveParamSetFromConversion{paramSetId: $paramSetId}';
   }
 }

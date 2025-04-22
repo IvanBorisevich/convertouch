@@ -12,9 +12,13 @@ abstract class ConversionParamSetRepository {
     required int pageSize,
   });
 
+  Future<Either<ConvertouchException, List<ConversionParamSetModel>>> getByIds({
+    required List<int> ids,
+  });
+
   Future<Either<ConvertouchException, ConversionParamSetModel?>> getMandatory(
     int groupId,
   );
 
-  Future<Either<ConvertouchException, bool>> checkIfOthersExist(int groupId);
+  Future<Either<ConvertouchException, bool>> hasOptionalParamSets(int groupId);
 }
