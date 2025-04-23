@@ -52,8 +52,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         final addedGroupId = await unitGroupDao
             .insert(UnitGroupTranslator.I.fromModel(unitGroup));
         return Right(
-          UnitGroupModel.coalesce(
-            unitGroup,
+          unitGroup.copyWith(
             id: addedGroupId,
           ),
         );

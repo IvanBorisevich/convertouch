@@ -17,8 +17,7 @@ class ReplaceConversionItemUnitUseCase
       (key, value) => key == delta.oldUnitId
           ? MapEntry(
               delta.newUnit.id,
-              ConversionUnitValueModel.coalesce(
-                value,
+              value.copyWith(
                 unit: delta.newUnit,
               ),
             )

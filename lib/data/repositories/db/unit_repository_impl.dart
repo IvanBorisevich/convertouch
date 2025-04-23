@@ -188,8 +188,7 @@ class UnitRepositoryImpl extends UnitRepository {
         int addedUnitId =
             await unitDao.insert(UnitTranslator.I.fromModel(unit));
         return Right(
-          UnitModel.coalesce(
-            unit,
+          unit.copyWith(
             id: addedUnitId,
           ),
         );

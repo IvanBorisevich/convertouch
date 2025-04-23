@@ -120,23 +120,24 @@ class ConversionRuleFormModel extends Equatable {
     return noConversionRule;
   }
 
-  ConversionRuleFormModel.coalesce(
-    ConversionRuleFormModel saved, {
+  ConversionRuleFormModel copyWith({
     ValueModel? unitValue,
     UnitModel? argUnit,
     ValueModel? draftArgValue,
     ValueModel? savedArgValue,
-  }) : this._(
-          unitValue: unitValue ?? saved.unitValue,
-          argUnit: argUnit ?? saved.argUnit,
-          draftArgValue: draftArgValue ?? saved.draftArgValue,
-          savedArgValue: savedArgValue ?? saved.savedArgValue,
-          configVisible: saved.configVisible,
-          configEditable: saved.configEditable,
-          readOnlyDescription: saved.readOnlyDescription,
-          primaryBaseUnit: saved.primaryBaseUnit,
-          secondaryBaseUnit: saved.secondaryBaseUnit,
-        );
+  }) {
+    return ConversionRuleFormModel._(
+      unitValue: unitValue ?? this.unitValue,
+      argUnit: argUnit ?? this.argUnit,
+      draftArgValue: draftArgValue ?? this.draftArgValue,
+      savedArgValue: savedArgValue ?? this.savedArgValue,
+      configVisible: configVisible,
+      configEditable: configEditable,
+      readOnlyDescription: readOnlyDescription,
+      primaryBaseUnit: primaryBaseUnit,
+      secondaryBaseUnit: secondaryBaseUnit,
+    );
+  }
 
   @override
   List<Object?> get props => [

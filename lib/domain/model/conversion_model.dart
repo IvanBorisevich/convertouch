@@ -37,24 +37,23 @@ class ConversionModel extends IdNameItemModel {
           params: params,
         );
 
-  ConversionModel.coalesce(
-    ConversionModel saved, {
+  ConversionModel copyWith({
     int? id,
     String? name,
     UnitGroupModel? unitGroup,
     ConversionUnitValueModel? sourceConversionItem,
-    List<ConversionUnitValueModel>? targetConversionItems,
+    List<ConversionUnitValueModel>? conversionUnitValues,
     ConversionParamSetValueBulkModel? params,
-  }) : this(
-          id: id ?? saved.id,
-          name: name ?? saved.name,
-          unitGroup: unitGroup ?? saved.unitGroup,
-          sourceConversionItem:
-              sourceConversionItem ?? saved.sourceConversionItem,
-          conversionUnitValues:
-              targetConversionItems ?? saved.conversionUnitValues,
-          params: params ?? saved.params,
-        );
+  }) {
+    return ConversionModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      unitGroup: unitGroup ?? this.unitGroup,
+      sourceConversionItem: sourceConversionItem ?? this.sourceConversionItem,
+      conversionUnitValues: conversionUnitValues ?? this.conversionUnitValues,
+      params: params ?? this.params,
+    );
+  }
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
@@ -107,6 +106,6 @@ class ConversionModel extends IdNameItemModel {
         'unitGroup: $unitGroup, '
         'sourceConversionItem: $sourceConversionItem, '
         'params: $params, '
-        'targetConversionItems: $conversionUnitValues}';
+        'conversionUnitValues: $conversionUnitValues}';
   }
 }

@@ -8,6 +8,7 @@ import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
@@ -40,6 +41,7 @@ class ConversionBloc
   final RemoveParamSetsFromConversionUseCase
       removeParamSetsFromConversionUseCase;
   final SelectParamSetInConversionUseCase selectParamSetInConversionUseCase;
+  final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -55,6 +57,7 @@ class ConversionBloc
     required this.addParamSetsToConversionUseCase,
     required this.removeParamSetsFromConversionUseCase,
     required this.selectParamSetInConversionUseCase,
+    required this.editConversionParamValueUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -76,6 +79,7 @@ class ConversionBloc
         _onRemoveSelectedParamSetFromConversion);
     on<RemoveAllParamSetsFromConversion>(_onRemoveAllParamSetsFromConversion);
     on<SelectParamSetInConversion>(_onSelectParamSetInConversion);
+    on<EditConversionParamValue>(_onEditConversionParamValue);
   }
 
   _onGetConversion(
@@ -322,6 +326,24 @@ class ConversionBloc
       InputConversionModifyModel<SelectParamSetDelta>(
         delta: SelectParamSetDelta(
           newSelectedParamSetIndex: event.newSelectedParamSetIndex,
+        ),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onEditConversionParamValue(
+    EditConversionParamValue event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await editConversionParamValueUseCase.execute(
+      InputConversionModifyModel<EditConversionParamValueDelta>(
+        delta: EditConversionParamValueDelta(
+          newValue: event.newValue,
+          newDefaultValue: event.newDefaultValue,
+          paramId: event.paramId,
+          paramSetId: event.paramSetId,
         ),
         conversion: state.conversion,
       ),

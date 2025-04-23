@@ -16,10 +16,7 @@ class EditConversionItemUnitUseCase
     if (conversionItemsMap.containsKey(delta.editedUnit.id)) {
       conversionItemsMap.update(
         delta.editedUnit.id,
-        (value) => ConversionUnitValueModel.coalesce(
-          value,
-          unit: delta.editedUnit,
-        ),
+        (value) => value.copyWith(unit: delta.editedUnit),
       );
     }
     return conversionItemsMap;

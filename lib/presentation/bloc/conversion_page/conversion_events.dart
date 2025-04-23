@@ -254,3 +254,34 @@ class SelectParamSetInConversion extends ModifyConversion {
         'newSelectedParamSetIndex: $newSelectedParamSetIndex}';
   }
 }
+
+class EditConversionParamValue extends ModifyConversion {
+  final String? newValue;
+  final String? newDefaultValue;
+  final int paramId;
+  final int paramSetId;
+
+  const EditConversionParamValue({
+    required this.newValue,
+    this.newDefaultValue,
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        newValue,
+        newDefaultValue,
+        paramId,
+        paramSetId,
+      ];
+
+  @override
+  String toString() {
+    return 'EditConversionParamValue{'
+        'newValue: $newValue, '
+        'newDefaultValue: $newDefaultValue, '
+        'paramId: $paramId, '
+        'paramSetId: $paramSetId}';
+  }
+}

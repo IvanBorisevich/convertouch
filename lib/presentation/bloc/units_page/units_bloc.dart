@@ -44,8 +44,7 @@ class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>> {
 
   @override
   UnitModel addSearchMatch(UnitModel item, String searchString) {
-    return UnitModel.coalesce(
-      item,
+    return item.copyWith(
       nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
       codeMatch: ObjectUtils.toSearchMatch(item.code, searchString),
     );

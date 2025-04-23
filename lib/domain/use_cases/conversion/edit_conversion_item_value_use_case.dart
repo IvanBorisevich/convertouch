@@ -23,8 +23,7 @@ class EditConversionItemValueUseCase
         ? ValueModel.str(delta.newDefaultValue)
         : ValueModel.one;
 
-    return ConversionUnitValueModel.coalesce(
-      modifiedConversionItemsMap[delta.unitId]!,
+    return modifiedConversionItemsMap[delta.unitId]!.copyWith(
       value: newValue ?? ValueModel.empty,
       defaultValue: newDefaultValue,
     );

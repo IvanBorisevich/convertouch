@@ -98,6 +98,20 @@ class SelectParamSetDelta extends ConversionModifyDelta {
   });
 }
 
+class EditConversionParamValueDelta extends ConversionModifyDelta {
+  final String? newValue;
+  final String? newDefaultValue;
+  final int paramId;
+  final int paramSetId;
+
+  const EditConversionParamValueDelta({
+    required this.newValue,
+    required this.newDefaultValue,
+    required this.paramId,
+    required this.paramSetId,
+  });
+}
+
 class RemoveParamSetsDelta extends ConversionModifyDelta {
   final bool allOptional;
 

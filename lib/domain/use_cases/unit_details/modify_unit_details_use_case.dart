@@ -118,8 +118,7 @@ class ModifyUnitDetailsUseCase
         UnitDetailsModel(
           unitGroup: input.unitGroup,
           draftUnitData: input.draftUnitData,
-          savedUnitData: UnitModel.coalesce(
-            input.savedUnitData,
+          savedUnitData: input.savedUnitData.copyWith(
             code: savedUnitCode,
           ),
           existingUnit: existingUnit,

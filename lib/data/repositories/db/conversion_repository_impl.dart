@@ -66,27 +66,26 @@ class ConversionRepositoryImpl extends ConversionRepository {
       };
 
       return Right(
-        ConversionModel.coalesce(
-          ConversionTranslator.I.toModel(conversion),
-          sourceConversionItem: ConversionUnitValueTranslator.I.toModel(
-            ConversionUnitValueEntity(
-              conversionId: conversion.id!,
-              value: conversion.sourceValue,
-              sequenceNum: 0,
-              unitId: sourceItemUnit.id,
-            ),
-            unit: sourceItemUnit,
-          ),
-          targetConversionItems: conversionItemEntities
-              .map(
-                (entity) => ConversionUnitValueTranslator.I.toModel(
-                  entity,
-                  unit: conversionItemUnitsMap[entity.unitId],
+        ConversionTranslator.I.toModel(conversion).copyWith(
+              sourceConversionItem: ConversionUnitValueTranslator.I.toModel(
+                ConversionUnitValueEntity(
+                  conversionId: conversion.id!,
+                  value: conversion.sourceValue,
+                  sequenceNum: 0,
+                  unitId: sourceItemUnit.id,
                 ),
-              )
-              .nonNulls
-              .toList(),
-        ),
+                unit: sourceItemUnit,
+              ),
+              conversionUnitValues: conversionItemEntities
+                  .map(
+                    (entity) => ConversionUnitValueTranslator.I.toModel(
+                      entity,
+                      unit: conversionItemUnitsMap[entity.unitId],
+                    ),
+                  )
+                  .nonNulls
+                  .toList(),
+            ),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -135,8 +134,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
       } else if (conversion.conversionUnitValues.isNotEmpty) {
         log("Inserting a new conversion");
         int id = await conversionDao.insert(entity);
-        resultConversion = ConversionModel.coalesce(
-          conversion,
+        resultConversion = conversion.copyWith(
           id: id,
         );
       }

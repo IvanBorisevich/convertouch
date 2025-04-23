@@ -53,23 +53,22 @@ class UnitEntity extends ConvertouchEntity {
     this.oob,
   });
 
-  UnitEntity.coalesce({
-    required UnitEntity savedEntity,
-    double? coefficient,
-  }) : this(
-          id: savedEntity.id,
-          name: savedEntity.name,
-          code: savedEntity.code,
-          unitGroupId: savedEntity.unitGroupId,
-          coefficient: coefficient ?? savedEntity.coefficient,
-          symbol: savedEntity.symbol,
-          valueType: savedEntity.valueType,
-          listType: savedEntity.listType,
-          minValue: savedEntity.minValue,
-          maxValue: savedEntity.maxValue,
-          invertible: savedEntity.invertible,
-          oob: savedEntity.oob,
-        );
+  UnitEntity copyWith({double? coefficient}) {
+    return UnitEntity(
+      id: id,
+      name: name,
+      code: code,
+      unitGroupId: unitGroupId,
+      coefficient: coefficient ?? this.coefficient,
+      symbol: symbol,
+      valueType: valueType,
+      listType: listType,
+      minValue: minValue,
+      maxValue: maxValue,
+      invertible: invertible,
+      oob: oob,
+    );
+  }
 
   @override
   Map<String, dynamic> toRow() {

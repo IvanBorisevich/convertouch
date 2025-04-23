@@ -47,8 +47,7 @@ class UnitGroupsBloc
 
   @override
   UnitGroupModel addSearchMatch(UnitGroupModel item, String searchString) {
-    return UnitGroupModel.coalesce(
-      item,
+    return item.copyWith(
       nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
     );
   }

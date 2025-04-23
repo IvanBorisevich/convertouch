@@ -1,7 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
@@ -75,8 +73,7 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
+    inputParam = inputParam.copyWith(
       unitGroup: event.unitGroup,
     );
 
@@ -90,10 +87,8 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
-      conversionRule: ConversionRuleFormModel.coalesce(
-        inputParam.conversionRule,
+    inputParam = inputParam.copyWith(
+      conversionRule: inputParam.conversionRule.copyWith(
         argUnit: event.argumentUnit,
       ),
     );
@@ -108,10 +103,8 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
-      draftUnit: UnitModel.coalesce(
-        inputParam.draftUnitData,
+    inputParam = inputParam.copyWith(
+      draftUnit: inputParam.draftUnitData.copyWith(
         name: event.newValue,
       ),
     );
@@ -124,10 +117,8 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
-      draftUnit: UnitModel.coalesce(
-        inputParam.draftUnitData,
+    inputParam = inputParam.copyWith(
+      draftUnit: inputParam.draftUnitData.copyWith(
         code: event.newValue,
       ),
     );
@@ -140,14 +131,11 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
-      conversionRule: ConversionRuleFormModel.coalesce(
-        inputParam.conversionRule,
+    inputParam = inputParam.copyWith(
+      conversionRule: inputParam.conversionRule.copyWith(
         unitValue: ValueModel.str(event.newValue),
       ),
     );
-
     await _handleInputParamAndEmit(inputParam, emit);
   }
 
@@ -156,10 +144,8 @@ class UnitDetailsBloc
     Emitter<UnitDetailsState> emit,
   ) async {
     var inputParam = _buildInputParams();
-    inputParam = UnitDetailsModel.coalesce(
-      inputParam,
-      conversionRule: ConversionRuleFormModel.coalesce(
-        inputParam.conversionRule,
+    inputParam = inputParam.copyWith(
+      conversionRule: inputParam.conversionRule.copyWith(
         draftArgValue: ValueModel.str(event.newValue),
       ),
     );

@@ -23,8 +23,7 @@ abstract class StartJobUseCase<P, R>
       if (input.progressController != null &&
           !input.progressController!.isClosed) {
         return Right(
-          JobModel.coalesce(
-            input,
+          input.copyWith(
             alreadyRunning: const Patchable(true),
           ),
         );
@@ -43,8 +42,7 @@ abstract class StartJobUseCase<P, R>
       );
 
       return Right(
-        JobModel.coalesce(
-          input,
+        input.copyWith(
           progressController: Patchable(jobProgressController),
         ),
       );

@@ -94,7 +94,6 @@ class ConversionParamsView extends StatelessWidget {
                             controller.index = params!.selectedIndex;
                           },
                           onTabChanged: (index) {
-                            print("Tab index changed to $index");
                             onParamSetSelect?.call(index ?? 0);
                           },
                           dynamicTabs: params!.paramSetValues

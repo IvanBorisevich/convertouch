@@ -22,6 +22,16 @@ class ConversionParamSetValueModel extends ItemModel {
         paramValues,
       ];
 
+  ConversionParamSetValueModel copyWith({
+    ConversionParamSetModel? paramSet,
+    List<ConversionParamValueModel>? paramValues,
+  }) {
+    return ConversionParamSetValueModel(
+      paramSet: paramSet ?? this.paramSet,
+      paramValues: paramValues ?? this.paramValues,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {
@@ -146,7 +156,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
         'paramSetValues: $paramSetValues, '
         'selectedIndex: $selectedIndex, '
         'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
-        'paramSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
+        'selectedParamSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
         'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk, '
         'mandatoryParamSetExists: $mandatoryParamSetExists, '
         'totalCount: $totalCount}';

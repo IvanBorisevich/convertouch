@@ -93,8 +93,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       return Right(
-        ConversionModel.coalesce(
-          result,
+        result.copyWith(
           id: input.conversion.id,
         ),
       );

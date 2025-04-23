@@ -29,23 +29,22 @@ class JobModel<P, R> extends IdNameItemModel {
           oob: true,
         );
 
-  JobModel.coalesce(
-    JobModel savedModel, {
+  JobModel<P, R> copyWith({
     Patchable<P>? params,
     Patchable<DateTime>? completedAt,
     Patchable<Cron>? selectedCron,
     Patchable<StreamController<JobResultModel>>? progressController,
     Patchable<bool>? alreadyRunning,
-  }) : this(
-          params: ObjectUtils.patch(savedModel.params, params),
-          completedAt: ObjectUtils.patch(savedModel.completedAt, completedAt),
-          selectedCron:
-              ObjectUtils.patch(savedModel.selectedCron, selectedCron)!,
-          progressController: ObjectUtils.patch(
-              savedModel.progressController, progressController),
-          alreadyRunning:
-              ObjectUtils.patch(savedModel.alreadyRunning, alreadyRunning)!,
-        );
+  }) {
+    return JobModel(
+      params: ObjectUtils.patch(this.params, params),
+      completedAt: ObjectUtils.patch(this.completedAt, completedAt),
+      selectedCron: ObjectUtils.patch(this.selectedCron, selectedCron)!,
+      progressController:
+          ObjectUtils.patch(this.progressController, progressController),
+      alreadyRunning: ObjectUtils.patch(this.alreadyRunning, alreadyRunning)!,
+    );
+  }
 
   @override
   List<Object?> get props => [

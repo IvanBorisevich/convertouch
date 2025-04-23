@@ -42,8 +42,7 @@ class UnitModel extends IdNameSearchableItemModel {
           valueType: ConvertouchValueType.decimalPositive,
         );
 
-  UnitModel.coalesce(
-    UnitModel saved, {
+  UnitModel copyWith({
     int? id,
     String? name,
     String? code,
@@ -57,22 +56,24 @@ class UnitModel extends IdNameSearchableItemModel {
     ItemSearchMatch? nameMatch,
     ItemSearchMatch? codeMatch,
     bool? invertible,
-  }) : this(
-          id: id ?? saved.id,
-          name: name ?? saved.name,
-          code: code ?? saved.code,
-          coefficient: coefficient ?? saved.coefficient,
-          symbol: symbol ?? saved.symbol,
-          valueType: valueType ?? saved.valueType,
-          listType: listType ?? saved.listType,
-          minValue: minValue?.isNotEmpty == true ? minValue! : saved.minValue,
-          maxValue: maxValue?.isNotEmpty == true ? maxValue! : saved.maxValue,
-          unitGroupId: unitGroupId ?? saved.unitGroupId,
-          invertible: saved.invertible,
-          nameMatch: nameMatch ?? saved.nameMatch,
-          codeMatch: codeMatch ?? saved.codeMatch,
-          oob: saved.oob,
-        );
+  }) {
+    return UnitModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      code: code ?? this.code,
+      coefficient: coefficient ?? this.coefficient,
+      symbol: symbol ?? this.symbol,
+      valueType: valueType ?? this.valueType,
+      listType: listType ?? this.listType,
+      minValue: minValue?.isNotEmpty == true ? minValue! : this.minValue,
+      maxValue: maxValue?.isNotEmpty == true ? maxValue! : this.maxValue,
+      unitGroupId: unitGroupId ?? this.unitGroupId,
+      invertible: this.invertible,
+      nameMatch: nameMatch ?? this.nameMatch,
+      codeMatch: codeMatch ?? this.codeMatch,
+      oob: oob,
+    );
+  }
 
   @override
   String get itemName {

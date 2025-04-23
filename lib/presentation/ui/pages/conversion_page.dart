@@ -189,6 +189,15 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   ),
                                 );
                               },
+                              onValueChanged: (paramValue, newValue) {
+                                conversionBloc.add(
+                                  EditConversionParamValue(
+                                    newValue: newValue,
+                                    paramId: paramValue.param.id,
+                                    paramSetId: paramValue.param.paramSetId,
+                                  ),
+                                );
+                              },
                               onSelectedParamSetRemove: () {
                                 conversionBloc.add(
                                   const RemoveSelectedParamSetFromConversion(),

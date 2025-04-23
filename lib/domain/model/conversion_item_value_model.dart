@@ -46,16 +46,17 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
           defaultValue: ValueModel.empty,
         );
 
-  ConversionUnitValueModel.coalesce(
-    ConversionUnitValueModel? saved, {
+  ConversionUnitValueModel copyWith({
     UnitModel? unit,
     ValueModel? value,
     ValueModel? defaultValue,
-  }) : this(
-          unit: unit ?? saved?.unit ?? UnitModel.none,
-          value: value ?? saved?.value ?? ValueModel.empty,
-          defaultValue: defaultValue ?? saved?.defaultValue ?? ValueModel.empty,
-        );
+  }) {
+    return ConversionUnitValueModel(
+      unit: unit ?? this.unit,
+      value: value ?? this.value,
+      defaultValue: defaultValue ?? this.defaultValue,
+    );
+  }
 
   bool get valueExists => value.isNotEmpty == true;
 
@@ -137,6 +138,22 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     }
 
     return param.name;
+  }
+
+  ConversionParamValueModel copyWith({
+    ConversionParamModel? param,
+    UnitModel? unit,
+    bool? calculated,
+    ValueModel? value,
+    ValueModel? defaultValue,
+  }) {
+    return ConversionParamValueModel(
+      param: param ?? this.param,
+      unit: unit ?? this.unit,
+      calculated: calculated ?? this.calculated,
+      value: value ?? this.value,
+      defaultValue: defaultValue ?? this.defaultValue,
+    );
   }
 
   @override

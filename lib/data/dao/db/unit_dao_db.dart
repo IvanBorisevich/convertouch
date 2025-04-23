@@ -8,7 +8,6 @@ import 'package:sqflite/sqflite.dart' as sqlite;
 
 @dao
 abstract class UnitDaoDb extends UnitDao {
-
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
@@ -173,8 +172,7 @@ abstract class UnitDaoDb extends UnitDao {
 
     List<UnitEntity> patchEntities = savedEntities
         .map(
-          (entity) => UnitEntity.coalesce(
-            savedEntity: entity,
+          (entity) => entity.copyWith(
             coefficient: codeToCoefficient[entity.code],
           ),
         )

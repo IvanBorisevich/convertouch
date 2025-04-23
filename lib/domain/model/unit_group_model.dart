@@ -27,8 +27,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
           itemType: ItemType.unitGroup,
         );
 
-  UnitGroupModel.coalesce(
-    UnitGroupModel saved, {
+  UnitGroupModel copyWith({
     int? id,
     String? name,
     String? iconName,
@@ -36,18 +35,20 @@ class UnitGroupModel extends IdNameSearchableItemModel {
     ValueModel? minValue,
     ValueModel? maxValue,
     ItemSearchMatch? nameMatch,
-  }) : this(
-          id: id ?? saved.id,
-          name: name ?? saved.name,
-          iconName: iconName ?? saved.iconName,
-          conversionType: saved.conversionType,
-          refreshable: saved.refreshable,
-          valueType: valueType ?? saved.valueType,
-          minValue: minValue?.isNotEmpty == true ? minValue! : saved.minValue,
-          maxValue: maxValue?.isNotEmpty == true ? maxValue! : saved.maxValue,
-          nameMatch: nameMatch ?? saved.nameMatch,
-          oob: saved.oob,
-        );
+  }) {
+    return UnitGroupModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      iconName: iconName ?? this.iconName,
+      conversionType: conversionType,
+      refreshable: refreshable,
+      valueType: valueType ?? this.valueType,
+      minValue: minValue?.isNotEmpty == true ? minValue! : this.minValue,
+      maxValue: maxValue?.isNotEmpty == true ? maxValue! : this.maxValue,
+      nameMatch: nameMatch ?? this.nameMatch,
+      oob: oob,
+    );
+  }
 
   const UnitGroupModel._()
       : this(

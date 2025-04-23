@@ -96,8 +96,7 @@ class CreateConversionUseCase
 
     srcDefaultValueStr ??= srcItem.unit.valueType.defaultValueStr;
 
-    return ConversionUnitValueModel.coalesce(
-      srcItem,
+    return srcItem.copyWith(
       defaultValue: ValueModel.str(
         srcDefaultValueStr ?? srcItem.defaultValue.raw,
       ),

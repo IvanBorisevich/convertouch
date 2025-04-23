@@ -18,11 +18,15 @@ class ValueModel extends Equatable {
   });
 
   factory ValueModel.str(String? value) {
-    double? num = double.tryParse(value ?? "");
+    if (value == null) {
+      return empty;
+    }
+
+    double? num = double.tryParse(value);
 
     return ValueModel._(
-      raw: value ?? "",
-      alt: value ?? "",
+      raw: value,
+      alt: value,
       numVal: num,
     );
   }

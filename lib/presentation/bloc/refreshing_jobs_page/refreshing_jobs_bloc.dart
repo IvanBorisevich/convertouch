@@ -235,8 +235,7 @@ class RefreshingJobsBloc
   }) async {
     activeJobs.update(
       unitGroupName,
-      (value) => JobModel.coalesce(
-        value,
+      (value) => value.copyWith(
         params: Patchable(jobPatch.params),
         completedAt: Patchable(jobPatch.completedAt),
         selectedCron: Patchable(jobPatch.selectedCron),
@@ -252,7 +251,9 @@ class RefreshingJobsBloc
       state.copyWith(
         jobs: activeJobs,
         currentLastRefreshed: jobPatch.completedAt,
-        currentLastRefreshedStr: jobPatch.completedAt != null ? timeago.format(jobPatch.completedAt!) : null,
+        currentLastRefreshedStr: jobPatch.completedAt != null
+            ? timeago.format(jobPatch.completedAt!)
+            : null,
       ),
     );
   }

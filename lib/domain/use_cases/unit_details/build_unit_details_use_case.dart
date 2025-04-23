@@ -27,8 +27,7 @@ class BuildUnitDetailsUseCase
       bool existingUnit = input is InputExistingUnitDetailsBuildModel;
 
       UnitModel unit = existingUnit
-          ? UnitModel.coalesce(
-              input.unit,
+          ? input.unit.copyWith(
               valueType: input.unit.valueType,
               minValue: input.unit.minValue,
               maxValue: input.unit.maxValue,
@@ -68,8 +67,7 @@ class BuildUnitDetailsUseCase
           argValue: argValue,
         );
 
-        unit = UnitModel.coalesce(
-          unit,
+        unit = unit.copyWith(
           coefficient: coefficient,
         );
       }
