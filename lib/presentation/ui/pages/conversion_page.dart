@@ -11,6 +11,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_state
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -49,6 +50,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final paramSetsBloc = BlocProvider.of<ConversionParamSetsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+    final singleParamBloc = BlocProvider.of<SingleParamBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return BlocListener<NavigationBloc, NavigationState>(
@@ -169,6 +171,12 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                 );
                               },
                               onParamUnitTap: (paramValue) {
+                                singleParamBloc.add(
+                                  ShowParam(
+                                    param: paramValue.param,
+                                  ),
+                                );
+
                                 unitsBloc.add(
                                   FetchItems(
                                     parentItemId: paramValue.param.id,

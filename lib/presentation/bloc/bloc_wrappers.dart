@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/common/items_selection/items_selec
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
@@ -65,3 +66,5 @@ const conversionBlocBuilder =
     blocBuilderWrap<ConversionBloc, ConversionState, ConversionBuilt>;
 const refreshingJobsBlocBuilder = blocBuilderWrap<RefreshingJobsBloc,
     RefreshingJobsState, RefreshingJobsFetched>;
+const singleParamBlocBuilder =
+    blocBuilderWrap<SingleParamBloc, SingleParamState, SingleParamState>;

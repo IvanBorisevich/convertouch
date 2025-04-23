@@ -38,6 +38,7 @@ import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
@@ -59,6 +60,7 @@ import 'package:convertouch/presentation/bloc/common/items_selection/items_selec
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -322,6 +324,12 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<ReplaceConversionParamUnitUseCase>(
+    () => ReplaceConversionParamUnitUseCase(
+      createConversionUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
@@ -440,6 +448,7 @@ Future<void> _initBloc() async {
       removeParamSetsFromConversionUseCase: locator(),
       selectParamSetInConversionUseCase: locator(),
       editConversionParamValueUseCase: locator(),
+      replaceConversionParamUnitUseCase: locator(),
       navigationBloc: locator(),
     ),
   );
@@ -448,6 +457,10 @@ Future<void> _initBloc() async {
     () => ConversionParamSetsBloc(
       fetchParamSetsUseCase: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<SingleParamBloc>(
+    () => SingleParamBloc(),
   );
 
   locator.registerLazySingleton<RefreshingJobsBloc>(

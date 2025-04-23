@@ -13,6 +13,7 @@ import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
@@ -42,6 +43,7 @@ class ConversionBloc
       removeParamSetsFromConversionUseCase;
   final SelectParamSetInConversionUseCase selectParamSetInConversionUseCase;
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
+  final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -58,6 +60,7 @@ class ConversionBloc
     required this.removeParamSetsFromConversionUseCase,
     required this.selectParamSetInConversionUseCase,
     required this.editConversionParamValueUseCase,
+    required this.replaceConversionParamUnitUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -80,6 +83,7 @@ class ConversionBloc
     on<RemoveAllParamSetsFromConversion>(_onRemoveAllParamSetsFromConversion);
     on<SelectParamSetInConversion>(_onSelectParamSetInConversion);
     on<EditConversionParamValue>(_onEditConversionParamValue);
+    on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
   }
 
   _onGetConversion(
@@ -342,6 +346,23 @@ class ConversionBloc
         delta: EditConversionParamValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
+          paramId: event.paramId,
+          paramSetId: event.paramSetId,
+        ),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onReplaceConversionParamUnit(
+    ReplaceConversionParamUnit event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await replaceConversionParamUnitUseCase.execute(
+      InputConversionModifyModel<ReplaceConversionParamUnitDelta>(
+        delta: ReplaceConversionParamUnitDelta(
+          newUnit: event.newUnit,
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),

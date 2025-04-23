@@ -285,3 +285,30 @@ class EditConversionParamValue extends ModifyConversion {
         'paramSetId: $paramSetId}';
   }
 }
+
+class ReplaceConversionParamUnit extends ModifyConversion {
+  final UnitModel newUnit;
+  final int paramId;
+  final int paramSetId;
+
+  const ReplaceConversionParamUnit({
+    required this.newUnit,
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        newUnit,
+        paramId,
+        paramSetId,
+      ];
+
+  @override
+  String toString() {
+    return 'ReplaceConversionParamUnit{'
+        'newUnit: $newUnit, '
+        'paramId: $paramId, '
+        'paramSetId: $paramSetId}';
+  }
+}

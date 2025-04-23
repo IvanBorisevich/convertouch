@@ -9,6 +9,7 @@ import 'package:convertouch/presentation/bloc/common/items_selection/items_selec
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
@@ -97,6 +98,9 @@ class ConvertouchApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionParamSetsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<SingleParamBloc>(),
         ),
       ],
       child: DismissKeyboard(

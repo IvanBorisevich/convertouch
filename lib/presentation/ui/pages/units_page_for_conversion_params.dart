@@ -29,29 +29,36 @@ class ConvertouchUnitsPageForConversionParams extends StatelessWidget {
       builderFunc: (itemsSelectionState) {
         return ConvertouchPage(
           title: 'Change Unit Of Parameter',
-          body: ConvertouchMenuItemsView(
-            itemsListBloc: unitsBloc,
-            pageName: PageName.unitsPageForConversionParams,
-            viewModeSettingKey: SettingKey.unitsViewMode,
-            searchBarPlaceholder: "Search units...",
-            onItemTap: (unit) {
-              conversionBloc.add(
-                ReplaceConversionItemUnit(
-                  newUnit: unit,
-                  oldUnitId: itemsSelectionState.selectedId!,
-                ),
+          body: singleParamBlocBuilder(
+            builderFunc: (singleParamState) {
+              return ConvertouchMenuItemsView(
+                itemsListBloc: unitsBloc,
+                pageName: PageName.unitsPageForConversionParams,
+                viewModeSettingKey: SettingKey.unitsViewMode,
+                searchBarPlaceholder: "Search units...",
+                onItemTap: (unit) {
+                  if (singleParamState.param != null) {
+                    conversionBloc.add(
+                      ReplaceConversionParamUnit(
+                        newUnit: unit,
+                        paramId: singleParamState.param!.id,
+                        paramSetId: singleParamState.param!.paramSetId,
+                      ),
+                    );
+                  }
+                  navigationBloc.add(const NavigateBack());
+                },
+                onItemTapForRemoval: null,
+                onItemLongPress: null,
+                checkedItemIds: itemsSelectionState.markedIds,
+                disabledItemIds: itemsSelectionState.excludedIds,
+                selectedItemId: itemsSelectionState.selectedId,
+                editableItemsVisible: false,
+                checkableItemsVisible: true,
+                checkIconVisibleIfUnchecked: true,
+                removalModeEnabled: false,
               );
-              navigationBloc.add(const NavigateBack());
             },
-            onItemTapForRemoval: null,
-            onItemLongPress: null,
-            checkedItemIds: itemsSelectionState.markedIds,
-            disabledItemIds: itemsSelectionState.excludedIds,
-            selectedItemId: itemsSelectionState.selectedId,
-            editableItemsVisible: false,
-            checkableItemsVisible: true,
-            checkIconVisibleIfUnchecked: true,
-            removalModeEnabled: false,
           ),
           floatingActionButton: appBlocBuilder(
             builderFunc: (appState) {

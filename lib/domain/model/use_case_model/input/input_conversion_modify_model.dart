@@ -112,6 +112,18 @@ class EditConversionParamValueDelta extends ConversionModifyDelta {
   });
 }
 
+class ReplaceConversionParamUnitDelta extends ConversionModifyDelta {
+  final UnitModel newUnit;
+  final int paramId;
+  final int paramSetId;
+
+  const ReplaceConversionParamUnitDelta({
+    required this.newUnit,
+    required this.paramId,
+    required this.paramSetId,
+  });
+}
+
 class RemoveParamSetsDelta extends ConversionModifyDelta {
   final bool allOptional;
 
