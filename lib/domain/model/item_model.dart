@@ -52,3 +52,25 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
 
   String get itemName => name;
 }
+
+class ListValueModel extends IdNameSearchableItemModel {
+  const ListValueModel(String name)
+      : super(
+          id: -1,
+          name: name,
+          itemType: ItemType.listValue,
+          oob: true,
+        );
+
+  @override
+  List<Object?> get props => [
+        name,
+      ];
+
+  @override
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    return {
+      'name': name,
+    };
+  }
+}

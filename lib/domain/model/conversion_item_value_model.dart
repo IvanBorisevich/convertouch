@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/list_values.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -44,13 +43,8 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     required String? value,
     required String? defaultValue,
   }) {
-    String? presetDefaultValueStr;
-
-    if (unit.listType != null && unit.listType!.isFirstValueDefault) {
-      presetDefaultValueStr = listableSets[unit.listType]!.first;
-    } else {
-      presetDefaultValueStr = unit.valueType.defaultValueStr;
-    }
+    String? presetDefaultValueStr =
+        unit.listType?.defaultValueStr ?? unit.valueType.defaultValueStr;
 
     ValueModel? presetDefaultValue = presetDefaultValueStr != null
         ? ValueModel.str(presetDefaultValueStr)
@@ -144,13 +138,8 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     String? value,
     String? defaultValue,
   }) {
-    String? presetDefaultValueStr;
-
-    if (param.listType != null && param.listType!.isFirstValueDefault) {
-      presetDefaultValueStr = listableSets[param.listType]!.first;
-    } else {
-      presetDefaultValueStr = param.valueType.defaultValueStr;
-    }
+    String? presetDefaultValueStr =
+        param.listType?.defaultValueStr ?? param.valueType.defaultValueStr;
 
     ValueModel? presetDefaultValue = presetDefaultValueStr != null
         ? ValueModel.str(presetDefaultValueStr)

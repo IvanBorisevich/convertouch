@@ -27,19 +27,19 @@ class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>> {
   Future<Either<ConvertouchException, List<UnitModel>>> fetchItems(
     InputItemsFetchModel input,
   ) async {
-    return fetchUnitsUseCase.execute(input);
+    return await fetchUnitsUseCase.execute(input);
   }
 
   @override
   Future<Either<ConvertouchException, UnitModel>> saveItem(
     UnitModel item,
   ) async {
-    return saveUnitUseCase.execute(item);
+    return await saveUnitUseCase.execute(item);
   }
 
   @override
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids) async {
-    return removeUnitsUseCase.execute(ids);
+    return await removeUnitsUseCase.execute(ids);
   }
 
   @override

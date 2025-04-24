@@ -75,7 +75,7 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
         regular: Color(0xBE3E5870),
       ),
       dropdown: ConvertouchColorScheme(
-        background: ColorVariation.only(Color(0xff9eb7f3)),
+        background: ColorVariation.only(Color(0xffbdcefa)),
         foreground: ColorVariation.only(Color(0xFF134470)),
       ),
     ),

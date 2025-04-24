@@ -27,8 +27,8 @@ class ConversionParamSetsBloc extends ItemsListBloc<ConversionParamSetModel,
 
   @override
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>>
-      fetchItems(InputItemsFetchModel input) {
-    return fetchParamSetsUseCase.execute(input);
+      fetchItems(InputItemsFetchModel input) async {
+    return await fetchParamSetsUseCase.execute(input);
   }
 
   @override

@@ -1,4 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/repositories/list_value_repository.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,9 @@ class ConvertouchListBox extends StatefulWidget {
 
   final String? value;
   final String? defaultValue;
+  final DropdownBloc bloc;
   final FocusNode? focusNode;
-  final List<String> listValues;
+  final ConvertouchListType listType;
   final String label;
   final bool autofocus;
   final bool disabled;
@@ -28,8 +31,9 @@ class ConvertouchListBox extends StatefulWidget {
   const ConvertouchListBox({
     this.value,
     this.defaultValue,
+    required this.bloc,
+    required this.listType,
     this.focusNode,
-    required this.listValues,
     this.label = "",
     this.autofocus = false,
     this.disabled = false,
@@ -160,7 +164,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           ),
         ),
         value: _selectedValue,
-        items: widget.listValues
+        items: listableSets[widget.listType]!
             .map(
               (value) => DropdownMenuItem(
                 value: value,
@@ -194,7 +198,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
          */
         selectedItemBuilder: _selectedValue != null
             ? (context) {
-                return widget.listValues.map(
+                return listableSets[widget.listType]!.map(
                   (value) {
                     return Container(
                       padding: EdgeInsets.zero,

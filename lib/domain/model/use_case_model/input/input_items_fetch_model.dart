@@ -5,6 +5,7 @@ class InputItemsFetchModel {
   final int parentItemId;
   final int pageSize;
   final int pageNum;
+  final ConvertouchListType? listType;
   final ItemType? parentItemType;
 
   const InputItemsFetchModel({
@@ -12,6 +13,7 @@ class InputItemsFetchModel {
     this.parentItemId = -1,
     required this.pageSize,
     required this.pageNum,
+    this.listType,
     this.parentItemType,
   });
 }

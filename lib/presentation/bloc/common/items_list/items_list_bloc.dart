@@ -70,6 +70,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             pageSize: event.pageSize,
             pageNum: pageNum,
             parentItemType: event.parentItemType,
+            listType: event.listType,
           ),
         ),
       );

@@ -99,6 +99,11 @@ class ObjectUtils {
       matchedLexemeIndex: matchedLexemeIndex,
     );
   }
+
+  static List<String> generateList(int min, int max, int step) {
+    int length = ((max - min) / step + 1).floor();
+    return List.generate(length, (index) => "${min + index * step}");
+  }
 }
 
 class Patchable<T> {

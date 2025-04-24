@@ -1,9 +1,9 @@
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -17,9 +17,7 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_states.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,10 +50,8 @@ const itemsSelectionBlocBuilder = blocBuilderWrap<ItemsSelectionBloc,
     ItemsSelectionState, ItemsSelectionDone>;
 const itemsListBlocBuilder =
     blocBuilderWrap<ItemsListBloc, ItemsFetched, ItemsFetched>;
-const unitsBlocBuilder = blocBuilderWrap<UnitsBloc, ItemsFetched<UnitModel>,
-    ItemsFetched<UnitModel>>;
-const unitGroupsBlocBuilder = blocBuilderWrap<UnitGroupsBloc,
-    ItemsFetched<UnitGroupModel>, ItemsFetched<UnitGroupModel>>;
+const dropdownBlocBuilder = blocBuilderWrap<DropdownBloc,
+    ItemsFetched<ListValueModel>, ItemsFetched<ListValueModel>>;
 const singleGroupBlocBuilder =
     blocBuilderWrap<SingleGroupBloc, SingleGroupState, SingleGroupState>;
 const unitDetailsBlocBuilder =

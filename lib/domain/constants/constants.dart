@@ -80,6 +80,7 @@ enum ItemType {
   conversionParam,
   job,
   dynamicValue,
+  listValue,
   cron,
   dataSource,
 }
@@ -208,17 +209,24 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  gender(1, isFirstValueDefault: false),
-  garment(2, isFirstValueDefault: false),
-  clothingSizeInter(3),
-  clothingSizeUs(4);
+  gender(1),
+  garment(2),
+  clothingSizeInter(3, defaultValueStr: "XXS"),
+  clothingSizeUs(4, defaultValueStr: "2"),
+  clothingSizeJp(5, defaultValueStr: "7"),
+  clothingSizeFr(6, defaultValueStr: "34"),
+  clothingSizeEu(7, defaultValueStr: "34"),
+  clothingSizeRu(8, defaultValueStr: "40"),
+  clothingSizeIt(9, defaultValueStr: "38"),
+  clothingSizeUk(10, defaultValueStr: "6"),
+  ;
 
   final int id;
-  final bool isFirstValueDefault;
+  final String? defaultValueStr;
 
   const ConvertouchListType(
     this.id, {
-    this.isFirstValueDefault = true,
+    this.defaultValueStr,
   });
 
   static ConvertouchListType? valueOf(int? id) {

@@ -51,10 +51,12 @@ enum ClothingSizeInter {
   s("S"),
   m("M"),
   l("L"),
-  xl("XL"),
   x("X"),
+  xl("XL"),
   xx("XX"),
-  xxx("3X");
+  xxl("XXL"),
+  xxx("3X"),
+  xxxl("3XL");
 
   final String name;
 

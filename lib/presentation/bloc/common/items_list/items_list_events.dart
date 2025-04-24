@@ -13,6 +13,7 @@ class FetchItems extends ItemsListEvent {
   final int pageSize;
   final bool firstFetch;
   final int parentItemId;
+  final ConvertouchListType? listType;
   final ItemType? parentItemType;
   final void Function()? onFirstFetch;
 
@@ -21,6 +22,7 @@ class FetchItems extends ItemsListEvent {
     this.pageSize = 100,
     this.firstFetch = true,
     this.parentItemId = -1,
+    this.listType,
     this.parentItemType,
     this.onFirstFetch,
   });
@@ -32,6 +34,7 @@ class FetchItems extends ItemsListEvent {
         firstFetch,
         parentItemId,
         parentItemType,
+        listType,
       ];
 
   @override
@@ -41,7 +44,8 @@ class FetchItems extends ItemsListEvent {
         'parentItemId: $parentItemId, '
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
-        'parentItemType: $parentItemType}';
+        'parentItemType: $parentItemType, '
+        'listType: $listType}';
   }
 }
 

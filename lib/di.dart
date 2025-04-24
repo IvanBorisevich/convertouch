@@ -9,6 +9,7 @@ import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.d
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
+import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_param_set_translator.dart';
@@ -22,9 +23,11 @@ import 'package:convertouch/domain/repositories/conversion_param_set_repository.
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
+import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/use_cases/common/get_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
@@ -56,6 +59,7 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -158,6 +162,10 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       conversionParamDao: database.conversionParamDao,
       unitDao: database.unitDao,
     ),
+  );
+
+  locator.registerLazySingleton<ListValueRepository>(
+    () => const ListValueRepositoryImpl(),
   );
 }
 
@@ -356,6 +364,12 @@ Future<void> _initUseCases() async {
       conversionParamSetRepository: locator(),
     ),
   );
+
+  locator.registerLazySingleton<GetListValuesUseCase>(
+    () => GetListValuesUseCase(
+      listValueRepository: locator(),
+    ),
+  );
 }
 
 Future<void> _initBloc() async {
@@ -470,6 +484,12 @@ Future<void> _initBloc() async {
       getDataSourceUseCase: locator(),
       conversionBloc: locator(),
       navigationBloc: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<DropdownBloc>(
+    () => DropdownBloc(
+      getListValuesUseCase: locator(),
     ),
   );
 }

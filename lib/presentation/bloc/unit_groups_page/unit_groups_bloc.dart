@@ -28,21 +28,21 @@ class UnitGroupsBloc
   Future<Either<ConvertouchException, List<UnitGroupModel>>> fetchItems(
     InputItemsFetchModel input,
   ) async {
-    return fetchUnitGroupsUseCase.execute(input);
+    return await fetchUnitGroupsUseCase.execute(input);
   }
 
   @override
   Future<Either<ConvertouchException, UnitGroupModel>> saveItem(
     UnitGroupModel item,
   ) async {
-    return saveUnitGroupUseCase.execute(item);
+    return await saveUnitGroupUseCase.execute(item);
   }
 
   @override
   Future<Either<ConvertouchException, void>> removeItems(
     List<int> ids,
   ) async {
-    return removeUnitGroupsUseCase.execute(ids);
+    return await removeUnitGroupsUseCase.execute(ids);
   }
 
   @override
