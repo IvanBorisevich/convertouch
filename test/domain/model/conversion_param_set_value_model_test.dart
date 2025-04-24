@@ -3,7 +3,6 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -23,8 +22,6 @@ void main() {
           valueType: ConvertouchValueType.text,
           paramSetId: 1,
         ),
-        value: ValueModel.empty,
-        defaultValue: ValueModel.empty,
       ),
     ],
   );
@@ -44,16 +41,6 @@ void main() {
           'valueType': 1,
           'paramSetId': 1,
           'calculable': false,
-        },
-        'value': {
-          'raw': '',
-          'num': null,
-          'alt': '',
-        },
-        'defaultValue': {
-          'raw': '',
-          'num': null,
-          'alt': '',
         },
         'calculated': false,
       }

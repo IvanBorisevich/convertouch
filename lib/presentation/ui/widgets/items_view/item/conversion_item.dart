@@ -45,21 +45,12 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
   static const double _elementsBorderRadius = 15;
   static const double _spacing = 9;
 
-  late final TextEditingController _unitValueController;
-
   late bool _isFocused;
 
   @override
   void initState() {
-    _unitValueController = TextEditingController();
     _isFocused = false;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _unitValueController.dispose();
-    super.dispose();
   }
 
   @override
@@ -69,18 +60,16 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     var unitTextBoxColor = itemColor.textBox;
     var handlerColor = itemColor.handler;
 
-    String mainText;
-    String hintText;
+    String? valueStr;
+    String? defaultValueStr;
 
     if (_isFocused && !widget.disabled) {
-      mainText = widget.item.value.raw;
-      hintText = widget.item.defaultValue.raw;
+      valueStr = widget.item.value?.raw;
+      defaultValueStr = widget.item.defaultValue?.raw;
     } else {
-      mainText = widget.item.value.alt;
-      hintText = widget.item.defaultValue.alt;
+      valueStr = widget.item.value?.alt;
+      defaultValueStr = widget.item.defaultValue?.alt;
     }
-
-    _unitValueController.text = mainText;
 
     String paramName = widget.itemNameFunc.call(widget.item);
     String? paramUnitCode = widget.unitItemCodeFunc.call(widget.item);
@@ -101,10 +90,10 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               : const SizedBox.shrink(),
           Expanded(
             child: ConvertouchInputBox(
-              textController: _unitValueController,
+              value: valueStr,
+              defaultValue: defaultValueStr,
               readonly: widget.disabled,
               label: paramName,
-              hintText: hintText,
               borderRadius: 15,
               valueType: widget.item.valueType,
               listType: widget.item.listType,
@@ -139,7 +128,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                           ),
                         )
                       : const SizedBox.shrink(),
-                  widget.item.value.isNotEmpty && _isFocused
+                  widget.item.value != null && _isFocused
                       ? IconButton(
                           icon: Icon(
                             Icons.close_rounded,
@@ -148,9 +137,6 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                           ),
                           onPressed: () {
                             widget.onValueChanged?.call("");
-                            setState(() {
-                              _unitValueController.clear();
-                            });
                           },
                         )
                       : const SizedBox.shrink(),
@@ -170,12 +156,12 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                       widget.onTap?.call();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                         _isFocused && !widget.disabled
                             ? unitButtonColor.background.focused
                             : unitButtonColor.background.regular,
                       ),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           side: BorderSide(
                             color: _isFocused && !widget.disabled

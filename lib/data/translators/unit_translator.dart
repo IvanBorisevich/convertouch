@@ -20,8 +20,8 @@ class UnitTranslator extends Translator<UnitModel, UnitEntity> {
       unitGroupId: model.unitGroupId,
       valueType: model.valueType.id,
       listType: model.listType?.id,
-      minValue: model.minValue.numVal,
-      maxValue: model.maxValue.numVal,
+      minValue: model.minValue?.numVal,
+      maxValue: model.maxValue?.numVal,
       invertible: bool2int(model.invertible),
       oob: bool2int(model.oob),
     );
@@ -38,8 +38,10 @@ class UnitTranslator extends Translator<UnitModel, UnitEntity> {
       unitGroupId: entity.unitGroupId,
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       listType: ConvertouchListType.valueOf(entity.listType),
-      minValue: ValueModel.numeric(entity.minValue),
-      maxValue: ValueModel.numeric(entity.maxValue),
+      minValue:
+          entity.minValue != null ? ValueModel.numeric(entity.minValue!) : null,
+      maxValue:
+          entity.maxValue != null ? ValueModel.numeric(entity.maxValue!) : null,
       invertible: int2bool(entity.invertible, ifNull: true),
       oob: int2bool(entity.oob, ifNull: true),
     );

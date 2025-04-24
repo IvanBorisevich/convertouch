@@ -43,8 +43,6 @@ void main() {
                   paramSetId: 1,
                 ),
                 calculated: false,
-                value: ValueModel.empty,
-                defaultValue: ValueModel.empty,
               ),
               ConversionParamValueModel(
                 param: ConversionParamModel(
@@ -56,8 +54,6 @@ void main() {
                   paramSetId: 1,
                 ),
                 calculated: false,
-                value: ValueModel.empty,
-                defaultValue: ValueModel.empty,
               ),
               ConversionParamValueModel(
                 param: ConversionParamModel(
@@ -91,8 +87,6 @@ void main() {
                   oob: true,
                 ),
                 calculated: false,
-                value: ValueModel.empty,
-                defaultValue: ValueModel.empty,
               ),
             ],
           ),
@@ -141,8 +135,6 @@ void main() {
                   paramSetId: 1,
                 ),
                 calculated: false,
-                value: ValueModel.empty,
-                defaultValue: ValueModel.empty,
               ),
               const ConversionParamValueModel(
                 param: ConversionParamModel(
@@ -154,8 +146,6 @@ void main() {
                   paramSetId: 1,
                 ),
                 calculated: false,
-                value: ValueModel.empty,
-                defaultValue: ValueModel.empty,
               ),
               ConversionParamValueModel(
                 param: const ConversionParamModel(

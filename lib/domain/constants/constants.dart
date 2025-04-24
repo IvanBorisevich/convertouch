@@ -208,14 +208,18 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  gender(1),
-  garment(2),
+  gender(1, isFirstValueDefault: false),
+  garment(2, isFirstValueDefault: false),
   clothingSizeInter(3),
   clothingSizeUs(4);
 
   final int id;
+  final bool isFirstValueDefault;
 
-  const ConvertouchListType(this.id);
+  const ConvertouchListType(
+    this.id, {
+    this.isFirstValueDefault = true,
+  });
 
   static ConvertouchListType? valueOf(int? id) {
     return values.firstWhereOrNull((element) => id == element.id);

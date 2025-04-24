@@ -7,16 +7,14 @@ void main() {
     expect(str1.raw, "0.0098");
     expect(str1.alt, "0.0098");
 
-    expect(ValueModel.str(null), ValueModel.empty);
-    expect(ValueModel.str(""), ValueModel.empty);
+    expect(ValueModel.str(""), ValueModel.emptyString);
   });
 
   test('Build value model from numeric value', () {
     expect(ValueModel.numeric(23).numVal, 23);
-    expect(ValueModel.numeric(null), ValueModel.empty);
     expect(ValueModel.numeric(0), ValueModel.zero);
     expect(ValueModel.numeric(1), ValueModel.one);
-    expect(ValueModel.numeric(double.nan), ValueModel.undef);
+    expect(ValueModel.numeric(double.nan), ValueModel.emptyString);
 
     ValueModel numVal = ValueModel.numeric(4000000000);
     expect(numVal.numVal, 4000000000);
@@ -43,13 +41,7 @@ void main() {
       'alt': '231',
     });
 
-    expect(ValueModel.undef.toJson(), {
-      'raw': '-',
-      'alt': '-',
-      'num': null,
-    });
-
-    expect(ValueModel.empty.toJson(), {
+    expect(ValueModel.emptyString.toJson(), {
       'raw': '',
       'alt': '',
       'num': null,
@@ -93,22 +85,73 @@ void main() {
       ValueModel.str('231'),
     );
 
-    ValueModel? nan = ValueModel.fromJson({
-      'raw': '-',
-      'num': double.nan,
-      'alt': '-',
-    });
-    expect('-', nan?.raw);
-    expect('-', nan?.alt);
-    expect(true, nan?.numVal?.isNaN);
-
     expect(
       ValueModel.fromJson({
         'raw': '',
         'num': null,
         'alt': '',
       }),
-      ValueModel.empty,
+      null,
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': null,
+        'num': null,
+        'alt': '',
+      }),
+      null,
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '34',
+        'num': null,
+        'scientific': '34',
+      }),
+      ValueModel.str('34'),
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '',
+        'num': null,
+        'scientific': '',
+      }),
+      null,
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': null,
+        'num': null,
+        'scientific': null,
+      }),
+      null,
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '34',
+        'scientific': '34',
+      }),
+      ValueModel.str('34'),
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '',
+        'scientific': '',
+      }),
+      null,
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': null,
+        'scientific': null,
+      }),
+      null,
     );
   });
 }

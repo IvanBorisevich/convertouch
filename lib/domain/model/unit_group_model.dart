@@ -9,8 +9,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
   final ConversionType conversionType;
   final bool refreshable;
   final ConvertouchValueType valueType;
-  final ValueModel minValue;
-  final ValueModel maxValue;
+  final ValueModel? minValue;
+  final ValueModel? maxValue;
 
   const UnitGroupModel({
     super.id,
@@ -19,8 +19,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
     this.conversionType = ConversionType.static,
     this.refreshable = false,
     required this.valueType,
-    this.minValue = ValueModel.empty,
-    this.maxValue = ValueModel.empty,
+    this.minValue,
+    this.maxValue,
     super.nameMatch,
     super.oob,
   }) : super(
@@ -43,8 +43,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       conversionType: conversionType,
       refreshable: refreshable,
       valueType: valueType ?? this.valueType,
-      minValue: minValue?.isNotEmpty == true ? minValue! : this.minValue,
-      maxValue: maxValue?.isNotEmpty == true ? maxValue! : this.maxValue,
+      minValue: minValue ?? this.minValue,
+      maxValue: maxValue ?? this.maxValue,
       nameMatch: nameMatch ?? this.nameMatch,
       oob: oob,
     );
@@ -82,8 +82,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       "conversionType": conversionType.value,
       "refreshable": refreshable,
       "valueType": valueType.id,
-      "minValue": minValue.numVal,
-      "maxValue": maxValue.numVal,
+      "minValue": minValue?.numVal,
+      "maxValue": maxValue?.numVal,
       "oob": oob,
     };
 
@@ -105,8 +105,12 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       conversionType: ConversionType.valueOf(json["conversionType"]),
       refreshable: json["refreshable"],
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
-      minValue: ValueModel.numeric(json["minValue"]),
-      maxValue: ValueModel.numeric(json["maxValue"]),
+      minValue: json["minValue"] != null
+          ? ValueModel.numeric(json["minValue"])
+          : null,
+      maxValue: json["maxValue"] != null
+          ? ValueModel.numeric(json["maxValue"])
+          : null,
       oob: json["oob"],
     );
   }

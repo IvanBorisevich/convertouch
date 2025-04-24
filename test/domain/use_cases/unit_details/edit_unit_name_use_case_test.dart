@@ -29,7 +29,7 @@ void main() {
     required String draftUnitName,
     required String draftUnitCode,
     required UnitModel savedUnitData,
-    ConversionRuleFormModel conversionRule = ConversionRuleFormModel.none,
+    required ConversionRuleFormModel conversionRule,
   }) async {
     UnitDetailsModel result = ObjectUtils.tryGet(
       await useCase.execute(
@@ -54,11 +54,23 @@ void main() {
   group('For new details', () {
     group('In group without units', () {
       test('New unit name = empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: '',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithoutUnits.id,
+          valueType: ConvertouchValueType.decimalPositive,
+        );
+
         final result = await testForInput(
           unitGroup: mockUnitGroupWithoutUnits,
-          draftUnitName: '',
-          draftUnitCode: 'code',
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
+          conversionRule: ConversionRuleFormModel.build(
+            unitGroup: mockUnitGroupWithoutUnits,
+            mandatoryParamsFilled: false,
+            draftUnit: draftUnit,
+          ),
         );
 
         expect(result.draftUnitData.name, '');
@@ -73,11 +85,23 @@ void main() {
       });
 
       test('New unit name != empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: 'unitName',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithoutUnits.id,
+          valueType: ConvertouchValueType.decimalPositive,
+        );
+
         final result = await testForInput(
           unitGroup: mockUnitGroupWithoutUnits,
-          draftUnitName: 'unitName',
-          draftUnitCode: 'code',
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
+          conversionRule: ConversionRuleFormModel.build(
+            unitGroup: mockUnitGroupWithoutUnits,
+            mandatoryParamsFilled: false,
+            draftUnit: draftUnit,
+          ),
         );
 
         expect(result.draftUnitData.name, 'unitName');

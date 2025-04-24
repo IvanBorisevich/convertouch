@@ -55,18 +55,18 @@ final Map<String, ConversionRule> clothingSizeFormulas = {
     )
 };
 
-ValueModel _getInternationalClothingSize({
+ValueModel? _getInternationalClothingSize({
   required ValueModel inputSizeValue,
   required ClothingSizeCode inputSizeCode,
   required ConversionParamSetValueModel params,
 }) {
-  Gender? gender = Gender.valueOf(params.getValue(genderParamName).raw);
+  Gender? gender = Gender.valueOf(params.getValue(genderParamName)?.raw);
   Garment? clothingType =
-      Garment.valueOf(params.getValue(garmentParamName).raw);
-  double? height = params.getValue(heightParamName).numVal;
+      Garment.valueOf(params.getValue(garmentParamName)?.raw);
+  double? height = params.getValue(heightParamName)?.numVal;
 
   if (gender == null || clothingType == null || height == null) {
-    return ValueModel.undef;
+    return null;
   }
 
   dynamic inputSize = inputSizeCode == ClothingSizeCode.inter
@@ -80,25 +80,25 @@ ValueModel _getInternationalClothingSize({
 
   ClothingSizeInter? interSize = foundTuple?.sizesMap[ClothingSizeCode.inter];
 
-  return interSize != null ? ValueModel.str(interSize.name) : ValueModel.undef;
+  return interSize != null ? ValueModel.str(interSize.name) : null;
 }
 
-ValueModel _getClothingSizeByCode({
+ValueModel? _getClothingSizeByCode({
   required ClothingSizeInter? interSizeValue,
   required ClothingSizeCode targetSizeCode,
   required ConversionParamSetValueModel params,
 }) {
   if (interSizeValue == null) {
-    return ValueModel.undef;
+    return null;
   }
 
-  Gender? gender = Gender.valueOf(params.getValue(genderParamName).raw);
+  Gender? gender = Gender.valueOf(params.getValue(genderParamName)?.raw);
   Garment? clothingType =
-      Garment.valueOf(params.getValue(garmentParamName).raw);
-  double? height = params.getValue(heightParamName).numVal;
+      Garment.valueOf(params.getValue(garmentParamName)?.raw);
+  double? height = params.getValue(heightParamName)?.numVal;
 
   if (gender == null || clothingType == null || height == null) {
-    return ValueModel.empty;
+    return null;
   }
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];

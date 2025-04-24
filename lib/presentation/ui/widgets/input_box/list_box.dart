@@ -7,6 +7,7 @@ class ConvertouchListBox extends StatefulWidget {
   static const double defaultHeight = 55;
 
   final String? value;
+  final String? defaultValue;
   final FocusNode? focusNode;
   final List<String> listValues;
   final String label;
@@ -26,6 +27,7 @@ class ConvertouchListBox extends StatefulWidget {
 
   const ConvertouchListBox({
     this.value,
+    this.defaultValue,
     this.focusNode,
     required this.listValues,
     this.label = "",
@@ -151,7 +153,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
         hint: Text(
-          '- Not selected -',
+          widget.defaultValue ?? '- Not selected -',
           style: TextStyle(
             fontSize: 16,
             color: hintColor,

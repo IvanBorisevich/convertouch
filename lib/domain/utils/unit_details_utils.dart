@@ -37,7 +37,7 @@ class UnitDetailsUtils {
             unitCoefficient: unit.coefficient,
             argUnitCoefficient: argUnit.coefficient!,
           )
-        : ValueModel.empty;
+        : ValueModel.one;
   }
 
   static double calcUnitCoefficient({

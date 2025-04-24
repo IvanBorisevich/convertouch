@@ -24,7 +24,7 @@ class UnitDetailsModel extends Equatable {
     this.editMode = false,
     this.unitGroupChanged = false,
     this.deltaDetected = false,
-    this.conversionRule = ConversionRuleFormModel.none,
+    required this.conversionRule,
     this.resultUnit = UnitModel.none,
   });
 

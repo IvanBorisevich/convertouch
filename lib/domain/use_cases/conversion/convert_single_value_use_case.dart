@@ -43,14 +43,14 @@ class ConvertSingleValueUseCase
       return Right(
         ConversionUnitValueModel(
           unit: input.tgtUnit,
-          value: tgt ?? ValueModel.empty,
-          defaultValue: tgtDef ?? ValueModel.undef,
+          value: tgt,
+          defaultValue: tgtDef,
         ),
       );
     } catch (e, stackTrace) {
       return Left(InternalException(
         message: "Error when converting a single value "
-            "${input.srcItem.value.raw} "
+            "${input.srcItem.value?.raw} "
             "from ${input.srcItem.unit.name} to ${input.tgtUnit.name}",
         stackTrace: stackTrace,
         dateTime: DateTime.now(),
@@ -59,7 +59,7 @@ class ConvertSingleValueUseCase
   }
 
   ValueModel? _calculate({
-    required ValueModel src,
+    required ValueModel? src,
     required UnitModel srcUnit,
     required UnitModel tgtUnit,
     required UnitGroupModel unitGroup,
@@ -67,6 +67,10 @@ class ConvertSingleValueUseCase
   }) {
     ConversionRule srcUnitRule;
     ConversionRule tgtUnitRule;
+
+    if (src == null) {
+      return null;
+    }
 
     switch (unitGroup.conversionType) {
       case ConversionType.formula:
@@ -84,7 +88,7 @@ class ConvertSingleValueUseCase
         tgtUnitRule = ConversionRule.fromCoefficient(tgtUnit.coefficient!);
     }
 
-    ValueModel result = ConversionRuleUtils.calculate(
+    ValueModel? result = ConversionRuleUtils.calculate(
       src,
       srcUnitRule: srcUnitRule,
       tgtUnitRule: tgtUnitRule,
@@ -92,9 +96,9 @@ class ConvertSingleValueUseCase
     );
 
     bool isValueInRange = DoubleValueUtils.between(
-      value: result.numVal,
-      min: tgtUnit.minValue.numVal,
-      max: tgtUnit.maxValue.numVal,
+      value: result?.numVal,
+      min: tgtUnit.minValue?.numVal,
+      max: tgtUnit.maxValue?.numVal,
     );
 
     return isValueInRange ? result : null;

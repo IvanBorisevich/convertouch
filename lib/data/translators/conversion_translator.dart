@@ -15,9 +15,7 @@ class ConversionTranslator
       sourceUnitId: model.sourceConversionItem?.unit.id != -1
           ? model.sourceConversionItem?.unit.id
           : null,
-      sourceValue: model.sourceConversionItem?.value.isNotEmpty == true
-          ? model.sourceConversionItem!.value.raw
-          : null,
+      sourceValue: model.sourceConversionItem?.value?.raw,
       lastModified: DateTime.now().millisecondsSinceEpoch,
     );
   }

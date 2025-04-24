@@ -46,12 +46,12 @@ void main() {
                 valueType: ConvertouchValueType.text,
                 paramSetId: 1,
               ),
-              value: ValueModel.empty,
-              defaultValue: ValueModel.empty,
+
             ),
           ],
         ),
       ],
+      mandatoryParamSetExists: true,
     ),
     conversionUnitValues: [
       ConversionUnitValueModel(
@@ -105,16 +105,6 @@ void main() {
                 'paramSetId': 1,
                 'calculable': false,
               },
-              'value': {
-                'raw': '',
-                'num': null,
-                'alt': '',
-              },
-              'defaultValue': {
-                'raw': '',
-                'num': null,
-                'alt': '',
-              },
               'calculated': false,
             }
           ],
@@ -124,6 +114,8 @@ void main() {
       "paramSetsCanBeAdded": false,
       "paramSetCanBeRemoved": false,
       "paramSetsCanBeRemovedInBulk": false,
+      "mandatoryParamSetExists": true,
+      'totalCount': 0,
     },
     'sourceItem': {
       'unit': {

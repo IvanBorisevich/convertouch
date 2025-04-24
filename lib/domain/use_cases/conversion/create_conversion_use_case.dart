@@ -5,7 +5,6 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
@@ -72,7 +71,7 @@ class CreateConversionUseCase
         InternalException(
           message: "Error when creating a conversion "
               "of the group ${input.unitGroup.name} "
-              "for the source value ${input.sourceUnitValue.value.raw} "
+              "for the source value ${input.sourceUnitValue.value?.raw} "
               "and the source unit ${input.sourceUnitValue.unit.name}",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
@@ -94,12 +93,10 @@ class CreateConversionUseCase
       srcDefaultValueStr = dynamicValue.value;
     }
 
-    srcDefaultValueStr ??= srcItem.unit.valueType.defaultValueStr;
-
-    return srcItem.copyWith(
-      defaultValue: ValueModel.str(
-        srcDefaultValueStr ?? srcItem.defaultValue.raw,
-      ),
+    return ConversionUnitValueModel.wrap(
+      unit: srcItem.unit,
+      value: srcItem.value?.raw,
+      defaultValue: srcDefaultValueStr,
     );
   }
 

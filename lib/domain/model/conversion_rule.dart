@@ -94,8 +94,8 @@ ValueModel _identityFunc(
 }
 
 typedef FormulasMap = Map<String, Map<String, ConversionRule>>;
-typedef FunctionWithParams = ValueModel Function(
+typedef FunctionWithParams = ValueModel? Function(
     ValueModel, ConversionParamSetValueModel params);
-typedef FunctionWithOptionalParams = ValueModel Function(ValueModel,
+typedef FunctionWithOptionalParams = ValueModel? Function(ValueModel,
     {ConversionParamSetValueModel? params});
-typedef FunctionWithoutParams = ValueModel Function(ValueModel);
+typedef FunctionWithoutParams = ValueModel? Function(ValueModel);

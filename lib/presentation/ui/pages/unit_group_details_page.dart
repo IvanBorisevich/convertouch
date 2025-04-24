@@ -96,17 +96,17 @@ class _ConvertouchUnitGroupDetailsPageState
                       ConvertouchParameterItem(
                         name: "Values Minimum",
                         visible:
-                            unitGroupDetailsState.draftGroup.minValue.isNotEmpty,
+                            unitGroupDetailsState.draftGroup.minValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.minValue.alt,
+                            .draftGroup.minValue?.alt,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: "Values Maximum",
                         visible:
-                            unitGroupDetailsState.draftGroup.maxValue.isNotEmpty,
+                            unitGroupDetailsState.draftGroup.maxValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.maxValue.alt,
+                            .draftGroup.maxValue?.alt,
                         textBoxColor: textBoxColor,
                       ),
                       refreshingJobsBlocBuilder(

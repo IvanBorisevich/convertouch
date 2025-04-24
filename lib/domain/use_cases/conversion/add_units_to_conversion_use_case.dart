@@ -24,7 +24,11 @@ class AddUnitsToConversionUseCase
 
     final addedConversionItemsMap = {
       for (var unit in newUnits)
-        unit.id: ConversionUnitValueModel.fromUnit(unit: unit)
+        unit.id: ConversionUnitValueModel.wrap(
+          unit: unit,
+          value: null,
+          defaultValue: null,
+        )
     };
     return {
       ...conversionItemsMap,

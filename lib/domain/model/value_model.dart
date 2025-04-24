@@ -2,8 +2,7 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const empty = ValueModel._(raw: "", numVal: null, alt: "");
-  static const undef = ValueModel._(raw: "-", numVal: null, alt: "-");
+  static const emptyString = ValueModel._(raw: "", numVal: null, alt: "");
   static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
   static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
 
@@ -17,11 +16,7 @@ class ValueModel extends Equatable {
     required this.numVal,
   });
 
-  factory ValueModel.str(String? value) {
-    if (value == null) {
-      return empty;
-    }
-
+  factory ValueModel.str(String value) {
     double? num = double.tryParse(value);
 
     return ValueModel._(
@@ -31,16 +26,8 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.numeric(num? value) {
-    if (value == null) {
-      return empty;
-    }
-
-    if (value.isNaN) {
-      return undef;
-    }
-
-    double numVal = value.toDouble();
+  factory ValueModel.numeric(num value) {
+    double? numVal = !value.isNaN ? value.toDouble() : null;
 
     return ValueModel._(
       raw: DoubleValueUtils.toPlain(numVal),
@@ -48,12 +35,6 @@ class ValueModel extends Equatable {
       numVal: numVal,
     );
   }
-
-  bool get isEmpty => raw.isEmpty;
-
-  bool get isNotEmpty => !isEmpty;
-
-  bool get isUndef => numVal?.isNaN == true;
 
   @override
   List<Object?> get props => [
@@ -75,22 +56,21 @@ class ValueModel extends Equatable {
       return null;
     }
 
+    String? raw = json["raw"];
+    if (raw == null || raw == '') {
+      return null;
+    }
+
     return ValueModel._(
-      raw: json["raw"] ?? "",
+      raw: raw,
       numVal: double.tryParse(json["num"]?.toString() ?? "") ??
-          double.tryParse(json["raw"] ?? ""),
+          double.tryParse(raw),
       alt: json["alt"] ?? json["scientific"],
     );
   }
 
   @override
   String toString() {
-    if (isEmpty) {
-      return 'ValueModel.empty';
-    }
-    if (isUndef) {
-      return 'ValueModel.undef';
-    }
     return 'ValueModel{raw: $raw, alt: $alt, num: $numVal}';
   }
 }

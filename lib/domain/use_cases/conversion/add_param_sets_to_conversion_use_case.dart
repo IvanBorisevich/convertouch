@@ -74,7 +74,7 @@ class AddParamSetsToConversionUseCase
 
       List<ConversionParamValueModel> paramValues = params
           .map(
-            (p) => ConversionParamValueModel(
+            (p) => ConversionParamValueModel.wrap(
               param: p,
               unit: p.defaultUnit,
             ),

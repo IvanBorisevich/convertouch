@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchInputBox extends StatefulWidget {
   final String? value;
-  final TextEditingController? textController;
+  final String? defaultValue;
   final FocusNode? focusNode;
   final ConvertouchValueType valueType;
   final ConvertouchListType? listType;
@@ -19,7 +19,6 @@ class ConvertouchInputBox extends StatefulWidget {
   final void Function()? onFocusLeft;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
-  final String? hintText;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
@@ -30,7 +29,7 @@ class ConvertouchInputBox extends StatefulWidget {
 
   const ConvertouchInputBox({
     this.value,
-    this.textController,
+    this.defaultValue,
     this.focusNode,
     this.valueType = ConvertouchValueType.text,
     this.listType,
@@ -42,7 +41,6 @@ class ConvertouchInputBox extends StatefulWidget {
     this.onFocusLeft,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
-    this.hintText,
     this.borderRadius = 15,
     required this.colors,
     this.prefixIcon,
@@ -65,6 +63,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
         value: widget.value,
         focusNode: widget.focusNode,
         listValues: listableSets[widget.listType]!,
+        defaultValue: widget.defaultValue,
         label: widget.label,
         autofocus: widget.autofocus,
         disabled: widget.readonly,
@@ -82,9 +81,9 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
 
     return ConvertouchTextBox(
       text: widget.value,
-      controller: widget.textController,
       focusNode: widget.focusNode,
       valueType: widget.valueType,
+      hintText: widget.defaultValue,
       label: widget.label,
       autofocus: widget.autofocus,
       readonly: widget.readonly,
@@ -93,7 +92,6 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
       onFocusLeft: widget.onFocusLeft,
       maxTextLength: widget.maxTextLength,
       textLengthCounterVisible: widget.textLengthCounterVisible,
-      hintText: widget.hintText,
       borderRadius: widget.borderRadius,
       colors: widget.colors,
       prefixIcon: widget.prefixIcon,

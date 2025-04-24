@@ -6,8 +6,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-class UnitGroupTranslator
-    extends Translator<UnitGroupModel, UnitGroupEntity> {
+class UnitGroupTranslator extends Translator<UnitGroupModel, UnitGroupEntity> {
   static final UnitGroupTranslator I = di.locator.get<UnitGroupTranslator>();
 
   @override
@@ -19,8 +18,8 @@ class UnitGroupTranslator
       conversionType:
           model.conversionType.value != 0 ? model.conversionType.value : null,
       valueType: model.valueType.id,
-      minValue: model.minValue.numVal,
-      maxValue: model.maxValue.numVal,
+      minValue: model.minValue?.numVal,
+      maxValue: model.maxValue?.numVal,
       refreshable: bool2int(model.refreshable),
       oob: bool2int(model.oob),
     );
@@ -34,8 +33,10 @@ class UnitGroupTranslator
       iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
-      minValue: ValueModel.numeric(entity.minValue),
-      maxValue: ValueModel.numeric(entity.maxValue),
+      minValue:
+          entity.minValue != null ? ValueModel.numeric(entity.minValue!) : null,
+      maxValue:
+          entity.maxValue != null ? ValueModel.numeric(entity.maxValue!) : null,
       refreshable: int2bool(entity.refreshable),
       oob: int2bool(entity.oob, ifNull: true),
     );

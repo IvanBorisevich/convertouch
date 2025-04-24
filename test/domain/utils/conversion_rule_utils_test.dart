@@ -56,11 +56,11 @@ void main() {
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.empty,
+              null,
               srcUnitRule: fahrenheitCalcRule,
               tgtUnitRule: kelvinCalcRule,
             ),
-            ValueModel.empty,
+            null,
           );
         },
       );
@@ -88,16 +88,16 @@ void main() {
               srcUnitRule: strLen,
               tgtUnitRule: ConversionRule.identity(),
             ),
-            ValueModel.undef,
+            null,
           );
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.empty,
+              null,
               srcUnitRule: strLen,
               tgtUnitRule: ConversionRule.identity(),
             ),
-            ValueModel.empty,
+            null,
           );
         },
       );
@@ -210,17 +210,17 @@ void main() {
               tgtUnitRule: ruSizeCalc,
               params: params,
             ),
-            ValueModel.undef,
+            null,
           );
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.empty,
+              null,
               srcUnitRule: ruSizeCalc,
               tgtUnitRule: euSizeCalc,
               params: params,
             ),
-            ValueModel.empty,
+            null,
           );
 
           expect(
@@ -276,11 +276,11 @@ void main() {
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.empty,
+              null,
               srcUnitRule: kilometerCalcRule,
               tgtUnitRule: kilometerCalcRule,
             ),
-            ValueModel.empty,
+            null,
           );
         },
       );
@@ -308,16 +308,16 @@ void main() {
               srcUnitRule: strLen,
               tgtUnitRule: ConversionRule.identity(),
             ),
-            ValueModel.undef,
+            null,
           );
 
           expect(
             ConversionRuleUtils.calculate(
-              ValueModel.empty,
+              null,
               srcUnitRule: strLen,
               tgtUnitRule: ConversionRule.identity(),
             ),
-            ValueModel.empty,
+            null,
           );
         },
       );

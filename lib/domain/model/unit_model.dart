@@ -11,8 +11,8 @@ class UnitModel extends IdNameSearchableItemModel {
   final int unitGroupId;
   final ConvertouchValueType valueType;
   final ConvertouchListType? listType;
-  final ValueModel minValue;
-  final ValueModel maxValue;
+  final ValueModel? minValue;
+  final ValueModel? maxValue;
   final bool invertible;
   final ItemSearchMatch codeMatch;
 
@@ -25,8 +25,8 @@ class UnitModel extends IdNameSearchableItemModel {
     this.unitGroupId = -1,
     required this.valueType,
     this.listType,
-    this.minValue = ValueModel.empty,
-    this.maxValue = ValueModel.empty,
+    this.minValue,
+    this.maxValue,
     this.invertible = true,
     super.nameMatch,
     this.codeMatch = ItemSearchMatch.none,
@@ -65,8 +65,8 @@ class UnitModel extends IdNameSearchableItemModel {
       symbol: symbol ?? this.symbol,
       valueType: valueType ?? this.valueType,
       listType: listType ?? this.listType,
-      minValue: minValue?.isNotEmpty == true ? minValue! : this.minValue,
-      maxValue: maxValue?.isNotEmpty == true ? maxValue! : this.maxValue,
+      minValue: minValue ?? this.minValue,
+      maxValue: maxValue ?? this.maxValue,
       unitGroupId: unitGroupId ?? this.unitGroupId,
       invertible: this.invertible,
       nameMatch: nameMatch ?? this.nameMatch,
@@ -97,8 +97,8 @@ class UnitModel extends IdNameSearchableItemModel {
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
       "valueType": valueType.id,
       "listType": listType?.id,
-      "minValue": minValue.numVal,
-      "maxValue": maxValue.numVal,
+      "minValue": minValue?.numVal,
+      "maxValue": maxValue?.numVal,
       "invertible": invertible,
       "oob": oob,
     };
@@ -123,8 +123,12 @@ class UnitModel extends IdNameSearchableItemModel {
       unitGroupId: json["unitGroupId"] ?? -1,
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
       listType: ConvertouchListType.valueOf(json["listType"]),
-      minValue: ValueModel.numeric(json["minValue"]),
-      maxValue: ValueModel.numeric(json["maxValue"]),
+      minValue: json["minValue"] != null
+          ? ValueModel.numeric(json["minValue"])
+          : null,
+      maxValue: json["maxValue"] != null
+          ? ValueModel.numeric(json["maxValue"])
+          : null,
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );

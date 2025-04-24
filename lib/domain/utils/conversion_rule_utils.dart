@@ -22,36 +22,32 @@ class ConversionRuleUtils {
     return formula;
   }
 
-  static ValueModel calculate(
-    ValueModel x, {
+  static ValueModel? calculate(
+    ValueModel? x, {
     required ConversionRule srcUnitRule,
     required ConversionRule tgtUnitRule,
     ConversionParamSetValueModel? params,
   }) {
-    if (x.isEmpty) {
-      return ValueModel.empty;
+    if (x == null) {
+      return null;
     }
 
-    ValueModel baseValue;
+    ValueModel? baseValue;
     if (srcUnitRule.toBase != null) {
       baseValue = srcUnitRule.toBase!.call(x, params: params);
     } else {
-      baseValue = ValueModel.undef;
+      baseValue = null;
     }
 
-    if (baseValue.isEmpty) {
-      return ValueModel.empty;
+    if (baseValue == null) {
+      return null;
     }
 
-    if (baseValue.isUndef) {
-      return ValueModel.undef;
-    }
-
-    ValueModel y;
+    ValueModel? y;
     if (tgtUnitRule.fromBase != null) {
       y = tgtUnitRule.fromBase!.call(baseValue, params: params);
     } else {
-      y = ValueModel.undef;
+      y = null;
     }
 
     return y;

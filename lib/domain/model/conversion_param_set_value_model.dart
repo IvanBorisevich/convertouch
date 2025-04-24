@@ -40,7 +40,7 @@ class ConversionParamSetValueModel extends ItemModel {
     };
   }
 
-  ValueModel getValue(String paramName) {
+  ValueModel? getValue(String paramName) {
     return paramValues.firstWhere((e) => e.param.name == paramName).value;
   }
 

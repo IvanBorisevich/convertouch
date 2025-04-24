@@ -6,8 +6,6 @@ import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ConversionRuleFormModel extends Equatable {
-  static const ConversionRuleFormModel none = ConversionRuleFormModel._();
-
   final ValueModel unitValue;
   final UnitModel argUnit;
   final ValueModel draftArgValue;
@@ -19,10 +17,10 @@ class ConversionRuleFormModel extends Equatable {
   final UnitModel secondaryBaseUnit;
 
   const ConversionRuleFormModel._({
-    this.unitValue = ValueModel.empty,
+    required this.unitValue,
     this.argUnit = UnitModel.none,
-    this.draftArgValue = ValueModel.empty,
-    this.savedArgValue = ValueModel.empty,
+    required this.draftArgValue,
+    required this.savedArgValue,
     this.configVisible = false,
     this.configEditable = false,
     this.readOnlyDescription = "",

@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
 class EditConversionItemValueUseCase
@@ -15,17 +14,13 @@ class EditConversionItemValueUseCase
     required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
     required EditConversionItemValueDelta delta,
   }) {
-    ValueModel? newValue = delta.newValue != null
-        ? ValueModel.str(delta.newValue)
-        : currentSourceItem?.value;
+    ConversionUnitValueModel currentSrcItem =
+        modifiedConversionItemsMap[delta.unitId]!;
 
-    ValueModel? newDefaultValue = delta.newDefaultValue != null
-        ? ValueModel.str(delta.newDefaultValue)
-        : ValueModel.one;
-
-    return modifiedConversionItemsMap[delta.unitId]!.copyWith(
-      value: newValue ?? ValueModel.empty,
-      defaultValue: newDefaultValue,
+    return ConversionUnitValueModel.wrap(
+      unit: currentSrcItem.unit,
+      value: delta.newValue,
+      defaultValue: delta.newDefaultValue,
     );
   }
 }

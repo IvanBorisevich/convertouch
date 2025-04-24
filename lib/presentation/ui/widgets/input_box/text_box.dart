@@ -38,6 +38,7 @@ class ConvertouchTextBox extends StatefulWidget {
   static const double defaultHeight = 55;
 
   final String? text;
+  final String? hintText;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final ConvertouchValueType valueType;
@@ -49,7 +50,6 @@ class ConvertouchTextBox extends StatefulWidget {
   final void Function()? onFocusLeft;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
-  final String? hintText;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
@@ -60,6 +60,7 @@ class ConvertouchTextBox extends StatefulWidget {
 
   const ConvertouchTextBox({
     this.text,
+    this.hintText,
     this.controller,
     this.focusNode,
     this.valueType = ConvertouchValueType.text,
@@ -71,7 +72,6 @@ class ConvertouchTextBox extends StatefulWidget {
     this.onFocusLeft,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
-    this.hintText,
     this.borderRadius = 15,
     required this.colors,
     this.prefixIcon,
@@ -144,6 +144,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   @override
   Widget build(BuildContext context) {
     RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.valueType];
+
+    _controller.text = widget.text ?? "";
 
     if (_cursorPosition == null || _cursorPosition! > _controller.text.length) {
       _cursorPosition = _controller.text.length;
@@ -223,7 +225,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             ),
           ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: widget.hintText,
+          hintText: widget.hintText ?? '-',
           hintStyle: TextStyle(
             foreground: Paint()..color = hintColor,
           ),

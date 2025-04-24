@@ -5,7 +5,6 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 
 abstract class ConversionItemValueTranslator<M extends ConversionItemValueModel,
     E extends ConversionItemValueEntity> extends Translator<M, E> {}
@@ -23,9 +22,8 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
   }) {
     return ConversionUnitValueEntity(
       unitId: model.unit.id,
-      value: model.value.isNotEmpty ? model.value.raw : null,
-      defaultValue:
-          model.defaultValue.isNotEmpty ? model.defaultValue.raw : null,
+      value: model.value?.raw,
+      defaultValue: model.defaultValue?.raw,
       sequenceNum: sequenceNum ?? 0,
       conversionId: conversionId!,
     );
@@ -36,13 +34,10 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
     ConversionUnitValueEntity entity, {
     UnitModel? unit,
   }) {
-    ValueModel value = ValueModel.str(entity.value);
-    ValueModel defaultValue = ValueModel.str(entity.defaultValue);
-
-    return ConversionUnitValueModel(
+    return ConversionUnitValueModel.wrap(
       unit: unit!,
-      value: value,
-      defaultValue: defaultValue,
+      value: entity.value,
+      defaultValue: entity.defaultValue,
     );
   }
 }
@@ -62,9 +57,8 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
       paramId: model.param.id,
       unitId: model.unit?.id,
       calculated: bool2int(model.calculated),
-      value: model.value.isNotEmpty ? model.value.raw : null,
-      defaultValue:
-          model.defaultValue.isNotEmpty ? model.defaultValue.raw : null,
+      value: model.value?.raw,
+      defaultValue: model.defaultValue?.raw,
       sequenceNum: sequenceNum ?? 0,
       conversionId: conversionId!,
     );
@@ -76,15 +70,12 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
     UnitModel? unit,
     ConversionParamModel? param,
   }) {
-    ValueModel value = ValueModel.str(entity.value);
-    ValueModel defaultValue = ValueModel.str(entity.defaultValue);
-
-    return ConversionParamValueModel(
+    return ConversionParamValueModel.wrap(
       param: param!,
       unit: unit,
       calculated: int2bool(entity.calculated),
-      value: value,
-      defaultValue: defaultValue,
+      value: entity.value,
+      defaultValue: entity.defaultValue,
     );
   }
 }
