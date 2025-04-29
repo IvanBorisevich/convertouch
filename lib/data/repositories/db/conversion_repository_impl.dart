@@ -67,7 +67,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
       return Right(
         ConversionTranslator.I.toModel(conversion).copyWith(
-              sourceConversionItem: ConversionUnitValueTranslator.I.toModel(
+              srcUnitValue: ConversionUnitValueTranslator.I.toModel(
                 ConversionUnitValueEntity(
                   conversionId: conversion.id!,
                   value: conversion.sourceValue,
@@ -76,7 +76,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
                 ),
                 unit: sourceItemUnit,
               ),
-              conversionUnitValues: conversionItemEntities
+              convertedUnitValues: conversionItemEntities
                   .map(
                     (entity) => ConversionUnitValueTranslator.I.toModel(
                       entity,
@@ -131,7 +131,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         await conversionDao.update(entity);
         await conversionUnitValueDao.removeByConversionId(conversion.id);
         resultConversion = conversion;
-      } else if (conversion.conversionUnitValues.isNotEmpty) {
+      } else if (conversion.convertedUnitValues.isNotEmpty) {
         log("Inserting a new conversion");
         int id = await conversionDao.insert(entity);
         resultConversion = conversion.copyWith(
@@ -139,13 +139,13 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
-      if (conversion.conversionUnitValues.isNotEmpty) {
+      if (conversion.convertedUnitValues.isNotEmpty) {
         log("Inserting conversion items");
-        log("Source unit id = ${conversion.sourceConversionItem?.unit.id}");
+        log("Source unit id = ${conversion.srcUnitValue?.unit.id}");
 
         await conversionUnitValueDao.insertBatch(
           database,
-          conversion.conversionUnitValues
+          conversion.convertedUnitValues
               .mapIndexed(
                 (index, item) => ConversionUnitValueTranslator.I.fromModel(
                   item,

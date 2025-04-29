@@ -21,6 +21,13 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   ConvertouchListType? get listType;
 
+  bool get isNotEmpty {
+    return listType != null && value != null ||
+        listType == null && (value != null || defaultValue != null);
+  }
+
+  bool get isEmpty => !isNotEmpty;
+
   @override
   List<Object?> get props => [
         itemType,
@@ -37,27 +44,6 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     super.value,
     super.defaultValue,
   });
-
-  factory ConversionUnitValueModel.wrap({
-    required UnitModel unit,
-    required String? value,
-    required String? defaultValue,
-  }) {
-    String? presetDefaultValueStr =
-        unit.listType?.defaultValueStr ?? unit.valueType.defaultValueStr;
-
-    ValueModel? presetDefaultValue = presetDefaultValueStr != null
-        ? ValueModel.str(presetDefaultValueStr)
-        : null;
-
-    return ConversionUnitValueModel(
-      unit: unit,
-      value: value != null ? ValueModel.str(value) : null,
-      defaultValue: defaultValue != null
-          ? ValueModel.str(defaultValue)
-          : presetDefaultValue,
-    );
-  }
 
   ConversionUnitValueModel copyWith({
     UnitModel? unit,
@@ -109,9 +95,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   @override
   String toString() {
     return 'ConversionUnitValueModel{'
-        'unit id: ${unit.id}, '
-        'name: ${unit.name}, '
-        'coefficient: ${unit.coefficient}, '
+        'unit: $unit, '
         'value: $value, '
         'default: $defaultValue'
         '}';
@@ -130,31 +114,6 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     super.value,
     super.defaultValue,
   });
-
-  factory ConversionParamValueModel.wrap({
-    required ConversionParamModel param,
-    UnitModel? unit,
-    bool calculated = false,
-    String? value,
-    String? defaultValue,
-  }) {
-    String? presetDefaultValueStr =
-        param.listType?.defaultValueStr ?? param.valueType.defaultValueStr;
-
-    ValueModel? presetDefaultValue = presetDefaultValueStr != null
-        ? ValueModel.str(presetDefaultValueStr)
-        : null;
-
-    return ConversionParamValueModel(
-      param: param,
-      unit: unit,
-      calculated: calculated,
-      value: value != null ? ValueModel.str(value) : null,
-      defaultValue: defaultValue != null
-          ? ValueModel.str(defaultValue)
-          : presetDefaultValue,
-    );
-  }
 
   @override
   List<Object?> get props => [
@@ -193,7 +152,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   ConvertouchValueType get valueType => param.valueType;
 
   @override
-  ConvertouchListType? get listType => param.listType;
+  ConvertouchListType? get listType => param.listType ?? unit?.listType;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {

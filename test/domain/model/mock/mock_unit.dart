@@ -51,3 +51,78 @@ const mockOobBaseUnit2 = UnitModel(
   valueType: ConvertouchValueType.decimalPositive,
   oob: true,
 );
+
+const UnitModel centimeter = UnitModel(
+  id: 1,
+  name: "Centimeter",
+  code: "cm",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 0.01,
+);
+
+const UnitModel decimeter = UnitModel(
+  id: 2,
+  name: "Decimeter",
+  code: "dm",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 0.1,
+);
+
+const UnitModel meter = UnitModel(
+  id: 3,
+  name: 'Meter',
+  code: 'm',
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 1,
+);
+
+const UnitModel kilometer = UnitModel(
+  id: 4,
+  name: "Kilometer",
+  code: "km",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 1000,
+);
+
+const UnitModel europeanSize = UnitModel(
+  id: 5,
+  name: "Europe",
+  code: "EU",
+  valueType: ConvertouchValueType.integerPositive,
+  listType: ConvertouchListType.clothingSizeEu,
+);
+
+const UnitModel japanSize = UnitModel(
+  id: 6,
+  name: "Japan",
+  code: "JP",
+  valueType: ConvertouchValueType.integerPositive,
+  listType: ConvertouchListType.clothingSizeJp,
+);
+
+const UnitModel italianSize = UnitModel(
+  id: 7,
+  name: "Italia",
+  code: "IT",
+  valueType: ConvertouchValueType.integerPositive,
+  listType: ConvertouchListType.clothingSizeIt,
+);
+
+const UnitModel usaSize = UnitModel(
+  id: 8,
+  name: 'Clothing Size US',
+  code: 'US',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.clothingSizeUs,
+);
+
+const mockUnitsList = [
+  centimeter,
+  decimeter,
+  meter,
+  kilometer,
+  europeanSize,
+  japanSize,
+  italianSize,
+  usaSize,
+];

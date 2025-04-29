@@ -21,7 +21,7 @@ class GetListValuesUseCase
       return const Right([]);
     }
 
-    return await listValueRepository.get(
+    return await listValueRepository.search(
       listType: input.listType!,
       searchString: input.searchString,
       pageNum: input.pageNum,

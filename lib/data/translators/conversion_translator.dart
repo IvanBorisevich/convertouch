@@ -12,10 +12,10 @@ class ConversionTranslator
     return ConversionEntity(
       id: model.id != -1 ? model.id : null,
       unitGroupId: model.unitGroup.id,
-      sourceUnitId: model.sourceConversionItem?.unit.id != -1
-          ? model.sourceConversionItem?.unit.id
+      sourceUnitId: model.srcUnitValue?.unit.id != -1
+          ? model.srcUnitValue?.unit.id
           : null,
-      sourceValue: model.sourceConversionItem?.value?.raw,
+      sourceValue: model.srcUnitValue?.value?.raw,
       lastModified: DateTime.now().millisecondsSinceEpoch,
     );
   }

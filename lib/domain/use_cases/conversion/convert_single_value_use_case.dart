@@ -32,13 +32,17 @@ class ConvertSingleValueUseCase
         unitGroup: input.unitGroup,
         paramSetValue: input.params,
       );
-      ValueModel? tgtDef = _calculate(
-        src: input.srcItem.defaultValue,
-        srcUnit: input.srcItem.unit,
-        tgtUnit: input.tgtUnit,
-        unitGroup: input.unitGroup,
-        paramSetValue: input.params,
-      );
+
+      ValueModel? tgtDef;
+      if (input.tgtUnit.listType == null) {
+        tgtDef = _calculate(
+          src: input.srcItem.defaultValue,
+          srcUnit: input.srcItem.unit,
+          tgtUnit: input.tgtUnit,
+          unitGroup: input.unitGroup,
+          paramSetValue: input.params,
+        );
+      }
 
       return Right(
         ConversionUnitValueModel(

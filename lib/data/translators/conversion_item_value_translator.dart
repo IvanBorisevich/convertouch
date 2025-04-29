@@ -5,6 +5,7 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 abstract class ConversionItemValueTranslator<M extends ConversionItemValueModel,
     E extends ConversionItemValueEntity> extends Translator<M, E> {}
@@ -34,10 +35,10 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
     ConversionUnitValueEntity entity, {
     UnitModel? unit,
   }) {
-    return ConversionUnitValueModel.wrap(
+    return ConversionUnitValueModel(
       unit: unit!,
-      value: entity.value,
-      defaultValue: entity.defaultValue,
+      value: ValueModel.any(entity.value),
+      defaultValue: ValueModel.any(entity.defaultValue),
     );
   }
 }
@@ -70,12 +71,12 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
     UnitModel? unit,
     ConversionParamModel? param,
   }) {
-    return ConversionParamValueModel.wrap(
+    return ConversionParamValueModel(
       param: param!,
       unit: unit,
       calculated: int2bool(entity.calculated),
-      value: entity.value,
-      defaultValue: entity.defaultValue,
+      value: ValueModel.any(entity.value),
+      defaultValue: ValueModel.any(entity.defaultValue),
     );
   }
 }

@@ -12,17 +12,17 @@ class ConversionModel extends IdNameItemModel {
   );
 
   final UnitGroupModel unitGroup;
-  final ConversionUnitValueModel? sourceConversionItem;
+  final ConversionUnitValueModel? srcUnitValue;
   final ConversionParamSetValueBulkModel? params;
-  final List<ConversionUnitValueModel> conversionUnitValues;
+  final List<ConversionUnitValueModel> convertedUnitValues;
 
   const ConversionModel({
     super.id = -1,
     super.name = "",
     this.unitGroup = UnitGroupModel.none,
-    this.sourceConversionItem,
+    this.srcUnitValue,
     this.params,
-    this.conversionUnitValues = const [],
+    this.convertedUnitValues = const [],
   }) : super(
           itemType: ItemType.conversion,
         );
@@ -41,16 +41,16 @@ class ConversionModel extends IdNameItemModel {
     int? id,
     String? name,
     UnitGroupModel? unitGroup,
-    ConversionUnitValueModel? sourceConversionItem,
-    List<ConversionUnitValueModel>? conversionUnitValues,
+    ConversionUnitValueModel? srcUnitValue,
+    List<ConversionUnitValueModel>? convertedUnitValues,
     ConversionParamSetValueBulkModel? params,
   }) {
     return ConversionModel(
       id: id ?? this.id,
       name: name ?? this.name,
       unitGroup: unitGroup ?? this.unitGroup,
-      sourceConversionItem: sourceConversionItem ?? this.sourceConversionItem,
-      conversionUnitValues: conversionUnitValues ?? this.conversionUnitValues,
+      srcUnitValue: srcUnitValue ?? this.srcUnitValue,
+      convertedUnitValues: convertedUnitValues ?? this.convertedUnitValues,
       params: params ?? this.params,
     );
   }
@@ -60,9 +60,9 @@ class ConversionModel extends IdNameItemModel {
     var result = {
       "id": id,
       "unitGroup": unitGroup.toJson(),
-      "sourceItem": sourceConversionItem?.toJson(),
+      "sourceItem": srcUnitValue?.toJson(),
       "params": params?.toJson(),
-      "targetItems": conversionUnitValues.map((item) => item.toJson()).toList(),
+      "targetItems": convertedUnitValues.map((item) => item.toJson()).toList(),
     };
 
     if (removeNulls) {
@@ -80,10 +80,10 @@ class ConversionModel extends IdNameItemModel {
       id: json["id"] ?? -1,
       unitGroup:
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
-      sourceConversionItem:
+      srcUnitValue:
           ConversionUnitValueModel.fromJson(json["sourceItem"]),
       params: ConversionParamSetValueBulkModel.fromJson(json["params"]),
-      conversionUnitValues: (json["targetItems"] as List)
+      convertedUnitValues: (json["targetItems"] as List)
           .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)
           .toList(),
     );
@@ -93,9 +93,9 @@ class ConversionModel extends IdNameItemModel {
   List<Object?> get props => [
         id,
         unitGroup,
-        sourceConversionItem,
+        srcUnitValue,
         params,
-        conversionUnitValues,
+        convertedUnitValues,
       ];
 
   bool get exists => this != none;
@@ -104,8 +104,8 @@ class ConversionModel extends IdNameItemModel {
   String toString() {
     return 'ConversionModel{'
         'unitGroup: $unitGroup, '
-        'sourceConversionItem: $sourceConversionItem, '
+        'srcUnitValue: $srcUnitValue, '
         'params: $params, '
-        'conversionUnitValues: $conversionUnitValues}';
+        'convertedUnitValues: $convertedUnitValues}';
   }
 }

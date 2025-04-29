@@ -5,12 +5,12 @@ import 'package:convertouch/domain/model/unit_model.dart';
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
   final T delta;
-  final bool rebuildConversion;
+  final bool recalculateUnitValues;
 
   const InputConversionModifyModel({
     required this.conversion,
     required this.delta,
-    this.rebuildConversion = true,
+    this.recalculateUnitValues = true,
   });
 }
 

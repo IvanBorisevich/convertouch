@@ -11,7 +11,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -31,7 +31,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -50,7 +50,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -71,7 +71,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -92,7 +92,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -105,7 +105,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -119,7 +119,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -132,7 +132,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '
@@ -144,7 +144,7 @@ abstract class UnitDaoDb extends UnitDao {
   @override
   @Query('select '
       'u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, '
-      'u.invertible, u.oob, '
+      'u.invertible, u.oob, u.list_type, '
       'coalesce(u.value_type, g.value_type) value_type, '
       'coalesce(u.min_value, g.min_value) min_value, '
       'coalesce(u.max_value, g.max_value) max_value '

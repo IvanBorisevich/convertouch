@@ -1,8 +1,8 @@
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const emptyString = ValueModel._(raw: "", numVal: null, alt: "");
   static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
   static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
 
@@ -19,6 +19,10 @@ class ValueModel extends Equatable {
   factory ValueModel.str(String value) {
     double? num = double.tryParse(value);
 
+    if (num != null) {
+      return ValueModel.numeric(num);
+    }
+
     return ValueModel._(
       raw: value,
       alt: value,
@@ -29,10 +33,32 @@ class ValueModel extends Equatable {
   factory ValueModel.numeric(num value) {
     double? numVal = !value.isNaN ? value.toDouble() : null;
 
+    String raw = DoubleValueUtils.format(numVal);
+
     return ValueModel._(
-      raw: DoubleValueUtils.toPlain(numVal),
-      alt: DoubleValueUtils.toScientific(numVal),
-      numVal: numVal,
+      raw: raw,
+      alt: DoubleValueUtils.format(numVal, scientific: true),
+      numVal: double.tryParse(raw),
+    );
+  }
+
+  static ValueModel? any(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    if (value is num) {
+      return ValueModel.numeric(value);
+    }
+
+    if (value is String) {
+      return ValueModel.str(value);
+    }
+
+    throw ConvertouchException(
+      message: "Value $value has unsupported type",
+      stackTrace: null,
+      dateTime: DateTime.now(),
     );
   }
 
@@ -40,7 +66,6 @@ class ValueModel extends Equatable {
   List<Object?> get props => [
         raw,
         alt,
-        numVal,
       ];
 
   Map<String, dynamic> toJson() {

@@ -6,16 +6,14 @@ import 'package:convertouch/domain/model/unit_model.dart';
 class InputConversionModel {
   final UnitGroupModel unitGroup;
   final ConversionUnitValueModel sourceUnitValue;
-  final ConversionParamSetValueBulkModel? params;
+  final ConversionParamSetValueModel? params;
   final List<UnitModel> targetUnits;
-  final int? conversionId;
 
   const InputConversionModel({
     required this.unitGroup,
     required this.sourceUnitValue,
     this.params,
     this.targetUnits = const [],
-    this.conversionId,
   });
 
   @override

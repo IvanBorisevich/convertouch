@@ -62,7 +62,6 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
     if (widget.listType != null) {
       return ConvertouchListBox(
         value: widget.value,
-        defaultValue: widget.defaultValue,
         listType: widget.listType!,
         bloc: BlocProvider.of<DropdownBloc>(context),
         focusNode: widget.focusNode,

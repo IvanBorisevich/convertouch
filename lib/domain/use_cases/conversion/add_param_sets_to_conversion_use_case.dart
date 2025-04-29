@@ -16,7 +16,8 @@ class AddParamSetsToConversionUseCase
   final ConversionParamRepository conversionParamRepository;
 
   const AddParamSetsToConversionUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
   });
@@ -25,7 +26,7 @@ class AddParamSetsToConversionUseCase
   Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
     required ConversionParamSetValueBulkModel? currentParams,
     required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel? currentSourceItem,
+    required ConversionUnitValueModel? srcUnitValue,
     required AddParamSetsDelta delta,
   }) async {
     List<ConversionParamSetModel> paramSetsInConversion = [];
@@ -74,7 +75,7 @@ class AddParamSetsToConversionUseCase
 
       List<ConversionParamValueModel> paramValues = params
           .map(
-            (p) => ConversionParamValueModel.wrap(
+            (p) => ConversionParamValueModel(
               param: p,
               unit: p.defaultUnit,
             ),

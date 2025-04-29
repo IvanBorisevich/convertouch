@@ -5,7 +5,8 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class RemoveConversionItemsUseCase
     extends AbstractModifyConversionUseCase<RemoveConversionItemsDelta> {
   const RemoveConversionItemsUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
@@ -17,18 +18,5 @@ class RemoveConversionItemsUseCase
       (unitId, item) => delta.unitIds.contains(unitId),
     );
     return conversionItemsMap;
-  }
-
-  @override
-  ConversionUnitValueModel modifySourceUnitValue({
-    required ConversionUnitValueModel? currentSourceItem,
-    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
-    required RemoveConversionItemsDelta delta,
-  }) {
-    if (currentSourceItem != null &&
-        !delta.unitIds.contains(currentSourceItem.unit.id)) {
-      return modifiedConversionItemsMap[currentSourceItem.unit.id]!;
-    }
-    return modifiedConversionItemsMap.values.first;
   }
 }

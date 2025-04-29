@@ -98,7 +98,7 @@ void main() {
         mandatoryParamSetExists: true,
         totalCount: 2,
       ),
-      conversionUnitValues: [],
+      convertedUnitValues: [],
     ),
     showRefreshButton: false,
   );
@@ -192,7 +192,7 @@ void main() {
         mandatoryParamSetExists: true,
         totalCount: 2,
       ),
-      conversionUnitValues: const [],
+      convertedUnitValues: const [],
     ),
     showRefreshButton: false,
   );

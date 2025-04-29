@@ -71,8 +71,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
       defaultValueStr = widget.item.defaultValue?.alt;
     }
 
-    String paramName = widget.itemNameFunc.call(widget.item);
-    String? paramUnitCode = widget.unitItemCodeFunc.call(widget.item);
+    String itemName = widget.itemNameFunc.call(widget.item);
+    String? itemCode = widget.unitItemCodeFunc.call(widget.item);
 
     return SizedBox(
       height: _defaultHeight,
@@ -93,7 +93,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               value: valueStr,
               defaultValue: defaultValueStr,
               readonly: widget.disabled,
-              label: paramName,
+              label: itemName,
               borderRadius: 15,
               valueType: widget.item.valueType,
               listType: widget.item.listType,
@@ -145,7 +145,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               colors: unitTextBoxColor,
             ),
           ),
-          paramUnitCode != null
+          itemCode != null
               ? Container(
                   width: _unitButtonWidth,
                   height: _defaultHeight,
@@ -176,7 +176,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                       ),
                     ),
                     child: Text(
-                      paramUnitCode,
+                      itemCode,
                       style: TextStyle(
                         color: _isFocused && !widget.disabled
                             ? unitButtonColor.foreground.focused

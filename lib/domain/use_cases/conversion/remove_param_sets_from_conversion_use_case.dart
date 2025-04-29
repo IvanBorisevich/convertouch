@@ -10,14 +10,15 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class RemoveParamSetsFromConversionUseCase
     extends AbstractModifyConversionUseCase<RemoveParamSetsDelta> {
   const RemoveParamSetsFromConversionUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
   Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
     required ConversionParamSetValueBulkModel? currentParams,
     required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel? currentSourceItem,
+    required ConversionUnitValueModel? srcUnitValue,
     required RemoveParamSetsDelta delta,
   }) async {
     if (currentParams == null || currentParams.paramSetValues.isEmpty) {

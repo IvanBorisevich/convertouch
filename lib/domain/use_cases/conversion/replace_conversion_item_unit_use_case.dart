@@ -5,7 +5,8 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class ReplaceConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionItemUnitDelta> {
   const ReplaceConversionItemUnitUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
@@ -26,11 +27,10 @@ class ReplaceConversionItemUnitUseCase
   }
 
   @override
-  ConversionUnitValueModel modifySourceUnitValue({
-    required ConversionUnitValueModel? currentSourceItem,
-    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
+  ConversionUnitValueModel? newSourceUnitValue({
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required ReplaceConversionItemUnitDelta delta,
   }) {
-    return modifiedConversionItemsMap[delta.newUnit.id]!;
+    return modifiedConvertedItemsMap[delta.newUnit.id];
   }
 }

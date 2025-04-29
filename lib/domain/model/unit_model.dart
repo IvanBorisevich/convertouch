@@ -144,6 +144,7 @@ class UnitModel extends IdNameSearchableItemModel {
         symbol,
         unitGroupId,
         valueType,
+        listType,
         minValue,
         maxValue,
         invertible,
@@ -167,6 +168,7 @@ class UnitModel extends IdNameSearchableItemModel {
         'valueType: $valueType, '
         'minValue: $minValue, '
         'maxValue: $maxValue, '
+        'listType: $listType, '
         'invertible: $invertible, '
         'nameMatch: $nameMatch, '
         'codeMatch: $codeMatch}';

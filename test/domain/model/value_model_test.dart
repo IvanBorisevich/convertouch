@@ -1,20 +1,32 @@
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
+ValueModel _emptyStr = ValueModel.str("");
+
 void main() {
   test('Build value model from raw string value', () {
     ValueModel str1 = ValueModel.str("0.0098");
     expect(str1.raw, "0.0098");
     expect(str1.alt, "0.0098");
 
-    expect(ValueModel.str(""), ValueModel.emptyString);
+    expect(ValueModel.str(""), _emptyStr);
   });
 
   test('Build value model from numeric value', () {
     expect(ValueModel.numeric(23).numVal, 23);
     expect(ValueModel.numeric(0), ValueModel.zero);
     expect(ValueModel.numeric(1), ValueModel.one);
-    expect(ValueModel.numeric(double.nan), ValueModel.emptyString);
+    expect(ValueModel.numeric(double.nan), _emptyStr);
+    expect(ValueModel.numeric(4000000000), ValueModel.str("4000000000"));
+    expect(ValueModel.numeric(0.09999999999999999), ValueModel.str("0.1"));
+    expect(ValueModel.numeric(0.09999999999999999), ValueModel.numeric(0.1));
+  });
+
+  test('Build value model from any dynamic value', () {
+    expect(ValueModel.any(23)?.numVal, 23);
+    expect(ValueModel.any(0), ValueModel.zero);
+    expect(ValueModel.any(1), ValueModel.one);
+    expect(ValueModel.any(double.nan), _emptyStr);
 
     ValueModel numVal = ValueModel.numeric(4000000000);
     expect(numVal.numVal, 4000000000);
@@ -41,7 +53,19 @@ void main() {
       'alt': '231',
     });
 
-    expect(ValueModel.emptyString.toJson(), {
+    expect(ValueModel.numeric(0.1).toJson(), {
+      'raw': '0.1',
+      'alt': '0.1',
+      'num': 0.1,
+    });
+
+    expect(ValueModel.numeric(0.0999999999999).toJson(), {
+      'raw': '0.1',
+      'alt': '0.1',
+      'num': 0.1,
+    });
+
+    expect(_emptyStr.toJson(), {
       'raw': '',
       'alt': '',
       'num': null,
@@ -56,6 +80,24 @@ void main() {
         'alt': '23',
       }),
       ValueModel.numeric(23),
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '0.1',
+        'num': 0.1,
+        'alt': '0.1',
+      }),
+      ValueModel.numeric(0.09999999999999999),
+    );
+
+    expect(
+      ValueModel.fromJson({
+        'raw': '0.1',
+        'num': 0.1,
+        'alt': '0.1',
+      }),
+      ValueModel.numeric(0.1),
     );
 
     expect(

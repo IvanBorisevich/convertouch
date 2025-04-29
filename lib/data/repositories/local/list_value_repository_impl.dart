@@ -8,7 +8,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
   const ListValueRepositoryImpl();
 
   @override
-  Future<Either<ConvertouchException, List<ListValueModel>>> get({
+  Future<Either<ConvertouchException, List<ListValueModel>>> search({
     required ConvertouchListType listType,
     String? searchString,
     int pageNum = 0,
@@ -18,5 +18,15 @@ class ListValueRepositoryImpl implements ListValueRepository {
         listableSets[listType]?.map((e) => ListValueModel(e)).toList();
 
     return Right(result ?? []);
+  }
+
+  @override
+  Future<Either<ConvertouchException, ListValueModel?>> getDefault({
+    required ConvertouchListType listType,
+  }) async {
+    String? rawValue = listableSets[listType]?.firstOrNull;
+    return rawValue != null
+        ? Right(ListValueModel(rawValue))
+        : const Right(null);
   }
 }

@@ -121,7 +121,7 @@ class ConversionBloc
           ConversionBuilt(
             conversion: conversion,
             showRefreshButton: event.unitGroup.refreshable &&
-                conversion.conversionUnitValues.isNotEmpty,
+                conversion.convertedUnitValues.isNotEmpty,
           ),
         );
 
@@ -175,7 +175,7 @@ class ConversionBloc
           editedGroup: event.editedGroup,
         ),
         conversion: state.conversion,
-        rebuildConversion: false,
+        recalculateUnitValues: false,
       ),
     );
 
@@ -259,7 +259,7 @@ class ConversionBloc
           unitIds: event.unitIds,
         ),
         conversion: state.conversion,
-        rebuildConversion: false,
+        recalculateUnitValues: false,
       ),
     );
     await _handleAndEmit(result, emit);
@@ -386,7 +386,7 @@ class ConversionBloc
         ConversionBuilt(
           conversion: result.right,
           showRefreshButton: result.right.unitGroup.refreshable &&
-              result.right.conversionUnitValues.isNotEmpty,
+              result.right.convertedUnitValues.isNotEmpty,
         ),
       );
       onSuccess?.call();

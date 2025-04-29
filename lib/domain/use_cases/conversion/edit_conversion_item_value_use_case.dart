@@ -1,26 +1,27 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
 class EditConversionItemValueUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemValueDelta> {
   const EditConversionItemValueUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  ConversionUnitValueModel modifySourceUnitValue({
-    required ConversionUnitValueModel? currentSourceItem,
-    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
+  ConversionUnitValueModel? newSourceUnitValue({
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required EditConversionItemValueDelta delta,
   }) {
     ConversionUnitValueModel currentSrcItem =
-        modifiedConversionItemsMap[delta.unitId]!;
+        modifiedConvertedItemsMap[delta.unitId]!;
 
-    return ConversionUnitValueModel.wrap(
+    return ConversionUnitValueModel(
       unit: currentSrcItem.unit,
-      value: delta.newValue,
-      defaultValue: delta.newDefaultValue,
+      value: ValueModel.any(delta.newValue),
+      defaultValue: ValueModel.any(delta.newDefaultValue),
     );
   }
 }

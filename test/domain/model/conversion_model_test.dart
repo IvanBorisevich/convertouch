@@ -19,7 +19,7 @@ void main() {
       refreshable: true,
       valueType: ConvertouchValueType.decimalPositive,
     ),
-    sourceConversionItem: ConversionUnitValueModel(
+    srcUnitValue: ConversionUnitValueModel(
       unit: UnitModel(
         id: 7,
         name: 'Euro',
@@ -53,7 +53,7 @@ void main() {
       ],
       mandatoryParamSetExists: true,
     ),
-    conversionUnitValues: [
+    convertedUnitValues: [
       ConversionUnitValueModel(
         unit: UnitModel(
           id: 8,

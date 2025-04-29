@@ -211,23 +211,19 @@ enum ConvertouchValueType {
 enum ConvertouchListType {
   gender(1),
   garment(2),
-  clothingSizeInter(3, defaultValueStr: "XXS"),
-  clothingSizeUs(4, defaultValueStr: "2"),
-  clothingSizeJp(5, defaultValueStr: "7"),
-  clothingSizeFr(6, defaultValueStr: "34"),
-  clothingSizeEu(7, defaultValueStr: "34"),
-  clothingSizeRu(8, defaultValueStr: "40"),
-  clothingSizeIt(9, defaultValueStr: "38"),
-  clothingSizeUk(10, defaultValueStr: "6"),
+  clothingSizeInter(3),
+  clothingSizeUs(4),
+  clothingSizeJp(5),
+  clothingSizeFr(6),
+  clothingSizeEu(7),
+  clothingSizeRu(8),
+  clothingSizeIt(9),
+  clothingSizeUk(10),
   ;
 
   final int id;
-  final String? defaultValueStr;
 
-  const ConvertouchListType(
-    this.id, {
-    this.defaultValueStr,
-  });
+  const ConvertouchListType(this.id);
 
   static ConvertouchListType? valueOf(int? id) {
     return values.firstWhereOrNull((element) => id == element.id);

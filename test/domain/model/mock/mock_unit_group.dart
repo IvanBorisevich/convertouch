@@ -30,3 +30,14 @@ const mockUnitGroupWithMultipleBaseUnitsOob = UnitGroupModel(
   name: "name4",
   valueType: ConvertouchValueType.decimalPositive,
 );
+
+const UnitGroupModel lengthGroup = UnitGroupModel(
+  name: GroupNames.length,
+  valueType: ConvertouchValueType.decimalPositive,
+);
+
+const UnitGroupModel clothingSizeGroup = UnitGroupModel(
+  name: GroupNames.clothingSize,
+  valueType: ConvertouchValueType.integerPositive,
+  conversionType: ConversionType.formula,
+);

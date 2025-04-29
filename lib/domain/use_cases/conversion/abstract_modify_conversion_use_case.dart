@@ -7,17 +7,21 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
+import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
-  final CreateConversionUseCase createConversionUseCase;
+  final ConvertUnitValuesUseCase convertUnitValuesUseCase;
+  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AbstractModifyConversionUseCase({
-    required this.createConversionUseCase,
+    required this.convertUnitValuesUseCase,
+    required this.calculateDefaultValueUseCase,
   });
 
   @override
@@ -34,69 +38,73 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         return Right(input.conversion);
       }
 
-      final conversionParams = await modifyConversionParamValues(
+      final newParams = await modifyConversionParamValues(
         currentParams: input.conversion.params,
         unitGroup: modifiedGroup,
-        currentSourceItem: input.conversion.sourceConversionItem,
+        srcUnitValue: input.conversion.srcUnitValue,
         delta: input.delta,
       );
 
       final conversionItemsMap = {
-        for (var item in input.conversion.conversionUnitValues)
+        for (var item in input.conversion.convertedUnitValues)
           item.unit.id: item
       };
 
-      final modifiedConversionItemsMap = await modifyConversionUnitValues(
+      final modifiedConvertedItemsMap = await modifyConversionUnitValues(
         conversionItemsMap: conversionItemsMap,
         delta: input.delta,
       );
 
-      if (modifiedConversionItemsMap.isEmpty) {
+      if (modifiedConvertedItemsMap.isEmpty) {
         return Right(
           ConversionModel(
             id: input.conversion.id,
             unitGroup: modifiedGroup,
-            params: conversionParams,
+            params: newParams,
           ),
         );
       }
 
-      var modifiedSourceUnitValue = modifySourceUnitValue(
-        currentSourceItem: input.conversion.sourceConversionItem ??
-            modifiedConversionItemsMap.values.first,
-        modifiedConversionItemsMap: modifiedConversionItemsMap,
-        delta: input.delta,
+      ConversionParamSetValueModel? activeParams =
+          newParams?.paramSetValues[newParams.selectedIndex];
+
+      var srcUnitValue = await getSrcUnitValue(
+        input: input,
+        modifiedConvertedItemsMap: modifiedConvertedItemsMap,
+        activeParams: activeParams,
       );
 
-      ConversionModel result;
-      if (input.rebuildConversion) {
-        result = ObjectUtils.tryGet(
-          await createConversionUseCase.execute(
+      ConversionModel conversion = ConversionModel(
+        id: input.conversion.id,
+        unitGroup: modifiedGroup,
+        srcUnitValue: srcUnitValue,
+        params: newParams,
+      );
+
+      if (input.recalculateUnitValues) {
+        var convertedUnitValues = ObjectUtils.tryGet(
+          await convertUnitValuesUseCase.execute(
             InputConversionModel(
-              conversionId: input.conversion.id,
               unitGroup: modifiedGroup,
-              params: conversionParams,
-              sourceUnitValue: modifiedSourceUnitValue,
-              targetUnits: modifiedConversionItemsMap.values
+              params: activeParams,
+              sourceUnitValue: srcUnitValue,
+              targetUnits: modifiedConvertedItemsMap.values
                   .map((conversionItem) => conversionItem.unit)
                   .toList(),
             ),
           ),
         );
+
+        conversion = conversion.copyWith(
+          convertedUnitValues: convertedUnitValues,
+        );
       } else {
-        result = ConversionModel(
-          unitGroup: modifiedGroup,
-          sourceConversionItem: modifiedSourceUnitValue,
-          params: conversionParams,
-          conversionUnitValues: modifiedConversionItemsMap.values.toList(),
+        conversion = conversion.copyWith(
+          convertedUnitValues: modifiedConvertedItemsMap.values.toList(),
         );
       }
 
-      return Right(
-        result.copyWith(
-          id: input.conversion.id,
-        ),
-      );
+      return Right(conversion);
     } catch (e, stackTrace) {
       log("Error when modifying the conversion: $e");
       return Left(
@@ -117,22 +125,67 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return unitGroup;
   }
 
-  ConversionUnitValueModel modifySourceUnitValue({
-    required ConversionUnitValueModel? currentSourceItem,
-    required Map<int, ConversionUnitValueModel> modifiedConversionItemsMap,
+  Future<ConversionUnitValueModel> getSrcUnitValue({
+    required InputConversionModifyModel<D> input,
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required ConversionParamSetValueModel? activeParams,
+  }) async {
+    var newSrcUnitValue = newSourceUnitValue(
+      modifiedConvertedItemsMap: modifiedConvertedItemsMap,
+      delta: input.delta,
+    );
+
+    ConversionUnitValueModel result;
+
+    if (newSrcUnitValue != null) {
+      result = newSrcUnitValue;
+    } else {
+      var srcUnitId = input.conversion.srcUnitValue?.unit.id;
+      if (srcUnitId != null &&
+          modifiedConvertedItemsMap.containsKey(srcUnitId)) {
+        result = modifiedConvertedItemsMap[srcUnitId]!;
+      } else {
+        result = modifiedConvertedItemsMap.values.first;
+      }
+    }
+
+    if (activeParams != null && !activeParams.applicable) {
+      return ConversionUnitValueModel(
+        unit: result.unit,
+      );
+    }
+
+    String? defaultValueStr = ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        result.unit,
+      ),
+    );
+
+    if (result.unit.listType != null) {
+      result = ConversionUnitValueModel(
+        unit: result.unit,
+        value: ValueModel.any(defaultValueStr),
+      );
+    } else {
+      result = result.copyWith(
+        defaultValue: ValueModel.any(defaultValueStr),
+      );
+    }
+
+    return result;
+  }
+
+  ConversionUnitValueModel? newSourceUnitValue({
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required D delta,
   }) {
-    if (currentSourceItem != null &&
-        modifiedConversionItemsMap.containsKey(currentSourceItem.unit.id)) {
-      return modifiedConversionItemsMap[currentSourceItem.unit.id]!;
-    }
-    return modifiedConversionItemsMap.values.first;
+    return null;
   }
 
   Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
     required ConversionParamSetValueBulkModel? currentParams,
     required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel? currentSourceItem,
+    required ConversionUnitValueModel? srcUnitValue,
     required D delta,
   }) async {
     return currentParams;

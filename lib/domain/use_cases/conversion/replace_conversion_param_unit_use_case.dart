@@ -7,14 +7,15 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 class ReplaceConversionParamUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionParamUnitDelta> {
   const ReplaceConversionParamUnitUseCase({
-    required super.createConversionUseCase,
+    required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
   Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
     required ConversionParamSetValueBulkModel? currentParams,
     required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel? currentSourceItem,
+    required ConversionUnitValueModel? srcUnitValue,
     required ReplaceConversionParamUnitDelta delta,
   }) async {
     if (currentParams == null || currentParams.paramSetValues.isEmpty) {
@@ -26,17 +27,17 @@ class ReplaceConversionParamUnitUseCase
     ];
 
     int paramSetValueIndex =
-    paramSetValues.indexWhere((p) => p.paramSet.id == delta.paramSetId);
+        paramSetValues.indexWhere((p) => p.paramSet.id == delta.paramSetId);
 
     ConversionParamSetValueModel paramSetValue =
-    paramSetValues[paramSetValueIndex];
+        paramSetValues[paramSetValueIndex];
 
     List<ConversionParamValueModel> paramValues = [
       ...paramSetValue.paramValues
     ];
 
     int paramValueIndex =
-    paramValues.indexWhere((p) => p.param.id == delta.paramId);
+        paramValues.indexWhere((p) => p.param.id == delta.paramId);
 
     ConversionParamValueModel paramValue = paramValues[paramValueIndex];
 
