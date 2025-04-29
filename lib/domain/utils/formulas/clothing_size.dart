@@ -3,37 +3,6 @@ import 'package:convertouch/domain/constants/conversion_param_constants/clothing
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/model/value_range.dart';
-
-class ClothingSizesTuple {
-  final NumValueRange height;
-  final Map<ClothingSizeCode, dynamic> sizesMap;
-
-  const ClothingSizesTuple({
-    required this.height,
-    required this.sizesMap,
-  });
-}
-
-const Map<Gender, Map<Garment, List<ClothingSizesTuple>>> clothingSizes = {
-  Gender.male: {
-    Garment.shirt: [
-      ClothingSizesTuple(
-        height: NumValueRange(0, 160),
-        sizesMap: {
-          ClothingSizeCode.inter: ClothingSizeInter.xxs,
-          ClothingSizeCode.ru: 38,
-          ClothingSizeCode.eu: 32,
-          ClothingSizeCode.uk: 4,
-          ClothingSizeCode.us: 0,
-          ClothingSizeCode.it: 36,
-          ClothingSizeCode.fr: 30,
-          ClothingSizeCode.jp: 3,
-        },
-      ),
-    ]
-  },
-};
 
 final Map<String, ConversionRule> clothingSizeFormulas = {
   for (var code in ClothingSizeCode.values)
@@ -75,7 +44,7 @@ ValueModel? _getInternationalClothingSize({
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
   var foundTuple = clothingSizeTuples?.firstWhereOrNull((sizesTuple) =>
-      sizesTuple.height.contains(height) &&
+      sizesTuple.height.contains(height, includeLeft: false) &&
       sizesTuple.sizesMap[inputSizeCode] == inputSize);
 
   ClothingSizeInter? interSize = foundTuple?.sizesMap[ClothingSizeCode.inter];
@@ -103,7 +72,7 @@ ValueModel? _getClothingSizeByCode({
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
   var foundTuple = clothingSizeTuples?.firstWhereOrNull((sizesTuple) =>
-      sizesTuple.height.contains(height) &&
+      sizesTuple.height.contains(height, includeLeft: false) &&
       sizesTuple.sizesMap[ClothingSizeCode.inter] == interSizeValue);
 
   dynamic foundSize = foundTuple?.sizesMap[targetSizeCode];

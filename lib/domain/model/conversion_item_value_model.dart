@@ -45,6 +45,18 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     super.defaultValue,
   });
 
+  factory ConversionUnitValueModel.tuple(
+    UnitModel unit,
+    dynamic value,
+    dynamic defaultValue,
+  ) {
+    return ConversionUnitValueModel(
+      unit: unit,
+      value: ValueModel.any(value),
+      defaultValue: ValueModel.any(defaultValue),
+    );
+  }
+
   ConversionUnitValueModel copyWith({
     UnitModel? unit,
     ValueModel? value,
@@ -114,6 +126,22 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     super.value,
     super.defaultValue,
   });
+
+  factory ConversionParamValueModel.tuple(
+    ConversionParamModel param,
+    dynamic value,
+    dynamic defaultValue, {
+    bool calculated = false,
+    UnitModel? unit,
+  }) {
+    return ConversionParamValueModel(
+      param: param,
+      unit: unit,
+      calculated: calculated,
+      value: ValueModel.any(value),
+      defaultValue: ValueModel.any(defaultValue),
+    );
+  }
 
   @override
   List<Object?> get props => [

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/model/value_range.dart';
 
 const String genderParamName = "Gender";
 const String garmentParamName = "Garment";
@@ -67,4 +68,45 @@ enum ClothingSizeInter {
   }
 }
 
-var t = ClothingSizeInter.xxs.name;
+class SizesMap {
+  final NumValueRange height;
+  final Map<ClothingSizeCode, dynamic> sizesMap;
+
+  const SizesMap({
+    required this.height,
+    required this.sizesMap,
+  });
+}
+
+const Map<Gender, Map<Garment, List<SizesMap>>> clothingSizes = {
+  Gender.male: {
+    Garment.shirt: [
+      SizesMap(
+        height: NumValueRange(0, 160),
+        sizesMap: {
+          ClothingSizeCode.inter: ClothingSizeInter.xxs,
+          ClothingSizeCode.ru: 38,
+          ClothingSizeCode.eu: 32,
+          ClothingSizeCode.uk: 4,
+          ClothingSizeCode.us: 0,
+          ClothingSizeCode.it: 36,
+          ClothingSizeCode.fr: 30,
+          ClothingSizeCode.jp: 3,
+        },
+      ),
+      SizesMap(
+        height: NumValueRange(160, 170),
+        sizesMap: {
+          ClothingSizeCode.inter: ClothingSizeInter.xs,
+          ClothingSizeCode.ru: 40,
+          ClothingSizeCode.eu: 34,
+          ClothingSizeCode.uk: 6,
+          ClothingSizeCode.us: 2,
+          ClothingSizeCode.it: 38,
+          ClothingSizeCode.fr: 34,
+          ClothingSizeCode.jp: 7,
+        },
+      ),
+    ]
+  },
+};

@@ -155,20 +155,25 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       );
     }
 
-    String? defaultValueStr = ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(
-        result.unit,
-      ),
-    );
+    ValueModel? defaultValue = result.defaultValue;
+    if (defaultValue == null) {
+      String? defaultValueStr = ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(
+          result.unit,
+        ),
+      );
+
+      defaultValue = ValueModel.any(defaultValueStr);
+    }
 
     if (result.unit.listType != null) {
       result = ConversionUnitValueModel(
         unit: result.unit,
-        value: ValueModel.any(defaultValueStr),
+        value: result.value ?? defaultValue,
       );
     } else {
       result = result.copyWith(
-        defaultValue: ValueModel.any(defaultValueStr),
+        defaultValue: defaultValue,
       );
     }
 

@@ -1,9 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
@@ -21,74 +19,50 @@ void main() {
 
   Future<void> testCase({
     required UnitGroupModel unitGroup,
-    required UnitModel srcUnit,
-    required ValueModel? srcValue,
-    required ValueModel? srcDefaultValue,
+    required ConversionUnitValueModel src,
     required ConversionParamSetValueModel? params,
-    required UnitModel tgtUnit,
-    required ValueModel? expectedTgtValue,
-    required ValueModel? expectedTgtDefaultValue,
+    required ConversionUnitValueModel expectedTgt,
   }) async {
     expect(
       ObjectUtils.tryGet(
         await useCase.execute(
           InputSingleValueConversionModel(
             unitGroup: unitGroup,
-            srcItem: ConversionUnitValueModel(
-              unit: srcUnit,
-              value: srcValue,
-              defaultValue: srcDefaultValue,
-            ),
-            tgtUnit: tgtUnit,
+            srcItem: src,
+            tgtUnit: expectedTgt.unit,
             params: params,
           ),
         ),
       ).toJson(),
-      ConversionUnitValueModel(
-        unit: tgtUnit,
-        value: expectedTgtValue,
-        defaultValue: expectedTgtDefaultValue,
-      ).toJson(),
+      expectedTgt.toJson(),
     );
   }
 
   Future<void> testCaseWithClothingSizeParams({
-    required UnitModel srcUnit,
-    required ValueModel? srcSizeValue,
-    required ValueModel? gender,
-    required ValueModel? garment,
-    required ValueModel? height,
-    required ValueModel? defaultHeight,
-    required UnitModel tgtUnit,
-    required ValueModel? tgtSizeValue,
+    required String? gender,
+    required String? garment,
+    required double? height,
+    required double? defaultHeight,
+    required ConversionUnitValueModel src,
+    required ConversionUnitValueModel expectedTgt,
   }) async {
     await testCase(
       unitGroup: clothingSizeGroup,
-      srcUnit: srcUnit,
-      srcValue: srcSizeValue,
-      srcDefaultValue: null,
-      tgtUnit: tgtUnit,
+      src: src,
       params: ConversionParamSetValueModel(
         paramSet: clothingSizeParamSet,
         paramValues: [
-          ConversionParamValueModel(
-            param: genderParam,
-            value: gender,
-          ),
-          ConversionParamValueModel(
-            param: garmentParam,
-            value: garment,
-          ),
-          ConversionParamValueModel(
-            param: heightParam,
+          ConversionParamValueModel.tuple(genderParam, gender, null),
+          ConversionParamValueModel.tuple(garmentParam, garment, null),
+          ConversionParamValueModel.tuple(
+            heightParam,
+            height,
+            defaultHeight,
             unit: centimeter,
-            value: height,
-            defaultValue: defaultHeight,
           ),
         ],
       ),
-      expectedTgtValue: tgtSizeValue,
-      expectedTgtDefaultValue: null,
+      expectedTgt: expectedTgt,
     );
   }
 
@@ -97,13 +71,9 @@ void main() {
       test('Without params', () async {
         await testCase(
           unitGroup: lengthGroup,
-          srcUnit: decimeter,
-          srcValue: ValueModel.numeric(2.5),
-          srcDefaultValue: ValueModel.one,
+          src: ConversionUnitValueModel.tuple(decimeter, 2.5, 1),
           params: null,
-          tgtUnit: centimeter,
-          expectedTgtValue: ValueModel.numeric(25),
-          expectedTgtDefaultValue: ValueModel.numeric(10),
+          expectedTgt: ConversionUnitValueModel.tuple(centimeter, 25, 10),
         );
       });
     });
@@ -112,13 +82,9 @@ void main() {
       test('Without params', () async {
         await testCase(
           unitGroup: lengthGroup,
-          srcUnit: decimeter,
-          srcValue: ValueModel.numeric(2.5),
-          srcDefaultValue: ValueModel.one,
+          src: ConversionUnitValueModel.tuple(decimeter, 2.5, 1),
           params: null,
-          tgtUnit: decimeter,
-          expectedTgtValue: ValueModel.numeric(2.5),
-          expectedTgtDefaultValue: ValueModel.one,
+          expectedTgt: ConversionUnitValueModel.tuple(decimeter, 2.5, 1),
         );
       });
     });
@@ -129,81 +95,72 @@ void main() {
       group('With params', () {
         test('All param values are set', () async {
           await testCaseWithClothingSizeParams(
-            srcUnit: europeanSize,
-            srcSizeValue: ValueModel.numeric(32),
-            gender: ValueModel.str("Male"),
-            garment: ValueModel.str("Shirt"),
-            height: ValueModel.numeric(150),
-            defaultHeight: ValueModel.one,
-            tgtUnit: japanSize,
-            tgtSizeValue: ValueModel.numeric(3),
+            gender: "Male",
+            garment: "Shirt",
+            height: 150,
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedTgt: ConversionUnitValueModel.tuple(japanSize, 3, null),
           );
         });
 
         test('All param values are set (default param value is set)', () async {
           await testCaseWithClothingSizeParams(
-            srcUnit: europeanSize,
-            srcSizeValue: ValueModel.numeric(32),
-            gender: ValueModel.str("Male"),
-            garment: ValueModel.str("Shirt"),
+            gender: "Male",
+            garment: "Shirt",
             height: null,
-            defaultHeight: ValueModel.one,
-            tgtUnit: japanSize,
-            tgtSizeValue: ValueModel.numeric(3),
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedTgt: ConversionUnitValueModel.tuple(japanSize, 3, null),
           );
         });
 
         group('Some param values are not set', () {
           test('Height param is not set', () async {
             await testCaseWithClothingSizeParams(
-              srcUnit: europeanSize,
-              srcSizeValue: ValueModel.numeric(32),
-              gender: ValueModel.str("Male"),
-              garment: ValueModel.str("Shirt"),
+              gender: "Male",
+              garment: "Shirt",
               height: null,
               defaultHeight: null,
-              tgtUnit: japanSize,
-              tgtSizeValue: null,
+              src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(japanSize, null, null),
             );
           });
 
           test('Garment param is not set', () async {
             await testCaseWithClothingSizeParams(
-              srcUnit: europeanSize,
-              srcSizeValue: ValueModel.numeric(32),
-              gender: ValueModel.str("Male"),
+              gender: "Male",
               garment: null,
-              height: ValueModel.numeric(150),
-              defaultHeight: ValueModel.one,
-              tgtUnit: japanSize,
-              tgtSizeValue: null,
+              height: 150,
+              defaultHeight: 1,
+              src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(japanSize, null, null),
             );
           });
 
           test('Gender param is not set', () async {
             await testCaseWithClothingSizeParams(
-              srcUnit: europeanSize,
-              srcSizeValue: ValueModel.numeric(32),
               gender: null,
-              garment: ValueModel.str("Shirt"),
-              height: ValueModel.numeric(150),
-              defaultHeight: ValueModel.one,
-              tgtUnit: japanSize,
-              tgtSizeValue: null,
+              garment: "Shirt",
+              height: 150,
+              defaultHeight: 1,
+              src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(japanSize, null, null),
             );
           });
         });
 
         test('No param values are set', () async {
           await testCaseWithClothingSizeParams(
-            srcUnit: europeanSize,
-            srcSizeValue: ValueModel.numeric(32),
             gender: null,
             garment: null,
             height: null,
-            defaultHeight: ValueModel.one,
-            tgtUnit: japanSize,
-            tgtSizeValue: null,
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedTgt: ConversionUnitValueModel.tuple(japanSize, null, null),
           );
         });
       });
@@ -213,67 +170,60 @@ void main() {
       group('With params', () {
         test('All param values are set', () async {
           await testCaseWithClothingSizeParams(
-            gender: ValueModel.str("Male"),
-            garment: ValueModel.str("Shirt"),
-            height: ValueModel.numeric(150),
-            defaultHeight: ValueModel.one,
-            srcUnit: europeanSize,
-            srcSizeValue: ValueModel.numeric(32),
-            tgtUnit: europeanSize,
-            tgtSizeValue: ValueModel.numeric(32),
+            gender: "Male",
+            garment: "Shirt",
+            height: 150,
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedTgt: ConversionUnitValueModel.tuple(europeanSize, 32, null),
           );
         });
 
         test('All param values are set (default param value is set)', () async {
           await testCaseWithClothingSizeParams(
-            gender: ValueModel.str("Male"),
-            garment: ValueModel.str("Shirt"),
+            gender: "Male",
+            garment: "Shirt",
             height: null,
-            defaultHeight: ValueModel.one,
-            srcUnit: europeanSize,
-            srcSizeValue: ValueModel.numeric(32),
-            tgtUnit: europeanSize,
-            tgtSizeValue: ValueModel.numeric(32),
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedTgt: ConversionUnitValueModel.tuple(europeanSize, 32, null),
           );
         });
 
         group('Some param values are not set', () {
           test('Height param is not set', () async {
             await testCaseWithClothingSizeParams(
-              gender: ValueModel.str("Male"),
-              garment: ValueModel.str("Shirt"),
+              gender: "Male",
+              garment: "Shirt",
               height: null,
               defaultHeight: null,
-              srcUnit: europeanSize,
-              srcSizeValue: null,
-              tgtUnit: europeanSize,
-              tgtSizeValue: null,
+              src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
             );
           });
 
           test('Garment param is not set', () async {
             await testCaseWithClothingSizeParams(
-              gender: ValueModel.str("Male"),
+              gender: "Male",
               garment: null,
-              height: ValueModel.numeric(150),
-              defaultHeight: ValueModel.one,
-              srcUnit: europeanSize,
-              srcSizeValue: null,
-              tgtUnit: europeanSize,
-              tgtSizeValue: null,
+              height: 150,
+              defaultHeight: 1,
+              src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
             );
           });
 
           test('Gender param is not set', () async {
             await testCaseWithClothingSizeParams(
               gender: null,
-              garment: ValueModel.str("Shirt"),
-              height: ValueModel.numeric(150),
-              defaultHeight: ValueModel.one,
-              srcUnit: europeanSize,
-              srcSizeValue: null,
-              tgtUnit: europeanSize,
-              tgtSizeValue: null,
+              garment: "Shirt",
+              height: 150,
+              defaultHeight: 1,
+              src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedTgt:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
             );
           });
         });
@@ -283,11 +233,10 @@ void main() {
             gender: null,
             garment: null,
             height: null,
-            defaultHeight: ValueModel.one,
-            srcUnit: europeanSize,
-            srcSizeValue: null,
-            tgtUnit: europeanSize,
-            tgtSizeValue: null,
+            defaultHeight: 1,
+            src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedTgt:
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
           );
         });
       });
