@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
@@ -44,11 +43,6 @@ class ConversionParamSetValueModel extends ItemModel {
   ValueModel? getValue(String paramName) {
     var paramValue = paramValues.firstWhere((e) => e.param.name == paramName);
     return paramValue.value ?? paramValue.defaultValue;
-  }
-
-  bool get applicable {
-    return !paramSet.mandatory ||
-        paramSet.mandatory && paramValues.none((p) => p.isEmpty);
   }
 
   static ConversionParamSetValueModel? fromJson(Map<String, dynamic>? json) {

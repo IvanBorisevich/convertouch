@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
 const clothingSizeParamSet = ConversionParamSetModel(
+  id: 1,
   name: "Clothing Size",
   mandatory: true,
   groupId: -1,

@@ -17,23 +17,22 @@ class AddParamSetsToConversionUseCase
 
   const AddParamSetsToConversionUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
   });
 
   @override
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
+  Future<ConversionParamSetValueBulkModel?> newConversionParams({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
     required AddParamSetsDelta delta,
   }) async {
     List<ConversionParamSetModel> paramSetsInConversion = [];
 
-    int paramSetsTotalCount = currentParams?.totalCount ?? 0;
+    int paramSetsTotalCount = oldConversionParams?.totalCount ?? 0;
     bool mandatoryParamSetExists =
-        currentParams?.mandatoryParamSetExists ?? false;
+        oldConversionParams?.mandatoryParamSetExists ?? false;
 
     if (delta.initial) {
       paramSetsTotalCount = ObjectUtils.tryGet(
@@ -54,7 +53,7 @@ class AddParamSetsToConversionUseCase
           mandatoryParamSetExists ? [mandatoryParamSet] : [];
     } else {
       List<int> currentParamSetIds =
-          currentParams?.paramSetValues.map((p) => p.paramSet.id).toList() ??
+          oldConversionParams?.paramSetValues.map((p) => p.paramSet.id).toList() ??
               [];
 
       List<int> newParamSetIds = delta.paramSetIds
@@ -91,7 +90,7 @@ class AddParamSetsToConversionUseCase
     }
 
     ConversionParamSetValueBulkModel result =
-        currentParams ?? const ConversionParamSetValueBulkModel();
+        oldConversionParams ?? const ConversionParamSetValueBulkModel();
 
     var resultParamSetValues = [
       ...result.paramSetValues,

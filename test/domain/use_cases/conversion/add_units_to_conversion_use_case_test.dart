@@ -383,9 +383,9 @@ void main() {
               italianSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
+              ConversionUnitValueModel.tuple(japanSize, 3, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],
           );
@@ -405,10 +405,9 @@ void main() {
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanSize, 32, null),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],
@@ -430,10 +429,9 @@ void main() {
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanSize, 32, 32),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],
@@ -454,9 +452,9 @@ void main() {
               italianSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
+              ConversionUnitValueModel.tuple(japanSize, 3, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],
           );
@@ -476,10 +474,9 @@ void main() {
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanSize, 32, null),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],
@@ -501,10 +498,9 @@ void main() {
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanSize, 32, 32),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
               ConversionUnitValueModel.tuple(italianSize, null, null),
             ],

@@ -7,8 +7,6 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -17,11 +15,9 @@ import 'package:either_dart/either.dart';
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
   final ConvertUnitValuesUseCase convertUnitValuesUseCase;
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AbstractModifyConversionUseCase({
     required this.convertUnitValuesUseCase,
-    required this.calculateDefaultValueUseCase,
   });
 
   @override
@@ -29,8 +25,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     InputConversionModifyModel<D> input,
   ) async {
     try {
-      final modifiedGroup = modifyGroup(
-        unitGroup: input.conversion.unitGroup,
+      final modifiedGroup = newGroup(
+        oldGroup: input.conversion.unitGroup,
         delta: input.delta,
       );
 
@@ -38,8 +34,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         return Right(input.conversion);
       }
 
-      final newParams = await modifyConversionParamValues(
-        currentParams: input.conversion.params,
+      final newParams = await newConversionParams(
+        oldConversionParams: input.conversion.params,
         unitGroup: modifiedGroup,
         srcUnitValue: input.conversion.srcUnitValue,
         delta: input.delta,
@@ -50,8 +46,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           item.unit.id: item
       };
 
-      final modifiedConvertedItemsMap = await modifyConversionUnitValues(
-        conversionItemsMap: conversionItemsMap,
+      final modifiedConvertedItemsMap = await newConvertedUnitValues(
+        oldConvertedUnitValues: conversionItemsMap,
         delta: input.delta,
       );
 
@@ -68,10 +64,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       ConversionParamSetValueModel? activeParams =
           newParams?.paramSetValues[newParams.selectedIndex];
 
-      var srcUnitValue = await getSrcUnitValue(
-        input: input,
+      var srcUnitValue = await newSourceUnitValue(
+        oldSourceUnitValue: input.conversion.srcUnitValue,
         modifiedConvertedItemsMap: modifiedConvertedItemsMap,
-        activeParams: activeParams,
+        delta: input.delta,
       );
 
       ConversionModel conversion = ConversionModel(
@@ -118,88 +114,44 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
-  UnitGroupModel modifyGroup({
-    required UnitGroupModel unitGroup,
+  UnitGroupModel newGroup({
+    required UnitGroupModel oldGroup,
     required D delta,
   }) {
-    return unitGroup;
+    return oldGroup;
   }
 
-  Future<ConversionUnitValueModel> getSrcUnitValue({
-    required InputConversionModifyModel<D> input,
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel? oldSourceUnitValue,
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
-    required ConversionParamSetValueModel? activeParams,
+    required D delta,
   }) async {
-    var newSrcUnitValue = newSourceUnitValue(
-      modifiedConvertedItemsMap: modifiedConvertedItemsMap,
-      delta: input.delta,
-    );
-
-    ConversionUnitValueModel result;
-
-    if (newSrcUnitValue != null) {
-      result = newSrcUnitValue;
+    if (oldSourceUnitValue != null) {
+      return oldSourceUnitValue;
     } else {
-      var srcUnitId = input.conversion.srcUnitValue?.unit.id;
+      var srcUnitId = oldSourceUnitValue?.unit.id;
       if (srcUnitId != null &&
           modifiedConvertedItemsMap.containsKey(srcUnitId)) {
-        result = modifiedConvertedItemsMap[srcUnitId]!;
+        return modifiedConvertedItemsMap[srcUnitId]!;
       } else {
-        result = modifiedConvertedItemsMap.values.first;
+        return modifiedConvertedItemsMap.values.first;
       }
     }
-
-    if (activeParams != null && !activeParams.applicable) {
-      return ConversionUnitValueModel(
-        unit: result.unit,
-      );
-    }
-
-    ValueModel? defaultValue = result.defaultValue;
-    if (defaultValue == null) {
-      String? defaultValueStr = ObjectUtils.tryGet(
-        await calculateDefaultValueUseCase.execute(
-          result.unit,
-        ),
-      );
-
-      defaultValue = ValueModel.any(defaultValueStr);
-    }
-
-    if (result.unit.listType != null) {
-      result = ConversionUnitValueModel(
-        unit: result.unit,
-        value: result.value ?? defaultValue,
-      );
-    } else {
-      result = result.copyWith(
-        defaultValue: defaultValue,
-      );
-    }
-
-    return result;
   }
 
-  ConversionUnitValueModel? newSourceUnitValue({
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
-    required D delta,
-  }) {
-    return null;
-  }
-
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
+  Future<ConversionParamSetValueBulkModel?> newConversionParams({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
     required D delta,
   }) async {
-    return currentParams;
+    return oldConversionParams;
   }
 
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
-    required Map<int, ConversionUnitValueModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required D delta,
   }) async {
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 }

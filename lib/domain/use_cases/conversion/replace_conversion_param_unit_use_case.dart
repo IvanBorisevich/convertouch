@@ -8,22 +8,21 @@ class ReplaceConversionParamUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionParamUnitDelta> {
   const ReplaceConversionParamUnitUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
+  Future<ConversionParamSetValueBulkModel?> newConversionParams({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
     required ReplaceConversionParamUnitDelta delta,
   }) async {
-    if (currentParams == null || currentParams.paramSetValues.isEmpty) {
-      return currentParams;
+    if (oldConversionParams == null || oldConversionParams.paramSetValues.isEmpty) {
+      return oldConversionParams;
     }
 
     List<ConversionParamSetValueModel> paramSetValues = [
-      ...currentParams.paramSetValues
+      ...oldConversionParams.paramSetValues
     ];
 
     int paramSetValueIndex =
@@ -49,7 +48,7 @@ class ReplaceConversionParamUnitUseCase
       paramValues: paramValues,
     );
 
-    return currentParams.copyWith(
+    return oldConversionParams.copyWith(
       paramSetValues: paramSetValues,
     );
   }

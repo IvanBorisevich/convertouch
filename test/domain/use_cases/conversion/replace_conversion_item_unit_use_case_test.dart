@@ -30,6 +30,7 @@ void main() {
         dynamicValueRepository: MockDynamicValueRepository(),
         listValueRepository: ListValueRepositoryImpl(),
       ),
+      listValueRepository: ListValueRepositoryImpl(),
     );
   });
 
@@ -180,9 +181,7 @@ void main() {
   });
 
   group('Change unit in the conversion by formula', () {
-
     group('With params', () {
-
       group('All param values are set', () {
         test('Source value is not empty', () async {
           await testCaseWithClothingSizeParams(

@@ -2,26 +2,43 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 class EditConversionItemValueUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemValueDelta> {
+  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
+
   const EditConversionItemValueUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
+    required this.calculateDefaultValueUseCase,
   });
 
   @override
-  ConversionUnitValueModel? newSourceUnitValue({
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel? oldSourceUnitValue,
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required EditConversionItemValueDelta delta,
-  }) {
-    ConversionUnitValueModel currentSrcItem =
+  }) async {
+    ConversionUnitValueModel newSrcUnitValue =
         modifiedConvertedItemsMap[delta.unitId]!;
 
-    return ConversionUnitValueModel(
-      unit: currentSrcItem.unit,
-      value: ValueModel.any(delta.newValue),
-      defaultValue: ValueModel.any(delta.newDefaultValue),
-    );
+    if (newSrcUnitValue.unit.listType != null) {
+      return ConversionUnitValueModel(
+        unit: newSrcUnitValue.unit,
+        value: ValueModel.any(delta.newValue),
+      );
+    } else {
+      ValueModel? defaultValue = ValueModel.any(delta.newDefaultValue) ??
+          ObjectUtils.tryGet(
+            await calculateDefaultValueUseCase.execute(newSrcUnitValue.unit),
+          );
+
+      return ConversionUnitValueModel(
+        unit: newSrcUnitValue.unit,
+        value: ValueModel.any(delta.newValue),
+        defaultValue: defaultValue,
+      );
+    }
   }
 }

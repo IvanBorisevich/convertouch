@@ -217,23 +217,27 @@ void main() {
           );
         });
 
-        test('New default value is not empty', () async {
-          await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
-            gender: "Male",
-            garment: "Shirt",
-            height: 165,
-            defaultHeight: 1,
-            newValue: null,
-            newDefaultValue: "34",
-            currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 34, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 34, null),
-              ConversionUnitValueModel.tuple(japanSize, 7, null),
-            ],
-          );
-        });
+        test(
+          'New default value is not empty (for list param should be ignored)',
+          () async {
+            await testCaseWithClothingSizeParams(
+              src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              gender: "Male",
+              garment: "Shirt",
+              height: 165,
+              defaultHeight: 1,
+              newValue: null,
+              newDefaultValue: "34",
+              currentUnitValues: currentUnitValues,
+              expectedSrc:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedUnitValues: [
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
+                ConversionUnitValueModel.tuple(japanSize, null, null),
+              ],
+            );
+          },
+        );
 
         test('Both new values are not empty', () async {
           await testCaseWithClothingSizeParams(
@@ -263,10 +267,11 @@ void main() {
             newValue: null,
             newDefaultValue: null,
             currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
+              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(japanSize, null, null),
             ],
           );
         });
@@ -291,23 +296,27 @@ void main() {
           );
         });
 
-        test('New default value is not empty', () async {
-          await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
-            gender: "Male",
-            garment: "Shirt",
-            height: null,
-            defaultHeight: 1,
-            newValue: null,
-            newDefaultValue: "32",
-            currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-            ],
-          );
-        });
+        test(
+          'New default value is not empty (for list param should be ignored)',
+          () async {
+            await testCaseWithClothingSizeParams(
+              src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+              gender: "Male",
+              garment: "Shirt",
+              height: null,
+              defaultHeight: 1,
+              newValue: null,
+              newDefaultValue: "32",
+              currentUnitValues: currentUnitValues,
+              expectedSrc:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedUnitValues: [
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
+                ConversionUnitValueModel.tuple(japanSize, null, null),
+              ],
+            );
+          },
+        );
 
         test('Both new values are not empty', () async {
           await testCaseWithClothingSizeParams(
@@ -337,10 +346,11 @@ void main() {
             newValue: null,
             newDefaultValue: null,
             currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
+              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(japanSize, null, null),
             ],
           );
         });
@@ -357,33 +367,35 @@ void main() {
             newValue: "32",
             newDefaultValue: null,
             currentUnitValues: currentUnitValues,
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
             ],
           );
         });
 
-        test('New default value is not empty', () async {
-          await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
-            gender: "Male",
-            garment: null,
-            height: null,
-            defaultHeight: 1,
-            newValue: null,
-            newDefaultValue: "32",
-            currentUnitValues: currentUnitValues,
-            expectedSrc:
+        test(
+          'New default value is not empty (for list param should be ignored)',
+          () async {
+            await testCaseWithClothingSizeParams(
+              src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+              gender: "Male",
+              garment: null,
+              height: null,
+              defaultHeight: 1,
+              newValue: null,
+              newDefaultValue: "32",
+              currentUnitValues: currentUnitValues,
+              expectedSrc:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedUnitValues: [
                 ConversionUnitValueModel.tuple(europeanSize, null, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-            ],
-          );
-        });
+                ConversionUnitValueModel.tuple(japanSize, null, null),
+              ],
+            );
+          },
+        );
 
         test('Both new values are not empty', () async {
           await testCaseWithClothingSizeParams(
@@ -395,10 +407,9 @@ void main() {
             newValue: "32",
             newDefaultValue: "30",
             currentUnitValues: currentUnitValues,
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
               ConversionUnitValueModel.tuple(japanSize, null, null),
             ],
           );
@@ -425,13 +436,82 @@ void main() {
       });
 
       group('No param values are set', () {
-        test('New value is not empty', () async {});
+        test('New value is not empty', () async {
+          await testCaseWithClothingSizeParams(
+            src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+            gender: null,
+            garment: null,
+            height: null,
+            defaultHeight: 1,
+            newValue: "32",
+            newDefaultValue: null,
+            currentUnitValues: currentUnitValues,
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              ConversionUnitValueModel.tuple(japanSize, null, null),
+            ],
+          );
+        });
 
-        test('New default value is not empty', () async {});
+        test(
+          'New default value is not empty (for list param should be ignored)',
+          () async {
+            await testCaseWithClothingSizeParams(
+              src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+              gender: null,
+              garment: null,
+              height: null,
+              defaultHeight: 1,
+              newValue: null,
+              newDefaultValue: "32",
+              currentUnitValues: currentUnitValues,
+              expectedSrc:
+                  ConversionUnitValueModel.tuple(europeanSize, null, null),
+              expectedUnitValues: [
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
+                ConversionUnitValueModel.tuple(japanSize, null, null),
+              ],
+            );
+          },
+        );
 
-        test('Both new values are not empty', () async {});
+        test('Both new values are not empty', () async {
+          await testCaseWithClothingSizeParams(
+            src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+            gender: null,
+            garment: null,
+            height: null,
+            defaultHeight: 1,
+            newValue: "32",
+            newDefaultValue: "30",
+            currentUnitValues: currentUnitValues,
+            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              ConversionUnitValueModel.tuple(japanSize, null, null),
+            ],
+          );
+        });
 
-        test('Both new values are empty', () async {});
+        test('Both new values are empty', () async {
+          await testCaseWithClothingSizeParams(
+            src: ConversionUnitValueModel.tuple(europeanSize, 34, null),
+            gender: null,
+            garment: null,
+            height: null,
+            defaultHeight: 1,
+            newValue: null,
+            newDefaultValue: null,
+            currentUnitValues: currentUnitValues,
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanSize, null, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(europeanSize, null, null),
+              ConversionUnitValueModel.tuple(japanSize, null, null),
+            ],
+          );
+        });
       });
     });
   });

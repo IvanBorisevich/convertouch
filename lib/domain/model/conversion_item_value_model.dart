@@ -161,14 +161,13 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   ConversionParamValueModel copyWith({
-    ConversionParamModel? param,
     UnitModel? unit,
     bool? calculated,
     ValueModel? value,
     ValueModel? defaultValue,
   }) {
     return ConversionParamValueModel(
-      param: param ?? this.param,
+      param: param,
       unit: unit ?? this.unit,
       calculated: calculated ?? this.calculated,
       value: value ?? this.value,
@@ -180,7 +179,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   ConvertouchValueType get valueType => param.valueType;
 
   @override
-  ConvertouchListType? get listType => param.listType ?? unit?.listType;
+  ConvertouchListType? get listType => param.listType;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {

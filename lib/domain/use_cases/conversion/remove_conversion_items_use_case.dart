@@ -6,17 +6,16 @@ class RemoveConversionItemsUseCase
     extends AbstractModifyConversionUseCase<RemoveConversionItemsDelta> {
   const RemoveConversionItemsUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
-    required Map<int, ConversionUnitValueModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required RemoveConversionItemsDelta delta,
   }) async {
-    conversionItemsMap.removeWhere(
+    oldConvertedUnitValues.removeWhere(
       (unitId, item) => delta.unitIds.contains(unitId),
     );
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 }

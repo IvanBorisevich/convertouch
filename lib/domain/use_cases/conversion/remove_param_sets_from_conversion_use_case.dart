@@ -11,42 +11,41 @@ class RemoveParamSetsFromConversionUseCase
     extends AbstractModifyConversionUseCase<RemoveParamSetsDelta> {
   const RemoveParamSetsFromConversionUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
+  Future<ConversionParamSetValueBulkModel?> newConversionParams({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
     required RemoveParamSetsDelta delta,
   }) async {
-    if (currentParams == null || currentParams.paramSetValues.isEmpty) {
-      return currentParams;
+    if (oldConversionParams == null || oldConversionParams.paramSetValues.isEmpty) {
+      return oldConversionParams;
     }
 
     var newParamSetValues = delta.allOptional
-        ? currentParams.paramSetValues
+        ? oldConversionParams.paramSetValues
             .where((p) => p.paramSet.mandatory)
             .toList()
-        : currentParams.paramSetValues
+        : oldConversionParams.paramSetValues
             .whereIndexed((index, p) =>
-                index != currentParams.selectedIndex || p.paramSet.mandatory)
+                index != oldConversionParams.selectedIndex || p.paramSet.mandatory)
             .toList();
 
     int newSelectedIndex = delta.allOptional
         ? 0
         : max(
             0,
-            min(currentParams.selectedIndex, newParamSetValues.length - 1),
+            min(oldConversionParams.selectedIndex, newParamSetValues.length - 1),
           );
 
-    return currentParams.copyWith(
+    return oldConversionParams.copyWith(
       paramSetValues: newParamSetValues,
       selectedIndex: newSelectedIndex,
-      paramSetsCanBeAdded: currentParams.mandatoryParamSetExists &&
-              newParamSetValues.length < currentParams.totalCount - 1 ||
-          newParamSetValues.length < currentParams.totalCount,
+      paramSetsCanBeAdded: oldConversionParams.mandatoryParamSetExists &&
+              newParamSetValues.length < oldConversionParams.totalCount - 1 ||
+          newParamSetValues.length < oldConversionParams.totalCount,
       selectedParamSetCanBeRemoved: newParamSetValues.isNotEmpty &&
           !newParamSetValues[newSelectedIndex].paramSet.mandatory,
       paramSetsCanBeRemovedInBulk: newParamSetValues.isNotEmpty &&

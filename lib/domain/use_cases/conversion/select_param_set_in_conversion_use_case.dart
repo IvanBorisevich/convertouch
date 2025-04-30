@@ -8,23 +8,22 @@ class SelectParamSetInConversionUseCase
     extends AbstractModifyConversionUseCase<SelectParamSetDelta> {
   const SelectParamSetInConversionUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<ConversionParamSetValueBulkModel?> modifyConversionParamValues({
-    required ConversionParamSetValueBulkModel? currentParams,
+  Future<ConversionParamSetValueBulkModel?> newConversionParams({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
     required SelectParamSetDelta delta,
   }) async {
-    if (currentParams == null || currentParams.paramSetValues.isEmpty) {
-      return currentParams;
+    if (oldConversionParams == null || oldConversionParams.paramSetValues.isEmpty) {
+      return oldConversionParams;
     }
 
-    return currentParams.copyWith(
+    return oldConversionParams.copyWith(
       selectedIndex: delta.newSelectedParamSetIndex,
-      selectedParamSetCanBeRemoved: !currentParams
+      selectedParamSetCanBeRemoved: !oldConversionParams
           .paramSetValues[delta.newSelectedParamSetIndex].paramSet.mandatory,
     );
   }

@@ -281,14 +281,12 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<EditConversionGroupUseCase>(
     () => EditConversionGroupUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
     () => EditConversionItemUnitUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
@@ -302,7 +300,6 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
     () => RemoveConversionItemsUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
@@ -310,20 +307,19 @@ Future<void> _initUseCases() async {
     () => ReplaceConversionItemUnitUseCase(
       convertUnitValuesUseCase: locator(),
       calculateDefaultValueUseCase: locator(),
+      listValueRepository: locator(),
     ),
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
     () => UpdateConversionCoefficientsUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<AddParamSetsToConversionUseCase>(
     () => AddParamSetsToConversionUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
       conversionParamSetRepository: locator(),
       conversionParamRepository: locator(),
     ),
@@ -332,14 +328,12 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
     () => RemoveParamSetsFromConversionUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
     () => SelectParamSetInConversionUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 
@@ -353,7 +347,6 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<ReplaceConversionParamUnitUseCase>(
     () => ReplaceConversionParamUnitUseCase(
       convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
     ),
   );
 

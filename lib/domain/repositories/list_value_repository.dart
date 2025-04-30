@@ -18,6 +18,11 @@ abstract interface class ListValueRepository {
   Future<Either<ConvertouchException, ListValueModel?>> getDefault({
     required ConvertouchListType listType,
   });
+
+  Future<Either<ConvertouchException, bool>> belongsToList({
+    required String? value,
+    required ConvertouchListType listType,
+  });
 }
 
 final Map<ConvertouchListType, List<String>> listableSets = {

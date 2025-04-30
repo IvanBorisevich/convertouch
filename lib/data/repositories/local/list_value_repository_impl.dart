@@ -29,4 +29,15 @@ class ListValueRepositoryImpl implements ListValueRepository {
         ? Right(ListValueModel(rawValue))
         : const Right(null);
   }
+
+  @override
+  Future<Either<ConvertouchException, bool>> belongsToList({
+    required String? value,
+    required ConvertouchListType listType,
+  }) async {
+    if (value == null) {
+      return const Right(true);
+    }
+    return Right(listableSets[listType]?.contains(value) ?? false);
+  }
 }

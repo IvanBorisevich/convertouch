@@ -6,12 +6,11 @@ class EditConversionGroupUseCase
     extends AbstractModifyConversionUseCase<EditConversionGroupDelta> {
   const EditConversionGroupUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  UnitGroupModel modifyGroup({
-    required UnitGroupModel unitGroup,
+  UnitGroupModel newGroup({
+    required UnitGroupModel oldGroup,
     required EditConversionGroupDelta delta,
   }) {
     return delta.editedGroup;

@@ -6,21 +6,20 @@ class UpdateConversionCoefficientsUseCase
     extends AbstractModifyConversionUseCase<UpdateConversionCoefficientsDelta> {
   const UpdateConversionCoefficientsUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
-    required Map<int, ConversionUnitValueModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required UpdateConversionCoefficientsDelta delta,
   }) async {
-    conversionItemsMap.updateAll(
+    oldConvertedUnitValues.updateAll(
       (key, item) => item.copyWith(
         unit: item.unit.copyWith(
           coefficient: delta.updatedUnitCoefs[item.unit.code],
         ),
       ),
     );
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 }

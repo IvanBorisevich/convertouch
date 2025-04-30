@@ -6,20 +6,19 @@ class EditConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemUnitDelta> {
   const EditConversionItemUnitUseCase({
     required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
   });
 
   @override
-  Future<Map<int, ConversionUnitValueModel>> modifyConversionUnitValues({
-    required Map<int, ConversionUnitValueModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required EditConversionItemUnitDelta delta,
   }) async {
-    if (conversionItemsMap.containsKey(delta.editedUnit.id)) {
-      conversionItemsMap.update(
+    if (oldConvertedUnitValues.containsKey(delta.editedUnit.id)) {
+      oldConvertedUnitValues.update(
         delta.editedUnit.id,
         (value) => value.copyWith(unit: delta.editedUnit),
       );
     }
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 }
