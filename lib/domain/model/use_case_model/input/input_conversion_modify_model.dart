@@ -18,7 +18,15 @@ abstract class ConversionModifyDelta {
   const ConversionModifyDelta();
 }
 
-class AddUnitsToConversionDelta extends ConversionModifyDelta {
+abstract class ConversionUnitValuesModifyDelta extends ConversionModifyDelta {
+  const ConversionUnitValuesModifyDelta();
+}
+
+abstract class ConversionParamValuesModifyDelta extends ConversionModifyDelta {
+  const ConversionParamValuesModifyDelta();
+}
+
+class AddUnitsToConversionDelta extends ConversionUnitValuesModifyDelta {
   final List<int> unitIds;
 
   const AddUnitsToConversionDelta({
@@ -34,7 +42,7 @@ class EditConversionGroupDelta extends ConversionModifyDelta {
   });
 }
 
-class EditConversionItemUnitDelta extends ConversionModifyDelta {
+class EditConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
   final UnitModel editedUnit;
 
   const EditConversionItemUnitDelta({
@@ -42,7 +50,7 @@ class EditConversionItemUnitDelta extends ConversionModifyDelta {
   });
 }
 
-class EditConversionItemValueDelta extends ConversionModifyDelta {
+class EditConversionItemValueDelta extends ConversionUnitValuesModifyDelta {
   final String? newValue;
   final String? newDefaultValue;
   final int unitId;
@@ -54,7 +62,8 @@ class EditConversionItemValueDelta extends ConversionModifyDelta {
   });
 }
 
-class UpdateConversionCoefficientsDelta extends ConversionModifyDelta {
+class UpdateConversionCoefficientsDelta
+    extends ConversionUnitValuesModifyDelta {
   final Map<String, double?> updatedUnitCoefs;
 
   const UpdateConversionCoefficientsDelta({
@@ -62,7 +71,7 @@ class UpdateConversionCoefficientsDelta extends ConversionModifyDelta {
   });
 }
 
-class RemoveConversionItemsDelta extends ConversionModifyDelta {
+class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
   final List<int> unitIds;
 
   const RemoveConversionItemsDelta({
@@ -70,7 +79,7 @@ class RemoveConversionItemsDelta extends ConversionModifyDelta {
   });
 }
 
-class ReplaceConversionItemUnitDelta extends ConversionModifyDelta {
+class ReplaceConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
   final UnitModel newUnit;
   final int oldUnitId;
 
@@ -80,7 +89,7 @@ class ReplaceConversionItemUnitDelta extends ConversionModifyDelta {
   });
 }
 
-class AddParamSetsDelta extends ConversionModifyDelta {
+class AddParamSetsDelta extends ConversionParamValuesModifyDelta {
   final List<int> paramSetIds;
   final bool initial;
 
@@ -90,7 +99,7 @@ class AddParamSetsDelta extends ConversionModifyDelta {
   });
 }
 
-class SelectParamSetDelta extends ConversionModifyDelta {
+class SelectParamSetDelta extends ConversionParamValuesModifyDelta {
   final int newSelectedParamSetIndex;
 
   const SelectParamSetDelta({
@@ -98,7 +107,7 @@ class SelectParamSetDelta extends ConversionModifyDelta {
   });
 }
 
-class EditConversionParamValueDelta extends ConversionModifyDelta {
+class EditConversionParamValueDelta extends ConversionParamValuesModifyDelta {
   final String? newValue;
   final String? newDefaultValue;
   final int paramId;
@@ -112,7 +121,7 @@ class EditConversionParamValueDelta extends ConversionModifyDelta {
   });
 }
 
-class ReplaceConversionParamUnitDelta extends ConversionModifyDelta {
+class ReplaceConversionParamUnitDelta extends ConversionParamValuesModifyDelta {
   final UnitModel newUnit;
   final int paramId;
   final int paramSetId;
@@ -124,7 +133,7 @@ class ReplaceConversionParamUnitDelta extends ConversionModifyDelta {
   });
 }
 
-class RemoveParamSetsDelta extends ConversionModifyDelta {
+class RemoveParamSetsDelta extends ConversionParamValuesModifyDelta {
   final bool allOptional;
 
   const RemoveParamSetsDelta.current() : allOptional = false;

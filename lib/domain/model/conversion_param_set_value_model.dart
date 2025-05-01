@@ -79,7 +79,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
   final int totalCount;
 
   const ConversionParamSetValueBulkModel({
-    this.paramSetValues = const [],
+    required this.paramSetValues,
     this.selectedIndex = 0,
     this.paramSetsCanBeAdded = false,
     this.selectedParamSetCanBeRemoved = false,
@@ -109,6 +109,10 @@ class ConversionParamSetValueBulkModel extends Equatable {
           mandatoryParamSetExists ?? this.mandatoryParamSetExists,
       totalCount: totalCount ?? this.totalCount,
     );
+  }
+
+  ConversionParamSetValueModel get activeParams {
+    return paramSetValues[selectedIndex];
   }
 
   @override

@@ -70,11 +70,11 @@ enum ClothingSizeInter {
 
 class SizesMap {
   final NumValueRange height;
-  final Map<ClothingSizeCode, dynamic> sizesMap;
+  final Map<ClothingSizeCode, dynamic> sizeMap;
 
   const SizesMap({
     required this.height,
-    required this.sizesMap,
+    required this.sizeMap,
   });
 }
 
@@ -83,7 +83,7 @@ const Map<Gender, Map<Garment, List<SizesMap>>> clothingSizes = {
     Garment.shirt: [
       SizesMap(
         height: NumValueRange(0, 1.6),
-        sizesMap: {
+        sizeMap: {
           ClothingSizeCode.inter: ClothingSizeInter.xxs,
           ClothingSizeCode.ru: 38,
           ClothingSizeCode.eu: 32,
@@ -96,7 +96,7 @@ const Map<Gender, Map<Garment, List<SizesMap>>> clothingSizes = {
       ),
       SizesMap(
         height: NumValueRange(1.6, 1.7),
-        sizesMap: {
+        sizeMap: {
           ClothingSizeCode.inter: ClothingSizeInter.xs,
           ClothingSizeCode.ru: 40,
           ClothingSizeCode.eu: 34,

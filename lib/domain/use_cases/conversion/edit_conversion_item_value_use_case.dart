@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -40,5 +41,14 @@ class EditConversionItemValueUseCase
         defaultValue: defaultValue,
       );
     }
+  }
+
+  @override
+  Future<ConversionParamSetValueBulkModel?> newConversionParamsBySrcUnitValue({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
+    required ConversionUnitValueModel srcUnitValue,
+    required EditConversionItemValueDelta delta,
+  }) async {
+    return oldConversionParams;
   }
 }

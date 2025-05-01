@@ -2,9 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
+import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:test/test.dart';
 
 import '../model/mock/mock_param.dart';
@@ -16,50 +15,45 @@ void main() {
       test(
         'Two-way conversion (e. g. temperature)',
         () {
-          ConversionRule fahrenheitCalcRule =
-              ConversionRuleUtils.getFormulaRule(
+          UnitRule fahrenheitRule = UnitRule.getFormulaRule(
             unitGroupName: GroupNames.temperature,
             unitCode: UnitCodes.degreeFahrenheit,
           );
 
-          ConversionRule kelvinCalcRule = ConversionRuleUtils.getFormulaRule(
+          UnitRule kelvinRule = UnitRule.getFormulaRule(
             unitGroupName: GroupNames.temperature,
             unitCode: UnitCodes.degreeKelvin,
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(32),
-              srcUnitRule: fahrenheitCalcRule,
-              tgtUnitRule: kelvinCalcRule,
-            ),
+            Converter(ValueModel.numeric(32))
+                .apply(fahrenheitRule.xToBase)
+                .apply(kelvinRule.baseToY)
+                .value,
             ValueModel.numeric(273.15),
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(273.15),
-              srcUnitRule: kelvinCalcRule,
-              tgtUnitRule: fahrenheitCalcRule,
-            ),
+            Converter(ValueModel.numeric(273.15))
+                .apply(kelvinRule.xToBase)
+                .apply(fahrenheitRule.baseToY)
+                .value,
             ValueModel.numeric(32),
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(32),
-              srcUnitRule: fahrenheitCalcRule,
-              tgtUnitRule: fahrenheitCalcRule,
-            ),
+            Converter(ValueModel.numeric(32))
+                .apply(fahrenheitRule.xToBase)
+                .apply(fahrenheitRule.baseToY)
+                .value,
             ValueModel.numeric(32),
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              null,
-              srcUnitRule: fahrenheitCalcRule,
-              tgtUnitRule: kelvinCalcRule,
-            ),
+            const Converter(null)
+                .apply(fahrenheitRule.xToBase)
+                .apply(fahrenheitRule.baseToY)
+                .value,
             null,
           );
         },
@@ -69,34 +63,42 @@ void main() {
         'One-way conversion (e. g. text size)',
         () {
           ConversionRule strLen = ConversionRule.noParams(
-            toBase: null,
-            fromBase: (x) => ValueModel.numeric(x.raw.length),
+            func: (x) => ValueModel.numeric(x.raw.length),
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.str("Example"),
-              srcUnitRule: ConversionRule.identity(),
-              tgtUnitRule: strLen,
-            ),
+            Converter(ValueModel.str("Example"))
+                .apply(ConversionRule.identity)
+                .apply(strLen)
+                .value,
             ValueModel.numeric(7),
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(7),
-              srcUnitRule: strLen,
-              tgtUnitRule: ConversionRule.identity(),
-            ),
+            Converter(ValueModel.str("Example")).apply(strLen).value,
+            ValueModel.numeric(7),
+          );
+
+          expect(
+            Converter(ValueModel.numeric(7)).apply(strLen).apply(null).value,
             null,
           );
 
           expect(
-            ConversionRuleUtils.calculate(
-              null,
-              srcUnitRule: strLen,
-              tgtUnitRule: ConversionRule.identity(),
-            ),
+            Converter(ValueModel.numeric(7))
+                .apply(strLen)
+                .apply(ConversionRule.identity)
+                .apply(null)
+                .value,
+            null,
+          );
+
+          expect(
+            Converter(ValueModel.numeric(7))
+                .apply(strLen)
+                .apply(null)
+                .apply(ConversionRule.identity)
+                .value,
             null,
           );
         },
@@ -117,101 +119,88 @@ void main() {
       group(
         'Two-way conversion (e. g. clothing size)',
         () {
-          ConversionRule ruSizeCalc = ConversionRuleUtils.getFormulaRule(
+          UnitRule ruSize = UnitRule.getFormulaRule(
             unitGroupName: GroupNames.clothingSize,
             unitCode: ClothingSizeCode.ru.name,
           );
 
-          ConversionRule euSizeCalc = ConversionRuleUtils.getFormulaRule(
+          UnitRule euSize = UnitRule.getFormulaRule(
             unitGroupName: GroupNames.clothingSize,
             unitCode: ClothingSizeCode.eu.name,
           );
 
-          ConversionRule interSizeCalc = ConversionRuleUtils.getFormulaRule(
+          UnitRule interSize = UnitRule.getFormulaRule(
             unitGroupName: GroupNames.clothingSize,
             unitCode: ClothingSizeCode.inter.name,
           );
 
           test('RU -> EU', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.numeric(38),
-                srcUnitRule: ruSizeCalc,
-                tgtUnitRule: euSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.numeric(38), params: params)
+                  .apply(ruSize.xToBase)
+                  .apply(euSize.baseToY)
+                  .value,
               ValueModel.numeric(32),
             );
           });
 
           test('EU -> RU', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.numeric(32),
-                srcUnitRule: euSizeCalc,
-                tgtUnitRule: ruSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.numeric(32), params: params)
+                  .apply(euSize.xToBase)
+                  .apply(ruSize.baseToY)
+                  .value,
               ValueModel.numeric(38),
             );
           });
 
           test('INT -> RU', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.str(ClothingSizeInter.xxs.name),
-                srcUnitRule: interSizeCalc,
-                tgtUnitRule: ruSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.str(ClothingSizeInter.xxs.name),
+                      params: params)
+                  .apply(interSize.xToBase)
+                  .apply(ruSize.baseToY)
+                  .value,
               ValueModel.numeric(38),
             );
           });
 
           test('EU -> INT', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.numeric(32),
-                srcUnitRule: euSizeCalc,
-                tgtUnitRule: interSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.numeric(32), params: params)
+                  .apply(euSize.xToBase)
+                  .apply(interSize.baseToY)
+                  .value,
               ValueModel.str(ClothingSizeInter.xxs.name),
             );
           });
 
           test('EU -> RU (unacceptable value)', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.numeric(33),
-                srcUnitRule: euSizeCalc,
-                tgtUnitRule: ruSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.numeric(33), params: params)
+                  .apply(euSize.xToBase)
+                  .apply(ruSize.baseToY)
+                  .value,
               null,
             );
           });
 
           test('RU -> EU (no value)', () {
             expect(
-              ConversionRuleUtils.calculate(
-                null,
-                srcUnitRule: ruSizeCalc,
-                tgtUnitRule: euSizeCalc,
-                params: params,
-              ),
+              Converter(null, params: params)
+                  .apply(ruSize.xToBase)
+                  .apply(euSize.baseToY)
+                  .value,
               null,
             );
           });
 
           test('RU -> RU', () {
             expect(
-              ConversionRuleUtils.calculate(
-                ValueModel.numeric(38),
-                srcUnitRule: ruSizeCalc,
-                tgtUnitRule: ruSizeCalc,
-                params: params,
-              ),
+              Converter(ValueModel.numeric(38), params: params)
+                  .apply(ruSize.xToBase)
+                  .apply(ruSize.baseToY)
+                  .value,
               ValueModel.numeric(38),
             );
           });
@@ -222,85 +211,51 @@ void main() {
 
   group('Convert by a coefficient rule', () {
     group('Without parameters', () {
-      test(
+      group(
         'Two-way conversion',
         () {
-          ConversionRule centimeterCalcRule =
-              ConversionRule.byCoefficient(0.01);
-          ConversionRule kilometerCalcRule = ConversionRule.byCoefficient(1000);
+          UnitRule centimeterRule = UnitRule.coefficient(0.01);
+          UnitRule kilometerRule = UnitRule.coefficient(1000);
 
-          expect(
-            ConversionRuleUtils.calculate(
+          test('cm -> km', () {
+            expect(
+              Converter(ValueModel.numeric(32))
+                  .apply(centimeterRule.xToBase)
+                  .apply(kilometerRule.baseToY)
+                  .value,
+              ValueModel.numeric(0.00032),
+            );
+          });
+
+          test('km -> cm', () {
+            expect(
+              Converter(ValueModel.numeric(32))
+                  .apply(kilometerRule.xToBase)
+                  .apply(centimeterRule.baseToY)
+                  .value,
+              ValueModel.numeric(3200000),
+            );
+          });
+
+          test('km -> km', () {
+            expect(
+              Converter(ValueModel.numeric(32))
+                  .apply(kilometerRule.xToBase)
+                  .apply(kilometerRule.baseToY)
+                  .value,
               ValueModel.numeric(32),
-              srcUnitRule: centimeterCalcRule,
-              tgtUnitRule: kilometerCalcRule,
-            ),
-            ValueModel.numeric(0.00032),
-          );
+            );
+          });
 
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(32),
-              srcUnitRule: kilometerCalcRule,
-              tgtUnitRule: centimeterCalcRule,
-            ),
-            ValueModel.numeric(3200000),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(32),
-              srcUnitRule: kilometerCalcRule,
-              tgtUnitRule: kilometerCalcRule,
-            ),
-            ValueModel.numeric(32),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
+          test('km -> km (no value)', () {
+            expect(
+              const Converter(null)
+                  .apply(kilometerRule.xToBase)
+                  .apply(kilometerRule.baseToY)
+                  .value,
               null,
-              srcUnitRule: kilometerCalcRule,
-              tgtUnitRule: kilometerCalcRule,
-            ),
-            null,
-          );
-        },
-      );
-
-      test(
-        'One-way conversion',
-        () {
-          ConversionRule strLen = ConversionRule.noParams(
-            toBase: null,
-            fromBase: (x) => ValueModel.numeric(x.raw.length),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.str("Example"),
-              srcUnitRule: ConversionRule.identity(),
-              tgtUnitRule: strLen,
-            ),
-            ValueModel.numeric(7),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(7),
-              srcUnitRule: strLen,
-              tgtUnitRule: ConversionRule.identity(),
-            ),
-            null,
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
-              null,
-              srcUnitRule: strLen,
-              tgtUnitRule: ConversionRule.identity(),
-            ),
-            null,
-          );
+            );
+          });
         },
       );
     });

@@ -34,13 +34,6 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         return Right(input.conversion);
       }
 
-      final newParams = await newConversionParams(
-        oldConversionParams: input.conversion.params,
-        unitGroup: modifiedGroup,
-        srcUnitValue: input.conversion.srcUnitValue,
-        delta: input.delta,
-      );
-
       final conversionItemsMap = {
         for (var item in input.conversion.convertedUnitValues)
           item.unit.id: item
@@ -50,6 +43,26 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         oldConvertedUnitValues: conversionItemsMap,
         delta: input.delta,
       );
+
+      ConversionParamSetValueBulkModel? newParams = input.conversion.params;
+      ConversionUnitValueModel? newSrcUnitValue = input.conversion.srcUnitValue;
+
+      if (input.delta is ConversionParamValuesModifyDelta) {
+        newParams = await newConversionParams(
+          oldConversionParams: input.conversion.params,
+          unitGroup: modifiedGroup,
+          srcUnitValue: input.conversion.srcUnitValue,
+          delta: input.delta,
+        );
+
+        if (newParams != null) {
+          newSrcUnitValue = await newSourceUnitValueByParams(
+            oldSourceUnitValue: input.conversion.srcUnitValue,
+            activeParams: newParams.activeParams,
+            delta: input.delta,
+          );
+        }
+      }
 
       if (modifiedConvertedItemsMap.isEmpty) {
         return Right(
@@ -61,19 +74,24 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       }
 
-      ConversionParamSetValueModel? activeParams =
-          newParams?.paramSetValues[newParams.selectedIndex];
+      if (input.delta is ConversionUnitValuesModifyDelta) {
+        newSrcUnitValue = await newSourceUnitValue(
+          oldSourceUnitValue: input.conversion.srcUnitValue,
+          modifiedConvertedItemsMap: modifiedConvertedItemsMap,
+          delta: input.delta,
+        );
 
-      var srcUnitValue = await newSourceUnitValue(
-        oldSourceUnitValue: input.conversion.srcUnitValue,
-        modifiedConvertedItemsMap: modifiedConvertedItemsMap,
-        delta: input.delta,
-      );
+        newParams = await newConversionParamsBySrcUnitValue(
+          oldConversionParams: newParams,
+          srcUnitValue: newSrcUnitValue,
+          delta: input.delta,
+        );
+      }
 
       ConversionModel conversion = ConversionModel(
         id: input.conversion.id,
         unitGroup: modifiedGroup,
-        srcUnitValue: srcUnitValue,
+        srcUnitValue: newSrcUnitValue,
         params: newParams,
       );
 
@@ -82,8 +100,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           await convertUnitValuesUseCase.execute(
             InputConversionModel(
               unitGroup: modifiedGroup,
-              params: activeParams,
-              sourceUnitValue: srcUnitValue,
+              params: newParams?.activeParams,
+              sourceUnitValue: newSrcUnitValue!,
               targetUnits: modifiedConvertedItemsMap.values
                   .map((conversionItem) => conversionItem.unit)
                   .toList(),
@@ -139,10 +157,26 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
   }
 
+  Future<ConversionUnitValueModel?> newSourceUnitValueByParams({
+    required ConversionUnitValueModel? oldSourceUnitValue,
+    required ConversionParamSetValueModel activeParams,
+    required D delta,
+  }) async {
+    return oldSourceUnitValue;
+  }
+
   Future<ConversionParamSetValueBulkModel?> newConversionParams({
     required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
+    required D delta,
+  }) async {
+    return oldConversionParams!;
+  }
+
+  Future<ConversionParamSetValueBulkModel?> newConversionParamsBySrcUnitValue({
+    required ConversionParamSetValueBulkModel? oldConversionParams,
+    required ConversionUnitValueModel srcUnitValue,
     required D delta,
   }) async {
     return oldConversionParams;

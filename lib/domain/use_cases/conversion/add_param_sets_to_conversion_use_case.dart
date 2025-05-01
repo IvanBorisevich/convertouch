@@ -89,21 +89,27 @@ class AddParamSetsToConversionUseCase
       );
     }
 
-    ConversionParamSetValueBulkModel result =
-        oldConversionParams ?? const ConversionParamSetValueBulkModel();
+    List<ConversionParamSetValueModel> resultParamSetValues;
+    int resultSelectedIndex;
 
-    var resultParamSetValues = [
-      ...result.paramSetValues,
-      ...paramSetValues,
-    ];
+    if (oldConversionParams != null) {
+      resultParamSetValues = [
+        ...oldConversionParams.paramSetValues,
+        ...paramSetValues,
+      ];
+      resultSelectedIndex = oldConversionParams.selectedIndex;
+    } else {
+      resultParamSetValues = paramSetValues;
+      resultSelectedIndex = 0;
+    }
 
-    return result.copyWith(
+    return ConversionParamSetValueBulkModel(
       paramSetValues: resultParamSetValues,
       paramSetsCanBeAdded: mandatoryParamSetExists &&
-              resultParamSetValues.length < paramSetsTotalCount - 1 ||
+          resultParamSetValues.length < paramSetsTotalCount - 1 ||
           resultParamSetValues.length < paramSetsTotalCount,
       selectedParamSetCanBeRemoved:
-          !resultParamSetValues[result.selectedIndex].paramSet.mandatory,
+      !resultParamSetValues[resultSelectedIndex].paramSet.mandatory,
       paramSetsCanBeRemovedInBulk: !(resultParamSetValues.length == 1 &&
           resultParamSetValues.first.paramSet.mandatory),
       mandatoryParamSetExists: mandatoryParamSetExists,

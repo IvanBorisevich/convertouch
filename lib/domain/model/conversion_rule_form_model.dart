@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
+import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:equatable/equatable.dart';
 
 class ConversionRuleFormModel extends Equatable {
@@ -97,10 +97,10 @@ class ConversionRuleFormModel extends Equatable {
     required bool showNonBaseConversionRule,
   }) {
     if (unitGroup.conversionType == ConversionType.formula) {
-      String? result = ConversionRuleUtils.getFormulaRule(
-        unitGroupName: unitGroup.name,
-        unitCode: draftUnit.code,
-      ).fromBaseStr;
+      String? result = UnitRule.getRule(
+        unitGroup: unitGroup,
+        unit: draftUnit,
+      ).baseToY.desc;
       return result ?? noConversionRule;
     }
 

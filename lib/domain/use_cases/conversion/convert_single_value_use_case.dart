@@ -1,14 +1,12 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/conversion_rule.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_single_value_conversion_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
+import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:either_dart/either.dart';
 
@@ -69,35 +67,19 @@ class ConvertSingleValueUseCase
     required UnitGroupModel unitGroup,
     ConversionParamSetValueModel? paramSetValue,
   }) {
-    ConversionRule srcUnitRule;
-    ConversionRule tgtUnitRule;
+    ConversionRule xToBase = UnitRule.getRule(
+      unitGroup: unitGroup,
+      unit: srcUnit,
+    ).xToBase;
+    ConversionRule baseToY = UnitRule.getRule(
+      unitGroup: unitGroup,
+      unit: tgtUnit,
+    ).baseToY;
 
-    if (src == null) {
-      return null;
-    }
-
-    switch (unitGroup.conversionType) {
-      case ConversionType.formula:
-        srcUnitRule = ConversionRuleUtils.getFormulaRule(
-          unitGroupName: unitGroup.name,
-          unitCode: srcUnit.code,
-        );
-        tgtUnitRule = ConversionRuleUtils.getFormulaRule(
-          unitGroupName: unitGroup.name,
-          unitCode: tgtUnit.code,
-        );
-      case ConversionType.static:
-      case ConversionType.dynamic:
-        srcUnitRule = ConversionRule.byCoefficient(srcUnit.coefficient!);
-        tgtUnitRule = ConversionRule.byCoefficient(tgtUnit.coefficient!);
-    }
-
-    ValueModel? result = ConversionRuleUtils.calculate(
-      src,
-      srcUnitRule: srcUnitRule,
-      tgtUnitRule: tgtUnitRule,
-      params: paramSetValue,
-    );
+    ValueModel? result = Converter(src, params: paramSetValue)
+        .apply(xToBase)
+        .apply(baseToY)
+        .value;
 
     bool isValueInRange = DoubleValueUtils.between(
       value: result?.numVal,
