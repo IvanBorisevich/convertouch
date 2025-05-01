@@ -76,7 +76,7 @@ class ConversionRule {
     );
   }
 
-  static ConversionRule fromCoefficient(double c) {
+  static ConversionRule byCoefficient(double c) {
     return ConversionRule(
       toBase: (x, {ConversionParamSetValueModel? params}) =>
           ValueModel.numeric(x.numVal! * c),

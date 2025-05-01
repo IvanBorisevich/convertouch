@@ -45,6 +45,10 @@ class ConversionParamSetValueModel extends ItemModel {
     return paramValue.value ?? paramValue.defaultValue;
   }
 
+  ConversionParamValueModel? getParam(String paramName) {
+    return paramValues.firstWhere((e) => e.param.name == paramName);
+  }
+
   static ConversionParamSetValueModel? fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return null;

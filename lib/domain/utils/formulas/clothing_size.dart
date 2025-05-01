@@ -32,11 +32,15 @@ ValueModel? _getInternationalClothingSize({
   Gender? gender = Gender.valueOf(params.getValue(genderParamName)?.raw);
   Garment? clothingType =
       Garment.valueOf(params.getValue(garmentParamName)?.raw);
-  double? height = params.getValue(heightParamName)?.numVal;
+
+  var heightParam = params.getParam(heightParamName);
+  ValueModel? height = heightParam?.value ?? heightParam?.defaultValue;
 
   if (gender == null || clothingType == null || height == null) {
     return null;
   }
+
+  var normalizedHeight = height.numVal! * heightParam!.unit!.coefficient!;
 
   dynamic inputSize = inputSizeCode == ClothingSizeCode.inter
       ? ClothingSizeInter.valueOf(inputSizeValue.raw)
@@ -44,7 +48,7 @@ ValueModel? _getInternationalClothingSize({
 
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
   var foundTuple = clothingSizeTuples?.firstWhereOrNull((sizesTuple) =>
-      sizesTuple.height.contains(height, includeLeft: false) &&
+      sizesTuple.height.contains(normalizedHeight, includeLeft: false) &&
       sizesTuple.sizesMap[inputSizeCode] == inputSize);
 
   ClothingSizeInter? interSize = foundTuple?.sizesMap[ClothingSizeCode.inter];
@@ -64,15 +68,18 @@ ValueModel? _getClothingSizeByCode({
   Gender? gender = Gender.valueOf(params.getValue(genderParamName)?.raw);
   Garment? clothingType =
       Garment.valueOf(params.getValue(garmentParamName)?.raw);
-  double? height = params.getValue(heightParamName)?.numVal;
+  var heightParam = params.getParam(heightParamName);
+  ValueModel? height = heightParam?.value ?? heightParam?.defaultValue;
 
   if (gender == null || clothingType == null || height == null) {
     return null;
   }
 
+  var normalizedHeight = height.numVal! * heightParam!.unit!.coefficient!;
+
   var clothingSizeTuples = clothingSizes[gender]?[clothingType];
   var foundTuple = clothingSizeTuples?.firstWhereOrNull((sizesTuple) =>
-      sizesTuple.height.contains(height, includeLeft: false) &&
+      sizesTuple.height.contains(normalizedHeight, includeLeft: false) &&
       sizesTuple.sizesMap[ClothingSizeCode.inter] == interSizeValue);
 
   dynamic foundSize = foundTuple?.sizesMap[targetSizeCode];
@@ -81,5 +88,5 @@ ValueModel? _getClothingSizeByCode({
     return ValueModel.str(foundSize.name);
   }
 
-  return ValueModel.numeric(foundSize);
+  return ValueModel.any(foundSize);
 }

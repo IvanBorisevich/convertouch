@@ -1,14 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_param_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/conversion_rule.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart';
 import 'package:test/test.dart';
+
+import '../model/mock/mock_param.dart';
+import '../model/mock/mock_unit.dart';
 
 void main() {
   group('Convert by a formula rule', () {
@@ -105,47 +105,16 @@ void main() {
 
     group('With parameters', () {
       ConversionParamSetValueModel params = ConversionParamSetValueModel(
-        paramSet: const ConversionParamSetModel(
-          name: "Clothing Size",
-          mandatory: true,
-          groupId: -1,
-        ),
+        paramSet: clothingSizeParamSet,
         paramValues: [
-          ConversionParamValueModel(
-            param: const ConversionParamModel(
-              name: "Gender",
-              paramSetId: 1,
-              valueType: ConvertouchValueType.text,
-              listType: ConvertouchListType.gender,
-            ),
-            value: ValueModel.str(Gender.male.name),
-          ),
-          ConversionParamValueModel(
-            param: const ConversionParamModel(
-              name: "Garment",
-              paramSetId: 1,
-              valueType: ConvertouchValueType.text,
-              listType: ConvertouchListType.garment,
-            ),
-            value: ValueModel.str(Garment.shirt.name),
-          ),
-          ConversionParamValueModel(
-            param: const ConversionParamModel(
-              name: "Height",
-              paramSetId: 2,
-              valueType: ConvertouchValueType.decimalPositive,
-            ),
-            unit: const UnitModel(
-              name: "Centimeter",
-              code: "cm",
-              valueType: ConvertouchValueType.decimalPositive,
-            ),
-            value: ValueModel.numeric(150),
-          ),
+          ConversionParamValueModel.tuple(genderParam, "Male", null),
+          ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+          ConversionParamValueModel.tuple(heightParam, 150, 1,
+              unit: centimeter),
         ],
       );
 
-      test(
+      group(
         'Two-way conversion (e. g. clothing size)',
         () {
           ConversionRule ruSizeCalc = ConversionRuleUtils.getFormulaRule(
@@ -163,75 +132,89 @@ void main() {
             unitCode: ClothingSizeCode.inter.name,
           );
 
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(38),
-              srcUnitRule: ruSizeCalc,
-              tgtUnitRule: euSizeCalc,
-              params: params,
-            ),
-            ValueModel.numeric(32),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
+          test('RU -> EU', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.numeric(38),
+                srcUnitRule: ruSizeCalc,
+                tgtUnitRule: euSizeCalc,
+                params: params,
+              ),
               ValueModel.numeric(32),
-              srcUnitRule: euSizeCalc,
-              tgtUnitRule: ruSizeCalc,
-              params: params,
-            ),
-            ValueModel.numeric(38),
-          );
+            );
+          });
 
-          expect(
-            ConversionRuleUtils.calculate(
+          test('EU -> RU', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.numeric(32),
+                srcUnitRule: euSizeCalc,
+                tgtUnitRule: ruSizeCalc,
+                params: params,
+              ),
+              ValueModel.numeric(38),
+            );
+          });
+
+          test('INT -> RU', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.str(ClothingSizeInter.xxs.name),
+                srcUnitRule: interSizeCalc,
+                tgtUnitRule: ruSizeCalc,
+                params: params,
+              ),
+              ValueModel.numeric(38),
+            );
+          });
+
+          test('EU -> INT', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.numeric(32),
+                srcUnitRule: euSizeCalc,
+                tgtUnitRule: interSizeCalc,
+                params: params,
+              ),
               ValueModel.str(ClothingSizeInter.xxs.name),
-              srcUnitRule: interSizeCalc,
-              tgtUnitRule: ruSizeCalc,
-              params: params,
-            ),
-            ValueModel.numeric(38),
-          );
+            );
+          });
 
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(32),
-              srcUnitRule: euSizeCalc,
-              tgtUnitRule: interSizeCalc,
-              params: params,
-            ),
-            ValueModel.str(ClothingSizeInter.xxs.name),
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
-              ValueModel.numeric(33),
-              srcUnitRule: euSizeCalc,
-              tgtUnitRule: ruSizeCalc,
-              params: params,
-            ),
-            null,
-          );
-
-          expect(
-            ConversionRuleUtils.calculate(
+          test('EU -> RU (unacceptable value)', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.numeric(33),
+                srcUnitRule: euSizeCalc,
+                tgtUnitRule: ruSizeCalc,
+                params: params,
+              ),
               null,
-              srcUnitRule: ruSizeCalc,
-              tgtUnitRule: euSizeCalc,
-              params: params,
-            ),
-            null,
-          );
+            );
+          });
 
-          expect(
-            ConversionRuleUtils.calculate(
+          test('RU -> EU (no value)', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                null,
+                srcUnitRule: ruSizeCalc,
+                tgtUnitRule: euSizeCalc,
+                params: params,
+              ),
+              null,
+            );
+          });
+
+          test('RU -> RU', () {
+            expect(
+              ConversionRuleUtils.calculate(
+                ValueModel.numeric(38),
+                srcUnitRule: ruSizeCalc,
+                tgtUnitRule: ruSizeCalc,
+                params: params,
+              ),
               ValueModel.numeric(38),
-              srcUnitRule: ruSizeCalc,
-              tgtUnitRule: ruSizeCalc,
-              params: params,
-            ),
-            ValueModel.numeric(38),
-          );
+            );
+          });
         },
       );
     });
@@ -243,9 +226,8 @@ void main() {
         'Two-way conversion',
         () {
           ConversionRule centimeterCalcRule =
-              ConversionRule.fromCoefficient(0.01);
-          ConversionRule kilometerCalcRule =
-              ConversionRule.fromCoefficient(1000);
+              ConversionRule.byCoefficient(0.01);
+          ConversionRule kilometerCalcRule = ConversionRule.byCoefficient(1000);
 
           expect(
             ConversionRuleUtils.calculate(

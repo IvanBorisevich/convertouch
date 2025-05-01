@@ -88,8 +88,8 @@ class ConvertSingleValueUseCase
         );
       case ConversionType.static:
       case ConversionType.dynamic:
-        srcUnitRule = ConversionRule.fromCoefficient(srcUnit.coefficient!);
-        tgtUnitRule = ConversionRule.fromCoefficient(tgtUnit.coefficient!);
+        srcUnitRule = ConversionRule.byCoefficient(srcUnit.coefficient!);
+        tgtUnitRule = ConversionRule.byCoefficient(tgtUnit.coefficient!);
     }
 
     ValueModel? result = ConversionRuleUtils.calculate(

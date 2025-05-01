@@ -82,7 +82,7 @@ const Map<Gender, Map<Garment, List<SizesMap>>> clothingSizes = {
   Gender.male: {
     Garment.shirt: [
       SizesMap(
-        height: NumValueRange(0, 160),
+        height: NumValueRange(0, 1.6),
         sizesMap: {
           ClothingSizeCode.inter: ClothingSizeInter.xxs,
           ClothingSizeCode.ru: 38,
@@ -95,7 +95,7 @@ const Map<Gender, Map<Garment, List<SizesMap>>> clothingSizes = {
         },
       ),
       SizesMap(
-        height: NumValueRange(160, 170),
+        height: NumValueRange(1.6, 1.7),
         sizesMap: {
           ClothingSizeCode.inter: ClothingSizeInter.xs,
           ClothingSizeCode.ru: 40,
