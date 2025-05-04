@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 
 const conversionParamsV1 = [
   {
@@ -8,19 +7,19 @@ const conversionParamsV1 = [
     "mandatory": true,
     "params": [
       {
-        "name": genderParamName,
+        "name": ParamNames.gender,
         "calculable": false,
         "valueType": ConvertouchValueType.text,
         "listType": ConvertouchListType.gender,
       },
       {
-        "name": garmentParamName,
+        "name": ParamNames.garment,
         "calculable": false,
         "valueType": ConvertouchValueType.text,
         "listType": ConvertouchListType.garment,
       },
       {
-        "name": heightParamName,
+        "name": ParamNames.height,
         "calculable": false,
         "valueType": ConvertouchValueType.decimalPositive,
         "unitGroupName": GroupNames.length,
@@ -34,16 +33,4 @@ const conversionParamsV1 = [
       }
     ],
   },
-  {
-    "name": "By Other",
-    "unitGroupName": GroupNames.clothingSize,
-    "params": [
-      {
-        "name": genderParamName,
-        "calculable": false,
-        "valueType": ConvertouchValueType.text,
-        "listType": ConvertouchListType.gender,
-      },
-    ],
-  }
 ];

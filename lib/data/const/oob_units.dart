@@ -1,6 +1,5 @@
 import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 
 const unitsV1 = [
   {
@@ -982,49 +981,49 @@ const unitsV4 = [
     "conversionType": ConversionType.formula,
     "units": [
       {
-        "code": ClothingSizeCode.inter,
+        "code": CountryCode.inter,
         "name": "International",
         "valueType": ConvertouchValueType.text,
         "listType": ConvertouchListType.clothingSizeInter,
       },
       {
-        "code": ClothingSizeCode.jp,
+        "code": CountryCode.jp,
         "name": "Japan",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeJp,
       },
       {
-        "code": ClothingSizeCode.fr,
+        "code": CountryCode.fr,
         "name": "France",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeFr,
       },
       {
-        "code": ClothingSizeCode.eu,
+        "code": CountryCode.eu,
         "name": "Europe",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeEu,
       },
       {
-        "code": ClothingSizeCode.ru,
+        "code": CountryCode.ru,
         "name": "Russia",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeRu,
       },
       {
-        "code": ClothingSizeCode.it,
+        "code": CountryCode.it,
         "name": "Italy",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeIt,
       },
       {
-        "code": ClothingSizeCode.uk,
+        "code": CountryCode.uk,
         "name": "United Kingdom",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeUk,
       },
       {
-        "code": ClothingSizeCode.us,
+        "code": CountryCode.us,
         "name": "USA",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeUs,

@@ -41,3 +41,9 @@ const UnitGroupModel clothingSizeGroup = UnitGroupModel(
   valueType: ConvertouchValueType.integerPositive,
   conversionType: ConversionType.formula,
 );
+
+const UnitGroupModel temperatureGroup = UnitGroupModel(
+  name: GroupNames.temperature,
+  valueType: ConvertouchValueType.decimal,
+  conversionType: ConversionType.formula,
+);

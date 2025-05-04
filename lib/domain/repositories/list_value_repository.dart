@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/utils/conversion_rules/clothing_size.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
@@ -28,8 +28,19 @@ abstract interface class ListValueRepository {
 final Map<ConvertouchListType, List<String>> listableSets = {
   ConvertouchListType.gender: Gender.values.map((e) => e.name).toList(),
   ConvertouchListType.garment: Garment.values.map((e) => e.name).toList(),
-  ConvertouchListType.clothingSizeInter:
-      ClothingSizeInter.values.map((e) => e.name).toList(),
+  ConvertouchListType.clothingSizeInter: [
+    "XXS",
+    "XS",
+    "S",
+    "M",
+    "L",
+    "X",
+    "XL",
+    "XX",
+    "XXL",
+    "3X",
+    "3XL",
+  ],
   ConvertouchListType.clothingSizeUs: ObjectUtils.generateList(0, 24, 2)
     ..addAll(ObjectUtils.generateList(30, 50, 2)),
   ConvertouchListType.clothingSizeJp: ObjectUtils.generateList(3, 29, 2)

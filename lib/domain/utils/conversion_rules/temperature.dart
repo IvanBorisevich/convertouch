@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
 
-final Map<String, UnitRule> temperatureFormulas = {
+final Map<String, UnitRule> temperatureRules = {
   UnitCodes.degreeCelsius: UnitRule.identity,
   UnitCodes.degreeFahrenheit: UnitRule.num(
     xToBase: (f) => 5.0 / 9 * (f - 32), // fahrenheit -> celsius

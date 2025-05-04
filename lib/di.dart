@@ -32,7 +32,6 @@ import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
@@ -249,13 +248,7 @@ Future<void> _initUseCases() async {
   );
 
   locator.registerLazySingleton<ConvertUnitValuesUseCase>(
-    () => ConvertUnitValuesUseCase(
-      convertSingleValueUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ConvertSingleValueUseCase>(
-    () => const ConvertSingleValueUseCase(),
+    () => const ConvertUnitValuesUseCase(),
   );
 
   locator.registerLazySingleton<GetConversionUseCase>(

@@ -62,6 +62,16 @@ class ValueModel extends Equatable {
     );
   }
 
+  ValueModel? betweenOrNull(ValueModel? min, ValueModel? max) {
+    return DoubleValueUtils.between(
+      value: numVal,
+      min: min?.numVal,
+      max: max?.numVal,
+    )
+        ? this
+        : null;
+  }
+
   @override
   List<Object?> get props => [
         raw,

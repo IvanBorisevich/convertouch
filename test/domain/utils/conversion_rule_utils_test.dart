@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
+import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:test/test.dart';
 
 import '../model/mock/mock_param.dart';
@@ -15,12 +15,12 @@ void main() {
       test(
         'Two-way conversion (e. g. temperature)',
         () {
-          UnitRule fahrenheitRule = UnitRule.getFormulaRule(
+          UnitRule fahrenheitRule = rules.getFormulaRule(
             unitGroupName: GroupNames.temperature,
             unitCode: UnitCodes.degreeFahrenheit,
-          );
+          )!;
 
-          UnitRule kelvinRule = UnitRule.getFormulaRule(
+          UnitRule? kelvinRule = rules.getFormulaRule(
             unitGroupName: GroupNames.temperature,
             unitCode: UnitCodes.degreeKelvin,
           );
@@ -28,14 +28,14 @@ void main() {
           expect(
             Converter(ValueModel.numeric(32))
                 .apply(fahrenheitRule.xToBase)
-                .apply(kelvinRule.baseToY)
+                .apply(kelvinRule?.baseToY)
                 .value,
             ValueModel.numeric(273.15),
           );
 
           expect(
             Converter(ValueModel.numeric(273.15))
-                .apply(kelvinRule.xToBase)
+                .apply(kelvinRule?.xToBase)
                 .apply(fahrenheitRule.baseToY)
                 .value,
             ValueModel.numeric(32),
@@ -119,19 +119,24 @@ void main() {
       group(
         'Two-way conversion (e. g. clothing size)',
         () {
-          UnitRule ruSize = UnitRule.getFormulaRule(
+          Map<String, String> mappingTable = rules.getMappingTable(
             unitGroupName: GroupNames.clothingSize,
-            unitCode: ClothingSizeCode.ru.name,
+            params: params,
+          )!;
+
+          UnitRule ruSize = UnitRule.mappingTable(
+            mapping: mappingTable,
+            unitCode: CountryCode.ru.name,
           );
 
-          UnitRule euSize = UnitRule.getFormulaRule(
-            unitGroupName: GroupNames.clothingSize,
-            unitCode: ClothingSizeCode.eu.name,
+          UnitRule euSize = UnitRule.mappingTable(
+            mapping: mappingTable,
+            unitCode: CountryCode.eu.name,
           );
 
-          UnitRule interSize = UnitRule.getFormulaRule(
-            unitGroupName: GroupNames.clothingSize,
-            unitCode: ClothingSizeCode.inter.name,
+          UnitRule interSize = UnitRule.mappingTable(
+            mapping: mappingTable,
+            unitCode: CountryCode.inter.name,
           );
 
           test('RU -> EU', () {
@@ -156,8 +161,7 @@ void main() {
 
           test('INT -> RU', () {
             expect(
-              Converter(ValueModel.str(ClothingSizeInter.xxs.name),
-                      params: params)
+              Converter(ValueModel.str("XXS"), params: params)
                   .apply(interSize.xToBase)
                   .apply(ruSize.baseToY)
                   .value,
@@ -171,7 +175,7 @@ void main() {
                   .apply(euSize.xToBase)
                   .apply(interSize.baseToY)
                   .value,
-              ValueModel.str(ClothingSizeInter.xxs.name),
+              ValueModel.str("XXS"),
             );
           });
 

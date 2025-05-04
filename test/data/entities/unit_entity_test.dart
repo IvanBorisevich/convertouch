@@ -1,6 +1,6 @@
 import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -28,7 +28,7 @@ void main() {
       expect(
         UnitEntity.jsonToRow(
           {
-            "code": ClothingSizeCode.it,
+            "code": CountryCode.it,
             "name": "Italy",
           },
           unitGroupId: 10,

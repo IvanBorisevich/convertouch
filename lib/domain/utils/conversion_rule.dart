@@ -1,11 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-
-import 'conversion_rules/clothing_size.dart';
-import 'conversion_rules/temperature.dart';
 
 typedef FunctionWithParams = ValueModel? Function(
     ValueModel, ConversionParamSetValueModel params);
@@ -136,38 +131,11 @@ class UnitRule {
           baseToY: (x) => x / c,
         );
 
-  static UnitRule getFormulaRule({
-    required String unitGroupName,
+  UnitRule.mappingTable({
+    required Map<String, String> mapping,
     required String unitCode,
-  }) {
-    var unitRule = _rulesMap[unitGroupName]?[unitCode];
-    if (unitRule == null) {
-      throw Exception(
-        "Conversion rule not found for unit group $unitGroupName "
-        "and unit code = $unitCode",
-      );
-    }
-    return unitRule;
-  }
-
-  static UnitRule getRule({
-    required UnitGroupModel unitGroup,
-    required UnitModel unit,
-  }) {
-    switch (unitGroup.conversionType) {
-      case ConversionType.formula:
-        return getFormulaRule(
-          unitGroupName: unitGroup.name,
-          unitCode: unit.code,
+  }) : this.plain(
+          xToBase: (x, {params}) => mapping[unitCode] == x.raw ? x : null,
+          baseToY: (x, {params}) => ValueModel.any(mapping[unitCode]),
         );
-      case ConversionType.static:
-      case ConversionType.dynamic:
-        return UnitRule.coefficient(unit.coefficient!);
-    }
-  }
 }
-
-final Map<String, Map<String, UnitRule>> _rulesMap = {
-  GroupNames.temperature: temperatureFormulas,
-  GroupNames.clothingSize: clothingSizeFormulas,
-};

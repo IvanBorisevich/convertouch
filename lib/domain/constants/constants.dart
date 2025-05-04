@@ -37,6 +37,14 @@ abstract class IconNames {
   static const oneWayConversion = "one_way_conversion.svg";
 }
 
+abstract class ParamNames {
+  const ParamNames._();
+
+  static const String gender = "Gender";
+  static const String garment = "Garment";
+  static const String height = "Height";
+}
+
 enum SettingKey {
   sourceUnitId,
   sourceValue,
@@ -238,4 +246,19 @@ enum ConvertouchSysAction {
   final String label;
 
   const ConvertouchSysAction(this.label);
+}
+
+enum CountryCode {
+  inter("INT"),
+  ru("RU"),
+  eu("EU"),
+  uk("UK"),
+  us("US"),
+  it("IT"),
+  fr("FR"),
+  jp("JP");
+
+  final String name;
+
+  const CountryCode(this.name);
 }

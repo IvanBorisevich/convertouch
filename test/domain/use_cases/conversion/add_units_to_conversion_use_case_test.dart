@@ -7,8 +7,6 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart'
-    show ConvertSingleValueUseCase;
 import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
@@ -24,9 +22,7 @@ void main() {
 
   setUp(() {
     useCase = const AddUnitsToConversionUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(
-        convertSingleValueUseCase: ConvertSingleValueUseCase(),
-      ),
+      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
         listValueRepository: ListValueRepositoryImpl(),

@@ -1,7 +1,6 @@
 import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/constants/conversion_param_constants/clothing_size.dart';
 import 'package:floor/floor.dart';
 
 const String unitsTableName = 'units';
@@ -97,8 +96,8 @@ class UnitEntity extends ConvertouchEntity {
 
     return minify({
       'name': item['name'],
-      'code': item['code'] is ClothingSizeCode
-          ? (item['code'] as ClothingSizeCode).name
+      'code': item['code'] is CountryCode
+          ? (item['code'] as CountryCode).name
           : item['code'],
       'symbol': item['symbol'],
       'coefficient': item['coefficient'],
