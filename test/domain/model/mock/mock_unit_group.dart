@@ -47,3 +47,9 @@ const UnitGroupModel temperatureGroup = UnitGroupModel(
   valueType: ConvertouchValueType.decimal,
   conversionType: ConversionType.formula,
 );
+
+const UnitGroupModel ringSizeGroup = UnitGroupModel(
+  name: GroupNames.ringSize,
+  valueType: ConvertouchValueType.decimal,
+  conversionType: ConversionType.formula,
+);

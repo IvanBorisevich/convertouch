@@ -57,8 +57,13 @@ class MockUnitRepository extends UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(
     List<int> ids,
   ) async {
+    Map<int, UnitModel> mockUnitsMap = {
+      for (var unit in mockUnitsList)
+        unit.id : unit
+    };
+
     return Right(
-      mockUnitsList.where((unit) => ids.contains(unit.id)).toList(),
+      ids.map((id) => mockUnitsMap[id]!).toList(),
     );
   }
 

@@ -18,22 +18,26 @@ class ConvertUnitValuesUseCase
     try {
       List<ConversionUnitValueModel> convertedUnitValues = [];
 
-      Map<String, String>? mappingTable = rules.getMappingTable(
-        unitGroupName: input.unitGroup.name,
-        params: input.params,
-      );
+      Map<String, String>? mappingTable;
+      if (input.params != null && input.params!.applicable) {
+        mappingTable = rules.getMappingTableByParams(
+          unitGroupName: input.unitGroup.name,
+          params: input.params,
+        );
+      } else {
+        mappingTable = rules.getMappingTableByValue(
+          unitGroupName: input.unitGroup.name,
+          value: input.sourceUnitValue,
+        );
+      }
 
-      ConversionRule? xToBase = mappingTable != null
-          ? UnitRule.mappingTable(
-              mapping: mappingTable,
-              unitCode: input.sourceUnitValue.unit.code,
-            ).xToBase
-          : rules
-              .getRule(
-                unitGroup: input.unitGroup,
-                unit: input.sourceUnitValue.unit,
-              )
-              ?.xToBase;
+      ConversionRule? xToBase = rules
+          .getRule(
+            unitGroup: input.unitGroup,
+            unit: input.sourceUnitValue.unit,
+            mappingTable: mappingTable,
+          )
+          ?.xToBase;
 
       for (var tgtUnit in input.targetUnits) {
         if (tgtUnit.name == input.sourceUnitValue.unit.name) {

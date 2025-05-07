@@ -119,7 +119,7 @@ void main() {
       group(
         'Two-way conversion (e. g. clothing size)',
         () {
-          Map<String, String> mappingTable = rules.getMappingTable(
+          Map<String, String> mappingTable = rules.getMappingTableByParams(
             unitGroupName: GroupNames.clothingSize,
             params: params,
           )!;

@@ -100,7 +100,7 @@ class ObjectUtils {
     );
   }
 
-  static List<String> generateList(int min, int max, int step) {
+  static List<String> generateList(double min, double max, double step) {
     int length = ((max - min) / step + 1).floor();
     return List.generate(length, (index) => "${min + index * step}");
   }

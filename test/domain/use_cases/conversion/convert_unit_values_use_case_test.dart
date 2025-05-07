@@ -134,18 +134,18 @@ void main() {
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -153,18 +153,18 @@ void main() {
         test('Source unit value does not exist', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -174,18 +174,18 @@ void main() {
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -193,18 +193,18 @@ void main() {
         test('Source unit value does not exist', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -214,18 +214,18 @@ void main() {
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: "Male",
             garment: null,
             height: 150,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -233,18 +233,18 @@ void main() {
         test('Source unit value does not exist', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: null,
             garment: null,
             height: 150,
             defaultHeight: 1,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -254,18 +254,18 @@ void main() {
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -273,18 +273,18 @@ void main() {
         test('Source unit value does not exist', () async {
           await testCaseWithClothingSizeParams(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanSize, null, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
-              japanSize,
-              italianSize,
+              japanClothSize,
+              italianClothSize,
             ],
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });

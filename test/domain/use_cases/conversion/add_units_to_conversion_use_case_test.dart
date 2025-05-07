@@ -112,6 +112,42 @@ void main() {
     );
   }
 
+  Future<void> testCaseWithRingSizeParams({
+    required double? diameter,
+    required double? defaultDiameter,
+    required bool calculated,
+    required ConversionUnitValueModel? src,
+    required List<int> newUnitIds,
+    required List<ConversionUnitValueModel> currentUnitValues,
+    required List<ConversionUnitValueModel> expectedUnitValues,
+    required ConversionUnitValueModel? expectedSrc,
+  }) async {
+    await testCase(
+      unitGroup: ringSizeGroup,
+      src: src,
+      newUnitIds: newUnitIds,
+      currentUnitValues: currentUnitValues,
+      expectedUnitValues: expectedUnitValues,
+      expectedSrc: expectedSrc,
+      params: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                diameter,
+                defaultDiameter,
+                unit: millimeter,
+                calculated: calculated,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   group('Add units to the conversion by coefficients', () {
     group('Without params', () {
       test('Source unit values do not exist', () async {
@@ -199,6 +235,97 @@ void main() {
         );
       });
     });
+
+    group('With params', () {
+      group('Source unit values do not exist', () {
+        test('Param is set', () async {
+          await testCaseWithRingSizeParams(
+            src: null,
+            diameter: 15,
+            defaultDiameter: 1,
+            calculated: false,
+            newUnitIds: [
+              usaRingSize.id,
+              frRingSize.id,
+            ],
+            currentUnitValues: [],
+            expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 4, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, 4, null),
+              ConversionUnitValueModel.tuple(frRingSize, 46.5, null),
+            ],
+          );
+        });
+
+        test('''Param is not set 
+          (for optional params default ring sizes should be set)''', () async {
+          await testCaseWithRingSizeParams(
+            src: null,
+            diameter: null,
+            defaultDiameter: null,
+            calculated: false,
+            newUnitIds: [
+              usaRingSize.id,
+              frRingSize.id,
+            ],
+            currentUnitValues: [],
+            expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+              ConversionUnitValueModel.tuple(frRingSize, 44, null),
+            ],
+          );
+        });
+      });
+
+      group('Source unit default value exists', () {
+        test('Param is set', () async {
+          await testCaseWithRingSizeParams(
+            src: ConversionUnitValueModel.tuple(usaRingSize, null, 3),
+            diameter: 14,
+            defaultDiameter: 1,
+            calculated: false,
+            newUnitIds: [
+              usaRingSize.id,
+              frRingSize.id,
+            ],
+            currentUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, null, 3),
+            ],
+            expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+              ConversionUnitValueModel.tuple(frRingSize, 44, null),
+            ],
+          );
+        });
+
+        test('Param is not set', () async {
+          await testCaseWithRingSizeParams(
+            src: ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
+            diameter: null,
+            defaultDiameter: null,
+            calculated: false,
+            newUnitIds: [
+              usaRingSize.id,
+              frRingSize.id,
+            ],
+            currentUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
+            ],
+            expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+              ConversionUnitValueModel.tuple(frRingSize, null, null),
+            ],
+          );
+        });
+      });
+
+      group('Source unit values exist', () {
+
+      });
+    });
   });
 
   group('Add units to the conversion by formula', () {
@@ -212,62 +339,65 @@ void main() {
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
 
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null)
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null)
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
 
         test('Add duplicated or already used units', () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
-              italianSize.id,
-              europeanSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
+              italianClothSize.id,
+              europeanClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null)
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null)
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -275,23 +405,24 @@ void main() {
         test('Source unit value exists (list default value is ignored)',
             () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -306,37 +437,39 @@ void main() {
             height: null,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
 
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -344,23 +477,24 @@ void main() {
         test('Source unit value exists (list default value is ignored)',
             () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
           );
         });
@@ -375,37 +509,39 @@ void main() {
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
 
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: null,
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -413,23 +549,24 @@ void main() {
         test('Source unit value exists (list default value is ignored)',
             () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: null,
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -444,37 +581,39 @@ void main() {
             height: null,
             defaultHeight: null,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [],
-            expectedSrc: ConversionUnitValueModel.tuple(japanSize, 3, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanSize, 3, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
 
         test('Source unit value exists', () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
@@ -482,23 +621,24 @@ void main() {
         test('Source unit value exists (list default value is ignored)',
             () async {
           await testCaseWithClothingSizeParams(
-            src: ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
             newUnitIds: [
-              japanSize.id,
-              italianSize.id,
+              japanClothSize.id,
+              italianClothSize.id,
             ],
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, 32),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanSize, 32, null),
-              ConversionUnitValueModel.tuple(japanSize, null, null),
-              ConversionUnitValueModel.tuple(italianSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });

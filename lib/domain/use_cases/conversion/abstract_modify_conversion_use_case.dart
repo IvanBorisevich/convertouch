@@ -77,6 +77,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       if (input.delta is ConversionUnitValuesModifyDelta) {
         newSrcUnitValue = await newSourceUnitValue(
           oldSourceUnitValue: input.conversion.srcUnitValue,
+          activeParams: newParams?.activeParams,
+          unitGroup: modifiedGroup,
           modifiedConvertedItemsMap: modifiedConvertedItemsMap,
           delta: input.delta,
         );
@@ -141,6 +143,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
   Future<ConversionUnitValueModel> newSourceUnitValue({
     required ConversionUnitValueModel? oldSourceUnitValue,
+    required ConversionParamSetValueModel? activeParams,
+    required UnitGroupModel unitGroup,
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required D delta,
   }) async {

@@ -16,6 +16,25 @@ abstract class GroupNames {
   static const temperature = "Temperature";
   static const currency = "Currency";
   static const clothingSize = "Clothing Size";
+  static const ringSize = "Ring Size";
+}
+
+abstract class ParamSetNames {
+  const ParamSetNames._();
+
+  static const byHeight = "By Height";
+  static const byDiameter = "By Diameter";
+  static const byCircumference = "By Circumference";
+}
+
+abstract class ParamNames {
+  const ParamNames._();
+
+  static const String gender = "Gender";
+  static const String garment = "Garment";
+  static const String height = "Height";
+  static const String diameter = "Diameter";
+  static const String circumference = "Circumference";
 }
 
 abstract class UnitCodes {
@@ -35,14 +54,6 @@ abstract class IconNames {
   const IconNames._();
 
   static const oneWayConversion = "one_way_conversion.svg";
-}
-
-abstract class ParamNames {
-  const ParamNames._();
-
-  static const String gender = "Gender";
-  static const String garment = "Garment";
-  static const String height = "Height";
 }
 
 enum SettingKey {
@@ -227,6 +238,10 @@ enum ConvertouchListType {
   clothingSizeRu(8),
   clothingSizeIt(9),
   clothingSizeUk(10),
+  ringSizeFr(11),
+  ringSizeRu(12),
+  ringSizeUs(13),
+  ringSizeIt(14),
   ;
 
   final int id;
@@ -256,9 +271,18 @@ enum CountryCode {
   us("US"),
   it("IT"),
   fr("FR"),
-  jp("JP");
+  jp("JP"),
+  de("DE");
 
   final String name;
 
   const CountryCode(this.name);
+
+  static CountryCode valueOf(String name) {
+    return values.firstWhere((element) => name == element.name);
+  }
+
+  static String nameOf(CountryCode value) {
+    return value.name;
+  }
 }

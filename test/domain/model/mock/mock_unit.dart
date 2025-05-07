@@ -60,8 +60,16 @@ const UnitModel centimeter = UnitModel(
   coefficient: 0.01,
 );
 
-const UnitModel decimeter = UnitModel(
+const UnitModel millimeter = UnitModel(
   id: 2,
+  name: "Millimeter",
+  code: "mm",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 0.001,
+);
+
+const UnitModel decimeter = UnitModel(
+  id: 3,
   name: "Decimeter",
   code: "dm",
   valueType: ConvertouchValueType.decimalPositive,
@@ -69,7 +77,7 @@ const UnitModel decimeter = UnitModel(
 );
 
 const UnitModel meter = UnitModel(
-  id: 3,
+  id: 4,
   name: 'Meter',
   code: 'm',
   valueType: ConvertouchValueType.decimalPositive,
@@ -77,43 +85,67 @@ const UnitModel meter = UnitModel(
 );
 
 const UnitModel kilometer = UnitModel(
-  id: 4,
+  id: 5,
   name: "Kilometer",
   code: "km",
   valueType: ConvertouchValueType.decimalPositive,
   coefficient: 1000,
 );
 
-const UnitModel europeanSize = UnitModel(
-  id: 5,
+const UnitModel europeanClothSize = UnitModel(
+  id: 6,
   name: "Europe",
   code: "EU",
   valueType: ConvertouchValueType.integerPositive,
   listType: ConvertouchListType.clothingSizeEu,
 );
 
-const UnitModel japanSize = UnitModel(
-  id: 6,
+const UnitModel japanClothSize = UnitModel(
+  id: 7,
   name: "Japan",
   code: "JP",
   valueType: ConvertouchValueType.integerPositive,
   listType: ConvertouchListType.clothingSizeJp,
 );
 
-const UnitModel italianSize = UnitModel(
-  id: 7,
+const UnitModel italianClothSize = UnitModel(
+  id: 8,
   name: "Italia",
   code: "IT",
   valueType: ConvertouchValueType.integerPositive,
   listType: ConvertouchListType.clothingSizeIt,
 );
 
-const UnitModel usaSize = UnitModel(
-  id: 8,
+const UnitModel usaClothSize = UnitModel(
+  id: 9,
   name: 'Clothing Size US',
   code: 'US',
   valueType: ConvertouchValueType.decimalPositive,
   listType: ConvertouchListType.clothingSizeUs,
+);
+
+const UnitModel usaRingSize = UnitModel(
+  id: 10,
+  name: 'Ring Size US',
+  code: 'US',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.ringSizeUs,
+);
+
+const UnitModel frRingSize = UnitModel(
+  id: 11,
+  name: 'Ring Size FR',
+  code: 'FR',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.ringSizeFr,
+);
+
+const UnitModel ruRingSize = UnitModel(
+  id: 12,
+  name: 'Ring Size RU',
+  code: 'RU',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.ringSizeRu,
 );
 
 const mockUnitsList = [
@@ -121,8 +153,11 @@ const mockUnitsList = [
   decimeter,
   meter,
   kilometer,
-  europeanSize,
-  japanSize,
-  italianSize,
-  usaSize,
+  europeanClothSize,
+  japanClothSize,
+  italianClothSize,
+  usaClothSize,
+  frRingSize,
+  ruRingSize,
+  usaRingSize,
 ];

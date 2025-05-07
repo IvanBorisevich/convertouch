@@ -17,6 +17,12 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   String get name;
 
+  ValueModel? get val => value ?? defaultValue;
+
+  String? get raw => val?.raw;
+
+  num? get numVal => val?.numVal;
+
   ConvertouchValueType get valueType;
 
   ConvertouchListType? get listType;
