@@ -59,8 +59,12 @@ class ReplaceConversionItemUnitUseCase
       if (belongsToList) {
         value = newSrcUnitValue.value;
       } else {
-        value = ObjectUtils.tryGet(
-          await calculateDefaultValueUseCase.execute(newSrcUnitValue.unit),
+        value = ValueModel.any(
+          ObjectUtils.tryGet(
+            await listValueRepository.getDefault(
+              listType: newSrcUnitValue.unit.listType!,
+            ),
+          )?.itemName,
         );
       }
 

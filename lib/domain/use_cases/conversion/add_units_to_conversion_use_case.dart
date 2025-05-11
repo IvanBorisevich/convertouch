@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
@@ -14,12 +15,14 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 class AddUnitsToConversionUseCase
     extends AbstractModifyConversionUseCase<AddUnitsToConversionDelta> {
   final UnitRepository unitRepository;
+  final ListValueRepository listValueRepository;
   final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AddUnitsToConversionUseCase({
     required super.convertUnitValuesUseCase,
     required this.calculateDefaultValueUseCase,
     required this.unitRepository,
+    required this.listValueRepository,
   });
 
   @override
@@ -57,45 +60,55 @@ class AddUnitsToConversionUseCase
     required AddUnitsToConversionDelta delta,
   }) async {
     if (oldSourceUnitValue != null) {
-      var unit = oldSourceUnitValue.unit;
-      var value = oldSourceUnitValue.value;
-      var defaultValue = oldSourceUnitValue.defaultValue;
-
       return ConversionUnitValueModel(
-        unit: unit,
-        value: value ?? (unit.listType != null ? defaultValue : null),
-        defaultValue: unit.listType == null ? defaultValue : null,
+        unit: oldSourceUnitValue.unit,
+        value: oldSourceUnitValue.value,
+        defaultValue: oldSourceUnitValue.unit.listType == null
+            ? oldSourceUnitValue.defaultValue
+            : null,
       );
     }
 
     UnitModel newUnit = modifiedConvertedItemsMap.values.first.unit;
-    ValueModel? newDefaultValue;
 
-    Map<String, String>? mappingTable;
-    if (activeParams != null && activeParams.applicable) {
-      mappingTable = rules.getMappingTableByParams(
-        unitGroupName: unitGroup.name,
-        params: activeParams,
+    if (newUnit.listType != null) {
+      Map<String, String>? mappingTable;
+      if (activeParams != null && activeParams.applicable) {
+        mappingTable = rules.getMappingTableByParams(
+          unitGroupName: unitGroup.name,
+          params: activeParams,
+        );
+      } else {
+        mappingTable = rules.getMappingTableByValue(
+          unitGroupName: unitGroup.name,
+          value: oldSourceUnitValue,
+        );
+      }
+
+      String? newValue;
+      if (mappingTable != null) {
+        newValue = mappingTable[newUnit.code];
+      } else if (activeParams == null || !activeParams.paramSet.mandatory) {
+        newValue = ObjectUtils.tryGet(
+          await listValueRepository.getDefault(
+            listType: newUnit.listType!,
+          ),
+        )?.itemName;
+      }
+
+      return ConversionUnitValueModel(
+        unit: newUnit,
+        value: ValueModel.any(newValue),
       );
     } else {
-      mappingTable = rules.getMappingTableByValue(
-        unitGroupName: unitGroup.name,
-        value: oldSourceUnitValue,
-      );
-    }
-
-    if (mappingTable != null) {
-      newDefaultValue = ValueModel.any(mappingTable[newUnit.code]);
-    } else {
-      newDefaultValue = ObjectUtils.tryGet(
+      ValueModel? newDefaultValue = ObjectUtils.tryGet(
         await calculateDefaultValueUseCase.execute(newUnit),
       );
-    }
 
-    return ConversionUnitValueModel(
-      unit: newUnit,
-      value: newUnit.listType != null ? newDefaultValue : null,
-      defaultValue: newUnit.listType == null ? newDefaultValue : null,
-    );
+      return ConversionUnitValueModel(
+        unit: newUnit,
+        defaultValue: newDefaultValue,
+      );
+    }
   }
 }

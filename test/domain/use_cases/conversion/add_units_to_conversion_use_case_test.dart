@@ -1,21 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
-import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../repositories/mock/mock_unit_repository.dart';
+import 'helpers/helpers.dart';
 
 void main() {
   late AddUnitsToConversionUseCase useCase;
@@ -25,141 +20,27 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
       ),
       unitRepository: MockUnitRepository(),
+      listValueRepository: ListValueRepositoryImpl(),
     );
   });
-
-  Future<void> testCase({
-    required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel? src,
-    required List<ConversionUnitValueModel> currentUnitValues,
-    required List<ConversionUnitValueModel> expectedUnitValues,
-    required ConversionUnitValueModel? expectedSrc,
-    required List<int> newUnitIds,
-    required ConversionParamSetValueBulkModel? params,
-  }) async {
-    ConversionModel actual = ObjectUtils.tryGet(
-      await useCase.execute(
-        InputConversionModifyModel<AddUnitsToConversionDelta>(
-          conversion: ConversionModel(
-            unitGroup: unitGroup,
-            srcUnitValue: src,
-            convertedUnitValues: currentUnitValues,
-            params: params,
-          ),
-          delta: AddUnitsToConversionDelta(
-            unitIds: newUnitIds,
-          ),
-        ),
-      ),
-    );
-
-    ConversionModel expected = ConversionModel(
-      unitGroup: unitGroup,
-      srcUnitValue: expectedSrc,
-      convertedUnitValues: expectedUnitValues,
-      params: params,
-    );
-
-    expect(actual.id, expected.id);
-    expect(actual.name, expected.name);
-    expect(actual.unitGroup, expected.unitGroup);
-    expect(actual.srcUnitValue, expected.srcUnitValue);
-    expect(actual.params, expected.params);
-    expect(
-      actual.convertedUnitValues.sortedBy((e) => e.name),
-      expected.convertedUnitValues.sortedBy((e) => e.name),
-    );
-  }
-
-  Future<void> testCaseWithClothingSizeParams({
-    required String? gender,
-    required String? garment,
-    required double? height,
-    required double? defaultHeight,
-    required ConversionUnitValueModel? src,
-    required List<int> newUnitIds,
-    required List<ConversionUnitValueModel> currentUnitValues,
-    required List<ConversionUnitValueModel> expectedUnitValues,
-    required ConversionUnitValueModel? expectedSrc,
-  }) async {
-    await testCase(
-      unitGroup: clothingSizeGroup,
-      src: src,
-      newUnitIds: newUnitIds,
-      currentUnitValues: currentUnitValues,
-      expectedUnitValues: expectedUnitValues,
-      expectedSrc: expectedSrc,
-      params: ConversionParamSetValueBulkModel(
-        paramSetValues: [
-          ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
-            paramValues: [
-              ConversionParamValueModel.tuple(genderParam, gender, null),
-              ConversionParamValueModel.tuple(garmentParam, garment, null),
-              ConversionParamValueModel.tuple(
-                heightParam,
-                height,
-                defaultHeight,
-                unit: centimeter,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> testCaseWithRingSizeParams({
-    required double? diameter,
-    required double? defaultDiameter,
-    required bool calculated,
-    required ConversionUnitValueModel? src,
-    required List<int> newUnitIds,
-    required List<ConversionUnitValueModel> currentUnitValues,
-    required List<ConversionUnitValueModel> expectedUnitValues,
-    required ConversionUnitValueModel? expectedSrc,
-  }) async {
-    await testCase(
-      unitGroup: ringSizeGroup,
-      src: src,
-      newUnitIds: newUnitIds,
-      currentUnitValues: currentUnitValues,
-      expectedUnitValues: expectedUnitValues,
-      expectedSrc: expectedSrc,
-      params: ConversionParamSetValueBulkModel(
-        paramSetValues: [
-          ConversionParamSetValueModel(
-            paramSet: ringSizeByDiameterParamSet,
-            paramValues: [
-              ConversionParamValueModel.tuple(
-                diameterParam,
-                diameter,
-                defaultDiameter,
-                unit: millimeter,
-                calculated: calculated,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   group('By coefficients', () {
     group('Without params', () {
       test('Source item does not exist', () async {
         await testCase(
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              centimeter.id,
+              kilometer.id,
+              decimeter.id,
+            ],
+          ),
           unitGroup: lengthGroup,
           src: null,
           params: null,
-          newUnitIds: [
-            centimeter.id,
-            kilometer.id,
-            decimeter.id,
-          ],
           currentUnitValues: [],
           expectedSrc: ConversionUnitValueModel.tuple(centimeter, null, 1),
           expectedUnitValues: [
@@ -172,13 +53,16 @@ void main() {
 
       test('Source item value and default value exist', () async {
         await testCase(
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              centimeter.id,
+              kilometer.id,
+            ],
+          ),
           unitGroup: lengthGroup,
           src: ConversionUnitValueModel.tuple(decimeter, 10, 1),
           params: null,
-          newUnitIds: [
-            centimeter.id,
-            kilometer.id,
-          ],
           currentUnitValues: [
             ConversionUnitValueModel.tuple(decimeter, 10, 1),
           ],
@@ -193,13 +77,16 @@ void main() {
 
       test('Source item default value exists only', () async {
         await testCase(
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              centimeter.id,
+              kilometer.id,
+            ],
+          ),
           unitGroup: lengthGroup,
           src: ConversionUnitValueModel.tuple(decimeter, null, 1),
           params: null,
-          newUnitIds: [
-            centimeter.id,
-            kilometer.id,
-          ],
           currentUnitValues: [
             ConversionUnitValueModel.tuple(decimeter, null, 1),
           ],
@@ -214,13 +101,16 @@ void main() {
 
       test('Source item value exists only', () async {
         await testCase(
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              centimeter.id,
+              kilometer.id,
+            ],
+          ),
           unitGroup: lengthGroup,
           src: ConversionUnitValueModel.tuple(decimeter, 10, null),
           params: null,
-          newUnitIds: [
-            centimeter.id,
-            kilometer.id,
-          ],
           currentUnitValues: [
             ConversionUnitValueModel.tuple(decimeter, 10, null),
           ],
@@ -240,15 +130,18 @@ void main() {
       group('All params are set', () {
         test('Source item does not exist', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: null,
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [],
             expectedSrc:
                 ConversionUnitValueModel.tuple(japanClothSize, 3, null),
@@ -263,15 +156,18 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
@@ -287,41 +183,47 @@ void main() {
 
         test(
             'Source item default value exists only '
-            '(default list value will be used as the main one)', () async {
+            '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
 
         test('Source item value exists only', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: "Male",
             garment: "Shirt",
             height: 150,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null)
             ],
@@ -339,15 +241,18 @@ void main() {
       group('Some params are set by default', () {
         test('Source item does not exist', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: null,
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [],
             expectedSrc:
                 ConversionUnitValueModel.tuple(japanClothSize, 3, null),
@@ -362,15 +267,18 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
@@ -386,41 +294,47 @@ void main() {
 
         test(
             'Source item default value exists only '
-            '(default list value will be used as the main one)', () async {
+            '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
         });
 
         test('Source item value exists only', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: "Male",
             garment: "Shirt",
             height: null,
             defaultHeight: 1,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],
@@ -436,17 +350,20 @@ void main() {
       });
 
       group('Some params are not set', () {
-        group('Optional params are ignored', () {
+        group('Optional params', () {
           test('Source item does not exist', () async {
             await testCaseWithRingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  usaRingSize.id,
+                  frRingSize.id,
+                ],
+              ),
               src: null,
               diameter: null,
               defaultDiameter: null,
               calculated: false,
-              newUnitIds: [
-                usaRingSize.id,
-                frRingSize.id,
-              ],
               currentUnitValues: [],
               expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
               expectedUnitValues: [
@@ -460,14 +377,17 @@ void main() {
               'Source item value and default value exist '
               '(default list value will be ignored)', () async {
             await testCaseWithRingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  usaRingSize.id,
+                  frRingSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
               diameter: null,
               defaultDiameter: null,
               calculated: false,
-              newUnitIds: [
-                usaRingSize.id,
-                frRingSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
               ],
@@ -482,23 +402,26 @@ void main() {
 
           test(
               'Source item default value exists only '
-              '(default list value will be used as the main one)', () async {
+              '(default list value will be ignored)', () async {
             await testCaseWithRingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  usaRingSize.id,
+                  frRingSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
               diameter: null,
               defaultDiameter: null,
               calculated: false,
-              newUnitIds: [
-                usaRingSize.id,
-                frRingSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
               ],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+                  ConversionUnitValueModel.tuple(usaRingSize, null, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+                ConversionUnitValueModel.tuple(usaRingSize, null, null),
                 ConversionUnitValueModel.tuple(frRingSize, null, null),
               ],
             );
@@ -506,14 +429,17 @@ void main() {
 
           test('Source item value exists only', () async {
             await testCaseWithRingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  usaRingSize.id,
+                  frRingSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
               diameter: null,
               defaultDiameter: null,
               calculated: false,
-              newUnitIds: [
-                usaRingSize.id,
-                frRingSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
               ],
@@ -527,23 +453,26 @@ void main() {
           });
         });
 
-        group('Mandatory params are always used', () {
+        group('Mandatory params', () {
           test('Source item does not exist', () async {
             await testCaseWithClothingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  japanClothSize.id,
+                  italianClothSize.id,
+                ],
+              ),
               src: null,
               gender: "Male",
               garment: null,
               height: 150,
               defaultHeight: 1,
-              newUnitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
               currentUnitValues: [],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+                  ConversionUnitValueModel.tuple(japanClothSize, null, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+                ConversionUnitValueModel.tuple(japanClothSize, null, null),
                 ConversionUnitValueModel.tuple(italianClothSize, null, null),
               ],
             );
@@ -553,15 +482,18 @@ void main() {
               'Source item value and default value exist '
               '(default list value will be ignored)', () async {
             await testCaseWithClothingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  japanClothSize.id,
+                  italianClothSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
               gender: null,
               garment: "Shirt",
               height: 150,
               defaultHeight: 1,
-              newUnitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
               ],
@@ -577,24 +509,27 @@ void main() {
 
           test(
               'Source item default value exists only '
-              '(default list value will be used as the main one)', () async {
+              '(default list value will be ignored)', () async {
             await testCaseWithClothingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  japanClothSize.id,
+                  italianClothSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
               gender: null,
               garment: "Shirt",
               height: 150,
               defaultHeight: 1,
-              newUnitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
               ],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
                 ConversionUnitValueModel.tuple(japanClothSize, null, null),
                 ConversionUnitValueModel.tuple(italianClothSize, null, null),
               ],
@@ -603,15 +538,18 @@ void main() {
 
           test('Source item value exists only', () async {
             await testCaseWithClothingSizeParams(
+              useCase: useCase,
+              delta: AddUnitsToConversionDelta(
+                unitIds: [
+                  japanClothSize.id,
+                  italianClothSize.id,
+                ],
+              ),
               src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               gender: null,
               garment: "Shirt",
               height: 150,
               defaultHeight: 1,
-              newUnitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ],
@@ -630,20 +568,23 @@ void main() {
       group('No params are set', () {
         test('Source item does not exist', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: null,
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [],
             expectedSrc:
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+                ConversionUnitValueModel.tuple(japanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
           );
@@ -653,15 +594,18 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
@@ -677,24 +621,27 @@ void main() {
 
         test(
             'Source item default value exists only '
-            '(default list value will be used as the main one)', () async {
+            '(default list value will be ignored)', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
@@ -703,15 +650,18 @@ void main() {
 
         test('Source item value exists only', () async {
           await testCaseWithClothingSizeParams(
+            useCase: useCase,
+            delta: AddUnitsToConversionDelta(
+              unitIds: [
+                japanClothSize.id,
+                italianClothSize.id,
+              ],
+            ),
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             gender: null,
             garment: null,
             height: null,
             defaultHeight: null,
-            newUnitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
-            ],
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],

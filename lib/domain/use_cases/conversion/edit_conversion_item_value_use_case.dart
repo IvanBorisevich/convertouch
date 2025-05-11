@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -24,26 +25,25 @@ class EditConversionItemValueUseCase
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required EditConversionItemValueDelta delta,
   }) async {
-    ConversionUnitValueModel newSrcUnitValue =
-        modifiedConvertedItemsMap[delta.unitId]!;
+    UnitModel newUnit = modifiedConvertedItemsMap[delta.unitId]!.unit;
 
-    if (newSrcUnitValue.unit.listType != null) {
-      return ConversionUnitValueModel(
-        unit: newSrcUnitValue.unit,
-        value: ValueModel.any(delta.newValue),
-      );
-    } else {
-      ValueModel? defaultValue = ValueModel.any(delta.newDefaultValue) ??
+    ConversionUnitValueModel newSrcUnitValue = ConversionUnitValueModel(
+      unit: newUnit,
+      value: ValueModel.any(delta.newValue),
+    );
+
+    if (newUnit.listType == null) {
+      ValueModel? newDefaultValue = ValueModel.any(delta.newDefaultValue) ??
           ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(newSrcUnitValue.unit),
+            await calculateDefaultValueUseCase.execute(newUnit),
           );
 
-      return ConversionUnitValueModel(
-        unit: newSrcUnitValue.unit,
-        value: ValueModel.any(delta.newValue),
-        defaultValue: defaultValue,
+      return newSrcUnitValue.copyWith(
+        defaultValue: newDefaultValue,
       );
     }
+
+    return newSrcUnitValue;
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -24,7 +23,6 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
       ),
     );
   });
@@ -152,7 +150,8 @@ void main() {
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
             currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ConversionUnitValueModel.tuple(japanClothSize, 3, null),
@@ -178,7 +177,8 @@ void main() {
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
             currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -204,7 +204,8 @@ void main() {
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
             currentUnitValues: currentUnitValues,
-            expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 30, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 30, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 30, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),

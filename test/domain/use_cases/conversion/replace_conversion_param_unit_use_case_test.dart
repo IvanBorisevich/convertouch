@@ -25,7 +25,6 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
       ),
       listValueRepository: ListValueRepositoryImpl(),
     );
@@ -146,7 +145,8 @@ void main() {
             ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+          expectedSrc:
+              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
             ConversionUnitValueModel.tuple(japanClothSize, 7, null),
@@ -173,7 +173,8 @@ void main() {
             ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+          expectedSrc:
+              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -200,7 +201,8 @@ void main() {
             ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+          expectedSrc:
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ConversionUnitValueModel.tuple(japanClothSize, 3, null),
@@ -232,7 +234,8 @@ void main() {
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ConversionUnitValueModel.tuple(japanClothSize, 3, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ConversionUnitValueModel.tuple(japanClothSize, 3, null),

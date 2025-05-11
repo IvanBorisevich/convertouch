@@ -25,7 +25,6 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
       ),
       listValueRepository: ListValueRepositoryImpl(),
     );
@@ -115,6 +114,8 @@ void main() {
       ),
     );
   }
+
+
 
   group('Change unit in the conversion by coefficients', () {
     group('Without params', () {
@@ -239,7 +240,8 @@ void main() {
               ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(usaClothSize, null, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(usaClothSize, null, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(usaClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -260,7 +262,8 @@ void main() {
               ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(usaClothSize, null, null),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(usaClothSize, null, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(usaClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
