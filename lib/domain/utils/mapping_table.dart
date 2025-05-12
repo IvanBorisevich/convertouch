@@ -35,6 +35,18 @@ class MappingRow<T extends Criterion, K> {
     required this.criterion,
     required this.row,
   });
+
+  Map<String, String>? transform(String Function(K)? key) {
+    var result = row.map(
+      (k, v) => MapEntry(
+        key?.call(k) ?? k.toString(),
+        v != null ? v.toString() : "",
+      ),
+    );
+
+    result.removeWhere((k, v) => v.isEmpty);
+    return result;
+  }
 }
 
 class MappingTable<T extends Criterion, K> {
@@ -56,41 +68,27 @@ class MappingTable<T extends Criterion, K> {
       return null;
     }
 
-    var result = rows
-        .firstWhereOrNull(
-          (row) => filter.call(params, row.criterion),
-        )
-        ?.row
-        .map(
-          (k, v) => MapEntry(
-            unitCodeByKey?.call(k) ?? k.toString(),
-            v != null ? v.toString() : "",
-          ),
-        );
-
-    result?.removeWhere((k, v) => v.isEmpty);
-    return result;
+    return rows
+        .firstWhereOrNull((row) => filter.call(params, row.criterion))
+        ?.transform(unitCodeByKey);
   }
 
-  Map<String, String>? getRowByValue(ConversionUnitValueModel value) {
+  T? getCriterionByValue(ConversionUnitValueModel value) {
+    return _getTableRowByValue(value)?.criterion;
+  }
+
+  Map<String, String>? getMappingByValue(ConversionUnitValueModel value) {
+    return _getTableRowByValue(value)?.transform(unitCodeByKey);
+  }
+
+  MappingRow<T, K>? _getTableRowByValue(ConversionUnitValueModel value) {
     if (rows.isEmpty) {
       return null;
     }
 
     K codeKey = keyByUnitCode?.call(value.unit.code) ?? (value.unit.code as K);
 
-    var result = rows
-        .firstWhereOrNull((row) =>
-            row.row[codeKey] == value.numVal || row.row[codeKey] == value.raw)
-        ?.row
-        .map(
-          (k, v) => MapEntry(
-            unitCodeByKey?.call(k) ?? k.toString(),
-            v != null ? v.toString() : "",
-          ),
-        );
-
-    result?.removeWhere((k, v) => v.isEmpty);
-    return result;
+    return rows.firstWhereOrNull((row) =>
+        row.row[codeKey] == value.numVal || row.row[codeKey] == value.raw);
   }
 }

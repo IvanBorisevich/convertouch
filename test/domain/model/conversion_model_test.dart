@@ -51,6 +51,7 @@ void main() {
           ],
         ),
       ],
+      totalCount: 1,
       mandatoryParamSetExists: true,
     ),
     convertedUnitValues: [
@@ -115,7 +116,7 @@ void main() {
       "paramSetCanBeRemoved": false,
       "paramSetsCanBeRemovedInBulk": false,
       "mandatoryParamSetExists": true,
-      'totalCount': 0,
+      'totalCount': 1,
     },
     'sourceItem': {
       'unit': {

@@ -110,9 +110,7 @@ class ConversionBloc
                     unitGroup: event.unitGroup,
                     params: null,
                   ),
-                  delta: const AddParamSetsDelta(
-                    initial: true,
-                  ),
+                  delta: const AddParamSetsDelta(),
                 ),
               ),
             );

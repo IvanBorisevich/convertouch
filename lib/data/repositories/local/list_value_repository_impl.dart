@@ -24,7 +24,8 @@ class ListValueRepositoryImpl implements ListValueRepository {
   Future<Either<ConvertouchException, ListValueModel?>> getDefault({
     required ConvertouchListType listType,
   }) async {
-    String? rawValue = listableSets[listType]?.firstOrNull;
+    String? rawValue =
+        listType.preselected ? listableSets[listType]?.firstOrNull : null;
     return rawValue != null
         ? Right(ListValueModel(rawValue))
         : const Right(null);

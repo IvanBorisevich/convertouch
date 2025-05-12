@@ -6,6 +6,20 @@ import 'package:either_dart/src/either.dart';
 
 import '../../model/mock/mock_unit.dart';
 
+const _mockUnitsList = [
+  centimeter,
+  decimeter,
+  meter,
+  kilometer,
+  europeanClothSize,
+  japanClothSize,
+  italianClothSize,
+  usaClothSize,
+  frRingSize,
+  ruRingSize,
+  usaRingSize,
+];
+
 class MockUnitRepository extends UnitRepository {
   const MockUnitRepository();
 
@@ -17,7 +31,7 @@ class MockUnitRepository extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel?>> get(int id) async {
     return Right(
-      mockUnitsList.firstWhereOrNull((unit) => unit.id == id),
+      _mockUnitsList.firstWhereOrNull((unit) => unit.id == id),
     );
   }
 
@@ -47,7 +61,7 @@ class MockUnitRepository extends UnitRepository {
   ) async {
     return Right(
       {
-        for (var v in mockUnitsList.where((unit) => codes.contains(unit.code)))
+        for (var v in _mockUnitsList.where((unit) => codes.contains(unit.code)))
           v.id: v
       },
     );
@@ -58,8 +72,7 @@ class MockUnitRepository extends UnitRepository {
     List<int> ids,
   ) async {
     Map<int, UnitModel> mockUnitsMap = {
-      for (var unit in mockUnitsList)
-        unit.id : unit
+      for (var unit in _mockUnitsList) unit.id: unit
     };
 
     return Right(
@@ -84,7 +97,7 @@ class MockUnitRepository extends UnitRepository {
     required int pageNum,
     required int pageSize,
   }) async {
-    return const Right(mockUnitsList);
+    return const Right(_mockUnitsList);
   }
 
   @override
@@ -94,6 +107,6 @@ class MockUnitRepository extends UnitRepository {
     required int pageNum,
     required int pageSize,
   }) async {
-    return const Right(mockUnitsList);
+    return const Right(_mockUnitsList);
   }
 }

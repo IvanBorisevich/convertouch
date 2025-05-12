@@ -8,36 +8,62 @@ import 'package:convertouch/domain/utils/mapping_table.dart';
 
 const int millimetersInMeter = 1000;
 
-Map<String, String>? getRingSizesMapByParams(
+Map<String, String>? getRingSizesMapByDiameter(
+  ConversionParamSetValueModel params,
+) {
+  return _getRingSizesMapByParams(params, ParamNames.diameter);
+}
+
+Map<String, String>? getRingSizesMapByCircumference(
+  ConversionParamSetValueModel params,
+) {
+  return _getRingSizesMapByParams(params, ParamNames.circumference);
+}
+
+Map<String, String>? getRingSizesMapByValue(ConversionUnitValueModel value) {
+  return _ringSizes.getMappingByValue(value);
+}
+
+ValueModel? getDiameterByValue({
+  required ConversionUnitValueModel value,
+  required List<ConversionParamValueModel> paramValues,
+}) {
+  var criterion = _ringSizes.getCriterionByValue(value);
+  return ValueModel.any(criterion?.left);
+}
+
+ValueModel? getCircumferenceByValue({
+  required ConversionUnitValueModel value,
+  required List<ConversionParamValueModel> paramValues,
+}) {
+  var criterion = _ringSizes.getCriterionByValue(value);
+  return criterion?.left != null ? ValueModel.any(criterion!.left * pi) : null;
+}
+
+Map<String, String>? _getRingSizesMapByParams(
   ConversionParamSetValueModel params,
   String paramName,
 ) {
   return _ringSizes.getRowByParams(
     params,
     filter: (params, criterion) {
-      var diameterParam = params.getParam(ParamNames.diameter);
-      ValueModel? diameter = diameterParam?.val;
+      var param = params.getParam(paramName);
+      ValueModel? paramVal = param?.val;
 
-      if (diameter == null) {
+      if (paramVal == null) {
         return false;
       }
 
-      double normalizedDiameter = paramName == ParamNames.diameter
-          ? diameter.numVal! *
-              diameterParam!.unit!.coefficient! *
-              millimetersInMeter
-          : diameter.numVal! *
-              diameterParam!.unit!.coefficient! *
+      double normalizedVal = paramName == ParamNames.diameter
+          ? paramVal.numVal! * param!.unit!.coefficient! * millimetersInMeter
+          : paramVal.numVal! *
+              param!.unit!.coefficient! *
               millimetersInMeter /
               pi;
 
-      return criterion.contains(normalizedDiameter, includeRight: false);
+      return criterion.contains(normalizedVal, includeRight: false);
     },
   );
-}
-
-Map<String, String>? getRingSizesMapByValue(ConversionUnitValueModel value) {
-  return _ringSizes.getRowByValue(value);
 }
 
 const MappingTable<NumRangeCriterion, CountryCode> _ringSizes = MappingTable(

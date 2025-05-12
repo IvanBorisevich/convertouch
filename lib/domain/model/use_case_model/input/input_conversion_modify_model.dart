@@ -91,11 +91,9 @@ class ReplaceConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
 
 class AddParamSetsDelta extends ConversionParamValuesModifyDelta {
   final List<int> paramSetIds;
-  final bool initial;
 
   const AddParamSetsDelta({
     this.paramSetIds = const [],
-    this.initial = false,
   });
 }
 

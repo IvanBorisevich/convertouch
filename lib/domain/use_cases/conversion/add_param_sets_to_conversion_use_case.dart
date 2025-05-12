@@ -5,20 +5,28 @@ import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
+import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class AddParamSetsToConversionUseCase
     extends AbstractModifyConversionUseCase<AddParamSetsDelta> {
   final ConversionParamSetRepository conversionParamSetRepository;
   final ConversionParamRepository conversionParamRepository;
+  final ListValueRepository listValueRepository;
+  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AddParamSetsToConversionUseCase({
     required super.convertUnitValuesUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
+    required this.listValueRepository,
+    required this.calculateDefaultValueUseCase,
   });
 
   @override
@@ -28,13 +36,11 @@ class AddParamSetsToConversionUseCase
     required ConversionUnitValueModel? srcUnitValue,
     required AddParamSetsDelta delta,
   }) async {
-    List<ConversionParamSetModel> paramSetsInConversion = [];
+    List<ConversionParamSetModel> newParamSets = [];
+    int paramSetsTotalCount;
+    bool mandatoryParamSetExists;
 
-    int paramSetsTotalCount = oldConversionParams?.totalCount ?? 0;
-    bool mandatoryParamSetExists =
-        oldConversionParams?.mandatoryParamSetExists ?? false;
-
-    if (delta.initial) {
+    if (oldConversionParams == null) {
       paramSetsTotalCount = ObjectUtils.tryGet(
         await conversionParamSetRepository.getCount(unitGroup.id),
       );
@@ -48,40 +54,69 @@ class AddParamSetsToConversionUseCase
       );
 
       mandatoryParamSetExists = mandatoryParamSet != null;
-
-      paramSetsInConversion =
-          mandatoryParamSetExists ? [mandatoryParamSet] : [];
+      newParamSets = mandatoryParamSetExists ? [mandatoryParamSet] : [];
     } else {
-      List<int> currentParamSetIds =
-          oldConversionParams?.paramSetValues.map((p) => p.paramSet.id).toList() ??
-              [];
+      paramSetsTotalCount = oldConversionParams.totalCount;
+      mandatoryParamSetExists = oldConversionParams.mandatoryParamSetExists;
+    }
+
+    if (delta.paramSetIds.isNotEmpty) {
+      List<int> currentParamSetIds = oldConversionParams?.paramSetValues
+              .map((p) => p.paramSet.id)
+              .toList() ??
+          [];
 
       List<int> newParamSetIds = delta.paramSetIds
           .whereNot((id) => currentParamSetIds.contains(id))
           .toList();
 
-      paramSetsInConversion = ObjectUtils.tryGet(
+      newParamSets = ObjectUtils.tryGet(
         await conversionParamSetRepository.getByIds(ids: newParamSetIds),
       );
     }
 
-    List<ConversionParamSetValueModel> paramSetValues = [];
+    if (newParamSets.isEmpty) {
+      return oldConversionParams;
+    }
 
-    for (ConversionParamSetModel paramSet in paramSetsInConversion) {
+    List<ConversionParamSetValueModel> newParamSetValues = [];
+
+    for (ConversionParamSetModel paramSet in newParamSets) {
       List<ConversionParamModel> params = ObjectUtils.tryGet(
         await conversionParamRepository.get(paramSet.id),
       );
 
-      List<ConversionParamValueModel> paramValues = params
-          .map(
-            (p) => ConversionParamValueModel(
-              param: p,
-              unit: p.defaultUnit,
-            ),
-          )
-          .toList();
+      List<ConversionParamValueModel> paramValues = [];
+      for (ConversionParamModel param in params) {
+        ConversionParamValueModel paramValue;
 
-      paramSetValues.add(
+        if (param.listType != null) {
+          ValueModel? value = ValueModel.any(
+            ObjectUtils.tryGet(
+              await listValueRepository.getDefault(listType: param.listType!),
+            )?.itemName,
+          );
+
+          paramValue = ConversionParamValueModel(
+            param: param,
+            value: value,
+          );
+        } else {
+          ValueModel? defaultValue = ObjectUtils.tryGet(
+            await calculateDefaultValueUseCase.execute(param.defaultUnit!),
+          );
+
+          paramValue = ConversionParamValueModel(
+            param: param,
+            unit: param.defaultUnit,
+            defaultValue: defaultValue,
+          );
+        }
+
+        paramValues.add(paramValue);
+      }
+
+      newParamSetValues.add(
         ConversionParamSetValueModel(
           paramSet: paramSet,
           paramValues: paramValues,
@@ -90,26 +125,55 @@ class AddParamSetsToConversionUseCase
     }
 
     List<ConversionParamSetValueModel> resultParamSetValues;
-    int resultSelectedIndex;
-
     if (oldConversionParams != null) {
       resultParamSetValues = [
         ...oldConversionParams.paramSetValues,
-        ...paramSetValues,
+        ...newParamSetValues,
       ];
-      resultSelectedIndex = oldConversionParams.selectedIndex;
     } else {
-      resultParamSetValues = paramSetValues;
-      resultSelectedIndex = 0;
+      resultParamSetValues = newParamSetValues;
+    }
+
+    int resultSelectedIndex = resultParamSetValues.length - 1;
+    var selectedParamSet = resultParamSetValues[resultSelectedIndex];
+
+    int firstCalculableParamIndex =
+        selectedParamSet.paramValues.indexWhere((p) => p.param.calculable);
+
+    if (firstCalculableParamIndex != -1) {
+      var selectedParamValues = [...selectedParamSet.paramValues];
+
+      var calculableParamValue = selectedParamValues[firstCalculableParamIndex];
+
+      ValueModel? value;
+      if (srcUnitValue != null) {
+        value = rules.calculateParamByValue(
+          unitValue: srcUnitValue,
+          unitGroupName: unitGroup.name,
+          paramSetName: selectedParamSet.paramSet.name,
+          paramName: calculableParamValue.param.name,
+          paramValues: selectedParamValues,
+        );
+      }
+
+      selectedParamValues[firstCalculableParamIndex] =
+          calculableParamValue.copyWith(
+        value: value,
+      );
+
+      resultParamSetValues[resultSelectedIndex] = selectedParamSet.copyWith(
+        paramValues: selectedParamValues,
+      );
     }
 
     return ConversionParamSetValueBulkModel(
       paramSetValues: resultParamSetValues,
       paramSetsCanBeAdded: mandatoryParamSetExists &&
-          resultParamSetValues.length < paramSetsTotalCount - 1 ||
+              resultParamSetValues.length < paramSetsTotalCount - 1 ||
           resultParamSetValues.length < paramSetsTotalCount,
+      selectedIndex: resultSelectedIndex,
       selectedParamSetCanBeRemoved:
-      !resultParamSetValues[resultSelectedIndex].paramSet.mandatory,
+          !resultParamSetValues[resultSelectedIndex].paramSet.mandatory,
       paramSetsCanBeRemovedInBulk: !(resultParamSetValues.length == 1 &&
           resultParamSetValues.first.paramSet.mandatory),
       mandatoryParamSetExists: mandatoryParamSetExists,

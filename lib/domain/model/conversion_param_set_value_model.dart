@@ -17,6 +17,11 @@ class ConversionParamSetValueModel extends ItemModel {
           itemType: ItemType.conversionParamSetValue,
         );
 
+  const ConversionParamSetValueModel.tuple(this.paramSet, this.paramValues)
+      : super(
+          itemType: ItemType.conversionParamSetValue,
+        );
+
   @override
   List<Object?> get props => [
         paramSet,
@@ -88,7 +93,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
     this.selectedParamSetCanBeRemoved = false,
     this.paramSetsCanBeRemovedInBulk = false,
     this.mandatoryParamSetExists = false,
-    this.totalCount = 0,
+    this.totalCount = 1,
   });
 
   ConversionParamSetValueBulkModel copyWith({

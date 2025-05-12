@@ -315,6 +315,8 @@ Future<void> _initUseCases() async {
       convertUnitValuesUseCase: locator(),
       conversionParamSetRepository: locator(),
       conversionParamRepository: locator(),
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 

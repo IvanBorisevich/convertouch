@@ -228,8 +228,8 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  gender(1),
-  garment(2),
+  gender(1, preselected: false),
+  garment(2, preselected: false),
   clothingSizeInter(3),
   clothingSizeUs(4),
   clothingSizeJp(5),
@@ -245,8 +245,12 @@ enum ConvertouchListType {
   ;
 
   final int id;
+  final bool preselected;
 
-  const ConvertouchListType(this.id);
+  const ConvertouchListType(
+    this.id, {
+    this.preselected = true,
+  });
 
   static ConvertouchListType? valueOf(int? id) {
     return values.firstWhereOrNull((element) => id == element.id);

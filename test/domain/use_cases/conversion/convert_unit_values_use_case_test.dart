@@ -43,37 +43,6 @@ void main() {
     );
   }
 
-  Future<void> testCaseWithClothingSizeParams({
-    required UnitGroupModel unitGroup,
-    required ConversionUnitValueModel src,
-    required List<UnitModel> tgtUnits,
-    required String? gender,
-    required String? garment,
-    required double? height,
-    required double? defaultHeight,
-    required List<ConversionUnitValueModel> expectedUnitValues,
-  }) async {
-    await testCase(
-      unitGroup: unitGroup,
-      src: src,
-      tgtUnits: tgtUnits,
-      expectedUnitValues: expectedUnitValues,
-      params: ConversionParamSetValueModel(
-        paramSet: clothingSizeParamSet,
-        paramValues: [
-          ConversionParamValueModel.tuple(genderParam, gender, null),
-          ConversionParamValueModel.tuple(garmentParam, garment, null),
-          ConversionParamValueModel.tuple(
-            heightParam,
-            height,
-            defaultHeight,
-            unit: centimeter,
-          ),
-        ],
-      ),
-    );
-  }
-
   group('Convert unit values by coefficients', () {
     group('Without params', () {
       test('Source unit values exist', () async {
@@ -132,17 +101,22 @@ void main() {
     group('With params', () {
       group('All param values are set', () {
         test('Source unit value exists', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: "Male",
-            garment: "Shirt",
-            height: 150,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, 3, null),
               ConversionUnitValueModel.tuple(italianClothSize, 36, null),
@@ -151,17 +125,22 @@ void main() {
         });
 
         test('Source unit value does not exist', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: "Male",
-            garment: "Shirt",
-            height: 150,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
@@ -172,17 +151,22 @@ void main() {
 
       group('All param values are set | default param value is set', () {
         test('Source unit value exists', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: "Male",
-            garment: "Shirt",
-            height: null,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                ConversionParamValueModel.tuple(heightParam, null, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, 3, null),
               ConversionUnitValueModel.tuple(italianClothSize, 36, null),
@@ -191,17 +175,22 @@ void main() {
         });
 
         test('Source unit value does not exist', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: "Male",
-            garment: "Shirt",
-            height: null,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                ConversionParamValueModel.tuple(heightParam, null, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
@@ -212,17 +201,22 @@ void main() {
 
       group('Some param values are not set', () {
         test('Source unit value exists', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: "Male",
-            garment: null,
-            height: 150,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(garmentParam, null, null),
+                ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
@@ -231,17 +225,22 @@ void main() {
         });
 
         test('Source unit value does not exist', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: null,
-            garment: null,
-            height: 150,
-            defaultHeight: 1,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(garmentParam, null, null),
+                ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
@@ -252,17 +251,22 @@ void main() {
 
       group('No param values are set', () {
         test('Source unit value exists', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: null,
-            garment: null,
-            height: null,
-            defaultHeight: null,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(garmentParam, null, null),
+                ConversionParamValueModel.tuple(heightParam, null, null,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
@@ -271,17 +275,22 @@ void main() {
         });
 
         test('Source unit value does not exist', () async {
-          await testCaseWithClothingSizeParams(
+          await testCase(
             unitGroup: clothingSizeGroup,
             src: ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
             ],
-            gender: null,
-            garment: null,
-            height: null,
-            defaultHeight: null,
+            params: ConversionParamSetValueModel(
+              paramSet: clothingSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(garmentParam, null, null),
+                ConversionParamValueModel.tuple(heightParam, null, null,
+                    unit: centimeter),
+              ],
+            ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),

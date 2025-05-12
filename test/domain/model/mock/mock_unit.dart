@@ -147,17 +147,3 @@ const UnitModel ruRingSize = UnitModel(
   valueType: ConvertouchValueType.decimalPositive,
   listType: ConvertouchListType.ringSizeRu,
 );
-
-const mockUnitsList = [
-  centimeter,
-  decimeter,
-  meter,
-  kilometer,
-  europeanClothSize,
-  japanClothSize,
-  italianClothSize,
-  usaClothSize,
-  frRingSize,
-  ruRingSize,
-  usaRingSize,
-];

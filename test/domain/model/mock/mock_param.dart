@@ -2,6 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
+import 'mock_unit.dart';
+
 const clothingSizeParamSet = ConversionParamSetModel(
   id: 1,
   name: ParamSetNames.byHeight,
@@ -44,6 +46,7 @@ const heightParam = ConversionParamModel(
   name: 'Height',
   unitGroupId: 1,
   valueType: ConvertouchValueType.decimalPositive,
+  defaultUnit: centimeter,
   paramSetId: 1,
 );
 
@@ -52,6 +55,8 @@ const diameterParam = ConversionParamModel(
   name: 'Diameter',
   unitGroupId: 2,
   valueType: ConvertouchValueType.decimalPositive,
+  defaultUnit: millimeter,
+  calculable: true,
   paramSetId: 2,
 );
 
@@ -60,5 +65,7 @@ const circumferenceParam = ConversionParamModel(
   name: 'Circumference',
   unitGroupId: 2,
   valueType: ConvertouchValueType.decimalPositive,
+  defaultUnit: millimeter,
+  calculable: true,
   paramSetId: 3,
 );

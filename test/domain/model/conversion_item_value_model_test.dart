@@ -22,6 +22,15 @@ void main() {
         'valueType': 5,
         'paramSetId': 1,
         'calculable': false,
+        'defaultUnit': {
+          'id': 1,
+          'name': 'Centimeter',
+          'code': 'cm',
+          'coefficient': 0.01,
+          'valueType': 5,
+          'invertible': true,
+          'oob': false
+        },
       },
       'unit': {
         "id": 4,

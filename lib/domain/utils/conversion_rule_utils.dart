@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothing_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
@@ -60,6 +61,19 @@ Map<String, String>? getMappingTableByValue({
   return _mappingRulesByValue[unitGroupName]?.call(value);
 }
 
+ValueModel? calculateParamByValue({
+  required ConversionUnitValueModel unitValue,
+  required String unitGroupName,
+  required String paramSetName,
+  required String paramName,
+  required List<ConversionParamValueModel> paramValues,
+}) {
+  return _paramByValueRules[unitGroupName]?[paramSetName]?[paramName]?.call(
+    value: unitValue,
+    paramValues: paramValues,
+  );
+}
+
 typedef MappingRuleByParamFunc = Map<String, String>? Function(
   ConversionParamSetValueModel,
 );
@@ -68,22 +82,41 @@ typedef MappingRuleByUnitValueFunc = Map<String, String>? Function(
   ConversionUnitValueModel,
 );
 
+typedef ParamByValueFunc = ValueModel? Function({
+  required ConversionUnitValueModel value,
+  required List<ConversionParamValueModel> paramValues,
+});
+
+typedef ParamByParamFunc = ValueModel? Function(
+  List<ConversionParamSetValueModel>,
+);
+
 final Map<String, Map<String, UnitRule>> _formulaRules = {
   GroupNames.temperature: temperatureRules,
 };
 
-final Map<String, Map<String, MappingRuleByParamFunc>> _mappingRulesByParam = {
+const Map<String, Map<String, MappingRuleByParamFunc>> _mappingRulesByParam = {
   GroupNames.clothingSize: {
     ParamSetNames.byHeight: getClothingSizesMap,
   },
   GroupNames.ringSize: {
-    ParamSetNames.byDiameter: (params) =>
-        getRingSizesMapByParams(params, ParamNames.diameter),
-    ParamSetNames.byCircumference: (params) =>
-        getRingSizesMapByParams(params, ParamNames.circumference),
+    ParamSetNames.byDiameter: getRingSizesMapByDiameter,
+    ParamSetNames.byCircumference: getRingSizesMapByCircumference,
   }
 };
 
-final Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
+const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
   GroupNames.ringSize: getRingSizesMapByValue,
+};
+
+const Map<String, Map<String, Map<String, ParamByValueFunc>>>
+    _paramByValueRules = {
+  GroupNames.ringSize: {
+    ParamSetNames.byDiameter: {
+      ParamNames.diameter: getDiameterByValue,
+    },
+    ParamSetNames.byCircumference: {
+      ParamNames.circumference: getCircumferenceByValue,
+    },
+  }
 };

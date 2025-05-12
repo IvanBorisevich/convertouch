@@ -8,30 +8,29 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
-import '../../../model/mock/mock_param.dart';
-import '../../../model/mock/mock_unit.dart';
-import '../../../model/mock/mock_unit_group.dart';
-
 Future<void> testCase<T extends ConversionModifyDelta>({
   required AbstractModifyConversionUseCase<T> useCase,
   required T delta,
   required UnitGroupModel unitGroup,
-  required ConversionUnitValueModel? src,
+  ConversionUnitValueModel? currentSrc,
+  ConversionParamSetValueBulkModel? currentParams,
   required List<ConversionUnitValueModel> currentUnitValues,
+  ConversionUnitValueModel? expectedSrc,
+  ConversionParamSetValueBulkModel? expectedParams,
   required List<ConversionUnitValueModel> expectedUnitValues,
-  required ConversionUnitValueModel? expectedSrc,
-  required ConversionParamSetValueBulkModel? params,
+  bool recalculateUnitValues = true,
 }) async {
   ConversionModel actual = ObjectUtils.tryGet(
     await useCase.execute(
       InputConversionModifyModel<T>(
         conversion: ConversionModel(
           unitGroup: unitGroup,
-          srcUnitValue: src,
+          srcUnitValue: currentSrc,
           convertedUnitValues: currentUnitValues,
-          params: params,
+          params: currentParams,
         ),
         delta: delta,
+        recalculateUnitValues: recalculateUnitValues,
       ),
     ),
   );
@@ -40,94 +39,16 @@ Future<void> testCase<T extends ConversionModifyDelta>({
     unitGroup: unitGroup,
     srcUnitValue: expectedSrc,
     convertedUnitValues: expectedUnitValues,
-    params: params,
+    params: expectedParams,
   );
 
   expect(actual.id, expected.id);
   expect(actual.name, expected.name);
   expect(actual.unitGroup, expected.unitGroup);
   expect(actual.srcUnitValue, expected.srcUnitValue);
-  expect(actual.params, expected.params);
+  expect(actual.params?.toJson(), expected.params?.toJson());
   expect(
     actual.convertedUnitValues.sortedBy((e) => e.name),
     expected.convertedUnitValues.sortedBy((e) => e.name),
-  );
-}
-
-Future<void> testCaseWithClothingSizeParams<T extends ConversionModifyDelta>({
-  required AbstractModifyConversionUseCase<T> useCase,
-  required T delta,
-  required String? gender,
-  required String? garment,
-  required double? height,
-  required double? defaultHeight,
-  required ConversionUnitValueModel? src,
-  required List<ConversionUnitValueModel> currentUnitValues,
-  required List<ConversionUnitValueModel> expectedUnitValues,
-  required ConversionUnitValueModel? expectedSrc,
-}) async {
-  await testCase(
-    useCase: useCase,
-    delta: delta,
-    unitGroup: clothingSizeGroup,
-    src: src,
-    currentUnitValues: currentUnitValues,
-    expectedUnitValues: expectedUnitValues,
-    expectedSrc: expectedSrc,
-    params: ConversionParamSetValueBulkModel(
-      paramSetValues: [
-        ConversionParamSetValueModel(
-          paramSet: clothingSizeParamSet,
-          paramValues: [
-            ConversionParamValueModel.tuple(genderParam, gender, null),
-            ConversionParamValueModel.tuple(garmentParam, garment, null),
-            ConversionParamValueModel.tuple(
-              heightParam,
-              height,
-              defaultHeight,
-              unit: centimeter,
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-Future<void> testCaseWithRingSizeParams<T extends ConversionModifyDelta>({
-  required AbstractModifyConversionUseCase<T> useCase,
-  required T delta,
-  required double? diameter,
-  required double? defaultDiameter,
-  required bool calculated,
-  required ConversionUnitValueModel? src,
-  required List<ConversionUnitValueModel> currentUnitValues,
-  required List<ConversionUnitValueModel> expectedUnitValues,
-  required ConversionUnitValueModel? expectedSrc,
-}) async {
-  await testCase(
-    useCase: useCase,
-    delta: delta,
-    unitGroup: ringSizeGroup,
-    src: src,
-    currentUnitValues: currentUnitValues,
-    expectedUnitValues: expectedUnitValues,
-    expectedSrc: expectedSrc,
-    params: ConversionParamSetValueBulkModel(
-      paramSetValues: [
-        ConversionParamSetValueModel(
-          paramSet: ringSizeByDiameterParamSet,
-          paramValues: [
-            ConversionParamValueModel.tuple(
-              diameterParam,
-              diameter,
-              defaultDiameter,
-              unit: millimeter,
-              calculated: calculated,
-            ),
-          ],
-        ),
-      ],
-    ),
   );
 }
