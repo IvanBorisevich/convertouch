@@ -61,11 +61,10 @@ void main() {
 
   group('Add an optional param set', () {
     group('Conversion already has params', () {
-      test('Conversion has unit values (they should not be changed)', () async {
+      test('Conversion has unit values (should not be changed)', () async {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
-          recalculateUnitValues: false,
           delta: AddParamSetsDelta(
             paramSetIds: [
               ringSizeByCircumferenceParamSet.id,
@@ -128,7 +127,6 @@ void main() {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
-          recalculateUnitValues: false,
           delta: AddParamSetsDelta(
             paramSetIds: [
               ringSizeByCircumferenceParamSet.id,
@@ -180,11 +178,10 @@ void main() {
     });
 
     group('Conversion does not have params', () {
-      test('Conversion has unit values (they should not be changed)', () async {
+      test('Conversion has unit values (should not be changed)', () async {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
-          // recalculateUnitValues: false,
           delta: AddParamSetsDelta(
             paramSetIds: [
               ringSizeByCircumferenceParamSet.id,
@@ -225,7 +222,6 @@ void main() {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
-          // recalculateUnitValues: false,
           delta: AddParamSetsDelta(
             paramSetIds: [
               ringSizeByDiameterParamSet.id,

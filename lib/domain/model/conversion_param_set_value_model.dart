@@ -119,8 +119,10 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  ConversionParamSetValueModel get activeParams {
-    return paramSetValues[selectedIndex];
+  ConversionParamSetValueModel? get activeParams {
+    return paramSetValues.isNotEmpty && selectedIndex > -1
+        ? paramSetValues[selectedIndex]
+        : null;
   }
 
   @override

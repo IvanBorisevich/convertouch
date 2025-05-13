@@ -1,4 +1,4 @@
-import 'dart:math' show max, min;
+import 'dart:math' show min;
 
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
@@ -20,7 +20,8 @@ class RemoveParamSetsFromConversionUseCase
     required ConversionUnitValueModel? srcUnitValue,
     required RemoveParamSetsDelta delta,
   }) async {
-    if (oldConversionParams == null || oldConversionParams.paramSetValues.isEmpty) {
+    if (oldConversionParams == null ||
+        oldConversionParams.paramSetValues.isEmpty) {
       return oldConversionParams;
     }
 
@@ -30,15 +31,14 @@ class RemoveParamSetsFromConversionUseCase
             .toList()
         : oldConversionParams.paramSetValues
             .whereIndexed((index, p) =>
-                index != oldConversionParams.selectedIndex || p.paramSet.mandatory)
+                index != oldConversionParams.selectedIndex ||
+                p.paramSet.mandatory)
             .toList();
 
-    int newSelectedIndex = delta.allOptional
-        ? 0
-        : max(
-            0,
-            min(oldConversionParams.selectedIndex, newParamSetValues.length - 1),
-          );
+    int newSelectedIndex = min(
+      oldConversionParams.selectedIndex,
+      newParamSetValues.length - 1,
+    );
 
     return oldConversionParams.copyWith(
       paramSetValues: newParamSetValues,

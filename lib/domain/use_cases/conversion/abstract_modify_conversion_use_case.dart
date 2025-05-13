@@ -55,10 +55,11 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           delta: input.delta,
         );
 
-        if (newParams != null) {
+        ConversionParamSetValueModel? activeParams = newParams?.activeParams;
+        if (activeParams != null) {
           newSrcUnitValue = await newSourceUnitValueByParams(
             oldSourceUnitValue: input.conversion.srcUnitValue,
-            activeParams: newParams.activeParams,
+            activeParams: activeParams,
             delta: input.delta,
           );
         }
