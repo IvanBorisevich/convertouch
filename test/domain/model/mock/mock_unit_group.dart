@@ -57,3 +57,9 @@ const UnitGroupModel ringSizeGroup = UnitGroupModel(
   valueType: ConvertouchValueType.decimal,
   conversionType: ConversionType.formula,
 );
+
+const UnitGroupModel massGroup = UnitGroupModel(
+  id: 9,
+  name: GroupNames.mass,
+  valueType: ConvertouchValueType.decimal,
+);

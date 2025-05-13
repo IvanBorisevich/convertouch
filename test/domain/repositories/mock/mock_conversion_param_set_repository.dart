@@ -10,6 +10,7 @@ const _mockParamSetsList = [
   clothingSizeParamSet,
   ringSizeByDiameterParamSet,
   ringSizeByCircumferenceParamSet,
+  barbellWeightParamSet,
 ];
 
 final _groupParamSets = {
@@ -19,7 +20,10 @@ final _groupParamSets = {
   ringSizeGroup.id: [
     ringSizeByDiameterParamSet,
     ringSizeByCircumferenceParamSet,
-  ]
+  ],
+  massGroup.id: [
+    barbellWeightParamSet,
+  ],
 };
 
 final _groupMandatoryParamSets = {

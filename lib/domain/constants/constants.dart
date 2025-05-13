@@ -17,6 +17,7 @@ abstract class GroupNames {
   static const currency = "Currency";
   static const clothingSize = "Clothing Size";
   static const ringSize = "Ring Size";
+  static const mass = "Mass";
 }
 
 abstract class ParamSetNames {
@@ -25,16 +26,19 @@ abstract class ParamSetNames {
   static const byHeight = "By Height";
   static const byDiameter = "By Diameter";
   static const byCircumference = "By Circumference";
+  static const barbellWeight = "Barbell Weight";
 }
 
 abstract class ParamNames {
   const ParamNames._();
 
-  static const String gender = "Gender";
-  static const String garment = "Garment";
-  static const String height = "Height";
-  static const String diameter = "Diameter";
-  static const String circumference = "Circumference";
+  static const gender = "Gender";
+  static const garment = "Garment";
+  static const height = "Height";
+  static const diameter = "Diameter";
+  static const circumference = "Circumference";
+  static const barWeight = "Bar Weight";
+  static const oneSideWeight = "One Side Weight";
 }
 
 abstract class UnitCodes {

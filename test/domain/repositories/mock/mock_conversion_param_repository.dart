@@ -17,6 +17,10 @@ final _paramsOfSet = {
   ringSizeByCircumferenceParamSet.id: [
     circumferenceParam,
   ],
+  barbellWeightParamSet.id: [
+    barWeightParam,
+    oneSideWeightParam,
+  ]
 };
 
 class MockConversionParamRepository extends ConversionParamRepository {

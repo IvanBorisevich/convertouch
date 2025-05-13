@@ -13,21 +13,28 @@ const clothingSizeParamSet = ConversionParamSetModel(
 
 const ringSizeByDiameterParamSet = ConversionParamSetModel(
   id: 2,
-  name: "By Diameter",
+  name: ParamSetNames.byDiameter,
   mandatory: false,
   groupId: -1,
 );
 
 const ringSizeByCircumferenceParamSet = ConversionParamSetModel(
   id: 3,
-  name: "By Circumference",
+  name: ParamSetNames.byCircumference,
+  mandatory: false,
+  groupId: -1,
+);
+
+const barbellWeightParamSet = ConversionParamSetModel(
+  id: 4,
+  name: ParamSetNames.barbellWeight,
   mandatory: false,
   groupId: -1,
 );
 
 const genderParam = ConversionParamModel(
   id: 1,
-  name: "Gender",
+  name: ParamNames.gender,
   paramSetId: 1,
   valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.gender,
@@ -35,7 +42,7 @@ const genderParam = ConversionParamModel(
 
 const garmentParam = ConversionParamModel(
   id: 2,
-  name: "Garment",
+  name: ParamNames.garment,
   paramSetId: 1,
   valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.garment,
@@ -43,7 +50,7 @@ const garmentParam = ConversionParamModel(
 
 const heightParam = ConversionParamModel(
   id: 3,
-  name: 'Height',
+  name: ParamNames.height,
   unitGroupId: 1,
   valueType: ConvertouchValueType.decimalPositive,
   defaultUnit: centimeter,
@@ -52,7 +59,7 @@ const heightParam = ConversionParamModel(
 
 const diameterParam = ConversionParamModel(
   id: 4,
-  name: 'Diameter',
+  name: ParamNames.diameter,
   unitGroupId: 2,
   valueType: ConvertouchValueType.decimalPositive,
   defaultUnit: millimeter,
@@ -62,10 +69,31 @@ const diameterParam = ConversionParamModel(
 
 const circumferenceParam = ConversionParamModel(
   id: 5,
-  name: 'Circumference',
+  name: ParamNames.circumference,
   unitGroupId: 2,
   valueType: ConvertouchValueType.decimalPositive,
   defaultUnit: millimeter,
   calculable: true,
   paramSetId: 3,
+);
+
+const barWeightParam = ConversionParamModel(
+  id: 5,
+  name: ParamNames.barWeight,
+  unitGroupId: 3,
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.barbellBarWeight,
+  defaultUnit: kilogram,
+  calculable: false,
+  paramSetId: 4,
+);
+
+const oneSideWeightParam = ConversionParamModel(
+  id: 6,
+  name: ParamNames.oneSideWeight,
+  unitGroupId: 3,
+  valueType: ConvertouchValueType.decimalPositive,
+  defaultUnit: kilogram,
+  calculable: true,
+  paramSetId: 4,
 );

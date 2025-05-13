@@ -1,10 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
+import 'package:convertouch/domain/utils/conversion_rules/barbell_weight.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothing_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
@@ -61,32 +63,39 @@ Map<String, String>? getMappingTableByValue({
   return _mappingRulesByValue[unitGroupName]?.call(value);
 }
 
-ValueModel? calculateParamValueBySrcValue({
+ConversionParamValueModel calculateParamValueBySrcValue({
   required ConversionUnitValueModel srcUnitValue,
   required String unitGroupName,
   required ConversionParamSetValueModel params,
-  required String paramName,
+  required ConversionParamModel param,
 }) {
-  ConversionParamValueModel? paramValue = params.getParam(paramName);
-  if (paramValue == null) {
-    return null;
-  }
-
-  if (paramValue.param.listType != null) {
+  if (param.listType != null) {
     Map<String, String>? mappingTable = getMappingTableByValue(
       unitGroupName: unitGroupName,
       value: srcUnitValue,
     );
 
     String? newValue = mappingTable?[srcUnitValue.unit.code];
-    return ValueModel.any(newValue);
+    return ConversionParamValueModel(
+      param: param,
+      value: ValueModel.any(newValue),
+    );
   } else {
     ParamByValueFunc? func = _nonListParamValueBySrcValueRules[unitGroupName]
-        ?[params.paramSet.name]?[paramName];
+        ?[params.paramSet.name]?[param.name];
 
-    return func?.call(
+    ValueModel? value = func?.call(
       value: srcUnitValue,
       paramValues: params.paramValues,
+    );
+
+    ConversionParamValueModel paramValue = params.getParam(param.name)!;
+    return ConversionParamValueModel(
+      param: param,
+      unit: paramValue.unit,
+      calculated: paramValue.calculated,
+      value: value,
+      defaultValue: paramValue.defaultValue,
     );
   }
 }
@@ -163,7 +172,12 @@ const Map<String, Map<String, Map<String, ParamByValueFunc>>>
     ParamSetNames.byCircumference: {
       ParamNames.circumference: getCircumferenceByValue,
     },
-  }
+  },
+  GroupNames.mass: {
+    ParamSetNames.barbellWeight: {
+      ParamNames.oneSideWeight: getOneSideWeight,
+    },
+  },
 };
 
 const Map<String, Map<String, ValueByParamFunc>>

@@ -125,23 +125,18 @@ class AddParamSetsToConversionUseCase
 
     if (firstCalculableParamIndex != -1) {
       var selectedParamValues = [...selectedParamSet.paramValues];
-
       var calculableParamValue = selectedParamValues[firstCalculableParamIndex];
 
-      ValueModel? value;
       if (srcUnitValue != null) {
-        value = rules.calculateParamValueBySrcValue(
+        calculableParamValue = rules.calculateParamValueBySrcValue(
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroup.name,
           params: selectedParamSet,
-          paramName: calculableParamValue.param.name,
+          param: calculableParamValue.param,
         );
       }
 
-      selectedParamValues[firstCalculableParamIndex] =
-          calculableParamValue.copyWith(
-        value: value,
-      );
+      selectedParamValues[firstCalculableParamIndex] = calculableParamValue;
 
       resultParamSetValues[resultSelectedIndex] = selectedParamSet.copyWith(
         paramValues: selectedParamValues,

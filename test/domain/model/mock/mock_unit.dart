@@ -147,3 +147,19 @@ const UnitModel ruRingSize = UnitModel(
   valueType: ConvertouchValueType.decimalPositive,
   listType: ConvertouchListType.ringSizeRu,
 );
+
+const UnitModel kilogram = UnitModel(
+  id: 5,
+  name: "Kilogram",
+  code: "kg",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 1,
+);
+
+const UnitModel pound = UnitModel(
+  id: 6,
+  name: "Pound",
+  code: "lbs.",
+  valueType: ConvertouchValueType.decimalPositive,
+  coefficient: 0.45359237,
+);

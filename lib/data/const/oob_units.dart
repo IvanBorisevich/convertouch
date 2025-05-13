@@ -48,7 +48,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Mass",
+    "groupName": GroupNames.mass,
     "iconName": "mass-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
