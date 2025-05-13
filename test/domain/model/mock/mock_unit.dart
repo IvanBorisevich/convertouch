@@ -149,7 +149,7 @@ const UnitModel ruRingSize = UnitModel(
 );
 
 const UnitModel kilogram = UnitModel(
-  id: 5,
+  id: 13,
   name: "Kilogram",
   code: "kg",
   valueType: ConvertouchValueType.decimalPositive,
@@ -157,7 +157,7 @@ const UnitModel kilogram = UnitModel(
 );
 
 const UnitModel pound = UnitModel(
-  id: 6,
+  id: 14,
   name: "Pound",
   code: "lbs.",
   valueType: ConvertouchValueType.decimalPositive,
