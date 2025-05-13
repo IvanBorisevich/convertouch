@@ -55,6 +55,7 @@ class ReplaceConversionItemUnitUseCase
         await listValueRepository.belongsToList(
           value: newSrcUnitValue.value?.raw,
           listType: newSrcUnitValue.unit.listType!,
+          coefficient: newSrcUnitValue.unit.coefficient,
         ),
       );
 

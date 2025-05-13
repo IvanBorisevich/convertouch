@@ -70,16 +70,14 @@ class CalculateDefaultValueUseCase<T extends IdNameItemModel>
     required UnitModel unit,
   }) async {
     if (listType != null) {
-      String? newValueStr = ObjectUtils.tryGet(
+      String? newValue = ObjectUtils.tryGet(
         await listValueRepository.getDefault(
           listType: listType,
+          coefficient: unit.coefficient,
         ),
       )?.itemName;
 
-      var newValue = ValueModel.any(newValueStr);
-      return unit.coefficient != null && newValue?.numVal != null
-          ? ValueModel.any((newValue!.numVal! / unit.coefficient!).round())
-          : newValue;
+      return ValueModel.any(newValue);
     } else {
       var dynamicValue = ObjectUtils.tryGet(
         await dynamicValueRepository.get(unit.id),

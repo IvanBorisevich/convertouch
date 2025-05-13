@@ -26,6 +26,7 @@ class GetListValuesUseCase
       searchString: input.searchString,
       pageNum: input.pageNum,
       pageSize: input.pageSize,
+      coefficient: input.coefficient,
     );
   }
 }

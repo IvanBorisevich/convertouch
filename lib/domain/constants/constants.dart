@@ -242,6 +242,7 @@ enum ConvertouchListType {
   ringSizeRu(12),
   ringSizeUs(13),
   ringSizeIt(14),
+  barbellBarWeight(15),
   ;
 
   final int id;

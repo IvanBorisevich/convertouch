@@ -163,6 +163,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
         ),
         value: _selectedValue,
         items: listableSets[widget.listType]!
+            .call()
             .map(
               (value) => DropdownMenuItem(
                 value: value,
@@ -196,7 +197,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
          */
         selectedItemBuilder: _selectedValue != null
             ? (context) {
-                return listableSets[widget.listType]!.map(
+                return listableSets[widget.listType]!.call().map(
                   (value) {
                     return Container(
                       padding: EdgeInsets.zero,

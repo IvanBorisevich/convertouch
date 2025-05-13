@@ -100,9 +100,21 @@ class ObjectUtils {
     );
   }
 
-  static List<String> generateList(double min, double max, double step) {
+  static List<String> generateList(
+    double min,
+    double max,
+    double step, {
+    double? multiplier,
+  }) {
     int length = ((max - min) / step + 1).floor();
-    return List.generate(length, (index) => "${min + index * step}");
+    String Function(int) func;
+
+    if (multiplier != null) {
+      func = (index) => "${(min + index * step / multiplier).round()}";
+    } else {
+      func = (index) => "${min + index * step}";
+    }
+    return List.generate(length, func);
   }
 }
 

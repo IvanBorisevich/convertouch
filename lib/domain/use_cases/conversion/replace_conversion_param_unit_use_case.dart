@@ -58,6 +58,7 @@ class ReplaceConversionParamUnitUseCase
         await listValueRepository.belongsToList(
           value: newParamValue.value?.raw,
           listType: delta.newUnit.listType!,
+          coefficient: delta.newUnit.coefficient,
         ),
       );
 

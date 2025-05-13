@@ -13,9 +13,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
     String? searchString,
     int pageNum = 0,
     int pageSize = 100,
+    double? coefficient,
   }) async {
-    List<ListValueModel>? result =
-        listableSets[listType]?.map((e) => ListValueModel(e)).toList();
+    List<ListValueModel>? result = listableSets[listType]
+        ?.call(c: coefficient)
+        .map((e) => ListValueModel(e))
+        .toList();
 
     return Right(result ?? []);
   }
@@ -23,9 +26,11 @@ class ListValueRepositoryImpl implements ListValueRepository {
   @override
   Future<Either<ConvertouchException, ListValueModel?>> getDefault({
     required ConvertouchListType listType,
+    double? coefficient,
   }) async {
-    String? rawValue =
-        listType.preselected ? listableSets[listType]?.firstOrNull : null;
+    String? rawValue = listType.preselected
+        ? listableSets[listType]?.call(c: coefficient).firstOrNull
+        : null;
     return rawValue != null
         ? Right(ListValueModel(rawValue))
         : const Right(null);
@@ -35,10 +40,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
   Future<Either<ConvertouchException, bool>> belongsToList({
     required String? value,
     required ConvertouchListType listType,
+    double? coefficient,
   }) async {
     if (value == null) {
       return const Right(true);
     }
-    return Right(listableSets[listType]?.contains(value) ?? false);
+    return Right(
+        listableSets[listType]?.call(c: coefficient).contains(value) ?? false);
   }
 }
