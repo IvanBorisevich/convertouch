@@ -147,12 +147,11 @@ class AddParamSetsToConversionUseCase
 
       ValueModel? value;
       if (srcUnitValue != null) {
-        value = rules.calculateParamByValue(
-          unitValue: srcUnitValue,
+        value = rules.calculateParamValueBySrcValue(
+          srcUnitValue: srcUnitValue,
           unitGroupName: unitGroup.name,
-          paramSetName: selectedParamSet.paramSet.name,
+          params: selectedParamSet,
           paramName: calculableParamValue.param.name,
-          paramValues: selectedParamValues,
         );
       }
 

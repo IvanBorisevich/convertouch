@@ -61,17 +61,61 @@ Map<String, String>? getMappingTableByValue({
   return _mappingRulesByValue[unitGroupName]?.call(value);
 }
 
-ValueModel? calculateParamByValue({
-  required ConversionUnitValueModel unitValue,
+ValueModel? calculateParamValueBySrcValue({
+  required ConversionUnitValueModel srcUnitValue,
   required String unitGroupName,
-  required String paramSetName,
+  required ConversionParamSetValueModel params,
   required String paramName,
-  required List<ConversionParamValueModel> paramValues,
 }) {
-  return _paramByValueRules[unitGroupName]?[paramSetName]?[paramName]?.call(
-    value: unitValue,
-    paramValues: paramValues,
-  );
+  ConversionParamValueModel? paramValue = params.getParam(paramName);
+  if (paramValue == null) {
+    return null;
+  }
+
+  if (paramValue.param.listType != null) {
+    Map<String, String>? mappingTable = getMappingTableByValue(
+      unitGroupName: unitGroupName,
+      value: srcUnitValue,
+    );
+
+    String? newValue = mappingTable?[srcUnitValue.unit.code];
+    return ValueModel.any(newValue);
+  } else {
+    ParamByValueFunc? func = _nonListParamValueBySrcValueRules[unitGroupName]
+        ?[params.paramSet.name]?[paramName];
+
+    return func?.call(
+      value: srcUnitValue,
+      paramValues: params.paramValues,
+    );
+  }
+}
+
+ConversionUnitValueModel? calculateSrcValueByParam({
+  required ConversionParamSetValueModel params,
+  required UnitModel srcUnit,
+  required String unitGroupName,
+}) {
+  if (srcUnit.listType != null) {
+    Map<String, String>? mappingTable = getMappingTableByParams(
+      unitGroupName: unitGroupName,
+      params: params,
+    );
+
+    String? newValue = mappingTable?[srcUnit.code];
+    return ConversionUnitValueModel(
+      unit: srcUnit,
+      value: ValueModel.any(newValue),
+    );
+  } else {
+    ValueByParamFunc? func =
+        _nonListSrcValueByParamValueRules[unitGroupName]?[params.paramSet.name];
+
+    return func?.call(
+      unit: srcUnit,
+      params: params,
+    );
+  }
 }
 
 typedef MappingRuleByParamFunc = Map<String, String>? Function(
@@ -87,9 +131,10 @@ typedef ParamByValueFunc = ValueModel? Function({
   required List<ConversionParamValueModel> paramValues,
 });
 
-typedef ParamByParamFunc = ValueModel? Function(
-  List<ConversionParamSetValueModel>,
-);
+typedef ValueByParamFunc = ConversionUnitValueModel? Function({
+  required UnitModel unit,
+  required ConversionParamSetValueModel params,
+});
 
 final Map<String, Map<String, UnitRule>> _formulaRules = {
   GroupNames.temperature: temperatureRules,
@@ -110,7 +155,7 @@ const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
 };
 
 const Map<String, Map<String, Map<String, ParamByValueFunc>>>
-    _paramByValueRules = {
+    _nonListParamValueBySrcValueRules = {
   GroupNames.ringSize: {
     ParamSetNames.byDiameter: {
       ParamNames.diameter: getDiameterByValue,
@@ -120,3 +165,6 @@ const Map<String, Map<String, Map<String, ParamByValueFunc>>>
     },
   }
 };
+
+const Map<String, Map<String, ValueByParamFunc>>
+    _nonListSrcValueByParamValueRules = {};

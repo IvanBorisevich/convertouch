@@ -69,44 +69,40 @@ class AddUnitsToConversionUseCase
       );
     }
 
-    UnitModel newUnit = modifiedConvertedItemsMap.values.first.unit;
+    UnitModel srcUnit = modifiedConvertedItemsMap.values.first.unit;
 
-    if (newUnit.listType != null) {
-      Map<String, String>? mappingTable;
-      if (activeParams != null && activeParams.applicable) {
-        mappingTable = rules.getMappingTableByParams(
-          unitGroupName: unitGroup.name,
-          params: activeParams,
-        );
-      } else {
-        mappingTable = rules.getMappingTableByValue(
-          unitGroupName: unitGroup.name,
-          value: oldSourceUnitValue,
-        );
-      }
+    if (activeParams == null ||
+        !activeParams.paramSet.mandatory && !activeParams.applicable) {
+      return _calculateDefaults(srcUnit);
+    } else {
+      return rules.calculateSrcValueByParam(
+            params: activeParams,
+            unitGroupName: unitGroup.name,
+            srcUnit: srcUnit,
+          ) ??
+          await _calculateDefaults(srcUnit);
+    }
+  }
 
-      String? newValue;
-      if (mappingTable != null) {
-        newValue = mappingTable[newUnit.code];
-      } else if (activeParams == null || !activeParams.paramSet.mandatory) {
-        newValue = ObjectUtils.tryGet(
-          await listValueRepository.getDefault(
-            listType: newUnit.listType!,
-          ),
-        )?.itemName;
-      }
+  Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
+    if (srcUnit.listType != null) {
+      String? newValue = ObjectUtils.tryGet(
+        await listValueRepository.getDefault(
+          listType: srcUnit.listType!,
+        ),
+      )?.itemName;
 
       return ConversionUnitValueModel(
-        unit: newUnit,
+        unit: srcUnit,
         value: ValueModel.any(newValue),
       );
     } else {
       ValueModel? newDefaultValue = ObjectUtils.tryGet(
-        await calculateDefaultValueUseCase.execute(newUnit),
+        await calculateDefaultValueUseCase.execute(srcUnit),
       );
 
       return ConversionUnitValueModel(
-        unit: newUnit,
+        unit: srcUnit,
         defaultValue: newDefaultValue,
       );
     }

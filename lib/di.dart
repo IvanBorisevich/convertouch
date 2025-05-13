@@ -323,12 +323,16 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
     () => RemoveParamSetsFromConversionUseCase(
       convertUnitValuesUseCase: locator(),
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
     () => SelectParamSetInConversionUseCase(
       convertUnitValuesUseCase: locator(),
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 

@@ -37,10 +37,8 @@ void main() {
       unitGroup: clothingSizeGroup,
       useCase: useCase,
       delta: const AddParamSetsDelta(),
-      currentParams: null,
       currentUnitValues: [],
       expectedUnitValues: [],
-      expectedSrc: null,
       expectedParams: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -59,8 +57,8 @@ void main() {
     );
   });
 
-  group('Add an optional param set', () {
-    group('Conversion already has params', () {
+  group('Add an optional param set (should be recalculated by src value)', () {
+    group('Conversion has params', () {
       test('Conversion has unit values (should not be changed)', () async {
         await testCase(
           unitGroup: ringSizeGroup,
@@ -123,7 +121,7 @@ void main() {
         );
       });
 
-      test('Conversion does not have unit values', () async {
+      test('Conversion has no unit values', () async {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
@@ -177,7 +175,7 @@ void main() {
       });
     });
 
-    group('Conversion does not have params', () {
+    group('Conversion has no params', () {
       test('Conversion has unit values (should not be changed)', () async {
         await testCase(
           unitGroup: ringSizeGroup,
@@ -218,7 +216,7 @@ void main() {
         );
       });
 
-      test('Conversion does not have unit values', () async {
+      test('Conversion has no unit values', () async {
         await testCase(
           unitGroup: ringSizeGroup,
           useCase: useCase,
