@@ -65,7 +65,7 @@ class SelectParamSetInConversionUseCase
     }
   }
 
-  Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
+  Future<ValueModel?> _calculateDefaultValue(UnitModel srcUnit) async {
     if (srcUnit.listType != null) {
       String? newValue = ObjectUtils.tryGet(
         await listValueRepository.getDefault(
@@ -73,19 +73,22 @@ class SelectParamSetInConversionUseCase
         ),
       )?.itemName;
 
-      return ConversionUnitValueModel(
-        unit: srcUnit,
-        value: ValueModel.any(newValue),
-      );
+      return ValueModel.any(newValue);
     } else {
-      ValueModel? newDefaultValue = ObjectUtils.tryGet(
+      return ObjectUtils.tryGet(
         await calculateDefaultValueUseCase.execute(srcUnit),
       );
-
-      return ConversionUnitValueModel(
-        unit: srcUnit,
-        defaultValue: newDefaultValue,
-      );
     }
+  }
+
+  Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
+    ValueModel? defaultValue = await _calculateDefaultValue(
+      srcUnit,
+    );
+    return ConversionUnitValueModel(
+      unit: srcUnit,
+      value: srcUnit.listType != null ? defaultValue : null,
+      defaultValue: srcUnit.listType != null ? null : defaultValue,
+    );
   }
 }

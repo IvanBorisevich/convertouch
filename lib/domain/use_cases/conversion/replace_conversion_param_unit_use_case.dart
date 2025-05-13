@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -48,47 +49,52 @@ class ReplaceConversionParamUnitUseCase
     int paramValueIndex =
         paramValues.indexWhere((p) => p.param.id == delta.paramId);
 
-    ConversionParamValueModel paramValue = paramValues[paramValueIndex];
+    ConversionParamValueModel newParamValue = paramValues[paramValueIndex];
+
+    ValueModel? newValue;
+    ValueModel? newDefaultValue;
 
     if (delta.newUnit.listType != null) {
       bool belongsToList = ObjectUtils.tryGet(
         await listValueRepository.belongsToList(
-          value: paramValue.value?.raw,
+          value: newParamValue.value?.raw,
           listType: delta.newUnit.listType!,
         ),
       );
 
-      ValueModel? value;
       if (belongsToList) {
-        value = paramValue.value;
-      } else {
-        value = ObjectUtils.tryGet(
-          await calculateDefaultValueUseCase.execute(delta.newUnit),
-        );
+        newValue = newParamValue.value;
       }
+    } else {
+      newValue = newParamValue.value;
+    }
 
-      paramValue = ConversionParamValueModel(
-        param: paramValue.param,
+    if (newParamValue.defaultValue != null && delta.newUnit.listType == null) {
+      newDefaultValue = newParamValue.defaultValue;
+    }
+
+    if (newValue == null && newDefaultValue == null) {
+      ValueModel? defaultValue = await _calculateDefaultValue(
+        delta.newUnit,
+      );
+      newParamValue = ConversionParamValueModel(
+        param: newParamValue.param,
         unit: delta.newUnit,
-        calculated: paramValue.calculated,
-        value: value,
+        value: delta.newUnit.listType != null ? defaultValue : null,
+        defaultValue: delta.newUnit.listType != null ? null : defaultValue,
+        calculated: newParamValue.calculated,
       );
     } else {
-      ValueModel? defaultValue = paramValue.defaultValue ??
-          ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(delta.newUnit),
-          );
-
-      paramValue = ConversionParamValueModel(
-        param: paramValue.param,
+      newParamValue = ConversionParamValueModel(
+        param: newParamValue.param,
         unit: delta.newUnit,
-        calculated: paramValue.calculated,
-        value: paramValue.value,
-        defaultValue: defaultValue,
+        value: newValue,
+        defaultValue: newDefaultValue,
+        calculated: newParamValue.calculated,
       );
     }
 
-    paramValues[paramValueIndex] = paramValue;
+    paramValues[paramValueIndex] = newParamValue;
 
     paramSetValues[paramSetValueIndex] = paramSetValue.copyWith(
       paramValues: paramValues,
@@ -97,5 +103,21 @@ class ReplaceConversionParamUnitUseCase
     return oldConversionParams.copyWith(
       paramSetValues: paramSetValues,
     );
+  }
+
+  Future<ValueModel?> _calculateDefaultValue(UnitModel srcUnit) async {
+    if (srcUnit.listType != null) {
+      String? newValue = ObjectUtils.tryGet(
+        await listValueRepository.getDefault(
+          listType: srcUnit.listType!,
+        ),
+      )?.itemName;
+
+      return ValueModel.any(newValue);
+    } else {
+      return ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(srcUnit),
+      );
+    }
   }
 }

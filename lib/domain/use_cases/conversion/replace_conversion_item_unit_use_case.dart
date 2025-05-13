@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -47,6 +48,9 @@ class ReplaceConversionItemUnitUseCase
     ConversionUnitValueModel newSrcUnitValue =
         modifiedConvertedItemsMap[delta.newUnit.id]!;
 
+    ValueModel? newValue;
+    ValueModel? newDefaultValue;
+
     if (newSrcUnitValue.unit.listType != null) {
       bool belongsToList = ObjectUtils.tryGet(
         await listValueRepository.belongsToList(
@@ -55,31 +59,49 @@ class ReplaceConversionItemUnitUseCase
         ),
       );
 
-      ValueModel? value;
       if (belongsToList) {
-        value = newSrcUnitValue.value;
-      } else {
-        value = ValueModel.any(
-          ObjectUtils.tryGet(
-            await listValueRepository.getDefault(
-              listType: newSrcUnitValue.unit.listType!,
-            ),
-          )?.itemName,
-        );
+        newValue = newSrcUnitValue.value;
       }
+    } else {
+      newValue = newSrcUnitValue.value;
+    }
 
+    if (newSrcUnitValue.defaultValue != null &&
+        newSrcUnitValue.unit.listType == null) {
+      newDefaultValue = newSrcUnitValue.defaultValue;
+    }
+
+    if (newValue == null && newDefaultValue == null) {
+      ValueModel? defaultValue = await _calculateDefaultValue(
+        newSrcUnitValue.unit,
+      );
       return ConversionUnitValueModel(
         unit: newSrcUnitValue.unit,
-        value: value,
+        value: newSrcUnitValue.unit.listType != null ? defaultValue : null,
+        defaultValue:
+            newSrcUnitValue.unit.listType != null ? null : defaultValue,
       );
     } else {
-      ValueModel? defaultValue = newSrcUnitValue.defaultValue ??
-          ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(newSrcUnitValue.unit),
-          );
+      return ConversionUnitValueModel(
+        unit: newSrcUnitValue.unit,
+        value: newValue,
+        defaultValue: newDefaultValue,
+      );
+    }
+  }
 
-      return newSrcUnitValue.copyWith(
-        defaultValue: defaultValue,
+  Future<ValueModel?> _calculateDefaultValue(UnitModel srcUnit) async {
+    if (srcUnit.listType != null) {
+      String? newValue = ObjectUtils.tryGet(
+        await listValueRepository.getDefault(
+          listType: srcUnit.listType!,
+        ),
+      )?.itemName;
+
+      return ValueModel.any(newValue);
+    } else {
+      return ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(srcUnit),
       );
     }
   }

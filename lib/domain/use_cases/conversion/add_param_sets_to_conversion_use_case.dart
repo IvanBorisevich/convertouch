@@ -88,30 +88,14 @@ class AddParamSetsToConversionUseCase
 
       List<ConversionParamValueModel> paramValues = [];
       for (ConversionParamModel param in params) {
-        ConversionParamValueModel paramValue;
+        ValueModel? defaultValue = await _calculateDefaultValue(param);
 
-        if (param.listType != null) {
-          ValueModel? value = ValueModel.any(
-            ObjectUtils.tryGet(
-              await listValueRepository.getDefault(listType: param.listType!),
-            )?.itemName,
-          );
-
-          paramValue = ConversionParamValueModel(
-            param: param,
-            value: value,
-          );
-        } else {
-          ValueModel? defaultValue = ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(param.defaultUnit!),
-          );
-
-          paramValue = ConversionParamValueModel(
-            param: param,
-            unit: param.defaultUnit,
-            defaultValue: defaultValue,
-          );
-        }
+        ConversionParamValueModel paramValue = ConversionParamValueModel(
+          param: param,
+          unit: param.defaultUnit,
+          value: param.listType != null ? defaultValue : null,
+          defaultValue: param.listType != null ? null : defaultValue,
+        );
 
         paramValues.add(paramValue);
       }
@@ -178,5 +162,21 @@ class AddParamSetsToConversionUseCase
       mandatoryParamSetExists: mandatoryParamSetExists,
       totalCount: paramSetsTotalCount,
     );
+  }
+
+  Future<ValueModel?> _calculateDefaultValue(ConversionParamModel param) async {
+    if (param.listType != null) {
+      String? newValue = ObjectUtils.tryGet(
+        await listValueRepository.getDefault(
+          listType: param.listType!,
+        ),
+      )?.itemName;
+
+      return ValueModel.any(newValue);
+    } else {
+      return ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(param.defaultUnit!),
+      );
+    }
   }
 }

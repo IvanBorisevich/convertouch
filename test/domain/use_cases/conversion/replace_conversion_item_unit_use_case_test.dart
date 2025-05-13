@@ -229,9 +229,9 @@ void main() {
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(usaClothSize, null, null),
+                ConversionUnitValueModel.tuple(usaClothSize, 0, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(usaClothSize, null, null),
+              ConversionUnitValueModel.tuple(usaClothSize, 0, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
@@ -280,9 +280,9 @@ void main() {
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(usaClothSize, null, null),
+                ConversionUnitValueModel.tuple(usaClothSize, 0, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(usaClothSize, null, null),
+              ConversionUnitValueModel.tuple(usaClothSize, 0, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
