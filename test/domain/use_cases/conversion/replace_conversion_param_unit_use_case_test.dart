@@ -21,6 +21,7 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
+        listValueRepository: ListValueRepositoryImpl(),
       ),
       listValueRepository: ListValueRepositoryImpl(),
     );

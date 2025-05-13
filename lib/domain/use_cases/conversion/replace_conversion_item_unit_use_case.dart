@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -72,8 +71,8 @@ class ReplaceConversionItemUnitUseCase
     }
 
     if (newValue == null && newDefaultValue == null) {
-      ValueModel? defaultValue = await _calculateDefaultValue(
-        newSrcUnitValue.unit,
+      ValueModel? defaultValue = ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(newSrcUnitValue.unit),
       );
       return ConversionUnitValueModel(
         unit: newSrcUnitValue.unit,
@@ -86,22 +85,6 @@ class ReplaceConversionItemUnitUseCase
         unit: newSrcUnitValue.unit,
         value: newValue,
         defaultValue: newDefaultValue,
-      );
-    }
-  }
-
-  Future<ValueModel?> _calculateDefaultValue(UnitModel srcUnit) async {
-    if (srcUnit.listType != null) {
-      String? newValue = ObjectUtils.tryGet(
-        await listValueRepository.getDefault(
-          listType: srcUnit.listType!,
-        ),
-      )?.itemName;
-
-      return ValueModel.any(newValue);
-    } else {
-      return ObjectUtils.tryGet(
-        await calculateDefaultValueUseCase.execute(srcUnit),
       );
     }
   }

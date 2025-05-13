@@ -7,7 +7,6 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
@@ -15,12 +14,10 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 
 class RemoveParamSetsFromConversionUseCase
     extends AbstractModifyConversionUseCase<RemoveParamSetsDelta> {
-  final ListValueRepository listValueRepository;
   final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const RemoveParamSetsFromConversionUseCase({
     required super.convertUnitValuesUseCase,
-    required this.listValueRepository,
     required this.calculateDefaultValueUseCase,
   });
 
@@ -90,25 +87,9 @@ class RemoveParamSetsFromConversionUseCase
     }
   }
 
-  Future<ValueModel?> _calculateDefaultValue(UnitModel srcUnit) async {
-    if (srcUnit.listType != null) {
-      String? newValue = ObjectUtils.tryGet(
-        await listValueRepository.getDefault(
-          listType: srcUnit.listType!,
-        ),
-      )?.itemName;
-
-      return ValueModel.any(newValue);
-    } else {
-      return ObjectUtils.tryGet(
-        await calculateDefaultValueUseCase.execute(srcUnit),
-      );
-    }
-  }
-
   Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
-    ValueModel? defaultValue = await _calculateDefaultValue(
-      srcUnit,
+    ValueModel? defaultValue = ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(srcUnit),
     );
     return ConversionUnitValueModel(
       unit: srcUnit,

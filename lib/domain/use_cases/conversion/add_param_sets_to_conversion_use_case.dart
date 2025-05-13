@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
-import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
@@ -18,14 +17,12 @@ class AddParamSetsToConversionUseCase
     extends AbstractModifyConversionUseCase<AddParamSetsDelta> {
   final ConversionParamSetRepository conversionParamSetRepository;
   final ConversionParamRepository conversionParamRepository;
-  final ListValueRepository listValueRepository;
   final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AddParamSetsToConversionUseCase({
     required super.convertUnitValuesUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
-    required this.listValueRepository,
     required this.calculateDefaultValueUseCase,
   });
 
@@ -88,7 +85,9 @@ class AddParamSetsToConversionUseCase
 
       List<ConversionParamValueModel> paramValues = [];
       for (ConversionParamModel param in params) {
-        ValueModel? defaultValue = await _calculateDefaultValue(param);
+        ValueModel? defaultValue = ObjectUtils.tryGet(
+          await calculateDefaultValueUseCase.execute(param),
+        );
 
         ConversionParamValueModel paramValue = ConversionParamValueModel(
           param: param,
@@ -162,21 +161,5 @@ class AddParamSetsToConversionUseCase
       mandatoryParamSetExists: mandatoryParamSetExists,
       totalCount: paramSetsTotalCount,
     );
-  }
-
-  Future<ValueModel?> _calculateDefaultValue(ConversionParamModel param) async {
-    if (param.listType != null) {
-      String? newValue = ObjectUtils.tryGet(
-        await listValueRepository.getDefault(
-          listType: param.listType!,
-        ),
-      )?.itemName;
-
-      return ValueModel.any(newValue);
-    } else {
-      return ObjectUtils.tryGet(
-        await calculateDefaultValueUseCase.execute(param.defaultUnit!),
-      );
-    }
   }
 }

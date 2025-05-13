@@ -25,9 +25,9 @@ void main() {
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
       conversionParamRepository: MockConversionParamRepository(),
       conversionParamSetRepository: MockConversionParamSetRepository(),
-      listValueRepository: ListValueRepositoryImpl(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
+        listValueRepository: ListValueRepositoryImpl(),
       ),
     );
   });

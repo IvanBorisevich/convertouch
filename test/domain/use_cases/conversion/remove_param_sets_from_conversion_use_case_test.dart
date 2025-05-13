@@ -21,9 +21,9 @@ void main() {
   setUp(() {
     useCase = const RemoveParamSetsFromConversionUseCase(
       convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      listValueRepository: ListValueRepositoryImpl(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
+        listValueRepository: ListValueRepositoryImpl(),
       ),
     );
   });
