@@ -60,25 +60,15 @@ class ConversionParamSetValueBulkModel extends Equatable {
       return this;
     }
 
-    int paramIndex =
-        paramSetValues[paramSetIndex].paramValues.indexWhere(paramFilter);
-
-    if (paramIndex < 0) {
-      return this;
-    }
-
-    List<ConversionParamValueModel> newParamValues = [
-      ...paramSetValues[paramSetIndex].paramValues
-    ];
-
-    newParamValues[paramIndex] = await map.call(
-      paramSetValues[paramSetIndex].paramValues[paramIndex],
-      paramSetValues[paramSetIndex],
+    ConversionParamSetValueModel newParamSetValue =
+        await paramSetValues[paramSetIndex].copyWithChangedParam(
+      map: map,
+      paramFilter: paramFilter,
     );
 
     List<ConversionParamSetValueModel> newParamSetValues = [...paramSetValues];
     newParamSetValues[paramSetIndex] = paramSetValues[paramSetIndex].copyWith(
-      paramValues: newParamValues,
+      paramValues: newParamSetValue.paramValues,
     );
 
     return copyWith(
@@ -89,7 +79,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
   Future<ConversionParamSetValueBulkModel> copyWithChangedParamByIds({
     required Future<ConversionParamValueModel> Function(
       ConversionParamValueModel,
-        ConversionParamSetValueModel,
+      ConversionParamSetValueModel,
     ) map,
     int? paramSetId,
     required int paramId,

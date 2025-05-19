@@ -117,31 +117,25 @@ class AddParamSetsToConversionUseCase
     }
 
     int resultSelectedIndex = resultParamSetValues.length - 1;
-    var selectedParamSetValue = resultParamSetValues[resultSelectedIndex];
 
-    int firstCalculableParamIndex =
-        selectedParamSetValue.paramValues.indexWhere((p) => p.param.calculable);
+    resultParamSetValues[resultSelectedIndex] =
+        await resultParamSetValues[resultSelectedIndex].copyWithChangedParam(
+      map: (paramValue, paramSetValue) async {
+        var newParamValue = srcUnitValue != null
+            ? rules.calculateParamValueBySrcValue(
+                srcUnitValue: srcUnitValue,
+                unitGroupName: unitGroup.name,
+                params: paramSetValue,
+                param: paramValue.param,
+              )
+            : paramValue;
 
-    if (firstCalculableParamIndex != -1) {
-      var selectedParamValues = [...selectedParamSetValue.paramValues];
-      var calculableParamValue = selectedParamValues[firstCalculableParamIndex];
-
-      if (srcUnitValue != null) {
-        calculableParamValue = rules.calculateParamValueBySrcValue(
-          srcUnitValue: srcUnitValue,
-          unitGroupName: unitGroup.name,
-          params: selectedParamSetValue,
-          param: calculableParamValue.param,
+        return newParamValue.copyWith(
+          calculated: true,
         );
-      }
-
-      selectedParamValues[firstCalculableParamIndex] = calculableParamValue;
-
-      resultParamSetValues[resultSelectedIndex] =
-          selectedParamSetValue.copyWith(
-        paramValues: selectedParamValues,
-      );
-    }
+      },
+      paramFilter: (p) => p.param.calculable,
+    );
 
     return ConversionParamSetValueBulkModel(
       paramSetValues: resultParamSetValues,

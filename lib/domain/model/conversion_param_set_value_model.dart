@@ -68,6 +68,27 @@ class ConversionParamSetValueModel extends ItemModel {
     );
   }
 
+  Future<ConversionParamSetValueModel> copyWithChangedParam({
+    required Future<ConversionParamValueModel> Function(
+      ConversionParamValueModel,
+      ConversionParamSetValueModel,
+    ) map,
+    required bool Function(ConversionParamValueModel) paramFilter,
+  }) async {
+    int paramIndex = paramValues.indexWhere(paramFilter);
+
+    if (paramIndex < 0) {
+      return this;
+    }
+
+    List<ConversionParamValueModel> newParamValues = [...paramValues];
+    newParamValues[paramIndex] = await map.call(paramValues[paramIndex], this);
+
+    return copyWith(
+      paramValues: newParamValues,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {

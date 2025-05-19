@@ -117,6 +117,20 @@ void main() {
     );
   });
 
+  test('Copy with changed unknown param', () async {
+    expect(
+      await _clothingSizeParams.copyWithChangedParamByIds(
+        map: (paramValue, paramSetValue) async => paramValue.copyWith(
+          value: ValueModel.numeric(150),
+          defaultValue: ValueModel.numeric(2),
+        ),
+        paramSetId: clothingSizeParamSet.id,
+        paramId: -1,
+      ),
+      _clothingSizeParams,
+    );
+  });
+
   test('Copy with changed non-list param unit', () async {
     expect(
       await _clothingSizeParams.copyWithChangedParamByIds(
