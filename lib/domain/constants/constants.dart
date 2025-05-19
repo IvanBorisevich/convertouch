@@ -281,7 +281,8 @@ enum CountryCode {
   it("IT"),
   fr("FR"),
   jp("JP"),
-  de("DE");
+  de("DE"),
+  es("ES");
 
   final String name;
 
