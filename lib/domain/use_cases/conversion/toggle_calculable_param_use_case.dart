@@ -4,9 +4,9 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
-class SelectParamSetInConversionUseCase
-    extends AbstractModifyConversionUseCase<SelectParamSetDelta> {
-  const SelectParamSetInConversionUseCase({
+class ToggleCalculableParamUseCase
+    extends AbstractModifyConversionUseCase<ToggleCalculableParamDelta> {
+  const ToggleCalculableParamUseCase({
     required super.convertUnitValuesUseCase,
     required super.calculateDefaultValueUseCase,
   });
@@ -16,17 +16,13 @@ class SelectParamSetInConversionUseCase
     required ConversionParamSetValueBulkModel? oldConversionParams,
     required UnitGroupModel unitGroup,
     required ConversionUnitValueModel? srcUnitValue,
-    required SelectParamSetDelta delta,
+    required ToggleCalculableParamDelta delta,
   }) async {
-    if (oldConversionParams == null ||
-        oldConversionParams.paramSetValues.isEmpty) {
-      return oldConversionParams;
-    }
-
-    return oldConversionParams.copyWith(
-      selectedIndex: delta.newSelectedParamSetIndex,
-      selectedParamSetCanBeRemoved: !oldConversionParams
-          .paramSetValues[delta.newSelectedParamSetIndex].paramSet.mandatory,
+    return oldConversionParams?.copyWithChangedParamSetByIds(
+      map: (paramSetValue) async => paramSetValue.copyWithNewCalculatedParam(
+        newCalculatedParamId: delta.paramId,
+      ),
+      paramSetId: delta.paramSetId,
     );
   }
 }

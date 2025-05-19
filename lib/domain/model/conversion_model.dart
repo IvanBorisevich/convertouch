@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
@@ -80,8 +80,7 @@ class ConversionModel extends IdNameItemModel {
       id: json["id"] ?? -1,
       unitGroup:
           UnitGroupModel.fromJson(json["unitGroup"]) ?? UnitGroupModel.none,
-      srcUnitValue:
-          ConversionUnitValueModel.fromJson(json["sourceItem"]),
+      srcUnitValue: ConversionUnitValueModel.fromJson(json["sourceItem"]),
       params: ConversionParamSetValueBulkModel.fromJson(json["params"]),
       convertedUnitValues: (json["targetItems"] as List)
           .map((unitMap) => ConversionUnitValueModel.fromJson(unitMap)!)

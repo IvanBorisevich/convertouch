@@ -274,12 +274,14 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<EditConversionGroupUseCase>(
     () => EditConversionGroupUseCase(
       convertUnitValuesUseCase: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
     () => EditConversionItemUnitUseCase(
       convertUnitValuesUseCase: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 
@@ -293,6 +295,7 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
     () => RemoveConversionItemsUseCase(
       convertUnitValuesUseCase: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 
@@ -307,6 +310,7 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
     () => UpdateConversionCoefficientsUseCase(
       convertUnitValuesUseCase: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 

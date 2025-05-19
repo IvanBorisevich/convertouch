@@ -1,5 +1,6 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
@@ -241,8 +242,6 @@ void main() {
                 italianClothSize.id,
               ],
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
@@ -257,15 +256,17 @@ void main() {
                 )
               ],
             ),
+            currentSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-              ConversionUnitValueModel.tuple(japanClothSize, null, null),
-              ConversionUnitValueModel.tuple(italianClothSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -454,8 +455,6 @@ void main() {
                 italianClothSize.id,
               ],
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
@@ -470,15 +469,17 @@ void main() {
                 )
               ],
             ),
+            currentSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-              ConversionUnitValueModel.tuple(japanClothSize, null, null),
-              ConversionUnitValueModel.tuple(italianClothSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -622,57 +623,9 @@ void main() {
                 ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
               ],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+                  ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
-                ConversionUnitValueModel.tuple(frRingSize, null, null),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, null, null,
-                          unit: millimeter),
-                    ],
-                  )
-                ],
-              ),
-            );
-          });
-
-          test(
-              'Source item default value exists only '
-              '(default list value will be ignored)', () async {
-            await testCase(
-              unitGroup: ringSizeGroup,
-              useCase: useCase,
-              delta: AddUnitsToConversionDelta(
-                unitIds: [
-                  usaRingSize.id,
-                  frRingSize.id,
-                ],
-              ),
-              currentSrc:
-                  ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, null, null,
-                          unit: millimeter),
-                    ],
-                  )
-                ],
-              ),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, null, 3.5),
-              ],
-              expectedSrc:
-                  ConversionUnitValueModel.tuple(usaRingSize, null, null),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, null, null),
+                ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
                 ConversionUnitValueModel.tuple(frRingSize, null, null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
@@ -817,9 +770,9 @@ void main() {
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
               ],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
                 ConversionUnitValueModel.tuple(japanClothSize, null, null),
                 ConversionUnitValueModel.tuple(italianClothSize, null, null),
               ],
@@ -925,9 +878,9 @@ void main() {
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
               ],
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
                 ConversionUnitValueModel.tuple(japanClothSize, null, null),
                 ConversionUnitValueModel.tuple(italianClothSize, null, null),
               ],
@@ -1009,8 +962,6 @@ void main() {
                 italianClothSize.id,
               ],
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
@@ -1024,13 +975,15 @@ void main() {
                 )
               ],
             ),
+            currentSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
@@ -1113,8 +1066,6 @@ void main() {
                 italianClothSize.id,
               ],
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
@@ -1128,13 +1079,15 @@ void main() {
                 )
               ],
             ),
+            currentSrc:
+                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],

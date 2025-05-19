@@ -6,6 +6,7 @@ class EditConversionGroupUseCase
     extends AbstractModifyConversionUseCase<EditConversionGroupDelta> {
   const EditConversionGroupUseCase({
     required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override

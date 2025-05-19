@@ -1,10 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:equatable/equatable.dart';
 
 class ConversionParamSetValueModel extends ItemModel {
   final ConversionParamSetModel paramSet;
@@ -28,7 +26,20 @@ class ConversionParamSetValueModel extends ItemModel {
         paramValues,
       ];
 
-  bool get applicable => paramValues.none((p) => p.isEmpty);
+  bool get hasAllValues => paramValues.every((p) => p.hasValue);
+
+  ValueModel? getValue(String paramName) {
+    var paramValue = paramValues.firstWhere((e) => e.param.name == paramName);
+    return paramValue.value ?? paramValue.defaultValue;
+  }
+
+  ConversionParamValueModel? getParam(String paramName) {
+    return paramValues.firstWhere((e) => e.param.name == paramName);
+  }
+
+  bool get hasMultipleCalculableParams {
+    return paramValues.where((p) => p.param.calculable).length > 1;
+  }
 
   ConversionParamSetValueModel copyWith({
     ConversionParamSetModel? paramSet,
@@ -40,21 +51,29 @@ class ConversionParamSetValueModel extends ItemModel {
     );
   }
 
+  ConversionParamSetValueModel copyWithNewCalculatedParam({
+    required int newCalculatedParamId,
+  }) {
+    List<ConversionParamValueModel> newParamValues = paramValues
+        .map(
+          (p) => p.copyWith(
+            calculated:
+                p.param.id == newCalculatedParamId ? !p.calculated : false,
+          ),
+        )
+        .toList();
+
+    return copyWith(
+      paramValues: newParamValues,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     return {
       "paramSet": paramSet.toJson(),
       "paramValues": paramValues.map((value) => value.toJson()).toList(),
     };
-  }
-
-  ValueModel? getValue(String paramName) {
-    var paramValue = paramValues.firstWhere((e) => e.param.name == paramName);
-    return paramValue.value ?? paramValue.defaultValue;
-  }
-
-  ConversionParamValueModel? getParam(String paramName) {
-    return paramValues.firstWhere((e) => e.param.name == paramName);
   }
 
   static ConversionParamSetValueModel? fromJson(Map<String, dynamic>? json) {
@@ -74,110 +93,5 @@ class ConversionParamSetValueModel extends ItemModel {
     return 'ConversionParamSetValueModel{'
         'paramSet: $paramSet, '
         'paramValues: $paramValues}';
-  }
-}
-
-class ConversionParamSetValueBulkModel extends Equatable {
-  final List<ConversionParamSetValueModel> paramSetValues;
-  final int selectedIndex;
-  final bool paramSetsCanBeAdded;
-  final bool selectedParamSetCanBeRemoved;
-  final bool paramSetsCanBeRemovedInBulk;
-  final bool mandatoryParamSetExists;
-  final int totalCount;
-
-  const ConversionParamSetValueBulkModel({
-    required this.paramSetValues,
-    this.selectedIndex = 0,
-    this.paramSetsCanBeAdded = false,
-    this.selectedParamSetCanBeRemoved = false,
-    this.paramSetsCanBeRemovedInBulk = false,
-    this.mandatoryParamSetExists = false,
-    this.totalCount = 1,
-  });
-
-  ConversionParamSetValueBulkModel copyWith({
-    List<ConversionParamSetValueModel>? paramSetValues,
-    int? selectedIndex,
-    bool? paramSetsCanBeAdded,
-    bool? selectedParamSetCanBeRemoved,
-    bool? paramSetsCanBeRemovedInBulk,
-    bool? mandatoryParamSetExists,
-    int? totalCount,
-  }) {
-    return ConversionParamSetValueBulkModel(
-      paramSetValues: paramSetValues ?? this.paramSetValues,
-      selectedIndex: selectedIndex ?? this.selectedIndex,
-      paramSetsCanBeAdded: paramSetsCanBeAdded ?? this.paramSetsCanBeAdded,
-      selectedParamSetCanBeRemoved:
-          selectedParamSetCanBeRemoved ?? this.selectedParamSetCanBeRemoved,
-      paramSetsCanBeRemovedInBulk:
-          paramSetsCanBeRemovedInBulk ?? this.paramSetsCanBeRemovedInBulk,
-      mandatoryParamSetExists:
-          mandatoryParamSetExists ?? this.mandatoryParamSetExists,
-      totalCount: totalCount ?? this.totalCount,
-    );
-  }
-
-  ConversionParamSetValueModel? get activeParams {
-    return paramSetValues.isNotEmpty && selectedIndex > -1
-        ? paramSetValues[selectedIndex]
-        : null;
-  }
-
-  @override
-  List<Object?> get props => [
-        paramSetValues,
-        selectedIndex,
-        paramSetsCanBeAdded,
-        selectedParamSetCanBeRemoved,
-        paramSetsCanBeRemovedInBulk,
-        mandatoryParamSetExists,
-        totalCount,
-      ];
-
-  Map<String, dynamic> toJson() {
-    return {
-      "paramSetValues": paramSetValues.map((item) => item.toJson()).toList(),
-      "selectedIndex": selectedIndex,
-      "paramSetsCanBeAdded": paramSetsCanBeAdded,
-      "paramSetCanBeRemoved": selectedParamSetCanBeRemoved,
-      "paramSetsCanBeRemovedInBulk": paramSetsCanBeRemovedInBulk,
-      "mandatoryParamSetExists": mandatoryParamSetExists,
-      "totalCount": totalCount,
-    };
-  }
-
-  static ConversionParamSetValueBulkModel? fromJson(
-      Map<String, dynamic>? json) {
-    if (json == null) {
-      return null;
-    }
-
-    return ConversionParamSetValueBulkModel(
-      paramSetValues: json["paramSetValues"] != null
-          ? (json["paramSetValues"] as List)
-              .map((item) => ConversionParamSetValueModel.fromJson(item)!)
-              .toList()
-          : [],
-      selectedIndex: json["selectedIndex"] ?? 0,
-      paramSetsCanBeAdded: json["paramSetsCanBeAdded"] ?? false,
-      selectedParamSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
-      paramSetsCanBeRemovedInBulk: json["paramSetsCanBeRemovedInBulk"] ?? false,
-      mandatoryParamSetExists: json["mandatoryParamSetExists"] ?? false,
-      totalCount: json["totalCount"] ?? 0,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'ConversionParamSetValueBulkModel{'
-        'paramSetValues: $paramSetValues, '
-        'selectedIndex: $selectedIndex, '
-        'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
-        'selectedParamSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
-        'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk, '
-        'mandatoryParamSetExists: $mandatoryParamSetExists, '
-        'totalCount: $totalCount}';
   }
 }

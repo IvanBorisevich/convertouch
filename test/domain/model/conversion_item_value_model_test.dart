@@ -28,6 +28,7 @@ void main() {
           'code': 'cm',
           'coefficient': 0.01,
           'valueType': 5,
+          'minValue': 0,
           'invertible': true,
           'oob': false
         },
@@ -38,6 +39,7 @@ void main() {
         "code": 'm',
         "coefficient": 1.0,
         "valueType": 5,
+        "minValue": 0,
         "invertible": true,
         "oob": false,
       },
@@ -80,6 +82,7 @@ void main() {
         "code": 'm',
         "coefficient": 1.0,
         "valueType": 5,
+        "minValue": 0,
         "invertible": true,
         "oob": false,
       },

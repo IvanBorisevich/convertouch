@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -9,7 +10,6 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 
@@ -17,13 +17,12 @@ class AddParamSetsToConversionUseCase
     extends AbstractModifyConversionUseCase<AddParamSetsDelta> {
   final ConversionParamSetRepository conversionParamSetRepository;
   final ConversionParamRepository conversionParamRepository;
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AddParamSetsToConversionUseCase({
     required super.convertUnitValuesUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
-    required this.calculateDefaultValueUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override
@@ -118,27 +117,28 @@ class AddParamSetsToConversionUseCase
     }
 
     int resultSelectedIndex = resultParamSetValues.length - 1;
-    var selectedParamSet = resultParamSetValues[resultSelectedIndex];
+    var selectedParamSetValue = resultParamSetValues[resultSelectedIndex];
 
     int firstCalculableParamIndex =
-        selectedParamSet.paramValues.indexWhere((p) => p.param.calculable);
+        selectedParamSetValue.paramValues.indexWhere((p) => p.param.calculable);
 
     if (firstCalculableParamIndex != -1) {
-      var selectedParamValues = [...selectedParamSet.paramValues];
+      var selectedParamValues = [...selectedParamSetValue.paramValues];
       var calculableParamValue = selectedParamValues[firstCalculableParamIndex];
 
       if (srcUnitValue != null) {
         calculableParamValue = rules.calculateParamValueBySrcValue(
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroup.name,
-          params: selectedParamSet,
+          params: selectedParamSetValue,
           param: calculableParamValue.param,
         );
       }
 
       selectedParamValues[firstCalculableParamIndex] = calculableParamValue;
 
-      resultParamSetValues[resultSelectedIndex] = selectedParamSet.copyWith(
+      resultParamSetValues[resultSelectedIndex] =
+          selectedParamSetValue.copyWith(
         paramValues: selectedParamValues,
       );
     }

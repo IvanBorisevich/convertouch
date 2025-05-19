@@ -19,7 +19,7 @@ class ConvertUnitValuesUseCase
       List<ConversionUnitValueModel> convertedUnitValues = [];
 
       Map<String, String>? mappingTable;
-      if (input.params != null && input.params!.applicable) {
+      if (input.params != null && input.params!.hasAllValues) {
         mappingTable = rules.getMappingTableByParams(
           unitGroupName: input.unitGroup.name,
           params: input.params,

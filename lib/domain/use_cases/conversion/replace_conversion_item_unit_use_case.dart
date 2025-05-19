@@ -5,17 +5,15 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ReplaceConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionItemUnitDelta> {
   final ListValueRepository listValueRepository;
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const ReplaceConversionItemUnitUseCase({
     required super.convertUnitValuesUseCase,
-    required this.calculateDefaultValueUseCase,
+    required super.calculateDefaultValueUseCase,
     required this.listValueRepository,
   });
 
@@ -38,7 +36,7 @@ class ReplaceConversionItemUnitUseCase
 
   @override
   Future<ConversionUnitValueModel> newSourceUnitValue({
-    required ConversionUnitValueModel? oldSourceUnitValue,
+    required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,

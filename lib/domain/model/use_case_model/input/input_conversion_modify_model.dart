@@ -22,8 +22,19 @@ abstract class ConversionUnitValuesModifyDelta extends ConversionModifyDelta {
   const ConversionUnitValuesModifyDelta();
 }
 
-abstract class ConversionParamValuesModifyDelta extends ConversionModifyDelta {
-  const ConversionParamValuesModifyDelta();
+abstract class ConversionParamsModifyDelta extends ConversionModifyDelta {
+  const ConversionParamsModifyDelta();
+}
+
+abstract class ConversionSingleParamModifyDelta
+    extends ConversionParamsModifyDelta {
+  final int paramId;
+  final int paramSetId;
+
+  const ConversionSingleParamModifyDelta({
+    required this.paramId,
+    required this.paramSetId,
+  });
 }
 
 class AddUnitsToConversionDelta extends ConversionUnitValuesModifyDelta {
@@ -89,7 +100,7 @@ class ReplaceConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
   });
 }
 
-class AddParamSetsDelta extends ConversionParamValuesModifyDelta {
+class AddParamSetsDelta extends ConversionParamsModifyDelta {
   final List<int> paramSetIds;
 
   const AddParamSetsDelta({
@@ -97,7 +108,7 @@ class AddParamSetsDelta extends ConversionParamValuesModifyDelta {
   });
 }
 
-class SelectParamSetDelta extends ConversionParamValuesModifyDelta {
+class SelectParamSetDelta extends ConversionParamsModifyDelta {
   final int newSelectedParamSetIndex;
 
   const SelectParamSetDelta({
@@ -105,36 +116,39 @@ class SelectParamSetDelta extends ConversionParamValuesModifyDelta {
   });
 }
 
-class EditConversionParamValueDelta extends ConversionParamValuesModifyDelta {
+class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
   final String? newValue;
   final String? newDefaultValue;
-  final int paramId;
-  final int paramSetId;
 
   const EditConversionParamValueDelta({
     required this.newValue,
     required this.newDefaultValue,
-    required this.paramId,
-    required this.paramSetId,
+    required super.paramId,
+    required super.paramSetId,
   });
 }
 
-class ReplaceConversionParamUnitDelta extends ConversionParamValuesModifyDelta {
+class ReplaceConversionParamUnitDelta extends ConversionSingleParamModifyDelta {
   final UnitModel newUnit;
-  final int paramId;
-  final int paramSetId;
 
   const ReplaceConversionParamUnitDelta({
     required this.newUnit,
-    required this.paramId,
-    required this.paramSetId,
+    required super.paramId,
+    required super.paramSetId,
   });
 }
 
-class RemoveParamSetsDelta extends ConversionParamValuesModifyDelta {
+class RemoveParamSetsDelta extends ConversionParamsModifyDelta {
   final bool allOptional;
 
   const RemoveParamSetsDelta.current() : allOptional = false;
 
   const RemoveParamSetsDelta.all() : allOptional = true;
+}
+
+class ToggleCalculableParamDelta extends ConversionSingleParamModifyDelta {
+  const ToggleCalculableParamDelta({
+    required super.paramId,
+    required super.paramSetId,
+  });
 }

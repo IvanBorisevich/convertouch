@@ -56,7 +56,7 @@ Map<String, String>? getMappingTableByValue({
   required String unitGroupName,
   required ConversionUnitValueModel? value,
 }) {
-  if (value == null || value.isEmpty) {
+  if (value == null || !value.hasValue) {
     return null;
   }
 
@@ -64,10 +64,10 @@ Map<String, String>? getMappingTableByValue({
 }
 
 ConversionParamValueModel calculateParamValueBySrcValue({
-  required ConversionUnitValueModel srcUnitValue,
-  required String unitGroupName,
-  required ConversionParamSetValueModel params,
   required ConversionParamModel param,
+  required ConversionUnitValueModel srcUnitValue,
+  required ConversionParamSetValueModel params,
+  required String unitGroupName,
 }) {
   if (param.listType != null) {
     Map<String, String>? mappingTable = getMappingTableByValue(
@@ -81,28 +81,34 @@ ConversionParamValueModel calculateParamValueBySrcValue({
       value: ValueModel.any(newValue),
     );
   } else {
-    ParamByValueFunc? func = _nonListParamValueBySrcValueRules[unitGroupName]
-        ?[params.paramSet.name]?[param.name];
-
-    ValueModel? value = func?.call(
-      value: srcUnitValue,
-      paramValues: params.paramValues,
-    );
+    ParamValueByUnitValueFunc? func =
+        _nonListParamValueBySrcValueRules[unitGroupName]?[params.paramSet.name]
+            ?[param.name];
 
     ConversionParamValueModel paramValue = params.getParam(param.name)!;
+
+    ValueModel? value = func
+        ?.call(
+          value: srcUnitValue,
+          paramValues: params.paramValues,
+        )
+        ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
+
+    ValueModel? defaultValue = value == null ? null : paramValue.defaultValue;
+
     return ConversionParamValueModel(
       param: param,
       unit: paramValue.unit,
       calculated: paramValue.calculated,
       value: value,
-      defaultValue: paramValue.defaultValue,
+      defaultValue: defaultValue,
     );
   }
 }
 
-ConversionUnitValueModel? calculateSrcValueByParam({
-  required ConversionParamSetValueModel params,
+ConversionUnitValueModel calculateSrcValueByParams({
   required UnitModel srcUnit,
+  required ConversionParamSetValueModel params,
   required String unitGroupName,
 }) {
   if (srcUnit.listType != null) {
@@ -117,12 +123,20 @@ ConversionUnitValueModel? calculateSrcValueByParam({
       value: ValueModel.any(newValue),
     );
   } else {
-    ValueByParamFunc? func =
-        _nonListSrcValueByParamValueRules[unitGroupName]?[params.paramSet.name];
+    UnitValueByParamValuesFunc? func =
+        _nonListSrcValueByParamValuesRules[unitGroupName]
+            ?[params.paramSet.name];
 
-    return func?.call(
+    ValueModel? value = func
+        ?.call(
+          unit: srcUnit,
+          paramValues: params.paramValues,
+        )
+        ?.betweenOrNull(srcUnit.minValue, srcUnit.maxValue);
+
+    return ConversionUnitValueModel(
       unit: srcUnit,
-      params: params,
+      value: value,
     );
   }
 }
@@ -135,14 +149,14 @@ typedef MappingRuleByUnitValueFunc = Map<String, String>? Function(
   ConversionUnitValueModel,
 );
 
-typedef ParamByValueFunc = ValueModel? Function({
+typedef ParamValueByUnitValueFunc = ValueModel? Function({
   required ConversionUnitValueModel value,
   required List<ConversionParamValueModel> paramValues,
 });
 
-typedef ValueByParamFunc = ConversionUnitValueModel? Function({
+typedef UnitValueByParamValuesFunc = ValueModel? Function({
   required UnitModel unit,
-  required ConversionParamSetValueModel params,
+  required List<ConversionParamValueModel> paramValues,
 });
 
 final Map<String, Map<String, UnitRule>> _formulaRules = {
@@ -163,7 +177,7 @@ const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
   GroupNames.ringSize: getRingSizesMapByValue,
 };
 
-const Map<String, Map<String, Map<String, ParamByValueFunc>>>
+const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
     _nonListParamValueBySrcValueRules = {
   GroupNames.ringSize: {
     ParamSetNames.byDiameter: {
@@ -175,10 +189,14 @@ const Map<String, Map<String, Map<String, ParamByValueFunc>>>
   },
   GroupNames.mass: {
     ParamSetNames.barbellWeight: {
-      ParamNames.oneSideWeight: getOneSideWeight,
+      ParamNames.oneSideWeight: getBarbellOneSideWeight,
     },
   },
 };
 
-const Map<String, Map<String, ValueByParamFunc>>
-    _nonListSrcValueByParamValueRules = {};
+const Map<String, Map<String, UnitValueByParamValuesFunc>>
+    _nonListSrcValueByParamValuesRules = {
+  GroupNames.mass: {
+    ParamSetNames.barbellWeight: getBarbellFullWeight,
+  },
+};

@@ -6,6 +6,7 @@ class EditConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemUnitDelta> {
   const EditConversionItemUnitUseCase({
     required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override

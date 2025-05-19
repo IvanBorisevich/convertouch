@@ -27,12 +27,10 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   ConvertouchListType? get listType;
 
-  bool get isNotEmpty {
+  bool get hasValue {
     return listType != null && value != null ||
         listType == null && (value != null || defaultValue != null);
   }
-
-  bool get isEmpty => !isNotEmpty;
 
   @override
   List<Object?> get props => [

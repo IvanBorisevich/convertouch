@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
@@ -445,7 +446,7 @@ void main() {
         });
 
         group("Remove the last param set - another set is not applicable", () {
-          test('Conversion has unit values (should be changed to defaults)',
+          test('Conversion has unit values (should not be changed)',
               () async {
             await testCase(
               unitGroup: ringSizeGroup,
@@ -480,10 +481,10 @@ void main() {
                 ConversionUnitValueModel.tuple(usaRingSize, 4, null),
                 ConversionUnitValueModel.tuple(frRingSize, 46.5, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+              expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 4, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                ConversionUnitValueModel.tuple(frRingSize, 44, null),
+                ConversionUnitValueModel.tuple(usaRingSize, 4, null),
+                ConversionUnitValueModel.tuple(frRingSize, 46.5, null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [

@@ -6,6 +6,7 @@ class RemoveConversionItemsUseCase
     extends AbstractModifyConversionUseCase<RemoveConversionItemsDelta> {
   const RemoveConversionItemsUseCase({
     required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override

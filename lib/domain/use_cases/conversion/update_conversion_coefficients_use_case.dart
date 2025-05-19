@@ -6,6 +6,7 @@ class UpdateConversionCoefficientsUseCase
     extends AbstractModifyConversionUseCase<UpdateConversionCoefficientsDelta> {
   const UpdateConversionCoefficientsUseCase({
     required super.convertUnitValuesUseCase,
+    required super.calculateDefaultValueUseCase,
   });
 
   @override

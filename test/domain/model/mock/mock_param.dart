@@ -97,3 +97,11 @@ const oneSideWeightParam = ConversionParamModel(
   calculable: true,
   paramSetId: 4,
 );
+
+const someCalculableParam = ConversionParamModel(
+  id: 7,
+  name: "Some calculable param",
+  calculable: true,
+  valueType: ConvertouchValueType.decimal,
+  paramSetId: 4,
+);

@@ -1,5 +1,6 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
@@ -79,7 +80,7 @@ void main() {
         );
       });
 
-      test('New height param value is not acceptable', () async {
+      test('Height param value is not acceptable for the new unit', () async {
         await testCase(
           unitGroup: clothingSizeGroup,
           useCase: useCase,
@@ -97,7 +98,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(genderParam, "Male", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 1.9, 1,
+                  ConversionParamValueModel.tuple(heightParam, 180, 1,
                       unit: centimeter),
                 ],
               )
@@ -108,9 +109,9 @@ void main() {
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
           ],
           expectedSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, null, null),
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
@@ -120,7 +121,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(genderParam, "Male", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 1.9, 1,
+                  ConversionParamValueModel.tuple(heightParam, 180, 1,
                       unit: meter),
                 ],
               )

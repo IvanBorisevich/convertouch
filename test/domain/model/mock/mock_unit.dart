@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 const mockUnit = UnitModel(
   id: 1,
@@ -57,6 +58,7 @@ const UnitModel centimeter = UnitModel(
   name: "Centimeter",
   code: "cm",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 0.01,
 );
 
@@ -65,6 +67,7 @@ const UnitModel millimeter = UnitModel(
   name: "Millimeter",
   code: "mm",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 0.001,
 );
 
@@ -73,6 +76,7 @@ const UnitModel decimeter = UnitModel(
   name: "Decimeter",
   code: "dm",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 0.1,
 );
 
@@ -81,6 +85,7 @@ const UnitModel meter = UnitModel(
   name: 'Meter',
   code: 'm',
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 1,
 );
 
@@ -89,6 +94,7 @@ const UnitModel kilometer = UnitModel(
   name: "Kilometer",
   code: "km",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 1000,
 );
 
@@ -153,6 +159,7 @@ const UnitModel kilogram = UnitModel(
   name: "Kilogram",
   code: "kg",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 1,
 );
 
@@ -161,5 +168,6 @@ const UnitModel pound = UnitModel(
   name: "Pound",
   code: "lbs.",
   valueType: ConvertouchValueType.decimalPositive,
+  minValue: ValueModel.zero,
   coefficient: 0.45359237,
 );
