@@ -2,29 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 
-abstract interface class Criterion {
+abstract class Criterion {
   const Criterion();
-}
 
-class NumRangeCriterion extends Criterion {
-  final num left;
-  final num right;
-
-  const NumRangeCriterion(this.left, this.right);
-
-  bool contains(
-    num? value, {
-    bool includeLeft = true,
-    bool includeRight = true,
-  }) {
-    if (value == null) {
-      return false;
-    }
-
-    bool isMoreThanLeft = includeLeft ? left <= value : left < value;
-    bool isLessThanRight = includeRight ? right >= value : right > value;
-    return isMoreThanLeft && isLessThanRight;
-  }
+  bool matches(ConversionParamSetValueModel params);
 }
 
 class MappingRow<T extends Criterion, K> {
@@ -60,16 +41,13 @@ class MappingTable<T extends Criterion, K> {
     this.keyByUnitCode,
   });
 
-  Map<String, String>? getRowByParams(
-    ConversionParamSetValueModel params, {
-    required bool Function(ConversionParamSetValueModel, T) filter,
-  }) {
+  Map<String, String>? getRowByParams(ConversionParamSetValueModel params) {
     if (rows.isEmpty) {
       return null;
     }
 
     return rows
-        .firstWhereOrNull((row) => filter.call(params, row.criterion))
+        .firstWhereOrNull((row) => row.criterion.matches(params))
         ?.transform(unitCodeByKey);
   }
 

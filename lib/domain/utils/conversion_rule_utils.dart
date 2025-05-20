@@ -48,8 +48,7 @@ Map<String, String>? getMappingTableByParams({
     return null;
   }
 
-  return _mappingRulesByParam[unitGroupName]?[params.paramSet.name]
-      ?.call(params);
+  return _mappingRulesByParam[unitGroupName]?.call(params);
 }
 
 Map<String, String>? getMappingTableByValue({
@@ -163,14 +162,9 @@ final Map<String, Map<String, UnitRule>> _formulaRules = {
   GroupNames.temperature: temperatureRules,
 };
 
-const Map<String, Map<String, MappingRuleByParamFunc>> _mappingRulesByParam = {
-  GroupNames.clothingSize: {
-    ParamSetNames.byHeight: getClothingSizesMap,
-  },
-  GroupNames.ringSize: {
-    ParamSetNames.byDiameter: getRingSizesMapByDiameter,
-    ParamSetNames.byCircumference: getRingSizesMapByCircumference,
-  }
+const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
+  GroupNames.clothingSize: getClothingSizesMap,
+  GroupNames.ringSize: getRingSizesMap,
 };
 
 const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {

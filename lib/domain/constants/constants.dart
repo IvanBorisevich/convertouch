@@ -35,6 +35,7 @@ abstract class ParamNames {
   static const person = "Person";
   static const garment = "Garment";
   static const height = "Height";
+  static const waist = "Waist";
   static const diameter = "Diameter";
   static const circumference = "Circumference";
   static const barWeight = "Bar Weight";
@@ -242,11 +243,13 @@ enum ConvertouchListType {
   clothingSizeRu(8),
   clothingSizeIt(9),
   clothingSizeUk(10),
-  ringSizeFr(11),
-  ringSizeRu(12),
-  ringSizeUs(13),
-  ringSizeIt(14),
-  barbellBarWeight(15),
+  clothingSizeDe(11),
+  clothingSizeEs(12),
+  ringSizeFr(13),
+  ringSizeRu(14),
+  ringSizeUs(15),
+  ringSizeIt(16),
+  barbellBarWeight(17),
   ;
 
   final int id;

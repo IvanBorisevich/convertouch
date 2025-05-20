@@ -40,6 +40,8 @@ const Map<ConvertouchListType, List<String> Function({double? c})>
   ConvertouchListType.clothingSizeRu: _clothingSizesRu,
   ConvertouchListType.clothingSizeIt: _clothingSizesIt,
   ConvertouchListType.clothingSizeUk: _clothingSizesUk,
+  ConvertouchListType.clothingSizeDe: _clothingSizesDe,
+  ConvertouchListType.clothingSizeEs: _clothingSizesEs,
   ConvertouchListType.ringSizeUs: _ringSizesUs,
   ConvertouchListType.ringSizeFr: _ringSizesFr,
   ConvertouchListType.barbellBarWeight: _barbellBarWeightsKg,
@@ -56,38 +58,59 @@ List<String> _clothingSizesInter({double? c}) => [
       "S",
       "M",
       "L",
-      "X",
       "XL",
-      "XX",
       "XXL",
-      "3X",
       "3XL",
     ];
 
-List<String> _clothingSizesUs({double? c}) => ObjectUtils.generateList(0, 24, 2)
-  ..addAll(ObjectUtils.generateList(30, 50, 2));
+List<String> _clothingSizesUs({double? c}) => [
+      ...ObjectUtils.generateList(2, 14, 2),
+      ...ObjectUtils.generateList(28, 42, 2),
+    ];
 
-List<String> _clothingSizesJp({double? c}) => ObjectUtils.generateList(3, 29, 2)
-  ..addAll(ObjectUtils.generateList(32, 52, 2));
+List<String> _clothingSizesJp({double? c}) => [
+      'S',
+      'M',
+      'L',
+      'LL',
+      '3L',
+      '4L',
+      '5L',
+      '6L',
+    ];
 
-List<String> _clothingSizesFr({double? c}) =>
-    ObjectUtils.generateList(30, 56, 2)
-      ..addAll(ObjectUtils.generateList(58, 60, 2));
+List<String> _clothingSizesFr({double? c}) => [
+      ...ObjectUtils.generateList(34, 48, 2),
+    ];
 
-List<String> _clothingSizesEu({double? c}) =>
-    ObjectUtils.generateList(32, 56, 2)
-      ..addAll(ObjectUtils.generateList(58, 60, 2));
+List<String> _clothingSizesEu({double? c}) => [
+      ...ObjectUtils.generateList(34, 56, 2),
+    ];
 
-List<String> _clothingSizesRu({double? c}) =>
-    ObjectUtils.generateList(38, 62, 2);
+List<String> _clothingSizesRu({double? c}) => [
+      ...ObjectUtils.generateList(40, 56, 2),
+    ];
 
-List<String> _clothingSizesIt({double? c}) =>
-    ObjectUtils.generateList(36, 60, 2);
+List<String> _clothingSizesIt({double? c}) => [
+      ...ObjectUtils.generateList(38, 56, 2),
+    ];
 
-List<String> _clothingSizesUk({double? c}) =>
-    ObjectUtils.generateList(4, 50, 2);
+List<String> _clothingSizesUk({double? c}) => [
+      ...ObjectUtils.generateList(6, 18, 2),
+      ...ObjectUtils.generateList(26, 40, 2),
+    ];
 
-List<String> _ringSizesUs({double? c}) => ObjectUtils.generateList(3, 15, 0.5);
+List<String> _clothingSizesDe({double? c}) => [
+      ...ObjectUtils.generateList(32, 56, 2),
+    ];
+
+List<String> _clothingSizesEs({double? c}) => [
+      ...ObjectUtils.generateList(34, 48, 2),
+    ];
+
+List<String> _ringSizesUs({double? c}) => [
+      ...ObjectUtils.generateList(3, 15, 0.5),
+    ];
 
 List<String> _ringSizesFr({double? c}) => [
       44,
@@ -116,5 +139,6 @@ List<String> _ringSizesFr({double? c}) => [
       75
     ].map((e) => e.toString()).toList();
 
-List<String> _barbellBarWeightsKg({double? c}) =>
-    ObjectUtils.generateList(10, 20, 25, multiplier: c);
+List<String> _barbellBarWeightsKg({double? c}) => [
+      ...ObjectUtils.generateList(10, 20, 25, multiplier: c),
+    ];
