@@ -141,21 +141,21 @@ void main() {
 
           test('RU -> EU', () {
             expect(
-              Converter(ValueModel.numeric(38), params: params)
+              Converter(ValueModel.numeric(42), params: params)
                   .apply(ruSize.xToBase)
                   .apply(euSize.baseToY)
                   .value,
-              ValueModel.numeric(32),
+              ValueModel.numeric(42),
             );
           });
 
           test('EU -> RU', () {
             expect(
-              Converter(ValueModel.numeric(32), params: params)
+              Converter(ValueModel.numeric(42), params: params)
                   .apply(euSize.xToBase)
                   .apply(ruSize.baseToY)
                   .value,
-              ValueModel.numeric(38),
+              ValueModel.numeric(42),
             );
           });
 
@@ -165,13 +165,13 @@ void main() {
                   .apply(interSize.xToBase)
                   .apply(ruSize.baseToY)
                   .value,
-              ValueModel.numeric(38),
+              ValueModel.numeric(42),
             );
           });
 
           test('EU -> INT', () {
             expect(
-              Converter(ValueModel.numeric(32), params: params)
+              Converter(ValueModel.numeric(42), params: params)
                   .apply(euSize.xToBase)
                   .apply(interSize.baseToY)
                   .value,
@@ -201,11 +201,11 @@ void main() {
 
           test('RU -> RU', () {
             expect(
-              Converter(ValueModel.numeric(38), params: params)
+              Converter(ValueModel.numeric(42), params: params)
                   .apply(ruSize.xToBase)
                   .apply(ruSize.baseToY)
                   .value,
-              ValueModel.numeric(38),
+              ValueModel.numeric(42),
             );
           });
         },

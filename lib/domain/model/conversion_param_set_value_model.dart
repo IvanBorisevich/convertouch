@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
@@ -29,12 +30,12 @@ class ConversionParamSetValueModel extends ItemModel {
   bool get hasAllValues => paramValues.every((p) => p.hasValue);
 
   ValueModel? getValue(String paramName) {
-    var paramValue = paramValues.firstWhere((e) => e.param.name == paramName);
-    return paramValue.value ?? paramValue.defaultValue;
+    var paramValue = paramValues.firstWhereOrNull((e) => e.param.name == paramName);
+    return paramValue?.val;
   }
 
   ConversionParamValueModel? getParam(String paramName) {
-    return paramValues.firstWhere((e) => e.param.name == paramName);
+    return paramValues.firstWhereOrNull((e) => e.param.name == paramName);
   }
 
   bool get hasMultipleCalculableParams {

@@ -103,7 +103,7 @@ void main() {
         test('Source unit value exists', () async {
           await testCase(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
@@ -118,8 +118,8 @@ void main() {
               ],
             ),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
             ],
           );
         });
@@ -153,7 +153,7 @@ void main() {
         test('Source unit value exists', () async {
           await testCase(
             unitGroup: clothingSizeGroup,
-            src: ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+            src: ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             tgtUnits: const [
               japanClothSize,
               italianClothSize,
@@ -168,8 +168,8 @@ void main() {
               ],
             ),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ConversionUnitValueModel.tuple(italianClothSize, 36, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
             ],
           );
         });

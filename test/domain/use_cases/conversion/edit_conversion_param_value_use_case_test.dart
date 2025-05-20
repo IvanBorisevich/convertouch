@@ -1343,7 +1343,8 @@ void main() {
 
     group('Change non-list parameter value (height)', () {
       group('New param value is not empty', () {
-        test('New param value is acceptable', () async {
+        test('New param value is acceptable (should recalculate conversion)',
+            () async {
           await testCase(
             unitGroup: clothingSizeGroup,
             useCase: useCase,
@@ -1371,10 +1372,10 @@ void main() {
             ),
             currentUnitValues: currentUnitValues,
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -1393,7 +1394,9 @@ void main() {
           );
         });
 
-        test('Both new param values are not empty', () async {
+        test(
+            'Both new param values are not empty '
+            '(the main value only should be applied)', () async {
           await testCase(
             unitGroup: clothingSizeGroup,
             useCase: useCase,
@@ -1421,10 +1424,10 @@ void main() {
             ),
             currentUnitValues: currentUnitValues,
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 56, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 56, null),
+              ConversionUnitValueModel.tuple(japanClothSize, '6L', null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -1445,9 +1448,7 @@ void main() {
       });
 
       group('New param value is empty', () {
-        test(
-          'New param default value is not empty (list value should be ignored)',
-          () async {
+        test('New param default value is not empty', () async {
             await testCase(
               unitGroup: clothingSizeGroup,
               useCase: useCase,
@@ -1464,8 +1465,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
@@ -1476,18 +1476,17 @@ void main() {
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+                ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, null, 160,
@@ -1573,8 +1572,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
@@ -1595,8 +1593,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
                           unit: centimeter),

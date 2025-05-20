@@ -57,8 +57,8 @@ class ClothingSizeCriterion extends Criterion {
         heightCmRange.contains(normalizedHeight, includeLeft: false);
 
     var waistParam = params.getParam(ParamNames.waist);
-    bool waistMatches = waistCmRange == null ||
-        waistCmRange!.contains(waistParam?.numVal, includeLeft: false);
+    bool waistMatches = waistCmRange == null || waistParam?.numVal == null ||
+        waistCmRange!.contains(waistParam!.numVal, includeLeft: false);
 
     return heightMatches && waistMatches;
   }

@@ -48,7 +48,7 @@ const Map<String, dynamic> paramSetValueJson = {
         'unitGroupId': 3,
         'calculable': false,
         'valueType': 5,
-        'listType': 15,
+        'listType': 17,
         'defaultUnit': {
           'id': 13,
           'name': 'Kilogram',

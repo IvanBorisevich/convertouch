@@ -39,8 +39,6 @@ void main() {
             paramSetId: heightParam.paramSetId,
             newUnit: meter,
           ),
-          currentSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
@@ -54,15 +52,17 @@ void main() {
               )
             ],
           ),
+          currentSrc:
+          ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+            ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           ],
           expectedSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
-            ConversionUnitValueModel.tuple(japanClothSize, 7, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+            ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -89,8 +89,6 @@ void main() {
             paramSetId: heightParam.paramSetId,
             newUnit: meter,
           ),
-          currentSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
@@ -104,15 +102,17 @@ void main() {
               )
             ],
           ),
+          currentSrc:
+          ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
+            ConversionUnitValueModel.tuple(japanClothSize, '3L', null),
           ],
           expectedSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 56, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 56, null),
+            ConversionUnitValueModel.tuple(japanClothSize, '6L', null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -140,7 +140,7 @@ void main() {
             newUnit: meter,
           ),
           currentSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
@@ -155,14 +155,14 @@ void main() {
             ],
           ),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+            ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           ],
           expectedSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-            ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+            ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+            ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -180,11 +180,8 @@ void main() {
         );
       });
 
-      test(
-        '''
-        New height param values are empty 
-        (preset value will be used for calculation)
-        ''',
+      test('New height param values are empty '
+        '(the value of the unit type should be used for calculation)',
         () async {
           await testCase(
             unitGroup: clothingSizeGroup,
@@ -194,8 +191,6 @@ void main() {
               paramSetId: heightParam.paramSetId,
               newUnit: meter,
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
@@ -210,15 +205,17 @@ void main() {
                 )
               ],
             ),
+            currentSrc:
+            ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ],
             expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [

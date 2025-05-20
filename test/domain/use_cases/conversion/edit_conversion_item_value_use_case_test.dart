@@ -1184,7 +1184,7 @@ void main() {
               unitGroup: clothingSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
-                newValue: '34',
+                newValue: '44',
                 newDefaultValue: '32',
                 unitId: europeanClothSize.id,
               ),
@@ -1207,10 +1207,10 @@ void main() {
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
-                ConversionUnitValueModel.tuple(japanClothSize, 7, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+                ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1237,7 +1237,7 @@ void main() {
               unitGroup: clothingSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
-                newValue: '34',
+                newValue: '44',
                 newDefaultValue: null,
                 unitId: europeanClothSize.id,
               ),
@@ -1260,10 +1260,10 @@ void main() {
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 34, null),
-                ConversionUnitValueModel.tuple(japanClothSize, 7, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+                ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
