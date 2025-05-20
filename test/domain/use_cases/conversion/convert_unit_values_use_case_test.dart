@@ -111,7 +111,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(heightParam, 150, 1,
                     unit: centimeter),
@@ -135,7 +135,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(heightParam, 150, 1,
                     unit: centimeter),
@@ -161,7 +161,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(heightParam, null, 1,
                     unit: centimeter),
@@ -185,7 +185,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(heightParam, null, 1,
                     unit: centimeter),
@@ -211,7 +211,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, "Male", null),
+                ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, null, null),
                 ConversionParamValueModel.tuple(heightParam, 150, 1,
                     unit: centimeter),
@@ -235,7 +235,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(personParam, null, null),
                 ConversionParamValueModel.tuple(garmentParam, null, null),
                 ConversionParamValueModel.tuple(heightParam, 150, 1,
                     unit: centimeter),
@@ -261,7 +261,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(personParam, null, null),
                 ConversionParamValueModel.tuple(garmentParam, null, null),
                 ConversionParamValueModel.tuple(heightParam, null, null,
                     unit: centimeter),
@@ -285,7 +285,7 @@ void main() {
             params: ConversionParamSetValueModel(
               paramSet: clothingSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(genderParam, null, null),
+                ConversionParamValueModel.tuple(personParam, null, null),
                 ConversionParamValueModel.tuple(garmentParam, null, null),
                 ConversionParamValueModel.tuple(heightParam, null, null,
                     unit: centimeter),

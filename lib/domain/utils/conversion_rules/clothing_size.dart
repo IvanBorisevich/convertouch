@@ -4,15 +4,15 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/mapping_table.dart';
 
-enum Gender {
-  male("Male"),
-  female("Female");
+enum Person {
+  man("Man"),
+  woman("Woman");
 
   final String name;
 
-  const Gender(this.name);
+  const Person(this.name);
 
-  static Gender? valueOf(String? name) {
+  static Person? valueOf(String? name) {
     return values.firstWhereOrNull((element) => name == element.name);
   }
 }
@@ -31,10 +31,10 @@ enum Garment {
 }
 
 Map<String, String>? getClothingSizesMap(ConversionParamSetValueModel params) {
-  Gender? gender = Gender.valueOf(params.getValue(ParamNames.gender)?.raw);
+  Person? person = Person.valueOf(params.getValue(ParamNames.person)?.raw);
   Garment? garment = Garment.valueOf(params.getValue(ParamNames.garment)?.raw);
 
-  return _clothingSizes[gender]?[garment]?.getRowByParams(
+  return _clothingSizes[person]?[garment]?.getRowByParams(
     params,
     filter: (params, criterion) {
       var heightParam = params.getParam(ParamNames.height);
@@ -53,9 +53,9 @@ Map<String, String>? getClothingSizesMap(ConversionParamSetValueModel params) {
   );
 }
 
-const Map<Gender, Map<Garment, MappingTable<NumRangeCriterion, CountryCode>>>
+const Map<Person, Map<Garment, MappingTable<NumRangeCriterion, CountryCode>>>
     _clothingSizes = {
-  Gender.male: {
+  Person.man: {
     Garment.shirt: MappingTable(
       unitCodeByKey: CountryCode.nameOf,
       keyByUnitCode: CountryCode.valueOf,

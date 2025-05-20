@@ -12,7 +12,7 @@ final _clothingSizeParams = ConversionParamSetValueBulkModel(
     ConversionParamSetValueModel(
       paramSet: clothingSizeParamSet,
       paramValues: [
-        ConversionParamValueModel.tuple(genderParam, "Male", null),
+        ConversionParamValueModel.tuple(personParam, "Man", null),
         ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
         ConversionParamValueModel.tuple(heightParam, 160, 1, unit: centimeter),
       ],
@@ -45,18 +45,18 @@ void main() {
     expect(
       await _clothingSizeParams.copyWithChangedParam(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.str("Female"),
+          value: ValueModel.str("Woman"),
         ),
         paramSetFilter: (paramSetValue) =>
             paramSetValue.paramSet.id == clothingSizeParamSet.id,
-        paramFilter: (paramValue) => paramValue.param.id == genderParam.id,
+        paramFilter: (paramValue) => paramValue.param.id == personParam.id,
       ),
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
             paramSet: clothingSizeParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(genderParam, "Female", null),
+              ConversionParamValueModel.tuple(personParam, "Woman", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
               ConversionParamValueModel.tuple(heightParam, 160, 1,
                   unit: centimeter),
@@ -71,16 +71,16 @@ void main() {
     expect(
       await _clothingSizeParams.copyWithChangedParam(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.str("Female"),
+          value: ValueModel.str("Woman"),
         ),
-        paramFilter: (paramValue) => paramValue.param.id == genderParam.id,
+        paramFilter: (paramValue) => paramValue.param.id == personParam.id,
       ),
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
             paramSet: clothingSizeParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(genderParam, "Female", null),
+              ConversionParamValueModel.tuple(personParam, "Woman", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
               ConversionParamValueModel.tuple(heightParam, 160, 1,
                   unit: centimeter),
@@ -106,7 +106,7 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: clothingSizeParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(genderParam, "Male", null),
+              ConversionParamValueModel.tuple(personParam, "Man", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
               ConversionParamValueModel.tuple(heightParam, 150, 2,
                   unit: centimeter),
@@ -145,7 +145,7 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: clothingSizeParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(genderParam, "Male", null),
+              ConversionParamValueModel.tuple(personParam, "Man", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
               ConversionParamValueModel.tuple(heightParam, 160, 1, unit: meter),
             ],

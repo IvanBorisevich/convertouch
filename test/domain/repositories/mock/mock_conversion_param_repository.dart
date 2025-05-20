@@ -7,7 +7,7 @@ import '../../model/mock/mock_param.dart';
 
 final _paramsOfSet = {
   clothingSizeParamSet.id: [
-    genderParam,
+    personParam,
     garmentParam,
     heightParam,
   ],

@@ -1,14 +1,14 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
+
+import 'mock/mock_param.dart';
 
 void main() {
   const ConversionModel conversion = ConversionModel(
@@ -33,21 +33,10 @@ void main() {
     params: ConversionParamSetValueBulkModel(
       paramSetValues: [
         ConversionParamSetValueModel(
-          paramSet: ConversionParamSetModel(
-            id: 1,
-            name: "Bank Currency Rate",
-            mandatory: true,
-            groupId: 1,
-          ),
+          paramSet: bankCurrencyRateParamSet,
           paramValues: [
             ConversionParamValueModel(
-              param: ConversionParamModel(
-                id: 1,
-                name: 'Bank',
-                valueType: ConvertouchValueType.text,
-                paramSetId: 1,
-              ),
-
+              param: bankParam,
             ),
           ],
         ),
@@ -93,18 +82,18 @@ void main() {
       'paramSetValues': [
         {
           'paramSet': {
-            'id': 1,
+            'id': 5,
             'name': 'Bank Currency Rate',
             'mandatory': true,
-            'groupId': 1,
+            'groupId': -1,
           },
           'paramValues': [
             {
               'param': {
-                'id': 1,
+                'id': 8,
                 'name': 'Bank',
                 'valueType': 1,
-                'paramSetId': 1,
+                'paramSetId': 5,
                 'calculable': false,
               },
               'calculated': false,

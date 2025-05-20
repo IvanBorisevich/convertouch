@@ -30,7 +30,7 @@ abstract interface class ListValueRepository {
 
 const Map<ConvertouchListType, List<String> Function({double? c})>
     listableSets = {
-  ConvertouchListType.gender: _genders,
+  ConvertouchListType.person: _persons,
   ConvertouchListType.garment: _garments,
   ConvertouchListType.clothingSizeInter: _clothingSizesInter,
   ConvertouchListType.clothingSizeUs: _clothingSizesUs,
@@ -45,7 +45,7 @@ const Map<ConvertouchListType, List<String> Function({double? c})>
   ConvertouchListType.barbellBarWeight: _barbellBarWeightsKg,
 };
 
-List<String> _genders({double? c}) => Gender.values.map((e) => e.name).toList();
+List<String> _persons({double? c}) => Person.values.map((e) => e.name).toList();
 
 List<String> _garments({double? c}) =>
     Garment.values.map((e) => e.name).toList();

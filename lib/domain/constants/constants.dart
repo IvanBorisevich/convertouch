@@ -32,7 +32,7 @@ abstract class ParamSetNames {
 abstract class ParamNames {
   const ParamNames._();
 
-  static const gender = "Gender";
+  static const person = "Person";
   static const garment = "Garment";
   static const height = "Height";
   static const diameter = "Diameter";
@@ -232,7 +232,7 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  gender(1, preselected: false),
+  person(1, preselected: false),
   garment(2, preselected: false),
   clothingSizeInter(3),
   clothingSizeUs(4),

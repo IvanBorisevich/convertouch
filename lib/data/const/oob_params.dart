@@ -7,10 +7,10 @@ const conversionParamsV1 = [
     "mandatory": true,
     "params": [
       {
-        "name": ParamNames.gender,
+        "name": ParamNames.person,
         "calculable": false,
         "valueType": ConvertouchValueType.text,
-        "listType": ConvertouchListType.gender,
+        "listType": ConvertouchListType.person,
       },
       {
         "name": ParamNames.garment,

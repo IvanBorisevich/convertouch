@@ -32,12 +32,19 @@ const barbellWeightParamSet = ConversionParamSetModel(
   groupId: -1,
 );
 
-const genderParam = ConversionParamModel(
+const bankCurrencyRateParamSet = ConversionParamSetModel(
+  id: 5,
+  name: "Bank Currency Rate",
+  mandatory: true,
+  groupId: -1,
+);
+
+const personParam = ConversionParamModel(
   id: 1,
-  name: ParamNames.gender,
+  name: ParamNames.person,
   paramSetId: 1,
   valueType: ConvertouchValueType.text,
-  listType: ConvertouchListType.gender,
+  listType: ConvertouchListType.person,
 );
 
 const garmentParam = ConversionParamModel(
@@ -104,4 +111,11 @@ const someCalculableParam = ConversionParamModel(
   calculable: true,
   valueType: ConvertouchValueType.decimal,
   paramSetId: 4,
+);
+
+const bankParam = ConversionParamModel(
+  id: 8,
+  name: 'Bank',
+  valueType: ConvertouchValueType.text,
+  paramSetId: 5,
 );

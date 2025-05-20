@@ -109,7 +109,7 @@ void main() {
       ConversionParamSetValueModel params = ConversionParamSetValueModel(
         paramSet: clothingSizeParamSet,
         paramValues: [
-          ConversionParamValueModel.tuple(genderParam, "Male", null),
+          ConversionParamValueModel.tuple(personParam, "Man", null),
           ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
           ConversionParamValueModel.tuple(heightParam, 150, 1,
               unit: centimeter),
