@@ -112,7 +112,7 @@ class ObjectUtils {
     if (multiplier != null) {
       func = (index) => "${(min + index * step / multiplier).round()}";
     } else {
-      func = (index) => "${min + index * step}";
+      func = (index) => "${(min + index * step).round()}";
     }
     return List.generate(length, func);
   }

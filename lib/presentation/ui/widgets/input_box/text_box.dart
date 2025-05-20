@@ -220,6 +220,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
               overflow: TextOverflow.fade,
               style: TextStyle(
                 fontSize: 15,
+                fontWeight: FontWeight.w500,
                 foreground: Paint()..color = borderColor,
               ),
             ),

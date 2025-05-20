@@ -11,7 +11,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final T item;
   final int? index;
   final void Function()? onTap;
-  final void Function(String)? onValueChanged;
+  final void Function(String?)? onValueChanged;
   final void Function()? onRemove;
   final bool disabled;
   final bool controlsVisible;
@@ -136,7 +136,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                             size: 17,
                           ),
                           onPressed: () {
-                            widget.onValueChanged?.call("");
+                            widget.onValueChanged?.call(null);
                           },
                         )
                       : const SizedBox.shrink(),

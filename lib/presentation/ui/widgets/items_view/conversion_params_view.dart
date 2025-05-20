@@ -28,7 +28,7 @@ class ConversionParamsView extends StatelessWidget {
   final void Function()? onSelectedParamSetRemove;
   final void Function()? onParamSetsBulkRemove;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
-  final void Function(ConversionParamValueModel, String)? onValueChanged;
+  final void Function(ConversionParamValueModel, String?)? onValueChanged;
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({

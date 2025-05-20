@@ -205,7 +205,7 @@ class _ConvertouchUnitDetailsPageState
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateUnitValueInUnitDetails(
-                                      newValue: value,
+                                      newValue: value ?? "",
                                     ),
                                   );
                                 },
@@ -229,7 +229,7 @@ class _ConvertouchUnitDetailsPageState
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateArgumentUnitValueInUnitDetails(
-                                      newValue: value,
+                                      newValue: value ?? "",
                                     ),
                                   );
                                 },

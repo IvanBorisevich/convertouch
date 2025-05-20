@@ -65,14 +65,14 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
   paramItem: ConversionItemColorScheme(
     textBox: InputBoxColorScheme(
       border: ColorVariation(
-        regular: Color(0xFF2F3F75),
-        focused: Color(0xFF1C2646),
+        regular: Color(0xFF5680A2),
+        focused: Color(0xFF3A6588),
       ),
       foreground: ColorVariation(
-        regular: Color(0xBE143656),
+        regular: Color(0xFF456885),
       ),
       hint: ColorVariation(
-        regular: Color(0xBE3E5870),
+        regular: Color(0xFF7DA4C4),
       ),
       dropdown: ConvertouchColorScheme(
         background: ColorVariation.only(Color(0xffbdcefa)),

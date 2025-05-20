@@ -54,6 +54,8 @@ class ConvertouchListBox extends StatefulWidget {
 }
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox> {
+  static const String hintText = 'Not selected';
+
   final TextEditingController dropdownSearchController =
       TextEditingController();
 
@@ -76,6 +78,14 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
     _focusNode.addListener(_focusListener);
 
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ConvertouchListBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _selectedValue = widget.value;
+    }
   }
 
   @override
@@ -155,7 +165,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
         hint: Text(
-          '- Not selected -',
+          hintText,
           style: TextStyle(
             fontSize: 16,
             color: hintColor,
@@ -195,27 +205,25 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
-        selectedItemBuilder: _selectedValue != null
-            ? (context) {
-                return listableSets[widget.listType]!.call().map(
-                  (value) {
-                    return Container(
-                      padding: EdgeInsets.zero,
-                      child: Text(
-                        _selectedValue!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.w600,
-                          foreground: Paint()..color = foregroundColor,
-                        ),
-                        maxLines: 1,
-                      ),
-                    );
-                  },
-                ).toList();
-              }
-            : null,
+        selectedItemBuilder: (context) {
+          return listableSets[widget.listType]!.call().map(
+            (value) {
+              return Container(
+                padding: EdgeInsets.zero,
+                child: Text(
+                  _selectedValue ?? hintText,
+                  style: TextStyle(
+                    fontSize: 16,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.w600,
+                    foreground: Paint()..color = foregroundColor,
+                  ),
+                  maxLines: 1,
+                ),
+              );
+            },
+          ).toList();
+        },
         iconStyleData: IconStyleData(
           icon: Icon(
             Icons.expand_more_rounded,
