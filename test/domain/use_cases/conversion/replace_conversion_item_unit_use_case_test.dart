@@ -3,8 +3,8 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:test/test.dart';
 
@@ -19,12 +19,13 @@ void main() {
 
   setUp(() {
     useCase = const ReplaceConversionItemUnitUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-        dynamicValueRepository: MockDynamicValueRepository(),
+      replaceUnitInConversionItemUseCase: ReplaceUnitInConversionItemUseCase(
         listValueRepository: ListValueRepositoryImpl(),
+        calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+          dynamicValueRepository: MockDynamicValueRepository(),
+          listValueRepository: ListValueRepositoryImpl(),
+        ),
       ),
-      listValueRepository: ListValueRepositoryImpl(),
     );
   });
 
@@ -121,7 +122,7 @@ void main() {
               ],
             ),
             currentSrc:
-            ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
               ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
@@ -230,8 +231,7 @@ void main() {
               ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(usaClothSize, 2, null),
+            expectedSrc: ConversionUnitValueModel.tuple(usaClothSize, 2, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(usaClothSize, 2, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -281,8 +281,7 @@ void main() {
               ConversionUnitValueModel.tuple(europeanClothSize, null, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),
             ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(usaClothSize, 2, null),
+            expectedSrc: ConversionUnitValueModel.tuple(usaClothSize, 2, null),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(usaClothSize, 2, null),
               ConversionUnitValueModel.tuple(japanClothSize, null, null),

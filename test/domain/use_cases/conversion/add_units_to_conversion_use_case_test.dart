@@ -4,8 +4,8 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -20,10 +20,11 @@ void main() {
 
   setUp(() {
     useCase = const AddUnitsToConversionUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-        dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+      calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
+        calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+          dynamicValueRepository: MockDynamicValueRepository(),
+          listValueRepository: ListValueRepositoryImpl(),
+        ),
       ),
       unitRepository: MockUnitRepository(),
     );
@@ -705,8 +706,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
                           unit: centimeter),
@@ -726,8 +726,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: clothingSizeParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(
-                          personParam, "Man", null),
+                      ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
                           unit: centimeter),

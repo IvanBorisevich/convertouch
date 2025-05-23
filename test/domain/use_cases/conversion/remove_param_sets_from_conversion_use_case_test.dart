@@ -5,8 +5,8 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:test/test.dart';
 
@@ -21,10 +21,11 @@ void main() {
 
   setUp(() {
     useCase = const RemoveParamSetsFromConversionUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-        dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+      calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
+        calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+          dynamicValueRepository: MockDynamicValueRepository(),
+          listValueRepository: ListValueRepositoryImpl(),
+        ),
       ),
     );
   });
@@ -446,8 +447,7 @@ void main() {
         });
 
         group("Remove the last param set - another set is not applicable", () {
-          test('Conversion has unit values (should not be changed)',
-              () async {
+          test('Conversion has unit values (should not be changed)', () async {
             await testCase(
               unitGroup: ringSizeGroup,
               useCase: useCase,
@@ -582,7 +582,8 @@ void main() {
             ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ConversionUnitValueModel.tuple(italianClothSize, 42, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+          expectedSrc:
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ConversionUnitValueModel.tuple(italianClothSize, 42, null),
@@ -666,7 +667,8 @@ void main() {
             ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ConversionUnitValueModel.tuple(italianClothSize, 42, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+          expectedSrc:
+              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
             ConversionUnitValueModel.tuple(italianClothSize, 42, null),

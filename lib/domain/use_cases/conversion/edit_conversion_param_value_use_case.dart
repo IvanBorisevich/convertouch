@@ -1,16 +1,23 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_source_item_by_params_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class EditConversionParamValueUseCase
     extends AbstractModifyConversionUseCase<EditConversionParamValueDelta> {
+  final CalculateSourceItemByParamsUseCase calculateSourceItemByParamsUseCase;
+  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
+
   const EditConversionParamValueUseCase({
-    required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
+    required this.calculateSourceItemByParamsUseCase,
+    required this.calculateDefaultValueUseCase,
   });
 
   @override
@@ -46,6 +53,25 @@ class EditConversionParamValueUseCase
           defaultValue: defaultValue,
         );
       },
+    );
+  }
+
+  @override
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel oldSourceUnitValue,
+    required ConversionParamSetValueModel? activeParams,
+    required UnitGroupModel unitGroup,
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required EditConversionParamValueDelta delta,
+  }) async {
+    return ObjectUtils.tryGet(
+      await calculateSourceItemByParamsUseCase.execute(
+        InputSourceItemByParamsModel(
+          oldSourceUnitValue: oldSourceUnitValue,
+          unitGroupName: unitGroup.name,
+          params: activeParams,
+        ),
+      ),
     );
   }
 }

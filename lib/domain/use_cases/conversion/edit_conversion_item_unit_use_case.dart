@@ -4,10 +4,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 
 class EditConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemUnitDelta> {
-  const EditConversionItemUnitUseCase({
-    required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
-  });
+  const EditConversionItemUnitUseCase();
 
   @override
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({

@@ -6,10 +6,7 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 
 class ToggleCalculableParamUseCase
     extends AbstractModifyConversionUseCase<ToggleCalculableParamDelta> {
-  const ToggleCalculableParamUseCase({
-    required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
-  });
+  const ToggleCalculableParamUseCase();
 
   @override
   Future<ConversionParamSetValueBulkModel?> newConversionParams({

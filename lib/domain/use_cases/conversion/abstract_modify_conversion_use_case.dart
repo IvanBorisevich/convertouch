@@ -6,31 +6,21 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
+import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     extends UseCase<InputConversionModifyModel<D>, ConversionModel> {
-  final ConvertUnitValuesUseCase convertUnitValuesUseCase;
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
-
-  const AbstractModifyConversionUseCase({
-    required this.convertUnitValuesUseCase,
-    required this.calculateDefaultValueUseCase,
-  });
+  const AbstractModifyConversionUseCase();
 
   @override
   Future<Either<ConvertouchException, ConversionModel>> execute(
-    InputConversionModifyModel<D> input,
-  ) async {
+      InputConversionModifyModel<D> input,) async {
     try {
       final modifiedGroup = newGroup(
         oldGroup: input.conversion.unitGroup,
@@ -99,16 +89,14 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       );
 
       if (input.recalculateUnitValues) {
-        var convertedUnitValues = ObjectUtils.tryGet(
-          await convertUnitValuesUseCase.execute(
-            InputConversionModel(
-              unitGroup: modifiedGroup,
-              params: newParams?.activeParams,
-              sourceUnitValue: newSrcUnitValue,
-              targetUnits: modifiedConvertedItemsMap.values
-                  .map((conversionItem) => conversionItem.unit)
-                  .toList(),
-            ),
+        var convertedUnitValues = _calculateUnitValues(
+          InputConversionModel(
+            unitGroup: modifiedGroup,
+            params: newParams?.activeParams,
+            sourceUnitValue: newSrcUnitValue,
+            targetUnits: modifiedConvertedItemsMap.values
+                .map((conversionItem) => conversionItem.unit)
+                .toList(),
           ),
         );
 
@@ -149,31 +137,6 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
     required D delta,
   }) async {
-    if (delta is EditConversionParamValueDelta ||
-        delta is SelectParamSetDelta ||
-        delta is RemoveParamSetsDelta ||
-        delta is ReplaceConversionParamUnitDelta ||
-        delta is AddUnitsToConversionDelta) {
-      UnitModel srcUnit = oldSourceUnitValue.unit;
-
-      if (activeParams == null ||
-          !activeParams.paramSet.mandatory && !activeParams.hasAllValues) {
-        return oldSourceUnitValue.hasValue
-            ? oldSourceUnitValue
-            : await _calculateDefaults(srcUnit);
-      }
-
-      if (activeParams.hasAllValues || activeParams.paramSet.mandatory) {
-        return rules.calculateSrcValueByParams(
-          params: activeParams,
-          unitGroupName: unitGroup.name,
-          srcUnit: srcUnit,
-        );
-      }
-
-      return oldSourceUnitValue;
-    }
-
     return oldSourceUnitValue;
   }
 
@@ -202,14 +165,73 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     return oldConvertedUnitValues;
   }
 
-  Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
-    ValueModel? defaultValue = ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(srcUnit),
-    );
-    return ConversionUnitValueModel(
-      unit: srcUnit,
-      value: srcUnit.listType != null ? defaultValue : null,
-      defaultValue: srcUnit.listType != null ? null : defaultValue,
-    );
+  List<ConversionUnitValueModel> _calculateUnitValues(
+      InputConversionModel input) {
+    List<ConversionUnitValueModel> convertedUnitValues = [];
+
+    Map<String, String>? mappingTable;
+    if (input.params != null && input.params!.hasAllValues) {
+      mappingTable = rules.getMappingTableByParams(
+        unitGroupName: input.unitGroup.name,
+        params: input.params,
+      );
+    } else {
+      mappingTable = rules.getMappingTableByValue(
+        unitGroupName: input.unitGroup.name,
+        value: input.sourceUnitValue,
+      );
+    }
+
+    ConversionRule? xToBase = rules
+        .getRule(
+      unitGroup: input.unitGroup,
+      unit: input.sourceUnitValue.unit,
+      mappingTable: mappingTable,
+    )
+        ?.xToBase;
+
+    for (var tgtUnit in input.targetUnits) {
+      if (tgtUnit.name == input.sourceUnitValue.unit.name) {
+        convertedUnitValues.add(input.sourceUnitValue);
+        continue;
+      }
+
+      ConversionRule? baseToY = mappingTable != null
+          ? UnitRule
+          .mappingTable(
+        mapping: mappingTable,
+        unitCode: tgtUnit.code,
+      )
+          .baseToY
+          : rules
+          .getRule(
+        unitGroup: input.unitGroup,
+        unit: tgtUnit,
+      )
+          ?.baseToY;
+
+      ValueModel? resultValue = Converter(input.sourceUnitValue.value)
+          .apply(xToBase)
+          .apply(baseToY)
+          .value
+          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
+
+      ValueModel? resultDefValue = tgtUnit.listType == null
+          ? Converter(input.sourceUnitValue.defaultValue)
+          .apply(xToBase)
+          .apply(baseToY)
+          .value
+          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue)
+          : null;
+
+      convertedUnitValues.add(
+        ConversionUnitValueModel(
+          unit: tgtUnit,
+          value: resultValue,
+          defaultValue: resultDefValue,
+        ),
+      );
+    }
+    return convertedUnitValues;
   }
 }

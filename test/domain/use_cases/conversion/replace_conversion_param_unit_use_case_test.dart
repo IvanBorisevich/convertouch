@@ -3,8 +3,9 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:test/test.dart';
 
@@ -18,13 +19,19 @@ void main() {
   late ReplaceConversionParamUnitUseCase useCase;
 
   setUp(() {
-    useCase = const ReplaceConversionParamUnitUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-        dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
-      ),
+    const calculateDefaultValueUseCase = CalculateDefaultValueUseCase(
+      dynamicValueRepository: MockDynamicValueRepository(),
       listValueRepository: ListValueRepositoryImpl(),
+    );
+
+    useCase = const ReplaceConversionParamUnitUseCase(
+      calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+      ),
+      replaceUnitInParamUseCase: ReplaceUnitInParamUseCase(
+        listValueRepository: ListValueRepositoryImpl(),
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+      ),
     );
   });
 
@@ -53,7 +60,7 @@ void main() {
             ],
           ),
           currentSrc:
-          ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
@@ -103,7 +110,7 @@ void main() {
             ],
           ),
           currentSrc:
-          ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
+              ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
             ConversionUnitValueModel.tuple(japanClothSize, '3L', null),
@@ -180,7 +187,8 @@ void main() {
         );
       });
 
-      test('New height param values are empty '
+      test(
+        'New height param values are empty '
         '(the value of the unit type should be used for calculation)',
         () async {
           await testCase(
@@ -206,7 +214,7 @@ void main() {
               ],
             ),
             currentSrc:
-            ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
               ConversionUnitValueModel.tuple(japanClothSize, 'S', null),

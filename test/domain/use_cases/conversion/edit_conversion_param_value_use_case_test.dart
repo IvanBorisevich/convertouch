@@ -3,9 +3,9 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -18,12 +18,16 @@ void main() {
   late EditConversionParamValueUseCase useCase;
 
   setUp(() {
+    const calculateDefaultValueUseCase = CalculateDefaultValueUseCase(
+      dynamicValueRepository: MockDynamicValueRepository(),
+      listValueRepository: ListValueRepositoryImpl(),
+    );
+
     useCase = const EditConversionParamValueUseCase(
-      convertUnitValuesUseCase: ConvertUnitValuesUseCase(),
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-        dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+      calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
       ),
+      calculateDefaultValueUseCase: calculateDefaultValueUseCase,
     );
   });
 
@@ -1448,7 +1452,9 @@ void main() {
       });
 
       group('New param value is empty', () {
-        test('New param default value is not empty', () async {
+        test(
+          'New param default value is not empty',
+          () async {
             await testCase(
               unitGroup: clothingSizeGroup,
               useCase: useCase,

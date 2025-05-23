@@ -10,6 +10,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 
@@ -17,12 +18,12 @@ class AddParamSetsToConversionUseCase
     extends AbstractModifyConversionUseCase<AddParamSetsDelta> {
   final ConversionParamSetRepository conversionParamSetRepository;
   final ConversionParamRepository conversionParamRepository;
+  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
   const AddParamSetsToConversionUseCase({
-    required super.convertUnitValuesUseCase,
     required this.conversionParamSetRepository,
     required this.conversionParamRepository,
-    required super.calculateDefaultValueUseCase,
+    required this.calculateDefaultValueUseCase,
   });
 
   @override

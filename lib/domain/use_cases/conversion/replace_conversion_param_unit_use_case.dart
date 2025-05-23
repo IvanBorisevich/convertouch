@@ -1,20 +1,23 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/repositories/list_value_repository.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_source_item_by_params_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ReplaceConversionParamUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionParamUnitDelta> {
-  final ListValueRepository listValueRepository;
+  final ReplaceUnitInParamUseCase replaceUnitInParamUseCase;
+  final CalculateSourceItemByParamsUseCase calculateSourceItemByParamsUseCase;
 
   const ReplaceConversionParamUnitUseCase({
-    required super.convertUnitValuesUseCase,
-    required super.calculateDefaultValueUseCase,
-    required this.listValueRepository,
+    required this.replaceUnitInParamUseCase,
+    required this.calculateSourceItemByParamsUseCase,
   });
 
   @override
@@ -33,50 +36,34 @@ class ReplaceConversionParamUnitUseCase
       paramSetId: delta.paramSetId,
       paramId: delta.paramId,
       map: (paramValue, paramSetValue) async {
-        ValueModel? newValue;
-        ValueModel? newDefaultValue;
-
-        if (delta.newUnit.listType != null) {
-          bool belongsToList = ObjectUtils.tryGet(
-            await listValueRepository.belongsToList(
-              value: paramValue.value?.raw,
-              listType: delta.newUnit.listType!,
-              coefficient: delta.newUnit.coefficient,
+        return ObjectUtils.tryGet(
+          await replaceUnitInParamUseCase.execute(
+            InputItemUnitReplaceModel(
+              item: paramValue,
+              newUnit: delta.newUnit,
             ),
-          );
-
-          if (belongsToList) {
-            newValue = paramValue.value;
-          }
-        } else {
-          newValue = paramValue.value;
-        }
-
-        if (paramValue.defaultValue != null && delta.newUnit.listType == null) {
-          newDefaultValue = paramValue.defaultValue;
-        }
-
-        if (newValue == null && newDefaultValue == null) {
-          ValueModel? defaultValue = ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(delta.newUnit),
-          );
-          return ConversionParamValueModel(
-            param: paramValue.param,
-            unit: delta.newUnit,
-            value: delta.newUnit.listType != null ? defaultValue : null,
-            defaultValue: delta.newUnit.listType != null ? null : defaultValue,
-            calculated: paramValue.calculated,
-          );
-        } else {
-          return ConversionParamValueModel(
-            param: paramValue.param,
-            unit: delta.newUnit,
-            value: newValue,
-            defaultValue: newDefaultValue,
-            calculated: paramValue.calculated,
-          );
-        }
+          ),
+        );
       },
+    );
+  }
+
+  @override
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel oldSourceUnitValue,
+    required ConversionParamSetValueModel? activeParams,
+    required UnitGroupModel unitGroup,
+    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required ReplaceConversionParamUnitDelta delta,
+  }) async {
+    return ObjectUtils.tryGet(
+      await calculateSourceItemByParamsUseCase.execute(
+        InputSourceItemByParamsModel(
+          oldSourceUnitValue: oldSourceUnitValue,
+          unitGroupName: unitGroup.name,
+          params: activeParams,
+        ),
+      ),
     );
   }
 }

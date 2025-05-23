@@ -31,13 +31,14 @@ import 'package:convertouch/domain/use_cases/common/get_list_values_use_case.dar
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_unit_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/inner/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -204,6 +205,33 @@ Future<void> _initTranslators() async {
 }
 
 Future<void> _initUseCases() async {
+  locator.registerLazySingleton<CalculateDefaultValueUseCase>(
+    () => CalculateDefaultValueUseCase(
+      dynamicValueRepository: locator(),
+      listValueRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<CalculateSourceItemByParamsUseCase>(
+    () => CalculateSourceItemByParamsUseCase(
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ReplaceUnitInConversionItemUseCase>(
+    () => ReplaceUnitInConversionItemUseCase(
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ReplaceUnitInParamUseCase>(
+    () => ReplaceUnitInParamUseCase(
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
     () => FetchUnitGroupsUseCase(locator()),
   );
@@ -240,17 +268,6 @@ Future<void> _initUseCases() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
-  locator.registerLazySingleton<CalculateDefaultValueUseCase>(
-    () => CalculateDefaultValueUseCase(
-      dynamicValueRepository: locator(),
-      listValueRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ConvertUnitValuesUseCase>(
-    () => const ConvertUnitValuesUseCase(),
-  );
-
   locator.registerLazySingleton<GetConversionUseCase>(
     () => GetConversionUseCase(
       conversionRepository: locator(),
@@ -265,58 +282,41 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<AddUnitsToConversionUseCase>(
     () => AddUnitsToConversionUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
       unitRepository: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionGroupUseCase>(
-    () => EditConversionGroupUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-    ),
+    () => const EditConversionGroupUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
-    () => EditConversionItemUnitUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-    ),
+    () => const EditConversionItemUnitUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionItemValueUseCase>(
     () => EditConversionItemValueUseCase(
-      convertUnitValuesUseCase: locator(),
       calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
-    () => RemoveConversionItemsUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-    ),
+    () => const RemoveConversionItemsUseCase(),
   );
 
   locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
     () => ReplaceConversionItemUnitUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-      listValueRepository: locator(),
+      replaceUnitInConversionItemUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
-    () => UpdateConversionCoefficientsUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-    ),
+    () => const UpdateConversionCoefficientsUseCase(),
   );
 
   locator.registerLazySingleton<AddParamSetsToConversionUseCase>(
     () => AddParamSetsToConversionUseCase(
-      convertUnitValuesUseCase: locator(),
       conversionParamSetRepository: locator(),
       conversionParamRepository: locator(),
       calculateDefaultValueUseCase: locator(),
@@ -325,30 +325,27 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
     () => RemoveParamSetsFromConversionUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
     () => SelectParamSetInConversionUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionParamValueUseCase>(
     () => EditConversionParamValueUseCase(
-      convertUnitValuesUseCase: locator(),
       calculateDefaultValueUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<ReplaceConversionParamUnitUseCase>(
     () => ReplaceConversionParamUnitUseCase(
-      convertUnitValuesUseCase: locator(),
-      calculateDefaultValueUseCase: locator(),
-      listValueRepository: locator(),
+      replaceUnitInParamUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
     ),
   );
 
