@@ -20,7 +20,7 @@ const conversionParamsV1 = [
       },
       {
         "name": ParamNames.height,
-        "calculable": false,
+        "calculable": true,
         "valueType": ConvertouchValueType.decimalPositive,
         "unitGroupName": GroupNames.length,
         "defaultUnitCode": "cm",
@@ -32,5 +32,73 @@ const conversionParamsV1 = [
         ],
       }
     ],
+  },
+  {
+    "name": ParamSetNames.byCircumference,
+    "unitGroupName": GroupNames.ringSize,
+    "mandatory": false,
+    "params": [
+      {
+        "name": ParamNames.circumference,
+        "calculable": true,
+        "valueType": ConvertouchValueType.decimalPositive,
+        "unitGroupName": GroupNames.length,
+        "defaultUnitCode": "mm",
+        "possibleUnitCodes": [
+          "mm",
+          "cm",
+          "in",
+        ],
+      }
+    ]
+  },
+  {
+    "name": ParamSetNames.byDiameter,
+    "unitGroupName": GroupNames.ringSize,
+    "mandatory": false,
+    "params": [
+      {
+        "name": ParamNames.diameter,
+        "calculable": true,
+        "valueType": ConvertouchValueType.decimalPositive,
+        "unitGroupName": GroupNames.length,
+        "defaultUnitCode": "mm",
+        "possibleUnitCodes": [
+          "mm",
+          "cm",
+          "in",
+        ],
+      }
+    ]
+  },
+  {
+    "name": ParamSetNames.barbellWeight,
+    "unitGroupName": GroupNames.mass,
+    "mandatory": false,
+    "params": [
+      {
+        "name": ParamNames.barWeight,
+        "calculable": false,
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.barbellBarWeight,
+        "unitGroupName": GroupNames.mass,
+        "defaultUnitCode": "kg",
+        "possibleUnitCodes": [
+          "kg",
+          "lb.",
+        ],
+      },
+      {
+        "name": ParamNames.oneSideWeight,
+        "calculable": true,
+        "valueType": ConvertouchValueType.decimalPositive,
+        "unitGroupName": GroupNames.mass,
+        "defaultUnitCode": "kg",
+        "possibleUnitCodes": [
+          "kg",
+          "lb.",
+        ],
+      }
+    ]
   },
 ];

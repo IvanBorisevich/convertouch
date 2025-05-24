@@ -6,7 +6,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -136,7 +136,7 @@ void main() {
       group('New mandatory param set', () {
         group('With mapping table (clothing size)', () {
           test(
-              'Height param should be set by default,'
+              'Height param should be set by default, '
               'other params should not be auto-calculated', () async {
             await testCase(
               unitGroup: clothingSizeGroup,
@@ -160,7 +160,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   ),
                 ],
@@ -271,7 +271,7 @@ void main() {
       group('New mandatory param set', () {
         group('With mapping table (clothing size)', () {
           test(
-              'Height param should be set by default,'
+              'Height param should be set by default, '
               'other params should not be auto-calculated', () async {
             await testCase(
               unitGroup: clothingSizeGroup,
@@ -287,7 +287,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   ),
                 ],

@@ -169,8 +169,6 @@ class UnitModel extends IdNameSearchableItemModel {
         'minValue: $minValue, '
         'maxValue: $maxValue, '
         'listType: $listType, '
-        'invertible: $invertible, '
-        'nameMatch: $nameMatch, '
-        'codeMatch: $codeMatch}';
+        'invertible: $invertible}';
   }
 }

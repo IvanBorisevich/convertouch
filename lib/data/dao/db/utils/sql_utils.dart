@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/data/entities/conversion_param_entity.dart';
 import 'package:convertouch/data/entities/conversion_param_set_entity.dart';
@@ -397,7 +399,7 @@ class SqlUtils {
     return QueryWithParams(sqlQuery: sqlQuery, params: newColumnValues);
   }
 
-  static Future<V> selectFirst<V>({
+  static Future<V?> selectFirst<V>({
     required Transaction txn,
     required String query,
     List<Object> args = const [],
@@ -407,6 +409,10 @@ class SqlUtils {
       toInArgsQuery(query, args),
       flatten(args),
     );
+    if (result.isEmpty) {
+      log("No result has been selected by the query with args: $args");
+      return null;
+    }
     return valFunc?.call(result.first) ?? result.first["id"];
   }
 

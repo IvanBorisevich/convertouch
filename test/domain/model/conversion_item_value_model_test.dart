@@ -21,7 +21,7 @@ void main() {
         'unitGroupId': 1,
         'valueType': 5,
         'paramSetId': 1,
-        'calculable': false,
+        'calculable': true,
         'defaultUnit': {
           'id': 1,
           'name': 'Centimeter',

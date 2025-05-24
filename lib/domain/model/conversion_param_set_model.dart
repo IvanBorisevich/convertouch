@@ -65,7 +65,6 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
         'id: $id, '
         'name: $name, '
         'mandatory: $mandatory, '
-        'groupId: $groupId, '
-        'nameMatch: $nameMatch}';
+        'groupId: $groupId}';
   }
 }

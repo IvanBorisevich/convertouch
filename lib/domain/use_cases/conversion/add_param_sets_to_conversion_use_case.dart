@@ -10,7 +10,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 
@@ -118,9 +118,10 @@ class AddParamSetsToConversionUseCase
     }
 
     int resultSelectedIndex = resultParamSetValues.length - 1;
+    var resultSelectedParamSetValue = resultParamSetValues[resultSelectedIndex];
 
     resultParamSetValues[resultSelectedIndex] =
-        await resultParamSetValues[resultSelectedIndex].copyWithChangedParam(
+        await resultSelectedParamSetValue.copyWithChangedParam(
       map: (paramValue, paramSetValue) async {
         var newParamValue = srcUnitValue != null
             ? rules.calculateParamValueBySrcValue(

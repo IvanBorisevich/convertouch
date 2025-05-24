@@ -67,6 +67,6 @@ class MappingTable<T extends Criterion, K> {
     K codeKey = keyByUnitCode?.call(value.unit.code) ?? (value.unit.code as K);
 
     return rows.firstWhereOrNull((row) =>
-        row.row[codeKey] == value.numVal || row.row[codeKey] == value.raw);
+        row.row[codeKey] == value.eitherNum || row.row[codeKey] == value.eitherRaw);
   }
 }

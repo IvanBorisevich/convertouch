@@ -128,7 +128,6 @@ class UnitGroupModel extends IdNameSearchableItemModel {
         'refreshable: $refreshable, '
         'valueType: $valueType, '
         'minValue: $minValue, '
-        'maxValue: $maxValue, '
-        'nameMatch: $nameMatch}';
+        'maxValue: $maxValue}';
   }
 }

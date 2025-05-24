@@ -36,9 +36,9 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_uni
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/calculate_source_item_by_params_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/replace_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';

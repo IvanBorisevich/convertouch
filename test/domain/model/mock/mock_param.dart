@@ -61,6 +61,7 @@ const heightParam = ConversionParamModel(
   unitGroupId: 1,
   valueType: ConvertouchValueType.decimalPositive,
   defaultUnit: centimeter,
+  calculable: true,
   paramSetId: 1,
 );
 

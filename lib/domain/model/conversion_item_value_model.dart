@@ -17,11 +17,19 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   String get name;
 
-  ValueModel? get val => value ?? defaultValue;
+  ValueModel? get eitherValue => value ?? defaultValue;
 
-  String? get raw => val?.raw;
+  String? get eitherRaw => eitherValue?.raw;
 
-  num? get numVal => val?.numVal;
+  String? get raw => value?.raw;
+
+  String? get defaultRaw => defaultValue?.raw;
+
+  num? get eitherNum => eitherValue?.numVal;
+
+  num? get numVal => value?.numVal;
+
+  num? get defaultNumVal => defaultValue?.numVal;
 
   ConvertouchValueType get valueType;
 
@@ -111,7 +119,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   @override
   String toString() {
     return 'ConversionUnitValueModel{'
-        'unit: $unit, '
+        'unit: ${unit.code}, '
         'value: $value, '
         'default: $defaultValue'
         '}';
@@ -218,8 +226,8 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   @override
   String toString() {
     return 'ConversionParamValueModel{'
-        'param: $param, '
-        'unit: $unit, '
+        'param: ${param.name}, '
+        'unit: ${unit?.code}, '
         'calculated: $calculated, '
         'value: $value, '
         'default: $defaultValue'

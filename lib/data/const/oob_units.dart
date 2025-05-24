@@ -975,7 +975,7 @@ const unitsV3 = [
 
 const unitsV4 = [
   {
-    "groupName": "Clothing Size",
+    "groupName": GroupNames.clothingSize,
     "iconName": "clothing-size-group.png",
     "valueType": ConvertouchValueType.integerPositive,
     "conversionType": ConversionType.formula,
@@ -989,7 +989,7 @@ const unitsV4 = [
       {
         "code": CountryCode.jp,
         "name": "Japan",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.text,
         "listType": ConvertouchListType.clothingSizeJp,
       },
       {
@@ -1028,6 +1028,50 @@ const unitsV4 = [
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.clothingSizeUs,
       },
+      {
+        "code": CountryCode.es,
+        "name": "Spain",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothingSizeEs,
+      },
+      {
+        "code": CountryCode.de,
+        "name": "Germany",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothingSizeDe,
+      },
     ],
-  }
+  },
+  {
+    "groupName": GroupNames.ringSize,
+    // "iconName": "clothing-size-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "conversionType": ConversionType.formula,
+    "units": [
+      {
+        "code": CountryCode.fr,
+        "name": "France",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeFr,
+      },
+      {
+        "code": CountryCode.us,
+        "name": "USA",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeUs,
+      },
+      {
+        "code": CountryCode.it,
+        "name": "Italy",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeIt,
+      },
+      {
+        "code": CountryCode.ru,
+        "name": "Russia",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeRu,
+      },
+    ],
+  },
 ];

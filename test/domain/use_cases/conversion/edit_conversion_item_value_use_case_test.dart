@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/inner/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -1163,19 +1163,6 @@ void main() {
 
     group('Conversion has params', () {
       group('Calculable param is switched on', () {
-        group('New src value exists | new src default value exists', () {});
-
-        group(
-            'New src value exists | new src default value do not exist', () {});
-
-        group(
-            'New src value do not exist | new src default value exists', () {});
-
-        group('New src value do not exist | new src default value do not exist',
-            () {});
-      });
-
-      group('Calculable params are switched off or do not exist', () {
         group('New src value exists | new src default value exists', () {
           test('New list value only should be applied', () async {
             await testCase(
@@ -1196,8 +1183,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                      ConversionParamValueModel.tuple(heightParam, 167, 1,
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1217,8 +1204,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                      ConversionParamValueModel.tuple(heightParam, 167, 1,
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1233,7 +1220,7 @@ void main() {
               unitGroup: clothingSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
-                newValue: '44',
+                newValue: '50',
                 newDefaultValue: null,
                 unitId: europeanClothSize.id,
               ),
@@ -1247,18 +1234,18 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                      ConversionParamValueModel.tuple(heightParam, null, 1,
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
-                ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
+                ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
+                ConversionUnitValueModel.tuple(japanClothSize, '3L', null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1268,8 +1255,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                      ConversionParamValueModel.tuple(heightParam, 184, 1,
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1299,7 +1286,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1320,7 +1307,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1351,7 +1338,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1372,7 +1359,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
-                          unit: centimeter),
+                          unit: centimeter, calculated: true),
                     ],
                   )
                 ],
@@ -1381,6 +1368,8 @@ void main() {
           });
         });
       });
+
+      group('Calculable params are switched off or do not exist', () {});
     });
   });
 }

@@ -1,17 +1,15 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 ValueModel? getBarbellOneSideWeight({
   required ConversionUnitValueModel value,
-  required List<ConversionParamValueModel> paramValues,
+  required ConversionParamSetValueModel params,
 }) {
-  num? fullWeight = value.numVal;
-  num? barWeight = paramValues
-      .firstWhereOrNull((p) => p.param.name == ParamNames.barWeight)
-      ?.numVal;
+  num? fullWeight = value.eitherNum;
+  num? barWeight = params.getParamValue(ParamNames.barWeight)?.eitherNum;
 
   if (fullWeight == null || barWeight == null) {
     return null;
@@ -22,15 +20,11 @@ ValueModel? getBarbellOneSideWeight({
 
 ValueModel? getBarbellFullWeight({
   required UnitModel unit,
-  required List<ConversionParamValueModel> paramValues,
+  required ConversionParamSetValueModel params,
 }) {
-  num? oneSideWeight = paramValues
-      .firstWhereOrNull((p) => p.param.name == ParamNames.oneSideWeight)
-      ?.numVal;
-
-  num? barWeight = paramValues
-      .firstWhereOrNull((p) => p.param.name == ParamNames.barWeight)
-      ?.numVal;
+  num? oneSideWeight =
+      params.getParamValue(ParamNames.oneSideWeight)?.eitherNum;
+  num? barWeight = params.getParamValue(ParamNames.barWeight)?.numVal;
 
   if (oneSideWeight == null || barWeight == null) {
     return null;
