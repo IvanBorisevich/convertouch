@@ -80,7 +80,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
   rows: [
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterCmRange: NumRange.rightOpen(14, 14.5),
+        diameterCmRange: NumRange.open(0, 14.5),
       ),
       row: {
         CountryCode.us: 3,

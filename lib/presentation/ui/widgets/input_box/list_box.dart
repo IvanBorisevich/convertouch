@@ -54,7 +54,7 @@ class ConvertouchListBox extends StatefulWidget {
 }
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox> {
-  static const String hintText = 'Not selected';
+  static const String hintText = 'N/A';
 
   final TextEditingController dropdownSearchController =
       TextEditingController();

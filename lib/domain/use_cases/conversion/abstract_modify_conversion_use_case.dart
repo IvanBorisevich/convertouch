@@ -20,7 +20,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
   @override
   Future<Either<ConvertouchException, ConversionModel>> execute(
-      InputConversionModifyModel<D> input,) async {
+    InputConversionModifyModel<D> input,
+  ) async {
     try {
       final modifiedGroup = newGroup(
         oldGroup: input.conversion.unitGroup,
@@ -184,10 +185,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
     ConversionRule? xToBase = rules
         .getRule(
-      unitGroup: input.unitGroup,
-      unit: input.sourceUnitValue.unit,
-      mappingTable: mappingTable,
-    )
+          unitGroup: input.unitGroup,
+          unit: input.sourceUnitValue.unit,
+          mappingTable: mappingTable,
+        )
         ?.xToBase;
 
     for (var tgtUnit in input.targetUnits) {
@@ -197,18 +198,16 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       ConversionRule? baseToY = mappingTable != null
-          ? UnitRule
-          .mappingTable(
-        mapping: mappingTable,
-        unitCode: tgtUnit.code,
-      )
-          .baseToY
+          ? UnitRule.mappingTable(
+              mapping: mappingTable,
+              unitCode: tgtUnit.code,
+            ).baseToY
           : rules
-          .getRule(
-        unitGroup: input.unitGroup,
-        unit: tgtUnit,
-      )
-          ?.baseToY;
+              .getRule(
+                unitGroup: input.unitGroup,
+                unit: tgtUnit,
+              )
+              ?.baseToY;
 
       ValueModel? resultValue = Converter(input.sourceUnitValue.value)
           .apply(xToBase)
@@ -218,10 +217,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
       ValueModel? resultDefValue = tgtUnit.listType == null
           ? Converter(input.sourceUnitValue.defaultValue)
-          .apply(xToBase)
-          .apply(baseToY)
-          .value
-          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue)
+              .apply(xToBase)
+              .apply(baseToY)
+              .value
+              ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue)
           : null;
 
       convertedUnitValues.add(

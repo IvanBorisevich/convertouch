@@ -43,7 +43,13 @@ const Map<ConvertouchListType, List<String> Function({double? c})>
   ConvertouchListType.clothingSizeDe: _clothingSizesDe,
   ConvertouchListType.clothingSizeEs: _clothingSizesEs,
   ConvertouchListType.ringSizeUs: _ringSizesUs,
+  ConvertouchListType.ringSizeUk: _ringSizesUk,
+  ConvertouchListType.ringSizeDe: _ringSizesDe,
+  ConvertouchListType.ringSizeEs: _ringSizesEs,
   ConvertouchListType.ringSizeFr: _ringSizesFr,
+  ConvertouchListType.ringSizeRu: _ringSizesRu,
+  ConvertouchListType.ringSizeIt: _ringSizesIt,
+  ConvertouchListType.ringSizeJp: _ringSizesJp,
   ConvertouchListType.barbellBarWeight: _barbellBarWeightsKg,
 };
 
@@ -64,8 +70,8 @@ List<String> _clothingSizesInter({double? c}) => [
     ];
 
 List<String> _clothingSizesUs({double? c}) => [
-      ...ObjectUtils.generateList(2, 14, 2),
-      ...ObjectUtils.generateList(28, 42, 2),
+      ...ObjectUtils.generateNumList(2, 14, step: 2),
+      ...ObjectUtils.generateNumList(28, 42, step: 2),
     ];
 
 List<String> _clothingSizesJp({double? c}) => [
@@ -80,39 +86,120 @@ List<String> _clothingSizesJp({double? c}) => [
     ];
 
 List<String> _clothingSizesFr({double? c}) => [
-      ...ObjectUtils.generateList(34, 48, 2),
+      ...ObjectUtils.generateNumList(34, 48, step: 2),
     ];
 
 List<String> _clothingSizesEu({double? c}) => [
-      ...ObjectUtils.generateList(34, 56, 2),
+      ...ObjectUtils.generateNumList(34, 56, step: 2),
     ];
 
 List<String> _clothingSizesRu({double? c}) => [
-      ...ObjectUtils.generateList(40, 56, 2),
+      ...ObjectUtils.generateNumList(40, 56, step: 2),
     ];
 
 List<String> _clothingSizesIt({double? c}) => [
-      ...ObjectUtils.generateList(38, 56, 2),
+      ...ObjectUtils.generateNumList(38, 56, step: 2),
     ];
 
 List<String> _clothingSizesUk({double? c}) => [
-      ...ObjectUtils.generateList(6, 18, 2),
-      ...ObjectUtils.generateList(26, 40, 2),
+      ...ObjectUtils.generateNumList(6, 18, step: 2),
+      ...ObjectUtils.generateNumList(26, 40, step: 2),
     ];
 
 List<String> _clothingSizesDe({double? c}) => [
-      ...ObjectUtils.generateList(32, 56, 2),
+      ...ObjectUtils.generateNumList(32, 56, step: 2),
     ];
 
 List<String> _clothingSizesEs({double? c}) => [
-      ...ObjectUtils.generateList(34, 48, 2),
+      ...ObjectUtils.generateNumList(34, 48, step: 2),
     ];
 
 List<String> _ringSizesUs({double? c}) => [
-      ...ObjectUtils.generateList(3, 15, 0.5),
+      ...ObjectUtils.generateNumList(3, 15, step: 0.5, fractionDigits: 1),
     ];
 
-List<String> _ringSizesFr({double? c}) => [
+List<String> _ringSizesUk({double? c}) => [
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z',
+      'Z+2',
+      'Z+3',
+      'Z+4',
+      'Z+5',
+    ];
+
+List<String> _ringSizesDe({double? c}) => ObjectUtils.fromNumList([
+      44,
+      47,
+      48,
+      49,
+      51,
+      52,
+      53,
+      54,
+      56,
+      57,
+      58,
+      60,
+      61,
+      62,
+      64,
+      65,
+      66,
+      68,
+      69,
+      70,
+      72,
+      73,
+      74,
+    ]);
+
+List<String> _ringSizesEs({double? c}) => ObjectUtils.fromNumList([
+      4,
+      6.5,
+      8,
+      9.5,
+      10.5,
+      12,
+      13.5,
+      14.5,
+      16,
+      17,
+      18.5,
+      20,
+      21,
+      22.5,
+      23.5,
+      25,
+      26,
+      27.5,
+      29,
+      30,
+      32,
+      33,
+      34.5,
+      35,
+    ]);
+
+List<String> _ringSizesFr({double? c}) => ObjectUtils.fromNumList([
       44,
       46.5,
       48,
@@ -137,8 +224,44 @@ List<String> _ringSizesFr({double? c}) => [
       72.5,
       73.5,
       75
-    ].map((e) => e.toString()).toList();
+    ]);
+
+List<String> _ringSizesRu({double? c}) => _ringSizesFr(c: c);
+
+List<String> _ringSizesIt({double? c}) => ObjectUtils.fromNumList([
+      4,
+      5.5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12.5,
+      14,
+      15,
+      16,
+      17.5,
+      19,
+      20,
+      21.5,
+      23,
+      24,
+      25,
+      26.5,
+      28,
+      28.5,
+      32,
+      33,
+      35
+    ]);
+
+List<String> _ringSizesJp({double? c}) => [
+      ...ObjectUtils.fromNumList([4, 5, 7, 8, 9, 10, 11]),
+      ...ObjectUtils.generateNumList(13, 20),
+      ...ObjectUtils.generateNumList(22, 23),
+      ...ObjectUtils.fromNumList([24, 25, 26, 27]),
+    ];
 
 List<String> _barbellBarWeightsKg({double? c}) => [
-      ...ObjectUtils.generateList(10, 20, 25, multiplier: c),
+      ...ObjectUtils.generateNumList(10, 20, step: 10, divisor: c),
     ];

@@ -1049,16 +1049,40 @@ const unitsV4 = [
     "conversionType": ConversionType.formula,
     "units": [
       {
+        "code": CountryCode.us,
+        "name": "USA",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeUs,
+      },
+      {
+        "code": CountryCode.uk,
+        "name": "United Kingdom",
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.ringSizeUk,
+      },
+      {
+        "code": CountryCode.de,
+        "name": "Germany",
+        "valueType": ConvertouchValueType.integerPositive,
+        "listType": ConvertouchListType.ringSizeDe,
+      },
+      {
+        "code": CountryCode.es,
+        "name": "Spain",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeEs,
+      },
+      {
         "code": CountryCode.fr,
         "name": "France",
         "valueType": ConvertouchValueType.decimalPositive,
         "listType": ConvertouchListType.ringSizeFr,
       },
       {
-        "code": CountryCode.us,
-        "name": "USA",
+        "code": CountryCode.ru,
+        "name": "Russia",
         "valueType": ConvertouchValueType.decimalPositive,
-        "listType": ConvertouchListType.ringSizeUs,
+        "listType": ConvertouchListType.ringSizeRu,
       },
       {
         "code": CountryCode.it,
@@ -1067,10 +1091,10 @@ const unitsV4 = [
         "listType": ConvertouchListType.ringSizeIt,
       },
       {
-        "code": CountryCode.ru,
-        "name": "Russia",
-        "valueType": ConvertouchValueType.decimalPositive,
-        "listType": ConvertouchListType.ringSizeRu,
+        "code": CountryCode.jp,
+        "name": "Japan",
+        "valueType": ConvertouchValueType.integerPositive,
+        "listType": ConvertouchListType.ringSizeJp,
       },
     ],
   },

@@ -101,7 +101,7 @@ class ConversionBloc
       prev = state;
       log("Prev conversion state: $prev");
 
-      conversion = conversionFromDb.isRight || conversionFromDb.right != null
+      conversion = conversionFromDb.isRight && conversionFromDb.right != null
           ? conversionFromDb.right!
           : ConversionModel.noItems(
               id: -1,

@@ -19,6 +19,21 @@ class DoubleValueUtils {
 
   const DoubleValueUtils._();
 
+  static String numToStr(
+    num d, {
+    int? fractionDigits,
+  }) {
+    if (d == d.truncateToDouble()) {
+      return d.toStringAsFixed(0);
+    }
+
+    if (fractionDigits != null) {
+      return d.toStringAsFixed(fractionDigits);
+    }
+
+    return d.toString();
+  }
+
   static String format(
     double? value, {
     int fractionDigits = defaultFractionDigits,
@@ -36,7 +51,7 @@ class DoubleValueUtils {
     assert(
       fractionDigitsInScientific >= 0,
       "Fraction digits in scientific significand should be "
-          "a non-negative number",
+      "a non-negative number",
     );
 
     if (value == null) {

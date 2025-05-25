@@ -10,6 +10,7 @@ import 'package:convertouch/data/translators/conversion_item_value_translator.da
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
@@ -40,6 +41,14 @@ class ConversionRepositoryImpl extends ConversionRepository {
     int unitGroupId,
   ) async {
     try {
+      UnitGroupModel? unitGroup = ObjectUtils.tryGet(
+        await unitGroupRepository.get(unitGroupId),
+      );
+
+      if (unitGroup == null) {
+        return const Right(null);
+      }
+
       ConversionEntity? conversion = await conversionDao.getLast(unitGroupId);
 
       if (conversion == null || conversion.sourceUnitId == null) {
@@ -76,6 +85,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
                 ),
                 unit: sourceItemUnit,
               ),
+              unitGroup: unitGroup,
               convertedUnitValues: conversionItemEntities
                   .map(
                     (entity) => ConversionUnitValueTranslator.I.toModel(
@@ -132,7 +142,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         await conversionUnitValueDao.removeByConversionId(conversion.id);
         resultConversion = conversion;
       } else if (conversion.convertedUnitValues.isNotEmpty) {
-        log("Inserting a new conversion");
+        log("Inserting a new conversion: $entity");
         int id = await conversionDao.insert(entity);
         resultConversion = conversion.copyWith(
           id: id,
