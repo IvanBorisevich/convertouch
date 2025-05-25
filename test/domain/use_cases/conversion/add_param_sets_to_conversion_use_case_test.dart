@@ -65,7 +65,7 @@ void main() {
                       paramValues: [
                         ConversionParamValueModel.tuple(
                           circumferenceParam,
-                          14 * pi,
+                          14.5 * pi,
                           1,
                           unit: millimeter,
                           calculated: true,
@@ -368,7 +368,8 @@ void main() {
     group('Conversion has items', () {
       group('New optional param set', () {
         group('With mapping table (circumference)', () {
-          test('Circumference param should be auto-calculated, '
+          test(
+              'Circumference param should be auto-calculated, '
               'duplicated param set ids should be omitted', () async {
             await testCase(
               unitGroup: ringSizeGroup,
@@ -419,7 +420,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
-                        14 * pi,
+                        14.5 * pi,
                         1,
                         unit: millimeter,
                         calculated: true,

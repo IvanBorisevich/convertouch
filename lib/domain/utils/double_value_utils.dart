@@ -1,3 +1,5 @@
+import 'dart:math';
+
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
 
 const _exponentSuperscripts = {
@@ -103,26 +105,20 @@ class DoubleValueUtils {
     return result;
   }
 
-  static String _trimToFractionDigits(double value, int fractionDigits) {
-    return _trimTrailingZerosInDouble(value.toStringAsFixed(
-      value.truncateToDouble() == value ? 0 : fractionDigits,
-    ));
-  }
-
   static bool areEqual(
-    double? num1,
-    double? num2, {
-    int fractionDigits = defaultFractionDigits,
-  }) {
+      double? num1,
+      double? num2, {
+        int fractionDigits = defaultFractionDigits,
+      }) {
     return format(num1, fractionDigits: fractionDigits) ==
         format(num2, fractionDigits: fractionDigits);
   }
 
   static bool areNotEqual(
-    double? num1,
-    double? num2, {
-    int fractionDigits = defaultFractionDigits,
-  }) {
+      double? num1,
+      double? num2, {
+        int fractionDigits = defaultFractionDigits,
+      }) {
     return !areEqual(
       num1,
       num2,
@@ -145,6 +141,17 @@ class DoubleValueUtils {
     min = _valueOrZero(min ?? double.negativeInfinity);
     max = _valueOrZero(max ?? double.infinity);
     return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
+  }
+
+  static double roundToPrecision(double v, int fractionDigits) {
+    num p = pow(10, fractionDigits);
+    return (v * p).roundToDouble() / p;
+  }
+
+  static String _trimToFractionDigits(double value, int fractionDigits) {
+    return _trimTrailingZerosInDouble(value.toStringAsFixed(
+      value.truncateToDouble() == value ? 0 : fractionDigits,
+    ));
   }
 
   static double _valueOrZero(double value) {

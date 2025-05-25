@@ -65,10 +65,10 @@ void main() {
         ConversionUnitValueModel.tuple(usaRingSize, 3, null),
         ConversionUnitValueModel.tuple(frRingSize, 44, null),
       ],
-      expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
+      expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
       expectedUnitValues: [
-        ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
-        ConversionUnitValueModel.tuple(frRingSize, null, null),
+        ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+        ConversionUnitValueModel.tuple(frRingSize, 44, null),
       ],
       expectedParams: ConversionParamSetValueBulkModel(
         paramSetValues: [
