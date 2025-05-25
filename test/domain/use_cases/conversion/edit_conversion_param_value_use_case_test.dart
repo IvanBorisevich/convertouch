@@ -1373,6 +1373,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: currentUnitValues,
             expectedSrc:
@@ -1394,6 +1395,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -1425,6 +1427,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: currentUnitValues,
             expectedSrc:
@@ -1446,6 +1449,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -1479,6 +1483,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
@@ -1500,6 +1505,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           },
@@ -1534,6 +1540,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: currentUnitValues,
             expectedSrc:
@@ -1554,6 +1561,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -1586,6 +1594,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: currentUnitValues,
               expectedSrc:
@@ -1606,6 +1615,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           },

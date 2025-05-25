@@ -12,8 +12,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
   final int totalCount;
 
   const ConversionParamSetValueBulkModel({
-    required this.paramSetValues,
-    this.selectedIndex = 0,
+    this.paramSetValues = const [],
+    this.selectedIndex = -1,
     this.paramSetsCanBeAdded = false,
     this.selectedParamSetCanBeRemoved = false,
     this.paramSetsCanBeRemovedInBulk = false,

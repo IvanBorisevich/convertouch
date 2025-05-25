@@ -576,6 +576,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentSrc: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           currentUnitValues: [
@@ -600,6 +601,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -621,6 +623,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentUnitValues: [],
           expectedUnitValues: [],
@@ -636,6 +639,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -661,6 +665,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentSrc: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
           currentUnitValues: [
@@ -685,6 +690,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -706,6 +712,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentUnitValues: [],
           expectedUnitValues: [],
@@ -721,6 +728,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });

@@ -18,6 +18,7 @@ final _clothingSizeParams = ConversionParamSetValueBulkModel(
       ],
     )
   ],
+  selectedIndex: 0,
 );
 
 const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
@@ -38,6 +39,7 @@ const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
       ],
     ),
   ],
+  selectedIndex: 0,
 );
 
 void main() {
@@ -63,6 +65,7 @@ void main() {
             ],
           )
         ],
+        selectedIndex: 0,
       ),
     );
   });
@@ -87,6 +90,7 @@ void main() {
             ],
           )
         ],
+        selectedIndex: 0,
       ),
     );
   });
@@ -113,6 +117,7 @@ void main() {
             ],
           )
         ],
+        selectedIndex: 0,
       ),
     );
   });
@@ -151,6 +156,7 @@ void main() {
             ],
           )
         ],
+        selectedIndex: 0,
       ),
     );
   });
@@ -183,6 +189,7 @@ void main() {
               ],
             ),
           ],
+          selectedIndex: 0,
         ),
       );
     });
@@ -213,6 +220,7 @@ void main() {
               ],
             ),
           ],
+          selectedIndex: 0,
         ),
       );
     });

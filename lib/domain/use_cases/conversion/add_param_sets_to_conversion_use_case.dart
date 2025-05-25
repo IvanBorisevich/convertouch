@@ -73,7 +73,17 @@ class AddParamSetsToConversionUseCase
     }
 
     if (newParamSets.isEmpty) {
-      return oldConversionParams;
+      if (oldConversionParams != null) {
+        return oldConversionParams;
+      } else if (paramSetsTotalCount == 0) {
+        return null;
+      } else {
+        return ConversionParamSetValueBulkModel(
+          totalCount: paramSetsTotalCount,
+          paramSetsCanBeAdded: true,
+          paramSetsCanBeRemovedInBulk: true,
+        );
+      }
     }
 
     List<ConversionParamSetValueModel> newParamSetValues = [];

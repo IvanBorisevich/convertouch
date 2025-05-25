@@ -151,6 +151,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [],
             expectedSrc:
@@ -172,6 +173,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -201,6 +203,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, 42, 42),
@@ -227,6 +230,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -256,6 +260,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
@@ -282,6 +287,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -311,6 +317,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 42, null)
@@ -335,6 +342,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -364,6 +372,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [],
             expectedSrc:
@@ -385,6 +394,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -416,6 +426,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 42, 32),
@@ -440,6 +451,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -469,6 +481,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
@@ -495,6 +508,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -524,6 +538,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
@@ -548,6 +563,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -575,6 +591,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [],
               expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
@@ -592,6 +609,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -619,6 +637,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(usaRingSize, 3.5, 3.5),
@@ -639,6 +658,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -665,6 +685,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(usaRingSize, 3.5, null),
@@ -685,6 +706,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -713,6 +735,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [],
               expectedSrc:
@@ -733,6 +756,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -764,6 +788,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
@@ -788,6 +813,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -819,6 +845,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
@@ -843,6 +870,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -872,6 +900,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
@@ -896,6 +925,7 @@ void main() {
                     ],
                   )
                 ],
+                selectedIndex: 0,
               ),
             );
           });
@@ -925,6 +955,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [],
             expectedSrc:
@@ -945,6 +976,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -973,6 +1005,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, 32),
@@ -998,6 +1031,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -1028,6 +1062,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
@@ -1051,6 +1086,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });
@@ -1077,6 +1113,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
@@ -1102,6 +1139,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         });

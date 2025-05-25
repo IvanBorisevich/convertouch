@@ -90,45 +90,47 @@ class ConversionBloc
     GetConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    if (event.unitGroup.id != state.conversion.unitGroup.id) {
-      var result = await getConversionUseCase.execute(event.unitGroup);
+    ConversionModel conversion;
+    ConversionBuilt? prev;
 
-      ConversionBuilt prev = state;
+    if (event.unitGroup.id != state.conversion.unitGroup.id) {
+      var conversionFromDb = await getConversionUseCase.execute(
+        event.unitGroup,
+      );
+
+      prev = state;
       log("Prev conversion state: $prev");
 
-      if (result.isLeft) {
-        navigationBloc.add(
-          ShowException(exception: result.left),
-        );
-      } else {
-        ConversionModel conversion = result.right ??
-            ObjectUtils.tryGet(
-              await addParamSetsToConversionUseCase.execute(
-                InputConversionModifyModel<AddParamSetsDelta>(
-                  conversion: ConversionModel.noItems(
-                    id: -1,
-                    unitGroup: event.unitGroup,
-                    params: null,
-                  ),
-                  delta: const AddParamSetsDelta(),
-                ),
-              ),
+      conversion = conversionFromDb.isRight || conversionFromDb.right != null
+          ? conversionFromDb.right!
+          : ConversionModel.noItems(
+              id: -1,
+              unitGroup: event.unitGroup,
+              params: null,
             );
-
-        emit(
-          ConversionBuilt(
-            conversion: conversion,
-            showRefreshButton: event.unitGroup.refreshable &&
-                conversion.convertedUnitValues.isNotEmpty,
-          ),
-        );
-
-        if (prev.conversion.exists) {
-          event.processPrevConversion?.call(prev.conversion);
-        }
-      }
     } else {
-      emit(state);
+      conversion = state.conversion;
+    }
+
+    conversion = ObjectUtils.tryGet(
+      await addParamSetsToConversionUseCase.execute(
+        InputConversionModifyModel<AddParamSetsDelta>(
+          conversion: conversion,
+          delta: const AddParamSetsDelta(),
+        ),
+      ),
+    );
+
+    emit(
+      ConversionBuilt(
+        conversion: conversion,
+        showRefreshButton: event.unitGroup.refreshable &&
+            conversion.convertedUnitValues.isNotEmpty,
+      ),
+    );
+
+    if (prev != null && prev.conversion.exists) {
+      event.processPrevConversion?.call(prev.conversion);
     }
 
     event.onComplete?.call();

@@ -41,6 +41,7 @@ void main() {
           ],
         ),
       ],
+      selectedIndex: 0,
       totalCount: 1,
       mandatoryParamSetExists: true,
     ),

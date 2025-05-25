@@ -58,6 +58,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentSrc:
               ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
@@ -83,6 +84,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -108,6 +110,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentSrc:
               ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
@@ -133,6 +136,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -160,6 +164,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
@@ -183,6 +188,7 @@ void main() {
                 ],
               )
             ],
+            selectedIndex: 0,
           ),
         );
       });
@@ -212,6 +218,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
             currentSrc:
                 ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
@@ -238,6 +245,7 @@ void main() {
                   ],
                 )
               ],
+              selectedIndex: 0,
             ),
           );
         },
