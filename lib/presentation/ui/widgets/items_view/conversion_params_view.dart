@@ -23,6 +23,7 @@ class ConversionParamsView extends StatelessWidget {
   static const double _paramsSpacing = 10;
 
   final ConversionParamSetValueBulkModel? params;
+  final PanelController panelController;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
   final void Function()? onSelectedParamSetRemove;
@@ -33,6 +34,7 @@ class ConversionParamsView extends StatelessWidget {
 
   const ConversionParamsView({
     this.params,
+    required this.panelController,
     this.onParamSetAdd,
     this.onParamSetSelect,
     this.onSelectedParamSetRemove,
@@ -73,6 +75,7 @@ class ConversionParamsView extends StatelessWidget {
     }
 
     return SlidingUpPanel(
+      controller: panelController,
       panel: Column(
         children: [
           SizedBox(

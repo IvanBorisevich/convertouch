@@ -18,6 +18,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_params_view.dart';
@@ -26,6 +27,7 @@ import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ConvertouchConversionPage extends StatefulWidget {
   const ConvertouchConversionPage({super.key});
@@ -36,10 +38,12 @@ class ConvertouchConversionPage extends StatefulWidget {
 
 class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
   late bool _isPopupMenuOpen;
+  late PanelController _panelController;
 
   @override
   void initState() {
     _isPopupMenuOpen = false;
+    _panelController = PanelController();
     super.initState();
   }
 
@@ -72,6 +76,22 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
               return ConvertouchPage(
                 title: unitGroup.name,
                 appBarRightWidgets: [
+                  IconButton(
+                      icon: IconUtils.getIcon(
+                        IconNames.parameters,
+                        color: pageColorScheme.appBar.foreground.regular,
+                        size: 22,
+                      ),
+                      onPressed: () {
+                        if (_panelController.isAttached) {
+                          if (_panelController.isPanelClosed) {
+                            _panelController.open();
+                          } else {
+                            _panelController.close();
+                          }
+                        }
+                      },
+                    ),
                   ConvertouchPopupMenu(
                     width: 210,
                     onMenuStateChange: (isOpen) {
@@ -135,6 +155,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         return Column(
                           children: [
                             ConversionParamsView(
+                              panelController: _panelController,
                               params: conversion.params,
                               onParamSetAdd: () {
                                 paramSetsBloc.add(

@@ -147,7 +147,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
         required Color matchBackground,
       }) {
         return IconUtils.getUnitGroupIcon(
-          iconName: parametersIconName,
+          iconName: IconNames.parameters,
           color: foreground,
           size: 29,
         );

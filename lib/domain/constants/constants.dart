@@ -7,8 +7,6 @@ const quicksandFontFamily = "Quicksand";
 const baseUnitConversionRule = "Base unit";
 const noConversionRule = "-";
 
-const parametersIconName = "parameters.png";
-
 abstract class GroupNames {
   const GroupNames._();
 
@@ -59,6 +57,7 @@ abstract class IconNames {
   const IconNames._();
 
   static const oneWayConversion = "one_way_conversion.svg";
+  static const parameters = "parameters.png";
 }
 
 enum SettingKey {
