@@ -16,6 +16,7 @@ import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -44,6 +45,7 @@ class ConversionBloc
   final SelectParamSetInConversionUseCase selectParamSetInConversionUseCase;
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
+  final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -61,6 +63,7 @@ class ConversionBloc
     required this.selectParamSetInConversionUseCase,
     required this.editConversionParamValueUseCase,
     required this.replaceConversionParamUnitUseCase,
+    required this.toggleCalculableParamUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -84,6 +87,7 @@ class ConversionBloc
     on<SelectParamSetInConversion>(_onSelectParamSetInConversion);
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
+    on<ToggleCalculableParam>(_onToggleCalculableParam);
   }
 
   _onGetConversion(
@@ -363,6 +367,22 @@ class ConversionBloc
       InputConversionModifyModel<ReplaceConversionParamUnitDelta>(
         delta: ReplaceConversionParamUnitDelta(
           newUnit: event.newUnit,
+          paramId: event.paramId,
+          paramSetId: event.paramSetId,
+        ),
+        conversion: state.conversion,
+      ),
+    );
+    await _handleAndEmit(result, emit);
+  }
+
+  _onToggleCalculableParam(
+    ToggleCalculableParam event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await toggleCalculableParamUseCase.execute(
+      InputConversionModifyModel<ToggleCalculableParamDelta>(
+        delta: ToggleCalculableParamDelta(
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),

@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
@@ -9,11 +11,12 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_i
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ConversionParamsView extends StatelessWidget {
   static const int _toolsetItemsNum = 3;
-  static const double _toolsetPanelWidth = 50;
+  static const double _toolsetPanelWidth = 47;
   static const double _toolsetPanelItemHeight = 50;
   static const double _minBodyHeight =
       _toolsetPanelItemHeight * _toolsetItemsNum;
@@ -47,6 +50,8 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+
     if (params == null) {
       return const SizedBox.shrink();
     }
@@ -125,21 +130,29 @@ class ConversionParamsView extends StatelessWidget {
                                           padding: const EdgeInsets.only(
                                             bottom: _paramsSpacing,
                                           ),
-                                          child: ConvertouchConversionItem(
-                                            paramItem,
-                                            controlsVisible: false,
-                                            itemNameFunc: (item) =>
-                                                item.param.name,
-                                            unitItemCodeFunc: (item) =>
-                                                item.unit?.code,
-                                            onTap: () {
-                                              onParamUnitTap?.call(paramItem);
-                                            },
-                                            onValueChanged: (value) {
-                                              onValueChanged?.call(
-                                                  paramItem, value);
-                                            },
-                                            colors: colors.paramItem,
+                                          child: Row(
+                                            children: [
+                                              _param(
+                                                paramItem: paramItem,
+                                                colors: colors,
+                                              ),
+                                              _calculationSwitcher(
+                                                areSwitchersShown: item
+                                                    .hasMultipleCalculableParams,
+                                                paramItem: paramItem,
+                                                colors: colors,
+                                                onTap: () {
+                                                  conversionBloc.add(
+                                                    ToggleCalculableParam(
+                                                      paramId:
+                                                          paramItem.param.id,
+                                                      paramSetId: paramItem
+                                                          .param.paramSetId,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },
@@ -263,6 +276,72 @@ class ConversionParamsView extends StatelessWidget {
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(20),
         bottomRight: Radius.circular(20),
+      ),
+    );
+  }
+
+  Widget _calculationSwitcher({
+    required ConversionParamValueModel paramItem,
+    required bool areSwitchersShown,
+    required ParamSetPanelColorScheme colors,
+    required void Function()? onTap,
+    double width = 30,
+    double height = 30,
+  }) {
+    return Visibility(
+      visible: areSwitchersShown,
+      child: paramItem.param.calculable
+          ? Padding(
+              padding: const EdgeInsets.only(left: 9),
+              child: GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  width: width,
+                  height: height,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(12),
+                    ),
+                    border: Border.all(
+                      color: paramItem.calculated
+                          ? colors.paramItem.handler.border.selected
+                          : colors.paramItem.handler.border.regular,
+                    ),
+                    color: paramItem.calculated
+                        ? colors.paramItem.handler.background.selected
+                        : colors.paramItem.handler.background.regular,
+                  ),
+                  child: Icon(
+                    Icons.sync_alt_rounded,
+                    size: 17,
+                    color: paramItem.calculated
+                        ? colors.paramItem.handler.foreground.selected
+                        : colors.paramItem.handler.foreground.regular,
+                  ),
+                ),
+              ),
+            )
+          : const SizedBox.shrink(),
+    );
+  }
+
+  Widget _param({
+    required ConversionParamValueModel paramItem,
+    required ParamSetPanelColorScheme colors,
+  }) {
+    return Expanded(
+      child: ConvertouchConversionItem(
+        paramItem,
+        controlsVisible: false,
+        itemNameFunc: (item) => item.param.name,
+        unitItemCodeFunc: (item) => item.unit?.code,
+        onTap: () {
+          onParamUnitTap?.call(paramItem);
+        },
+        onValueChanged: (value) {
+          onValueChanged?.call(paramItem, value);
+        },
+        colors: colors.paramItem,
       ),
     );
   }

@@ -45,6 +45,7 @@ import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
@@ -349,6 +350,10 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<ToggleCalculableParamUseCase>(
+    () => const ToggleCalculableParamUseCase(),
+  );
+
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
@@ -474,6 +479,7 @@ Future<void> _initBloc() async {
       selectParamSetInConversionUseCase: locator(),
       editConversionParamValueUseCase: locator(),
       replaceConversionParamUnitUseCase: locator(),
+      toggleCalculableParamUseCase: locator(),
       navigationBloc: locator(),
     ),
   );

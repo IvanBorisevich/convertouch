@@ -312,3 +312,19 @@ class ReplaceConversionParamUnit extends ModifyConversion {
         'paramSetId: $paramSetId}';
   }
 }
+
+class ToggleCalculableParam extends ModifyConversion {
+  final int paramId;
+  final int paramSetId;
+
+  const ToggleCalculableParam({
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        paramId,
+        paramSetId,
+      ];
+}

@@ -92,6 +92,20 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
         regular: Color(0xFF224F79),
       ),
     ),
+    handler: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xff82a7ec),
+        selected: Colors.transparent,
+      ),
+      background: ColorVariation(
+        regular: Colors.transparent,
+        selected: Color(0xffa1c2ff),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xff82a7ec),
+        selected: Color(0xFF304860),
+      ),
+    ),
   ),
 );
 

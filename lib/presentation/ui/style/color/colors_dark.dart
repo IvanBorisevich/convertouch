@@ -95,6 +95,20 @@ const paramSetColorSchemeDark = ParamSetPanelColorScheme(
         regular: Color(0xFFADCEEC),
       ),
     ),
+    handler: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFF5D8DBD),
+        selected: Colors.transparent,
+      ),
+      background: ColorVariation(
+        regular: Colors.transparent,
+        selected: Color(0xFF477DAF),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFF5D8DBD),
+        selected: Color(0xFFB2D5F8),
+      ),
+    ),
   ),
 );
 
