@@ -7,15 +7,15 @@ import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit_group.dart';
 
 const _mockParamSetsList = [
-  clothingSizeParamSet,
+  clothesSizeParamSet,
   ringSizeByDiameterParamSet,
   ringSizeByCircumferenceParamSet,
   barbellWeightParamSet,
 ];
 
 final _groupParamSets = {
-  clothingSizeGroup.id: [
-    clothingSizeParamSet,
+  clothesSizeGroup.id: [
+    clothesSizeParamSet,
   ],
   ringSizeGroup.id: [
     ringSizeByDiameterParamSet,
@@ -27,7 +27,7 @@ final _groupParamSets = {
 };
 
 final _groupMandatoryParamSets = {
-  clothingSizeGroup.id: clothingSizeParamSet,
+  clothesSizeGroup.id: clothesSizeParamSet,
 };
 
 class MockConversionParamSetRepository extends ConversionParamSetRepository {

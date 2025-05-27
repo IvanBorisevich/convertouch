@@ -168,12 +168,12 @@ void main() {
       });
 
       group('New mandatory param set', () {
-        group('With mapping table (clothing size)', () {
+        group('With mapping table (clothes size)', () {
           test(
               'Height param should be set by default, '
               'other params should not be auto-calculated', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: const AddParamSetsDelta(),
               currentSrc:
@@ -189,7 +189,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -329,12 +329,12 @@ void main() {
       });
 
       group('New mandatory param set', () {
-        group('With mapping table (clothing size)', () {
+        group('With mapping table (clothes size)', () {
           test(
               'Height param should be set by default, '
               'other params should not be auto-calculated', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: const AddParamSetsDelta(),
               currentUnitValues: [],
@@ -342,7 +342,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),

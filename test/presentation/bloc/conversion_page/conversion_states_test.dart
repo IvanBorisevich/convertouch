@@ -17,8 +17,8 @@ void main() {
       id: -1,
       unitGroup: UnitGroupModel(
         id: 10,
-        name: "Clothing Size",
-        iconName: "clothing-size-group.png",
+        name: "Clothes Size",
+        iconName: "clothes-size-group.png",
         conversionType: ConversionType.formula,
         refreshable: false,
         valueType: ConvertouchValueType.integerPositive,
@@ -27,7 +27,7 @@ void main() {
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               ConversionParamValueModel(
                 param: personParam,
@@ -62,8 +62,8 @@ void main() {
       id: -1,
       unitGroup: const UnitGroupModel(
         id: 10,
-        name: "Clothing Size",
-        iconName: "clothing-size-group.png",
+        name: "Clothes Size",
+        iconName: "clothes-size-group.png",
         conversionType: ConversionType.formula,
         refreshable: false,
         valueType: ConvertouchValueType.integerPositive,
@@ -72,7 +72,7 @@ void main() {
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               const ConversionParamValueModel(
                 param: personParam,

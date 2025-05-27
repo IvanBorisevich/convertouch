@@ -37,9 +37,9 @@ const UnitGroupModel lengthGroup = UnitGroupModel(
   valueType: ConvertouchValueType.decimalPositive,
 );
 
-const UnitGroupModel clothingSizeGroup = UnitGroupModel(
+const UnitGroupModel clothesSizeGroup = UnitGroupModel(
   id: 6,
-  name: GroupNames.clothingSize,
+  name: GroupNames.clothesSize,
   valueType: ConvertouchValueType.integerPositive,
   conversionType: ConversionType.formula,
 );

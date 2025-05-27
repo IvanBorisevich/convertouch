@@ -3,7 +3,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 const conversionParamsV1 = [
   {
     "name": ParamSetNames.byHeight,
-    "unitGroupName": GroupNames.clothingSize,
+    "unitGroupName": GroupNames.clothesSize,
     "mandatory": true,
     "params": [
       {

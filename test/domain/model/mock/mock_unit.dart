@@ -103,7 +103,7 @@ const UnitModel europeanClothSize = UnitModel(
   name: "Europe",
   code: "EU",
   valueType: ConvertouchValueType.integerPositive,
-  listType: ConvertouchListType.clothingSizeEu,
+  listType: ConvertouchListType.clothesSizeEu,
 );
 
 const UnitModel japanClothSize = UnitModel(
@@ -111,7 +111,7 @@ const UnitModel japanClothSize = UnitModel(
   name: "Japan",
   code: "JP",
   valueType: ConvertouchValueType.integerPositive,
-  listType: ConvertouchListType.clothingSizeJp,
+  listType: ConvertouchListType.clothesSizeJp,
 );
 
 const UnitModel italianClothSize = UnitModel(
@@ -119,15 +119,15 @@ const UnitModel italianClothSize = UnitModel(
   name: "Italia",
   code: "IT",
   valueType: ConvertouchValueType.integerPositive,
-  listType: ConvertouchListType.clothingSizeIt,
+  listType: ConvertouchListType.clothesSizeIt,
 );
 
 const UnitModel usaClothSize = UnitModel(
   id: 9,
-  name: 'Clothing Size US',
+  name: 'Clothes Size US',
   code: 'US',
   valueType: ConvertouchValueType.decimalPositive,
-  listType: ConvertouchListType.clothingSizeUs,
+  listType: ConvertouchListType.clothesSizeUs,
 );
 
 const UnitModel usaRingSize = UnitModel(

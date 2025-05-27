@@ -130,7 +130,7 @@ void main() {
       group('All params are set', () {
         test('Source item does not exist', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -141,7 +141,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -163,7 +163,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -182,7 +182,7 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -193,7 +193,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -220,7 +220,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -239,7 +239,7 @@ void main() {
             'Source item default value exists only '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -250,7 +250,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -277,7 +277,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -294,7 +294,7 @@ void main() {
 
         test('Source item value exists only', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -307,7 +307,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -332,7 +332,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -351,7 +351,7 @@ void main() {
       group('Some params are set by default', () {
         test('Source item does not exist', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -362,7 +362,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -384,7 +384,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -403,7 +403,7 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -416,7 +416,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -441,7 +441,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -460,7 +460,7 @@ void main() {
             'Source item default value exists only '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -471,7 +471,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -498,7 +498,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -515,7 +515,7 @@ void main() {
 
         test('Source item value exists only', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -528,7 +528,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -553,7 +553,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -715,7 +715,7 @@ void main() {
         group('Mandatory params', () {
           test('Source item does not exist', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: AddUnitsToConversionDelta(
                 unitIds: [
@@ -726,7 +726,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -747,7 +747,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -765,7 +765,7 @@ void main() {
               'Source item value and default value exist '
               '(default list value will be ignored)', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: AddUnitsToConversionDelta(
                 unitIds: [
@@ -778,7 +778,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -803,7 +803,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -822,7 +822,7 @@ void main() {
               'Source item default value exists only '
               '(default list value will be ignored)', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: AddUnitsToConversionDelta(
                 unitIds: [
@@ -835,7 +835,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -860,7 +860,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -877,7 +877,7 @@ void main() {
 
           test('Source item value exists only', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: AddUnitsToConversionDelta(
                 unitIds: [
@@ -890,7 +890,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -915,7 +915,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(
@@ -935,7 +935,7 @@ void main() {
       group('No params are set', () {
         test('Source item does not exist', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -946,7 +946,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -967,7 +967,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -985,7 +985,7 @@ void main() {
             'Source item value and default value exist '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -996,7 +996,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -1022,7 +1022,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -1040,7 +1040,7 @@ void main() {
             'Source item default value exists only '
             '(default list value will be ignored)', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -1053,7 +1053,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -1077,7 +1077,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -1093,7 +1093,7 @@ void main() {
 
         test('Source item value exists only', () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: AddUnitsToConversionDelta(
               unitIds: [
@@ -1104,7 +1104,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),
@@ -1130,7 +1130,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, null, null),
                     ConversionParamValueModel.tuple(garmentParam, null, null),

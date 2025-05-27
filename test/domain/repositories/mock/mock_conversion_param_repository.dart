@@ -6,7 +6,7 @@ import 'package:either_dart/src/either.dart';
 import '../../model/mock/mock_param.dart';
 
 final _paramsOfSet = {
-  clothingSizeParamSet.id: [
+  clothesSizeParamSet.id: [
     personParam,
     garmentParam,
     heightParam,

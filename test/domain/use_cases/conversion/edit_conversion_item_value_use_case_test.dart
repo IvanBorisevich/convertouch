@@ -1166,7 +1166,7 @@ void main() {
         group('New src value exists | new src default value exists', () {
           test('New list value only should be applied', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
                 newValue: '44',
@@ -1178,7 +1178,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1200,7 +1200,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1219,7 +1219,7 @@ void main() {
         group('New src value exists | new src default value do not exist', () {
           test('New list value only should be applied', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
                 newValue: '50',
@@ -1231,7 +1231,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1253,7 +1253,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1272,7 +1272,7 @@ void main() {
         group('New src value do not exist | new src default value exists', () {
           test('New empty list value should be applied', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
                 newValue: null,
@@ -1284,7 +1284,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1305,7 +1305,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1324,7 +1324,7 @@ void main() {
             () {
           test('New empty list value should be applied', () async {
             await testCase(
-              unitGroup: clothingSizeGroup,
+              unitGroup: clothesSizeGroup,
               useCase: useCase,
               delta: EditConversionItemValueDelta(
                 newValue: null,
@@ -1336,7 +1336,7 @@ void main() {
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
@@ -1357,7 +1357,7 @@ void main() {
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
-                    paramSet: clothingSizeParamSet,
+                    paramSet: clothesSizeParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(

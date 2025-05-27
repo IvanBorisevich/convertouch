@@ -561,13 +561,13 @@ void main() {
     group("Remove mandatory (should not be removed)", () {
       test('Conversion has unit values (should not be changed)', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: const RemoveParamSetsDelta.current(),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -592,7 +592,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -608,13 +608,13 @@ void main() {
 
       test('Conversion does not have unit values', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: const RemoveParamSetsDelta.current(),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -630,7 +630,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -650,13 +650,13 @@ void main() {
     group("Mandatory param set exists (should not be removed)", () {
       test('Conversion has unit values (should not be changed)', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: const RemoveParamSetsDelta.all(),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -681,7 +681,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -697,13 +697,13 @@ void main() {
 
       test('Conversion does not have unit values', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: const RemoveParamSetsDelta.all(),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -719,7 +719,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),

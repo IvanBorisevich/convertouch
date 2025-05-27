@@ -39,7 +39,7 @@ void main() {
     group('Change non-list parameter unit (height)', () {
       test('New height param value is acceptable', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: ReplaceConversionParamUnitDelta(
             paramId: heightParam.id,
@@ -49,7 +49,7 @@ void main() {
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -75,7 +75,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -91,7 +91,7 @@ void main() {
 
       test('Height param value is not acceptable for the new unit', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: ReplaceConversionParamUnitDelta(
             paramId: heightParam.id,
@@ -101,7 +101,7 @@ void main() {
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -127,7 +127,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -143,7 +143,7 @@ void main() {
 
       test('New height default param value is not empty', () async {
         await testCase(
-          unitGroup: clothingSizeGroup,
+          unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: ReplaceConversionParamUnitDelta(
             paramId: heightParam.id,
@@ -155,7 +155,7 @@ void main() {
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -179,7 +179,7 @@ void main() {
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
               ConversionParamSetValueModel(
-                paramSet: clothingSizeParamSet,
+                paramSet: clothesSizeParamSet,
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -198,7 +198,7 @@ void main() {
         '(the value of the unit type should be used for calculation)',
         () async {
           await testCase(
-            unitGroup: clothingSizeGroup,
+            unitGroup: clothesSizeGroup,
             useCase: useCase,
             delta: ReplaceConversionParamUnitDelta(
               paramId: heightParam.id,
@@ -208,7 +208,7 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
@@ -235,7 +235,7 @@ void main() {
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
                 ConversionParamSetValueModel(
-                  paramSet: clothingSizeParamSet,
+                  paramSet: clothesSizeParamSet,
                   paramValues: [
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(

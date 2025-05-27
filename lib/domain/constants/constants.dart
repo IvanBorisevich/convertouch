@@ -13,7 +13,7 @@ abstract class GroupNames {
   static const length = "Length";
   static const temperature = "Temperature";
   static const currency = "Currency";
-  static const clothingSize = "Clothing Size";
+  static const clothesSize = "Clothes Size";
   static const ringSize = "Ring Size";
   static const mass = "Mass";
 }
@@ -234,16 +234,16 @@ enum ConvertouchValueType {
 enum ConvertouchListType {
   person(1, preselected: false),
   garment(2, preselected: false),
-  clothingSizeInter(3),
-  clothingSizeUs(4),
-  clothingSizeJp(5),
-  clothingSizeFr(6),
-  clothingSizeEu(7),
-  clothingSizeRu(8),
-  clothingSizeIt(9),
-  clothingSizeUk(10),
-  clothingSizeDe(11),
-  clothingSizeEs(12),
+  clothesSizeInter(3),
+  clothesSizeUs(4),
+  clothesSizeJp(5),
+  clothesSizeFr(6),
+  clothesSizeEu(7),
+  clothesSizeRu(8),
+  clothesSizeIt(9),
+  clothesSizeUk(10),
+  clothesSizeDe(11),
+  clothesSizeEs(12),
   ringSizeFr(13),
   ringSizeRu(14),
   ringSizeUs(15),

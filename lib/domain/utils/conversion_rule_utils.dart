@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/conversion_rules/barbell_weight.dart';
-import 'package:convertouch/domain/utils/conversion_rules/clothing_size.dart';
+import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
 
@@ -20,13 +20,13 @@ UnitRule? getRule({
     case ConversionType.formula:
       return mappingTable != null
           ? UnitRule.mappingTable(
-              mapping: mappingTable,
-              unitCode: unit.code,
-            )
+        mapping: mappingTable,
+        unitCode: unit.code,
+      )
           : getFormulaRule(
-              unitGroupName: unitGroup.name,
-              unitCode: unit.code,
-            );
+        unitGroupName: unitGroup.name,
+        unitCode: unit.code,
+      );
     case ConversionType.static:
     case ConversionType.dynamic:
       return UnitRule.coefficient(unit.coefficient!);
@@ -81,16 +81,16 @@ ConversionParamValueModel calculateParamValueBySrcValue({
     );
   } else {
     ParamValueByUnitValueFunc? func =
-        _nonListParamValueBySrcValueRules[unitGroupName]?[params.paramSet.name]
-            ?[param.name];
+    _nonListParamValueBySrcValueRules[unitGroupName]?[params.paramSet.name]
+    ?[param.name];
 
     ConversionParamValueModel paramValue = params.getParamValue(param.name)!;
 
     ValueModel? value = func
         ?.call(
-          value: srcUnitValue,
-          params: params,
-        )
+      value: srcUnitValue,
+      params: params,
+    )
         ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
 
     ValueModel? defaultValue;
@@ -128,14 +128,14 @@ ConversionUnitValueModel calculateSrcValueByParams({
     );
   } else {
     UnitValueByParamValuesFunc? func =
-        _nonListSrcValueByParamValuesRules[unitGroupName]
-            ?[params.paramSet.name];
+    _nonListSrcValueByParamValuesRules[unitGroupName]
+    ?[params.paramSet.name];
 
     ValueModel? value = func
         ?.call(
-          unit: srcUnit,
-          params: params,
-        )
+      unit: srcUnit,
+      params: params,
+    )
         ?.betweenOrNull(srcUnit.minValue, srcUnit.maxValue);
 
     return ConversionUnitValueModel(
@@ -146,21 +146,21 @@ ConversionUnitValueModel calculateSrcValueByParams({
 }
 
 typedef MappingRuleByParamFunc = Map<String, String>? Function(
-  ConversionParamSetValueModel,
-);
+    ConversionParamSetValueModel,
+    );
 
 typedef MappingRuleByUnitValueFunc = Map<String, String>? Function(
-  ConversionUnitValueModel,
-);
+    ConversionUnitValueModel,
+    );
 
 typedef ParamValueByUnitValueFunc = ValueModel? Function({
-  required ConversionUnitValueModel value,
-  required ConversionParamSetValueModel params,
+required ConversionUnitValueModel value,
+required ConversionParamSetValueModel params,
 });
 
 typedef UnitValueByParamValuesFunc = ValueModel? Function({
-  required UnitModel unit,
-  required ConversionParamSetValueModel params,
+required UnitModel unit,
+required ConversionParamSetValueModel params,
 });
 
 final Map<String, Map<String, UnitRule>> _formulaRules = {
@@ -168,7 +168,7 @@ final Map<String, Map<String, UnitRule>> _formulaRules = {
 };
 
 const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
-  GroupNames.clothingSize: getClothingSizesMapByParams,
+  GroupNames.clothesSize: getClothesSizesMapByParams,
   GroupNames.ringSize: getRingSizesMapByParams,
 };
 
@@ -177,10 +177,10 @@ const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
 };
 
 const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
-    _nonListParamValueBySrcValueRules = {
-  GroupNames.clothingSize: {
+_nonListParamValueBySrcValueRules = {
+  GroupNames.clothesSize: {
     ParamSetNames.byHeight: {
-      ParamNames.height: getHeightByClothingSize,
+      ParamNames.height: getHeightByClothesSize,
     },
   },
   GroupNames.ringSize: {
@@ -199,7 +199,7 @@ const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
 };
 
 const Map<String, Map<String, UnitValueByParamValuesFunc>>
-    _nonListSrcValueByParamValuesRules = {
+_nonListSrcValueByParamValuesRules = {
   GroupNames.mass: {
     ParamSetNames.barbellWeight: getBarbellFullWeight,
   },

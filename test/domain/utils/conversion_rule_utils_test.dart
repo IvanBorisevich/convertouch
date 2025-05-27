@@ -107,7 +107,7 @@ void main() {
 
     group('With parameters', () {
       ConversionParamSetValueModel params = ConversionParamSetValueModel(
-        paramSet: clothingSizeParamSet,
+        paramSet: clothesSizeParamSet,
         paramValues: [
           ConversionParamValueModel.tuple(personParam, "Man", null),
           ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -117,10 +117,10 @@ void main() {
       );
 
       group(
-        'Two-way conversion (e. g. clothing size)',
+        'Two-way conversion (e. g. clothes size)',
         () {
           Map<String, String> mappingTable = rules.getMappingTableByParams(
-            unitGroupName: GroupNames.clothingSize,
+            unitGroupName: GroupNames.clothesSize,
             params: params,
           )!;
 

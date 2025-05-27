@@ -7,10 +7,10 @@ import 'package:test/test.dart';
 import 'mock/mock_param.dart';
 import 'mock/mock_unit.dart';
 
-final _clothingSizeParams = ConversionParamSetValueBulkModel(
+final _clothesSizeParams = ConversionParamSetValueBulkModel(
   paramSetValues: [
     ConversionParamSetValueModel(
-      paramSet: clothingSizeParamSet,
+      paramSet: clothesSizeParamSet,
       paramValues: [
         ConversionParamValueModel.tuple(personParam, "Man", null),
         ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -45,18 +45,18 @@ const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
 void main() {
   test('Copy with changed list param value', () async {
     expect(
-      await _clothingSizeParams.copyWithChangedParam(
+      await _clothesSizeParams.copyWithChangedParam(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),
         paramSetFilter: (paramSetValue) =>
-            paramSetValue.paramSet.id == clothingSizeParamSet.id,
+            paramSetValue.paramSet.id == clothesSizeParamSet.id,
         paramFilter: (paramValue) => paramValue.param.id == personParam.id,
       ),
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               ConversionParamValueModel.tuple(personParam, "Woman", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -72,7 +72,7 @@ void main() {
 
   test('Copy with changed list param value (in active param set)', () async {
     expect(
-      await _clothingSizeParams.copyWithChangedParam(
+      await _clothesSizeParams.copyWithChangedParam(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),
@@ -81,7 +81,7 @@ void main() {
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               ConversionParamValueModel.tuple(personParam, "Woman", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -97,18 +97,18 @@ void main() {
 
   test('Copy with changed non-list param value', () async {
     expect(
-      await _clothingSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamByIds(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(150),
           defaultValue: ValueModel.numeric(2),
         ),
-        paramSetId: clothingSizeParamSet.id,
+        paramSetId: clothesSizeParamSet.id,
         paramId: heightParam.id,
       ),
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               ConversionParamValueModel.tuple(personParam, "Man", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
@@ -124,31 +124,31 @@ void main() {
 
   test('Copy with changed unknown param', () async {
     expect(
-      await _clothingSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamByIds(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(150),
           defaultValue: ValueModel.numeric(2),
         ),
-        paramSetId: clothingSizeParamSet.id,
+        paramSetId: clothesSizeParamSet.id,
         paramId: -1,
       ),
-      _clothingSizeParams,
+      _clothesSizeParams,
     );
   });
 
   test('Copy with changed non-list param unit', () async {
     expect(
-      await _clothingSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamByIds(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           unit: meter,
         ),
-        paramSetId: clothingSizeParamSet.id,
+        paramSetId: clothesSizeParamSet.id,
         paramId: heightParam.id,
       ),
       ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: clothingSizeParamSet,
+            paramSet: clothesSizeParamSet,
             paramValues: [
               ConversionParamValueModel.tuple(personParam, "Man", null),
               ConversionParamValueModel.tuple(garmentParam, "Shirt", null),

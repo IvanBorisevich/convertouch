@@ -34,11 +34,11 @@ enum Garment {
   }
 }
 
-class ClothingSizeCriterion extends Criterion {
+class ClothesSizeCriterion extends Criterion {
   final NumRange heightCmRange;
   final NumRange? waistCmRange;
 
-  const ClothingSizeCriterion({
+  const ClothesSizeCriterion({
     required this.heightCmRange,
     this.waistCmRange,
   });
@@ -66,16 +66,16 @@ class ClothingSizeCriterion extends Criterion {
   }
 }
 
-Map<String, String>? getClothingSizesMapByParams(
+Map<String, String>? getClothesSizesMapByParams(
   ConversionParamSetValueModel params,
 ) {
   Person? person = params.getValueOfType(ParamNames.person, Person.valueOf);
   Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
 
-  return _clothingSizes[person]?[garment]?.getRowByParams(params);
+  return _clothesSizes[person]?[garment]?.getRowByParams(params);
 }
 
-ValueModel? getHeightByClothingSize({
+ValueModel? getHeightByClothesSize({
   required ConversionUnitValueModel value,
   required ConversionParamSetValueModel params,
 }) {
@@ -83,21 +83,21 @@ ValueModel? getHeightByClothingSize({
   Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
   num? currentHeight = params.getParamValue(ParamNames.height)?.numVal;
 
-  var criterion = _clothingSizes[person]?[garment]?.getCriterionByValue(value);
+  var criterion = _clothesSizes[person]?[garment]?.getCriterionByValue(value);
   return ValueModel.any(
       criterion?.heightCmRange.valOrRight(currentHeight) ?? currentHeight);
 }
 
 const Map<Person,
-        Map<Garment, MappingTable<ClothingSizeCriterion, CountryCode>>>
-    _clothingSizes = {
+        Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
+    _clothesSizes = {
   Person.man: {
     Garment.shirt: MappingTable(
       unitCodeByKey: CountryCode.nameOf,
       keyByUnitCode: CountryCode.valueOf,
       rows: [
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(0, 164),
             waistCmRange: NumRange.leftOpen(0, 74),
           ),
@@ -115,7 +115,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(164, 170),
             waistCmRange: NumRange.leftOpen(74, 78),
           ),
@@ -133,7 +133,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(170, 176),
             waistCmRange: NumRange.leftOpen(78, 82),
           ),
@@ -151,7 +151,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(174, 180),
             waistCmRange: NumRange.leftOpen(82, 86),
           ),
@@ -169,7 +169,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(178, 184),
             waistCmRange: NumRange.leftOpen(86, 90),
           ),
@@ -187,7 +187,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(182, 188),
             waistCmRange: NumRange.leftOpen(90, 94),
           ),
@@ -205,7 +205,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(186, 192),
             waistCmRange: NumRange.leftOpen(94, 98),
           ),
@@ -223,7 +223,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(190, double.infinity),
             waistCmRange: NumRange.leftOpen(98, double.infinity),
           ),
@@ -247,7 +247,7 @@ const Map<Person,
       keyByUnitCode: CountryCode.valueOf,
       rows: [
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(0, 164),
             waistCmRange: NumRange.leftOpen(0, 74),
           ),
@@ -265,7 +265,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(164, 170),
             waistCmRange: NumRange.leftOpen(74, 78),
           ),
@@ -283,7 +283,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(170, 176),
             waistCmRange: NumRange.leftOpen(78, 82),
           ),
@@ -301,7 +301,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(176, 182),
             waistCmRange: NumRange.leftOpen(82, 86),
           ),
@@ -319,7 +319,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(180, 186),
             waistCmRange: NumRange.leftOpen(86, 90),
           ),
@@ -337,7 +337,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(184, 190),
             waistCmRange: NumRange.leftOpen(90, 94),
           ),
@@ -355,7 +355,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(188, double.infinity),
             waistCmRange: NumRange.leftOpen(94, double.infinity),
           ),
@@ -381,7 +381,7 @@ const Map<Person,
       keyByUnitCode: CountryCode.valueOf,
       rows: [
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(0, 156),
             waistCmRange: NumRange.leftOpen(58, 62),
           ),
@@ -399,7 +399,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(156, 162),
             waistCmRange: NumRange.leftOpen(62, 66),
           ),
@@ -417,7 +417,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(162, 168),
             waistCmRange: NumRange.leftOpen(66, 70),
           ),
@@ -435,7 +435,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(168, 174),
             waistCmRange: NumRange.leftOpen(70, 74),
           ),
@@ -453,7 +453,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(174, 180),
             waistCmRange: NumRange.leftOpen(74, 78),
           ),
@@ -471,7 +471,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(180, 186),
             waistCmRange: NumRange.leftOpen(78, 82),
           ),
@@ -489,7 +489,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(186, double.infinity),
             waistCmRange: NumRange.leftOpen(82, double.infinity),
           ),
@@ -513,7 +513,7 @@ const Map<Person,
       keyByUnitCode: CountryCode.valueOf,
       rows: [
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(0, 156),
             waistCmRange: NumRange.leftOpen(0, 62),
           ),
@@ -531,7 +531,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(156, 162),
             waistCmRange: NumRange.leftOpen(62, 66),
           ),
@@ -549,7 +549,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(162, 168),
             waistCmRange: NumRange.leftOpen(66, 70),
           ),
@@ -567,7 +567,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(168, 174),
             waistCmRange: NumRange.leftOpen(70, 74),
           ),
@@ -585,7 +585,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(174, 180),
             waistCmRange: NumRange.leftOpen(74, 78),
           ),
@@ -603,7 +603,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(180, 186),
             waistCmRange: NumRange.leftOpen(78, 82),
           ),
@@ -621,7 +621,7 @@ const Map<Person,
           },
         ),
         MappingRow(
-          criterion: ClothingSizeCriterion(
+          criterion: ClothesSizeCriterion(
             heightCmRange: NumRange.leftOpen(186, double.infinity),
             waistCmRange: NumRange.leftOpen(82, double.infinity),
           ),

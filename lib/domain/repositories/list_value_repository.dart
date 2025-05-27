@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/utils/conversion_rules/clothing_size.dart';
+import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
@@ -32,16 +32,16 @@ const Map<ConvertouchListType, List<String> Function({double? c})>
     listableSets = {
   ConvertouchListType.person: _persons,
   ConvertouchListType.garment: _garments,
-  ConvertouchListType.clothingSizeInter: _clothingSizesInter,
-  ConvertouchListType.clothingSizeUs: _clothingSizesUs,
-  ConvertouchListType.clothingSizeJp: _clothingSizesJp,
-  ConvertouchListType.clothingSizeFr: _clothingSizesFr,
-  ConvertouchListType.clothingSizeEu: _clothingSizesEu,
-  ConvertouchListType.clothingSizeRu: _clothingSizesRu,
-  ConvertouchListType.clothingSizeIt: _clothingSizesIt,
-  ConvertouchListType.clothingSizeUk: _clothingSizesUk,
-  ConvertouchListType.clothingSizeDe: _clothingSizesDe,
-  ConvertouchListType.clothingSizeEs: _clothingSizesEs,
+  ConvertouchListType.clothesSizeInter: _clothesSizesInter,
+  ConvertouchListType.clothesSizeUs: _clothesSizesUs,
+  ConvertouchListType.clothesSizeJp: _clothesSizesJp,
+  ConvertouchListType.clothesSizeFr: _clothesSizesFr,
+  ConvertouchListType.clothesSizeEu: _clothesSizesEu,
+  ConvertouchListType.clothesSizeRu: _clothesSizesRu,
+  ConvertouchListType.clothesSizeIt: _clothesSizesIt,
+  ConvertouchListType.clothesSizeUk: _clothesSizesUk,
+  ConvertouchListType.clothesSizeDe: _clothesSizesDe,
+  ConvertouchListType.clothesSizeEs: _clothesSizesEs,
   ConvertouchListType.ringSizeUs: _ringSizesUs,
   ConvertouchListType.ringSizeUk: _ringSizesUk,
   ConvertouchListType.ringSizeDe: _ringSizesDe,
@@ -58,7 +58,7 @@ List<String> _persons({double? c}) => Person.values.map((e) => e.name).toList();
 List<String> _garments({double? c}) =>
     Garment.values.map((e) => e.name).toList();
 
-List<String> _clothingSizesInter({double? c}) => [
+List<String> _clothesSizesInter({double? c}) => [
       "XXS",
       "XS",
       "S",
@@ -69,12 +69,12 @@ List<String> _clothingSizesInter({double? c}) => [
       "3XL",
     ];
 
-List<String> _clothingSizesUs({double? c}) => [
+List<String> _clothesSizesUs({double? c}) => [
       ...ObjectUtils.generateNumList(2, 14, step: 2),
       ...ObjectUtils.generateNumList(28, 42, step: 2),
     ];
 
-List<String> _clothingSizesJp({double? c}) => [
+List<String> _clothesSizesJp({double? c}) => [
       'S',
       'M',
       'L',
@@ -85,32 +85,32 @@ List<String> _clothingSizesJp({double? c}) => [
       '6L',
     ];
 
-List<String> _clothingSizesFr({double? c}) => [
+List<String> _clothesSizesFr({double? c}) => [
       ...ObjectUtils.generateNumList(34, 48, step: 2),
     ];
 
-List<String> _clothingSizesEu({double? c}) => [
+List<String> _clothesSizesEu({double? c}) => [
       ...ObjectUtils.generateNumList(34, 56, step: 2),
     ];
 
-List<String> _clothingSizesRu({double? c}) => [
+List<String> _clothesSizesRu({double? c}) => [
       ...ObjectUtils.generateNumList(40, 56, step: 2),
     ];
 
-List<String> _clothingSizesIt({double? c}) => [
+List<String> _clothesSizesIt({double? c}) => [
       ...ObjectUtils.generateNumList(38, 56, step: 2),
     ];
 
-List<String> _clothingSizesUk({double? c}) => [
+List<String> _clothesSizesUk({double? c}) => [
       ...ObjectUtils.generateNumList(6, 18, step: 2),
       ...ObjectUtils.generateNumList(26, 40, step: 2),
     ];
 
-List<String> _clothingSizesDe({double? c}) => [
+List<String> _clothesSizesDe({double? c}) => [
       ...ObjectUtils.generateNumList(32, 56, step: 2),
     ];
 
-List<String> _clothingSizesEs({double? c}) => [
+List<String> _clothesSizesEs({double? c}) => [
       ...ObjectUtils.generateNumList(34, 48, step: 2),
     ];
 

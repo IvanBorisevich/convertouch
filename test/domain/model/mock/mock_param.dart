@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
 import 'mock_unit.dart';
 
-const clothingSizeParamSet = ConversionParamSetModel(
+const clothesSizeParamSet = ConversionParamSetModel(
   id: 1,
   name: ParamSetNames.byHeight,
   mandatory: true,
