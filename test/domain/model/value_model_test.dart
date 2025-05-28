@@ -28,6 +28,7 @@ void main() {
     expect(ValueModel.any(1), ValueModel.one);
     expect(ValueModel.any(double.nan), _emptyStr);
     expect(ValueModel.any(null), null);
+    expect(ValueModel.any(''), null);
 
     ValueModel numVal = ValueModel.numeric(4000000000);
     expect(numVal.numVal, 4000000000);

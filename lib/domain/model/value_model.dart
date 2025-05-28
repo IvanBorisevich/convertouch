@@ -52,7 +52,7 @@ class ValueModel extends Equatable {
     }
 
     if (value is String) {
-      return ValueModel.str(value);
+      return value.isNotEmpty ? ValueModel.str(value) : null;
     }
 
     throw ConvertouchException(

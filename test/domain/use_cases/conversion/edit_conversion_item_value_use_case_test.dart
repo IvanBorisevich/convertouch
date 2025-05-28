@@ -79,11 +79,33 @@ void main() {
       });
 
       group('New src value does not exist | new src default value exists', () {
-        test('New default value should be applied', () async {
+        test('For null src value new default value should be applied',
+            () async {
           await testCase(
             useCase: useCase,
             delta: EditConversionItemValueDelta(
               newValue: null,
+              newDefaultValue: '2',
+              unitId: decimeter.id,
+            ),
+            unitGroup: lengthGroup,
+            currentSrc: ConversionUnitValueModel.tuple(decimeter, 10, 1),
+            currentParams: null,
+            currentUnitValues: currentUnitValues,
+            expectedSrc: ConversionUnitValueModel.tuple(decimeter, null, 2),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(decimeter, null, 2),
+              ConversionUnitValueModel.tuple(centimeter, null, 20),
+            ],
+          );
+        });
+
+        test('For empty src value new default value should be applied',
+            () async {
+          await testCase(
+            useCase: useCase,
+            delta: EditConversionItemValueDelta(
+              newValue: '',
               newDefaultValue: '2',
               unitId: decimeter.id,
             ),
@@ -103,12 +125,35 @@ void main() {
       group(
           'New src value does not exist | new src default value does not exist',
           () {
-        test('Default value should be a default value of the unit type',
+        test(
+            'For null src value default value should be a default value of the unit type',
             () async {
           await testCase(
             useCase: useCase,
             delta: EditConversionItemValueDelta(
               newValue: null,
+              newDefaultValue: null,
+              unitId: decimeter.id,
+            ),
+            unitGroup: lengthGroup,
+            currentSrc: ConversionUnitValueModel.tuple(decimeter, 10, 1),
+            currentParams: null,
+            currentUnitValues: currentUnitValues,
+            expectedSrc: ConversionUnitValueModel.tuple(decimeter, null, 1),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(decimeter, null, 1),
+              ConversionUnitValueModel.tuple(centimeter, null, 10),
+            ],
+          );
+        });
+
+        test(
+            'For empty src value default value should be '
+            'a default value of the unit type', () async {
+          await testCase(
+            useCase: useCase,
+            delta: EditConversionItemValueDelta(
+              newValue: '',
               newDefaultValue: null,
               unitId: decimeter.id,
             ),
