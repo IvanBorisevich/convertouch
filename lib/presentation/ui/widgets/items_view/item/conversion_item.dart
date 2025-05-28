@@ -123,36 +123,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   _isFocused = false;
                 });
               },
-              suffixIcon: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  widget.item is ConversionUnitValueModel &&
-                          !(widget.item as ConversionUnitValueModel)
-                              .unit
-                              .invertible
-                      ? Padding(
-                          padding: const EdgeInsets.all(9),
-                          child: IconUtils.getSuffixSvgIcon(
-                            IconNames.oneWayConversion,
-                            color: itemColor.textBox.foreground.regular,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  widget.item.value != null && _isFocused
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.close_rounded,
-                            color: itemColor.textBox.foreground.regular,
-                            size: 17,
-                          ),
-                          onPressed: () {
-                            widget.onValueChanged?.call(null);
-                          },
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
+              suffixIcon: _suffixIcon(),
               colors: unitTextBoxColor,
             ),
           ),
@@ -232,6 +203,33 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
         ? handlerColor.foreground.selected
         : handlerColor.foreground.regular;
 
+    Widget? handlerLogo() {
+      if (textLogo != null) {
+        return Container(
+          padding: const EdgeInsets.only(left: 2),
+          child: Text(
+            textLogo,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              height: -0.3,
+              color: foreground,
+            ),
+          ),
+        );
+      }
+
+      if (iconLogo != null) {
+        return Icon(
+          iconLogo,
+          color: foreground,
+        );
+      }
+
+      return null;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 7,
@@ -246,28 +244,37 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
             color: background,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
           ),
-          child: textLogo != null
-              ? Container(
-                  padding: const EdgeInsets.only(left: 2),
-                  child: Text(
-                    textLogo,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      height: -0.3,
-                      color: foreground,
-                    ),
-                  ),
-                )
-              : (iconLogo != null
-                  ? Icon(
-                      iconLogo,
-                      color: foreground,
-                    )
-                  : null),
+          child: handlerLogo(),
         ),
       ),
     );
+  }
+
+  Widget? _suffixIcon() {
+    if (widget.item is ConversionUnitValueModel &&
+        !(widget.item as ConversionUnitValueModel).unit.invertible) {
+      return Padding(
+        padding: const EdgeInsets.all(9),
+        child: IconUtils.getSuffixSvgIcon(
+          IconNames.oneWayConversion,
+          color: widget.colors.textBox.foreground.regular,
+        ),
+      );
+    }
+
+    if (widget.item.value != null && _isFocused) {
+      return IconButton(
+        icon: Icon(
+          Icons.close_rounded,
+          color: widget.colors.textBox.foreground.regular,
+          size: 17,
+        ),
+        onPressed: () {
+          widget.onValueChanged?.call(null);
+        },
+      );
+    }
+
+    return null;
   }
 }
