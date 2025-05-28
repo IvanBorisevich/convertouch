@@ -7,7 +7,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
   final int selectedIndex;
   final bool paramSetsCanBeAdded;
   final bool selectedParamSetCanBeRemoved;
-  final bool paramSetsCanBeRemovedInBulk;
+  final bool optionalParamSetsExist;
   final bool mandatoryParamSetExists;
   final int totalCount;
 
@@ -16,17 +16,46 @@ class ConversionParamSetValueBulkModel extends Equatable {
     this.selectedIndex = -1,
     this.paramSetsCanBeAdded = false,
     this.selectedParamSetCanBeRemoved = false,
-    this.paramSetsCanBeRemovedInBulk = false,
+    this.optionalParamSetsExist = false,
     this.mandatoryParamSetExists = false,
     this.totalCount = 1,
   });
+
+  factory ConversionParamSetValueBulkModel.basic({
+    List<ConversionParamSetValueModel> paramSetValues = const [],
+    int? selectedIndex,
+    int totalCount = 1,
+  }) {
+    int paramSetsListSize = paramSetValues.length;
+    int index = selectedIndex ?? paramSetsListSize - 1;
+
+    bool paramSetsCanBeAdded = paramSetsListSize < totalCount;
+    bool selectedParamSetCanBeRemoved =
+        paramSetValues.isNotEmpty && !paramSetValues[index].paramSet.mandatory;
+    bool optionalParamSetsExist = paramSetValues.any(
+      (p) => !p.paramSet.mandatory,
+    );
+    bool mandatoryParamSetExists = paramSetValues.any(
+      (p) => p.paramSet.mandatory,
+    );
+
+    return ConversionParamSetValueBulkModel(
+      paramSetValues: paramSetValues,
+      selectedIndex: index,
+      paramSetsCanBeAdded: paramSetsCanBeAdded,
+      selectedParamSetCanBeRemoved: selectedParamSetCanBeRemoved,
+      optionalParamSetsExist: optionalParamSetsExist,
+      mandatoryParamSetExists: mandatoryParamSetExists,
+      totalCount: totalCount,
+    );
+  }
 
   ConversionParamSetValueBulkModel copyWith({
     List<ConversionParamSetValueModel>? paramSetValues,
     int? selectedIndex,
     bool? paramSetsCanBeAdded,
     bool? selectedParamSetCanBeRemoved,
-    bool? paramSetsCanBeRemovedInBulk,
+    bool? optionalParamSetsExist,
     bool? mandatoryParamSetExists,
     int? totalCount,
   }) {
@@ -36,8 +65,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
       paramSetsCanBeAdded: paramSetsCanBeAdded ?? this.paramSetsCanBeAdded,
       selectedParamSetCanBeRemoved:
           selectedParamSetCanBeRemoved ?? this.selectedParamSetCanBeRemoved,
-      paramSetsCanBeRemovedInBulk:
-          paramSetsCanBeRemovedInBulk ?? this.paramSetsCanBeRemovedInBulk,
+      optionalParamSetsExist:
+          optionalParamSetsExist ?? this.optionalParamSetsExist,
       mandatoryParamSetExists:
           mandatoryParamSetExists ?? this.mandatoryParamSetExists,
       totalCount: totalCount ?? this.totalCount,
@@ -140,7 +169,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
         selectedIndex,
         paramSetsCanBeAdded,
         selectedParamSetCanBeRemoved,
-        paramSetsCanBeRemovedInBulk,
+        optionalParamSetsExist,
         mandatoryParamSetExists,
         totalCount,
       ];
@@ -151,7 +180,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
       "selectedIndex": selectedIndex,
       "paramSetsCanBeAdded": paramSetsCanBeAdded,
       "paramSetCanBeRemoved": selectedParamSetCanBeRemoved,
-      "paramSetsCanBeRemovedInBulk": paramSetsCanBeRemovedInBulk,
+      "optionalParamSetsExist": optionalParamSetsExist,
       "mandatoryParamSetExists": mandatoryParamSetExists,
       "totalCount": totalCount,
     };
@@ -172,7 +201,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
       selectedIndex: json["selectedIndex"] ?? 0,
       paramSetsCanBeAdded: json["paramSetsCanBeAdded"] ?? false,
       selectedParamSetCanBeRemoved: json["paramSetCanBeRemoved"] ?? false,
-      paramSetsCanBeRemovedInBulk: json["paramSetsCanBeRemovedInBulk"] ?? false,
+      optionalParamSetsExist: json["optionalParamSetsExist"] ?? false,
       mandatoryParamSetExists: json["mandatoryParamSetExists"] ?? false,
       totalCount: json["totalCount"] ?? 0,
     );
@@ -185,7 +214,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
         'selectedIndex: $selectedIndex, '
         'paramSetsCanBeAdded: $paramSetsCanBeAdded, '
         'selectedParamSetCanBeRemoved: $selectedParamSetCanBeRemoved, '
-        'paramSetsCanBeRemovedInBulk: $paramSetsCanBeRemovedInBulk, '
+        'optionalParamSetsExist: $optionalParamSetsExist, '
         'mandatoryParamSetExists: $mandatoryParamSetExists, '
         'totalCount: $totalCount}';
   }

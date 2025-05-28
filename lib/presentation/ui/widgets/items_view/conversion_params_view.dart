@@ -219,7 +219,7 @@ class ConversionParamsView extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: params!.paramSetsCanBeRemovedInBulk,
+                        visible: params!.optionalParamSetsExist,
                         child: Expanded(
                           child: Container(
                             alignment: Alignment.bottomCenter,

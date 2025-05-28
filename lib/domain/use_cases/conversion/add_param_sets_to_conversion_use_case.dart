@@ -78,10 +78,8 @@ class AddParamSetsToConversionUseCase
       } else if (paramSetsTotalCount == 0) {
         return null;
       } else {
-        return ConversionParamSetValueBulkModel(
+        return ConversionParamSetValueBulkModel.basic(
           totalCount: paramSetsTotalCount,
-          paramSetsCanBeAdded: true,
-          paramSetsCanBeRemovedInBulk: true,
         );
       }
     }
@@ -149,17 +147,9 @@ class AddParamSetsToConversionUseCase
       paramFilter: (p) => p.param.calculable,
     );
 
-    return ConversionParamSetValueBulkModel(
+    return ConversionParamSetValueBulkModel.basic(
       paramSetValues: resultParamSetValues,
-      paramSetsCanBeAdded: mandatoryParamSetExists &&
-              resultParamSetValues.length < paramSetsTotalCount - 1 ||
-          resultParamSetValues.length < paramSetsTotalCount,
       selectedIndex: resultSelectedIndex,
-      selectedParamSetCanBeRemoved:
-          !resultParamSetValues[resultSelectedIndex].paramSet.mandatory,
-      paramSetsCanBeRemovedInBulk: !(resultParamSetValues.length == 1 &&
-          resultParamSetValues.first.paramSet.mandatory),
-      mandatoryParamSetExists: mandatoryParamSetExists,
       totalCount: paramSetsTotalCount,
     );
   }

@@ -105,7 +105,7 @@ void main() {
       'selectedIndex': 0,
       "paramSetsCanBeAdded": false,
       "paramSetCanBeRemoved": false,
-      "paramSetsCanBeRemovedInBulk": false,
+      "optionalParamSetsExist": false,
       "mandatoryParamSetExists": true,
       'totalCount': 1,
     },

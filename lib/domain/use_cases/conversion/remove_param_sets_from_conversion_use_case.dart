@@ -54,7 +54,7 @@ class RemoveParamSetsFromConversionUseCase
           newParamSetValues.length < oldConversionParams.totalCount,
       selectedParamSetCanBeRemoved: newParamSetValues.isNotEmpty &&
           !newParamSetValues[newSelectedIndex].paramSet.mandatory,
-      paramSetsCanBeRemovedInBulk: newParamSetValues.isNotEmpty &&
+      optionalParamSetsExist: newParamSetValues.isNotEmpty &&
           !(newParamSetValues.length == 1 &&
               newParamSetValues.first.paramSet.mandatory),
     );
