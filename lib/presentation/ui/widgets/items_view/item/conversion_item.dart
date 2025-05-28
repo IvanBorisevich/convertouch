@@ -13,6 +13,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final void Function()? onTap;
   final void Function(String?)? onValueChanged;
   final void Function()? onRemove;
+  final bool wrapped;
   final bool isSource;
   final bool disabled;
   final bool controlsVisible;
@@ -26,6 +27,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
     this.onTap,
     this.onValueChanged,
     this.onRemove,
+    this.wrapped = false,
     this.isSource = false,
     this.disabled = false,
     this.controlsVisible = true,
@@ -44,9 +46,10 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     extends State<ConvertouchConversionItem<T>> {
   static const double _unitButtonWidth = 90;
   static const double _unitButtonBorderRadius = 15;
-  static const double _containerPadding = 7;
-  static const double _containerHeight =
-      ConvertouchTextBox.defaultHeight + _containerPadding * 2;
+  static const double _containerHeight = ConvertouchTextBox.defaultHeight;
+  static const double _wrapContainerVerticalPadding = 7;
+  static const double _wrapContainerHeight =
+      _containerHeight + _wrapContainerVerticalPadding * 2;
 
   late bool _isFocused;
 
@@ -62,7 +65,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     var unitButtonColor = itemColor.unitButton;
     var unitTextBoxColor = itemColor.textBox;
     var handlerColor = itemColor.handler;
-    var highlightBackgroundColor = itemColor.highlightBackground;
+    var wrapBackgroundColor = itemColor.wrapBackground;
 
     String? valueStr;
     String? defaultValueStr;
@@ -79,12 +82,13 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     String? itemCode = widget.unitItemCodeFunc.call(widget.item);
 
     return Container(
-      height: _containerHeight,
-      padding: const EdgeInsets.symmetric(vertical: _containerPadding),
+      height: widget.wrapped ? _wrapContainerHeight : _containerHeight,
+      padding: widget.wrapped
+          ? const EdgeInsets.symmetric(vertical: _wrapContainerVerticalPadding)
+          : null,
       decoration: BoxDecoration(
-        color: widget.isSource
-            ? highlightBackgroundColor.regular
-            : Colors.transparent,
+        color:
+            widget.isSource ? wrapBackgroundColor.regular : Colors.transparent,
       ),
       child: Row(
         children: [

@@ -65,6 +65,7 @@ class _ConvertouchConversionItemsViewState
             index: index,
             isSource:
                 widget.convertedItems[index].unit.id == widget.sourceUnitId,
+            wrapped: true,
             disabled: !widget.convertedItems[index].unit.invertible,
             itemNameFunc: (item) => item.unit.name,
             unitItemCodeFunc: (item) => item.unit.code,

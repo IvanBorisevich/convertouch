@@ -293,7 +293,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
       selected: Color(0xFF88AACB),
     ),
   ),
-  highlightBackground: ColorVariation.only(Color(0xFF3F4756)),
+  wrapBackground: ColorVariation.only(Color(0xFF3D4554)),
 );
 
 const unitGroupsPageFloatingButtonColorSchemeDark = ConvertouchColorScheme(

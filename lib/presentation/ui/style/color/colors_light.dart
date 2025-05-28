@@ -292,7 +292,7 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
       selected: Color(0xFF486077),
     ),
   ),
-  highlightBackground: ColorVariation.only(Color(0xffd8e6ff)),
+  wrapBackground: ColorVariation.only(Color(0xffd8e6ff)),
 );
 
 const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
