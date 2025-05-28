@@ -283,9 +283,16 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
     ),
   ),
   handler: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffccdeff)),
-    foreground: ColorVariation.only(Color(0xFF4D657C)),
+    background: ColorVariation(
+      regular: Color(0xffccdeff),
+      selected: Color(0xffbdd1f6),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF4D657C),
+      selected: Color(0xFF486077),
+    ),
   ),
+  highlightBackground: ColorVariation.only(Color(0xffd8e6ff)),
 );
 
 const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(

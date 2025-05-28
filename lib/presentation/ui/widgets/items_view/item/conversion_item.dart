@@ -13,6 +13,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final void Function()? onTap;
   final void Function(String?)? onValueChanged;
   final void Function()? onRemove;
+  final bool isSource;
   final bool disabled;
   final bool controlsVisible;
   final String Function(T) itemNameFunc;
@@ -25,6 +26,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
     this.onTap,
     this.onValueChanged,
     this.onRemove,
+    this.isSource = false,
     this.disabled = false,
     this.controlsVisible = true,
     required this.itemNameFunc,
@@ -41,9 +43,10 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
 class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     extends State<ConvertouchConversionItem<T>> {
   static const double _unitButtonWidth = 90;
-  static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
-  static const double _elementsBorderRadius = 15;
-  static const double _spacing = 9;
+  static const double _unitButtonBorderRadius = 15;
+  static const double _containerPadding = 7;
+  static const double _containerHeight =
+      ConvertouchTextBox.defaultHeight + _containerPadding * 2;
 
   late bool _isFocused;
 
@@ -59,6 +62,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     var unitButtonColor = itemColor.unitButton;
     var unitTextBoxColor = itemColor.textBox;
     var handlerColor = itemColor.handler;
+    var highlightBackgroundColor = itemColor.highlightBackground;
 
     String? valueStr;
     String? defaultValueStr;
@@ -74,17 +78,24 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     String itemName = widget.itemNameFunc.call(widget.item);
     String? itemCode = widget.unitItemCodeFunc.call(widget.item);
 
-    return SizedBox(
-      height: _defaultHeight,
+    return Container(
+      height: _containerHeight,
+      padding: const EdgeInsets.symmetric(vertical: _containerPadding),
+      decoration: BoxDecoration(
+        color: widget.isSource
+            ? highlightBackgroundColor.regular
+            : Colors.transparent,
+      ),
       child: Row(
         children: [
           widget.controlsVisible
               ? _wrapIntoDragListener(
                   index: widget.index,
                   child: _handler(
-                    icon: Icons.drag_indicator_outlined,
-                    background: handlerColor.background.regular,
-                    foreground: handlerColor.foreground.regular,
+                    iconLogo:
+                        !widget.isSource ? Icons.drag_indicator_outlined : null,
+                    textLogo: widget.isSource ? '𝑥' : null,
+                    handlerColor: handlerColor,
                   ),
                 )
               : const SizedBox.shrink(),
@@ -148,8 +159,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
           itemCode != null
               ? Container(
                   width: _unitButtonWidth,
-                  height: _defaultHeight,
-                  padding: const EdgeInsets.only(left: _spacing),
+                  height: ConvertouchTextBox.defaultHeight,
+                  padding: const EdgeInsets.only(left: 7),
                   child: TextButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
@@ -157,20 +168,16 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
-                        _isFocused && !widget.disabled
-                            ? unitButtonColor.background.focused
-                            : unitButtonColor.background.regular,
+                        unitButtonColor.background.regular,
                       ),
                       shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           side: BorderSide(
-                            color: _isFocused && !widget.disabled
-                                ? unitButtonColor.border.focused
-                                : unitButtonColor.border.regular,
+                            color: unitButtonColor.border.regular,
                             width: 1,
                           ),
                           borderRadius: const BorderRadius.all(
-                            Radius.circular(_elementsBorderRadius),
+                            Radius.circular(_unitButtonBorderRadius),
                           ),
                         ),
                       ),
@@ -178,9 +185,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                     child: Text(
                       itemCode,
                       style: TextStyle(
-                        color: _isFocused && !widget.disabled
-                            ? unitButtonColor.foreground.focused
-                            : unitButtonColor.foreground.regular,
+                        color: unitButtonColor.foreground.regular,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
@@ -191,9 +196,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               : const SizedBox.shrink(),
           widget.controlsVisible
               ? _handler(
-                  icon: Icons.remove,
-                  background: handlerColor.background.regular,
-                  foreground: handlerColor.foreground.regular,
+                  iconLogo: Icons.remove,
+                  handlerColor: handlerColor,
                   onTap: widget.onRemove,
                 )
               : const SizedBox.shrink(),
@@ -215,26 +219,53 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
   }
 
   Widget _handler({
-    required IconData icon,
-    required Color foreground,
-    required Color background,
+    IconData? iconLogo,
+    String? textLogo,
+    required ConvertouchColorScheme handlerColor,
     void Function()? onTap,
   }) {
+    Color background = widget.isSource
+        ? handlerColor.background.selected
+        : handlerColor.background.regular;
+
+    Color foreground = widget.isSource
+        ? handlerColor.foreground.selected
+        : handlerColor.foreground.regular;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 9),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 7,
+      ),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           width: 32,
           height: 32,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: background,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
           ),
-          child: Icon(
-            icon,
-            color: foreground,
-          ),
+          child: textLogo != null
+              ? Container(
+                  padding: const EdgeInsets.only(left: 2),
+                  child: Text(
+                    textLogo,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      height: -0.3,
+                      color: foreground,
+                    ),
+                  ),
+                )
+              : (iconLogo != null
+                  ? Icon(
+                      iconLogo,
+                      color: foreground,
+                    )
+                  : null),
         ),
       ),
     );

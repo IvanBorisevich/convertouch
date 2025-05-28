@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionUnitValueModel> convertedItems;
+  final int? sourceUnitId;
   final void Function(ConversionUnitValueModel)? onUnitItemTap;
   final void Function(ConversionUnitValueModel, String?)? onTextValueChanged;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
@@ -15,6 +16,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
   const ConvertouchConversionItemsView(
     this.convertedItems, {
+    this.sourceUnitId,
     this.onUnitItemTap,
     this.onTextValueChanged,
     this.onItemRemoveTap,
@@ -29,9 +31,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _itemsSpacing = 10;
-  static const double _itemPadding = _itemsSpacing / 2;
-  static const double _itemTopPadding = 7;
+  static const double _viewTopPadding = 7;
   static const double _bottomSpacing = 85;
 
   @override
@@ -51,7 +51,7 @@ class _ConvertouchConversionItemsViewState
       shrinkWrap: true,
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(
-        top: _itemPadding + 4,
+        top: _viewTopPadding,
         bottom: _bottomSpacing,
       ),
       itemBuilder: (context, index) {
@@ -59,13 +59,12 @@ class _ConvertouchConversionItemsViewState
 
         return Padding(
           key: Key('$index'),
-          padding: const EdgeInsets.only(
-            top: _itemTopPadding,
-            bottom: _itemPadding,
-          ),
+          padding: const EdgeInsets.only(),
           child: ConvertouchConversionItem(
             item,
             index: index,
+            isSource:
+                widget.convertedItems[index].unit.id == widget.sourceUnitId,
             disabled: !widget.convertedItems[index].unit.invertible,
             itemNameFunc: (item) => item.unit.name,
             unitItemCodeFunc: (item) => item.unit.code,

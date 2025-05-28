@@ -116,11 +116,13 @@ class ConversionItemColorScheme extends ConvertouchColorScheme {
   final InputBoxColorScheme textBox;
   final ConvertouchColorScheme unitButton;
   final ConvertouchColorScheme handler;
+  final ColorVariation highlightBackground;
 
   const ConversionItemColorScheme({
     required this.textBox,
     required this.unitButton,
     this.handler = ConvertouchColorScheme.none,
+    this.highlightBackground = ColorVariation.none,
     super.background,
   });
 }
