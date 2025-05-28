@@ -23,10 +23,10 @@ class EditConversionItemValueUseCase
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required EditConversionItemValueDelta delta,
   }) async {
-    UnitModel newUnit = modifiedConvertedItemsMap[delta.unitId]!.unit;
+    UnitModel newUnit = newConvertedUnitValues[delta.unitId]!.unit;
     ValueModel? newDefaultValue;
 
     if (newUnit.listType == null) {

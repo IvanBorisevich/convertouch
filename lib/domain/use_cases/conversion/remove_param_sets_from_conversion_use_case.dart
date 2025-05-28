@@ -65,7 +65,7 @@ class RemoveParamSetsFromConversionUseCase
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required RemoveParamSetsDelta delta,
   }) async {
     return ObjectUtils.tryGet(

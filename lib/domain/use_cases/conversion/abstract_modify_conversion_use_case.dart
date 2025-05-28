@@ -32,13 +32,13 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         return Right(input.conversion);
       }
 
-      final conversionItemsMap = {
+      final oldConvertedUnitValues = {
         for (var item in input.conversion.convertedUnitValues)
           item.unit.id: item
       };
 
-      final modifiedConvertedItemsMap = await newConvertedUnitValues(
-        oldConvertedUnitValues: conversionItemsMap,
+      final modifiedConvertedValues = await newConvertedUnitValues(
+        oldConvertedUnitValues: oldConvertedUnitValues,
         delta: input.delta,
       );
 
@@ -53,7 +53,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       }
 
-      if (modifiedConvertedItemsMap.isEmpty) {
+      if (modifiedConvertedValues.isEmpty) {
         return Right(
           ConversionModel(
             id: input.conversion.id,
@@ -65,11 +65,11 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
       ConversionUnitValueModel? newSrcUnitValue = await newSourceUnitValue(
         oldSourceUnitValue: input.conversion.srcUnitValue ??
-            modifiedConvertedItemsMap[input.conversion.srcUnitValue?.unit.id] ??
-            modifiedConvertedItemsMap.values.first,
+            modifiedConvertedValues[input.conversion.srcUnitValue?.unit.id] ??
+            modifiedConvertedValues.values.first,
         activeParams: newParams?.activeParams,
         unitGroup: modifiedGroup,
-        modifiedConvertedItemsMap: modifiedConvertedItemsMap,
+        newConvertedUnitValues: modifiedConvertedValues,
         delta: input.delta,
       );
 
@@ -95,7 +95,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
             unitGroup: modifiedGroup,
             params: newParams?.activeParams,
             sourceUnitValue: newSrcUnitValue,
-            targetUnits: modifiedConvertedItemsMap.values
+            targetUnits: modifiedConvertedValues.values
                 .map((conversionItem) => conversionItem.unit)
                 .toList(),
           ),
@@ -106,7 +106,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       } else {
         conversion = conversion.copyWith(
-          convertedUnitValues: modifiedConvertedItemsMap.values.toList(),
+          convertedUnitValues: modifiedConvertedValues.values.toList(),
         );
       }
 
@@ -135,7 +135,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required D delta,
   }) async {
     return oldSourceUnitValue;

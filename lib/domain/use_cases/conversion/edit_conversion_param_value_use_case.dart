@@ -61,7 +61,7 @@ class EditConversionParamValueUseCase
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required EditConversionParamValueDelta delta,
   }) async {
     return ObjectUtils.tryGet(

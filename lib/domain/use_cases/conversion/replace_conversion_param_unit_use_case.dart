@@ -53,7 +53,7 @@ class ReplaceConversionParamUnitUseCase
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required ReplaceConversionParamUnitDelta delta,
   }) async {
     return ObjectUtils.tryGet(

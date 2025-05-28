@@ -37,11 +37,11 @@ class ReplaceConversionItemUnitUseCase
     required ConversionUnitValueModel oldSourceUnitValue,
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
-    required Map<int, ConversionUnitValueModel> modifiedConvertedItemsMap,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required ReplaceConversionItemUnitDelta delta,
   }) async {
     ConversionUnitValueModel newSrcUnitValue =
-        modifiedConvertedItemsMap[delta.newUnit.id]!;
+        newConvertedUnitValues[delta.newUnit.id]!;
 
     return ObjectUtils.tryGet(
       await replaceUnitInConversionItemUseCase.execute(
