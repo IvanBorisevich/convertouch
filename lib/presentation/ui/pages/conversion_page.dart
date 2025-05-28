@@ -76,22 +76,29 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
               return ConvertouchPage(
                 title: unitGroup.name,
                 appBarRightWidgets: [
-                  IconButton(
-                      icon: IconUtils.getIcon(
-                        IconNames.parameters,
-                        color: pageColorScheme.appBar.foreground.regular,
-                        size: 22,
-                      ),
-                      onPressed: () {
-                        if (_panelController.isAttached) {
-                          if (_panelController.isPanelClosed) {
-                            _panelController.open();
-                          } else {
-                            _panelController.close();
-                          }
-                        }
-                      },
-                    ),
+                  conversionBlocBuilder(
+                    builderFunc: (pageState) {
+                      return Visibility(
+                        visible: pageState.conversion.params != null,
+                        child: IconButton(
+                          icon: IconUtils.getIcon(
+                            IconNames.parameters,
+                            color: pageColorScheme.appBar.foreground.regular,
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            if (_panelController.isAttached) {
+                              if (_panelController.isPanelClosed) {
+                                _panelController.open();
+                              } else {
+                                _panelController.close();
+                              }
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   ConvertouchPopupMenu(
                     width: 210,
                     onMenuStateChange: (isOpen) {

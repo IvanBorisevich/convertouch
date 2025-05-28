@@ -184,6 +184,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                       ],
                     ),
                     bottomNavigationBar: BottomNavigationBar(
+                      showSelectedLabels: false,
+                      showUnselectedLabels: false,
                       type: BottomNavigationBarType.fixed,
                       items: [
                         _buildNavbarItem(
