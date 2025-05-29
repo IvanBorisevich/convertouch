@@ -16,6 +16,7 @@ class ConvertouchInputBox extends StatefulWidget {
   final bool autofocus;
   final bool readonly;
   final void Function(String)? onChanged;
+  final void Function()? onClean;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
   final int? maxTextLength;
@@ -38,6 +39,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.autofocus = false,
     this.readonly = false,
     this.onChanged,
+    this.onClean,
     this.onFocusSelected,
     this.onFocusLeft,
     this.maxTextLength,
@@ -88,7 +90,8 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
       label: widget.label,
       autofocus: widget.autofocus,
       readonly: widget.readonly,
-      onChanged: widget.onChanged,
+      onValueChanged: widget.onChanged,
+      onValueClean: widget.onClean,
       onFocusSelected: widget.onFocusSelected,
       onFocusLeft: widget.onFocusLeft,
       maxTextLength: widget.maxTextLength,

@@ -74,7 +74,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
             Expanded(
               child: ConvertouchTextBox(
                 controller: _searchFieldController,
-                onChanged: widget.onSearchStringChanged,
+                onValueChanged: widget.onSearchStringChanged,
                 hintText: widget.placeholder,
                 prefixIcon: Icon(
                   Icons.search,

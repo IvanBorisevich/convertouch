@@ -46,7 +46,7 @@ class ConvertouchParameterItem extends StatelessWidget {
           ? ConvertouchTextBox(
               label: headerTitle ?? "",
               controller: valueChangeController,
-              onChanged: onValueChanged,
+              onValueChanged: onValueChanged,
               hintText: value,
               colors: textBoxColor,
               textLengthCounterVisible: editableValueLengthVisible,

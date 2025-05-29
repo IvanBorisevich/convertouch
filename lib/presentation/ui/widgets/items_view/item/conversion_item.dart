@@ -117,6 +117,9 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   widget.onValueChanged?.call(value);
                 }
               },
+              onClean: () {
+                widget.onValueChanged?.call(null);
+              },
               onFocusSelected: () {
                 setState(() {
                   _isFocused = true;
@@ -263,19 +266,6 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
           IconNames.oneWayConversion,
           color: widget.colors.textBox.foreground.regular,
         ),
-      );
-    }
-
-    if (widget.item.value != null && _isFocused) {
-      return IconButton(
-        icon: Icon(
-          Icons.close_rounded,
-          color: widget.colors.textBox.foreground.regular,
-          size: 17,
-        ),
-        onPressed: () {
-          widget.onValueChanged?.call(null);
-        },
       );
     }
 

@@ -45,7 +45,8 @@ class ConvertouchTextBox extends StatefulWidget {
   final String label;
   final bool autofocus;
   final bool readonly;
-  final void Function(String)? onChanged;
+  final void Function(String)? onValueChanged;
+  final void Function()? onValueClean;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
   final int? maxTextLength;
@@ -67,7 +68,8 @@ class ConvertouchTextBox extends StatefulWidget {
     this.label = "",
     this.autofocus = false,
     this.readonly = false,
-    this.onChanged,
+    this.onValueChanged,
+    this.onValueClean,
     this.onFocusSelected,
     this.onFocusLeft,
     this.maxTextLength,
@@ -87,8 +89,6 @@ class ConvertouchTextBox extends StatefulWidget {
 }
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
-  int? _cursorPosition;
-
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
 
@@ -128,6 +128,25 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(ConvertouchTextBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.text != oldWidget.text) {
+      String newText = widget.text ?? "";
+      int offset = _controller.selection.baseOffset;
+
+      if (offset > newText.length) {
+        offset = newText.length;
+      }
+
+      _controller.value = _controller.value.copyWith(
+        text: widget.text ?? "",
+        selection: TextSelection.collapsed(offset: offset),
+      );
+    }
+  }
+
   void _focusListener() {
     if (widget.readonly) {
       return;
@@ -135,7 +154,6 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
     if (_focusNode.hasFocus) {
       widget.onFocusSelected?.call();
-      _cursorPosition = null;
     } else {
       widget.onFocusLeft?.call();
     }
@@ -144,16 +162,6 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   @override
   Widget build(BuildContext context) {
     RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.valueType];
-
-    _controller.text = widget.text ?? "";
-
-    if (_cursorPosition == null || _cursorPosition! > _controller.text.length) {
-      _cursorPosition = _controller.text.length;
-    }
-
-    _controller.selection = TextSelection.collapsed(
-      offset: _cursorPosition!,
-    );
 
     Color borderColor;
     Color foregroundColor;
@@ -188,11 +196,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             : null,
         keyboardType: inputValueTypeToKeyboardTypeMap[widget.valueType],
         onChanged: (newValue) {
-          int currentCursorPos = _controller.selection.baseOffset;
-          widget.onChanged?.call(newValue);
-          setState(() {
-            _cursorPosition = currentCursorPos;
-          });
+          widget.onValueChanged?.call(newValue);
         },
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
@@ -233,7 +237,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           contentPadding: widget.contentPadding,
           counterText: "",
           prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
+          suffixIcon: _suffixIcon(),
           suffixIconColor: foregroundColor,
           suffixText: widget.textLengthCounterVisible
               ? '${_controller.text.length}/${widget.maxTextLength}'
@@ -249,5 +253,24 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         textAlign: TextAlign.start,
       ),
     );
+  }
+
+  Widget? _suffixIcon() {
+    if (widget.suffixIcon != null) {
+      return widget.suffixIcon;
+    }
+
+    if (_controller.text.isNotEmpty && _focusNode.hasFocus) {
+      return IconButton(
+        icon: Icon(
+          Icons.close_rounded,
+          color: widget.colors.foreground.regular,
+          size: 17,
+        ),
+        onPressed: widget.onValueClean,
+      );
+    }
+
+    return null;
   }
 }
