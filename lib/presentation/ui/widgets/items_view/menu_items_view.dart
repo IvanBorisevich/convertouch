@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -19,9 +20,9 @@ import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
-    extends StatefulWidget {
-  final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
+class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
+    P extends ItemsFetchParams> extends StatefulWidget {
+  final ItemsListBloc<T, ItemsFetched<T>, P> itemsListBloc;
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String? searchBarPlaceholder;
@@ -55,11 +56,12 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
   });
 
   @override
-  State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T>();
+  State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T, P>();
 }
 
-class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
-    extends State<ConvertouchMenuItemsView<T>> with ItemsLazyLoadingMixin {
+class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
+        P extends ItemsFetchParams>
+    extends State<ConvertouchMenuItemsView<T, P>> with ItemsLazyLoadingMixin {
   static const double _itemsSpacing = 8;
   static const double _bottomSpacing = 85;
 
@@ -196,7 +198,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
                 colors: itemColors,
                 disabled: disabled,
                 logoFunc: _itemLogoFunc,
-                itemName: item.itemName,
+                itemName: item.name,
                 checkIconVisible: checkIconVisible,
                 checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
                 editIconVisible: editIconVisible,
@@ -211,7 +213,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
               colors: itemColors,
               disabled: disabled,
               logoFunc: _itemLogoFunc,
-              itemName: item.itemName,
+              itemName: item.name,
               checkIconVisible: checkIconVisible,
               checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
               editIconVisible: editIconVisible,
@@ -325,7 +327,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
         Expanded(
           child: ScrollConfiguration(
             behavior: NoGlowScrollBehavior(),
-            child: BlocListener<ItemsListBloc<T, ItemsFetched<T>>,
+            child: BlocListener<ItemsListBloc<T, ItemsFetched<T>, P>,
                 ItemsFetched<T>>(
               bloc: widget.itemsListBloc,
               listener: (_, state) {

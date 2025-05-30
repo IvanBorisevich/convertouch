@@ -6,14 +6,15 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchUnitsUseCase extends UseCase<InputItemsFetchModel, List<UnitModel>> {
+class FetchUnitsUseCase
+    extends UseCase<InputItemsFetchModel<UnitsFetchParams>, List<UnitModel>> {
   final UnitRepository unitRepository;
 
   const FetchUnitsUseCase(this.unitRepository);
 
   @override
   Future<Either<ConvertouchException, List<UnitModel>>> execute(
-    InputItemsFetchModel input,
+    InputItemsFetchModel<UnitsFetchParams> input,
   ) async {
     if (input.parentItemType == ItemType.unitGroup ||
         input.parentItemType == null) {

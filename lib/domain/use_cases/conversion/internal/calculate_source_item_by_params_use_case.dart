@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_source_item_by_params_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -46,7 +47,11 @@ class CalculateSourceItemByParamsUseCase
 
   Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
     ValueModel? defaultValue = ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(srcUnit),
+      await calculateDefaultValueUseCase.execute(
+        InputDefaultValueCalculationModel(
+            item: srcUnit,
+        ),
+      ),
     );
     return ConversionUnitValueModel(
       unit: srcUnit,

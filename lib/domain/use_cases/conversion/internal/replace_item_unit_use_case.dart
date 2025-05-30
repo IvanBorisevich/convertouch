@@ -1,6 +1,10 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -9,7 +13,8 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-abstract class ReplaceItemUnitUseCase<T extends ConversionItemValueModel>
+abstract class ReplaceItemUnitUseCase<T extends ConversionItemValueModel,
+        V extends IdNameItemModel>
     extends UseCase<InputItemUnitReplaceModel<T>, T> {
   final ListValueRepository listValueRepository;
   final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
@@ -24,33 +29,48 @@ abstract class ReplaceItemUnitUseCase<T extends ConversionItemValueModel>
     InputItemUnitReplaceModel<T> input,
   ) async {
     try {
-      ValueModel? newValue = await _validateValue(input);
-      ValueModel? newDefaultValue = await _calculateDefaultValue(input);
+      ConvertouchListType? newListType =
+          input.newUnit.listType ?? input.item.listType;
+
+      ValueModel? newValue = await _validateValue(
+        input: input,
+        newListType: newListType,
+      );
+      ValueModel? newDefaultValue = await _calculateDefaultValue(
+        input: input,
+        newListType: newListType,
+      );
 
       return Right(
         _buildNewItem(
           item: input.item,
           newUnit: input.newUnit,
+          newListType: newListType,
           newValue: newValue,
           newDefaultValue: newDefaultValue,
         ),
       );
     } catch (e, stackTrace) {
-      return Left(ConvertouchException(
-        message: "Error when replacing the item unit; $e",
-        stackTrace: stackTrace,
-        dateTime: DateTime.now(),
-      ));
+      return Left(
+        ConvertouchException(
+          message: "Error when replacing the item unit; $e",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
     }
   }
 
-  Future<ValueModel?> _validateValue(InputItemUnitReplaceModel<T> input) async {
-    if (input.newUnit.listType != null) {
+  Future<ValueModel?> _validateValue({
+    required InputItemUnitReplaceModel<T> input,
+    required ConvertouchListType? newListType,
+  }) async {
+    if (newListType != null) {
       bool belongsToList = ObjectUtils.tryGet(
         await listValueRepository.belongsToList(
           value: input.item.value?.raw,
-          listType: input.newUnit.listType!,
-          coefficient: input.newUnit.coefficient,
+          listType: newListType,
+          unit: input.newUnit,
         ),
       );
 
@@ -60,30 +80,41 @@ abstract class ReplaceItemUnitUseCase<T extends ConversionItemValueModel>
     }
   }
 
-  Future<ValueModel?> _calculateDefaultValue(
-    InputItemUnitReplaceModel<T> input,
-  ) async {
+  Future<ValueModel?> _calculateDefaultValue({
+    required InputItemUnitReplaceModel<T> input,
+    required ConvertouchListType? newListType,
+  }) async {
     ValueModel? defaultValue;
-    if (input.item.defaultValue != null && input.newUnit.listType == null) {
+    if (input.item.defaultValue != null && newListType == null) {
       defaultValue = input.item.defaultValue;
     }
 
-    return defaultValue ??
-        ObjectUtils.tryGet(
-          await calculateDefaultValueUseCase.execute(input.newUnit),
-        );
+    if (defaultValue != null) {
+      return defaultValue;
+    }
+
+    return ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        getDefaultValueInputModel(input),
+      ),
+    );
   }
+
+  InputDefaultValueCalculationModel<V> getDefaultValueInputModel(
+    InputItemUnitReplaceModel<T> input,
+  );
 
   T _buildNewItem({
     required T item,
     required UnitModel newUnit,
+    required ConvertouchListType? newListType,
     required ValueModel? newValue,
     required ValueModel? newDefaultValue,
   });
 }
 
 class ReplaceUnitInConversionItemUseCase
-    extends ReplaceItemUnitUseCase<ConversionUnitValueModel> {
+    extends ReplaceItemUnitUseCase<ConversionUnitValueModel, UnitModel> {
   const ReplaceUnitInConversionItemUseCase({
     required super.listValueRepository,
     required super.calculateDefaultValueUseCase,
@@ -93,19 +124,30 @@ class ReplaceUnitInConversionItemUseCase
   ConversionUnitValueModel _buildNewItem({
     required ConversionUnitValueModel item,
     required UnitModel newUnit,
+    required ConvertouchListType? newListType,
     required ValueModel? newValue,
     required ValueModel? newDefaultValue,
   }) {
     return ConversionUnitValueModel(
       unit: newUnit,
-      value: newValue ?? (newUnit.listType != null ? newDefaultValue : null),
-      defaultValue: newUnit.listType != null ? null : newDefaultValue,
+      value: newValue ?? (newListType != null ? newDefaultValue : null),
+      defaultValue: newListType != null ? null : newDefaultValue,
+    );
+  }
+
+  @override
+  InputDefaultValueCalculationModel<UnitModel> getDefaultValueInputModel(
+    InputItemUnitReplaceModel<ConversionUnitValueModel> input,
+  ) {
+    return InputDefaultValueCalculationModel(
+      item: input.item.unit,
+      replacingUnit: input.newUnit,
     );
   }
 }
 
-class ReplaceUnitInParamUseCase
-    extends ReplaceItemUnitUseCase<ConversionParamValueModel> {
+class ReplaceUnitInParamUseCase extends ReplaceItemUnitUseCase<
+    ConversionParamValueModel, ConversionParamModel> {
   const ReplaceUnitInParamUseCase({
     required super.listValueRepository,
     required super.calculateDefaultValueUseCase,
@@ -115,15 +157,28 @@ class ReplaceUnitInParamUseCase
   ConversionParamValueModel _buildNewItem({
     required ConversionParamValueModel item,
     required UnitModel newUnit,
+    required ConvertouchListType? newListType,
     required ValueModel? newValue,
     required ValueModel? newDefaultValue,
   }) {
     return ConversionParamValueModel(
       param: item.param,
       unit: newUnit,
-      value: newValue ?? (newUnit.listType != null ? newDefaultValue : null),
-      defaultValue: newDefaultValue,
+      value: newValue ?? (newListType != null ? newDefaultValue : null),
+      defaultValue: newListType != null ? null : newDefaultValue,
       calculated: item.calculated,
+    );
+  }
+
+  @override
+  InputDefaultValueCalculationModel<ConversionParamModel>
+      getDefaultValueInputModel(
+    InputItemUnitReplaceModel<ConversionParamValueModel> input,
+  ) {
+    return InputDefaultValueCalculationModel(
+      item: input.item.param,
+      currentParamUnit: input.item.unit,
+      replacingUnit: input.newUnit,
     );
   }
 }

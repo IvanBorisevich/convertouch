@@ -5,8 +5,8 @@ import 'package:convertouch/domain/repositories/conversion_param_set_repository.
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class FetchParamSetsUseCase
-    extends UseCase<InputItemsFetchModel, List<ConversionParamSetModel>> {
+class FetchParamSetsUseCase extends UseCase<
+    InputItemsFetchModel<ParamSetsFetchParams>, List<ConversionParamSetModel>> {
   final ConversionParamSetRepository conversionParamSetRepository;
 
   const FetchParamSetsUseCase({
@@ -15,7 +15,7 @@ class FetchParamSetsUseCase
 
   @override
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>> execute(
-    InputItemsFetchModel input,
+    InputItemsFetchModel<ParamSetsFetchParams> input,
   ) async {
     return await conversionParamSetRepository.search(
       groupId: input.parentItemId,

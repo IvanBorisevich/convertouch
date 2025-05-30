@@ -37,8 +37,8 @@ class SelectListValue extends ItemsListEvent {
   }
 }
 
-class DropdownBloc
-    extends ItemsListBloc<ListValueModel, ItemsFetched<ListValueModel>> {
+class DropdownBloc extends ItemsListBloc<ListValueModel,
+    ItemsFetched<ListValueModel>, DropdownItemsFetchParams> {
   final GetListValuesUseCase getListValuesUseCase;
   final SelectListValueUseCase selectListValueUseCase;
 
@@ -56,7 +56,7 @@ class DropdownBloc
 
   @override
   Future<Either<ConvertouchException, List<ListValueModel>>> fetchItems(
-    InputItemsFetchModel input,
+    InputItemsFetchModel<DropdownItemsFetchParams> input,
   ) async {
     return await getListValuesUseCase.execute(input);
   }
@@ -82,6 +82,7 @@ class DropdownBloc
         InputListValueSelectionModel(
           value: event.value,
           listType: event.listType,
+          unit: state.listItemUnit,
         ),
       ),
     );
@@ -93,5 +94,12 @@ class DropdownBloc
     );
 
     event.onItemSelect?.call(listValue);
+  }
+
+  @override
+  DropdownItemsFetchParams? getFetchParams(FetchItems event) {
+    return DropdownItemsFetchParams(
+      unit: event.listItemUnit,
+    );
   }
 }

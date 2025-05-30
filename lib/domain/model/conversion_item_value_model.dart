@@ -35,6 +35,8 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   ConvertouchListType? get listType;
 
+  UnitModel? get unitItem;
+
   bool get hasValue {
     return listType != null && value != null ||
         listType == null && (value != null || defaultValue != null);
@@ -89,6 +91,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
 
   @override
   ConvertouchListType? get listType => unit.listType;
+
+  @override
+  UnitModel? get unitItem => unit;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
@@ -192,6 +197,9 @@ class ConversionParamValueModel extends ConversionItemValueModel {
 
   @override
   ConvertouchListType? get listType => param.listType;
+
+  @override
+  UnitModel? get unitItem => unit ?? param.defaultUnit;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {

@@ -5,8 +5,8 @@ import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class GetListValuesUseCase
-    extends UseCase<InputItemsFetchModel, List<ListValueModel>> {
+class GetListValuesUseCase extends UseCase<
+    InputItemsFetchModel<DropdownItemsFetchParams>, List<ListValueModel>> {
   final ListValueRepository listValueRepository;
 
   const GetListValuesUseCase({
@@ -15,7 +15,7 @@ class GetListValuesUseCase
 
   @override
   Future<Either<ConvertouchException, List<ListValueModel>>> execute(
-    InputItemsFetchModel input,
+    InputItemsFetchModel<DropdownItemsFetchParams> input,
   ) async {
     if (input.listType == null) {
       return const Right([]);
@@ -26,7 +26,7 @@ class GetListValuesUseCase
       searchString: input.searchString,
       pageNum: input.pageNum,
       pageSize: input.pageSize,
-      coefficient: input.coefficient,
+      unit: input.params?.unit,
     );
   }
 }

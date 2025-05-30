@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -16,12 +17,9 @@ class ListValueRepositoryImpl implements ListValueRepository {
     String? searchString,
     int pageNum = 0,
     int pageSize = 100,
-    double? coefficient,
+    UnitModel? unit,
   }) async {
-    List<ListValueModel>? result = _listValues[listType]
-        ?.call(c: coefficient)
-        .map((e) => ListValueModel(e))
-        .toList();
+    List<ListValueModel>? result = _listValues[listType]?.call(unit: unit);
 
     return Right(result ?? []);
   }
@@ -29,53 +27,52 @@ class ListValueRepositoryImpl implements ListValueRepository {
   @override
   Future<Either<ConvertouchException, ListValueModel?>> getDefault({
     required ConvertouchListType listType,
-    double? coefficient,
+    UnitModel? unit,
   }) async {
-    String? rawValue = listType.preselected
-        ? _listValues[listType]?.call(c: coefficient).firstOrNull
-        : null;
-    return rawValue != null
-        ? Right(ListValueModel(rawValue))
-        : const Right(null);
+    return Right(
+      listType.preselected
+          ? _listValues[listType]?.call(unit: unit).firstOrNull
+          : null,
+    );
   }
 
   @override
   Future<Either<ConvertouchException, bool>> belongsToList({
     required String? value,
     required ConvertouchListType listType,
-    double? coefficient,
+    UnitModel? unit,
   }) async {
     if (value == null) {
       return const Right(true);
     }
-    return Right(
-        _listValues[listType]?.call(c: coefficient).contains(value) ?? false);
+
+    bool belongs =
+        _listValues[listType]?.call(unit: unit).any((v) => v.value == value) ??
+            false;
+
+    return Right(belongs);
   }
 
   @override
   Future<Either<ConvertouchException, ListValueModel?>> getByStrValue({
     required ConvertouchListType listType,
     required String? value,
-    double? coefficient,
+    UnitModel? unit,
   }) async {
     if (value == null) {
       return const Right(null);
     }
 
-    bool belongsToList =
-        _listValues[listType]?.call(c: coefficient).any((v) => v == value) ??
-            false;
+    ListValueModel? result = _listValues[listType]
+        ?.call(unit: unit)
+        .firstWhereOrNull((v) => v.value == value);
 
-    if (belongsToList) {
-      return Right(ListValueModel(value));
-    } else {
-      return const Right(null);
-    }
+    return Right(result);
   }
 }
 
-const Map<ConvertouchListType, List<String> Function({double? c})> _listValues =
-    {
+const Map<ConvertouchListType, List<ListValueModel> Function({UnitModel? unit})>
+    _listValues = {
   ConvertouchListType.person: _persons,
   ConvertouchListType.garment: _garments,
   ConvertouchListType.clothesSizeInter: _clothesSizesInter,
@@ -96,15 +93,40 @@ const Map<ConvertouchListType, List<String> Function({double? c})> _listValues =
   ConvertouchListType.ringSizeRu: _ringSizesRu,
   ConvertouchListType.ringSizeIt: _ringSizesIt,
   ConvertouchListType.ringSizeJp: _ringSizesJp,
-  ConvertouchListType.barbellBarWeight: _barbellBarWeightsKg,
+  ConvertouchListType.barbellBarWeight: _barbellBarWeights,
 };
 
-List<String> _persons({double? c}) => Person.values.map((e) => e.name).toList();
+String _defaultMap<T>(T value) => value.toString();
 
-List<String> _garments({double? c}) =>
-    Garment.values.map((e) => e.name).toList();
+List<ListValueModel> _wrapList<T>(
+  List<T> src, {
+  String Function(T)? valueMap,
+  String Function(T)? nameMap,
+}) {
+  return src.map((v) {
+    String value = (valueMap ?? _defaultMap).call(v);
+    String name = (nameMap ?? _defaultMap).call(v);
 
-List<String> _clothesSizesInter({double? c}) => [
+    return ListValueModel(
+      value: value,
+      name: name,
+    );
+  }).toList();
+}
+
+List<ListValueModel> _persons({UnitModel? unit}) => _wrapList(
+      Person.values,
+      valueMap: (v) => v.name,
+      nameMap: (v) => v.name,
+    );
+
+List<ListValueModel> _garments({UnitModel? unit}) => _wrapList(
+      Garment.values,
+      valueMap: (v) => v.name,
+      nameMap: (v) => v.name,
+    );
+
+List<ListValueModel> _clothesSizesInter({UnitModel? unit}) => _wrapList([
       "XXS",
       "XS",
       "S",
@@ -113,14 +135,14 @@ List<String> _clothesSizesInter({double? c}) => [
       "XL",
       "XXL",
       "3XL",
-    ];
+    ]);
 
-List<String> _clothesSizesUs({double? c}) => [
+List<ListValueModel> _clothesSizesUs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(2, 14, step: 2),
       ...ObjectUtils.generateNumList(28, 42, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesJp({double? c}) => [
+List<ListValueModel> _clothesSizesJp({UnitModel? unit}) => _wrapList([
       'S',
       'M',
       'L',
@@ -129,42 +151,42 @@ List<String> _clothesSizesJp({double? c}) => [
       '4L',
       '5L',
       '6L',
-    ];
+    ]);
 
-List<String> _clothesSizesFr({double? c}) => [
+List<ListValueModel> _clothesSizesFr({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(34, 48, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesEu({double? c}) => [
+List<ListValueModel> _clothesSizesEu({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(34, 56, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesRu({double? c}) => [
+List<ListValueModel> _clothesSizesRu({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(40, 56, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesIt({double? c}) => [
+List<ListValueModel> _clothesSizesIt({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(38, 56, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesUk({double? c}) => [
+List<ListValueModel> _clothesSizesUk({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(6, 18, step: 2),
       ...ObjectUtils.generateNumList(26, 40, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesDe({double? c}) => [
+List<ListValueModel> _clothesSizesDe({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(32, 56, step: 2),
-    ];
+    ]);
 
-List<String> _clothesSizesEs({double? c}) => [
+List<ListValueModel> _clothesSizesEs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(34, 48, step: 2),
-    ];
+    ]);
 
-List<String> _ringSizesUs({double? c}) => [
+List<ListValueModel> _ringSizesUs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(3, 15, step: 0.5, fractionDigits: 1),
-    ];
+    ]);
 
-List<String> _ringSizesUk({double? c}) => [
+List<ListValueModel> _ringSizesUk({UnitModel? unit}) => _wrapList([
       'F',
       'G',
       'H',
@@ -190,9 +212,10 @@ List<String> _ringSizesUk({double? c}) => [
       'Z+3',
       'Z+4',
       'Z+5',
-    ];
+    ]);
 
-List<String> _ringSizesDe({double? c}) => ObjectUtils.fromNumList([
+List<ListValueModel> _ringSizesDe({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
       44,
       47,
       48,
@@ -216,9 +239,10 @@ List<String> _ringSizesDe({double? c}) => ObjectUtils.fromNumList([
       72,
       73,
       74,
-    ]);
+    ]));
 
-List<String> _ringSizesEs({double? c}) => ObjectUtils.fromNumList([
+List<ListValueModel> _ringSizesEs({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
       4,
       6.5,
       8,
@@ -243,9 +267,10 @@ List<String> _ringSizesEs({double? c}) => ObjectUtils.fromNumList([
       33,
       34.5,
       35,
-    ]);
+    ]));
 
-List<String> _ringSizesFr({double? c}) => ObjectUtils.fromNumList([
+List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
       44,
       46.5,
       48,
@@ -270,11 +295,13 @@ List<String> _ringSizesFr({double? c}) => ObjectUtils.fromNumList([
       72.5,
       73.5,
       75
-    ]);
+    ]));
 
-List<String> _ringSizesRu({double? c}) => _ringSizesFr(c: c);
+List<ListValueModel> _ringSizesRu({UnitModel? unit}) =>
+    _ringSizesFr(unit: unit);
 
-List<String> _ringSizesIt({double? c}) => ObjectUtils.fromNumList([
+List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
       4,
       5.5,
       7,
@@ -299,15 +326,16 @@ List<String> _ringSizesIt({double? c}) => ObjectUtils.fromNumList([
       32,
       33,
       35
-    ]);
+    ]));
 
-List<String> _ringSizesJp({double? c}) => [
+List<ListValueModel> _ringSizesJp({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.fromNumList([4, 5, 7, 8, 9, 10, 11]),
       ...ObjectUtils.generateNumList(13, 20),
       ...ObjectUtils.generateNumList(22, 23),
       ...ObjectUtils.fromNumList([24, 25, 26, 27]),
-    ];
+    ]);
 
-List<String> _barbellBarWeightsKg({double? c}) => [
-      ...ObjectUtils.generateNumList(10, 20, step: 10, divisor: c),
-    ];
+List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
+      ...ObjectUtils.generateNumList(10, 20,
+          step: 10, fractionDigits: 0, divisor: unit?.coefficient),
+    ]);

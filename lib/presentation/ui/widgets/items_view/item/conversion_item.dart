@@ -107,6 +107,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
             child: ConvertouchInputBox(
               value: valueStr,
               defaultValue: defaultValueStr,
+              itemUnit: widget.item.unitItem,
               readonly: widget.disabled,
               label: itemName,
               borderRadius: 15,

@@ -1,5 +1,6 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchInputBox extends StatefulWidget {
   final String? value;
   final String? defaultValue;
+  final UnitModel? itemUnit;
   final FocusNode? focusNode;
   final ConvertouchValueType valueType;
   final ConvertouchListType? listType;
@@ -33,6 +35,7 @@ class ConvertouchInputBox extends StatefulWidget {
   const ConvertouchInputBox({
     this.value,
     this.defaultValue,
+    this.itemUnit,
     this.focusNode,
     this.valueType = ConvertouchValueType.text,
     this.listType,
@@ -71,6 +74,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
         child: ConvertouchListBox(
           value: widget.value,
           listType: widget.listType!,
+          itemUnit: widget.itemUnit,
           focusNode: widget.focusNode,
           label: widget.label,
           autofocus: widget.autofocus,

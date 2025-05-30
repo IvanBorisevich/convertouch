@@ -6,6 +6,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
@@ -94,7 +95,9 @@ class AddParamSetsToConversionUseCase
       List<ConversionParamValueModel> paramValues = [];
       for (ConversionParamModel param in params) {
         ValueModel? defaultValue = ObjectUtils.tryGet(
-          await calculateDefaultValueUseCase.execute(param),
+          await calculateDefaultValueUseCase.execute(
+            InputDefaultValueCalculationModel(item: param),
+          ),
         );
 
         ConversionParamValueModel paramValue = ConversionParamValueModel(

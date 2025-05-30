@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ItemsListEvent extends ConvertouchEvent {
@@ -13,7 +14,7 @@ class FetchItems extends ItemsListEvent {
   final int pageSize;
   final bool firstFetch;
   final int parentItemId;
-  final double? coefficient;
+  final UnitModel? listItemUnit;
   final ConvertouchListType? listType;
   final ItemType? parentItemType;
   final void Function()? onFirstFetch;
@@ -23,7 +24,7 @@ class FetchItems extends ItemsListEvent {
     this.pageSize = 100,
     this.firstFetch = true,
     this.parentItemId = -1,
-    this.coefficient,
+    this.listItemUnit,
     this.listType,
     this.parentItemType,
     this.onFirstFetch,
@@ -35,7 +36,7 @@ class FetchItems extends ItemsListEvent {
         pageSize,
         firstFetch,
         parentItemId,
-        coefficient,
+        listItemUnit,
         parentItemType,
         listType,
       ];
@@ -47,7 +48,7 @@ class FetchItems extends ItemsListEvent {
         'parentItemId: $parentItemId, '
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
-        'coefficient: $coefficient, '
+        'listItemUnit: ${listItemUnit?.code}, '
         'parentItemType: $parentItemType, '
         'listType: $listType}';
   }

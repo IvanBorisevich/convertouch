@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ItemsListState extends ConvertouchState {
@@ -11,6 +12,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   final T? selectedItem;
   final List<int> oobIds;
   final int parentItemId;
+  final UnitModel? listItemUnit;
   final ItemType? parentItemType;
   final String? searchString;
   final FetchingStatus status;
@@ -22,6 +24,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
     this.selectedItem,
     this.oobIds = const [],
     this.parentItemId = -1,
+    this.listItemUnit,
     this.parentItemType,
     this.searchString,
     this.status = FetchingStatus.success,
@@ -37,6 +40,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
       selectedItem: selectedItem ?? this.selectedItem,
       oobIds: oobIds,
       parentItemId: parentItemId,
+      listItemUnit: listItemUnit,
       parentItemType: parentItemType,
       searchString: searchString,
       status: status,
@@ -52,6 +56,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
         oobIds,
         parentItemId,
         parentItemType,
+        listItemUnit,
         searchString,
         status,
         hasReachedMax,
@@ -64,6 +69,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
         'itemsCount: ${pageItems.length}, '
         'selectedItem: $selectedItem, '
         'parentItemId: $parentItemId, '
+        'listItemUnit: ${listItemUnit?.code}, '
         'parentItemType: $parentItemType, '
         'searchString: $searchString, '
         'status: $status, '

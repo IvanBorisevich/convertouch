@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -32,7 +33,9 @@ class EditConversionItemValueUseCase
     if (newUnit.listType == null) {
       newDefaultValue = ValueModel.any(delta.newDefaultValue) ??
           ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(newUnit),
+            await calculateDefaultValueUseCase.execute(
+              InputDefaultValueCalculationModel(item: newUnit),
+            ),
           );
     }
 

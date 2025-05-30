@@ -110,7 +110,7 @@ const UnitModel japanClothSize = UnitModel(
   id: 7,
   name: "Japan",
   code: "JP",
-  valueType: ConvertouchValueType.integerPositive,
+  valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.clothesSizeJp,
 );
 

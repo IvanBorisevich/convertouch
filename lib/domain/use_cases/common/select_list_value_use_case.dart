@@ -20,6 +20,7 @@ class SelectListValueUseCase
     return await listValueRepository.getByStrValue(
       listType: input.listType,
       value: input.value,
+      unit: input.unit,
     );
   }
 }
