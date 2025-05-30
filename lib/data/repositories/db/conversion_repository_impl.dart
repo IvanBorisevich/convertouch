@@ -8,10 +8,17 @@ import 'package:convertouch/data/entities/conversion_entity.dart';
 import 'package:convertouch/data/entities/conversion_item_value_entity.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
+import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
@@ -25,6 +32,8 @@ class ConversionRepositoryImpl extends ConversionRepository {
   final ConversionParamValueDao conversionParamValueDao;
   final UnitGroupRepository unitGroupRepository;
   final UnitRepository unitRepository;
+  final ConversionParamRepository conversionParamRepository;
+  final ConversionParamSetRepository conversionParamSetRepository;
   final sqlite.Database database;
 
   const ConversionRepositoryImpl({
@@ -33,6 +42,8 @@ class ConversionRepositoryImpl extends ConversionRepository {
     required this.conversionParamValueDao,
     required this.unitGroupRepository,
     required this.unitRepository,
+    required this.conversionParamRepository,
+    required this.conversionParamSetRepository,
     required this.database,
   });
 
@@ -74,29 +85,40 @@ class ConversionRepositoryImpl extends ConversionRepository {
         for (var unit in conversionItemUnits) unit.id: unit
       };
 
-      return Right(
-        ConversionTranslator.I.toModel(conversion).copyWith(
-              srcUnitValue: ConversionUnitValueTranslator.I.toModel(
-                ConversionUnitValueEntity(
-                  conversionId: conversion.id!,
-                  value: conversion.sourceValue,
-                  sequenceNum: 0,
-                  unitId: sourceItemUnit.id,
+      List<ConversionUnitValueModel> convertedUnitValues =
+          conversionItemEntities
+              .map(
+                (entity) => ConversionUnitValueTranslator.I.toModel(
+                  entity,
+                  unit: conversionItemUnitsMap[entity.unitId],
                 ),
-                unit: sourceItemUnit,
-              ),
-              unitGroup: unitGroup,
-              convertedUnitValues: conversionItemEntities
-                  .map(
-                    (entity) => ConversionUnitValueTranslator.I.toModel(
-                      entity,
-                      unit: conversionItemUnitsMap[entity.unitId],
-                    ),
-                  )
-                  .nonNulls
-                  .toList(),
-            ),
+              )
+              .nonNulls
+              .toList();
+
+      ConversionUnitValueModel srcUnitValue =
+          ConversionUnitValueTranslator.I.toModel(
+        ConversionUnitValueEntity(
+          conversionId: conversion.id!,
+          value: conversion.sourceValue,
+          sequenceNum: 0,
+          unitId: sourceItemUnit.id,
+        ),
+        unit: sourceItemUnit,
       );
+
+      ConversionModel resultConversion =
+          ConversionTranslator.I.toModel(conversion).copyWith(
+                srcUnitValue: srcUnitValue,
+                unitGroup: unitGroup,
+                convertedUnitValues: convertedUnitValues,
+                params: await _getConversionParams(
+                  conversionId: conversion.id!,
+                  groupId: unitGroupId,
+                ),
+              );
+
+      return Right(resultConversion);
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -140,6 +162,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         log("Updating an existing conversion: $entity");
         await conversionDao.update(entity);
         await conversionUnitValueDao.removeByConversionId(conversion.id);
+        await conversionParamValueDao.removeByConversionId(conversion.id);
         resultConversion = conversion;
       } else if (conversion.convertedUnitValues.isNotEmpty) {
         log("Inserting a new conversion: $entity");
@@ -167,6 +190,24 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
+      if (conversion.params != null) {
+        log("Inserting conversion params");
+
+        for (var paramSetValue in conversion.params!.paramSetValues) {
+          await conversionParamValueDao.insertBatch(
+              database,
+              paramSetValue.paramValues
+                  .mapIndexed(
+                    (index, item) => ConversionParamValueTranslator.I.fromModel(
+                      item,
+                      sequenceNum: index,
+                      conversionId: resultConversion.id,
+                    ),
+                  )
+                  .toList());
+        }
+      }
+
       return Right(resultConversion);
     } catch (e, stackTrace) {
       return Left(
@@ -177,5 +218,84 @@ class ConversionRepositoryImpl extends ConversionRepository {
         ),
       );
     }
+  }
+
+  Future<ConversionParamSetValueBulkModel?> _getConversionParams({
+    required int conversionId,
+    required int groupId,
+  }) async {
+    List<ConversionParamValueEntity> paramValueEntities =
+        await conversionParamValueDao.getByConversionId(conversionId);
+
+    if (paramValueEntities.isEmpty) {
+      return null;
+    }
+
+    var groupedParamValueEntities = paramValueEntities.groupListsBy(
+      (p) => p.paramSetId,
+    );
+
+    List<ConversionParamSetModel> paramSets = ObjectUtils.tryGet(
+      await conversionParamSetRepository.getByIds(
+        ids: groupedParamValueEntities.keys.toList(),
+      ),
+    );
+
+    Map<int, ConversionParamSetModel> paramSetsMap = {
+      for (var paramSet in paramSets) paramSet.id: paramSet
+    };
+
+    List<ConversionParamSetValueModel> paramSetValues = [];
+
+    for (var paramValueEntry in groupedParamValueEntities.entries) {
+      int paramSetId = paramValueEntry.key;
+      var paramValueEntities = paramValueEntry.value;
+
+      List<int> paramUnitIds =
+          paramValueEntities.map((p) => p.unitId).nonNulls.toList();
+
+      List<UnitModel> paramUnits = ObjectUtils.tryGet(
+        await unitRepository.getByIds(paramUnitIds),
+      );
+
+      Map<int, UnitModel> paramUnitsMap = {
+        for (var paramUnit in paramUnits) paramUnit.id: paramUnit
+      };
+
+      List<ConversionParamModel> conversionParams = ObjectUtils.tryGet(
+        await conversionParamRepository.get(paramSetId),
+      );
+
+      Map<int, ConversionParamModel> conversionParamsMap = {
+        for (var param in conversionParams) param.id: param
+      };
+
+      List<ConversionParamValueModel> paramValues = paramValueEntities
+          .mapIndexed(
+            (index, p) => ConversionParamValueTranslator.I.toModel(
+              p,
+              unit: paramUnitsMap[p.unitId],
+              param: conversionParamsMap[p.paramId],
+            ),
+          )
+          .toList();
+
+      var paramSetValueModel = ConversionParamSetValueModel(
+        paramSet: paramSetsMap[paramSetId]!,
+        paramValues: paramValues,
+      );
+
+      paramSetValues.add(paramSetValueModel);
+    }
+
+    int totalCount = ObjectUtils.tryGet(
+      await conversionParamSetRepository.getCount(groupId),
+    );
+
+    return ConversionParamSetValueBulkModel.basic(
+      paramSetValues: paramSetValues,
+      selectedIndex: 0,
+      totalCount: totalCount,
+    );
   }
 }

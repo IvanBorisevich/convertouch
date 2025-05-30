@@ -61,6 +61,7 @@ class Migration3to4 extends ConvertouchDbMigration {
     await database.execute('''
       CREATE TABLE IF NOT EXISTS `conversion_param_values` (
         `param_id` INTEGER NOT NULL, 
+        `param_set_id` INTEGER NOT NULL, 
         `unit_id` INTEGER, 
         `calculated` INTEGER, 
         `value` TEXT, 

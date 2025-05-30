@@ -19,7 +19,7 @@ abstract class ConversionParamValueDaoDb extends ConversionParamValueDao {
     var batch = db.batch();
     for (ConversionParamValueEntity entity in conversionParamValues) {
       batch.insert(
-        conversionUnitValuesTableName,
+        conversionParamValuesTableName,
         entity.toRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.fail,
       );

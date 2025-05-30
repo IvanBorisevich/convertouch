@@ -56,6 +56,7 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
   }) {
     return ConversionParamValueEntity(
       paramId: model.param.id,
+      paramSetId: model.param.paramSetId,
       unitId: model.unit?.id,
       calculated: bool2int(model.calculated),
       value: model.value?.raw,

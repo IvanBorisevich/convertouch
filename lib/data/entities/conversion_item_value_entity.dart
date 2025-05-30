@@ -80,6 +80,8 @@ class ConversionUnitValueEntity extends ConversionItemValueEntity {
 class ConversionParamValueEntity extends ConversionItemValueEntity {
   @ColumnInfo(name: 'param_id')
   final int paramId;
+  @ColumnInfo(name: 'param_set_id')
+  final int paramSetId;
   @ColumnInfo(name: 'unit_id')
   final int? unitId;
   final int? calculated;
@@ -87,6 +89,7 @@ class ConversionParamValueEntity extends ConversionItemValueEntity {
   const ConversionParamValueEntity({
     super.id,
     required this.paramId,
+    required this.paramSetId,
     this.unitId,
     this.calculated,
     super.value,
@@ -100,6 +103,7 @@ class ConversionParamValueEntity extends ConversionItemValueEntity {
     return {
       'id': id,
       'param_id': paramId,
+      'param_set_id': paramSetId,
       'unit_id': unitId,
       'calculated': calculated,
       'value': value,

@@ -130,7 +130,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_param_values` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER, `calculated` INTEGER, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_param_values` (`param_id` INTEGER NOT NULL, `param_set_id` INTEGER NOT NULL, `unit_id` INTEGER, `calculated` INTEGER, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -682,7 +682,7 @@ class _$ConversionParamValueDaoDb extends ConversionParamValueDaoDb {
       int conversionId) async {
     return _queryAdapter.queryList(
         'select * from conversion_param_values where conversion_id = ?1 order by sequence_num',
-        mapper: (Map<String, Object?> row) => ConversionParamValueEntity(id: row['id'] as int?, paramId: row['param_id'] as int, unitId: row['unit_id'] as int?, calculated: row['calculated'] as int?, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
+        mapper: (Map<String, Object?> row) => ConversionParamValueEntity(id: row['id'] as int?, paramId: row['param_id'] as int, paramSetId: row['param_set_id'] as int, unitId: row['unit_id'] as int?, calculated: row['calculated'] as int?, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
         arguments: [conversionId]);
   }
 

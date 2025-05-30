@@ -128,6 +128,8 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       conversionParamValueDao: database.conversionParamValueDao,
       unitGroupRepository: locator(),
       unitRepository: locator(),
+      conversionParamRepository: locator(),
+      conversionParamSetRepository: locator(),
       database: database.database.database,
     ),
   );
