@@ -20,43 +20,51 @@ class CalculateSourceItemByParamsUseCase
 
   @override
   Future<Either<ConvertouchException, ConversionUnitValueModel>> execute(
-      InputSourceItemByParamsModel input) async {
+    InputSourceItemByParamsModel input,
+  ) async {
     UnitModel srcUnit = input.oldSourceUnitValue.unit;
 
     if (input.params == null ||
         !input.params!.paramSet.mandatory && !input.params!.hasAllValues) {
-      return Right(
-        input.oldSourceUnitValue.hasValue
-            ? input.oldSourceUnitValue
-            : await _calculateDefaults(srcUnit),
-      );
+      if (input.oldSourceUnitValue.hasValue) {
+        return Right(input.oldSourceUnitValue);
+      } else {
+        ValueModel? defaultValue = ObjectUtils.tryGet(
+          await calculateDefaultValueUseCase.execute(
+            InputDefaultValueCalculationModel(
+              item: srcUnit,
+            ),
+          ),
+        );
+        return Right(
+          ConversionUnitValueModel(
+            unit: srcUnit,
+            value: srcUnit.listType != null ? defaultValue : null,
+            defaultValue: srcUnit.listType != null ? null : defaultValue,
+          ),
+        );
+      }
     }
 
     if (input.params!.hasAllValues || input.params!.paramSet.mandatory) {
+      ValueModel? defaultValue = ObjectUtils.tryGet(
+        await calculateDefaultValueUseCase.execute(
+          InputDefaultValueCalculationModel(
+            item: srcUnit,
+          ),
+        ),
+      );
+
       return Right(
         rules.calculateSrcValueByParams(
           params: input.params!,
           unitGroupName: input.unitGroupName,
           srcUnit: srcUnit,
+          defaultValue: defaultValue,
         ),
       );
     }
 
     return Right(input.oldSourceUnitValue);
-  }
-
-  Future<ConversionUnitValueModel> _calculateDefaults(UnitModel srcUnit) async {
-    ValueModel? defaultValue = ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(
-        InputDefaultValueCalculationModel(
-            item: srcUnit,
-        ),
-      ),
-    );
-    return ConversionUnitValueModel(
-      unit: srcUnit,
-      value: srcUnit.listType != null ? defaultValue : null,
-      defaultValue: srcUnit.listType != null ? null : defaultValue,
-    );
   }
 }

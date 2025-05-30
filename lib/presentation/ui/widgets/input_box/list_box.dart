@@ -71,7 +71,6 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
 
   @override
   void initState() {
-    print("Init state, value: ${widget.value}");
     _bloc = BlocProvider.of<DropdownBloc>(context)
       ..add(
         FetchItems(
@@ -121,15 +120,15 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
       );
     }
 
-    // if (widget.value != oldWidget.value) {
-    //   log("Value has been changed");
-    //   _bloc.add(
-    //     SelectListValue(
-    //       value: widget.value,
-    //       listType: widget.listType,
-    //     ),
-    //   );
-    // }
+    if (widget.value != oldWidget.value) {
+      log("Value has been changed");
+      _bloc.add(
+        SelectListValue(
+          value: widget.value,
+          listType: widget.listType,
+        ),
+      );
+    }
   }
 
   @override

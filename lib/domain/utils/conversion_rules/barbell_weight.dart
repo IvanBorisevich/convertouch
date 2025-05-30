@@ -24,11 +24,13 @@ ValueModel? getBarbellFullWeight({
 }) {
   num? oneSideWeight =
       params.getParamValue(ParamNames.oneSideWeight)?.eitherNum;
-  num? barWeight = params.getParamValue(ParamNames.barWeight)?.numVal;
+  var barWeightParam = params.getParamValue(ParamNames.barWeight);
 
-  if (oneSideWeight == null || barWeight == null) {
+  if (oneSideWeight == null || barWeightParam?.numVal == null) {
     return null;
   }
+
+  num? barWeight = barWeightParam!.numVal! * barWeightParam.unit!.coefficient!;
 
   return ValueModel.any(barWeight + oneSideWeight * 2);
 }

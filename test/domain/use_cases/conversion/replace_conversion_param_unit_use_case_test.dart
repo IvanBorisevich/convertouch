@@ -252,4 +252,60 @@ void main() {
       );
     });
   });
+
+  group('Change param unit in the conversion by coefficients', () {
+    group('Change list parameter unit (bar weight)', () {
+      test(
+          'Param list value should change as well, '
+          'conversion values should remain as is', () async {
+        double expectedNum = 22 * pound.coefficient! + 45 * 2;
+
+        await testCase(
+          unitGroup: massGroup,
+          useCase: useCase,
+          delta: ReplaceConversionParamUnitDelta(
+            paramId: barWeightParam.id,
+            paramSetId: barWeightParam.paramSetId,
+            newUnit: pound,
+          ),
+          currentParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: barbellWeightParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(barWeightParam, 10, null,
+                      unit: kilogram),
+                  ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
+                      unit: kilogram),
+                ],
+              )
+            ],
+            selectedIndex: 0,
+          ),
+          currentSrc: ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          ],
+          expectedSrc: ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: barbellWeightParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(barWeightParam, 22, null,
+                      unit: pound),
+                  ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
+                      unit: kilogram),
+                ],
+              ),
+            ],
+            selectedIndex: 0,
+          ),
+        );
+      });
+    });
+  });
 }

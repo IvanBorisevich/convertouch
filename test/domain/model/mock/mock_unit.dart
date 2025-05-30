@@ -171,3 +171,19 @@ const UnitModel pound = UnitModel(
   minValue: ValueModel.zero,
   coefficient: 0.45359237,
 );
+
+const UnitModel spainClothSize = UnitModel(
+  id: 15,
+  name: "Spain",
+  code: "ES",
+  valueType: ConvertouchValueType.integerPositive,
+  listType: ConvertouchListType.clothesSizeEs,
+);
+
+const UnitModel germanyClothSize = UnitModel(
+  id: 16,
+  name: "Germany",
+  code: "DE",
+  valueType: ConvertouchValueType.integerPositive,
+  listType: ConvertouchListType.clothesSizeDe,
+);
