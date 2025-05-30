@@ -41,7 +41,7 @@ class ConversionParamSetsPage extends StatelessWidget {
                 searchBarPlaceholder: "Search parameters...",
                 onItemTap: (paramSet) {
                   paramSetsSelectionBloc.add(
-                    SelectItem(
+                    SelectSingleItem(
                       id: paramSet.id,
                     ),
                   );

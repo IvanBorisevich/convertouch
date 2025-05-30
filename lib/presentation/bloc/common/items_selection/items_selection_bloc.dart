@@ -18,7 +18,7 @@ class ItemsSelectionBloc
     on<StartItemsMarking>(_onStartItemsMarking);
     on<CancelItemsMarking>(_onCancelItemsMarking);
     on<StartItemSelection>(_onStartItemSelection);
-    on<SelectItem>(_onSelectItem);
+    on<SelectSingleItem>(_onSelectItem);
   }
 
   _onStartItemsMarking(
@@ -71,7 +71,7 @@ class ItemsSelectionBloc
   }
 
   _onSelectItem(
-    SelectItem event,
+    SelectSingleItem event,
     Emitter<ItemsSelectionDone> emit,
   ) async {
     if (state.excludedIds.contains(event.id) || event.id == state.selectedId) {

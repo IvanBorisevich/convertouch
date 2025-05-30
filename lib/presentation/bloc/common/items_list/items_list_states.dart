@@ -8,6 +8,7 @@ abstract class ItemsListState extends ConvertouchState {
 
 class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   final List<T> pageItems;
+  final T? selectedItem;
   final List<int> oobIds;
   final int parentItemId;
   final ItemType? parentItemType;
@@ -18,6 +19,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
 
   const ItemsFetched({
     required this.pageItems,
+    this.selectedItem,
     this.oobIds = const [],
     this.parentItemId = -1,
     this.parentItemType,
@@ -27,12 +29,29 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
     this.pageNum = 0,
   });
 
+  ItemsFetched<T> copyWith({
+    T? selectedItem,
+  }) {
+    return ItemsFetched(
+      pageItems: pageItems,
+      selectedItem: selectedItem ?? this.selectedItem,
+      oobIds: oobIds,
+      parentItemId: parentItemId,
+      parentItemType: parentItemType,
+      searchString: searchString,
+      status: status,
+      hasReachedMax: hasReachedMax,
+      pageNum: pageNum,
+    );
+  }
+
   @override
   List<Object?> get props => [
         pageItems,
+        selectedItem,
         oobIds,
         parentItemId,
-    parentItemType,
+        parentItemType,
         searchString,
         status,
         hasReachedMax,
@@ -43,6 +62,7 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   String toString() {
     return 'ItemsFetched{'
         'itemsCount: ${pageItems.length}, '
+        'selectedItem: $selectedItem, '
         'parentItemId: $parentItemId, '
         'parentItemType: $parentItemType, '
         'searchString: $searchString, '

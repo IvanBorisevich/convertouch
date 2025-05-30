@@ -81,7 +81,7 @@ class ConversionGroupsPage extends StatelessWidget {
             },
             onItemTapForRemoval: (unitGroup) {
               itemsSelectionBloc.add(
-                SelectItem(id: unitGroup.id),
+                SelectSingleItem(id: unitGroup.id),
               );
             },
             onItemLongPress: (unitGroup) {

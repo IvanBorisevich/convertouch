@@ -48,7 +48,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                 navigationBloc.add(const NavigateBack());
               } else {
                 unitsSelectionBloc.add(
-                  SelectItem(
+                  SelectSingleItem(
                     id: unit.id,
                   ),
                 );

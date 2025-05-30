@@ -63,7 +63,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 },
                 onItemTapForRemoval: (unit) {
                   unitsSelectionBloc.add(
-                    SelectItem(
+                    SelectSingleItem(
                       id: unit.id,
                     ),
                   );

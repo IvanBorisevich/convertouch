@@ -67,10 +67,10 @@ class StartItemSelection extends ItemsSelectionEvent {
   }
 }
 
-class SelectItem extends ItemsSelectionEvent {
+class SelectSingleItem extends ItemsSelectionEvent {
   final int id;
 
-  const SelectItem({
+  const SelectSingleItem({
     required this.id,
   });
 
@@ -81,6 +81,6 @@ class SelectItem extends ItemsSelectionEvent {
 
   @override
   String toString() {
-    return 'SelectItem{id: $id}';
+    return 'SelectSingleItem{id: $id}';
   }
 }

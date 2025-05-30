@@ -1,3 +1,4 @@
+import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -62,23 +63,28 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
   @override
   Widget build(BuildContext context) {
     if (widget.listType != null) {
-      return ConvertouchListBox(
-        value: widget.value,
-        listType: widget.listType!,
-        bloc: BlocProvider.of<DropdownBloc>(context),
-        focusNode: widget.focusNode,
-        label: widget.label,
-        autofocus: widget.autofocus,
-        disabled: widget.readonly,
-        onChanged: widget.onChanged,
-        onFocusSelected: widget.onFocusSelected,
-        onFocusLeft: widget.onFocusLeft,
-        borderRadius: widget.borderRadius,
-        colors: widget.colors,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
-        height: widget.height,
-        fontSize: widget.fontSize,
+      return BlocProvider(
+        create: (_) => DropdownBloc(
+          getListValuesUseCase: di.locator(),
+          selectListValueUseCase: di.locator(),
+        ),
+        child: ConvertouchListBox(
+          value: widget.value,
+          listType: widget.listType!,
+          focusNode: widget.focusNode,
+          label: widget.label,
+          autofocus: widget.autofocus,
+          disabled: widget.readonly,
+          onChanged: widget.onChanged,
+          onFocusSelected: widget.onFocusSelected,
+          onFocusLeft: widget.onFocusLeft,
+          borderRadius: widget.borderRadius,
+          colors: widget.colors,
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon,
+          height: widget.height,
+          fontSize: widget.fontSize,
+        ),
       );
     }
 

@@ -29,6 +29,7 @@ import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/common/get_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/select_list_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
@@ -61,7 +62,6 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -386,6 +386,12 @@ Future<void> _initUseCases() async {
       listValueRepository: locator(),
     ),
   );
+
+  locator.registerLazySingleton<SelectListValueUseCase>(
+    () => SelectListValueUseCase(
+      listValueRepository: locator(),
+    ),
+  );
 }
 
 Future<void> _initBloc() async {
@@ -501,12 +507,6 @@ Future<void> _initBloc() async {
       getDataSourceUseCase: locator(),
       conversionBloc: locator(),
       navigationBloc: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<DropdownBloc>(
-    () => DropdownBloc(
-      getListValuesUseCase: locator(),
     ),
   );
 }

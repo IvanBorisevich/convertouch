@@ -77,10 +77,9 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       );
 
       final itemsWithMatch = newItems
-          .map((item) =>
-              searchString != null && searchString.isNotEmpty
-                  ? addSearchMatch(item, searchString)
-                  : item)
+          .map((item) => searchString != null && searchString.isNotEmpty
+              ? addSearchMatch(item, searchString)
+              : item)
           .toList();
 
       oobIds.addAll(
@@ -127,7 +126,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
 
   _onSaveItem(
     SaveItem<T> event,
-    Emitter<ItemsFetched> emit,
+    Emitter<ItemsFetched<T>> emit,
   ) async {
     final result = ObjectUtils.tryGet(await saveItem(event.item));
 
