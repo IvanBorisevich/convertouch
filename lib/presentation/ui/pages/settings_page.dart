@@ -72,7 +72,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                       context: context,
                       applicationName: appName,
                       applicationVersion: "Version: ${appState.appVersion}",
-                      applicationLegalese: "©2024, Made by johnbor7",
+                      applicationLegalese: "©2025, Made by johnbor7",
                     );
                   },
                   theme: appState.theme,

@@ -82,7 +82,7 @@ final locator = GetIt.I;
 
 Future<void> init() async {
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: HydratedStorageDirectory((await getTemporaryDirectory()).path),
+    storageDirectory: await getApplicationDocumentsDirectory(),
   );
 
   locator.registerLazySingleton<ConvertouchDatabaseHelper>(
