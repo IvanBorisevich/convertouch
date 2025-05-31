@@ -132,7 +132,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
           match: item.codeMatch,
           foreground: foreground,
           fontSize: 17,
-          fontWeight: FontWeight.w700,
           matchBackground: matchBackground,
           matchForeground: matchForeground,
         );

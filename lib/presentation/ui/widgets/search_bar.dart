@@ -76,6 +76,8 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                 controller: _searchFieldController,
                 onValueChanged: widget.onSearchStringChanged,
                 hintText: widget.placeholder,
+                fontSize: 15,
+                letterSpacing: 0,
                 prefixIcon: Icon(
                   Icons.search,
                   color: searchBarColorScheme.textBox.foreground.regular,
@@ -93,7 +95,6 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                     : null,
                 colors: searchBarColorScheme.textBox,
                 contentPadding: const EdgeInsets.symmetric(vertical: 7),
-                fontSize: 16,
               ),
             ),
             const SizedBox(width: 7),

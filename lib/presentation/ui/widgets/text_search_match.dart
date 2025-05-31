@@ -25,55 +25,39 @@ class TextSearchMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (match == ItemSearchMatch.none) {
-      return Text(
-        sourceString,
-        style: TextStyle(
-          fontFamily: quicksandFontFamily,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: foreground,
-        ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-      );
-    }
-
     return RichText(
-      text: TextSpan(
-        style: TextStyle(
-          fontFamily: quicksandFontFamily,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: foreground,
-        ),
-        children: match.lexemes
-            .mapIndexed(
-              (index, lexeme) => index == match.matchedLexemeIndex
-                  ? WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: matchBackground,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        child: Text(
-                          lexeme,
-                          style: TextStyle(
-                            color: matchForeground ?? foreground,
-                            fontFamily: quicksandFontFamily,
-                            fontSize: fontSize,
-                            fontWeight: fontWeight,
-                          ),
-                        ),
+      text: match != ItemSearchMatch.none
+          ? TextSpan(
+              children: match.lexemes
+                  .mapIndexed(
+                    (index, lexeme) => TextSpan(
+                      text: lexeme,
+                      style: TextStyle(
+                        backgroundColor: index == match.matchedLexemeIndex
+                            ? matchBackground
+                            : null,
+                        color: index == match.matchedLexemeIndex
+                            ? matchForeground
+                            : foreground,
+                        fontFamily: quicksandFontFamily,
+                        fontSize: fontSize,
+                        fontWeight: fontWeight,
+                        letterSpacing: 0,
                       ),
-                    )
-                  : TextSpan(text: lexeme),
+                    ),
+                  )
+                  .toList(),
             )
-            .toList(),
-      ),
+          : TextSpan(
+              text: sourceString,
+              style: TextStyle(
+                fontFamily: quicksandFontFamily,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                color: foreground,
+                letterSpacing: 0,
+              ),
+            ),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
     );

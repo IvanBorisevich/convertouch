@@ -181,7 +181,7 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF99C1EF),
     disabled: Color(0x9EB1CBEF),
   ),
-  matchBackground: ColorVariation.only(Color(0xFF4E79B2)),
+  matchBackground: ColorVariation.only(Color(0xFF80ADE7)),
   matchForeground: ColorVariation.only(Color(0xFF264E72)),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),

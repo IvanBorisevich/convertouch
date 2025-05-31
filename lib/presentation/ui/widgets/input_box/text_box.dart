@@ -59,6 +59,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final EdgeInsetsGeometry? labelPadding;
   final double height;
   final double fontSize;
+  final double? letterSpacing;
 
   const ConvertouchTextBox({
     this.text,
@@ -83,6 +84,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.labelPadding,
     this.height = defaultHeight,
     this.fontSize = 17,
+    this.letterSpacing,
     super.key,
   });
 
@@ -257,6 +259,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           fontSize: widget.fontSize,
           fontWeight: FontWeight.w500,
           fontFamily: quicksandFontFamily,
+          letterSpacing: widget.letterSpacing,
         ),
         textAlign: TextAlign.start,
       ),
