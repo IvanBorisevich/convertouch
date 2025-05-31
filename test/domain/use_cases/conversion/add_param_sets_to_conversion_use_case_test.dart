@@ -208,6 +208,28 @@ void main() {
 
         group('With formula', () {});
       });
+
+      group('No new param set', () {
+        test('Conversion should not be recalculated', () async {
+          await testCase(
+            unitGroup: lengthGroup,
+            useCase: useCase,
+            delta: const AddParamSetsDelta(),
+            currentParams: null,
+            currentSrc: ConversionUnitValueModel.tuple(meter, null, null),
+            currentUnitValues: [
+              ConversionUnitValueModel.tuple(meter, null, 1),
+              ConversionUnitValueModel.tuple(kilometer, null, 0.001),
+            ],
+            expectedSrc: ConversionUnitValueModel.tuple(meter, null, 1),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(meter, null, 1),
+              ConversionUnitValueModel.tuple(kilometer, null, 0.001),
+            ],
+            expectedParams: null,
+          );
+        });
+      });
     });
 
     group('Conversion has no items', () {

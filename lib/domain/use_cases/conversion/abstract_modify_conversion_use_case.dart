@@ -64,9 +64,9 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       ConversionUnitValueModel? newSrcUnitValue = await newSourceUnitValue(
-        oldSourceUnitValue: input.conversion.srcUnitValue ??
+        oldSourceUnitValue:
             modifiedConvertedValues[input.conversion.srcUnitValue?.unit.id] ??
-            modifiedConvertedValues.values.first,
+                modifiedConvertedValues.values.first,
         activeParams: newParams?.activeParams,
         unitGroup: modifiedGroup,
         newConvertedUnitValues: modifiedConvertedValues,

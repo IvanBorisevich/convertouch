@@ -34,7 +34,7 @@ void main() {
   group('Conversion by coefficients', () {
     group('New list parameter value (barbell bar weight)', () {
       group('Src value exists | src default value exists', () {
-        test('Source unit value only should be recalculated by params',
+        test('Source unit value and default value should be recalculated',
             () async {
           await testCase(
             unitGroup: massGroup,
@@ -68,11 +68,11 @@ void main() {
               ConversionUnitValueModel.tuple(kilogram, 70, 1),
               ConversionUnitValueModel.tuple(pound, 70 / pound.coefficient!, 1),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, null),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, null),
+              ConversionUnitValueModel.tuple(kilogram, 80, 1),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, null),
+                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -97,7 +97,7 @@ void main() {
       });
 
       group('Src value exists | src default value does not exist', () {
-        test('Source unit value only should be recalculated by params',
+        test('Source unit value and default value should be recalculated',
             () async {
           await testCase(
             unitGroup: massGroup,
@@ -132,11 +132,11 @@ void main() {
               ConversionUnitValueModel.tuple(
                   pound, 1 / pound.coefficient!, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, null),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, null),
+              ConversionUnitValueModel.tuple(kilogram, 80, 1),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, null),
+                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -161,7 +161,7 @@ void main() {
       });
 
       group('Src value does not exists | src default value exists', () {
-        test('Source unit value only should be recalculated by params',
+        test('Source unit value and default value should be recalculated',
             () async {
           await testCase(
             unitGroup: massGroup,
@@ -196,11 +196,11 @@ void main() {
               ConversionUnitValueModel.tuple(
                   pound, null, 1 / pound.coefficient!),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, null),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, null),
+              ConversionUnitValueModel.tuple(kilogram, 80, 1),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, null),
+                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -225,7 +225,7 @@ void main() {
       });
 
       group('Src value does not exists | src default value does not exist', () {
-        test('Source unit value only should be recalculated by params',
+        test('Source unit value and default value should be recalculated',
             () async {
           await testCase(
             unitGroup: massGroup,
@@ -259,11 +259,11 @@ void main() {
               ConversionUnitValueModel.tuple(kilogram, null, null),
               ConversionUnitValueModel.tuple(pound, null, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, null),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, null),
+              ConversionUnitValueModel.tuple(kilogram, 80, 1),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, null),
+                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -291,7 +291,7 @@ void main() {
     group('New non-list parameter value (barbell one side weight)', () {
       group('New param value exists | default value exists', () {
         group('Src value exists | src default value exists', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -326,11 +326,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -355,7 +355,7 @@ void main() {
         });
 
         group('Src value exists | src default value does not exist', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -390,11 +390,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -419,7 +419,7 @@ void main() {
         });
 
         group('Src value does not exists | src default value exists', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -454,11 +454,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -484,7 +484,7 @@ void main() {
 
         group('Src value does not exists | src default value does not exist',
             () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -518,11 +518,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -549,7 +549,7 @@ void main() {
 
       group('New param value exists | default value does not exist', () {
         group('Src value exists | src default value exists', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -584,11 +584,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -613,7 +613,7 @@ void main() {
         });
 
         group('Src value exists | src default value does not exist', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -648,11 +648,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -677,7 +677,7 @@ void main() {
         });
 
         group('Src value does not exists | src default value exists', () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -712,11 +712,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -742,7 +742,7 @@ void main() {
 
         group('Src value does not exists | src default value does not exist',
             () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -776,11 +776,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -807,8 +807,7 @@ void main() {
 
       group('New param value does not exist | default value exists', () {
         group('Src value exists | src default value exists', () {
-          test(
-              'Source unit value only should be recalculated by param default value',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -843,11 +842,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -873,8 +872,7 @@ void main() {
         });
 
         group('Src value exists | src default value does not exist', () {
-          test(
-              'Source unit value only should be recalculated by param default value',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -909,11 +907,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -939,8 +937,7 @@ void main() {
         });
 
         group('Src value does not exists | src default value exists', () {
-          test(
-              'Source unit value only should be recalculated by param default value',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -975,11 +972,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1006,7 +1003,7 @@ void main() {
 
         group('Src value does not exists | src default value does not exist',
             () {
-          test('Source unit value only should be recalculated by params',
+          test('Source unit value and default value should be recalculated',
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -1040,11 +1037,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, null),
+                ConversionUnitValueModel.tuple(kilogram, 90, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, null),
+                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1074,7 +1071,7 @@ void main() {
           () {
         group('Src value exists | src default value exists', () {
           test(
-              'Source unit value only should be recalculated '
+              'Source unit value and default value should be recalculated '
               'by param default value of the unit type', () async {
             await testCase(
               unitGroup: massGroup,
@@ -1109,11 +1106,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, null),
+                ConversionUnitValueModel.tuple(kilogram, 12, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, null),
+                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1140,7 +1137,7 @@ void main() {
 
         group('Src value exists | src default value does not exist', () {
           test(
-              'Source unit value only should be recalculated '
+              'Source unit value and default value should be recalculated '
               'by param default value of the unit type', () async {
             await testCase(
               unitGroup: massGroup,
@@ -1175,11 +1172,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, null),
+                ConversionUnitValueModel.tuple(kilogram, 12, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, null),
+                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1206,7 +1203,7 @@ void main() {
 
         group('Src value does not exists | src default value exists', () {
           test(
-              'Source unit value only should be recalculated '
+              'Source unit value and default value should be recalculated '
               'by param default value of the unit type', () async {
             await testCase(
               unitGroup: massGroup,
@@ -1241,11 +1238,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, null),
+                ConversionUnitValueModel.tuple(kilogram, 12, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, null),
+                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1273,7 +1270,7 @@ void main() {
         group('Src value does not exists | src default value does not exist',
             () {
           test(
-              'Source unit value only should be recalculated '
+              'Source unit value and default value should be recalculated '
               'by param default value of the unit type', () async {
             await testCase(
               unitGroup: massGroup,
@@ -1307,11 +1304,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, null),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, null),
+                ConversionUnitValueModel.tuple(kilogram, 12, 1),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, null),
+                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
