@@ -29,6 +29,7 @@ class ConvertouchInputBox extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry? labelPadding;
   final double height;
   final double fontSize;
 
@@ -53,6 +54,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.contentPadding = const EdgeInsets.all(17),
+    this.labelPadding,
     this.height = ConvertouchTextBox.defaultHeight,
     this.fontSize = 17,
     super.key,
@@ -88,6 +90,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
           suffixIcon: widget.suffixIcon,
           height: widget.height,
           fontSize: widget.fontSize,
+          labelPadding: widget.labelPadding,
         ),
       );
     }
@@ -111,6 +114,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
       prefixIcon: widget.prefixIcon,
       suffixIcon: widget.suffixIcon,
       contentPadding: widget.contentPadding,
+      labelPadding: widget.labelPadding,
       height: widget.height,
       fontSize: widget.fontSize,
     );

@@ -32,6 +32,7 @@ class ConvertouchListBox extends StatefulWidget {
   final Widget? suffixIcon;
   final double height;
   final double fontSize;
+  final EdgeInsetsGeometry? labelPadding;
 
   const ConvertouchListBox({
     this.value,
@@ -52,6 +53,7 @@ class ConvertouchListBox extends StatefulWidget {
     this.suffixIcon,
     this.height = defaultHeight,
     this.fontSize = 17,
+    this.labelPadding,
     super.key,
   });
 
@@ -193,6 +195,11 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                 ),
               ),
               label: Container(
+                padding: widget.labelPadding,
+                decoration: BoxDecoration(
+                  color: widget.colors.background.regular,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                ),
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 2,
                 ),
@@ -209,6 +216,8 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                 ),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
+              filled: true,
+              fillColor: widget.colors.background.regular,
             ),
             hint: Text(
               hintText,
@@ -247,6 +256,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
               );
             },
             style: TextStyle(
+              foreground: Paint()..color = foregroundColor,
               fontSize: widget.fontSize,
               fontWeight: FontWeight.w500,
               fontFamily: quicksandFontFamily,

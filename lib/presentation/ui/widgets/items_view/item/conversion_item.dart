@@ -133,6 +133,9 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               },
               suffixIcon: _suffixIcon(),
               colors: unitTextBoxColor,
+              labelPadding: widget.isSource
+                  ? const EdgeInsets.symmetric(horizontal: 4)
+                  : null,
             ),
           ),
           itemCode != null
@@ -147,12 +150,16 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
-                        unitButtonColor.background.regular,
+                        widget.isSource
+                            ? unitButtonColor.background.selected
+                            : unitButtonColor.background.regular,
                       ),
                       shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           side: BorderSide(
-                            color: unitButtonColor.border.regular,
+                            color: widget.isSource
+                                ? unitButtonColor.border.selected
+                                : unitButtonColor.border.regular,
                             width: 1,
                           ),
                           borderRadius: const BorderRadius.all(

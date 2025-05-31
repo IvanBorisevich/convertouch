@@ -56,6 +56,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry? labelPadding;
   final double height;
   final double fontSize;
 
@@ -79,6 +80,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.contentPadding = const EdgeInsets.all(17),
+    this.labelPadding,
     this.height = defaultHeight,
     this.fontSize = 17,
     super.key,
@@ -214,6 +216,11 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             ),
           ),
           label: Container(
+            padding: widget.labelPadding,
+            decoration: BoxDecoration(
+              color: widget.colors.background.regular,
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+            ),
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width / 2,
             ),
@@ -249,6 +256,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           foreground: Paint()..color = foregroundColor,
           fontSize: widget.fontSize,
           fontWeight: FontWeight.w500,
+          fontFamily: quicksandFontFamily,
         ),
         textAlign: TextAlign.start,
       ),
