@@ -20,7 +20,7 @@ class DynamicValueTranslator
   DynamicValueModel toModel(DynamicValueEntity entity) {
     return DynamicValueModel(
       unitId: entity.unitId,
-      value: entity.value ?? "",
+      value: entity.value,
     );
   }
 }

@@ -89,7 +89,9 @@ class CalculateDefaultValueUseCase<T extends IdNameItemModel>
         await dynamicValueRepository.get(unit.id),
       );
 
-      String? srcDefaultValueStr = dynamicValue != null
+      String? srcDefaultValueStr = dynamicValue != null &&
+              dynamicValue.value != null &&
+              dynamicValue.value!.isNotEmpty
           ? dynamicValue.value
           : unit.valueType.defaultValueStr;
 
