@@ -1,26 +1,27 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
 class InputConversionModel {
   final UnitGroupModel unitGroup;
-  final ConversionItemModel sourceConversionItem;
+  final ConversionUnitValueModel sourceUnitValue;
+  final ConversionParamSetValueModel? params;
   final List<UnitModel> targetUnits;
-  final int? conversionId;
 
   const InputConversionModel({
     required this.unitGroup,
-    required this.sourceConversionItem,
+    required this.sourceUnitValue,
+    this.params,
     this.targetUnits = const [],
-    this.conversionId,
   });
 
   @override
   String toString() {
     return 'InputConversionModel{'
         'unitGroup: $unitGroup, '
-        'sourceConversionItem: $sourceConversionItem, '
+        'sourceUnitValue: $sourceUnitValue, '
+        'params: $params, '
         'targetUnits: $targetUnits}';
   }
 }
-

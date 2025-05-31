@@ -2,94 +2,195 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Format to scientific notation', () {
+  group('Format to the string in scientific notation', () {
     test(
-      'Values with exponent [-4..7] should not be formatted to scientific',
+      'Values with exponent from -4 to 7 should not be formatted to scientific',
       () {
-        expect(DoubleValueUtils.toScientific(-0010000000), "-10000000");
-        expect(DoubleValueUtils.toScientific(-10000000), "-10000000");
-        expect(DoubleValueUtils.toScientific(-1000000), "-1000000");
-        expect(DoubleValueUtils.toScientific(-1.236236478785), "-1.2362364788");
-        expect(DoubleValueUtils.toScientific(-1), "-1");
-        expect(DoubleValueUtils.toScientific(-0.9999), "-0.9999");
-        expect(DoubleValueUtils.toScientific(-000.9999), "-0.9999");
-        expect(DoubleValueUtils.toScientific(-1E-4), "-0.0001");
-        expect(DoubleValueUtils.toScientific(0), "0");
-        expect(DoubleValueUtils.toScientific(-0), "0");
-        expect(DoubleValueUtils.toScientific(0.001), "0.001");
-        expect(DoubleValueUtils.toScientific(0.0098), "0.0098");
-        expect(DoubleValueUtils.toScientific(0.00980665), "0.00980665");
-        expect(DoubleValueUtils.toScientific(0.9999), "0.9999");
-        expect(DoubleValueUtils.toScientific(000.9999), "0.9999");
-        expect(DoubleValueUtils.toScientific(1), "1");
-        expect(DoubleValueUtils.toScientific(1.236236478785), "1.2362364788");
-        expect(DoubleValueUtils.toScientific(1000000), "1000000");
-        expect(DoubleValueUtils.toScientific(10000000), "10000000");
-        expect(DoubleValueUtils.toScientific(0010000000), "10000000");
+        expect(
+          DoubleValueUtils.format(0.09999999999999999, scientific: true),
+          "0.1",
+        );
+        expect(
+          DoubleValueUtils.format(-0010000000, scientific: true),
+          "-10000000",
+        );
+        expect(
+          DoubleValueUtils.format(-10000000, scientific: true),
+          "-10000000",
+        );
+        expect(DoubleValueUtils.format(-1000000, scientific: true), "-1000000");
+        expect(
+          DoubleValueUtils.format(-1.236236478785, scientific: true),
+          "-1.2362364788",
+        );
+        expect(DoubleValueUtils.format(-1, scientific: true), "-1");
+        expect(DoubleValueUtils.format(-0.9999, scientific: true), "-0.9999");
+        expect(DoubleValueUtils.format(-000.9999, scientific: true), "-0.9999");
+        expect(DoubleValueUtils.format(-1E-4, scientific: true), "-0.0001");
+        expect(DoubleValueUtils.format(0, scientific: true), "0");
+        expect(DoubleValueUtils.format(-0, scientific: true), "0");
+        expect(DoubleValueUtils.format(0.001, scientific: true), "0.001");
+        expect(DoubleValueUtils.format(0.0098, scientific: true), "0.0098");
+        expect(
+          DoubleValueUtils.format(0.00980665, scientific: true),
+          "0.00980665",
+        );
+        expect(DoubleValueUtils.format(0.9999, scientific: true), "0.9999");
+        expect(DoubleValueUtils.format(000.9999, scientific: true), "0.9999");
+        expect(DoubleValueUtils.format(1, scientific: true), "1");
+        expect(
+          DoubleValueUtils.format(1.236236478785, scientific: true),
+          "1.2362364788",
+        );
+        expect(DoubleValueUtils.format(1000000, scientific: true), "1000000");
+        expect(DoubleValueUtils.format(10000000, scientific: true), "10000000");
+        expect(
+          DoubleValueUtils.format(0010000000, scientific: true),
+          "10000000",
+        );
       },
     );
 
-    test('Values with exponent < -4 should be formatted', () {
-      expect(DoubleValueUtils.toScientific(-1E-7), "-10¯⁷");
-      expect(DoubleValueUtils.toScientific(-0.0000001), "-10¯⁷");
-      expect(DoubleValueUtils.toScientific(-0.000013), "-1.3 · 10¯⁵");
-      expect(DoubleValueUtils.toScientific(-0.0000323), "-3.23 · 10¯⁵");
-      expect(DoubleValueUtils.toScientific(0.0000017), "1.7 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(0.00000178), "1.78 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(0.000001781), "1.78 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(0.000001785), "1.79 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(-0.0000017), "-1.7 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(-0.00000178), "-1.78 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(-0.000001781), "-1.78 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(-0.000001785), "-1.79 · 10¯⁶");
-      expect(DoubleValueUtils.toScientific(0.00000003), "3 · 10¯⁸");
-      expect(DoubleValueUtils.toScientific(0.000000003), "3 · 10¯⁹");
-      expect(DoubleValueUtils.toScientific(0.000000001), "10¯⁹");
-      expect(DoubleValueUtils.toScientific(4E-23), "4 · 10¯²³");
+    test('Values with exponent less than -4 should be formatted', () {
+      expect(DoubleValueUtils.format(-1E-7, scientific: true), "-10¯⁷");
+      expect(DoubleValueUtils.format(-0.0000001, scientific: true), "-10¯⁷");
+      expect(
+        DoubleValueUtils.format(-0.000013, scientific: true),
+        "-1.3 · 10¯⁵",
+      );
+      expect(
+        DoubleValueUtils.format(-0.0000323, scientific: true),
+        "-3.23 · 10¯⁵",
+      );
+      expect(
+        DoubleValueUtils.format(0.0000017, scientific: true),
+        "1.7 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(0.00000178, scientific: true),
+        "1.78 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(0.000001781, scientific: true),
+        "1.78 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(0.000001785, scientific: true),
+        "1.79 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(-0.0000017, scientific: true),
+        "-1.7 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(-0.00000178, scientific: true),
+        "-1.78 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(-0.000001781, scientific: true),
+        "-1.78 · 10¯⁶",
+      );
+      expect(
+        DoubleValueUtils.format(-0.000001785, scientific: true),
+        "-1.79 · 10¯⁶",
+      );
+      expect(DoubleValueUtils.format(0.00000003, scientific: true), "3 · 10¯⁸");
+      expect(
+          DoubleValueUtils.format(0.000000003, scientific: true), "3 · 10¯⁹");
+      expect(DoubleValueUtils.format(0.000000001, scientific: true), "10¯⁹");
+      expect(DoubleValueUtils.format(4E-23, scientific: true), "4 · 10¯²³");
     });
 
-    test('Values with exponent > 7 should be formatted', () {
-      expect(DoubleValueUtils.toScientific(1E21), "10²¹");
-      expect(DoubleValueUtils.toScientific(123E15), "1.23 · 10¹⁷");
-      expect(DoubleValueUtils.toScientific(123E21), "1.23 · 10²³");
+    test('Values with exponent more than 7 should be formatted', () {
+      expect(DoubleValueUtils.format(1E21, scientific: true), "10²¹");
+      expect(DoubleValueUtils.format(123E15, scientific: true), "1.23 · 10¹⁷");
+      expect(DoubleValueUtils.format(123E21, scientific: true), "1.23 · 10²³");
       expect(
-        DoubleValueUtils.toScientific(123.44E21,
-            fractionDigitsInSignificand: 3),
+        DoubleValueUtils.format(123.44E21,
+            scientific: true, fractionDigitsInScientific: 3),
         "1.234 · 10²³",
       );
     });
 
     test('Value null should be formatted to the empty string', () {
-      expect(DoubleValueUtils.toScientific(null), "");
+      expect(DoubleValueUtils.format(null, scientific: true), "");
     });
   });
 
-  group("Format to a plain string", () {
+  group("Format to the ordinary string", () {
+    test('Value null should be formatted to the empty string', () {
+      expect(DoubleValueUtils.format(null), "");
+    });
+
     test(
-      'Fraction digits should not be trimmed without the explicit parameter',
+      'Fraction digits (<= 10) should not be trimmed',
+      () {
+        expect(DoubleValueUtils.format(56746345631111.000), "56746345631111");
+        expect(DoubleValueUtils.format(1.0), "1");
+      },
+    );
+
+    test(
+      'Fraction digits (> 10) should be trimmed to 10 with possible rounding',
+      () {
+        expect(DoubleValueUtils.format(0.09999999999999999), "0.1");
+        expect(DoubleValueUtils.format(9.999999999999999), "10");
+        expect(DoubleValueUtils.format(0.00000000000000000000000001), "0");
+        expect(
+          DoubleValueUtils.format(0.00000000010000000000000001),
+          "0.0000000001",
+        );
+
+        expect(
+          double.parse(DoubleValueUtils.format(0.09999999999999999)),
+          0.1,
+        );
+      },
+    );
+
+    test(
+      '''
+      Fraction digits (> 10) should be trimmed to explicit parameter
+      with possible rounding
+      ''',
       () {
         expect(
-          DoubleValueUtils.toPlain(0.00000000000000000000000001),
-          "0.00000000000000000000000001",
+          DoubleValueUtils.format(
+            0.00000000000000000000000001,
+            fractionDigits: 12,
+          ),
+          "0",
         );
-        expect(DoubleValueUtils.toPlain(56746345631111.000), "56746345631111");
-        expect(DoubleValueUtils.toPlain(1.0), "1");
+        expect(
+          DoubleValueUtils.format(
+            0.00000000000990000000000001,
+            fractionDigits: 12,
+          ),
+          "0.00000000001",
+        );
+        expect(
+          DoubleValueUtils.format(
+            0.00000000010000000000000001,
+            fractionDigits: 12,
+          ),
+          "0.0000000001",
+        );
       },
     );
 
     test('Value null should be formatted to the empty string', () {
-      expect(DoubleValueUtils.toPlain(null), "");
+      expect(DoubleValueUtils.format(null), "");
     });
 
     test('Fraction digits should be trimmed by the explicit parameter', () {
-      expect(DoubleValueUtils.toPlain(0.56746, fractionDigits: 5), "0.56746");
+      expect(DoubleValueUtils.format(0.56746, fractionDigits: 5), "0.56746");
       expect(
-        DoubleValueUtils.toPlain(5674634563.0012, fractionDigits: 3),
+        DoubleValueUtils.format(5674634563.0012, fractionDigits: 3),
         "5674634563.001",
       );
-      expect(DoubleValueUtils.toPlain(0.001, fractionDigits: 8), "0.001");
+      expect(DoubleValueUtils.format(0.001, fractionDigits: 8), "0.001");
       expect(
-          DoubleValueUtils.toPlain(
+          DoubleValueUtils.format(
             0.001000000000000002,
             fractionDigits: 9,
           ),
@@ -97,12 +198,12 @@ void main() {
     });
 
     test('Fraction trailing zeros should always be trimmed', () {
-      expect(DoubleValueUtils.toPlain(35.0000000, fractionDigits: 5), "35");
-      expect(DoubleValueUtils.toPlain(0035.0000000, fractionDigits: 5), "35");
-      expect(DoubleValueUtils.toPlain(35.0000000), "35");
-      expect(DoubleValueUtils.toPlain(1.056000), "1.056");
-      expect(DoubleValueUtils.toPlain(001.056000), "1.056");
-      expect(DoubleValueUtils.toPlain(1.0), "1");
+      expect(DoubleValueUtils.format(35.0000000, fractionDigits: 5), "35");
+      expect(DoubleValueUtils.format(0035.0000000, fractionDigits: 5), "35");
+      expect(DoubleValueUtils.format(35.0000000), "35");
+      expect(DoubleValueUtils.format(1.056000), "1.056");
+      expect(DoubleValueUtils.format(001.056000), "1.056");
+      expect(DoubleValueUtils.format(1.0), "1");
     });
   });
 

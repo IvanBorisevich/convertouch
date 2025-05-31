@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
@@ -52,7 +52,7 @@ class _ConvertouchUnitDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        TextBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
+        InputBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             unitsPageFloatingButtonColors[appState.theme]!;
 
@@ -131,7 +131,7 @@ class _ConvertouchUnitDetailsPageState
                         valueChangeController: _unitNameTextController,
                         editable: pageState.details.editMode,
                         textBoxColor: textBoxColor,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitDetailsBloc.add(
                             UpdateUnitNameInUnitDetails(
                               newValue: value,
@@ -148,7 +148,7 @@ class _ConvertouchUnitDetailsPageState
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitDetailsBloc.add(
                             UpdateUnitCodeInUnitDetails(
                               newValue: value,
@@ -158,25 +158,21 @@ class _ConvertouchUnitDetailsPageState
                       ),
                       ConvertouchParameterItem(
                         name: 'Value Type',
-                        value: pageState.details.draftUnitData.valueType!.name,
+                        value: pageState.details.draftUnitData.valueType.name,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: 'Min Value',
-                        value: pageState
-                            .details.savedUnitData.minValue?.scientific,
+                        value: pageState.details.savedUnitData.minValue?.alt,
                         visible:
-                            pageState.details.savedUnitData.minValue?.exists ??
-                                false,
+                            pageState.details.savedUnitData.minValue != null,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: 'Max Value',
-                        value: pageState
-                            .details.savedUnitData.maxValue?.scientific,
+                        value: pageState.details.savedUnitData.maxValue?.alt,
                         visible:
-                            pageState.details.savedUnitData.maxValue?.exists ??
-                                false,
+                            pageState.details.savedUnitData.maxValue != null,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
@@ -195,22 +191,21 @@ class _ConvertouchUnitDetailsPageState
                             children: [
                               const SizedBox(height: 10),
                               ConvertouchConversionItem(
-                                ConversionItemModel(
+                                ConversionUnitValueModel(
                                   unit: pageState.details.resultUnit,
                                   value: pageState
                                       .details.conversionRule.unitValue,
                                   defaultValue: ValueModel.one,
                                 ),
-                                inputType:
-                                    pageState.details.resultUnit.valueType ??
-                                        pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
+                                itemNameFunc: (item) => item.unit.name,
+                                unitItemCodeFunc: (item) => item.unit.code,
                                 controlsVisible: false,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateUnitValueInUnitDetails(
-                                      newValue: value,
+                                      newValue: value ?? "",
                                     ),
                                   );
                                 },
@@ -218,7 +213,7 @@ class _ConvertouchUnitDetailsPageState
                               ),
                               const SizedBox(height: 12),
                               ConvertouchConversionItem(
-                                ConversionItemModel(
+                                ConversionUnitValueModel(
                                   unit:
                                       pageState.details.conversionRule.argUnit,
                                   value: pageState
@@ -226,16 +221,15 @@ class _ConvertouchUnitDetailsPageState
                                   defaultValue: pageState
                                       .details.conversionRule.savedArgValue,
                                 ),
-                                inputType: pageState.details.conversionRule
-                                        .argUnit.valueType ??
-                                    pageState.details.unitGroup.valueType,
                                 disabled: !pageState
                                     .details.conversionRule.configEditable,
+                                itemNameFunc: (item) => item.unit.name,
+                                unitItemCodeFunc: (item) => item.unit.code,
                                 controlsVisible: false,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateArgumentUnitValueInUnitDetails(
-                                      newValue: value,
+                                      newValue: value ?? "",
                                     ),
                                   );
                                 },

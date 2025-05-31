@@ -18,10 +18,6 @@ class NoItemsInfoLabel extends StatelessWidget {
         horizontal: 14,
         vertical: 11,
       ),
-      decoration: BoxDecoration(
-        color: colors.background.regular,
-        borderRadius: BorderRadius.circular(11),
-      ),
       child: Text(
         text,
         style: TextStyle(

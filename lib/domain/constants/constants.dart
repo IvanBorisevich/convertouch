@@ -1,28 +1,63 @@
 import 'package:collection/collection.dart';
 
-const String appName = "Convertouch";
-const String unknownAppVersion = "Unknown";
-const String iconAssetsPathPrefix = "assets/icons";
-const String quicksandFontFamily = "Quicksand";
-
-const currencyGroup = "Currency";
-const temperatureGroup = "Temperature";
-const degreeCelsiusCode = "°C";
-const degreeFahrenheitCode = "°F";
-const degreeKelvinCode = "K";
-const degreeRankineCode = "°R";
-const degreeDelisleCode = "°De";
-const degreeNewtonCode = "°N";
-const degreeReaumurCode = "°Ré";
-const degreeRomerCode = "°Rø";
-
+const appName = "Convertouch";
+const unknownAppVersion = "Unknown";
+const iconAssetsPathPrefix = "assets/icons";
+const quicksandFontFamily = "Quicksand";
 const baseUnitConversionRule = "Base unit";
 const noConversionRule = "-";
+
+abstract class GroupNames {
+  const GroupNames._();
+
+  static const length = "Length";
+  static const temperature = "Temperature";
+  static const currency = "Currency";
+  static const clothesSize = "Clothes Size";
+  static const ringSize = "Ring Size";
+  static const mass = "Mass";
+}
+
+abstract class ParamSetNames {
+  const ParamSetNames._();
+
+  static const byHeight = "By Height";
+  static const byDiameter = "By Diameter";
+  static const byCircumference = "By Circumference";
+  static const barbellWeight = "Barbell Weight";
+}
+
+abstract class ParamNames {
+  const ParamNames._();
+
+  static const person = "Person";
+  static const garment = "Garment";
+  static const height = "Height";
+  static const waist = "Waist";
+  static const diameter = "Diameter";
+  static const circumference = "Circumference";
+  static const barWeight = "Bar Weight";
+  static const oneSideWeight = "One Side Weight";
+}
+
+abstract class UnitCodes {
+  const UnitCodes._();
+
+  static const degreeCelsius = "°C";
+  static const degreeFahrenheit = "°F";
+  static const degreeKelvin = "K";
+  static const degreeRankine = "°R";
+  static const degreeDelisle = "°De";
+  static const degreeNewton = "°N";
+  static const degreeReaumur = "°Ré";
+  static const degreeRomer = "°Rø";
+}
 
 abstract class IconNames {
   const IconNames._();
 
-  static const String oneWayConversion = "one_way_conversion.svg";
+  static const oneWayConversion = "one_way_conversion.svg";
+  static const parameters = "parameters.png";
 }
 
 enum SettingKey {
@@ -33,6 +68,7 @@ enum SettingKey {
   theme,
   unitGroupsViewMode,
   unitsViewMode,
+  paramSetsViewMode,
   appVersion,
 }
 
@@ -43,9 +79,11 @@ enum PageName {
   unitGroupsPageForUnitDetails,
   unitsPageRegular,
   unitsPageForConversion,
+  unitsPageForConversionParams,
   unitsPageForUnitDetails,
   unitGroupDetailsPage,
   unitDetailsPage,
+  paramSetsPage,
   settingsPage,
   refreshingJobDetailsPage,
   errorPage;
@@ -59,9 +97,13 @@ enum ItemType {
   unit,
   unitGroup,
   conversion,
-  conversionItem,
+  conversionItemValue,
+  conversionParamSet,
+  conversionParamSetValue,
+  conversionParam,
   job,
   dynamicValue,
+  listValue,
   cron,
   dataSource,
 }
@@ -167,20 +209,62 @@ enum Cron {
 }
 
 enum ConvertouchValueType {
-  text(1, "Any"),
-  integer(2, "Integer"),
-  integerPositive(3, "Positive Integer"),
-  decimal(4, "Decimal"),
-  decimalPositive(5, "Positive Decimal"),
-  hexadecimal(6, "Hexadecimal");
+  text(1, "Text"),
+  integer(2, "Integer", defaultValueStr: "1"),
+  integerPositive(3, "Positive Integer", defaultValueStr: "1"),
+  decimal(4, "Decimal", defaultValueStr: "1"),
+  decimalPositive(5, "Positive Decimal", defaultValueStr: "1"),
+  hexadecimal(6, "Hexadecimal", defaultValueStr: "1");
 
-  final int val;
+  final int id;
   final String name;
+  final String? defaultValueStr;
 
-  const ConvertouchValueType(this.val, this.name);
+  const ConvertouchValueType(
+    this.id,
+    this.name, {
+    this.defaultValueStr,
+  });
 
   static ConvertouchValueType? valueOf(int? value) {
-    return values.firstWhereOrNull((element) => value == element.val);
+    return values.firstWhereOrNull((element) => value == element.id);
+  }
+}
+
+enum ConvertouchListType {
+  person(1, preselected: false),
+  garment(2, preselected: false),
+  clothesSizeInter(3),
+  clothesSizeUs(4),
+  clothesSizeJp(5),
+  clothesSizeFr(6),
+  clothesSizeEu(7),
+  clothesSizeRu(8),
+  clothesSizeIt(9),
+  clothesSizeUk(10),
+  clothesSizeDe(11),
+  clothesSizeEs(12),
+  ringSizeFr(13),
+  ringSizeRu(14),
+  ringSizeUs(15),
+  ringSizeIt(16),
+  barbellBarWeight(17),
+  ringSizeUk(18),
+  ringSizeDe(19),
+  ringSizeEs(20),
+  ringSizeJp(21),
+  ;
+
+  final int id;
+  final bool preselected;
+
+  const ConvertouchListType(
+    this.id, {
+    this.preselected = true,
+  });
+
+  static ConvertouchListType? valueOf(int? id) {
+    return values.firstWhereOrNull((element) => id == element.id);
   }
 }
 
@@ -192,4 +276,29 @@ enum ConvertouchSysAction {
   final String label;
 
   const ConvertouchSysAction(this.label);
+}
+
+enum CountryCode {
+  inter("INT"),
+  ru("RU"),
+  eu("EU"),
+  uk("UK"),
+  us("US"),
+  it("IT"),
+  fr("FR"),
+  jp("JP"),
+  de("DE"),
+  es("ES");
+
+  final String name;
+
+  const CountryCode(this.name);
+
+  static CountryCode valueOf(String name) {
+    return values.firstWhere((element) => name == element.name);
+  }
+
+  static String nameOf(CountryCode value) {
+    return value.name;
+  }
 }

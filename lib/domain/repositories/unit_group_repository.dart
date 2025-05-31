@@ -5,13 +5,8 @@ import 'package:either_dart/either.dart';
 abstract class UnitGroupRepository {
   const UnitGroupRepository();
 
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> getPage({
-    required int pageNum,
-    required int pageSize,
-  });
-
   Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
-    required String searchString,
+    String? searchString,
     required int pageNum,
     required int pageSize,
   });

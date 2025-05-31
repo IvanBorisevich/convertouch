@@ -10,6 +10,7 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
+import 'package:convertouch/presentation/ui/pages/conversion_param_sets_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
 import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/settings_page.dart';
@@ -17,6 +18,7 @@ import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart';
+import 'package:convertouch/presentation/ui/pages/units_page_for_conversion_params.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -145,6 +147,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                                 const ConversionGroupsPage(),
                             PageName.unitsPageForConversion.name:
                                 const ConvertouchUnitsPageForConversion(),
+                            PageName.unitsPageForConversionParams.name:
+                                const ConvertouchUnitsPageForConversionParams(),
                             PageName.unitsPageRegular.name:
                                 const ConvertouchUnitsPageRegular(),
                             PageName.unitGroupsPageForUnitDetails.name:
@@ -155,6 +159,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                                 const ConvertouchUnitGroupDetailsPage(),
                             PageName.unitDetailsPage.name:
                                 const ConvertouchUnitDetailsPage(),
+                            PageName.paramSetsPage.name:
+                                const ConversionParamSetsPage(),
                           },
                         ),
                         ConvertouchRootScreen(
@@ -178,6 +184,8 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                       ],
                     ),
                     bottomNavigationBar: BottomNavigationBar(
+                      showSelectedLabels: false,
+                      showUnselectedLabels: false,
                       type: BottomNavigationBarType.fixed,
                       items: [
                         _buildNavbarItem(

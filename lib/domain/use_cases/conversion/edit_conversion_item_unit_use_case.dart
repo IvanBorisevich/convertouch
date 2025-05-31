@@ -1,27 +1,22 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
 class EditConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<EditConversionItemUnitDelta> {
-  const EditConversionItemUnitUseCase({
-    required super.createConversionUseCase,
-  });
+  const EditConversionItemUnitUseCase();
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems({
-    required Map<int, ConversionItemModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required EditConversionItemUnitDelta delta,
   }) async {
-    if (conversionItemsMap.containsKey(delta.editedUnit.id)) {
-      conversionItemsMap.update(
+    if (oldConvertedUnitValues.containsKey(delta.editedUnit.id)) {
+      oldConvertedUnitValues.update(
         delta.editedUnit.id,
-        (value) => ConversionItemModel.coalesce(
-          value,
-          unit: delta.editedUnit,
-        ),
+        (value) => value.copyWith(unit: delta.editedUnit),
       );
     }
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 }

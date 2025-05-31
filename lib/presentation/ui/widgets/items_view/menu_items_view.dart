@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -19,9 +20,9 @@ import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
-    extends StatefulWidget {
-  final ItemsListBloc<T, ItemsFetched<T>> itemsListBloc;
+class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
+    P extends ItemsFetchParams> extends StatefulWidget {
+  final ItemsListBloc<T, ItemsFetched<T>, P> itemsListBloc;
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String? searchBarPlaceholder;
@@ -55,11 +56,12 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel>
   });
 
   @override
-  State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T>();
+  State<StatefulWidget> createState() => _ConvertouchMenuItemsViewState<T, P>();
 }
 
-class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
-    extends State<ConvertouchMenuItemsView<T>> with ItemsLazyLoadingMixin {
+class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
+        P extends ItemsFetchParams>
+    extends State<ConvertouchMenuItemsView<T, P>> with ItemsLazyLoadingMixin {
   static const double _itemsSpacing = 8;
   static const double _bottomSpacing = 85;
 
@@ -70,13 +72,13 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
     required Color matchBackground,
   }) _itemLogoFunc;
 
-  late String Function(T) _itemNameFunc;
-
   late final List<T> _itemsFullList;
-  late final Map<ConvertouchUITheme, ListItemColorScheme> _itemColors;
-  late final Map<ConvertouchUITheme, ConvertouchColorScheme> _emptyViewColors;
+  late Map<ConvertouchUITheme, ListItemColorScheme> _itemColors;
+  late Map<ConvertouchUITheme, ConvertouchColorScheme> _emptyViewColors;
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
+
+  late final String _noItemsLabel;
 
   late final void Function(BuildContext, T, {bool callable}) _onItemTap;
   late final Widget? Function(
@@ -98,6 +100,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
     if (T == UnitGroupModel) {
       _itemColors = unitGroupItemColors;
       _emptyViewColors = unitGroupPageEmptyViewColor;
+      _noItemsLabel = "Unit groups list is empty";
 
       _itemLogoFunc = (
         T item, {
@@ -112,13 +115,10 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
           size: 29,
         );
       };
-
-      _itemNameFunc = (T item) {
-        return item.name;
-      };
-    } else {
+    } else if (T == UnitModel) {
       _itemColors = unitItemColors;
       _emptyViewColors = unitPageEmptyViewColor;
+      _noItemsLabel = "Units list is empty";
 
       _itemLogoFunc = (
         T item, {
@@ -132,17 +132,26 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
           match: item.codeMatch,
           foreground: foreground,
           fontSize: 17,
-          fontWeight: FontWeight.w700,
           matchBackground: matchBackground,
           matchForeground: matchForeground,
         );
       };
+    } else {
+      _itemColors = paramSetItemColors;
+      _emptyViewColors = paramSetPageEmptyViewColor;
+      _noItemsLabel = "Parameters list is empty";
 
-      _itemNameFunc = (T item) {
-        UnitModel unit = item as UnitModel;
-        return unit.symbol != null
-            ? "${unit.name} (${unit.symbol})"
-            : unit.name;
+      _itemLogoFunc = (
+        T item, {
+        required Color foreground,
+        required Color matchForeground,
+        required Color matchBackground,
+      }) {
+        return IconUtils.getUnitGroupIcon(
+          iconName: IconNames.parameters,
+          color: foreground,
+          size: 29,
+        );
       };
     }
 
@@ -188,7 +197,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
                 colors: itemColors,
                 disabled: disabled,
                 logoFunc: _itemLogoFunc,
-                itemName: _itemNameFunc.call(item),
+                itemName: item.name,
                 checkIconVisible: checkIconVisible,
                 checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
                 editIconVisible: editIconVisible,
@@ -203,7 +212,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
               colors: itemColors,
               disabled: disabled,
               logoFunc: _itemLogoFunc,
-              itemName: _itemNameFunc.call(item),
+              itemName: item.name,
               checkIconVisible: checkIconVisible,
               checkIconVisibleIfUnchecked: checkIconVisibleIfUnchecked,
               editIconVisible: editIconVisible,
@@ -274,6 +283,17 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
     final checkIconVisible =
         widget.checkableItemsVisible || widget.removalModeEnabled;
 
+    if (T == UnitGroupModel) {
+      _itemColors = unitGroupItemColors;
+      _emptyViewColors = unitGroupPageEmptyViewColor;
+    } else if (T == UnitModel) {
+      _itemColors = unitItemColors;
+      _emptyViewColors = unitPageEmptyViewColor;
+    } else {
+      _itemColors = paramSetItemColors;
+      _emptyViewColors = paramSetPageEmptyViewColor;
+    }
+
     return Column(
       children: [
         itemsListBlocBuilder(
@@ -288,12 +308,16 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
                   FetchItems(
                     searchString: text,
                     parentItemId: state.parentItemId,
+                    parentItemType: state.parentItemType,
                   ),
                 );
               },
               onSearchReset: () {
                 widget.itemsListBloc.add(
-                  FetchItems(parentItemId: state.parentItemId),
+                  FetchItems(
+                    parentItemId: state.parentItemId,
+                    parentItemType: state.parentItemType,
+                  ),
                 );
               },
             );
@@ -302,7 +326,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
         Expanded(
           child: ScrollConfiguration(
             behavior: NoGlowScrollBehavior(),
-            child: BlocListener<ItemsListBloc<T, ItemsFetched<T>>,
+            child: BlocListener<ItemsListBloc<T, ItemsFetched<T>, P>,
                 ItemsFetched<T>>(
               bloc: widget.itemsListBloc,
               listener: (_, state) {
@@ -318,19 +342,23 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel>
                   if (_itemsFullList.isEmpty) {
                     return Center(
                       child: NoItemsInfoLabel(
-                        text: T == UnitGroupModel
-                            ? "No unit groups added"
-                            : "No units added",
+                        text: _noItemsLabel,
                         colors: _emptyViewColors[appState.theme]!,
                       ),
                     );
                   }
 
-                  ItemsViewMode itemsViewMode = T == UnitGroupModel
-                      ? appState.unitGroupsViewMode
-                      : appState.unitsViewMode;
-
                   var itemColors = _itemColors[appState.theme]!;
+
+                  ItemsViewMode itemsViewMode;
+
+                  if (T == UnitGroupModel) {
+                    itemsViewMode = appState.unitGroupsViewMode;
+                  } else if (T == UnitModel) {
+                    itemsViewMode = appState.unitsViewMode;
+                  } else {
+                    itemsViewMode = appState.paramSetsViewMode;
+                  }
 
                   switch (itemsViewMode) {
                     case ItemsViewMode.list:

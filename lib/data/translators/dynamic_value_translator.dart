@@ -4,15 +4,12 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/dynamic_value_model.dart';
 
 class DynamicValueTranslator
-    extends Translator<DynamicValueModel?, DynamicValueEntity?> {
+    extends Translator<DynamicValueModel, DynamicValueEntity> {
   static final DynamicValueTranslator I =
       di.locator.get<DynamicValueTranslator>();
 
   @override
-  DynamicValueEntity? fromModel(DynamicValueModel? model) {
-    if (model == null || model.value == "1") {
-      return null;
-    }
+  DynamicValueEntity fromModel(DynamicValueModel model) {
     return DynamicValueEntity(
       unitId: model.unitId,
       value: model.value,
@@ -20,13 +17,10 @@ class DynamicValueTranslator
   }
 
   @override
-  DynamicValueModel? toModel(DynamicValueEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
+  DynamicValueModel toModel(DynamicValueEntity entity) {
     return DynamicValueModel(
       unitId: entity.unitId,
-      value: entity.value ?? "1",
+      value: entity.value,
     );
   }
 }

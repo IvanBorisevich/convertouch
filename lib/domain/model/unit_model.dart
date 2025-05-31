@@ -9,7 +9,8 @@ class UnitModel extends IdNameSearchableItemModel {
   final double? coefficient;
   final String? symbol;
   final int unitGroupId;
-  final ConvertouchValueType? valueType;
+  final ConvertouchValueType valueType;
+  final ConvertouchListType? listType;
   final ValueModel? minValue;
   final ValueModel? maxValue;
   final bool invertible;
@@ -22,9 +23,10 @@ class UnitModel extends IdNameSearchableItemModel {
     this.coefficient,
     this.symbol,
     this.unitGroupId = -1,
-    this.valueType,
-    this.minValue = ValueModel.none,
-    this.maxValue = ValueModel.none,
+    required this.valueType,
+    this.listType,
+    this.minValue,
+    this.maxValue,
     this.invertible = true,
     super.nameMatch,
     this.codeMatch = ItemSearchMatch.none,
@@ -37,10 +39,10 @@ class UnitModel extends IdNameSearchableItemModel {
       : this(
           name: "",
           code: "",
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
-  UnitModel.coalesce(
-    UnitModel saved, {
+  UnitModel copyWith({
     int? id,
     String? name,
     String? code,
@@ -48,26 +50,35 @@ class UnitModel extends IdNameSearchableItemModel {
     String? symbol,
     int? unitGroupId,
     ConvertouchValueType? valueType,
+    ConvertouchListType? listType,
     ValueModel? minValue,
     ValueModel? maxValue,
     ItemSearchMatch? nameMatch,
     ItemSearchMatch? codeMatch,
     bool? invertible,
-  }) : this(
-          id: id ?? saved.id,
-          name: name ?? saved.name,
-          code: code ?? saved.code,
-          coefficient: coefficient ?? saved.coefficient,
-          symbol: symbol ?? saved.symbol,
-          valueType: valueType ?? saved.valueType,
-          minValue: minValue?.exists == true ? minValue! : saved.minValue,
-          maxValue: maxValue?.exists == true ? maxValue! : saved.maxValue,
-          unitGroupId: unitGroupId ?? saved.unitGroupId,
-          invertible: saved.invertible,
-          nameMatch: nameMatch ?? saved.nameMatch,
-          codeMatch: codeMatch ?? saved.codeMatch,
-          oob: saved.oob,
-        );
+  }) {
+    return UnitModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      code: code ?? this.code,
+      coefficient: coefficient ?? this.coefficient,
+      symbol: symbol ?? this.symbol,
+      valueType: valueType ?? this.valueType,
+      listType: listType ?? this.listType,
+      minValue: minValue ?? this.minValue,
+      maxValue: maxValue ?? this.maxValue,
+      unitGroupId: unitGroupId ?? this.unitGroupId,
+      invertible: this.invertible,
+      nameMatch: nameMatch ?? this.nameMatch,
+      codeMatch: codeMatch ?? this.codeMatch,
+      oob: oob,
+    );
+  }
+
+  @override
+  String get itemName {
+    return symbol != null ? "$name ($symbol)" : name;
+  }
 
   bool get exists => this != none;
 
@@ -75,7 +86,8 @@ class UnitModel extends IdNameSearchableItemModel {
 
   bool get unnamed => name.isEmpty;
 
-  Map<String, dynamic> toJson() {
+  @override
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       "id": id,
       "name": name,
@@ -83,14 +95,18 @@ class UnitModel extends IdNameSearchableItemModel {
       "coefficient": coefficient,
       "symbol": symbol,
       "unitGroupId": unitGroupId != -1 ? unitGroupId : null,
-      "valueType": valueType?.val,
-      "minValue": minValue?.num,
-      "maxValue": maxValue?.num,
+      "valueType": valueType.id,
+      "listType": listType?.id,
+      "minValue": minValue?.numVal,
+      "maxValue": maxValue?.numVal,
       "invertible": invertible,
-      "oob": oob == true ? true : null,
+      "oob": oob,
     };
 
-    result.removeWhere((key, value) => value == null);
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
     return result;
   }
 
@@ -105,9 +121,14 @@ class UnitModel extends IdNameSearchableItemModel {
       coefficient: json["coefficient"],
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
-      valueType: ConvertouchValueType.valueOf(json["valueType"]),
-      minValue: ValueModel.ofDouble(json["minValue"]),
-      maxValue: ValueModel.ofDouble(json["maxValue"]),
+      valueType: ConvertouchValueType.valueOf(json["valueType"])!,
+      listType: ConvertouchListType.valueOf(json["listType"]),
+      minValue: json["minValue"] != null
+          ? ValueModel.numeric(json["minValue"])
+          : null,
+      maxValue: json["maxValue"] != null
+          ? ValueModel.numeric(json["maxValue"])
+          : null,
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );
@@ -123,6 +144,7 @@ class UnitModel extends IdNameSearchableItemModel {
         symbol,
         unitGroupId,
         valueType,
+        listType,
         minValue,
         maxValue,
         invertible,
@@ -146,8 +168,7 @@ class UnitModel extends IdNameSearchableItemModel {
         'valueType: $valueType, '
         'minValue: $minValue, '
         'maxValue: $maxValue, '
-        'invertible: $invertible, '
-        'nameMatch: $nameMatch, '
-        'codeMatch: $codeMatch}';
+        'listType: $listType, '
+        'invertible: $invertible}';
   }
 }

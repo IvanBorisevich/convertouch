@@ -4,20 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class IconUtils {
   static const double defaultIconSize = 25;
-  static const IconData defaultUnitGroupIconData =
-      Icons.dashboard_customize_outlined;
   static const String defaultUnitGroupIconAssetName = "unit-group.png";
 
   const IconUtils._();
 
-  static ImageIcon? getIcon(
-    String? iconName, {
+  static ImageIcon getIcon(
+    String iconName, {
     Color? color,
     double size = defaultIconSize,
   }) {
-    if (iconName == null) {
-      return null;
-    }
     return ImageIcon(
       AssetImage(
         "$iconAssetsPathPrefix/$iconName",
@@ -56,19 +51,13 @@ class IconUtils {
 
   static Widget getUnitGroupIcon({
     String? iconName,
-    IconData iconData = defaultUnitGroupIconData,
     Color? color,
     double size = defaultIconSize,
   }) {
     return getIcon(
-          iconName ?? defaultUnitGroupIconAssetName,
-          color: color,
-          size: size,
-        ) ??
-        Icon(
-          iconData,
-          color: color,
-          size: size,
-        );
+      iconName ?? defaultUnitGroupIconAssetName,
+      color: color,
+      size: size,
+    );
   }
 }

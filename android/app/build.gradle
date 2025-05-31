@@ -29,6 +29,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.johnbor7.convertouch"
     compileSdkVersion flutter.compileSdkVersion
     compileSdk = 35
     ndkVersion "21.3.6528147"

@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
@@ -5,45 +6,39 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-class UnitGroupTranslator
-    extends Translator<UnitGroupModel?, UnitGroupEntity?> {
+class UnitGroupTranslator extends Translator<UnitGroupModel, UnitGroupEntity> {
   static final UnitGroupTranslator I = di.locator.get<UnitGroupTranslator>();
 
   @override
-  UnitGroupEntity? fromModel(UnitGroupModel? model) {
-    if (model == null) {
-      return null;
-    }
+  UnitGroupEntity fromModel(UnitGroupModel model) {
     return UnitGroupEntity(
       id: model.id != -1 ? model.id : null,
       name: model.name,
       iconName: model.iconName,
       conversionType:
           model.conversionType.value != 0 ? model.conversionType.value : null,
-      refreshable: model.refreshable == true ? 1 : null,
-      valueType: model.valueType.val,
-      minValue: model.minValue.num,
-      maxValue: model.maxValue.num,
-      oob: model.oob == true ? 1 : null,
+      valueType: model.valueType.id,
+      minValue: model.minValue?.numVal,
+      maxValue: model.maxValue?.numVal,
+      refreshable: bool2int(model.refreshable),
+      oob: bool2int(model.oob),
     );
   }
 
   @override
-  UnitGroupModel? toModel(UnitGroupEntity? entity) {
-    if (entity == null) {
-      return null;
-    }
+  UnitGroupModel toModel(UnitGroupEntity entity) {
     return UnitGroupModel(
       id: entity.id ?? -1,
       name: entity.name,
       iconName: entity.iconName,
       conversionType: ConversionType.valueOf(entity.conversionType),
-      refreshable: entity.refreshable == 1,
-      valueType: ConvertouchValueType.valueOf(entity.valueType) ??
-          UnitGroupModel.defaultValueType,
-      minValue: ValueModel.ofDouble(entity.minValue),
-      maxValue: ValueModel.ofDouble(entity.maxValue),
-      oob: entity.oob == 1,
+      valueType: ConvertouchValueType.valueOf(entity.valueType)!,
+      minValue:
+          entity.minValue != null ? ValueModel.numeric(entity.minValue!) : null,
+      maxValue:
+          entity.maxValue != null ? ValueModel.numeric(entity.maxValue!) : null,
+      refreshable: int2bool(entity.refreshable),
+      oob: int2bool(entity.oob, ifNull: true),
     );
   }
 }

@@ -4,15 +4,29 @@ import 'package:sqflite/sqflite.dart' as sqlite;
 abstract class UnitDao {
   const UnitDao();
 
-  Future<List<UnitEntity>> getAll({
+  Future<List<UnitEntity>> getByParamId({
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  });
+
+  Future<List<UnitEntity>> searchWithGroupId({
+    required String searchString,
     required int unitGroupId,
     required int pageSize,
     required int offset,
   });
 
-  Future<List<UnitEntity>> getBySearchString({
+  Future<List<UnitEntity>> searchWithParamIdAndPossibleUnits({
     required String searchString,
-    required int unitGroupId,
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  });
+
+  Future<List<UnitEntity>> searchWithParamId({
+    required String searchString,
+    required int paramId,
     required int pageSize,
     required int offset,
   });

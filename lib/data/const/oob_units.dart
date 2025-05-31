@@ -1,8 +1,9 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 
 const unitsV1 = [
   {
-    "groupName": "Length",
+    "groupName": GroupNames.length,
     "iconName": "length-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
@@ -47,7 +48,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Mass",
+    "groupName": GroupNames.mass,
     "iconName": "mass-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
@@ -61,23 +62,23 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": temperatureGroup,
+    "groupName": GroupNames.temperature,
     "iconName": "temperature-group.png",
     "valueType": ConvertouchValueType.decimal,
     "conversionType": ConversionType.formula,
     "units": [
-      {"code": degreeCelsiusCode, "name": "Degree Celsius"},
-      {"code": degreeFahrenheitCode, "name": "Degree Fahrenheit"},
-      {"code": degreeKelvinCode, "name": "Degree Kelvin"},
-      {"code": degreeRankineCode, "name": "Degree Rankine"},
-      {"code": degreeDelisleCode, "name": "Degree Delisle"},
-      {"code": degreeNewtonCode, "name": "Degree Newton"},
-      {"code": degreeReaumurCode, "name": "Degree Réaumur"},
-      {"code": degreeRomerCode, "name": "Degree Rømer"},
+      {"code": UnitCodes.degreeCelsius, "name": "Degree Celsius"},
+      {"code": UnitCodes.degreeFahrenheit, "name": "Degree Fahrenheit"},
+      {"code": UnitCodes.degreeKelvin, "name": "Degree Kelvin"},
+      {"code": UnitCodes.degreeRankine, "name": "Degree Rankine"},
+      {"code": UnitCodes.degreeDelisle, "name": "Degree Delisle"},
+      {"code": UnitCodes.degreeNewton, "name": "Degree Newton"},
+      {"code": UnitCodes.degreeReaumur, "name": "Degree Réaumur"},
+      {"code": UnitCodes.degreeRomer, "name": "Degree Rømer"},
     ]
   },
   {
-    "groupName": currencyGroup,
+    "groupName": GroupNames.currency,
     "iconName": "currency-group.png",
     "valueType": ConvertouchValueType.decimalPositive,
     "minValue": 0,
@@ -929,8 +930,172 @@ const unitsV2 = [
   {
     "groupName": "Volume",
     "units": [
+      {
+        "code": "cm",
+        forUpdate: {
+          "code": "cm³",
+        },
+      }
+    ],
+  },
+];
+
+const unitsV3 = [
+  {
+    "groupName": "Volume",
+    "units": [
       {"code": "mL", "name": "Milliliter", "coefficient": 1E-6},
       {"code": "L", "name": "Liter", "coefficient": 1E-3},
+      {
+        "code": "dm³",
+        forUpdate: {
+          "name": "Cubic Decimeter",
+        },
+      }
     ]
+  },
+  {
+    "groupName": "Angle",
+    "units": [
+      {
+        "code": "arcmin",
+        forUpdate: {
+          "symbol": "'",
+        },
+      },
+      {
+        "code": "arcsec",
+        forUpdate: {
+          "symbol": '"',
+        },
+      },
+    ],
+  }
+];
+
+const unitsV4 = [
+  {
+    "groupName": GroupNames.clothesSize,
+    "iconName": "clothes-size-group.png",
+    "valueType": ConvertouchValueType.integerPositive,
+    "conversionType": ConversionType.formula,
+    "units": [
+      {
+        "code": CountryCode.inter,
+        "name": "International",
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.clothesSizeInter,
+      },
+      {
+        "code": CountryCode.jp,
+        "name": "Japan",
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.clothesSizeJp,
+      },
+      {
+        "code": CountryCode.fr,
+        "name": "France",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeFr,
+      },
+      {
+        "code": CountryCode.eu,
+        "name": "Europe",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeEu,
+      },
+      {
+        "code": CountryCode.ru,
+        "name": "Russia",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeRu,
+      },
+      {
+        "code": CountryCode.it,
+        "name": "Italy",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeIt,
+      },
+      {
+        "code": CountryCode.uk,
+        "name": "United Kingdom",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeUk,
+      },
+      {
+        "code": CountryCode.us,
+        "name": "USA",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeUs,
+      },
+      {
+        "code": CountryCode.es,
+        "name": "Spain",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeEs,
+      },
+      {
+        "code": CountryCode.de,
+        "name": "Germany",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.clothesSizeDe,
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.ringSize,
+    "iconName": "ring-size-group.png",
+    "valueType": ConvertouchValueType.decimalPositive,
+    "conversionType": ConversionType.formula,
+    "units": [
+      {
+        "code": CountryCode.us,
+        "name": "USA",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeUs,
+      },
+      {
+        "code": CountryCode.uk,
+        "name": "United Kingdom",
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.ringSizeUk,
+      },
+      {
+        "code": CountryCode.de,
+        "name": "Germany",
+        "valueType": ConvertouchValueType.integerPositive,
+        "listType": ConvertouchListType.ringSizeDe,
+      },
+      {
+        "code": CountryCode.es,
+        "name": "Spain",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeEs,
+      },
+      {
+        "code": CountryCode.fr,
+        "name": "France",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeFr,
+      },
+      {
+        "code": CountryCode.ru,
+        "name": "Russia",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeRu,
+      },
+      {
+        "code": CountryCode.it,
+        "name": "Italy",
+        "valueType": ConvertouchValueType.decimalPositive,
+        "listType": ConvertouchListType.ringSizeIt,
+      },
+      {
+        "code": CountryCode.jp,
+        "name": "Japan",
+        "valueType": ConvertouchValueType.integerPositive,
+        "listType": ConvertouchListType.ringSizeJp,
+      },
+    ],
   },
 ];

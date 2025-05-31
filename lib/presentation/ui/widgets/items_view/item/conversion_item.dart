@@ -1,103 +1,124 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/textbox.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchConversionItem extends StatefulWidget {
-  final ConversionItemModel item;
+class ConvertouchConversionItem<T extends ConversionItemValueModel>
+    extends StatefulWidget {
+  final T item;
   final int? index;
-  final ConvertouchValueType inputType;
   final void Function()? onTap;
-  final void Function(String)? onValueChanged;
+  final void Function(String?)? onValueChanged;
   final void Function()? onRemove;
+  final bool wrapped;
+  final bool isSource;
   final bool disabled;
   final bool controlsVisible;
+  final String Function(T) itemNameFunc;
+  final String? Function(T) unitItemCodeFunc;
   final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
     this.item, {
     this.index,
-    required this.inputType,
     this.onTap,
     this.onValueChanged,
     this.onRemove,
+    this.wrapped = false,
+    this.isSource = false,
     this.disabled = false,
     this.controlsVisible = true,
+    required this.itemNameFunc,
+    required this.unitItemCodeFunc,
     required this.colors,
     super.key,
   });
 
   @override
-  State<ConvertouchConversionItem> createState() =>
-      _ConvertouchConversionItemState();
+  State<ConvertouchConversionItem<T>> createState() =>
+      _ConvertouchConversionItemState<T>();
 }
 
-class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
+class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
+    extends State<ConvertouchConversionItem<T>> {
   static const double _unitButtonWidth = 90;
-  static const double _defaultHeight = ConvertouchTextBox.defaultHeight;
-  static const double _elementsBorderRadius = 15;
-  static const double _spacing = 11;
-
-  late final TextEditingController _unitValueController;
+  static const double _unitButtonBorderRadius = 15;
+  static const double _containerHeight = ConvertouchTextBox.defaultHeight;
+  static const double _wrapContainerVerticalPadding = 7;
+  static const double _wrapContainerHeight =
+      _containerHeight + _wrapContainerVerticalPadding * 2;
 
   late bool _isFocused;
 
   @override
   void initState() {
-    _unitValueController = TextEditingController();
     _isFocused = false;
     super.initState();
   }
 
   @override
-  void dispose() {
-    _unitValueController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var itemColor = widget.colors;
-    var unitButtonColor = itemColor.unitButton;
-    var unitTextBoxColor = itemColor.textBox;
-    var handlerColor = itemColor.handler;
+    var unitButtonColor = widget.colors.unitButton;
+    var textBoxColor = widget.colors.textBox;
+    var handlerColor = widget.colors.handler;
+    var wrapBackgroundColor = widget.colors.wrapBackground;
+
+    String? valueStr;
+    String? defaultValueStr;
 
     if (_isFocused && !widget.disabled) {
-      _unitValueController.text = widget.item.value.str;
+      valueStr = widget.item.value?.raw;
+      defaultValueStr = widget.item.defaultValue?.raw;
     } else {
-      _unitValueController.text = widget.item.value.scientific;
+      valueStr = widget.item.value?.alt;
+      defaultValueStr = widget.item.defaultValue?.alt;
     }
 
-    return SizedBox(
-      height: _defaultHeight,
+    String itemName = widget.itemNameFunc.call(widget.item);
+    String? itemCode = widget.unitItemCodeFunc.call(widget.item);
+
+    return Container(
+      height: widget.wrapped ? _wrapContainerHeight : _containerHeight,
+      padding: widget.wrapped
+          ? const EdgeInsets.symmetric(vertical: _wrapContainerVerticalPadding)
+          : null,
+      decoration: BoxDecoration(
+        color:
+            widget.isSource ? wrapBackgroundColor.regular : Colors.transparent,
+      ),
       child: Row(
         children: [
           widget.controlsVisible
               ? _wrapIntoDragListener(
                   index: widget.index,
                   child: _handler(
-                    icon: Icons.drag_indicator_outlined,
-                    background: handlerColor.background.regular,
-                    foreground: handlerColor.foreground.regular,
+                    iconLogo:
+                        !widget.isSource ? Icons.drag_indicator_outlined : null,
+                    textLogo: widget.isSource ? '𝑥' : null,
+                    handlerColor: handlerColor,
                   ),
                 )
               : const SizedBox.shrink(),
           Expanded(
-            child: ConvertouchTextBox(
-              controller: _unitValueController,
-              disabled: widget.disabled,
-              label: widget.item.unit.name,
-              hintText: _isFocused && !widget.disabled
-                  ? widget.item.defaultValue.str
-                  : widget.item.defaultValue.scientific,
+            child: ConvertouchInputBox(
+              value: valueStr,
+              defaultValue: defaultValueStr,
+              itemUnit: widget.item.unitItem,
+              readonly: widget.disabled,
+              label: itemName,
               borderRadius: 15,
-              inputType: widget.inputType,
+              valueType: widget.item.valueType,
+              listType: widget.item.listType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);
                 }
+              },
+              onClean: () {
+                widget.onValueChanged?.call(null);
               },
               onFocusSelected: () {
                 setState(() {
@@ -109,86 +130,59 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
                   _isFocused = false;
                 });
               },
-              suffixIcon: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  !widget.item.unit.invertible
-                      ? Padding(
-                          padding: const EdgeInsets.all(9),
-                          child: IconUtils.getSuffixSvgIcon(
-                            IconNames.oneWayConversion,
-                            color: itemColor.textBox.foreground.regular,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  widget.item.value.str.isNotEmpty && _isFocused
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.close_rounded,
-                            color: itemColor.textBox.foreground.regular,
-                            size: 17,
-                          ),
-                          onPressed: () {
-                            widget.onValueChanged?.call("");
-                            setState(() {
-                              _unitValueController.clear();
-                            });
-                          },
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-              colors: unitTextBoxColor,
+              suffixIcon: _suffixIcon(),
+              colors: textBoxColor,
+              labelPadding: widget.isSource
+                  ? const EdgeInsets.symmetric(horizontal: 4)
+                  : null,
             ),
           ),
-          Container(
-            width: _unitButtonWidth,
-            height: _defaultHeight,
-            padding: const EdgeInsets.only(left: _spacing),
-            child: TextButton(
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                widget.onTap?.call();
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  _isFocused && !widget.disabled
-                      ? unitButtonColor.background.focused
-                      : unitButtonColor.background.regular,
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: _isFocused && !widget.disabled
-                          ? unitButtonColor.border.focused
-                          : unitButtonColor.border.regular,
-                      width: 1,
+          itemCode != null
+              ? Container(
+                  width: _unitButtonWidth,
+                  height: ConvertouchTextBox.defaultHeight,
+                  padding: const EdgeInsets.only(left: 7),
+                  child: TextButton(
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      widget.onTap?.call();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        widget.isSource
+                            ? unitButtonColor.background.selected
+                            : unitButtonColor.background.regular,
+                      ),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: widget.isSource
+                                ? unitButtonColor.border.selected
+                                : unitButtonColor.border.regular,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(_unitButtonBorderRadius),
+                          ),
+                        ),
+                      ),
                     ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(_elementsBorderRadius),
+                    child: Text(
+                      itemCode,
+                      style: TextStyle(
+                        color: unitButtonColor.foreground.regular,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
                     ),
                   ),
-                ),
-              ),
-              child: Text(
-                widget.item.unit.code,
-                style: TextStyle(
-                  color: _isFocused && !widget.disabled
-                      ? unitButtonColor.foreground.focused
-                      : unitButtonColor.foreground.regular,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-                maxLines: 1,
-              ),
-            ),
-          ),
+                )
+              : const SizedBox.shrink(),
           widget.controlsVisible
               ? _handler(
-                  icon: Icons.remove,
-                  background: handlerColor.background.regular,
-                  foreground: handlerColor.foreground.regular,
+                  iconLogo: Icons.remove,
+                  handlerColor: handlerColor,
                   onTap: widget.onRemove,
                 )
               : const SizedBox.shrink(),
@@ -210,28 +204,78 @@ class _ConvertouchConversionItemState extends State<ConvertouchConversionItem> {
   }
 
   Widget _handler({
-    required IconData icon,
-    required Color foreground,
-    required Color background,
+    IconData? iconLogo,
+    String? textLogo,
+    required ConvertouchColorScheme handlerColor,
     void Function()? onTap,
   }) {
+    Color background = widget.isSource
+        ? handlerColor.background.selected
+        : handlerColor.background.regular;
+
+    Color foreground = widget.isSource
+        ? handlerColor.foreground.selected
+        : handlerColor.foreground.regular;
+
+    Widget? handlerLogo() {
+      if (textLogo != null) {
+        return Container(
+          padding: const EdgeInsets.only(left: 2),
+          child: Text(
+            textLogo,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              height: -0.3,
+              color: foreground,
+            ),
+          ),
+        );
+      }
+
+      if (iconLogo != null) {
+        return Icon(
+          iconLogo,
+          color: foreground,
+        );
+      }
+
+      return null;
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 9),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 7,
+      ),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           width: 32,
           height: 32,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: background,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
           ),
-          child: Icon(
-            icon,
-            color: foreground,
-          ),
+          child: handlerLogo(),
         ),
       ),
     );
+  }
+
+  Widget? _suffixIcon() {
+    if (widget.item is ConversionUnitValueModel &&
+        !(widget.item as ConversionUnitValueModel).unit.invertible) {
+      return Padding(
+        padding: const EdgeInsets.all(9),
+        child: IconUtils.getSuffixSvgIcon(
+          IconNames.oneWayConversion,
+          color: widget.colors.textBox.foreground.regular,
+        ),
+      );
+    }
+
+    return null;
   }
 }

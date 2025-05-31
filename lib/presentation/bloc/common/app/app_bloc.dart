@@ -12,6 +12,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
             theme: ConvertouchUITheme.light,
             unitGroupsViewMode: ItemsViewMode.grid,
             unitsViewMode: ItemsViewMode.grid,
+            paramSetsViewMode: ItemsViewMode.grid,
             appVersion: unknownAppVersion,
           ),
         ) {
@@ -79,6 +80,8 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
       unitGroupsViewMode:
           ItemsViewMode.valueOf(json[SettingKey.unitGroupsViewMode.name]),
       unitsViewMode: ItemsViewMode.valueOf(json[SettingKey.unitsViewMode.name]),
+      paramSetsViewMode:
+          ItemsViewMode.valueOf(json[SettingKey.paramSetsViewMode.name]),
       appVersion: json[SettingKey.appVersion.name] ?? unknownAppVersion,
       changedFromPage: json['changedFromPage'],
     );
@@ -91,6 +94,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
         SettingKey.theme.name: state.theme.value,
         SettingKey.unitGroupsViewMode.name: state.unitGroupsViewMode.value,
         SettingKey.unitsViewMode.name: state.unitsViewMode.value,
+        SettingKey.paramSetsViewMode.name: state.paramSetsViewMode.value,
         SettingKey.appVersion.name: state.appVersion,
       };
     }

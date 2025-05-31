@@ -9,6 +9,8 @@ abstract class ItemModel extends Equatable {
     required this.itemType,
     this.oob = false,
   });
+
+  Map<String, dynamic> toJson({bool removeNulls = true});
 }
 
 abstract class IdNameItemModel extends ItemModel {
@@ -47,4 +49,37 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
     required super.itemType,
     super.oob,
   });
+}
+
+class ListValueModel extends IdNameSearchableItemModel {
+  final String value;
+
+  const ListValueModel({
+    required this.value,
+    required super.name,
+  }) : super(
+          id: -1,
+          itemType: ItemType.listValue,
+          oob: true,
+        );
+
+  const ListValueModel.value(String value)
+      : this(
+          value: value,
+          name: value,
+        );
+
+  @override
+  List<Object?> get props => [
+        value,
+        name,
+      ];
+
+  @override
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    return {
+      'value': value,
+      'name': name,
+    };
+  }
 }

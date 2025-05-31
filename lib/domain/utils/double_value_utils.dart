@@ -1,4 +1,4 @@
-import 'package:decimal/decimal.dart';
+import 'dart:math';
 
 final _scientificNotationRegexp = RegExp(r"(-?)(\d\.?\d*)e[+]?(-?\d+)");
 
@@ -21,95 +21,104 @@ class DoubleValueUtils {
 
   const DoubleValueUtils._();
 
-  static String toScientific(
+  static String numToStr(
+    num d, {
+    int? fractionDigits,
+  }) {
+    if (d == d.truncateToDouble()) {
+      return d.toStringAsFixed(0);
+    }
+
+    if (fractionDigits != null) {
+      return d.toStringAsFixed(fractionDigits);
+    }
+
+    return d.toString();
+  }
+
+  static String format(
     double? value, {
-    int fractionDigitsInSignificand = 2,
+    int fractionDigits = defaultFractionDigits,
+    bool scientific = false,
+    int fractionDigitsInScientific = 2,
     int noFormatMinExponent = -4,
     int noFormatMaxExponent = 7,
-    int? fractionDigitsInUnformatted,
     String defaultValue = "",
   }) {
+    assert(
+      fractionDigits >= 0,
+      "Fraction digits should be a non-negative number",
+    );
+
+    assert(
+      fractionDigitsInScientific >= 0,
+      "Fraction digits in scientific significand should be "
+      "a non-negative number",
+    );
+
     if (value == null) {
       return defaultValue;
     }
-    String valueStr = value.toStringAsExponential(fractionDigitsInSignificand);
-    RegExpMatch? match = _scientificNotationRegexp.firstMatch(valueStr);
 
-    if (match != null) {
-      String significandSign = match.group(1)!;
-      String significandStr = match.group(2)!;
-      String exponentStr = match.group(3)!;
-
-      double significandNum = double.parse(significandStr);
-      double exponentNum = double.parse(exponentStr);
-
-      if (exponentNum >= noFormatMinExponent &&
-          exponentNum <= noFormatMaxExponent) {
-        return toPlain(
-          value,
-          fractionDigits: fractionDigitsInUnformatted ?? defaultFractionDigits,
-        );
-      }
-
-      String superscriptExponentStr = exponentStr.runes
-          .map((code) => _exponentSuperscripts[String.fromCharCode(code)]!)
-          .join();
-      String result = "${10}$superscriptExponentStr";
-
-      if (significandNum.abs() != 1) {
-        String basePart = toPlain(
-          significandNum.abs(),
-          fractionDigits: fractionDigitsInSignificand,
-        );
-        result = "$significandSign$basePart · $result";
-      } else {
-        result = "$significandSign$result";
-      }
-
-      return result;
-    }
-
-    return defaultValue;
-  }
-
-  static String toPlain(
-    double? value, {
-    int? fractionDigits,
-  }) {
-    if (value == null) {
-      return "";
-    }
     if (value == 0 && value.isNegative) {
       return "0";
     }
 
-    String valueStr;
-    if (fractionDigits == null) {
-      valueStr = "${Decimal.parse(value.toString())}";
-    } else {
-      fractionDigits = fractionDigits < 0 ? 0 : fractionDigits;
-      valueStr = value.toStringAsFixed(
-        value.truncateToDouble() == value ? 0 : fractionDigits,
-      );
+    if (!scientific) {
+      return _trimToFractionDigits(value, fractionDigits);
     }
 
-    return _trimTrailingZerosInDouble(valueStr);
+    String valueStr = value.toStringAsExponential(fractionDigitsInScientific);
+    RegExpMatch? match = _scientificNotationRegexp.firstMatch(valueStr);
+
+    if (match == null) {
+      return defaultValue;
+    }
+
+    String significandSign = match.group(1)!;
+    String significandStr = match.group(2)!;
+    String exponentStr = match.group(3)!;
+
+    double significandNum = double.parse(significandStr);
+    double exponentNum = double.parse(exponentStr);
+
+    if (exponentNum >= noFormatMinExponent &&
+        exponentNum <= noFormatMaxExponent) {
+      return _trimToFractionDigits(value, fractionDigits);
+    }
+
+    String superscriptExponentStr = exponentStr.runes
+        .map((code) => _exponentSuperscripts[String.fromCharCode(code)]!)
+        .join();
+    String result = "${10}$superscriptExponentStr";
+
+    if (significandNum.abs() != 1) {
+      String basePart = _trimToFractionDigits(
+        significandNum.abs(),
+        fractionDigitsInScientific,
+      );
+      result = "$significandSign$basePart · $result";
+    } else {
+      result = "$significandSign$result";
+    }
+
+    return result;
   }
 
   static bool areEqual(
-    double? num1,
-    double? num2, {
-    int fractionDigits = defaultFractionDigits,
-  }) {
-    return toPlain(num1, fractionDigits: fractionDigits) ==
-        toPlain(num2, fractionDigits: fractionDigits);
+      double? num1,
+      double? num2, {
+        int fractionDigits = defaultFractionDigits,
+      }) {
+    return format(num1, fractionDigits: fractionDigits) ==
+        format(num2, fractionDigits: fractionDigits);
   }
 
   static bool areNotEqual(
-    double? num1,
-    double? num2, {
-    int fractionDigits = defaultFractionDigits,
-  }) {
+      double? num1,
+      double? num2, {
+        int fractionDigits = defaultFractionDigits,
+      }) {
     return !areEqual(
       num1,
       num2,
@@ -132,6 +141,17 @@ class DoubleValueUtils {
     min = _valueOrZero(min ?? double.negativeInfinity);
     max = _valueOrZero(max ?? double.infinity);
     return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
+  }
+
+  static double roundToPrecision(double v, int fractionDigits) {
+    num p = pow(10, fractionDigits);
+    return (v * p).roundToDouble() / p;
+  }
+
+  static String _trimToFractionDigits(double value, int fractionDigits) {
+    return _trimTrailingZerosInDouble(value.toStringAsFixed(
+      value.truncateToDouble() == value ? 0 : fractionDigits,
+    ));
   }
 
   static double _valueOrZero(double value) {

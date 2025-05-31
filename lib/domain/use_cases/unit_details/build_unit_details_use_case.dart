@@ -1,5 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -9,7 +9,6 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/domain/utils/unit_details_utils.dart';
-import 'package:convertouch/domain/utils/value_model_utils.dart';
 import 'package:either_dart/either.dart';
 
 class BuildUnitDetailsUseCase
@@ -28,17 +27,10 @@ class BuildUnitDetailsUseCase
       bool existingUnit = input is InputExistingUnitDetailsBuildModel;
 
       UnitModel unit = existingUnit
-          ? UnitModel.coalesce(
-              input.unit,
-              valueType: input.unit.valueType ?? input.unitGroup.valueType,
-              minValue: ValueModelUtils.coalesce(
-                v1: input.unit.minValue,
-                v2: input.unitGroup.minValue,
-              ),
-              maxValue: ValueModelUtils.coalesce(
-                v1: input.unit.maxValue,
-                v2: input.unitGroup.maxValue,
-              ),
+          ? input.unit.copyWith(
+              valueType: input.unit.valueType,
+              minValue: input.unit.minValue,
+              maxValue: input.unit.maxValue,
             )
           : UnitModel(
               name: "",
@@ -75,8 +67,7 @@ class BuildUnitDetailsUseCase
           argValue: argValue,
         );
 
-        unit = UnitModel.coalesce(
-          unit,
+        unit = unit.copyWith(
           coefficient: coefficient,
         );
       }
@@ -94,7 +85,7 @@ class BuildUnitDetailsUseCase
           unitGroupChanged: false,
           deltaDetected: false,
           resultUnit: unit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: input.unitGroup,
             mandatoryParamsFilled: mandatoryParamsFilled,
             draftUnit: unit,

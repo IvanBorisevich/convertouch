@@ -31,13 +31,15 @@ class UnitDetailsUtils {
     required UnitModel argUnit,
     required UnitModel unit,
   }) {
-    return argUnit.exists
-        ? UnitDetailsUtils.calcNewArgValue(
-            unitValue: unitValue.num ?? 1,
-            unitCoefficient: unit.coefficient,
-            argUnitCoefficient: argUnit.coefficient!,
-          )
-        : ValueModel.none;
+    if (!argUnit.exists) {
+      return ValueModel.one;
+    }
+    return UnitDetailsUtils.calcNewArgValue(
+          unitValue: unitValue.numVal ?? 1,
+          unitCoefficient: unit.coefficient,
+          argUnitCoefficient: argUnit.coefficient!,
+        ) ??
+        ValueModel.one;
   }
 
   static double calcUnitCoefficient({
@@ -45,19 +47,19 @@ class UnitDetailsUtils {
     required UnitModel argUnit,
     required ValueModel argValue,
   }) {
-    double valueNum = double.tryParse(value.str) ?? 1;
-    double argValueNum = double.tryParse(argValue.str) ?? 1;
+    double valueNum = value.numVal ?? 1;
+    double argValueNum = argValue.numVal ?? 1;
     double argUnitCoefficient = argUnit.coefficient ?? 1;
 
     return argValueNum * argUnitCoefficient / valueNum;
   }
 
-  static ValueModel calcNewArgValue({
+  static ValueModel? calcNewArgValue({
     double unitValue = 1,
     required double? unitCoefficient,
     required double argUnitCoefficient,
   }) {
-    return ValueModel.ofDouble(
+    return ValueModel.numeric(
       unitCoefficient != null
           ? unitCoefficient / argUnitCoefficient * unitValue
           : argUnitCoefficient,

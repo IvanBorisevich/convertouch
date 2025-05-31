@@ -6,21 +6,33 @@ part of 'dbconfig.dart';
 // FloorGenerator
 // **************************************************************************
 
+abstract class $ConvertouchDatabaseBuilderContract {
+  /// Adds migrations to the builder.
+  $ConvertouchDatabaseBuilderContract addMigrations(List<Migration> migrations);
+
+  /// Adds a database [Callback] to the builder.
+  $ConvertouchDatabaseBuilderContract addCallback(Callback callback);
+
+  /// Creates the database and initializes it.
+  Future<ConvertouchDatabase> build();
+}
+
 // ignore: avoid_classes_with_only_static_members
 class $FloorConvertouchDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$ConvertouchDatabaseBuilder databaseBuilder(String name) =>
+  static $ConvertouchDatabaseBuilderContract databaseBuilder(String name) =>
       _$ConvertouchDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$ConvertouchDatabaseBuilder inMemoryDatabaseBuilder() =>
+  static $ConvertouchDatabaseBuilderContract inMemoryDatabaseBuilder() =>
       _$ConvertouchDatabaseBuilder(null);
 }
 
-class _$ConvertouchDatabaseBuilder {
+class _$ConvertouchDatabaseBuilder
+    implements $ConvertouchDatabaseBuilderContract {
   _$ConvertouchDatabaseBuilder(this.name);
 
   final String? name;
@@ -29,19 +41,20 @@ class _$ConvertouchDatabaseBuilder {
 
   Callback? _callback;
 
-  /// Adds migrations to the builder.
-  _$ConvertouchDatabaseBuilder addMigrations(List<Migration> migrations) {
+  @override
+  $ConvertouchDatabaseBuilderContract addMigrations(
+      List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
-  /// Adds a database [Callback] to the builder.
-  _$ConvertouchDatabaseBuilder addCallback(Callback callback) {
+  @override
+  $ConvertouchDatabaseBuilderContract addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
-  /// Creates the database and initializes it.
+  @override
   Future<ConvertouchDatabase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)
@@ -69,7 +82,15 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
 
   ConversionDaoDb? _conversionDaoInstance;
 
-  ConversionItemDaoDb? _conversionItemDaoInstance;
+  ConversionUnitValueDaoDb? _conversionUnitValueDaoInstance;
+
+  ConversionParamValueDaoDb? _conversionParamValueDaoInstance;
+
+  ConversionParamDaoDb? _conversionParamDaoInstance;
+
+  ConversionParamSetDaoDb? _conversionParamSetDaoInstance;
+
+  ConversionParamUnitDaoDb? _conversionParamUnitDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -77,7 +98,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 3,
+      version: 4,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -93,15 +114,23 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `unit_groups` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `value_type` INTEGER NOT NULL, `min_value` REAL, `max_value` REAL, `oob` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `unit_groups` (`name` TEXT NOT NULL, `icon_name` TEXT, `conversion_type` INTEGER, `refreshable` INTEGER, `value_type` INTEGER NOT NULL, `min_value` REAL, `max_value` REAL, `oob` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `units` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `value_type` INTEGER, `min_value` REAL, `max_value` REAL, `invertible` INTEGER, `oob` INTEGER, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `units` (`name` TEXT NOT NULL, `code` TEXT NOT NULL, `symbol` TEXT, `coefficient` REAL, `unit_group_id` INTEGER NOT NULL, `value_type` INTEGER, `list_type` INTEGER, `min_value` REAL, `max_value` REAL, `invertible` INTEGER, `oob` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `refreshable_values` (`unit_id` INTEGER NOT NULL, `value` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_group_id` INTEGER NOT NULL, `source_unit_id` INTEGER, `source_value` TEXT, `last_modified` INTEGER NOT NULL, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversions` (`unit_group_id` INTEGER NOT NULL, `source_unit_id` INTEGER, `source_value` TEXT, `last_modified` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`unit_group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_items` (`unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`name` TEXT NOT NULL, `mandatory` INTEGER, `group_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_params` (`name` TEXT NOT NULL, `calculable` INTEGER, `unit_group_id` INTEGER, `value_type` INTEGER NOT NULL, `list_type` INTEGER, `default_unit_id` INTEGER, `param_set_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_units` (`param_id` INTEGER NOT NULL, `unit_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_id`) REFERENCES `conversion_params` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `conversion_param_values` (`param_id` INTEGER NOT NULL, `param_set_id` INTEGER NOT NULL, `unit_id` INTEGER, `calculated` INTEGER, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_unit_groups_name` ON `unit_groups` (`name`)');
         await database.execute(
@@ -112,6 +141,14 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
             'CREATE UNIQUE INDEX `index_conversions_last_modified` ON `conversions` (`last_modified`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_conversion_items_unit_id_conversion_id` ON `conversion_items` (`unit_id`, `conversion_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_conversion_param_sets_name_group_id` ON `conversion_param_sets` (`name`, `group_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_conversion_params_name_param_set_id` ON `conversion_params` (`name`, `param_set_id`)');
+        await database.execute(
+            'CREATE INDEX `index_conversion_param_units_param_id` ON `conversion_param_units` (`param_id`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_conversion_param_values_param_id_conversion_id` ON `conversion_param_values` (`param_id`, `conversion_id`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -142,9 +179,33 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
   }
 
   @override
-  ConversionItemDaoDb get conversionItemDao {
-    return _conversionItemDaoInstance ??=
-        _$ConversionItemDaoDb(database, changeListener);
+  ConversionUnitValueDaoDb get conversionUnitValueDao {
+    return _conversionUnitValueDaoInstance ??=
+        _$ConversionUnitValueDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamValueDaoDb get conversionParamValueDao {
+    return _conversionParamValueDaoInstance ??=
+        _$ConversionParamValueDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamDaoDb get conversionParamDao {
+    return _conversionParamDaoInstance ??=
+        _$ConversionParamDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamSetDaoDb get conversionParamSetDao {
+    return _conversionParamSetDaoInstance ??=
+        _$ConversionParamSetDaoDb(database, changeListener);
+  }
+
+  @override
+  ConversionParamUnitDaoDb get conversionParamUnitDao {
+    return _conversionParamUnitDaoInstance ??=
+        _$ConversionParamUnitDaoDb(database, changeListener);
   }
 }
 
@@ -157,7 +218,6 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
             database,
             'unit_groups',
             (UnitGroupEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
@@ -165,14 +225,14 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'value_type': item.valueType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 }),
         _unitGroupEntityUpdateAdapter = UpdateAdapter(
             database,
             'unit_groups',
             ['id'],
             (UnitGroupEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'icon_name': item.iconName,
                   'conversion_type': item.conversionType,
@@ -180,7 +240,8 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
                   'value_type': item.valueType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -192,26 +253,6 @@ class _$UnitGroupDaoDb extends UnitGroupDaoDb {
   final InsertionAdapter<UnitGroupEntity> _unitGroupEntityInsertionAdapter;
 
   final UpdateAdapter<UnitGroupEntity> _unitGroupEntityUpdateAdapter;
-
-  @override
-  Future<List<UnitGroupEntity>> getAll({
-    required int pageSize,
-    required int offset,
-  }) async {
-    return _queryAdapter.queryList(
-        'select * from unit_groups order by name limit ?1 offset ?2',
-        mapper: (Map<String, Object?> row) => UnitGroupEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            iconName: row['icon_name'] as String?,
-            conversionType: row['conversion_type'] as int?,
-            refreshable: row['refreshable'] as int?,
-            valueType: row['value_type'] as int,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            oob: row['oob'] as int?),
-        arguments: [pageSize, offset]);
-  }
 
   @override
   Future<List<UnitGroupEntity>> getBySearchString({
@@ -308,34 +349,36 @@ class _$UnitDaoDb extends UnitDaoDb {
             database,
             'units',
             (UnitEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'code': item.code,
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
                   'unit_group_id': item.unitGroupId,
                   'value_type': item.valueType,
+                  'list_type': item.listType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
                   'invertible': item.invertible,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 }),
         _unitEntityUpdateAdapter = UpdateAdapter(
             database,
             'units',
             ['id'],
             (UnitEntity item) => <String, Object?>{
-                  'id': item.id,
                   'name': item.name,
                   'code': item.code,
                   'symbol': item.symbol,
                   'coefficient': item.coefficient,
                   'unit_group_id': item.unitGroupId,
                   'value_type': item.valueType,
+                  'list_type': item.listType,
                   'min_value': item.minValue,
                   'max_value': item.maxValue,
                   'invertible': item.invertible,
-                  'oob': item.oob
+                  'oob': item.oob,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -349,28 +392,54 @@ class _$UnitDaoDb extends UnitDaoDb {
   final UpdateAdapter<UnitEntity> _unitEntityUpdateAdapter;
 
   @override
-  Future<List<UnitEntity>> getAll({
-    required int unitGroupId,
-    required int pageSize,
-    required int offset,
-  }) async {
-    return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 order by code limit ?2 offset ?3',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
-        arguments: [unitGroupId, pageSize, offset]);
-  }
-
-  @override
-  Future<List<UnitEntity>> getBySearchString({
+  Future<List<UnitEntity>> searchWithGroupId({
     required String searchString,
     required int unitGroupId,
     required int pageSize,
     required int offset,
   }) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?2 and (name like ?1 or code like ?1) order by code limit ?3 offset ?4',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where g.id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [searchString, unitGroupId, pageSize, offset]);
+  }
+
+  @override
+  Future<List<UnitEntity>> getByParamId({
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join conversion_param_units p on p.unit_id = u.id inner join unit_groups g on g.id = u.unit_group_id where p.param_id = ?1 order by u.code limit ?2 offset ?3',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        arguments: [paramId, pageSize, offset]);
+  }
+
+  @override
+  Future<List<UnitEntity>> searchWithParamIdAndPossibleUnits({
+    required String searchString,
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join conversion_param_units p on p.unit_id = u.id inner join unit_groups g on g.id = u.unit_group_id where p.param_id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        arguments: [searchString, paramId, pageSize, offset]);
+  }
+
+  @override
+  Future<List<UnitEntity>> searchWithParamId({
+    required String searchString,
+    required int paramId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from conversion_params p inner join units u on u.unit_group_id = p.unit_group_id inner join unit_groups g on g.id = u.unit_group_id where p.id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        arguments: [searchString, paramId, pageSize, offset]);
   }
 
   @override
@@ -379,45 +448,24 @@ class _$UnitDaoDb extends UnitDaoDb {
     String code,
   ) async {
     return _queryAdapter.query(
-        'select * from units where unit_group_id = ?1 and code = ?2',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            valueType: row['value_type'] as int?,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            invertible: row['invertible'] as int?,
-            oob: row['oob'] as int?),
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where g.id = ?1 and u.code = ?2',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [unitGroupId, code]);
   }
 
   @override
   Future<List<UnitEntity>> getBaseUnits(int unitGroupId) async {
     return _queryAdapter.queryList(
-        'select * from units where unit_group_id = ?1 and cast(coefficient as int) = 1 limit 2',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where g.id = ?1 and cast(u.coefficient as int) = 1 limit 2',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [unitGroupId]);
   }
 
   @override
   Future<UnitEntity?> getUnit(int id) async {
-    return _queryAdapter.query('select * from units where id = ?1 limit 1',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            valueType: row['value_type'] as int?,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            invertible: row['invertible'] as int?,
-            oob: row['oob'] as int?),
+    return _queryAdapter.query(
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where u.id = ?1 limit 1',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [id]);
   }
 
@@ -428,19 +476,10 @@ class _$UnitDaoDb extends UnitDaoDb {
         Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
             .join(',');
     return _queryAdapter.queryList(
-        'select * from units where id in (' + _sqliteVariablesForIds + ')',
-        mapper: (Map<String, Object?> row) => UnitEntity(
-            id: row['id'] as int?,
-            name: row['name'] as String,
-            code: row['code'] as String,
-            symbol: row['symbol'] as String?,
-            coefficient: row['coefficient'] as double?,
-            unitGroupId: row['unit_group_id'] as int,
-            valueType: row['value_type'] as int?,
-            minValue: row['min_value'] as double?,
-            maxValue: row['max_value'] as double?,
-            invertible: row['invertible'] as int?,
-            oob: row['oob'] as int?),
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where u.id in (' +
+            _sqliteVariablesForIds +
+            ')',
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [...ids]);
   }
 
@@ -454,10 +493,10 @@ class _$UnitDaoDb extends UnitDaoDb {
         Iterable<String>.generate(codes.length, (i) => '?${i + offset}')
             .join(',');
     return _queryAdapter.queryList(
-        'select u.* from units u inner join unit_groups g where 1=1 and g.name = ?1 and u.unit_group_id = g.id and u.code in (' +
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where 1=1 and g.name = ?1 and u.unit_group_id = g.id and u.code in (' +
             _sqliteVariablesForCodes +
             ')',
-        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
+        mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [unitGroupName, ...codes]);
   }
 
@@ -535,22 +574,22 @@ class _$ConversionDaoDb extends ConversionDaoDb {
             database,
             'conversions',
             (ConversionEntity item) => <String, Object?>{
-                  'id': item.id,
                   'unit_group_id': item.unitGroupId,
                   'source_unit_id': item.sourceUnitId,
                   'source_value': item.sourceValue,
-                  'last_modified': item.lastModified
+                  'last_modified': item.lastModified,
+                  'id': item.id
                 }),
         _conversionEntityUpdateAdapter = UpdateAdapter(
             database,
             'conversions',
             ['id'],
             (ConversionEntity item) => <String, Object?>{
-                  'id': item.id,
                   'unit_group_id': item.unitGroupId,
                   'source_unit_id': item.sourceUnitId,
                   'source_value': item.sourceValue,
-                  'last_modified': item.lastModified
+                  'last_modified': item.lastModified,
+                  'id': item.id
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -597,8 +636,8 @@ class _$ConversionDaoDb extends ConversionDaoDb {
   }
 }
 
-class _$ConversionItemDaoDb extends ConversionItemDaoDb {
-  _$ConversionItemDaoDb(
+class _$ConversionUnitValueDaoDb extends ConversionUnitValueDaoDb {
+  _$ConversionUnitValueDaoDb(
     this.database,
     this.changeListener,
   ) : _queryAdapter = QueryAdapter(database);
@@ -610,10 +649,11 @@ class _$ConversionItemDaoDb extends ConversionItemDaoDb {
   final QueryAdapter _queryAdapter;
 
   @override
-  Future<List<ConversionItemEntity>> getByConversionId(int conversionId) async {
+  Future<List<ConversionUnitValueEntity>> getByConversionId(
+      int conversionId) async {
     return _queryAdapter.queryList(
         'select * from conversion_items where conversion_id = ?1 order by sequence_num',
-        mapper: (Map<String, Object?> row) => ConversionItemEntity(id: row['id'] as int?, unitId: row['unit_id'] as int, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
+        mapper: (Map<String, Object?> row) => ConversionUnitValueEntity(id: row['id'] as int?, unitId: row['unit_id'] as int, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
         arguments: [conversionId]);
   }
 
@@ -622,5 +662,144 @@ class _$ConversionItemDaoDb extends ConversionItemDaoDb {
     await _queryAdapter.queryNoReturn(
         'delete from conversion_items where conversion_id = ?1',
         arguments: [conversionId]);
+  }
+}
+
+class _$ConversionParamValueDaoDb extends ConversionParamValueDaoDb {
+  _$ConversionParamValueDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamValueEntity>> getByConversionId(
+      int conversionId) async {
+    return _queryAdapter.queryList(
+        'select * from conversion_param_values where conversion_id = ?1 order by sequence_num',
+        mapper: (Map<String, Object?> row) => ConversionParamValueEntity(id: row['id'] as int?, paramId: row['param_id'] as int, paramSetId: row['param_set_id'] as int, unitId: row['unit_id'] as int?, calculated: row['calculated'] as int?, value: row['value'] as String?, defaultValue: row['default_value'] as String?, sequenceNum: row['sequence_num'] as int, conversionId: row['conversion_id'] as int),
+        arguments: [conversionId]);
+  }
+
+  @override
+  Future<void> removeByConversionId(int conversionId) async {
+    await _queryAdapter.queryNoReturn(
+        'delete from conversion_param_values where conversion_id = ?1',
+        arguments: [conversionId]);
+  }
+}
+
+class _$ConversionParamDaoDb extends ConversionParamDaoDb {
+  _$ConversionParamDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamEntity>> get(int setId) async {
+    return _queryAdapter.queryList(
+        'SELECT p.* FROM conversion_params p WHERE p.param_set_id = ?1',
+        mapper: (Map<String, Object?> row) => ConversionParamEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            calculable: row['calculable'] as int?,
+            unitGroupId: row['unit_group_id'] as int?,
+            valueType: row['value_type'] as int,
+            listType: row['list_type'] as int?,
+            defaultUnitId: row['default_unit_id'] as int?,
+            paramSetId: row['param_set_id'] as int),
+        arguments: [setId]);
+  }
+}
+
+class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
+  _$ConversionParamSetDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<ConversionParamSetEntity>> getBySearchString({
+    required String searchString,
+    required int groupId,
+    required int pageSize,
+    required int offset,
+  }) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM conversion_param_sets WHERE group_id = ?2 and name like ?1 limit ?3 offset ?4',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        arguments: [searchString, groupId, pageSize, offset]);
+  }
+
+  @override
+  Future<List<ConversionParamSetEntity>> getByIds(List<int> ids) async {
+    const offset = 1;
+    final _sqliteVariablesForIds =
+        Iterable<String>.generate(ids.length, (i) => '?${i + offset}')
+            .join(',');
+    return _queryAdapter.queryList(
+        'SELECT * FROM conversion_param_sets WHERE id in (' +
+            _sqliteVariablesForIds +
+            ')',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            mandatory: row['mandatory'] as int?,
+            groupId: row['group_id'] as int),
+        arguments: [...ids]);
+  }
+
+  @override
+  Future<ConversionParamSetEntity?> getFirstMandatory(int groupId) async {
+    return _queryAdapter.query(
+        'SELECT * FROM conversion_param_sets WHERE group_id = ?1 AND mandatory = 1 limit 1',
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        arguments: [groupId]);
+  }
+
+  @override
+  Future<int?> getCount(int groupId) async {
+    return _queryAdapter.query(
+        'SELECT count(1) FROM conversion_param_sets WHERE group_id = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [groupId]);
+  }
+}
+
+class _$ConversionParamUnitDaoDb extends ConversionParamUnitDaoDb {
+  _$ConversionParamUnitDaoDb(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<int?> hasPossibleUnits(int paramId) async {
+    return _queryAdapter.query(
+        'SELECT CASE count(1) WHEN 0 THEN 0 ELSE 1 END FROM conversion_param_units WHERE param_id = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [paramId]);
   }
 }

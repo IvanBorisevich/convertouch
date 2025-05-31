@@ -13,8 +13,7 @@ class StopJobUseCase<R> extends UseCase<JobModel, JobModel> {
     try {
       input.progressController?.close();
 
-      JobModel stoppedJob = JobModel.coalesce(
-        input,
+      JobModel stoppedJob = input.copyWith(
         progressController: null,
       );
 

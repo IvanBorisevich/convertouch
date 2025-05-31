@@ -4,10 +4,10 @@ import 'package:test/test.dart';
 
 void main() {
   test(
-    'Build unit_groups table row from entity with init defaults',
+    'Build unit_groups table row from entity',
     () {
       expect(
-        UnitGroupEntity.entityToRow({
+        UnitGroupEntity.jsonToRow({
           'groupName': 'Length',
           'iconName': 'length-group.png',
           'valueType': ConvertouchValueType.decimalPositive,
@@ -16,68 +16,84 @@ void main() {
         {
           'name': 'Length',
           'icon_name': 'length-group.png',
-          'conversion_type': null,
-          'refreshable': null,
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
-          'max_value': null,
           'oob': 1,
         },
       );
 
       expect(
-        UnitGroupEntity.entityToRow({
+        UnitGroupEntity.jsonToRow({
           'groupName': 'Length',
           'iconName': 'length-group.png',
-          'conversionType': ConversionType.static,
+          'valueType': ConvertouchValueType.decimalPositive,
+          'minValue': 0,
+          'oob': true,
+        }),
+        {
+          'name': 'Length',
+          'icon_name': 'length-group.png',
+          'value_type': ConvertouchValueType.decimalPositive.id,
+          'min_value': 0,
+          'oob': 1,
+        },
+      );
+
+      expect(
+        UnitGroupEntity.jsonToRow({
+          'groupName': 'Length',
+          'iconName': 'length-group.png',
           'refreshable': false,
           'valueType': ConvertouchValueType.decimalPositive,
           'minValue': 0,
           'units': [],
+          'oob': null,
         }),
         {
           'name': 'Length',
           'icon_name': 'length-group.png',
-          'conversion_type': null,
-          'refreshable': null,
-          'value_type': ConvertouchValueType.decimalPositive.val,
+          'refreshable': 0,
+          'value_type': ConvertouchValueType.decimalPositive.id,
           'min_value': 0,
-          'max_value': null,
           'oob': 1,
         },
       );
-    },
-  );
 
-  test(
-    'Build unit_groups table row from entity without init defaults',
-    () {
       expect(
-        UnitGroupEntity.entityToRow(
-          {
-            'groupName': 'Length',
-          },
-          initDefaults: false,
-        ),
+        UnitGroupEntity.jsonToRow({
+          'groupName': 'Length',
+          'iconName': 'length-group.png',
+          'valueType': ConvertouchValueType.decimalPositive,
+          'minValue': 0,
+          'oob': false,
+        }),
         {
           'name': 'Length',
+          'icon_name': 'length-group.png',
+          'value_type': ConvertouchValueType.decimalPositive.id,
+          'min_value': 0,
+          'oob': 0,
         },
       );
 
       expect(
-        UnitGroupEntity.entityToRow(
-          {
-            'groupName': 'Length',
-            'minValue': null,
-            'units': [],
-          },
-          initDefaults: false,
-        ),
+        UnitGroupEntity.jsonToRow({
+          'groupName': 'Length',
+          'iconName': 'length-group.png',
+          'valueType': null,
+          'minValue': -1,
+          'oob': false,
+        }, excludedColumns: [
+          'oob'
+        ]),
         {
           'name': 'Length',
+          'icon_name': 'length-group.png',
           'min_value': null,
         },
       );
+
+      expect(UnitGroupEntity.jsonToRow({}, excludedColumns: ['oob']), {});
     },
   );
 }

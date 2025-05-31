@@ -10,18 +10,24 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/conversion_params_view.dart';
 import 'package:convertouch/presentation/ui/widgets/popup_menu_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
+import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ConvertouchConversionPage extends StatefulWidget {
   const ConvertouchConversionPage({super.key});
@@ -32,10 +38,12 @@ class ConvertouchConversionPage extends StatefulWidget {
 
 class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
   late bool _isPopupMenuOpen;
+  late PanelController _panelController;
 
   @override
   void initState() {
     _isPopupMenuOpen = false;
+    _panelController = PanelController();
     super.initState();
   }
 
@@ -44,7 +52,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
+    final paramSetsBloc = BlocProvider.of<ConversionParamSetsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
+    final singleParamBloc = BlocProvider.of<SingleParamBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return BlocListener<NavigationBloc, NavigationState>(
@@ -66,6 +76,29 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
               return ConvertouchPage(
                 title: unitGroup.name,
                 appBarRightWidgets: [
+                  conversionBlocBuilder(
+                    builderFunc: (pageState) {
+                      return Visibility(
+                        visible: pageState.conversion.params != null,
+                        child: IconButton(
+                          icon: IconUtils.getIcon(
+                            IconNames.parameters,
+                            color: pageColorScheme.appBar.foreground.regular,
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            if (_panelController.isAttached) {
+                              if (_panelController.isPanelClosed) {
+                                _panelController.open();
+                              } else {
+                                _panelController.close();
+                              }
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   ConvertouchPopupMenu(
                     width: 210,
                     onMenuStateChange: (isOpen) {
@@ -120,54 +153,149 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                 ],
                 body: Container(
                   color: Colors.transparent,
-                  child: conversionBlocBuilder(
-                    builderFunc: (pageState) {
-                      final conversion = pageState.conversion;
+                  child: ScrollConfiguration(
+                    behavior: NoGlowScrollBehavior(),
+                    child: conversionBlocBuilder(
+                      builderFunc: (pageState) {
+                        final conversion = pageState.conversion;
 
-                      return ConvertouchConversionItemsView(
-                        conversion.targetConversionItems,
-                        parentValueType: conversion.unitGroup.valueType,
-                        onUnitItemTap: (item) {
-                          unitsBloc.add(
-                            FetchItems(
-                              parentItemId: conversion.unitGroup.id,
-                            ),
-                          );
+                        return Column(
+                          children: [
+                            ConversionParamsView(
+                              panelController: _panelController,
+                              params: conversion.params,
+                              onParamSetAdd: () {
+                                paramSetsBloc.add(
+                                  FetchItems(
+                                    parentItemId: unitGroup.id,
+                                  ),
+                                );
+                                unitsSelectionBloc.add(
+                                  StartItemsMarking(
+                                    previouslyMarkedIds: conversion
+                                        .params?.paramSetValues
+                                        .map((item) => item.paramSet.id)
+                                        .toList(),
+                                    excludedIds: conversion
+                                            .params?.paramSetValues
+                                            .where((item) =>
+                                                item.paramSet.mandatory)
+                                            .map((item) => item.paramSet.id)
+                                            .toList() ??
+                                        [],
+                                  ),
+                                );
+                                navigationBloc.add(
+                                  const NavigateToPage(
+                                    pageName: PageName.paramSetsPage,
+                                  ),
+                                );
+                              },
+                              onParamSetSelect: (newIndex) {
+                                conversionBloc.add(
+                                  SelectParamSetInConversion(
+                                    newSelectedParamSetIndex: newIndex,
+                                  ),
+                                );
+                              },
+                              onParamUnitTap: (paramValue) {
+                                singleParamBloc.add(
+                                  ShowParam(
+                                    param: paramValue.param,
+                                  ),
+                                );
 
-                          unitsSelectionBloc.add(
-                            StartItemSelection(
-                              previouslySelectedId: item.unit.id,
-                              excludedIds: conversion.targetConversionItems
-                                  .map((e) => e.unit.id)
-                                  .whereNot((id) => id == item.unit.id)
-                                  .toList(),
-                            ),
-                          );
+                                unitsBloc.add(
+                                  FetchItems(
+                                    parentItemId: paramValue.param.id,
+                                    parentItemType: ItemType.conversionParam,
+                                  ),
+                                );
 
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.unitsPageForConversion,
+                                unitsSelectionBloc.add(
+                                  StartItemSelection(
+                                    previouslySelectedId: paramValue.unit!.id,
+                                  ),
+                                );
+
+                                navigationBloc.add(
+                                  const NavigateToPage(
+                                    pageName:
+                                        PageName.unitsPageForConversionParams,
+                                  ),
+                                );
+                              },
+                              onValueChanged: (paramValue, newValue) {
+                                conversionBloc.add(
+                                  EditConversionParamValue(
+                                    newValue: newValue,
+                                    paramId: paramValue.param.id,
+                                    paramSetId: paramValue.param.paramSetId,
+                                  ),
+                                );
+                              },
+                              onSelectedParamSetRemove: () {
+                                conversionBloc.add(
+                                  const RemoveSelectedParamSetFromConversion(),
+                                );
+                              },
+                              onParamSetsBulkRemove: () {
+                                conversionBloc.add(
+                                  const RemoveAllParamSetsFromConversion(),
+                                );
+                              },
+                              theme: appState.theme,
                             ),
-                          );
-                        },
-                        onTextValueChanged: (item, value) {
-                          conversionBloc.add(
-                            EditConversionItemValue(
-                              newValue: value,
-                              unitId: item.unit.id,
+                            Expanded(
+                              child: ConvertouchConversionItemsView(
+                                conversion.convertedUnitValues,
+                                sourceUnitId: conversion.srcUnitValue?.unit.id,
+                                onUnitItemTap: (item) {
+                                  unitsBloc.add(
+                                    FetchItems(
+                                      parentItemId: conversion.unitGroup.id,
+                                    ),
+                                  );
+
+                                  unitsSelectionBloc.add(
+                                    StartItemSelection(
+                                      previouslySelectedId: item.unit.id,
+                                      excludedIds: conversion
+                                          .convertedUnitValues
+                                          .map((e) => e.unit.id)
+                                          .whereNot((id) => id == item.unit.id)
+                                          .toList(),
+                                    ),
+                                  );
+
+                                  navigationBloc.add(
+                                    const NavigateToPage(
+                                      pageName: PageName.unitsPageForConversion,
+                                    ),
+                                  );
+                                },
+                                onTextValueChanged: (item, value) {
+                                  conversionBloc.add(
+                                    EditConversionItemValue(
+                                      newValue: value,
+                                      unitId: item.unit.id,
+                                    ),
+                                  );
+                                },
+                                onItemRemoveTap: (item) {
+                                  conversionBloc.add(
+                                    RemoveConversionItems(
+                                      unitIds: [item.unit.id],
+                                    ),
+                                  );
+                                },
+                                theme: appState.theme,
+                              ),
                             ),
-                          );
-                        },
-                        onItemRemoveTap: (item) {
-                          conversionBloc.add(
-                            RemoveConversionItems(
-                              unitIds: [item.unit.id],
-                            ),
-                          );
-                        },
-                        theme: appState.theme,
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
                 floatingActionButton: conversionBlocBuilder(
@@ -192,10 +320,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                             unitsSelectionBloc.add(
                               StartItemsMarking(
                                 previouslyMarkedIds: conversion
-                                    .targetConversionItems
+                                    .convertedUnitValues
                                     .map((unitValue) => unitValue.unit.id)
                                     .toList(),
-                                markedItemsMinNumForSelection: 2,
+                                markedItemsSelectionMinNum: 2,
                               ),
                             );
                             navigationBloc.add(

@@ -49,7 +49,7 @@ class ConversionGroupsPage extends StatelessWidget {
             itemsListBloc: unitGroupsBloc,
             pageName: PageName.conversionGroupsPage,
             viewModeSettingKey: SettingKey.unitGroupsViewMode,
-            searchBarPlaceholder: 'Search conversion groups...',
+            searchBarPlaceholder: 'Search groups...',
             onItemTap: (unitGroup) {
               singleGroupBloc.add(
                 ShowGroup(unitGroup: unitGroup),
@@ -81,7 +81,7 @@ class ConversionGroupsPage extends StatelessWidget {
             },
             onItemTapForRemoval: (unitGroup) {
               itemsSelectionBloc.add(
-                SelectItem(id: unitGroup.id),
+                SelectSingleItem(id: unitGroup.id),
               );
             },
             onItemLongPress: (unitGroup) {

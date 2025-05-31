@@ -1,3 +1,4 @@
+import 'package:convertouch/data/dao/conversion_param_unit_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
@@ -8,32 +9,38 @@ import 'package:either_dart/either.dart';
 
 class UnitRepositoryImpl extends UnitRepository {
   final UnitDao unitDao;
+  final ConversionParamUnitDao conversionParamUnitDao;
 
   const UnitRepositoryImpl({
     required this.unitDao,
+    required this.conversionParamUnitDao,
   });
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
     required int unitGroupId,
-    required int pageNum,
+    String? searchString,
+    int pageNum = 0,
     required int pageSize,
   }) async {
     try {
-      final result = await unitDao.getAll(
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<UnitEntity> result = await unitDao.searchWithGroupId(
         unitGroupId: unitGroupId,
+        searchString: searchPattern,
         pageSize: pageSize,
         offset: pageNum * pageSize,
       );
-
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching units of the group with id = "
-              "$unitGroupId",
+          message: "Error when searching units of the group id = $unitGroupId",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -42,31 +49,47 @@ class UnitRepositoryImpl extends UnitRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search({
-    required int unitGroupId,
-    required String searchString,
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
+    required int paramId,
+    String? searchString,
     int pageNum = 0,
     required int pageSize,
   }) async {
     try {
+      int? possibleUnitsExistenceFlag =
+          await conversionParamUnitDao.hasPossibleUnits(paramId);
+
+      bool hasPossibleUnits =
+          possibleUnitsExistenceFlag != null && possibleUnitsExistenceFlag > 0;
+
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
       List<UnitEntity> result;
-      if (searchString.isNotEmpty) {
-        result = await unitDao.getBySearchString(
-          unitGroupId: unitGroupId,
-          searchString: '%$searchString%',
+      if (hasPossibleUnits) {
+        result = await unitDao.searchWithParamIdAndPossibleUnits(
+          paramId: paramId,
+          searchString: searchPattern,
           pageSize: pageSize,
           offset: pageNum * pageSize,
         );
       } else {
-        result = [];
+        result = await unitDao.searchWithParamId(
+          paramId: paramId,
+          searchString: searchPattern,
+          pageSize: pageSize,
+          offset: pageNum * pageSize,
+        );
       }
+
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when searching units",
+          message: "Error when searching units of the param id = $paramId",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),
@@ -77,8 +100,8 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel?>> get(int id) async {
     try {
-      final result = await unitDao.getUnit(id);
-      return Right(UnitTranslator.I.toModel(result)!);
+      final unit = await unitDao.getUnit(id);
+      return Right(unit != null ? UnitTranslator.I.toModel(unit) : null);
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -92,14 +115,15 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(
-      List<int>? ids) async {
+    List<int>? ids,
+  ) async {
     if (ids == null || ids.isEmpty) {
       return const Right([]);
     }
     try {
       final result = await unitDao.getUnitsByIds(ids);
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -120,7 +144,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       final result = await unitDao.getUnitsByCodes(unitGroupName, codes);
       return Right(
-        {for (var v in result) v.id!: UnitTranslator.I.toModel(v)!},
+        {for (var v in result) v.id!: UnitTranslator.I.toModel(v)},
       );
     } catch (e, stackTrace) {
       return Left(
@@ -142,7 +166,7 @@ class UnitRepositoryImpl extends UnitRepository {
     try {
       var result = await unitDao.getBaseUnits(unitGroupId);
       return Right(
-        result.map((entity) => UnitTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -162,10 +186,9 @@ class UnitRepositoryImpl extends UnitRepository {
       final existingUnit = await unitDao.getByCode(unit.unitGroupId, unit.code);
       if (existingUnit == null) {
         int addedUnitId =
-            await unitDao.insert(UnitTranslator.I.fromModel(unit)!);
+            await unitDao.insert(UnitTranslator.I.fromModel(unit));
         return Right(
-          UnitModel.coalesce(
-            unit,
+          unit.copyWith(
             id: addedUnitId,
           ),
         );
@@ -214,7 +237,7 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) async {
     try {
-      await unitDao.update(UnitTranslator.I.fromModel(unit)!);
+      await unitDao.update(UnitTranslator.I.fromModel(unit));
       return Right(unit);
     } catch (e, stackTrace) {
       return Left(

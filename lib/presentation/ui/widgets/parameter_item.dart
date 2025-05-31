@@ -1,5 +1,5 @@
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/textbox.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchParameterItem extends StatelessWidget {
@@ -10,11 +10,11 @@ class ConvertouchParameterItem extends StatelessWidget {
   final bool visible;
   final bool editable;
   final TextEditingController? valueChangeController;
-  final void Function(String)? onValueChange;
+  final void Function(String)? onValueChanged;
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double bottomMargin;
-  final TextBoxColorScheme textBoxColor;
+  final InputBoxColorScheme textBoxColor;
 
   const ConvertouchParameterItem({
     required this.name,
@@ -24,7 +24,7 @@ class ConvertouchParameterItem extends StatelessWidget {
     this.visible = true,
     this.editable = false,
     this.valueChangeController,
-    this.onValueChange,
+    this.onValueChanged,
     this.editableValueMaxLength,
     this.editableValueLengthVisible = false,
     this.bottomMargin = 20,
@@ -46,7 +46,7 @@ class ConvertouchParameterItem extends StatelessWidget {
           ? ConvertouchTextBox(
               label: headerTitle ?? "",
               controller: valueChangeController,
-              onChanged: onValueChange,
+              onValueChanged: onValueChanged,
               hintText: value,
               colors: textBoxColor,
               textLengthCounterVisible: editableValueLengthVisible,

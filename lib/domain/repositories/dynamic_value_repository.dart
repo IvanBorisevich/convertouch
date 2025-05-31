@@ -5,7 +5,7 @@ import 'package:either_dart/either.dart';
 abstract class DynamicValueRepository {
   const DynamicValueRepository();
 
-  Future<Either<ConvertouchException, DynamicValueModel>> get(int unitId);
+  Future<Either<ConvertouchException, DynamicValueModel?>> get(int unitId);
 
   Future<Either<ConvertouchException, List<DynamicValueModel>>> getList(
     List<int> unitIds,

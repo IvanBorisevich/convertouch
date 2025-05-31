@@ -4,13 +4,11 @@ import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversi
 
 class EditConversionGroupUseCase
     extends AbstractModifyConversionUseCase<EditConversionGroupDelta> {
-  const EditConversionGroupUseCase({
-    required super.createConversionUseCase,
-  });
+  const EditConversionGroupUseCase();
 
   @override
-  UnitGroupModel getModifiedGroup({
-    required UnitGroupModel unitGroup,
+  UnitGroupModel newGroup({
+    required UnitGroupModel oldGroup,
     required EditConversionGroupDelta delta,
   }) {
     return delta.editedGroup;

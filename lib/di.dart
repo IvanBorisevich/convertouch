@@ -2,38 +2,56 @@ import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
+import 'package:convertouch/data/repositories/db/conversion_param_repository_impl.dart';
+import 'package:convertouch/data/repositories/db/conversion_param_set_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
+import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
-import 'package:convertouch/data/translators/conversion_item_translator.dart';
+import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
+import 'package:convertouch/data/translators/conversion_param_set_translator.dart';
+import 'package:convertouch/data/translators/conversion_param_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
+import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
+import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
 import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
+import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/use_cases/common/get_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/select_list_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/convert_single_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/create_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_case.dart';
@@ -47,6 +65,8 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -97,15 +117,19 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
   locator.registerLazySingleton<UnitRepository>(
     () => UnitRepositoryImpl(
       unitDao: database.unitDao,
+      conversionParamUnitDao: database.conversionParamUnitDao,
     ),
   );
 
   locator.registerLazySingleton<ConversionRepository>(
     () => ConversionRepositoryImpl(
       conversionDao: database.conversionDao,
-      conversionItemDao: database.conversionItemDao,
+      conversionUnitValueDao: database.conversionUnitValueDao,
+      conversionParamValueDao: database.conversionParamValueDao,
       unitGroupRepository: locator(),
       unitRepository: locator(),
+      conversionParamRepository: locator(),
+      conversionParamSetRepository: locator(),
       database: database.database.database,
     ),
   );
@@ -130,6 +154,23 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       database: database.database.database,
     ),
   );
+
+  locator.registerLazySingleton<ConversionParamSetRepository>(
+    () => ConversionParamSetRepositoryImpl(
+      conversionParamSetDao: database.conversionParamSetDao,
+    ),
+  );
+
+  locator.registerLazySingleton<ConversionParamRepository>(
+    () => ConversionParamRepositoryImpl(
+      conversionParamDao: database.conversionParamDao,
+      unitDao: database.unitDao,
+    ),
+  );
+
+  locator.registerLazySingleton<ListValueRepository>(
+    () => const ListValueRepositoryImpl(),
+  );
 }
 
 Future<void> _initTranslators() async {
@@ -149,12 +190,51 @@ Future<void> _initTranslators() async {
     () => ConversionTranslator(),
   );
 
-  locator.registerLazySingleton<ConversionItemTranslator>(
-    () => ConversionItemTranslator(),
+  locator.registerLazySingleton<ConversionUnitValueTranslator>(
+    () => ConversionUnitValueTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamValueTranslator>(
+    () => ConversionParamValueTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamSetTranslator>(
+    () => ConversionParamSetTranslator(),
+  );
+
+  locator.registerLazySingleton<ConversionParamTranslator>(
+    () => ConversionParamTranslator(),
   );
 }
 
 Future<void> _initUseCases() async {
+  locator.registerLazySingleton<CalculateDefaultValueUseCase>(
+    () => CalculateDefaultValueUseCase(
+      dynamicValueRepository: locator(),
+      listValueRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<CalculateSourceItemByParamsUseCase>(
+    () => CalculateSourceItemByParamsUseCase(
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ReplaceUnitInConversionItemUseCase>(
+    () => ReplaceUnitInConversionItemUseCase(
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ReplaceUnitInParamUseCase>(
+    () => ReplaceUnitInParamUseCase(
+      listValueRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
     () => FetchUnitGroupsUseCase(locator()),
   );
@@ -191,17 +271,6 @@ Future<void> _initUseCases() async {
     () => RemoveUnitsUseCase(locator()),
   );
 
-  locator.registerLazySingleton<CreateConversionUseCase>(
-    () => CreateConversionUseCase(
-      convertSingleValueUseCase: locator(),
-      dynamicValueRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<ConvertSingleValueUseCase>(
-    () => const ConvertSingleValueUseCase(),
-  );
-
   locator.registerLazySingleton<GetConversionUseCase>(
     () => GetConversionUseCase(
       conversionRepository: locator(),
@@ -216,45 +285,75 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<AddUnitsToConversionUseCase>(
     () => AddUnitsToConversionUseCase(
-      createConversionUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
       unitRepository: locator(),
     ),
   );
 
   locator.registerLazySingleton<EditConversionGroupUseCase>(
-    () => EditConversionGroupUseCase(
-      createConversionUseCase: locator(),
-    ),
+    () => const EditConversionGroupUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionItemUnitUseCase>(
-    () => EditConversionItemUnitUseCase(
-      createConversionUseCase: locator(),
-    ),
+    () => const EditConversionItemUnitUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionItemValueUseCase>(
     () => EditConversionItemValueUseCase(
-      createConversionUseCase: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
-    () => RemoveConversionItemsUseCase(
-      createConversionUseCase: locator(),
-    ),
+    () => const RemoveConversionItemsUseCase(),
   );
 
   locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
     () => ReplaceConversionItemUnitUseCase(
-      createConversionUseCase: locator(),
+      replaceUnitInConversionItemUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
-    () => UpdateConversionCoefficientsUseCase(
-      createConversionUseCase: locator(),
+    () => const UpdateConversionCoefficientsUseCase(),
+  );
+
+  locator.registerLazySingleton<AddParamSetsToConversionUseCase>(
+    () => AddParamSetsToConversionUseCase(
+      conversionParamSetRepository: locator(),
+      conversionParamRepository: locator(),
+      calculateDefaultValueUseCase: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
+    () => RemoveParamSetsFromConversionUseCase(
+      calculateSourceItemByParamsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
+    () => SelectParamSetInConversionUseCase(
+      calculateSourceItemByParamsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<EditConversionParamValueUseCase>(
+    () => EditConversionParamValueUseCase(
+      calculateDefaultValueUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ReplaceConversionParamUnitUseCase>(
+    () => ReplaceConversionParamUnitUseCase(
+      replaceUnitInParamUseCase: locator(),
+      calculateSourceItemByParamsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ToggleCalculableParamUseCase>(
+    () => const ToggleCalculableParamUseCase(),
   );
 
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
@@ -276,6 +375,24 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<MarkItemsUseCase>(
     () => MarkItemsUseCase(),
+  );
+
+  locator.registerLazySingleton<FetchParamSetsUseCase>(
+    () => FetchParamSetsUseCase(
+      conversionParamSetRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<GetListValuesUseCase>(
+    () => GetListValuesUseCase(
+      listValueRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SelectListValueUseCase>(
+    () => SelectListValueUseCase(
+      listValueRepository: locator(),
+    ),
   );
 }
 
@@ -365,8 +482,24 @@ Future<void> _initBloc() async {
       updateConversionCoefficientsUseCase: locator(),
       removeConversionItemsUseCase: locator(),
       replaceConversionItemUnitUseCase: locator(),
+      addParamSetsToConversionUseCase: locator(),
+      removeParamSetsFromConversionUseCase: locator(),
+      selectParamSetInConversionUseCase: locator(),
+      editConversionParamValueUseCase: locator(),
+      replaceConversionParamUnitUseCase: locator(),
+      toggleCalculableParamUseCase: locator(),
       navigationBloc: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<ConversionParamSetsBloc>(
+    () => ConversionParamSetsBloc(
+      fetchParamSetsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<SingleParamBloc>(
+    () => SingleParamBloc(),
   );
 
   locator.registerLazySingleton<RefreshingJobsBloc>(

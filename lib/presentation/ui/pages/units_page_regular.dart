@@ -63,7 +63,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 },
                 onItemTapForRemoval: (unit) {
                   unitsSelectionBloc.add(
-                    SelectItem(
+                    SelectSingleItem(
                       id: unit.id,
                     ),
                   );
@@ -124,7 +124,6 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                         );
                 },
               ),
-              onItemsRemove: null,
             );
           },
         );

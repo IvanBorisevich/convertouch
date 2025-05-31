@@ -19,15 +19,17 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, DynamicValueModel>> get(
+  Future<Either<ConvertouchException, DynamicValueModel?>> get(
     int unitId,
   ) async {
     try {
       final result = await dynamicValueDao.get(unitId);
-      return Right(
-        DynamicValueTranslator.I.toModel(result) ??
-            DynamicValueModel(unitId: unitId),
-      );
+
+      if (result == null) {
+        return const Right(null);
+      }
+
+      return Right(DynamicValueTranslator.I.toModel(result));
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -47,7 +49,7 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
       final result = await dynamicValueDao.getList(unitIds);
       return Right(
         result
-            .map((entity) => DynamicValueTranslator.I.toModel(entity)!)
+            .map((entity) => DynamicValueTranslator.I.toModel(entity))
             .toList(),
       );
     } catch (e, stackTrace) {

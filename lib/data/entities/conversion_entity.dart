@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/entities/unit_group_entity.dart';
 import 'package:floor/floor.dart';
 
@@ -17,9 +18,7 @@ const String conversionsTableName = 'conversions';
     ),
   ],
 )
-class ConversionEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class ConversionEntity extends ConvertouchEntity {
   @ColumnInfo(name: 'unit_group_id')
   final int unitGroupId;
   @ColumnInfo(name: 'source_unit_id')
@@ -30,25 +29,31 @@ class ConversionEntity {
   final int lastModified;
 
   const ConversionEntity({
-    this.id,
+    super.id,
     required this.unitGroupId,
     this.sourceUnitId,
     this.sourceValue,
     required this.lastModified,
   });
 
-  static Map<String, Object?> entityToRow(Map<String, dynamic> entity) {
+  @override
+  Map<String, dynamic> toRow() {
     return {
-      'id': entity['id'],
-      'unit_group_id': entity['unitGroupId'],
-      'source_unit_id': entity['sourceUnitId'],
-      'source_value': entity['source_value'],
-      'last_modified': DateTime.now().millisecondsSinceEpoch,
+      'id': id,
+      'unit_group_id': unitGroupId,
+      'source_unit_id': sourceUnitId,
+      'source_value': sourceValue,
+      'last_modified': lastModified,
     };
   }
 
   @override
   String toString() {
-    return 'ConversionEntity{id: $id, unitGroupId: $unitGroupId, sourceUnitId: $sourceUnitId, sourceValue: $sourceValue, lastModified: $lastModified}';
+    return 'ConversionEntity{'
+        'id: $id, '
+        'unitGroupId: $unitGroupId, '
+        'sourceUnitId: $sourceUnitId, '
+        'sourceValue: $sourceValue, '
+        'lastModified: $lastModified}';
   }
 }

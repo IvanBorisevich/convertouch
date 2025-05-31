@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
@@ -5,19 +6,35 @@ import 'package:either_dart/src/either.dart';
 
 import '../../model/mock/mock_unit.dart';
 
+const _mockUnitsList = [
+  centimeter,
+  decimeter,
+  meter,
+  kilometer,
+  europeanClothSize,
+  japanClothSize,
+  italianClothSize,
+  usaClothSize,
+  frRingSize,
+  ruRingSize,
+  usaRingSize,
+  kilogram,
+  pound,
+];
+
 class MockUnitRepository extends UnitRepository {
   const MockUnitRepository();
 
   @override
-  Future<Either<ConvertouchException, UnitModel>> add(UnitModel unit) {
-    // TODO: implement add
-    throw UnimplementedError();
+  Future<Either<ConvertouchException, UnitModel>> add(UnitModel unit) async {
+    return Right(unit);
   }
 
   @override
-  Future<Either<ConvertouchException, UnitModel?>> get(int id) {
-    // TODO: implement get
-    throw UnimplementedError();
+  Future<Either<ConvertouchException, UnitModel?>> get(int id) async {
+    return Right(
+      _mockUnitsList.firstWhereOrNull((unit) => unit.id == id),
+    );
   }
 
   @override
@@ -41,48 +58,57 @@ class MockUnitRepository extends UnitRepository {
 
   @override
   Future<Either<ConvertouchException, Map<int, UnitModel>>> getByCodesAsMap(
-      String unitGroupName, List<String> codes) {
-    // TODO: implement getByCodesAsMap
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitModel>>> getPageByGroupId({
-    required int unitGroupId,
-    required int pageNum,
-    required int pageSize,
-  }) {
-    // TODO: implement getByGroupId
-    throw UnimplementedError();
+    String unitGroupName,
+    List<String> codes,
+  ) async {
+    return Right(
+      {
+        for (var v in _mockUnitsList.where((unit) => codes.contains(unit.code)))
+          v.id: v
+      },
+    );
   }
 
   @override
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(
-      List<int> ids) {
-    // TODO: implement getByIds
-    throw UnimplementedError();
+    List<int> ids,
+  ) async {
+    Map<int, UnitModel> mockUnitsMap = {
+      for (var unit in _mockUnitsList) unit.id: unit
+    };
+
+    return Right(
+      ids.map((id) => mockUnitsMap[id]!).toList(),
+    );
   }
 
   @override
-  Future<Either<ConvertouchException, void>> remove(List<int> unitIds) {
-    // TODO: implement remove
-    throw UnimplementedError();
+  Future<Either<ConvertouchException, void>> remove(List<int> unitIds) async {
+    return const Right(null);
   }
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> search({
+  Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) async {
+    return Right(unit);
+  }
+
+  @override
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
     required int unitGroupId,
-    required String searchString,
+    String? searchString,
     required int pageNum,
     required int pageSize,
-  }) {
-    // TODO: implement search
-    throw UnimplementedError();
+  }) async {
+    return const Right(_mockUnitsList);
   }
 
   @override
-  Future<Either<ConvertouchException, UnitModel>> update(UnitModel unit) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
+    required int paramId,
+    String? searchString,
+    required int pageNum,
+    required int pageSize,
+  }) async {
+    return const Right(_mockUnitsList);
   }
 }

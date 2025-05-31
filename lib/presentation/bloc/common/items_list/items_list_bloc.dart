@@ -22,7 +22,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
-        S extends ItemsFetched<T>>
+        S extends ItemsFetched<T>, P extends ItemsFetchParams>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T>> {
   ItemsListBloc() : super(ItemsFetched<T>(pageItems: const [])) {
     on<FetchItems>(
@@ -69,15 +69,17 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             parentItemId: parentItemId,
             pageSize: event.pageSize,
             pageNum: pageNum,
+            parentItemType: event.parentItemType,
+            listType: event.listType,
+            params: getFetchParams(event),
           ),
         ),
       );
 
       final itemsWithMatch = newItems
-          .map((item) =>
-              searchString != null && searchString.isNotEmpty
-                  ? addSearchMatch(item, searchString)
-                  : item)
+          .map((item) => searchString != null && searchString.isNotEmpty
+              ? addSearchMatch(item, searchString)
+              : item)
           .toList();
 
       oobIds.addAll(
@@ -95,6 +97,8 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           status: FetchingStatus.success,
           hasReachedMax: hasReachedMax,
           parentItemId: parentItemId,
+          listItemUnit: event.listItemUnit,
+          parentItemType: event.parentItemType,
           pageItems: itemsWithMatch,
           oobIds: oobIds,
           searchString: searchString,
@@ -112,6 +116,8 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           status: FetchingStatus.failure,
           hasReachedMax: hasReachedMax,
           parentItemId: parentItemId,
+          listItemUnit: event.listItemUnit,
+          parentItemType: event.parentItemType,
           pageItems: const [],
           searchString: searchString,
           pageNum: pageNum,
@@ -122,13 +128,14 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
 
   _onSaveItem(
     SaveItem<T> event,
-    Emitter<ItemsFetched> emit,
+    Emitter<ItemsFetched<T>> emit,
   ) async {
     final result = ObjectUtils.tryGet(await saveItem(event.item));
 
     add(
       FetchItems(
         parentItemId: state.parentItemId,
+        parentItemType: state.parentItemType,
       ),
     );
 
@@ -151,8 +158,10 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     event.onComplete?.call();
   }
 
+  P? getFetchParams(FetchItems event);
+
   Future<Either<ConvertouchException, List<T>>> fetchItems(
-    InputItemsFetchModel input,
+    InputItemsFetchModel<P> input,
   );
 
   Future<Either<ConvertouchException, T>> saveItem(T item);

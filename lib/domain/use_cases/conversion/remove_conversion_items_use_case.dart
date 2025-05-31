@@ -1,34 +1,35 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
 class RemoveConversionItemsUseCase
     extends AbstractModifyConversionUseCase<RemoveConversionItemsDelta> {
-  const RemoveConversionItemsUseCase({
-    required super.createConversionUseCase,
-  });
+  const RemoveConversionItemsUseCase();
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems({
-    required Map<int, ConversionItemModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required RemoveConversionItemsDelta delta,
   }) async {
-    conversionItemsMap.removeWhere(
+    oldConvertedUnitValues.removeWhere(
       (unitId, item) => delta.unitIds.contains(unitId),
     );
-    return conversionItemsMap;
+    return oldConvertedUnitValues;
   }
 
   @override
-  ConversionItemModel getModifiedSourceItem({
-    required ConversionItemModel? currentSourceItem,
-    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel oldSourceUnitValue,
+    required ConversionParamSetValueModel? activeParams,
+    required UnitGroupModel unitGroup,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required RemoveConversionItemsDelta delta,
-  }) {
-    if (currentSourceItem != null &&
-        !delta.unitIds.contains(currentSourceItem.unit.id)) {
-      return modifiedConversionItemsMap[currentSourceItem.unit.id]!;
+  }) async {
+    if (!delta.unitIds.contains(oldSourceUnitValue.unit.id)) {
+      return oldSourceUnitValue;
     }
-    return modifiedConversionItemsMap.values.first;
+    return newConvertedUnitValues.values.first;
   }
 }

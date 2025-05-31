@@ -1,5 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ItemsListState extends ConvertouchState {
@@ -8,8 +10,11 @@ abstract class ItemsListState extends ConvertouchState {
 
 class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   final List<T> pageItems;
+  final T? selectedItem;
   final List<int> oobIds;
   final int parentItemId;
+  final UnitModel? listItemUnit;
+  final ItemType? parentItemType;
   final String? searchString;
   final FetchingStatus status;
   final bool hasReachedMax;
@@ -17,19 +22,42 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
 
   const ItemsFetched({
     required this.pageItems,
+    this.selectedItem,
     this.oobIds = const [],
     this.parentItemId = -1,
+    this.listItemUnit,
+    this.parentItemType,
     this.searchString,
     this.status = FetchingStatus.success,
     this.hasReachedMax = false,
     this.pageNum = 0,
   });
 
+  ItemsFetched<T> copyWith({
+    Patchable<T>? selectedItem,
+  }) {
+    return ItemsFetched(
+      pageItems: pageItems,
+      selectedItem: ObjectUtils.patch(this.selectedItem, selectedItem),
+      oobIds: oobIds,
+      parentItemId: parentItemId,
+      listItemUnit: listItemUnit,
+      parentItemType: parentItemType,
+      searchString: searchString,
+      status: status,
+      hasReachedMax: hasReachedMax,
+      pageNum: pageNum,
+    );
+  }
+
   @override
   List<Object?> get props => [
         pageItems,
+        selectedItem,
         oobIds,
         parentItemId,
+        parentItemType,
+        listItemUnit,
         searchString,
         status,
         hasReachedMax,
@@ -40,7 +68,10 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   String toString() {
     return 'ItemsFetched{'
         'itemsCount: ${pageItems.length}, '
+        'selectedItem: $selectedItem, '
         'parentItemId: $parentItemId, '
+        'listItemUnit: ${listItemUnit?.code}, '
+        'parentItemType: $parentItemType, '
         'searchString: $searchString, '
         'status: $status, '
         'hasReachedMax: $hasReachedMax, '

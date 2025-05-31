@@ -70,8 +70,7 @@ class UnitGroupDetailsBloc
   ) async {
     UnitGroupDetailsReady currentState = state as UnitGroupDetailsReady;
     UnitGroupModel savedGroup = currentState.savedGroup;
-    UnitGroupModel draftGroup = UnitGroupModel.coalesce(
-      currentState.draftGroup,
+    UnitGroupModel draftGroup = currentState.draftGroup.copyWith(
       name: event.newValue,
     );
 

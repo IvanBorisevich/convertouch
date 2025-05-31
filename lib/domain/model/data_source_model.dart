@@ -11,9 +11,9 @@ class DataSourceModel extends IdNameItemModel {
     required this.url,
     required this.responseTransformerClassName,
     required this.refreshablePart,
-    super.itemType = ItemType.dataSource,
-    super.oob = true,
-  });
+  }) : super(
+          itemType: ItemType.dataSource,
+        );
 
   @override
   List<Object?> get props => [
@@ -23,6 +23,16 @@ class DataSourceModel extends IdNameItemModel {
         refreshablePart,
         itemType,
       ];
+
+  @override
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    return {
+      'name': name,
+      'url': url,
+      'responseTransformer': responseTransformerClassName,
+      'refreshablePart': refreshablePart.val,
+    };
+  }
 
   @override
   String toString() {

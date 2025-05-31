@@ -1,24 +1,30 @@
-import 'package:convertouch/domain/model/conversion_item_model.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ReplaceConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionItemUnitDelta> {
+  final ReplaceUnitInConversionItemUseCase replaceUnitInConversionItemUseCase;
+
   const ReplaceConversionItemUnitUseCase({
-    required super.createConversionUseCase,
+    required this.replaceUnitInConversionItemUseCase,
   });
 
   @override
-  Future<Map<int, ConversionItemModel>> modifyConversionItems({
-    required Map<int, ConversionItemModel> conversionItemsMap,
+  Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
+    required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required ReplaceConversionItemUnitDelta delta,
   }) async {
-    return conversionItemsMap.map(
+    return oldConvertedUnitValues.map(
       (key, value) => key == delta.oldUnitId
           ? MapEntry(
               delta.newUnit.id,
-              ConversionItemModel.coalesce(
-                value,
+              value.copyWith(
                 unit: delta.newUnit,
               ),
             )
@@ -27,11 +33,23 @@ class ReplaceConversionItemUnitUseCase
   }
 
   @override
-  ConversionItemModel getModifiedSourceItem({
-    required ConversionItemModel? currentSourceItem,
-    required Map<int, ConversionItemModel> modifiedConversionItemsMap,
+  Future<ConversionUnitValueModel> newSourceUnitValue({
+    required ConversionUnitValueModel oldSourceUnitValue,
+    required ConversionParamSetValueModel? activeParams,
+    required UnitGroupModel unitGroup,
+    required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required ReplaceConversionItemUnitDelta delta,
-  }) {
-    return modifiedConversionItemsMap[delta.newUnit.id]!;
+  }) async {
+    ConversionUnitValueModel newSrcUnitValue =
+        newConvertedUnitValues[delta.newUnit.id]!;
+
+    return ObjectUtils.tryGet(
+      await replaceUnitInConversionItemUseCase.execute(
+        InputItemUnitReplaceModel(
+          item: newSrcUnitValue,
+          newUnit: delta.newUnit,
+        ),
+      ),
+    );
   }
 }

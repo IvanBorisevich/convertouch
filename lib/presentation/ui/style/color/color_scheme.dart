@@ -14,6 +14,22 @@ class ConvertouchColorScheme {
   });
 }
 
+class ParamSetPanelColorScheme {
+  final ConvertouchColorScheme tab;
+  final ConvertouchColorScheme toolset;
+  final ConvertouchColorScheme footer;
+  final ColorVariation removalIcon;
+  final ConversionItemColorScheme paramItem;
+
+  const ParamSetPanelColorScheme({
+    this.tab = ConvertouchColorScheme.none,
+    this.toolset = ConvertouchColorScheme.none,
+    this.footer = ConvertouchColorScheme.none,
+    this.removalIcon = ColorVariation.none,
+    required this.paramItem,
+  });
+}
+
 class ListItemColorScheme extends ConvertouchColorScheme {
   final ColorVariation divider;
   final ColorVariation titleBackground;
@@ -73,19 +89,21 @@ class SnackBarColorScheme extends ConvertouchColorScheme {
   });
 }
 
-class TextBoxColorScheme extends ConvertouchColorScheme {
+class InputBoxColorScheme extends ConvertouchColorScheme {
   final ColorVariation hint;
+  final ConvertouchColorScheme dropdown;
 
-  const TextBoxColorScheme({
+  const InputBoxColorScheme({
     super.border,
     super.background,
     super.foreground,
     this.hint = ColorVariation.none,
+    this.dropdown = ConvertouchColorScheme.none,
   });
 }
 
 class SearchBarColorScheme {
-  final TextBoxColorScheme textBox;
+  final InputBoxColorScheme textBox;
   final ConvertouchColorScheme viewModeButton;
 
   const SearchBarColorScheme({
@@ -95,14 +113,16 @@ class SearchBarColorScheme {
 }
 
 class ConversionItemColorScheme extends ConvertouchColorScheme {
-  final TextBoxColorScheme textBox;
+  final InputBoxColorScheme textBox;
   final ConvertouchColorScheme unitButton;
   final ConvertouchColorScheme handler;
+  final ColorVariation wrapBackground;
 
   const ConversionItemColorScheme({
     required this.textBox,
     required this.unitButton,
-    required this.handler,
+    this.handler = ConvertouchColorScheme.none,
+    this.wrapBackground = ColorVariation.none,
     super.background,
   });
 }

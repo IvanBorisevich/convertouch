@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff9bb4ec)),
-    foreground: ColorVariation(
-      regular: Color(0xFF3B5B7A),
-    ),
+    background: ColorVariation.only(Color(0xff7f9dec)),
+    foreground: ColorVariation.only(Color(0xFF1D5180)),
   ),
   page: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffe8efff)),
@@ -22,17 +20,17 @@ const pageColorSchemeLight = PageColorScheme(
     action: ColorVariation.only(Color(0xFFB6D5F6)),
   ),
   bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffa7c2ff)),
+    background: ColorVariation.only(Color(0xff7f9dec)),
     foreground: ColorVariation(
-      regular: Color(0xFF2B679D),
-      selected: Color(0xFF244360),
+      regular: Color(0xFF1D5180),
+      selected: Color(0xFF1C3750),
       disabled: Color(0xFFA0C4F5),
     ),
   ),
 );
 
 const searchBarColorSchemeLight = SearchBarColorScheme(
-  textBox: TextBoxColorScheme(
+  textBox: InputBoxColorScheme(
     background: ColorVariation.only(Color(0xFFF6F9FF)),
     foreground: ColorVariation.only(Color(0xFF426F99)),
     hint: ColorVariation.only(Color(0xFF5C93C7)),
@@ -40,6 +38,74 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
   viewModeButton: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffc1d7ff)),
     foreground: ColorVariation.only(Color(0xFF4D79A1)),
+  ),
+);
+
+const paramSetColorSchemeLight = ParamSetPanelColorScheme(
+  tab: ConvertouchColorScheme(
+    background: ColorVariation(
+      regular: Color(0xffdae5ff),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF2D6698),
+    ),
+  ),
+  toolset: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xffc6d6ff)),
+    foreground: ColorVariation(
+      regular: Color(0xFF235475),
+      disabled: Color(0xFF97B0C7),
+    ),
+  ),
+  removalIcon: ColorVariation.only(Color(0xFFB6441C)),
+  footer: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xffabbff3)),
+    foreground: ColorVariation.only(Color(0xFF6C9CC9)),
+  ),
+  paramItem: ConversionItemColorScheme(
+    textBox: InputBoxColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFF5680A2),
+        focused: Color(0xFF3A6588),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFF456885),
+      ),
+      hint: ColorVariation(
+        regular: Color(0xFF7DA4C4),
+      ),
+      dropdown: ConvertouchColorScheme(
+        background: ColorVariation.only(Color(0xffabc4fd)),
+        foreground: ColorVariation.only(Color(0xFF1D578C)),
+      ),
+    ),
+    background: ColorVariation.only(Color(0xffdae5ff)),
+    unitButton: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xFFA2C0F3),
+        focused: Color(0xFF375067),
+      ),
+      background: ColorVariation(
+        regular: Color(0xFFA2C0F3),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xFF224F79),
+      ),
+    ),
+    handler: ConvertouchColorScheme(
+      border: ColorVariation(
+        regular: Color(0xff82a7ec),
+        selected: Colors.transparent,
+      ),
+      background: ColorVariation(
+        regular: Colors.transparent,
+        selected: Color(0xffa1c2ff),
+      ),
+      foreground: ColorVariation(
+        regular: Color(0xff82a7ec),
+        selected: Color(0xFF304860),
+      ),
+    ),
   ),
 );
 
@@ -115,7 +181,7 @@ const unitItemColorSchemeLight = ListItemColorScheme(
     regular: Color(0xFF99C1EF),
     disabled: Color(0x9EB1CBEF),
   ),
-  matchBackground: ColorVariation.only(Color(0xFF4E79B2)),
+  matchBackground: ColorVariation.only(Color(0xFF80ADE7)),
   matchForeground: ColorVariation.only(Color(0xFF264E72)),
   foreground: ColorVariation(
     regular: Color(0xFF2C6396),
@@ -160,16 +226,14 @@ const unitPageInfoBoxColorLight = ConvertouchColorScheme(
 );
 
 const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFE6DFF6)),
   foreground: ColorVariation.only(Color(0xFF45459A)),
 );
 
 const unitPageEmptyViewColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFD4E5FC)),
   foreground: ColorVariation.only(Color(0xFF3B6083)),
 );
 
-const unitTextBoxColorLight = TextBoxColorScheme(
+const unitTextBoxColorLight = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF4F7498),
     focused: Color(0xFF233B50),
@@ -183,9 +247,13 @@ const unitTextBoxColorLight = TextBoxColorScheme(
     regular: Color(0xFF799BBB),
     disabled: Color(0xBE73ACE5),
   ),
+  dropdown: ConvertouchColorScheme(
+    background: ColorVariation.only(Color(0xff9eb7f3)),
+    foreground: ColorVariation.only(Color(0xFF134470)),
+  ),
 );
 
-const unitGroupTextBoxColorLight = TextBoxColorScheme(
+const unitGroupTextBoxColorLight = InputBoxColorScheme(
   border: ColorVariation(
     regular: Color(0xFF6766D3),
     disabled: Color(0xFF6160BE),
@@ -199,26 +267,52 @@ const unitGroupTextBoxColorLight = TextBoxColorScheme(
   ),
 );
 
-
 const conversionItemColorSchemeLight = ConversionItemColorScheme(
-  textBox: unitTextBoxColorLight,
+  textBox: InputBoxColorScheme(
+    background: ColorVariation.only(Color(0xffe8efff)),
+    border: ColorVariation(
+      regular: Color(0xFF4F7498),
+      focused: Color(0xFF233B50),
+      disabled: Color(0xFF90A8C0),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xBE143656),
+      disabled: Color(0xFF90A8C0),
+    ),
+    hint: ColorVariation(
+      regular: Color(0xFF799BBB),
+      disabled: Color(0xBE73ACE5),
+    ),
+    dropdown: ConvertouchColorScheme(
+      background: ColorVariation.only(Color(0xffabc4fd)),
+      foreground: ColorVariation.only(Color(0xFF1D578C)),
+    ),
+  ),
   background: ColorVariation.only(Color(0xffe7f2ff)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
       regular: Color(0xFFAAC9F1),
-      focused: Color(0xFF375067),
+      selected: Color(0xFF90B5E5),
     ),
     background: ColorVariation(
       regular: Color(0xFFAAC9F1),
+      selected: Color(0xFF90B5E5),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF2C6396),
     ),
   ),
   handler: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffccdeff)),
-    foreground: ColorVariation.only(Color(0xFF4D657C)),
+    background: ColorVariation(
+      regular: Color(0xffcee0ff),
+      selected: Color(0xff9ab7ee),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF7799B9),
+      selected: Color(0xFF2C6396),
+    ),
   ),
+  wrapBackground: ColorVariation.only(Color(0xffccdfff)),
 );
 
 const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(

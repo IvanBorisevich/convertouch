@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_rule_model.dart';
+import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -29,7 +29,7 @@ void main() {
     required String draftUnitName,
     required String draftUnitCode,
     required UnitModel savedUnitData,
-    ConversionRule conversionRule = ConversionRule.none,
+    required ConversionRuleFormModel conversionRule,
   }) async {
     UnitDetailsModel result = ObjectUtils.tryGet(
       await useCase.execute(
@@ -40,6 +40,7 @@ void main() {
             name: draftUnitName,
             code: draftUnitCode,
             unitGroupId: unitGroup.id,
+            valueType: ConvertouchValueType.decimalPositive,
           ),
           savedUnitData: savedUnitData,
           conversionRule: conversionRule,
@@ -53,11 +54,23 @@ void main() {
   group('For new details', () {
     group('In group without units', () {
       test('New unit name = empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: '',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithoutUnits.id,
+          valueType: ConvertouchValueType.decimalPositive,
+        );
+
         final result = await testForInput(
           unitGroup: mockUnitGroupWithoutUnits,
-          draftUnitName: '',
-          draftUnitCode: 'code',
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
+          conversionRule: ConversionRuleFormModel.build(
+            unitGroup: mockUnitGroupWithoutUnits,
+            mandatoryParamsFilled: false,
+            draftUnit: draftUnit,
+          ),
         );
 
         expect(result.draftUnitData.name, '');
@@ -72,11 +85,23 @@ void main() {
       });
 
       test('New unit name != empty', () async {
+        UnitModel draftUnit = UnitModel(
+          name: 'unitName',
+          code: 'code',
+          unitGroupId: mockUnitGroupWithoutUnits.id,
+          valueType: ConvertouchValueType.decimalPositive,
+        );
+
         final result = await testForInput(
           unitGroup: mockUnitGroupWithoutUnits,
-          draftUnitName: 'unitName',
-          draftUnitCode: 'code',
+          draftUnitName: draftUnit.name,
+          draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
+          conversionRule: ConversionRuleFormModel.build(
+            unitGroup: mockUnitGroupWithoutUnits,
+            mandatoryParamsFilled: false,
+            draftUnit: draftUnit,
+          ),
         );
 
         expect(result.draftUnitData.name, 'unitName');
@@ -99,6 +124,7 @@ void main() {
           name: '',
           code: 'code',
           unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -106,7 +132,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: false,
             draftUnit: draftUnit,
@@ -130,6 +156,7 @@ void main() {
           name: 'unitName',
           code: 'code',
           unitGroupId: mockUnitGroupWithOneBaseUnit.id,
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -137,7 +164,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: UnitModel.none,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -165,6 +192,7 @@ void main() {
           id: mockBaseUnit.id,
           name: '',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -173,7 +201,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -200,6 +228,7 @@ void main() {
           id: mockBaseUnit.id,
           name: 'newName',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -208,7 +237,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithOneBaseUnit,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -237,6 +266,7 @@ void main() {
           id: mockBaseUnit.id,
           name: '',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -245,7 +275,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithMultipleBaseUnits,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,
@@ -270,6 +300,7 @@ void main() {
           id: mockBaseUnit.id,
           name: 'newName',
           code: 'b1',
+          valueType: ConvertouchValueType.decimalPositive,
         );
 
         final result = await testForInput(
@@ -278,7 +309,7 @@ void main() {
           draftUnitName: draftUnit.name,
           draftUnitCode: draftUnit.code,
           savedUnitData: mockBaseUnit2,
-          conversionRule: ConversionRule.build(
+          conversionRule: ConversionRuleFormModel.build(
             unitGroup: mockUnitGroupWithMultipleBaseUnits,
             mandatoryParamsFilled: true,
             draftUnit: draftUnit,

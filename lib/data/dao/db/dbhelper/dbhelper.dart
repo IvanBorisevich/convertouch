@@ -6,6 +6,7 @@ import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/init_migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration1to2.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration2to3.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration3to4.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
@@ -20,18 +21,17 @@ import 'package:floor/floor.dart';
 /// 5) Rebuild and start the app
 
 class ConvertouchDatabaseHelper {
-  static const databaseName = "convertouch_database.db";
-  static const databaseVersion = 3;
+  static const dbName = "convertouch_database.db";
+  static const dbVersion = 4;
 
   static final ConvertouchDatabaseHelper I =
       di.locator.get<ConvertouchDatabaseHelper>();
 
   Future<ConvertouchDatabase> initDatabase() async {
-    logger.d("Initializing database $databaseName "
-        "of version ${ConvertouchDatabaseHelper.databaseVersion}");
+    logger.d("Initializing database $dbName of version $dbVersion");
     final migrations = await _initMigrations();
     return await $FloorConvertouchDatabase
-        .databaseBuilder(databaseName)
+        .databaseBuilder(dbName)
         .addCallback(_initCallback)
         .addMigrations(migrations)
         .build();
@@ -39,9 +39,10 @@ class ConvertouchDatabaseHelper {
 
   Future<List<Migration>> _initMigrations() async {
     return _rawMigrations
+        .whereIndexed((index, e) => index + 2 <= dbVersion)
         .mapIndexed(
           (index, e) => Migration(index + 1, index + 2, (database) async {
-            e.execute(database);
+            await e.execute(database);
           }),
         )
         .toList();
@@ -61,4 +62,5 @@ final _initCallback = Callback(
 final List<ConvertouchDbMigration> _rawMigrations = [
   Migration1to2(),
   Migration2to3(),
+  Migration3to4(),
 ];

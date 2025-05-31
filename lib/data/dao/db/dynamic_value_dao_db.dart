@@ -25,7 +25,7 @@ abstract class DynamicValueDaoDb extends DynamicValueDao {
     for (DynamicValueEntity entity in entities) {
       batch.insert(
         dynamicValuesTableName,
-        entity.toDbRow(),
+        entity.toRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.ignore,
       );
     }
@@ -41,7 +41,7 @@ abstract class DynamicValueDaoDb extends DynamicValueDao {
     for (DynamicValueEntity entity in entities) {
       batch.update(
         dynamicValuesTableName,
-        entity.toDbRow(),
+        entity.toRow(),
         conflictAlgorithm: sqlite.ConflictAlgorithm.ignore,
       );
     }

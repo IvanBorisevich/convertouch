@@ -1,69 +1,89 @@
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const ValueModel none = ValueModel(
-    str: "",
-    scientific: "",
-  );
+  static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
+  static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
+  static const undef = ValueModel._(raw: '-', numVal: null, alt: "");
 
-  static const ValueModel nan = ValueModel(
-    str: "-",
-    scientific: "-",
-  );
+  final String raw;
+  final String alt;
+  final double? numVal;
 
-  static const ValueModel one = ValueModel(
-    num: 1,
-    str: "1",
-    scientific: "1",
-  );
-
-  final double? num;
-  final String str;
-  final String scientific;
-
-  const ValueModel({
-    this.num,
-    required this.str,
-    required this.scientific,
+  const ValueModel._({
+    required this.raw,
+    required this.alt,
+    required this.numVal,
   });
 
-  factory ValueModel.ofDouble(double? value) {
-    if (value == null) {
-      return ValueModel.none;
+  factory ValueModel.str(String value) {
+    double? num = double.tryParse(value);
+
+    if (num != null) {
+      return ValueModel.numeric(num);
     }
 
-    return ValueModel(
-      num: value,
-      str: DoubleValueUtils.toPlain(value),
-      scientific: DoubleValueUtils.toScientific(value),
+    return ValueModel._(
+      raw: value,
+      alt: value,
+      numVal: num,
     );
   }
 
-  factory ValueModel.ofString(
-    String? value, {
-    ValueModel defaultValue = ValueModel.none,
-  }) {
-    if (value == null) {
-      return defaultValue;
-    }
+  factory ValueModel.numeric(num value) {
+    double? numVal = !value.isNaN ? value.toDouble() : null;
 
-    var numVal = double.tryParse(value);
+    String raw = DoubleValueUtils.format(numVal);
 
-    return ValueModel(
-      num: numVal,
-      str: value,
-      scientific: DoubleValueUtils.toScientific(numVal),
+    return ValueModel._(
+      raw: raw,
+      alt: DoubleValueUtils.format(numVal, scientific: true),
+      numVal: double.tryParse(raw),
     );
   }
 
-  bool get exists => this != none && this != nan;
+  static ValueModel? any(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    if (value is num) {
+      return ValueModel.numeric(value);
+    }
+
+    if (value is String) {
+      return value.isNotEmpty ? ValueModel.str(value) : null;
+    }
+
+    throw ConvertouchException(
+      message: "Value $value has unsupported type",
+      stackTrace: null,
+      dateTime: DateTime.now(),
+    );
+  }
+
+  ValueModel? betweenOrNull(ValueModel? min, ValueModel? max) {
+    return DoubleValueUtils.between(
+      value: numVal,
+      min: min?.numVal,
+      max: max?.numVal,
+    )
+        ? this
+        : null;
+  }
+
+  @override
+  List<Object?> get props => [
+        raw,
+        alt,
+      ];
 
   Map<String, dynamic> toJson() {
     return {
-      "num": num,
-      "raw": str,
-      "scientific": scientific,
+      "raw": raw,
+      "alt": alt,
+      "num": numVal,
     };
   }
 
@@ -72,25 +92,21 @@ class ValueModel extends Equatable {
       return null;
     }
 
-    return ValueModel(
-      num: json["num"] ?? double.tryParse(json["raw"] ?? ""),
-      str: json["raw"],
-      scientific: json["scientific"],
+    String? raw = json["raw"];
+    if (raw == null || raw == '') {
+      return null;
+    }
+
+    return ValueModel._(
+      raw: raw,
+      numVal: double.tryParse(json["num"]?.toString() ?? "") ??
+          double.tryParse(raw),
+      alt: json["alt"] ?? json["scientific"],
     );
   }
 
   @override
-  List<Object?> get props => [
-        num,
-        str,
-        scientific,
-      ];
-
-  @override
   String toString() {
-    if (!exists) {
-      return "ValueModel.none";
-    }
-    return "ValueModel{num: $num; str: $str; sc: $scientific}";
+    return 'ValueModel{raw: $raw, alt: $alt, num: $numVal}';
   }
 }

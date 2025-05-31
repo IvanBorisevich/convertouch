@@ -15,6 +15,11 @@ const searchBarColors = {
   ConvertouchUITheme.dark: searchBarColorSchemeDark,
 };
 
+const paramSetColors = {
+  ConvertouchUITheme.light: paramSetColorSchemeLight,
+  ConvertouchUITheme.dark: paramSetColorSchemeDark,
+};
+
 const unitGroupBottomLoaderColors = {
   ConvertouchUITheme.light: unitGroupBottomLoaderLight,
   ConvertouchUITheme.dark: unitGroupBottomLoaderDark,
@@ -31,6 +36,11 @@ const unitGroupItemColors = {
 };
 
 const unitItemColors = {
+  ConvertouchUITheme.light: unitItemColorSchemeLight,
+  ConvertouchUITheme.dark: unitItemColorSchemeDark,
+};
+
+const paramSetItemColors = {
   ConvertouchUITheme.light: unitItemColorSchemeLight,
   ConvertouchUITheme.dark: unitItemColorSchemeDark,
 };
@@ -55,6 +65,11 @@ const unitPageEmptyViewColor = {
   ConvertouchUITheme.dark: unitPageEmptyViewColorDark,
 };
 
+const paramSetPageEmptyViewColor = {
+  ConvertouchUITheme.light: unitPageEmptyViewColorLight,
+  ConvertouchUITheme.dark: unitPageEmptyViewColorDark,
+};
+
 const conversionItemColors = {
   ConvertouchUITheme.light: conversionItemColorSchemeLight,
   ConvertouchUITheme.dark: conversionItemColorSchemeDark,
@@ -73,6 +88,11 @@ const unitsPageFloatingButtonColors = {
 const conversionPageFloatingButtonColors = {
   ConvertouchUITheme.light: conversionPageFloatingButtonColorSchemeLight,
   ConvertouchUITheme.dark: conversionPageFloatingButtonColorSchemeDark,
+};
+
+const paramSetsPageFloatingButtonColors = {
+  ConvertouchUITheme.light: unitsPageFloatingButtonColorSchemeLight,
+  ConvertouchUITheme.dark: unitsPageFloatingButtonColorSchemeDark,
 };
 
 const refreshButtonColors = {

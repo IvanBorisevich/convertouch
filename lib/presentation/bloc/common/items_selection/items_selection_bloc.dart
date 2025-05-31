@@ -18,7 +18,7 @@ class ItemsSelectionBloc
     on<StartItemsMarking>(_onStartItemsMarking);
     on<CancelItemsMarking>(_onCancelItemsMarking);
     on<StartItemSelection>(_onStartItemSelection);
-    on<SelectItem>(_onSelectItem);
+    on<SelectSingleItem>(_onSelectItem);
   }
 
   _onStartItemsMarking(
@@ -29,12 +29,12 @@ class ItemsSelectionBloc
         .whereNot((id) => event.excludedIds.contains(id))
         .toList();
     var canMarkedItemsBeSelected =
-        markedIds.length >= event.markedItemsMinNumForSelection;
+        markedIds.length >= event.markedItemsSelectionMinNum;
 
     emit(
       ItemsSelectionDone(
         markedIds: markedIds,
-        markedItemsMinNumForSelection: event.markedItemsMinNumForSelection,
+        markedItemsMinNumForSelection: event.markedItemsSelectionMinNum,
         canMarkedItemsBeSelected: canMarkedItemsBeSelected,
         singleItemSelectionMode: false,
         excludedIds: event.excludedIds,
@@ -71,7 +71,7 @@ class ItemsSelectionBloc
   }
 
   _onSelectItem(
-    SelectItem event,
+    SelectSingleItem event,
     Emitter<ItemsSelectionDone> emit,
   ) async {
     if (state.excludedIds.contains(event.id) || event.id == state.selectedId) {

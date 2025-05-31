@@ -12,49 +12,24 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   const UnitGroupRepositoryImpl(this.unitGroupDao);
 
   @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> getPage({
+  Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
+    String? searchString,
     int pageNum = 0,
     required int pageSize,
   }) async {
     try {
-      List<UnitGroupEntity> result = await unitGroupDao.getAll(
+      String searchPattern = searchString != null && searchString.isNotEmpty
+          ? '%$searchString%'
+          : '%';
+
+      List<UnitGroupEntity> result = await unitGroupDao.getBySearchString(
+        searchString: searchPattern,
         pageSize: pageSize,
         offset: pageNum * pageSize,
       );
 
       return Right(
-        result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
-      );
-    } catch (e, stackTrace) {
-      return Left(
-        DatabaseException(
-          message: "Error when fetching unit groups",
-          stackTrace: stackTrace,
-          dateTime: DateTime.now(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
-    required String searchString,
-    required int pageNum,
-    required int pageSize,
-  }) async {
-    try {
-      List<UnitGroupEntity> result;
-      if (searchString.isNotEmpty) {
-        result = await unitGroupDao.getBySearchString(
-          searchString: '%$searchString%',
-          pageSize: pageSize,
-          offset: pageNum * pageSize,
-        );
-      } else {
-        result = [];
-      }
-      return Right(
-        result.map((entity) => UnitGroupTranslator.I.toModel(entity)!).toList(),
+        result.map((entity) => UnitGroupTranslator.I.toModel(entity)).toList(),
       );
     } catch (e, stackTrace) {
       return Left(
@@ -75,10 +50,9 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       final existingGroup = await unitGroupDao.getByName(unitGroup.name);
       if (existingGroup == null) {
         final addedGroupId = await unitGroupDao
-            .insert(UnitGroupTranslator.I.fromModel(unitGroup)!);
+            .insert(UnitGroupTranslator.I.fromModel(unitGroup));
         return Right(
-          UnitGroupModel.coalesce(
-            unitGroup,
+          unitGroup.copyWith(
             id: addedGroupId,
           ),
         );
@@ -118,7 +92,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
           ),
         );
       }
-      return Right(UnitGroupTranslator.I.toModel(result)!);
+      return Right(UnitGroupTranslator.I.toModel(result));
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
@@ -153,7 +127,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
     UnitGroupModel unitGroup,
   ) async {
     try {
-      await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup)!);
+      await unitGroupDao.update(UnitGroupTranslator.I.fromModel(unitGroup));
       return Right(unitGroup);
     } catch (e, stackTrace) {
       return Left(

@@ -43,7 +43,7 @@ class _ConvertouchUnitGroupDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        TextBoxColorScheme textBoxColor =
+        InputBoxColorScheme textBoxColor =
             unitGroupTextBoxColors[appState.theme]!;
         ConvertouchColorScheme floatingButtonColor =
             unitGroupsPageFloatingButtonColors[appState.theme]!;
@@ -73,7 +73,7 @@ class _ConvertouchUnitGroupDetailsPageState
                         value: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         valueChangeController: _unitGroupNameController,
-                        onValueChange: (value) {
+                        onValueChanged: (value) {
                           unitGroupDetailsBloc.add(
                             UpdateUnitGroupName(
                               newValue: value,
@@ -96,17 +96,17 @@ class _ConvertouchUnitGroupDetailsPageState
                       ConvertouchParameterItem(
                         name: "Values Minimum",
                         visible:
-                            unitGroupDetailsState.draftGroup.minValue.exists,
+                            unitGroupDetailsState.draftGroup.minValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.minValue.scientific,
+                            .draftGroup.minValue?.alt,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: "Values Maximum",
                         visible:
-                            unitGroupDetailsState.draftGroup.maxValue.exists,
+                            unitGroupDetailsState.draftGroup.maxValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.maxValue.scientific,
+                            .draftGroup.maxValue?.alt,
                         textBoxColor: textBoxColor,
                       ),
                       refreshingJobsBlocBuilder(
@@ -134,11 +134,11 @@ class _ConvertouchUnitGroupDetailsPageState
                                     jobState.currentLastRefreshedStr ?? 'Never',
                                 textBoxColor: textBoxColor,
                               ),
-                              ConvertouchParameterItem(
-                                name: "Data Source",
-                                value: jobState.currentDataSourceUrl,
-                                textBoxColor: textBoxColor,
-                              ),
+                              // ConvertouchParameterItem(
+                              //   name: "Data Source",
+                              //   value: jobState.currentDataSourceUrl,
+                              //   textBoxColor: textBoxColor,
+                              // ),
                             ],
                           );
                         },

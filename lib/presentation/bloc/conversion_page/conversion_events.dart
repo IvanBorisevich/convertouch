@@ -199,3 +199,132 @@ class ReplaceConversionItemUnit extends ModifyConversion {
         'oldUnitId: $oldUnitId}';
   }
 }
+
+class AddParamSetsToConversion extends ModifyConversion {
+  final List<int> paramSetIds;
+
+  const AddParamSetsToConversion({
+    required this.paramSetIds,
+  });
+
+  @override
+  List<Object?> get props => [
+        paramSetIds,
+      ];
+
+  @override
+  String toString() {
+    return 'AddParamSetsToConversion{paramSetIds: $paramSetIds}';
+  }
+}
+
+class RemoveSelectedParamSetFromConversion extends ModifyConversion {
+  const RemoveSelectedParamSetFromConversion();
+
+  @override
+  String toString() {
+    return 'RemoveSelectedParamSetFromConversion{}';
+  }
+}
+
+class RemoveAllParamSetsFromConversion extends ModifyConversion {
+  const RemoveAllParamSetsFromConversion();
+
+  @override
+  String toString() {
+    return 'RemoveAllParamSetsFromConversion{}';
+  }
+}
+
+class SelectParamSetInConversion extends ModifyConversion {
+  final int newSelectedParamSetIndex;
+
+  const SelectParamSetInConversion({
+    required this.newSelectedParamSetIndex,
+  });
+
+  @override
+  List<Object?> get props => [
+        newSelectedParamSetIndex,
+      ];
+
+  @override
+  String toString() {
+    return 'SelectParamSetInConversion{'
+        'newSelectedParamSetIndex: $newSelectedParamSetIndex}';
+  }
+}
+
+class EditConversionParamValue extends ModifyConversion {
+  final String? newValue;
+  final String? newDefaultValue;
+  final int paramId;
+  final int paramSetId;
+
+  const EditConversionParamValue({
+    required this.newValue,
+    this.newDefaultValue,
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        newValue,
+        newDefaultValue,
+        paramId,
+        paramSetId,
+      ];
+
+  @override
+  String toString() {
+    return 'EditConversionParamValue{'
+        'newValue: $newValue, '
+        'newDefaultValue: $newDefaultValue, '
+        'paramId: $paramId, '
+        'paramSetId: $paramSetId}';
+  }
+}
+
+class ReplaceConversionParamUnit extends ModifyConversion {
+  final UnitModel newUnit;
+  final int paramId;
+  final int paramSetId;
+
+  const ReplaceConversionParamUnit({
+    required this.newUnit,
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        newUnit,
+        paramId,
+        paramSetId,
+      ];
+
+  @override
+  String toString() {
+    return 'ReplaceConversionParamUnit{'
+        'newUnit: $newUnit, '
+        'paramId: $paramId, '
+        'paramSetId: $paramSetId}';
+  }
+}
+
+class ToggleCalculableParam extends ModifyConversion {
+  final int paramId;
+  final int paramSetId;
+
+  const ToggleCalculableParam({
+    required this.paramId,
+    required this.paramSetId,
+  });
+
+  @override
+  List<Object?> get props => [
+        paramId,
+        paramSetId,
+      ];
+}

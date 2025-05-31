@@ -1,7 +1,11 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:either_dart/either.dart';
+
+const _alphaCodes = NumRange(65, 90);
 
 class ObjectUtils {
   const ObjectUtils._();
@@ -72,7 +76,7 @@ class ObjectUtils {
   }
 
   static T? patch<T>(T? what, Patchable<T>? patch) {
-    return patch != null && patch.value == null && patch.forcePatchNull
+    return patch != null && patch.value == null && patch.patchNull
         ? null
         : (patch?.value ?? what);
   }
@@ -99,14 +103,85 @@ class ObjectUtils {
       matchedLexemeIndex: matchedLexemeIndex,
     );
   }
+
+  static List<String> generateNumList(
+    double min,
+    double max, {
+    double step = 1,
+    double? divisor,
+    int? fractionDigits,
+  }) {
+    int length = ((max - min) / step + 1).floor();
+    String Function(int) func;
+
+    if (divisor != null) {
+      func = (index) => DoubleValueUtils.numToStr(
+            (min + index * step) / divisor,
+            fractionDigits: fractionDigits,
+          );
+    } else {
+      func = (index) => DoubleValueUtils.numToStr(
+            min + index * step,
+            fractionDigits: fractionDigits,
+          );
+    }
+    return List.generate(length, func);
+  }
+
+  static List<String> fromNumList(
+    List<num> l, {
+    double? divisor,
+    int? fractionDigits,
+  }) {
+    String Function(num) func;
+
+    if (divisor != null) {
+      func = (v) => DoubleValueUtils.numToStr(
+            v / divisor,
+            fractionDigits: fractionDigits,
+          );
+    } else {
+      func = (v) => DoubleValueUtils.numToStr(
+            v,
+            fractionDigits: fractionDigits,
+          );
+    }
+
+    return l.map(func).toList();
+  }
+
+  static List<String> generateAlphaList(
+    String from,
+    String to,
+  ) {
+    int startCode = from.codeUnitAt(0);
+    int endCode = to.codeUnitAt(0);
+
+    if (!_alphaCodes.contains(startCode) || !_alphaCodes.contains(endCode)) {
+      return [];
+    }
+
+    int listSize = endCode - startCode + 1;
+
+    if (listSize <= 0) {
+      return [];
+    }
+
+    int offset = startCode - _alphaCodes.left.toInt();
+
+    return List.generate(
+      listSize,
+      (index) => String.fromCharCode(index + _alphaCodes.left.toInt() + offset),
+    );
+  }
 }
 
 class Patchable<T> {
   final T? value;
-  final bool forcePatchNull;
+  final bool patchNull;
 
   const Patchable(
     this.value, {
-    this.forcePatchNull = false,
+    this.patchNull = false,
   });
 }
