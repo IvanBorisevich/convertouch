@@ -118,41 +118,39 @@ class AddParamSetsToConversionUseCase
       );
     }
 
-    List<ConversionParamSetValueModel> resultParamSetValues;
-    if (oldConversionParams != null) {
-      resultParamSetValues = [
-        ...oldConversionParams.paramSetValues,
-        ...newParamSetValues,
-      ];
-    } else {
-      resultParamSetValues = newParamSetValues;
+    List<ConversionParamSetValueModel> mergedParamSetValues = [
+      ...(oldConversionParams?.paramSetValues ?? []),
+      ...newParamSetValues,
+    ];
+
+    List<ConversionParamSetValueModel> resultParamSetValues = [];
+
+    for (int i = 0; i < mergedParamSetValues.length; i++) {
+      var resultParamSetValue =
+          await mergedParamSetValues[i].copyWithChangedParam(
+        map: (paramValue, paramSetValue) async {
+          var newParamValue = srcUnitValue != null
+              ? rules.calculateParamValueBySrcValue(
+                  srcUnitValue: srcUnitValue,
+                  unitGroupName: unitGroup.name,
+                  params: paramSetValue,
+                  param: paramValue.param,
+                )
+              : paramValue;
+
+          return newParamValue.copyWith(
+            calculated: true,
+          );
+        },
+        paramFilter: (p) => p.param.calculable,
+      );
+
+      resultParamSetValues.add(resultParamSetValue);
     }
-
-    int resultSelectedIndex = resultParamSetValues.length - 1;
-    var resultSelectedParamSetValue = resultParamSetValues[resultSelectedIndex];
-
-    resultParamSetValues[resultSelectedIndex] =
-        await resultSelectedParamSetValue.copyWithChangedParam(
-      map: (paramValue, paramSetValue) async {
-        var newParamValue = srcUnitValue != null
-            ? rules.calculateParamValueBySrcValue(
-                srcUnitValue: srcUnitValue,
-                unitGroupName: unitGroup.name,
-                params: paramSetValue,
-                param: paramValue.param,
-              )
-            : paramValue;
-
-        return newParamValue.copyWith(
-          calculated: true,
-        );
-      },
-      paramFilter: (p) => p.param.calculable,
-    );
 
     return ConversionParamSetValueBulkModel.basic(
       paramSetValues: resultParamSetValues,
-      selectedIndex: resultSelectedIndex,
+      selectedIndex: resultParamSetValues.length - 1,
       totalCount: paramSetsTotalCount,
     );
   }

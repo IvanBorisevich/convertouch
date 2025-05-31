@@ -83,6 +83,63 @@ void main() {
             });
           });
 
+          group('With mapping table (diameter + circumference)', () {
+            test('All params should be auto-calculated where possible',
+                () async {
+              await testCase(
+                unitGroup: ringSizeGroup,
+                useCase: useCase,
+                delta: AddParamSetsDelta(
+                  paramSetIds: [
+                    ringSizeByDiameterParamSet.id,
+                    ringSizeByCircumferenceParamSet.id,
+                  ],
+                ),
+                currentParams: null,
+                currentSrc:
+                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+                currentUnitValues: [
+                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
+                ],
+                expectedSrc:
+                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+                expectedUnitValues: [
+                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
+                ],
+                expectedParams: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: ringSizeByDiameterParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(diameterParam, 14.5, 1,
+                            unit: millimeter, calculated: true),
+                      ],
+                    ),
+                    ConversionParamSetValueModel(
+                      paramSet: ringSizeByCircumferenceParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          circumferenceParam,
+                          14.5 * pi,
+                          1,
+                          unit: millimeter,
+                          calculated: true,
+                        ),
+                      ],
+                    ),
+                  ],
+                  selectedParamSetCanBeRemoved: true,
+                  optionalParamSetsExist: true,
+                  paramSetsCanBeAdded: false,
+                  selectedIndex: 1,
+                  totalCount: 2,
+                ),
+              );
+            });
+          });
+
           group('With formula (barbell weight)', () {
             test(
                 'Bar weight param should be set by default,'
@@ -236,9 +293,8 @@ void main() {
       group('New optional param set', () {
         group('With explicit param set id', () {
           group('With mapping table (diameter and circumference)', () {
-            test(
-                'When both params added, the last one should not be '
-                'auto-calculated', () async {
+            test('All of param sets should be recalculated if possible',
+                () async {
               await testCase(
                 unitGroup: ringSizeGroup,
                 useCase: useCase,
@@ -257,7 +313,7 @@ void main() {
                       paramSet: ringSizeByDiameterParamSet,
                       paramValues: [
                         ConversionParamValueModel.tuple(diameterParam, null, 1,
-                            unit: millimeter),
+                            unit: millimeter, calculated: true),
                       ],
                     ),
                     ConversionParamSetValueModel(
@@ -391,7 +447,7 @@ void main() {
       group('New optional param set', () {
         group('With mapping table (circumference)', () {
           test(
-              'Circumference param should be auto-calculated, '
+              'Circumference param should be recalculated if possible, '
               'duplicated param set ids should be omitted', () async {
             await testCase(
               unitGroup: ringSizeGroup,
@@ -433,8 +489,8 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: ringSizeByDiameterParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                          unit: millimeter),
+                      ConversionParamValueModel.tuple(diameterParam, 14.5, 1,
+                          unit: millimeter, calculated: true),
                     ],
                   ),
                   ConversionParamSetValueModel(
@@ -467,7 +523,8 @@ void main() {
     group('Conversion has no items', () {
       group('New optional param set', () {
         group('With mapping table (circumference)', () {
-          test('Circumference param should not be auto-calculated', () async {
+          test('Circumference param should be recalculated if possible',
+              () async {
             await testCase(
               unitGroup: ringSizeGroup,
               useCase: useCase,
@@ -500,7 +557,7 @@ void main() {
                     paramSet: ringSizeByDiameterParamSet,
                     paramValues: [
                       ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                          unit: millimeter),
+                          unit: millimeter, calculated: true),
                     ],
                   ),
                   ConversionParamSetValueModel(
