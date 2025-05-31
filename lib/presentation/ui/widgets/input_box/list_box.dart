@@ -249,6 +249,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                 SelectListValue(
                   value: item?.value,
                   listType: widget.listType,
+                  checkIfBelongsToList: false,
                   onItemSelect: (listValue) {
                     widget.onChanged?.call(listValue?.value ?? "");
                   },

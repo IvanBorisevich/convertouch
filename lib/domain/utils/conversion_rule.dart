@@ -3,13 +3,13 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 typedef FunctionWithParams = ValueModel? Function(
-    ValueModel, ConversionParamSetValueModel params);
-typedef FunctionWithOptionalParams = ValueModel? Function(ValueModel,
+    ValueModel?, ConversionParamSetValueModel params);
+typedef FunctionWithOptionalParams = ValueModel? Function(ValueModel?,
     {ConversionParamSetValueModel? params});
-typedef FunctionWithoutParams = ValueModel? Function(ValueModel);
+typedef FunctionWithoutParams = ValueModel? Function(ValueModel?);
 
-ValueModel _identityFunc(
-  ValueModel x, {
+ValueModel? _identityFunc(
+  ValueModel? x, {
   ConversionParamSetValueModel? params,
 }) {
   return x;
@@ -25,8 +25,8 @@ class Converter {
   });
 
   Converter apply(ConversionRule? conversionRule) {
-    ValueModel? y = value != null && conversionRule != null
-        ? conversionRule.func?.call(value!, params: params)
+    ValueModel? y = value != ValueModel.undef
+        ? conversionRule?.func?.call(value, params: params)
         : null;
     return Converter(y, params: params);
   }
@@ -72,8 +72,11 @@ class ConversionRule {
     String? desc,
   }) : this(
           func: func != null
-              ? (x, {ConversionParamSetValueModel? params}) =>
-                  ValueModel.numeric(func.call(x.numVal!))
+              ? (x, {ConversionParamSetValueModel? params}) {
+                  return x?.numVal != null
+                      ? ValueModel.numeric(func.call(x!.numVal!))
+                      : null;
+                }
               : null,
           desc: desc,
         );
@@ -135,7 +138,11 @@ class UnitRule {
     required Map<String, String> mapping,
     required String unitCode,
   }) : this.plain(
-          xToBase: (x, {params}) => mapping[unitCode] == x.raw ? x : null,
-          baseToY: (x, {params}) => ValueModel.any(mapping[unitCode]),
+          xToBase: (x, {params}) {
+            return mapping[unitCode] == x?.raw ? x : ValueModel.undef;
+          },
+          baseToY: (x, {params}) {
+            return ValueModel.any(mapping[unitCode]);
+          },
         );
 }

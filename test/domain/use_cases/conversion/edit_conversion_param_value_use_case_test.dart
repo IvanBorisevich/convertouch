@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
@@ -1336,7 +1338,7 @@ void main() {
     });
   });
 
-  group('Conversion by formula', () {
+  group('Conversion by formula (mapping table)', () {
     var currentUnitValues = [
       ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
       ConversionUnitValueModel.tuple(japanClothSize, 3, null),
@@ -1508,6 +1510,70 @@ void main() {
             );
           },
         );
+      });
+    });
+
+    group('Change non-list parameter value (circumference of ring)', () {
+      group(
+          'New param value is not empty, '
+          'new src value will be recalculated as null by mapping table', () {
+        test('Source unit value and other values should be recalculated',
+            () async {
+          await testCase(
+            unitGroup: ringSizeGroup,
+            useCase: useCase,
+            delta: EditConversionParamValueDelta(
+              paramId: circumferenceParam.id,
+              paramSetId: circumferenceParam.paramSetId,
+              newValue: "450",
+              newDefaultValue: null,
+            ),
+            currentParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: ringSizeByCircumferenceParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(
+                      circumferenceParam,
+                      14.5 * pi,
+                      1,
+                      unit: millimeter,
+                      calculated: true,
+                    ),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+            ),
+            currentSrc: ConversionUnitValueModel.tuple(deRingSize, 44, null),
+            currentUnitValues: [
+              ConversionUnitValueModel.tuple(esRingSize, 4, null),
+              ConversionUnitValueModel.tuple(deRingSize, 44, null),
+            ],
+            expectedSrc: ConversionUnitValueModel.tuple(deRingSize, null, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(esRingSize, 35, null),
+              ConversionUnitValueModel.tuple(deRingSize, null, null),
+            ],
+            expectedParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: ringSizeByCircumferenceParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(
+                      circumferenceParam,
+                      450,
+                      1,
+                      unit: millimeter,
+                      calculated: true,
+                    ),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+            ),
+          );
+        });
       });
     });
 

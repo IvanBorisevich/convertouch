@@ -63,7 +63,7 @@ void main() {
         'One-way conversion (e. g. text size)',
         () {
           ConversionRule strLen = ConversionRule.noParams(
-            func: (x) => ValueModel.numeric(x.raw.length),
+            func: (x) => ValueModel.any(x?.raw.length),
           );
 
           expect(
@@ -106,7 +106,7 @@ void main() {
     });
 
     group('With parameters', () {
-      ConversionParamSetValueModel params = ConversionParamSetValueModel(
+      ConversionParamSetValueModel clothesParams = ConversionParamSetValueModel(
         paramSet: clothesSizeParamSet,
         paramValues: [
           ConversionParamValueModel.tuple(personParam, "Man", null),
@@ -116,100 +116,155 @@ void main() {
         ],
       );
 
-      group(
-        'Two-way conversion (e. g. clothes size)',
-        () {
-          Map<String, String> mappingTable = rules.getMappingTableByParams(
-            unitGroupName: GroupNames.clothesSize,
-            params: params,
-          )!;
+      group('Clothes size', () {
+        Map<String, String> mappingTable = rules.getMappingTableByParams(
+          unitGroupName: GroupNames.clothesSize,
+          params: clothesParams,
+        )!;
 
-          UnitRule ruSize = UnitRule.mappingTable(
-            mapping: mappingTable,
-            unitCode: CountryCode.ru.name,
+        UnitRule ruSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.ru.name,
+        );
+
+        UnitRule euSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.eu.name,
+        );
+
+        UnitRule interSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.inter.name,
+        );
+
+        test('RU -> EU', () {
+          expect(
+            Converter(ValueModel.numeric(42), params: clothesParams)
+                .apply(ruSize.xToBase)
+                .apply(euSize.baseToY)
+                .value,
+            ValueModel.numeric(42),
           );
+        });
 
-          UnitRule euSize = UnitRule.mappingTable(
-            mapping: mappingTable,
-            unitCode: CountryCode.eu.name,
+        test('EU -> RU', () {
+          expect(
+            Converter(ValueModel.numeric(42), params: clothesParams)
+                .apply(euSize.xToBase)
+                .apply(ruSize.baseToY)
+                .value,
+            ValueModel.numeric(42),
           );
+        });
 
-          UnitRule interSize = UnitRule.mappingTable(
-            mapping: mappingTable,
-            unitCode: CountryCode.inter.name,
+        test('INT -> RU', () {
+          expect(
+            Converter(ValueModel.str("XXS"), params: clothesParams)
+                .apply(interSize.xToBase)
+                .apply(ruSize.baseToY)
+                .value,
+            ValueModel.numeric(42),
           );
+        });
 
-          test('RU -> EU', () {
-            expect(
-              Converter(ValueModel.numeric(42), params: params)
-                  .apply(ruSize.xToBase)
-                  .apply(euSize.baseToY)
-                  .value,
-              ValueModel.numeric(42),
-            );
-          });
+        test('EU -> INT', () {
+          expect(
+            Converter(ValueModel.numeric(42), params: clothesParams)
+                .apply(euSize.xToBase)
+                .apply(interSize.baseToY)
+                .value,
+            ValueModel.str("XXS"),
+          );
+        });
 
-          test('EU -> RU', () {
-            expect(
-              Converter(ValueModel.numeric(42), params: params)
-                  .apply(euSize.xToBase)
-                  .apply(ruSize.baseToY)
-                  .value,
-              ValueModel.numeric(42),
-            );
-          });
+        test('EU -> RU (unacceptable value)', () {
+          expect(
+            Converter(ValueModel.numeric(33), params: clothesParams)
+                .apply(euSize.xToBase)
+                .apply(ruSize.baseToY)
+                .value,
+            null,
+          );
+        });
 
-          test('INT -> RU', () {
-            expect(
-              Converter(ValueModel.str("XXS"), params: params)
-                  .apply(interSize.xToBase)
-                  .apply(ruSize.baseToY)
-                  .value,
-              ValueModel.numeric(42),
-            );
-          });
+        test('RU -> EU (no value)', () {
+          expect(
+            Converter(null, params: clothesParams)
+                .apply(ruSize.xToBase)
+                .apply(euSize.baseToY)
+                .value,
+            null,
+          );
+        });
 
-          test('EU -> INT', () {
-            expect(
-              Converter(ValueModel.numeric(42), params: params)
-                  .apply(euSize.xToBase)
-                  .apply(interSize.baseToY)
-                  .value,
-              ValueModel.str("XXS"),
-            );
-          });
+        test('RU -> RU', () {
+          expect(
+            Converter(ValueModel.numeric(42), params: clothesParams)
+                .apply(ruSize.xToBase)
+                .apply(ruSize.baseToY)
+                .value,
+            ValueModel.numeric(42),
+          );
+        });
+      });
 
-          test('EU -> RU (unacceptable value)', () {
-            expect(
-              Converter(ValueModel.numeric(33), params: params)
-                  .apply(euSize.xToBase)
-                  .apply(ruSize.baseToY)
-                  .value,
-              null,
-            );
-          });
+      group('Ring size', () {
+        Map<String, String> mappingTable = {
+          CountryCode.us: 15,
+          CountryCode.uk: "Z+5",
+          CountryCode.es: 35,
+          CountryCode.fr: 75,
+          CountryCode.ru: 75,
+          CountryCode.it: 35,
+        }.map((k, v) => MapEntry(k.name, v.toString()));
 
-          test('RU -> EU (no value)', () {
-            expect(
-              Converter(null, params: params)
-                  .apply(ruSize.xToBase)
-                  .apply(euSize.baseToY)
-                  .value,
-              null,
-            );
-          });
+        UnitRule deSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.de.name,
+        );
 
-          test('RU -> RU', () {
-            expect(
-              Converter(ValueModel.numeric(42), params: params)
-                  .apply(ruSize.xToBase)
-                  .apply(ruSize.baseToY)
-                  .value,
-              ValueModel.numeric(42),
-            );
-          });
-        },
-      );
+        UnitRule esSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.es.name,
+        );
+
+        UnitRule frSize = UnitRule.mappingTable(
+          mapping: mappingTable,
+          unitCode: CountryCode.fr.name,
+        );
+
+        test('FR -> ES | should find match by non-null src value', () {
+          expect(
+            Converter(ValueModel.any(75))
+                .apply(frSize.xToBase)
+                .apply(esSize.baseToY)
+                .value,
+            ValueModel.numeric(35),
+          );
+        });
+
+        test(
+            'FR -> ES | should not find match '
+            'by src value not from the mapping', () {
+          expect(
+            Converter(ValueModel.any(400))
+                .apply(frSize.xToBase)
+                .apply(esSize.baseToY)
+                .value,
+            ValueModel.any(null),
+          );
+        });
+
+        test('DE -> ES | should find match by null src value', () {
+          expect(
+            Converter(ValueModel.any(null))
+                .apply(deSize.xToBase)
+                .apply(esSize.baseToY)
+                .value,
+            ValueModel.numeric(35),
+          );
+        });
+      });
     });
   });
 

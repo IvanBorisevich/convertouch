@@ -187,3 +187,19 @@ const UnitModel germanyClothSize = UnitModel(
   valueType: ConvertouchValueType.integerPositive,
   listType: ConvertouchListType.clothesSizeDe,
 );
+
+const UnitModel deRingSize = UnitModel(
+  id: 17,
+  name: 'Germany',
+  code: 'DE',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.ringSizeDe,
+);
+
+const UnitModel esRingSize = UnitModel(
+  id: 18,
+  name: 'Spain',
+  code: 'ES',
+  valueType: ConvertouchValueType.decimalPositive,
+  listType: ConvertouchListType.ringSizeEs,
+);

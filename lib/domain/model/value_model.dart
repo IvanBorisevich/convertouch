@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 class ValueModel extends Equatable {
   static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
   static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
+  static const undef = ValueModel._(raw: '-', numVal: null, alt: "");
 
   final String raw;
   final String alt;

@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ItemsListState extends ConvertouchState {
@@ -33,11 +34,11 @@ class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
   });
 
   ItemsFetched<T> copyWith({
-    T? selectedItem,
+    Patchable<T>? selectedItem,
   }) {
     return ItemsFetched(
       pageItems: pageItems,
-      selectedItem: selectedItem ?? this.selectedItem,
+      selectedItem: ObjectUtils.patch(this.selectedItem, selectedItem),
       oobIds: oobIds,
       parentItemId: parentItemId,
       listItemUnit: listItemUnit,

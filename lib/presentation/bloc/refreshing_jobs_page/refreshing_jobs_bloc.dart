@@ -241,7 +241,7 @@ class RefreshingJobsBloc
         selectedCron: Patchable(jobPatch.selectedCron),
         progressController: Patchable(
           jobPatch.progressController,
-          forcePatchNull: true,
+          patchNull: true,
         ),
         alreadyRunning: Patchable(jobPatch.alreadyRunning),
       ),

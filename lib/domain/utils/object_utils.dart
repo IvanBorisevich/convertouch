@@ -76,7 +76,7 @@ class ObjectUtils {
   }
 
   static T? patch<T>(T? what, Patchable<T>? patch) {
-    return patch != null && patch.value == null && patch.forcePatchNull
+    return patch != null && patch.value == null && patch.patchNull
         ? null
         : (patch?.value ?? what);
   }
@@ -178,10 +178,10 @@ class ObjectUtils {
 
 class Patchable<T> {
   final T? value;
-  final bool forcePatchNull;
+  final bool patchNull;
 
   const Patchable(
     this.value, {
-    this.forcePatchNull = false,
+    this.patchNull = false,
   });
 }

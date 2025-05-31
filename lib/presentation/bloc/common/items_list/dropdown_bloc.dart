@@ -14,11 +14,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectListValue extends ItemsListEvent {
   final String? value;
+  final bool checkIfBelongsToList;
   final ConvertouchListType listType;
   final void Function(ListValueModel?)? onItemSelect;
 
   const SelectListValue({
     required this.value,
+    this.checkIfBelongsToList = true,
     required this.listType,
     this.onItemSelect,
   });
@@ -26,6 +28,7 @@ class SelectListValue extends ItemsListEvent {
   @override
   List<Object?> get props => [
         value,
+        checkIfBelongsToList,
         listType,
       ];
 
@@ -33,6 +36,7 @@ class SelectListValue extends ItemsListEvent {
   String toString() {
     return 'SelectListValue{'
         'value: $value, '
+        'checkIfBelongsToList: $checkIfBelongsToList, '
         'listType: $listType}';
   }
 }
@@ -77,19 +81,26 @@ class DropdownBloc extends ItemsListBloc<ListValueModel,
     SelectListValue event,
     Emitter<ItemsFetched<ListValueModel>> emit,
   ) async {
-    ListValueModel? listValue = ObjectUtils.tryGet(
-      await selectListValueUseCase.execute(
-        InputListValueSelectionModel(
-          value: event.value,
-          listType: event.listType,
-          unit: state.listItemUnit,
+    ListValueModel? listValue;
+
+    if (event.checkIfBelongsToList) {
+      listValue = ObjectUtils.tryGet(
+        await selectListValueUseCase.execute(
+          InputListValueSelectionModel(
+            value: event.value,
+            listType: event.listType,
+            unit: state.listItemUnit,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      listValue =
+          event.value != null ? ListValueModel.value(event.value!) : null;
+    }
 
     emit(
       state.copyWith(
-        selectedItem: listValue,
+        selectedItem: Patchable(listValue, patchNull: true),
       ),
     );
 
