@@ -50,6 +50,13 @@ class _ConvertouchConversionItemsViewState
       buildDefaultDragHandles: false,
       shrinkWrap: true,
       physics: const AlwaysScrollableScrollPhysics(),
+      proxyDecorator: (child, index, animation) {
+        return Material(
+          key: ValueKey(index),
+          color: Colors.transparent,
+          child: child, // place your ui
+        );
+      },
       padding: const EdgeInsets.only(
         top: _viewTopPadding,
         bottom: _bottomSpacing,
