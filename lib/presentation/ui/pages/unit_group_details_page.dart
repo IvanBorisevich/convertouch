@@ -134,11 +134,11 @@ class _ConvertouchUnitGroupDetailsPageState
                                     jobState.currentLastRefreshedStr ?? 'Never',
                                 textBoxColor: textBoxColor,
                               ),
-                              ConvertouchParameterItem(
-                                name: "Data Source",
-                                value: jobState.currentDataSourceUrl,
-                                textBoxColor: textBoxColor,
-                              ),
+                              // ConvertouchParameterItem(
+                              //   name: "Data Source",
+                              //   value: jobState.currentDataSourceUrl,
+                              //   textBoxColor: textBoxColor,
+                              // ),
                             ],
                           );
                         },
