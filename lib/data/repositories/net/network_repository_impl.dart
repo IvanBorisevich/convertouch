@@ -35,7 +35,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
   }) async {
     try {
       final Connectivity connectivity = Connectivity();
-      final ConnectivityResult status = await connectivity.checkConnectivity();
+      final ConnectivityResult status = (await connectivity.checkConnectivity()).first;
 
       if (status == ConnectivityResult.none) {
         return Left(
