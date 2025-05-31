@@ -110,7 +110,8 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.itemUnit != oldWidget.itemUnit) {
-      log("Item unit has been changed");
+      log("Item unit has been changed from ${oldWidget.itemUnit} "
+          "to ${widget.itemUnit}");
       _bloc.add(
         FetchItems(
           listType: widget.listType,
@@ -125,10 +126,8 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           },
         ),
       );
-    }
-
-    if (widget.value != oldWidget.value) {
-      log("Value has been changed");
+    } else if (widget.value != oldWidget.value) {
+      log("Value has been changed from ${oldWidget.value} to ${widget.value}");
       _bloc.add(
         SelectListValue(
           value: widget.value,

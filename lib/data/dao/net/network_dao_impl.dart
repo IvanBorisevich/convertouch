@@ -23,8 +23,7 @@ class NetworkDaoImpl extends NetworkDao {
       return response.body;
     } else {
       throw NetworkException(
-        message: "Error response {code: ${response.statusCode}, "
-            "message: ${response.reasonPhrase}",
+        message: "HTTP ${response.statusCode} | ${response.reasonPhrase}",
         stackTrace: null,
         dateTime: DateTime.now(),
         severity: ExceptionSeverity.warning,
