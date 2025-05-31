@@ -75,8 +75,8 @@ const paramSetColorSchemeLight = ParamSetPanelColorScheme(
         regular: Color(0xFF7DA4C4),
       ),
       dropdown: ConvertouchColorScheme(
-        background: ColorVariation.only(Color(0xffbdcefa)),
-        foreground: ColorVariation.only(Color(0xFF134470)),
+        background: ColorVariation.only(Color(0xffabc4fd)),
+        foreground: ColorVariation.only(Color(0xFF1D578C)),
       ),
     ),
     background: ColorVariation.only(Color(0xffdae5ff)),
@@ -284,8 +284,8 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
       disabled: Color(0xBE73ACE5),
     ),
     dropdown: ConvertouchColorScheme(
-      background: ColorVariation.only(Color(0xff9eb7f3)),
-      foreground: ColorVariation.only(Color(0xFF134470)),
+      background: ColorVariation.only(Color(0xffabc4fd)),
+      foreground: ColorVariation.only(Color(0xFF1D578C)),
     ),
   ),
   background: ColorVariation.only(Color(0xffe7f2ff)),
@@ -305,7 +305,7 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
   handler: ConvertouchColorScheme(
     background: ColorVariation(
       regular: Color(0xffcee0ff),
-      selected: Color(0xffadc2ea),
+      selected: Color(0xff9ab7ee),
     ),
     foreground: ColorVariation(
       regular: Color(0xFF7799B9),

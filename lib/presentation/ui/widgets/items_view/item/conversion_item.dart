@@ -61,11 +61,10 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
 
   @override
   Widget build(BuildContext context) {
-    var itemColor = widget.colors;
-    var unitButtonColor = itemColor.unitButton;
-    var unitTextBoxColor = itemColor.textBox;
-    var handlerColor = itemColor.handler;
-    var wrapBackgroundColor = itemColor.wrapBackground;
+    var unitButtonColor = widget.colors.unitButton;
+    var textBoxColor = widget.colors.textBox;
+    var handlerColor = widget.colors.handler;
+    var wrapBackgroundColor = widget.colors.wrapBackground;
 
     String? valueStr;
     String? defaultValueStr;
@@ -132,7 +131,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                 });
               },
               suffixIcon: _suffixIcon(),
-              colors: unitTextBoxColor,
+              colors: textBoxColor,
               labelPadding: widget.isSource
                   ? const EdgeInsets.symmetric(horizontal: 4)
                   : null,
