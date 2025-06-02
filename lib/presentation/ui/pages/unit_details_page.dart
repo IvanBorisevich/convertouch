@@ -78,7 +78,6 @@ class _ConvertouchUnitDetailsPageState
                               padding: const EdgeInsets.only(bottom: 20),
                               child: ConvertouchMenuListItem(
                                 pageState.details.unitGroup,
-                                itemName: pageState.details.unitGroup.name,
                                 checkIconVisible: false,
                                 checkIconVisibleIfUnchecked: false,
                                 checked: false,

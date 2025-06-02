@@ -11,7 +11,6 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
   static const double defaultBorderRadius = 15;
 
   final T item;
-  final String itemName;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
   final bool checked;
@@ -29,7 +28,6 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
 
   const ConvertouchMenuGridItem(
     this.item, {
-    required this.itemName,
     required this.checkIconVisible,
     required this.checkIconVisibleIfUnchecked,
     required this.checked,
@@ -109,7 +107,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                     ),
                   ),
                   child: TextSearchMatch(
-                    sourceString: itemName,
+                    sourceString: item.itemName,
                     match: item.nameMatch,
                     foreground: foreground,
                     matchBackground: matchBackground,

@@ -49,6 +49,10 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
     required super.itemType,
     super.oob,
   });
+
+  String get itemName {
+    return name;
+  }
 }
 
 class ListValueModel extends IdNameSearchableItemModel {
