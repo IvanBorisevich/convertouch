@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -126,7 +127,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         onTap: () {
                           unitsBloc.add(
                             FetchItems(
-                              parentItemId: unitGroup.id,
+                              params: UnitsFetchParams(
+                                parentItemId: unitGroup.id,
+                                parentItemType: ItemType.unitGroup,
+                              ),
                               onFirstFetch: () {
                                 navigationBloc.add(
                                   const NavigateToPage(
@@ -167,7 +171,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                               onParamSetAdd: () {
                                 paramSetsBloc.add(
                                   FetchItems(
-                                    parentItemId: unitGroup.id,
+                                    params: UnitsFetchParams(
+                                      parentItemId: unitGroup.id,
+                                      parentItemType: ItemType.unitGroup,
+                                    ),
                                   ),
                                 );
                                 unitsSelectionBloc.add(
@@ -207,8 +214,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
 
                                 unitsBloc.add(
                                   FetchItems(
-                                    parentItemId: paramValue.param.id,
-                                    parentItemType: ItemType.conversionParam,
+                                    params: UnitsFetchParams(
+                                      parentItemId: paramValue.param.id,
+                                      parentItemType: ItemType.conversionParam,
+                                    ),
                                   ),
                                 );
 
@@ -253,7 +262,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                 onUnitItemTap: (item) {
                                   unitsBloc.add(
                                     FetchItems(
-                                      parentItemId: conversion.unitGroup.id,
+                                      params: UnitsFetchParams(
+                                        parentItemId: conversion.unitGroup.id,
+                                        parentItemType: ItemType.unitGroup,
+                                      ),
                                     ),
                                   );
 
@@ -314,7 +326,10 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                           onClick: () {
                             unitsBloc.add(
                               FetchItems(
-                                parentItemId: unitGroup.id,
+                                params: UnitsFetchParams(
+                                  parentItemId: unitGroup.id,
+                                  parentItemType: ItemType.unitGroup,
+                                ),
                               ),
                             );
                             unitsSelectionBloc.add(

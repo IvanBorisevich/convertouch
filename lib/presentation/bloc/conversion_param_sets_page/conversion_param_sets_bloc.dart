@@ -4,12 +4,10 @@ import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_
 import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:either_dart/either.dart';
 
-class ConversionParamSetsBloc extends ItemsListBloc<ConversionParamSetModel,
-    ItemsFetched<ConversionParamSetModel>, ParamSetsFetchParams> {
+class ConversionParamSetsBloc
+    extends ItemsListBloc<ConversionParamSetModel, ParamSetsFetchParams> {
   final FetchParamSetsUseCase fetchParamSetsUseCase;
 
   ConversionParamSetsBloc({
@@ -28,7 +26,7 @@ class ConversionParamSetsBloc extends ItemsListBloc<ConversionParamSetModel,
 
   @override
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>>
-      fetchItems(InputItemsFetchModel<ParamSetsFetchParams> input) async {
+      fetchItemsPage(InputItemsFetchModel<ParamSetsFetchParams> input) async {
     return await fetchParamSetsUseCase.execute(input);
   }
 
@@ -44,10 +42,5 @@ class ConversionParamSetsBloc extends ItemsListBloc<ConversionParamSetModel,
     ConversionParamSetModel item,
   ) async {
     return Right(item);
-  }
-
-  @override
-  ParamSetsFetchParams? getFetchParams(FetchItems event) {
-    return null;
   }
 }

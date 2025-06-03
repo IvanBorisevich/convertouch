@@ -1,5 +1,6 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchInputBox extends StatefulWidget {
   final String? value;
   final String? defaultValue;
+  final List<ListValueModel> listValues;
+  final ListValueModel? selectedListValue;
   final UnitModel? itemUnit;
   final FocusNode? focusNode;
   final ConvertouchValueType valueType;
@@ -18,7 +21,7 @@ class ConvertouchInputBox extends StatefulWidget {
   final String label;
   final bool autofocus;
   final bool readonly;
-  final void Function(String)? onChanged;
+  final void Function(String?)? onChanged;
   final void Function()? onClean;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
@@ -58,7 +61,8 @@ class ConvertouchInputBox extends StatefulWidget {
     this.height = ConvertouchTextBox.defaultHeight,
     this.fontSize = 17,
     super.key,
-  });
+  })  : listValues = const [],
+        selectedListValue = null;
 
   @override
   State<ConvertouchInputBox> createState() => _ConvertouchInputBoxState();
@@ -74,9 +78,8 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
           selectListValueUseCase: di.locator(),
         ),
         child: ConvertouchListBox(
-          value: widget.value,
-          listType: widget.listType!,
-          itemUnit: widget.itemUnit,
+          values: widget.listValues,
+          selectedValue: widget.selectedListValue,
           focusNode: widget.focusNode,
           label: widget.label,
           autofocus: widget.autofocus,

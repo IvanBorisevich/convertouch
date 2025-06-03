@@ -17,8 +17,14 @@ class FetchParamSetsUseCase extends UseCase<
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>> execute(
     InputItemsFetchModel<ParamSetsFetchParams> input,
   ) async {
+    ParamSetsFetchParams? params = input.params;
+
+    if (params == null) {
+      return const Right([]);
+    }
+
     return await conversionParamSetRepository.search(
-      groupId: input.parentItemId,
+      groupId: params.parentItemId,
       searchString: input.searchString,
       pageNum: input.pageNum,
       pageSize: input.pageSize,

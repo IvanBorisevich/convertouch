@@ -16,17 +16,22 @@ class FetchUnitsUseCase
   Future<Either<ConvertouchException, List<UnitModel>>> execute(
     InputItemsFetchModel<UnitsFetchParams> input,
   ) async {
-    if (input.parentItemType == ItemType.unitGroup ||
-        input.parentItemType == null) {
+    UnitsFetchParams? params = input.params;
+
+    if (params == null) {
+      return const Right([]);
+    }
+
+    if (params.parentItemType == ItemType.unitGroup) {
       return await unitRepository.searchWithGroupId(
-        unitGroupId: input.parentItemId,
+        unitGroupId: params.parentItemId,
         searchString: input.searchString,
         pageNum: input.pageNum,
         pageSize: input.pageSize,
       );
-    } else if (input.parentItemType == ItemType.conversionParam) {
+    } else if (params.parentItemType == ItemType.conversionParam) {
       return await unitRepository.searchWithParamId(
-        paramId: input.parentItemId,
+        paramId: params.parentItemId,
         searchString: input.searchString,
         pageNum: input.pageNum,
         pageSize: input.pageSize,

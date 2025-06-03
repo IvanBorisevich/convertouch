@@ -1,9 +1,9 @@
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/dropdown_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -45,13 +45,20 @@ Widget blocBuilderWrap<
   );
 }
 
+Widget itemsListBlocBuilder<T extends IdNameSearchableItemModel,
+    P extends ItemsFetchParams>({
+  ItemsListBloc<T, P>? bloc,
+  required Widget Function(ItemsFetched<T, P> pageState) builderFunc,
+}) {
+  return blocBuilderWrap.call(
+    bloc: bloc,
+    builderFunc: builderFunc,
+  );
+}
+
 const appBlocBuilder = blocBuilderWrap<AppBloc, AppState, AppStateReady>;
 const itemsSelectionBlocBuilder = blocBuilderWrap<ItemsSelectionBloc,
     ItemsSelectionState, ItemsSelectionDone>;
-const itemsListBlocBuilder =
-    blocBuilderWrap<ItemsListBloc, ItemsFetched, ItemsFetched>;
-const dropdownBlocBuilder = blocBuilderWrap<DropdownBloc,
-    ItemsFetched<ListValueModel>, ItemsFetched<ListValueModel>>;
 const singleGroupBlocBuilder =
     blocBuilderWrap<SingleGroupBloc, SingleGroupState, SingleGroupState>;
 const unitDetailsBlocBuilder =

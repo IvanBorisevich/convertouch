@@ -1,6 +1,5 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ItemsListEvent extends ConvertouchEvent {
@@ -9,24 +8,18 @@ abstract class ItemsListEvent extends ConvertouchEvent {
   });
 }
 
-class FetchItems extends ItemsListEvent {
+class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   final String? searchString;
   final int pageSize;
   final bool firstFetch;
-  final int parentItemId;
-  final UnitModel? listItemUnit;
-  final ConvertouchListType? listType;
-  final ItemType? parentItemType;
   final void Function()? onFirstFetch;
+  final P? params;
 
   const FetchItems({
     this.searchString,
     this.pageSize = 100,
     this.firstFetch = true,
-    this.parentItemId = -1,
-    this.listItemUnit,
-    this.listType,
-    this.parentItemType,
+    this.params,
     this.onFirstFetch,
   });
 
@@ -35,22 +28,17 @@ class FetchItems extends ItemsListEvent {
         searchString,
         pageSize,
         firstFetch,
-        parentItemId,
-        listItemUnit,
-        parentItemType,
-        listType,
+        params,
       ];
 
   @override
   String toString() {
     return 'FetchItems{'
         'searchString: $searchString, '
-        'parentItemId: $parentItemId, '
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
-        'listItemUnit: ${listItemUnit?.code}, '
-        'parentItemType: $parentItemType, '
-        'listType: $listType}';
+        'onFirstFetch: $onFirstFetch, '
+        'params: $params}';
   }
 }
 

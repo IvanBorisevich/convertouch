@@ -1,80 +1,32 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class ItemsListState extends ConvertouchState {
   const ItemsListState();
 }
 
-class ItemsFetched<T extends IdNameSearchableItemModel> extends ItemsListState {
-  final List<T> pageItems;
-  final T? selectedItem;
+class ItemsFetched<T extends IdNameSearchableItemModel,
+    P extends ItemsFetchParams> extends ItemsListState {
+  final OutputItemsFetchModel<T, P> itemsFetch;
   final List<int> oobIds;
-  final int parentItemId;
-  final UnitModel? listItemUnit;
-  final ItemType? parentItemType;
-  final String? searchString;
-  final FetchingStatus status;
-  final bool hasReachedMax;
-  final int pageNum;
 
   const ItemsFetched({
-    required this.pageItems,
-    this.selectedItem,
+    required this.itemsFetch,
     this.oobIds = const [],
-    this.parentItemId = -1,
-    this.listItemUnit,
-    this.parentItemType,
-    this.searchString,
-    this.status = FetchingStatus.success,
-    this.hasReachedMax = false,
-    this.pageNum = 0,
   });
-
-  ItemsFetched<T> copyWith({
-    Patchable<T>? selectedItem,
-  }) {
-    return ItemsFetched(
-      pageItems: pageItems,
-      selectedItem: ObjectUtils.patch(this.selectedItem, selectedItem),
-      oobIds: oobIds,
-      parentItemId: parentItemId,
-      listItemUnit: listItemUnit,
-      parentItemType: parentItemType,
-      searchString: searchString,
-      status: status,
-      hasReachedMax: hasReachedMax,
-      pageNum: pageNum,
-    );
-  }
 
   @override
   List<Object?> get props => [
-        pageItems,
-        selectedItem,
+        itemsFetch,
         oobIds,
-        parentItemId,
-        parentItemType,
-        listItemUnit,
-        searchString,
-        status,
-        hasReachedMax,
-        pageNum,
       ];
 
   @override
   String toString() {
     return 'ItemsFetched{'
-        'itemsCount: ${pageItems.length}, '
-        'selectedItem: $selectedItem, '
-        'parentItemId: $parentItemId, '
-        'listItemUnit: ${listItemUnit?.code}, '
-        'parentItemType: $parentItemType, '
-        'searchString: $searchString, '
-        'status: $status, '
-        'hasReachedMax: $hasReachedMax, '
-        'pageNum: $pageNum}';
+        'itemsFetch: $itemsFetch, '
+        'oobIds: $oobIds}';
   }
 }

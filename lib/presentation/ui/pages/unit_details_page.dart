@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -99,7 +100,7 @@ class _ConvertouchUnitDetailsPageState
                                 onTap: () {
                                   FocusScope.of(context).unfocus();
                                   unitGroupsBlocForDetails.add(
-                                    const FetchItems(),
+                                    const FetchItems<UnitGroupsFetchParams>(),
                                   );
 
                                   itemsSelectionBloc.add(
@@ -235,8 +236,11 @@ class _ConvertouchUnitDetailsPageState
                                 onTap: () {
                                   unitsBlocForDetails.add(
                                     FetchItems(
-                                      parentItemId:
-                                          pageState.details.unitGroup.id,
+                                      params: UnitsFetchParams(
+                                        parentItemId:
+                                            pageState.details.unitGroup.id,
+                                        parentItemType: ItemType.unitGroup,
+                                      ),
                                     ),
                                   );
                                   itemsSelectionBloc.add(

@@ -6,13 +6,10 @@ import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:either_dart/either.dart';
 
-class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>,
-    UnitsFetchParams> {
+class UnitsBloc extends ItemsListBloc<UnitModel, UnitsFetchParams> {
   final FetchUnitsUseCase fetchUnitsUseCase;
   final SaveUnitUseCase saveUnitUseCase;
   final RemoveUnitsUseCase removeUnitsUseCase;
@@ -26,7 +23,7 @@ class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>,
   });
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> fetchItems(
+  Future<Either<ConvertouchException, List<UnitModel>>> fetchItemsPage(
     InputItemsFetchModel<UnitsFetchParams> input,
   ) async {
     return await fetchUnitsUseCase.execute(input);
@@ -50,11 +47,6 @@ class UnitsBloc extends ItemsListBloc<UnitModel, ItemsFetched<UnitModel>,
       nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
       codeMatch: ObjectUtils.toSearchMatch(item.code, searchString),
     );
-  }
-
-  @override
-  UnitsFetchParams? getFetchParams(FetchItems event) {
-    return null;
   }
 }
 

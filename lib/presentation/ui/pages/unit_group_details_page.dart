@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -156,7 +157,7 @@ class _ConvertouchUnitGroupDetailsPageState
                       item: unitGroupDetailsState.draftGroup,
                       onItemSave: (savedGroup) {
                         unitGroupsBloc.add(
-                          const FetchItems(),
+                          const FetchItems<UnitGroupsFetchParams>(),
                         );
                         singleGroupBloc.add(
                           ShowGroup(unitGroup: savedGroup),

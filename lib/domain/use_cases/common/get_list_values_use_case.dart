@@ -17,16 +17,18 @@ class GetListValuesUseCase extends UseCase<
   Future<Either<ConvertouchException, List<ListValueModel>>> execute(
     InputItemsFetchModel<DropdownItemsFetchParams> input,
   ) async {
-    if (input.listType == null) {
+    DropdownItemsFetchParams? params = input.params;
+
+    if (params == null) {
       return const Right([]);
     }
 
     return await listValueRepository.search(
-      listType: input.listType!,
+      listType: params.listType,
       searchString: input.searchString,
       pageNum: input.pageNum,
       pageSize: input.pageSize,
-      unit: input.params?.unit,
+      unit: params.unit,
     );
   }
 }
