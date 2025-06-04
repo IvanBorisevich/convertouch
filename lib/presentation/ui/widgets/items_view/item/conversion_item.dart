@@ -73,8 +73,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
       valueStr = widget.item.value?.raw;
       defaultValueStr = widget.item.defaultValue?.raw;
     } else {
-      valueStr = widget.item.value?.alt;
-      defaultValueStr = widget.item.defaultValue?.alt;
+      valueStr = widget.item.value?.altOrRaw;
+      defaultValueStr = widget.item.defaultValue?.altOrRaw;
     }
 
     String itemName = widget.itemNameFunc.call(widget.item);
@@ -106,12 +106,13 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
             child: ConvertouchInputBox(
               value: valueStr,
               defaultValue: defaultValueStr,
+              listValues: widget.item.listValues?.items,
+              selectedListValue: widget.item.value?.toListValueModel(),
               itemUnit: widget.item.unitItem,
               readonly: widget.disabled,
               label: itemName,
               borderRadius: 15,
               valueType: widget.item.valueType,
-              listType: widget.item.listType,
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);

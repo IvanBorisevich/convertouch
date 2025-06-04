@@ -16,7 +16,11 @@ void main() {
   group('Enum items fetch', () {
     test('Should be fetched', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(listType: ConvertouchListType.person),
+        await listValueRepository.search(
+          listType: ConvertouchListType.person,
+          pageNum: 0,
+          pageSize: 100,
+        ),
       );
 
       expect(listValues, const [
@@ -31,6 +35,8 @@ void main() {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
         await listValueRepository.search(
           listType: ConvertouchListType.barbellBarWeight,
+          pageNum: 0,
+          pageSize: 100,
         ),
       );
 
@@ -44,6 +50,8 @@ void main() {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
         await listValueRepository.search(
           listType: ConvertouchListType.barbellBarWeight,
+          pageNum: 0,
+          pageSize: 100,
           unit: pound,
         ),
       );

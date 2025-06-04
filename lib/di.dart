@@ -27,7 +27,8 @@ import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
-import 'package:convertouch/domain/use_cases/common/get_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/select_list_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
@@ -356,6 +357,12 @@ Future<void> _initUseCases() async {
     () => const ToggleCalculableParamUseCase(),
   );
 
+  locator.registerLazySingleton<EnrichItemsWithListValuesUseCase>(
+    () => EnrichItemsWithListValuesUseCase(
+      fetchListValuesUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
@@ -383,8 +390,8 @@ Future<void> _initUseCases() async {
     ),
   );
 
-  locator.registerLazySingleton<GetListValuesUseCase>(
-    () => GetListValuesUseCase(
+  locator.registerLazySingleton<FetchListValuesUseCase>(
+    () => FetchListValuesUseCase(
       listValueRepository: locator(),
     ),
   );
@@ -488,6 +495,7 @@ Future<void> _initBloc() async {
       editConversionParamValueUseCase: locator(),
       replaceConversionParamUnitUseCase: locator(),
       toggleCalculableParamUseCase: locator(),
+      enrichItemsWithListValuesUseCase: locator(),
       navigationBloc: locator(),
     ),
   );

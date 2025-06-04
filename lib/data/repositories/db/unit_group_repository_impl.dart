@@ -14,7 +14,7 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
   @override
   Future<Either<ConvertouchException, List<UnitGroupModel>>> search({
     String? searchString,
-    int pageNum = 0,
+    required int pageNum,
     required int pageSize,
   }) async {
     try {

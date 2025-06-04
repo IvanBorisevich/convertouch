@@ -20,7 +20,7 @@ class UnitRepositoryImpl extends UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> searchWithGroupId({
     required int unitGroupId,
     String? searchString,
-    int pageNum = 0,
+    required int pageNum,
     required int pageSize,
   }) async {
     try {
@@ -52,7 +52,7 @@ class UnitRepositoryImpl extends UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> searchWithParamId({
     required int paramId,
     String? searchString,
-    int pageNum = 0,
+    required int pageNum,
     required int pageSize,
   }) async {
     try {

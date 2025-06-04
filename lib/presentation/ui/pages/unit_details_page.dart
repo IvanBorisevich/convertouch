@@ -163,14 +163,16 @@ class _ConvertouchUnitDetailsPageState
                       ),
                       ConvertouchParameterItem(
                         name: 'Min Value',
-                        value: pageState.details.savedUnitData.minValue?.alt,
+                        value:
+                            pageState.details.savedUnitData.minValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.minValue != null,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
                         name: 'Max Value',
-                        value: pageState.details.savedUnitData.maxValue?.alt,
+                        value:
+                            pageState.details.savedUnitData.maxValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
                         textBoxColor: textBoxColor,

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 typedef FunctionWithParams = ValueModel? Function(
@@ -142,7 +143,9 @@ class UnitRule {
             return mapping[unitCode] == x?.raw ? x : ValueModel.undef;
           },
           baseToY: (x, {params}) {
-            return ValueModel.any(mapping[unitCode]);
+            return mapping[unitCode] != null
+                ? ValueModel.any(ListValueModel.value(mapping[unitCode]!))
+                : null;
           },
         );
 }

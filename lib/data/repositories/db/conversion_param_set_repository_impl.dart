@@ -17,7 +17,7 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
   Future<Either<ConvertouchException, List<ConversionParamSetModel>>> search({
     required int groupId,
     String? searchString,
-    int pageNum = 0,
+    required int pageNum,
     required int pageSize,
   }) async {
     try {

@@ -69,8 +69,8 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     }
 
     try {
-      final newPageItems = ObjectUtils.tryGet(
-        await fetchItemsPage(
+      final newBatch = ObjectUtils.tryGet(
+        await fetchBatch(
           InputItemsFetchModel(
             searchString: searchString,
             pageSize: event.pageSize,
@@ -80,33 +80,24 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ),
       );
 
-      final itemsWithMatch = newPageItems
-          .map((item) => searchString != null && searchString.isNotEmpty
-              ? addSearchMatch(item, searchString)
-              : item)
-          .toList();
-
       oobIds.addAll(
-        newPageItems.where((item) => item.oob).map((item) => item.id).toList(),
+        newBatch.items
+            .where((item) => item.oob)
+            .map((item) => item.id)
+            .toList(),
       );
-
-      if (newPageItems.isNotEmpty) {
-        pageNum++;
-      }
-
-      hasReachedMax = newPageItems.length < event.pageSize;
 
       emit(
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel(
             items: [
               ...allItems,
-              ...itemsWithMatch,
+              ...newBatch.items,
             ],
             status: FetchingStatus.success,
-            hasReachedMax: hasReachedMax,
+            hasReachedMax: newBatch.hasReachedMax,
             searchString: searchString,
-            pageNum: pageNum,
+            pageNum: newBatch.pageNum,
             params: params,
           ),
           oobIds: oobIds,
@@ -156,13 +147,11 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     event.onComplete?.call();
   }
 
-  Future<Either<ConvertouchException, List<T>>> fetchItemsPage(
+  Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> fetchBatch(
     InputItemsFetchModel<P> input,
   );
 
   Future<Either<ConvertouchException, T>> saveItem(T item);
 
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids);
-
-  T addSearchMatch(T item, String searchString);
 }

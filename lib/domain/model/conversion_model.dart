@@ -59,10 +59,12 @@ class ConversionModel extends IdNameItemModel {
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       "id": id,
-      "unitGroup": unitGroup.toJson(),
-      "sourceItem": srcUnitValue?.toJson(),
+      "unitGroup": unitGroup.toJson(removeNulls: removeNulls),
+      "sourceItem": srcUnitValue?.toJson(removeNulls: removeNulls),
       "params": params?.toJson(),
-      "targetItems": convertedUnitValues.map((item) => item.toJson()).toList(),
+      "targetItems": convertedUnitValues
+          .map((item) => item.toJson(removeNulls: removeNulls))
+          .toList(),
     };
 
     if (removeNulls) {

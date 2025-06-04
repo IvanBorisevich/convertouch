@@ -99,7 +99,7 @@ class _ConvertouchUnitGroupDetailsPageState
                         visible:
                             unitGroupDetailsState.draftGroup.minValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.minValue?.alt,
+                            .draftGroup.minValue?.altOrRaw,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchParameterItem(
@@ -107,7 +107,7 @@ class _ConvertouchUnitGroupDetailsPageState
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue != null,
                         value: unitGroupDetailsState
-                            .draftGroup.maxValue?.alt,
+                            .draftGroup.maxValue?.altOrRaw,
                         textBoxColor: textBoxColor,
                       ),
                       refreshingJobsBlocBuilder(

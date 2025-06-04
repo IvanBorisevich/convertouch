@@ -1,13 +1,15 @@
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:either_dart/either.dart';
+
+typedef OutputUnitsFetch = OutputItemsFetchModel<UnitModel, UnitsFetchParams>;
 
 class UnitsBloc extends ItemsListBloc<UnitModel, UnitsFetchParams> {
   final FetchUnitsUseCase fetchUnitsUseCase;
@@ -23,7 +25,7 @@ class UnitsBloc extends ItemsListBloc<UnitModel, UnitsFetchParams> {
   });
 
   @override
-  Future<Either<ConvertouchException, List<UnitModel>>> fetchItemsPage(
+  Future<Either<ConvertouchException, OutputUnitsFetch>> fetchBatch(
     InputItemsFetchModel<UnitsFetchParams> input,
   ) async {
     return await fetchUnitsUseCase.execute(input);
@@ -39,14 +41,6 @@ class UnitsBloc extends ItemsListBloc<UnitModel, UnitsFetchParams> {
   @override
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids) async {
     return await removeUnitsUseCase.execute(ids);
-  }
-
-  @override
-  UnitModel addSearchMatch(UnitModel item, String searchString) {
-    return item.copyWith(
-      nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
-      codeMatch: ObjectUtils.toSearchMatch(item.code, searchString),
-    );
   }
 }
 

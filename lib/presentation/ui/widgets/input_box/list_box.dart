@@ -185,7 +185,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 17),
                     child: Text(
-                      value.name,
+                      value.itemName,
                       style: TextStyle(
                         fontSize: 16,
                         color: dropdownMenu.foreground.regular,
@@ -213,7 +213,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                 return Container(
                   padding: EdgeInsets.zero,
                   child: Text(
-                    widget.selectedValue?.name ?? hintText,
+                    widget.selectedValue?.itemName ?? hintText,
                     style: TextStyle(
                       fontSize: 16,
                       overflow: TextOverflow.ellipsis,

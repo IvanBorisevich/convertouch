@@ -2,15 +2,22 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+
+typedef OutputListValuesBatch
+    = OutputItemsFetchModel<ListValueModel, ListValuesFetchParams>;
 
 abstract class ConversionItemValueModel extends ItemModel {
   final ValueModel? value;
   final ValueModel? defaultValue;
+  final OutputListValuesBatch? listValues;
 
   const ConversionItemValueModel({
     this.value,
     this.defaultValue,
+    this.listValues,
   }) : super(
           itemType: ItemType.conversionItemValue,
         );
@@ -47,6 +54,7 @@ abstract class ConversionItemValueModel extends ItemModel {
         itemType,
         value,
         defaultValue,
+        listValues,
       ];
 }
 
@@ -57,17 +65,20 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     required this.unit,
     super.value,
     super.defaultValue,
+    super.listValues,
   });
 
   factory ConversionUnitValueModel.tuple(
     UnitModel unit,
     dynamic value,
-    dynamic defaultValue,
-  ) {
+    dynamic defaultValue, {
+    OutputListValuesBatch? listValues,
+  }) {
     return ConversionUnitValueModel(
       unit: unit,
       value: ValueModel.any(value),
       defaultValue: ValueModel.any(defaultValue),
+      listValues: listValues,
     );
   }
 
@@ -75,11 +86,13 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     UnitModel? unit,
     ValueModel? value,
     ValueModel? defaultValue,
+    OutputListValuesBatch? listValues,
   }) {
     return ConversionUnitValueModel(
       unit: unit ?? this.unit,
       value: value ?? this.value,
       defaultValue: defaultValue ?? this.defaultValue,
+      listValues: listValues ?? this.listValues,
     );
   }
 
@@ -97,11 +110,21 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
-    return {
-      "unit": unit.toJson(),
+    var result = {
+      "unit": unit.toJson(removeNulls: removeNulls),
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
+      "listValues": listValues?.toJson(
+        removeNulls: removeNulls,
+        saveParams: false,
+      ),
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static ConversionUnitValueModel? fromJson(Map<String, dynamic>? json) {
@@ -112,6 +135,11 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
       unit: UnitModel.fromJson(json["unit"])!,
       value: ValueModel.fromJson(json["value"]),
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
+      listValues: OutputItemsFetchModel.fromJson(
+        json["listValues"],
+        fromItemJson: (e) => ListValueModel.fromJson(e)!,
+        fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
+      ),
     );
   }
 
@@ -126,8 +154,8 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     return 'ConversionUnitValueModel{'
         'unit: ${unit.code}, '
         'value: $value, '
-        'default: $defaultValue'
-        '}';
+        'default: $defaultValue, '
+        'listValues: $listValues}';
   }
 }
 
@@ -142,6 +170,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     this.calculated = false,
     super.value,
     super.defaultValue,
+    super.listValues,
   });
 
   factory ConversionParamValueModel.tuple(
@@ -150,6 +179,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     dynamic defaultValue, {
     bool calculated = false,
     UnitModel? unit,
+    OutputListValuesBatch? listValues,
   }) {
     return ConversionParamValueModel(
       param: param,
@@ -157,6 +187,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       calculated: calculated,
       value: ValueModel.any(value),
       defaultValue: ValueModel.any(defaultValue),
+      listValues: listValues,
     );
   }
 
@@ -182,6 +213,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     bool? calculated,
     ValueModel? value,
     ValueModel? defaultValue,
+    OutputListValuesBatch? listValues,
   }) {
     return ConversionParamValueModel(
       param: param,
@@ -189,6 +221,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       calculated: calculated ?? this.calculated,
       value: value ?? this.value,
       defaultValue: defaultValue ?? this.defaultValue,
+      listValues: listValues ?? this.listValues,
     );
   }
 
@@ -204,11 +237,15 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
-      "param": param.toJson(),
-      "unit": unit?.toJson(),
+      "param": param.toJson(removeNulls: removeNulls),
+      "unit": unit?.toJson(removeNulls: removeNulls),
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
+      "listValues": listValues?.toJson(
+        removeNulls: removeNulls,
+        saveParams: false,
+      ),
     };
 
     if (removeNulls) {
@@ -228,6 +265,11 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       calculated: json["calculated"],
       value: ValueModel.fromJson(json["value"]),
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
+      listValues: OutputItemsFetchModel.fromJson(
+        json['listValues'],
+        fromItemJson: (e) => ListValueModel.fromJson(e)!,
+        fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
+      ),
     );
   }
 
@@ -238,7 +280,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
         'unit: ${unit?.code}, '
         'calculated: $calculated, '
         'value: $value, '
-        'default: $defaultValue'
-        '}';
+        'default: $defaultValue, '
+        'listValues: $listValues}';
   }
 }

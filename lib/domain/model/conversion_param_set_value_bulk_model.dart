@@ -73,32 +73,39 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  Future<ConversionParamSetValueBulkModel> copyWithChangedParam({
+  Future<ConversionParamSetValueBulkModel> copyWithChangedParams({
     required Future<ConversionParamValueModel> Function(
       ConversionParamValueModel,
       ConversionParamSetValueModel,
     ) map,
     bool Function(ConversionParamSetValueModel)? paramSetFilter,
     required bool Function(ConversionParamValueModel) paramFilter,
+    bool changeFirstParamSetOnly = true,
+    bool changeFirstParamOnly = true,
   }) async {
-    int paramSetIndex = paramSetFilter != null
-        ? paramSetValues.indexWhere(paramSetFilter)
-        : selectedIndex;
+    List<ConversionParamSetValueModel> newParamSetValues = [];
+    bool firstParamSetFound = true;
 
-    if (paramSetIndex < 0) {
-      return this;
+    for (int i = 0; i < paramSetValues.length; i++) {
+      ConversionParamSetValueModel oldParamSetValue = paramSetValues[i];
+      ConversionParamSetValueModel newParamSetValue;
+
+      if ((paramSetFilter == null ||
+              paramSetFilter.call(oldParamSetValue) ||
+              i == selectedIndex) &&
+          firstParamSetFound) {
+        newParamSetValue = await oldParamSetValue.copyWithChangedParams(
+          map: map,
+          paramFilter: paramFilter,
+          changeFirstParamOnly: changeFirstParamOnly,
+        );
+        firstParamSetFound = !changeFirstParamSetOnly;
+      } else {
+        newParamSetValue = oldParamSetValue;
+      }
+
+      newParamSetValues.add(newParamSetValue);
     }
-
-    ConversionParamSetValueModel newParamSetValue =
-        await paramSetValues[paramSetIndex].copyWithChangedParam(
-      map: map,
-      paramFilter: paramFilter,
-    );
-
-    List<ConversionParamSetValueModel> newParamSetValues = [...paramSetValues];
-    newParamSetValues[paramSetIndex] = paramSetValues[paramSetIndex].copyWith(
-      paramValues: newParamSetValue.paramValues,
-    );
 
     return copyWith(
       paramSetValues: newParamSetValues,
@@ -110,14 +117,15 @@ class ConversionParamSetValueBulkModel extends Equatable {
       ConversionParamValueModel,
       ConversionParamSetValueModel,
     ) map,
-    int? paramSetId,
+    required int paramSetId,
     required int paramId,
   }) async {
-    return await copyWithChangedParam(
+    return await copyWithChangedParams(
       map: map,
-      paramSetFilter:
-          paramSetId != null ? (p) => p.paramSet.id == paramSetId : null,
+      paramSetFilter: (p) => p.paramSet.id == paramSetId,
       paramFilter: (p) => p.param.id == paramId,
+      changeFirstParamOnly: true,
+      changeFirstParamSetOnly: true,
     );
   }
 
@@ -157,7 +165,7 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  ConversionParamSetValueModel? get activeParams {
+  ConversionParamSetValueModel? get active {
     return paramSetValues.isNotEmpty && selectedIndex > -1
         ? paramSetValues[selectedIndex]
         : null;

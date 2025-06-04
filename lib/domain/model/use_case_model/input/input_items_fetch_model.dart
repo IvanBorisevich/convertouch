@@ -18,6 +18,8 @@ class InputItemsFetchModel<P extends ItemsFetchParams> {
 
 abstract class ItemsFetchParams extends Equatable {
   const ItemsFetchParams();
+
+  Map<String, dynamic> toJson();
 }
 
 class UnitsFetchParams extends ItemsFetchParams {
@@ -34,6 +36,14 @@ class UnitsFetchParams extends ItemsFetchParams {
         parentItemId,
         parentItemType,
       ];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'parentItemId': parentItemId,
+      'parentItemType': parentItemType.name,
+    };
+  }
 }
 
 class UnitGroupsFetchParams extends ItemsFetchParams {
@@ -41,6 +51,11 @@ class UnitGroupsFetchParams extends ItemsFetchParams {
 
   @override
   List<Object?> get props => [];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {};
+  }
 }
 
 class ParamSetsFetchParams extends ItemsFetchParams {
@@ -52,15 +67,22 @@ class ParamSetsFetchParams extends ItemsFetchParams {
 
   @override
   List<Object?> get props => [
-    parentItemId,
-  ];
+        parentItemId,
+      ];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'parentItemId': parentItemId,
+    };
+  }
 }
 
-class DropdownItemsFetchParams extends ItemsFetchParams {
+class ListValuesFetchParams extends ItemsFetchParams {
   final ConvertouchListType listType;
   final UnitModel? unit;
 
-  const DropdownItemsFetchParams({
+  const ListValuesFetchParams({
     required this.listType,
     this.unit,
   });
@@ -70,4 +92,23 @@ class DropdownItemsFetchParams extends ItemsFetchParams {
         listType,
         unit,
       ];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'listType': listType.id,
+      'unit': unit?.toJson(),
+    };
+  }
+
+  static ListValuesFetchParams? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    return ListValuesFetchParams(
+      listType: ConvertouchListType.valueOf(json['listType'])!,
+      unit: UnitModel.fromJson(json['unit']),
+    );
+  }
 }

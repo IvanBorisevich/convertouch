@@ -15,8 +15,8 @@ class ListValueRepositoryImpl implements ListValueRepository {
   Future<Either<ConvertouchException, List<ListValueModel>>> search({
     required ConvertouchListType listType,
     String? searchString,
-    int pageNum = 0,
-    int pageSize = 100,
+    required int pageNum,
+    required int pageSize,
     UnitModel? unit,
   }) async {
     List<ListValueModel>? result = _listValues[listType]?.call(unit: unit);
@@ -101,15 +101,15 @@ String _defaultMap<T>(T value) => value.toString();
 List<ListValueModel> _wrapList<T>(
   List<T> src, {
   String Function(T)? valueMap,
-  String Function(T)? nameMap,
+  String Function(T)? altValueMap,
 }) {
   return src.map((v) {
     String value = (valueMap ?? _defaultMap).call(v);
-    String name = (nameMap ?? _defaultMap).call(v);
+    String? alt = altValueMap?.call(v);
 
     return ListValueModel(
       value: value,
-      name: name,
+      alt: alt,
     );
   }).toList();
 }
@@ -117,13 +117,11 @@ List<ListValueModel> _wrapList<T>(
 List<ListValueModel> _persons({UnitModel? unit}) => _wrapList(
       Person.values,
       valueMap: (v) => v.name,
-      nameMap: (v) => v.name,
     );
 
 List<ListValueModel> _garments({UnitModel? unit}) => _wrapList(
       Garment.values,
       valueMap: (v) => v.name,
-      nameMap: (v) => v.name,
     );
 
 List<ListValueModel> _clothesSizesInter({UnitModel? unit}) => _wrapList([

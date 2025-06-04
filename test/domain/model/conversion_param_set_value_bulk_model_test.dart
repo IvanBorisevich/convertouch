@@ -45,7 +45,7 @@ const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
 void main() {
   test('Copy with changed list param value', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParam(
+      await _clothesSizeParams.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),
@@ -72,7 +72,7 @@ void main() {
 
   test('Copy with changed list param value (in active param set)', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParam(
+      await _clothesSizeParams.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),

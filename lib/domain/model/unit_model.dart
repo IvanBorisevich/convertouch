@@ -118,7 +118,7 @@ class UnitModel extends IdNameSearchableItemModel {
       id: json["id"] ?? -1,
       name: json["name"],
       code: json["code"],
-      coefficient: json["coefficient"],
+      coefficient: json["coefficient"]?.toDouble(),
       symbol: json["symbol"],
       unitGroupId: json["unitGroupId"] ?? -1,
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,

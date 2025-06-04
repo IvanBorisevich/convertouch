@@ -251,7 +251,7 @@ void main() {
                 .apply(frSize.xToBase)
                 .apply(esSize.baseToY)
                 .value,
-            ValueModel.any(null),
+            null,
           );
         });
 

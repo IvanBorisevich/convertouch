@@ -53,7 +53,7 @@ class EditConversionItemValueUseCase
     required UnitGroupModel unitGroup,
     required EditConversionItemValueDelta delta,
   }) async {
-    return oldConversionParams?.copyWithChangedParam(
+    return oldConversionParams?.copyWithChangedParams(
       paramFilter: (p) => p.calculated,
       map: (paramValue, paramSetValue) async {
         return rules.calculateParamValueBySrcValue(

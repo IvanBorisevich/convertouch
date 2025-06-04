@@ -57,12 +57,14 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
 
 class ListValueModel extends IdNameSearchableItemModel {
   final String value;
+  final String? alt;
 
   const ListValueModel({
     required this.value,
-    required super.name,
+    this.alt,
   }) : super(
           id: -1,
+          name: '',
           itemType: ItemType.listValue,
           oob: true,
         );
@@ -70,20 +72,38 @@ class ListValueModel extends IdNameSearchableItemModel {
   const ListValueModel.value(String value)
       : this(
           value: value,
-          name: value,
         );
 
   @override
   List<Object?> get props => [
         value,
-        name,
       ];
 
   @override
+  String get itemName => alt ?? value;
+
+  @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
-    return {
+    var result = {
       'value': value,
-      'name': name,
+      'alt': alt != value ? alt : null,
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
+  }
+
+  static ListValueModel? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    return ListValueModel(
+      value: json['value'],
+      alt: json['alt'],
+    );
   }
 }

@@ -67,7 +67,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         oldSourceUnitValue:
             modifiedConvertedValues[input.conversion.srcUnitValue?.unit.id] ??
                 modifiedConvertedValues.values.first,
-        activeParams: newParams?.activeParams,
+        activeParams: newParams?.active,
         unitGroup: modifiedGroup,
         newConvertedUnitValues: modifiedConvertedValues,
         delta: input.delta,
@@ -93,7 +93,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         var convertedUnitValues = _calculateUnitValues(
           InputConversionModel(
             unitGroup: modifiedGroup,
-            params: newParams?.activeParams,
+            params: newParams?.active,
             sourceUnitValue: newSrcUnitValue,
             targetUnits: modifiedConvertedValues.values
                 .map((conversionItem) => conversionItem.unit)

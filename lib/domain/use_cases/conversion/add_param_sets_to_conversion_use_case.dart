@@ -127,7 +127,7 @@ class AddParamSetsToConversionUseCase
 
     for (int i = 0; i < mergedParamSetValues.length; i++) {
       var resultParamSetValue =
-          await mergedParamSetValues[i].copyWithChangedParam(
+          await mergedParamSetValues[i].copyWithChangedParams(
         map: (paramValue, paramSetValue) async {
           var newParamValue = srcUnitValue != null
               ? rules.calculateParamValueBySrcValue(

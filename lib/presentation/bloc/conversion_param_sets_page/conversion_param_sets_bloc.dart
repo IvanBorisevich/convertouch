@@ -1,10 +1,13 @@
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:either_dart/either.dart';
+
+typedef OutputParamSetsFetch
+    = OutputItemsFetchModel<ConversionParamSetModel, ParamSetsFetchParams>;
 
 class ConversionParamSetsBloc
     extends ItemsListBloc<ConversionParamSetModel, ParamSetsFetchParams> {
@@ -15,18 +18,9 @@ class ConversionParamSetsBloc
   });
 
   @override
-  ConversionParamSetModel addSearchMatch(
-    ConversionParamSetModel item,
-    String searchString,
-  ) {
-    return item.copyWith(
-      nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
-    );
-  }
-
-  @override
-  Future<Either<ConvertouchException, List<ConversionParamSetModel>>>
-      fetchItemsPage(InputItemsFetchModel<ParamSetsFetchParams> input) async {
+  Future<Either<ConvertouchException, OutputParamSetsFetch>> fetchBatch(
+    InputItemsFetchModel<ParamSetsFetchParams> input,
+  ) async {
     return await fetchParamSetsUseCase.execute(input);
   }
 

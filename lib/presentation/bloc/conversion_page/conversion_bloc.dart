@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
@@ -46,6 +47,7 @@ class ConversionBloc
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
+  final EnrichItemsWithListValuesUseCase enrichItemsWithListValuesUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -64,6 +66,7 @@ class ConversionBloc
     required this.editConversionParamValueUseCase,
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
+    required this.enrichItemsWithListValuesUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -123,6 +126,10 @@ class ConversionBloc
           delta: const AddParamSetsDelta(),
         ),
       ),
+    );
+
+    conversion = ObjectUtils.tryGet(
+      await enrichItemsWithListValuesUseCase.execute(conversion),
     );
 
     emit(
@@ -402,11 +409,15 @@ class ConversionBloc
         ShowException(exception: result.left),
       );
     } else {
+      ConversionModel enrichedConversion = ObjectUtils.tryGet(
+        await enrichItemsWithListValuesUseCase.execute(result.right),
+      );
+
       emit(
         ConversionBuilt(
-          conversion: result.right,
-          showRefreshButton: result.right.unitGroup.refreshable &&
-              result.right.convertedUnitValues.isNotEmpty,
+          conversion: enrichedConversion,
+          showRefreshButton: enrichedConversion.unitGroup.refreshable &&
+              enrichedConversion.convertedUnitValues.isNotEmpty,
         ),
       );
       onSuccess?.call();

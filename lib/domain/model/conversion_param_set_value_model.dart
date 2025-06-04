@@ -71,21 +71,28 @@ class ConversionParamSetValueModel extends ItemModel {
     );
   }
 
-  Future<ConversionParamSetValueModel> copyWithChangedParam({
+  Future<ConversionParamSetValueModel> copyWithChangedParams({
     required Future<ConversionParamValueModel> Function(
       ConversionParamValueModel,
       ConversionParamSetValueModel,
     ) map,
     required bool Function(ConversionParamValueModel) paramFilter,
+    bool changeFirstParamOnly = true,
   }) async {
-    int paramIndex = paramValues.indexWhere(paramFilter);
+    List<ConversionParamValueModel> newParamValues = [];
+    bool firstParamFound = true;
 
-    if (paramIndex < 0) {
-      return this;
+    for (var paramValue in paramValues) {
+      ConversionParamValueModel newParamValue;
+      if (paramFilter.call(paramValue) && firstParamFound) {
+        newParamValue = await map.call(paramValue, this);
+        firstParamFound = !changeFirstParamOnly;
+      } else {
+        newParamValue = paramValue;
+      }
+
+      newParamValues.add(newParamValue);
     }
-
-    List<ConversionParamValueModel> newParamValues = [...paramValues];
-    newParamValues[paramIndex] = await map.call(paramValues[paramIndex], this);
 
     return copyWith(
       paramValues: newParamValues,

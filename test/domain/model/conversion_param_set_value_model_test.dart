@@ -101,7 +101,7 @@ void main() {
 
   test('Copy with changed list param value', () async {
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParam(
+      await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(20),
         ),
@@ -124,7 +124,7 @@ void main() {
 
   test('Copy with changed non-list param value', () async {
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParam(
+      await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(40),
         ),
@@ -148,7 +148,7 @@ void main() {
 
   test('Copy with changed unknown param', () async {
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParam(
+      await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(40),
         ),

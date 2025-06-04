@@ -11,6 +11,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final bool hasReachedMax;
   final int pageNum;
   final P? params;
+  final bool fetchedRemotely;
 
   const OutputItemsFetchModel.empty()
       : this(
@@ -27,6 +28,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.params,
+    this.fetchedRemotely = true,
   });
 
   OutputItemsFetchModel<T, P> copyWith({
@@ -36,6 +38,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     bool? hasReachedMax,
     int? pageNum,
     P? params,
+    bool? fetchedRemotely,
   }) {
     return OutputItemsFetchModel(
       items: items ?? this.items,
@@ -44,6 +47,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
       params: params ?? this.params,
+      fetchedRemotely: fetchedRemotely ?? this.fetchedRemotely,
     );
   }
 
@@ -55,7 +59,52 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         hasReachedMax,
         pageNum,
         params,
+        fetchedRemotely,
       ];
+
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveParams = true,
+  }) {
+    var result = {
+      'items': fetchedRemotely ? items.map((e) => e.toJson()).toList() : [],
+      'searchString': searchString,
+      'hasReachedMax': hasReachedMax,
+      'pageNum': pageNum,
+      'params': saveParams ? params?.toJson() : null,
+      'fetchedRemotely': fetchedRemotely,
+    };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
+  }
+
+  static OutputItemsFetchModel<T, P>?
+      fromJson<T extends IdNameSearchableItemModel, P extends ItemsFetchParams>(
+    Map<String, dynamic>? json, {
+    required T Function(Map<String, dynamic>) fromItemJson,
+    required P? Function(Map<String, dynamic>?) fromParamsJson,
+  }) {
+    if (json == null) {
+      return null;
+    }
+
+    bool fetchedRemotely = json['fetchedRemotely'] ?? false;
+
+    return OutputItemsFetchModel(
+      items: json['items'] != null
+          ? (json['items'] as List).map((e) => fromItemJson.call(e)).toList()
+          : [],
+      searchString: json['searchString'],
+      hasReachedMax: json['hasReachedMax'],
+      pageNum: json['pageNum'],
+      params: fromParamsJson.call(json['params']),
+      fetchedRemotely: fetchedRemotely,
+    );
+  }
 
   @override
   String toString() {
@@ -65,6 +114,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         'status: $status, '
         'hasReachedMax: $hasReachedMax, '
         'pageNum: $pageNum, '
-        'params: $params}';
+        'params: $params, '
+        'fetchedRemotely: $fetchedRemotely}';
   }
 }
