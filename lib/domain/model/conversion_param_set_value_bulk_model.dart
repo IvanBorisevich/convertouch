@@ -80,8 +80,8 @@ class ConversionParamSetValueBulkModel extends Equatable {
     ) map,
     bool Function(ConversionParamSetValueModel)? paramSetFilter,
     required bool Function(ConversionParamValueModel) paramFilter,
-    bool changeFirstParamSetOnly = true,
-    bool changeFirstParamOnly = true,
+    bool changeFirstMatchedParamSetOnly = true,
+    bool changeFirstMatchedParamOnly = true,
   }) async {
     List<ConversionParamSetValueModel> newParamSetValues = [];
     bool firstParamSetFound = true;
@@ -97,9 +97,9 @@ class ConversionParamSetValueBulkModel extends Equatable {
         newParamSetValue = await oldParamSetValue.copyWithChangedParams(
           map: map,
           paramFilter: paramFilter,
-          changeFirstParamOnly: changeFirstParamOnly,
+          changeFirstMatchedParamOnly: changeFirstMatchedParamOnly,
         );
-        firstParamSetFound = !changeFirstParamSetOnly;
+        firstParamSetFound = !changeFirstMatchedParamSetOnly;
       } else {
         newParamSetValue = oldParamSetValue;
       }
@@ -112,20 +112,21 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  Future<ConversionParamSetValueBulkModel> copyWithChangedParamByIds({
+  Future<ConversionParamSetValueBulkModel> copyWithChangedParamById({
     required Future<ConversionParamValueModel> Function(
       ConversionParamValueModel,
       ConversionParamSetValueModel,
     ) map,
-    required int paramSetId,
+    int? paramSetId,
     required int paramId,
   }) async {
     return await copyWithChangedParams(
       map: map,
-      paramSetFilter: (p) => p.paramSet.id == paramSetId,
+      paramSetFilter:
+          paramSetId != null ? (p) => p.paramSet.id == paramSetId : null,
       paramFilter: (p) => p.param.id == paramId,
-      changeFirstParamOnly: true,
-      changeFirstParamSetOnly: true,
+      changeFirstMatchedParamOnly: true,
+      changeFirstMatchedParamSetOnly: true,
     );
   }
 

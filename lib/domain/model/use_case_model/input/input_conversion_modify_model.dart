@@ -152,3 +152,24 @@ class ToggleCalculableParamDelta extends ConversionSingleParamModifyDelta {
     required super.paramSetId,
   });
 }
+
+abstract class FetchMoreListValuesOfItemDelta extends ConversionModifyDelta {
+  const FetchMoreListValuesOfItemDelta();
+}
+
+class FetchMoreListValuesOfParamDelta extends FetchMoreListValuesOfItemDelta {
+  final int paramId;
+
+  const FetchMoreListValuesOfParamDelta({
+    required this.paramId,
+  });
+}
+
+class FetchMoreListValuesOfConversionItemDelta
+    extends FetchMoreListValuesOfItemDelta {
+  final int unitId;
+
+  const FetchMoreListValuesOfConversionItemDelta({
+    required this.unitId,
+  });
+}

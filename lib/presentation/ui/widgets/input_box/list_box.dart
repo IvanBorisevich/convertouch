@@ -1,8 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchListBox extends StatefulWidget {
   static const double defaultHeight = 55;
 
-  final List<ListValueModel> values;
+  final OutputListValuesBatch listValuesBatch;
   final ListValueModel? selectedValue;
   final FocusNode? focusNode;
   final String label;
@@ -30,7 +32,7 @@ class ConvertouchListBox extends StatefulWidget {
   final EdgeInsetsGeometry? labelPadding;
 
   const ConvertouchListBox({
-    required this.values,
+    required this.listValuesBatch,
     this.selectedValue,
     this.focusNode,
     this.label = "",
@@ -55,10 +57,11 @@ class ConvertouchListBox extends StatefulWidget {
   State<ConvertouchListBox> createState() => _ConvertouchListBoxState();
 }
 
-class _ConvertouchListBoxState extends State<ConvertouchListBox> {
+class _ConvertouchListBoxState extends State<ConvertouchListBox>
+    with ItemsLazyLoadingMixin {
   static const String hintText = 'N/A';
 
-  final TextEditingController dropdownSearchController =
+  final TextEditingController _dropdownSearchController =
       TextEditingController();
 
   late bool _isDropdownOpen;
@@ -85,7 +88,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
   void dispose() {
     _focusNode.removeListener(_focusListener);
     _defaultFocusNode?.dispose();
-    dropdownSearchController.dispose();
+    _dropdownSearchController.dispose();
     super.dispose();
   }
 
@@ -178,7 +181,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
             ),
           ),
           value: widget.selectedValue,
-          items: widget.values
+          items: widget.listValuesBatch.items
               .map(
                 (value) => DropdownMenuItem(
                   value: value,
@@ -208,7 +211,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
           selectedItemBuilder: (context) {
-            return widget.values.map(
+            return widget.listValuesBatch.items.map(
               (value) {
                 return Container(
                   padding: EdgeInsets.zero,
@@ -260,7 +263,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
           ),
           dropdownSearchData: widget.dropdownSearchVisible
               ? DropdownSearchData(
-                  searchController: dropdownSearchController,
+                  searchController: _dropdownSearchController,
                   searchInnerWidgetHeight: 60,
                   searchInnerWidget: Container(
                     height: 60,
@@ -272,7 +275,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
                     ),
                     child: TextFormField(
                       maxLines: 1,
-                      controller: dropdownSearchController,
+                      controller: _dropdownSearchController,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 17,
@@ -297,7 +300,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox> {
               : null,
           onMenuStateChange: (isOpen) {
             if (!isOpen) {
-              dropdownSearchController.clear();
+              _dropdownSearchController.clear();
             }
 
             setState(() {

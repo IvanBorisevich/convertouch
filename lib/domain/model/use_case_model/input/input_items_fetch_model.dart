@@ -20,6 +20,8 @@ abstract class ItemsFetchParams extends Equatable {
   const ItemsFetchParams();
 
   Map<String, dynamic> toJson();
+
+  bool get fetchRemotely;
 }
 
 class UnitsFetchParams extends ItemsFetchParams {
@@ -44,6 +46,9 @@ class UnitsFetchParams extends ItemsFetchParams {
       'parentItemType': parentItemType.name,
     };
   }
+
+  @override
+  bool get fetchRemotely => false;
 }
 
 class UnitGroupsFetchParams extends ItemsFetchParams {
@@ -51,6 +56,9 @@ class UnitGroupsFetchParams extends ItemsFetchParams {
 
   @override
   List<Object?> get props => [];
+
+  @override
+  bool get fetchRemotely => false;
 
   @override
   Map<String, dynamic> toJson() {
@@ -69,6 +77,9 @@ class ParamSetsFetchParams extends ItemsFetchParams {
   List<Object?> get props => [
         parentItemId,
       ];
+
+  @override
+  bool get fetchRemotely => false;
 
   @override
   Map<String, dynamic> toJson() {
@@ -92,6 +103,9 @@ class ListValuesFetchParams extends ItemsFetchParams {
         listType,
         unit,
       ];
+
+  @override
+  bool get fetchRemotely => false;
 
   @override
   Map<String, dynamic> toJson() {

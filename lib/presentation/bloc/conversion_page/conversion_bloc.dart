@@ -3,14 +3,16 @@ import 'dart:developer';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -48,6 +50,9 @@ class ConversionBloc
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
   final EnrichItemsWithListValuesUseCase enrichItemsWithListValuesUseCase;
+  final FetchMoreListValuesOfParamUseCase fetchMoreListValuesOfParamUseCase;
+  final FetchMoreListValuesOfConvItemUseCase
+      fetchMoreListValuesOfConvItemUseCase;
   final NavigationBloc navigationBloc;
 
   ConversionBloc({
@@ -67,6 +72,8 @@ class ConversionBloc
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
     required this.enrichItemsWithListValuesUseCase,
+    required this.fetchMoreListValuesOfParamUseCase,
+    required this.fetchMoreListValuesOfConvItemUseCase,
     required this.navigationBloc,
   }) : super(
           const ConversionBuilt(
@@ -91,6 +98,8 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
+    on<FetchMoreListValuesOfParam>(_onFetchMoreListValuesOfParam);
+    on<FetchMoreListValuesOfConvItem>(_onFetchMoreListValuesOfConvItem);
   }
 
   _onGetConversion(
@@ -399,9 +408,42 @@ class ConversionBloc
     await _handleAndEmit(result, emit);
   }
 
+  _onFetchMoreListValuesOfParam(
+    FetchMoreListValuesOfParam event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await fetchMoreListValuesOfParamUseCase.execute(
+      InputConversionModifyModel<FetchMoreListValuesOfParamDelta>(
+        delta: FetchMoreListValuesOfParamDelta(
+          paramId: event.paramId,
+        ),
+        conversion: state.conversion,
+        recalculateUnitValues: false,
+      ),
+    );
+    await _handleAndEmit(result, emit, enrichWithListValues: false);
+  }
+
+  _onFetchMoreListValuesOfConvItem(
+    FetchMoreListValuesOfConvItem event,
+    Emitter<ConversionState> emit,
+  ) async {
+    final result = await fetchMoreListValuesOfConvItemUseCase.execute(
+      InputConversionModifyModel<FetchMoreListValuesOfConversionItemDelta>(
+        delta: FetchMoreListValuesOfConversionItemDelta(
+          unitId: event.unitId,
+        ),
+        conversion: state.conversion,
+        recalculateUnitValues: false,
+      ),
+    );
+    await _handleAndEmit(result, emit, enrichWithListValues: false);
+  }
+
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
+    bool enrichWithListValues = true,
     void Function()? onSuccess,
   }) async {
     if (result.isLeft) {
@@ -409,9 +451,11 @@ class ConversionBloc
         ShowException(exception: result.left),
       );
     } else {
-      ConversionModel enrichedConversion = ObjectUtils.tryGet(
-        await enrichItemsWithListValuesUseCase.execute(result.right),
-      );
+      ConversionModel enrichedConversion = enrichWithListValues
+          ? ObjectUtils.tryGet(
+              await enrichItemsWithListValuesUseCase.execute(result.right),
+            )
+          : result.right;
 
       emit(
         ConversionBuilt(

@@ -4,6 +4,8 @@ import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/common/fetch_items_batch_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
+const int listValuesPageSize = 100;
+
 class FetchListValuesUseCase
     extends FetchItemsBatchUseCase<ListValueModel, ListValuesFetchParams> {
   final ListValueRepository listValueRepository;

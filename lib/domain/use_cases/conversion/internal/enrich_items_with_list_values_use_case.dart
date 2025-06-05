@@ -32,7 +32,7 @@ class EnrichItemsWithListValuesUseCase
           continue;
         }
 
-        var listValues = await _fetchListValues(
+        var listValues = await _fetchFirstBatch(
           listType: conversionUnitValue.listType!,
           unit: conversionUnitValue.unit,
         );
@@ -50,7 +50,7 @@ class EnrichItemsWithListValuesUseCase
               (p.listValues == null || p.listValues!.items.isEmpty);
         },
         map: (paramValue, paramSetValue) async {
-          var listValues = await _fetchListValues(
+          var listValues = await _fetchFirstBatch(
             listType: paramValue.listType!,
             unit: paramValue.unit,
           );
@@ -60,7 +60,8 @@ class EnrichItemsWithListValuesUseCase
 
           );
         },
-        changeFirstParamOnly: false,
+        changeFirstMatchedParamSetOnly: false,
+        changeFirstMatchedParamOnly: false,
       );
 
       return Right(
@@ -80,14 +81,14 @@ class EnrichItemsWithListValuesUseCase
     }
   }
 
-  Future<OutputListValuesBatch> _fetchListValues({
+  Future<OutputListValuesBatch> _fetchFirstBatch({
     required ConvertouchListType listType,
     UnitModel? unit,
   }) async {
     return ObjectUtils.tryGet(
       await fetchListValuesUseCase.execute(
         InputItemsFetchModel(
-          pageSize: 100,
+          pageSize: listValuesPageSize,
           pageNum: 0,
           params: ListValuesFetchParams(
             listType: listType,

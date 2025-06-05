@@ -145,10 +145,10 @@ void main() {
             40,
             null,
             listValues: OutputListValuesBatch(
-              items: ObjectUtils.generateNumList(32, 56, step: 2)
+              items: ObjectUtils.generateNumList(32, 50, step: 2)
                   .map((v) => ListValueModel.value(v))
                   .toList(),
-              hasReachedMax: true,
+              hasReachedMax: false,
               pageNum: 1,
             ),
           ),

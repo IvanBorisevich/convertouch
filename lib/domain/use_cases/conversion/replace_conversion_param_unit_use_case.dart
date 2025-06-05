@@ -32,7 +32,7 @@ class ReplaceConversionParamUnitUseCase
       return oldConversionParams;
     }
 
-    return await oldConversionParams.copyWithChangedParamByIds(
+    return await oldConversionParams.copyWithChangedParamById(
       paramSetId: delta.paramSetId,
       paramId: delta.paramId,
       map: (paramValue, paramSetValue) async {

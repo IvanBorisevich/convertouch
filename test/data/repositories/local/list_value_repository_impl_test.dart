@@ -13,13 +13,13 @@ void main() {
     listValueRepository = const ListValueRepositoryImpl();
   });
 
-  group('Enum items fetch', () {
+  group('Enum items batch fetch', () {
     test('Should be fetched', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
         await listValueRepository.search(
           listType: ConvertouchListType.person,
           pageNum: 0,
-          pageSize: 100,
+          pageSize: 10,
         ),
       );
 
@@ -30,13 +30,13 @@ void main() {
     });
   });
 
-  group('Num items fetch', () {
-    test('Items should be fetched without coefficient', () async {
+  group('Num items batch fetch', () {
+    test('All items batch should be fetched without coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
         await listValueRepository.search(
           listType: ConvertouchListType.barbellBarWeight,
           pageNum: 0,
-          pageSize: 100,
+          pageSize: 10,
         ),
       );
 
@@ -46,12 +46,12 @@ void main() {
       ]);
     });
 
-    test('Items should be fetched with coefficient', () async {
+    test('All items batch should be fetched with coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
         await listValueRepository.search(
           listType: ConvertouchListType.barbellBarWeight,
           pageNum: 0,
-          pageSize: 100,
+          pageSize: 10,
           unit: pound,
         ),
       );
@@ -59,6 +59,58 @@ void main() {
       expect(listValues, const [
         ListValueModel.value("22"),
         ListValueModel.value("44"),
+      ]);
+    });
+
+    test('First 5 items should be fetched without coefficient', () async {
+      List<ListValueModel> listValues = ObjectUtils.tryGet(
+        await listValueRepository.search(
+          listType: ConvertouchListType.clothesSizeDe,
+          pageNum: 0,
+          pageSize: 5,
+        ),
+      );
+
+      expect(listValues, const [
+        ListValueModel.value("32"),
+        ListValueModel.value("34"),
+        ListValueModel.value("36"),
+        ListValueModel.value("38"),
+        ListValueModel.value("40"),
+      ]);
+    });
+
+    test('Next 5 items should be fetched without coefficient', () async {
+      List<ListValueModel> listValues = ObjectUtils.tryGet(
+        await listValueRepository.search(
+          listType: ConvertouchListType.clothesSizeDe,
+          pageNum: 1,
+          pageSize: 5,
+        ),
+      );
+
+      expect(listValues, const [
+        ListValueModel.value("42"),
+        ListValueModel.value("44"),
+        ListValueModel.value("46"),
+        ListValueModel.value("48"),
+        ListValueModel.value("50"),
+      ]);
+    });
+
+    test('The rest of items should be fetched without coefficient', () async {
+      List<ListValueModel> listValues = ObjectUtils.tryGet(
+        await listValueRepository.search(
+          listType: ConvertouchListType.clothesSizeDe,
+          pageNum: 2,
+          pageSize: 5,
+        ),
+      );
+
+      expect(listValues, const [
+        ListValueModel.value("52"),
+        ListValueModel.value("54"),
+        ListValueModel.value("56"),
       ]);
     });
   });

@@ -106,7 +106,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
             child: ConvertouchInputBox(
               value: valueStr,
               defaultValue: defaultValueStr,
-              listValues: widget.item.listValues?.items,
+              listValues: widget.item.listValues,
               selectedListValue: widget.item.value?.toListValueModel(),
               itemUnit: widget.item.unitItem,
               readonly: widget.disabled,

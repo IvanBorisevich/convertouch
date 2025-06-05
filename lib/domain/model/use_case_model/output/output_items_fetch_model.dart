@@ -11,7 +11,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final bool hasReachedMax;
   final int pageNum;
   final P? params;
-  final bool fetchedRemotely;
 
   const OutputItemsFetchModel.empty()
       : this(
@@ -28,7 +27,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.params,
-    this.fetchedRemotely = true,
   });
 
   OutputItemsFetchModel<T, P> copyWith({
@@ -47,7 +45,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
       params: params ?? this.params,
-      fetchedRemotely: fetchedRemotely ?? this.fetchedRemotely,
     );
   }
 
@@ -59,7 +56,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         hasReachedMax,
         pageNum,
         params,
-        fetchedRemotely,
       ];
 
   Map<String, dynamic> toJson({
@@ -67,12 +63,13 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     bool saveParams = true,
   }) {
     var result = {
-      'items': fetchedRemotely ? items.map((e) => e.toJson()).toList() : [],
+      'items': params?.fetchRemotely == true
+          ? items.map((e) => e.toJson()).toList()
+          : [],
       'searchString': searchString,
       'hasReachedMax': hasReachedMax,
       'pageNum': pageNum,
       'params': saveParams ? params?.toJson() : null,
-      'fetchedRemotely': fetchedRemotely,
     };
 
     if (removeNulls) {
@@ -92,8 +89,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       return null;
     }
 
-    bool fetchedRemotely = json['fetchedRemotely'] ?? false;
-
     return OutputItemsFetchModel(
       items: json['items'] != null
           ? (json['items'] as List).map((e) => fromItemJson.call(e)).toList()
@@ -102,7 +97,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       hasReachedMax: json['hasReachedMax'],
       pageNum: json['pageNum'],
       params: fromParamsJson.call(json['params']),
-      fetchedRemotely: fetchedRemotely,
     );
   }
 
@@ -114,7 +108,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         'status: $status, '
         'hasReachedMax: $hasReachedMax, '
         'pageNum: $pageNum, '
-        'params: $params, '
-        'fetchedRemotely: $fetchedRemotely}';
+        'params: $params}';
   }
 }

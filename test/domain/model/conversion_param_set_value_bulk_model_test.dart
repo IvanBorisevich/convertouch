@@ -97,7 +97,7 @@ void main() {
 
   test('Copy with changed non-list param value', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(150),
           defaultValue: ValueModel.numeric(2),
@@ -124,7 +124,7 @@ void main() {
 
   test('Copy with changed unknown param', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.numeric(150),
           defaultValue: ValueModel.numeric(2),
@@ -138,7 +138,7 @@ void main() {
 
   test('Copy with changed non-list param unit', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParamByIds(
+      await _clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           unit: meter,
         ),

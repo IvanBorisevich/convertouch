@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -327,4 +328,66 @@ class ToggleCalculableParam extends ModifyConversion {
         paramId,
         paramSetId,
       ];
+}
+
+abstract class FetchMoreListValues extends ConversionEvent {
+  final OutputListValuesBatch? currentBatch;
+
+  const FetchMoreListValues({
+    required this.currentBatch,
+  });
+
+  @override
+  List<Object?> get props => [
+        currentBatch,
+      ];
+
+  @override
+  String toString() {
+    return 'FetchMoreListValues{currentBatch: $currentBatch}';
+  }
+}
+
+class FetchMoreListValuesOfParam extends FetchMoreListValues {
+  final int paramId;
+
+  const FetchMoreListValuesOfParam({
+    required this.paramId,
+    required super.currentBatch,
+  });
+
+  @override
+  List<Object?> get props => [
+        paramId,
+        currentBatch,
+      ];
+
+  @override
+  String toString() {
+    return 'FetchMoreListValuesOfParam{'
+        'paramId: $paramId, '
+        'currentBatch: $currentBatch}';
+  }
+}
+
+class FetchMoreListValuesOfConvItem extends FetchMoreListValues {
+  final int unitId;
+
+  const FetchMoreListValuesOfConvItem({
+    required this.unitId,
+    required super.currentBatch,
+  });
+
+  @override
+  List<Object?> get props => [
+        unitId,
+        currentBatch,
+      ];
+
+  @override
+  String toString() {
+    return 'FetchMoreListValuesOfConvItem{'
+        'unitId: $unitId, '
+        'currentBatch: $currentBatch}';
+  }
 }

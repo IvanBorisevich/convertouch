@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
@@ -69,20 +68,18 @@ void main() {
     });
   });
 
-  group('For conversion param value with list values', () {
+  group(
+      'For conversion param value with list values '
+      '(local list values should not be serialized)', () {
     final barWeightParamVal = ConversionParamValueModel.tuple(
       barWeightParam,
       10,
       null,
       unit: kilogram,
       listValues: const OutputListValuesBatch(
-        items: [
-          ListValueModel.value("10"),
-          ListValueModel.value("20"),
-        ],
+        items: [],
         pageNum: 1,
         hasReachedMax: true,
-        fetchedRemotely: true,
       ),
     );
 
@@ -123,12 +120,8 @@ void main() {
       },
       'calculated': false,
       'listValues': {
-        'items': [
-          {'value': '10'},
-          {'value': '20'}
-        ],
+        'items': [],
         'pageNum': 1,
-        'fetchedRemotely': true,
         'hasReachedMax': true,
       },
     };

@@ -77,7 +77,7 @@ class ConversionParamSetValueModel extends ItemModel {
       ConversionParamSetValueModel,
     ) map,
     required bool Function(ConversionParamValueModel) paramFilter,
-    bool changeFirstParamOnly = true,
+    bool changeFirstMatchedParamOnly = true,
   }) async {
     List<ConversionParamValueModel> newParamValues = [];
     bool firstParamFound = true;
@@ -86,7 +86,7 @@ class ConversionParamSetValueModel extends ItemModel {
       ConversionParamValueModel newParamValue;
       if (paramFilter.call(paramValue) && firstParamFound) {
         newParamValue = await map.call(paramValue, this);
-        firstParamFound = !changeFirstParamOnly;
+        firstParamFound = !changeFirstMatchedParamOnly;
       } else {
         newParamValue = paramValue;
       }

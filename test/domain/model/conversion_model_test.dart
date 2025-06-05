@@ -3,11 +3,9 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_param.dart';
@@ -205,10 +203,7 @@ void main() {
                 "Man",
                 null,
                 listValues: const OutputListValuesBatch(
-                  items: [
-                    ListValueModel.value('Man'),
-                    ListValueModel.value('Woman'),
-                  ],
+                  items: [],
                   pageNum: 1,
                 ),
               ),
@@ -217,10 +212,7 @@ void main() {
                 "Shirt",
                 null,
                 listValues: const OutputListValuesBatch(
-                  items: [
-                    ListValueModel.value('Shirt'),
-                    ListValueModel.value('Trousers'),
-                  ],
+                  items: [],
                   pageNum: 1,
                 ),
               ),
@@ -236,16 +228,7 @@ void main() {
           'S',
           null,
           listValues: const OutputListValuesBatch(
-            items: [
-              ListValueModel.value('S'),
-              ListValueModel.value('M'),
-              ListValueModel.value('L'),
-              ListValueModel.value('LL'),
-              ListValueModel.value('3L'),
-              ListValueModel.value('4L'),
-              ListValueModel.value('5L'),
-              ListValueModel.value('6L'),
-            ],
+            items: [],
             pageNum: 1,
           ),
         ),
@@ -253,10 +236,8 @@ void main() {
           germanyClothSize,
           40,
           null,
-          listValues: OutputListValuesBatch(
-            items: ObjectUtils.generateNumList(32, 56, step: 2)
-                .map((v) => ListValueModel.value(v))
-                .toList(),
+          listValues: const OutputListValuesBatch(
+            items: [],
             pageNum: 1,
           ),
         ),
@@ -311,13 +292,9 @@ void main() {
                   'num': null,
                 },
                 'listValues': {
-                  'items': [
-                    {'value': 'Man'},
-                    {'value': 'Woman'}
-                  ],
+                  'items': [],
                   'hasReachedMax': false,
                   'pageNum': 1,
-                  'fetchedRemotely': true
                 },
               },
               {
@@ -336,13 +313,9 @@ void main() {
                   'num': null,
                 },
                 'listValues': {
-                  'items': [
-                    {'value': 'Shirt'},
-                    {'value': 'Trousers'}
-                  ],
+                  'items': [],
                   'hasReachedMax': false,
                   'pageNum': 1,
-                  'fetchedRemotely': true
                 },
               },
               {
@@ -401,19 +374,9 @@ void main() {
           },
           'value': {'raw': 'S', 'alt': 'S', 'num': null},
           'listValues': {
-            'items': [
-              {'value': 'S'},
-              {'value': 'M'},
-              {'value': 'L'},
-              {'value': 'LL'},
-              {'value': '3L'},
-              {'value': '4L'},
-              {'value': '5L'},
-              {'value': '6L'},
-            ],
+            'items': [],
             'hasReachedMax': false,
             'pageNum': 1,
-            'fetchedRemotely': true
           },
         },
         {
@@ -428,24 +391,9 @@ void main() {
           },
           'value': {'raw': '40', 'alt': '40', 'num': 40.0},
           'listValues': {
-            'items': [
-              {'value': '32'},
-              {'value': '34'},
-              {'value': '36'},
-              {'value': '38'},
-              {'value': '40'},
-              {'value': '42'},
-              {'value': '44'},
-              {'value': '46'},
-              {'value': '48'},
-              {'value': '50'},
-              {'value': '52'},
-              {'value': '54'},
-              {'value': '56'},
-            ],
+            'items': [],
             'hasReachedMax': false,
             'pageNum': 1,
-            'fetchedRemotely': true
           },
         }
       ]

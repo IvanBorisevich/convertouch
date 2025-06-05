@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -19,9 +21,16 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required int pageSize,
     UnitModel? unit,
   }) async {
-    List<ListValueModel>? result = _listValues[listType]?.call(unit: unit);
+    List<ListValueModel>? fullList = _listValues[listType]?.call(unit: unit);
 
-    return Right(result ?? []);
+    if (fullList == null) {
+      return const Right([]);
+    }
+
+    int end = min((pageNum + 1) * pageSize, fullList.length);
+    List<ListValueModel> result = fullList.sublist(pageNum * pageSize, end);
+
+    return Right(result);
   }
 
   @override

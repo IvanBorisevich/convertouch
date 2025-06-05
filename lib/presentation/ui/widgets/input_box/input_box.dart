@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 class ConvertouchInputBox extends StatefulWidget {
   final String? value;
   final String? defaultValue;
-  final List<ListValueModel>? listValues;
+  final OutputListValuesBatch? listValues;
   final ListValueModel? selectedListValue;
   final UnitModel? itemUnit;
   final FocusNode? focusNode;
@@ -67,9 +68,9 @@ class ConvertouchInputBox extends StatefulWidget {
 class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
   @override
   Widget build(BuildContext context) {
-    if (widget.listValues != null && widget.listValues!.isNotEmpty) {
+    if (widget.listValues != null && widget.listValues!.items.isNotEmpty) {
       return ConvertouchListBox(
-        values: widget.listValues!,
+        listValuesBatch: widget.listValues!,
         selectedValue: widget.selectedListValue,
         focusNode: widget.focusNode,
         label: widget.label,
