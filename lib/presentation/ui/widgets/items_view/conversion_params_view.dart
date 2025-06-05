@@ -24,6 +24,7 @@ class ConversionParamsView extends StatelessWidget {
   static const double _tabPanelHeight = 50;
   static const double _footerHeight = 28;
   static const double _paramsSpacing = 10;
+  static const double _tabHeight = 40;
 
   final ConversionParamSetValueBulkModel? params;
   final PanelController panelController;
@@ -109,6 +110,7 @@ class ConversionParamsView extends StatelessWidget {
                                 (index, item) => TabData(
                                   index: index,
                                   title: Tab(
+                                    height: _tabHeight,
                                     child: Text(
                                       item.paramSet.name,
                                       maxLines: 1,
