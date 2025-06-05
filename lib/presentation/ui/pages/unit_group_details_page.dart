@@ -13,7 +13,7 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
-import 'package:convertouch/presentation/ui/widgets/parameter_item.dart';
+import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,7 +69,7 @@ class _ConvertouchUnitGroupDetailsPageState
                   ),
                   child: Column(
                     children: [
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: "Name",
                         value: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
@@ -83,18 +83,18 @@ class _ConvertouchUnitGroupDetailsPageState
                         },
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: "Conversion Type",
                         value: unitGroupDetailsState
                             .draftGroup.conversionType.name,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: "Values Type",
                         value: unitGroupDetailsState.draftGroup.valueType.name,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: "Values Minimum",
                         visible:
                             unitGroupDetailsState.draftGroup.minValue != null,
@@ -102,7 +102,7 @@ class _ConvertouchUnitGroupDetailsPageState
                             .draftGroup.minValue?.altOrRaw,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: "Values Maximum",
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue != null,
@@ -129,7 +129,7 @@ class _ConvertouchUnitGroupDetailsPageState
                                   color: textBoxColor.border.regular,
                                 ),
                               ),
-                              ConvertouchParameterItem(
+                              ConvertouchDetailsItem(
                                 name: "Last Refreshed",
                                 value:
                                     jobState.currentLastRefreshedStr ?? 'Never',

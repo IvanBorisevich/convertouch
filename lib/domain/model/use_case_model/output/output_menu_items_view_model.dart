@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 
 class OutputMenuItemsViewModel {
   final ItemsViewMode currentMode;

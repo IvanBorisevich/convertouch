@@ -61,15 +61,19 @@ class SwitcherColorScheme extends ConvertouchColorScheme {
   });
 }
 
-class SettingItemColorScheme extends ListItemColorScheme {
+class SettingsColorScheme {
+  final ConvertouchColorScheme settingItem;
   final SwitcherColorScheme switcher;
+  final ColorVariation divider;
+  final ColorVariation selectedValueColor;
+  final ConvertouchColorScheme viewTitle;
 
-  const SettingItemColorScheme({
-    super.border,
-    super.background,
-    super.foreground,
-    super.divider,
+  const SettingsColorScheme({
+    this.settingItem = ConvertouchColorScheme.none,
+    this.selectedValueColor = ColorVariation.none,
+    this.divider = ColorVariation.none,
     this.switcher = SwitcherColorScheme.none,
+    this.viewTitle = ConvertouchColorScheme.none,
   });
 }
 

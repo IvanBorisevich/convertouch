@@ -2,7 +2,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchParameterItem extends StatelessWidget {
+class ConvertouchDetailsItem extends StatelessWidget {
   final String name;
   final bool nameVisible;
   final String? value;
@@ -16,7 +16,7 @@ class ConvertouchParameterItem extends StatelessWidget {
   final double bottomMargin;
   final InputBoxColorScheme textBoxColor;
 
-  const ConvertouchParameterItem({
+  const ConvertouchDetailsItem({
     required this.name,
     this.nameVisible = true,
     this.value,

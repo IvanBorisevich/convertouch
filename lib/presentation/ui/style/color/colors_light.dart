@@ -347,19 +347,23 @@ const removalFloatingButtonColorLight = ConvertouchColorScheme(
   foreground: ColorVariation.only(Color(0xFFDEE9FF)),
 );
 
-const settingItemColorLight = SettingItemColorScheme(
-  border: ColorVariation.only(Color(0xFFB1BFE1)),
-  background: ColorVariation(
-    regular: Color(0xFFD5E2FF),
-    selected: Color(0xFFE5ECFF),
-    disabled: Color(0xFFE5ECFF),
+const settingItemColorLight = SettingsColorScheme(
+  viewTitle: ConvertouchColorScheme(
+    foreground: ColorVariation.only(Color(0xFF426F99)),
   ),
-  foreground: ColorVariation(
+  settingItem: ConvertouchColorScheme(
+    background: ColorVariation(
+      regular: Color(0xFFD5E2FF),
+      selected: Color(0xFFE5ECFF),
+      disabled: Color(0xFFE5ECFF),
+    ),
+    foreground: ColorVariation(
+      regular: Color(0xFF426F99),
+    ),
+  ),
+  selectedValueColor: ColorVariation(
     regular: Color(0xFF426F99),
-    selected: Color(0xFF426F99),
-    disabled: Color(0xFF6F9ECB),
   ),
-  divider: ColorVariation.only(Color(0xFFB1BFE1)),
   switcher: SwitcherColorScheme(
     track: ConvertouchColorScheme(
       border: ColorVariation(

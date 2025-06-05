@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
 abstract class AppState extends ConvertouchState {
@@ -24,13 +25,13 @@ class AppStateReady extends AppState {
 
   @override
   List<Object?> get props => [
-    theme,
-    unitGroupsViewMode,
-    unitsViewMode,
-    paramSetsViewMode,
-    changedFromPage,
-    appVersion,
-  ];
+        theme,
+        unitGroupsViewMode,
+        unitsViewMode,
+        paramSetsViewMode,
+        changedFromPage,
+        appVersion,
+      ];
 
   @override
   String toString() {

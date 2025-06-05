@@ -22,7 +22,7 @@ import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
-import 'package:convertouch/presentation/ui/widgets/parameter_item.dart';
+import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -119,13 +119,13 @@ class _ConvertouchUnitDetailsPageState
                                 },
                               ),
                             )
-                          : ConvertouchParameterItem(
+                          : ConvertouchDetailsItem(
                               name: 'Unit Group',
                               value: pageState.details.unitGroup.name,
                               visible: true,
                               textBoxColor: textBoxColor,
                             ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Unit Name',
                         value: pageState.details.savedUnitData.name,
                         valueChangeController: _unitNameTextController,
@@ -139,7 +139,7 @@ class _ConvertouchUnitDetailsPageState
                           );
                         },
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Unit Code',
                         value: pageState.details.savedUnitData.code,
                         valueChangeController: _unitCodeTextController,
@@ -156,12 +156,12 @@ class _ConvertouchUnitDetailsPageState
                           );
                         },
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Value Type',
                         value: pageState.details.draftUnitData.valueType.name,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Min Value',
                         value:
                             pageState.details.savedUnitData.minValue?.altOrRaw,
@@ -169,7 +169,7 @@ class _ConvertouchUnitDetailsPageState
                             pageState.details.savedUnitData.minValue != null,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Max Value',
                         value:
                             pageState.details.savedUnitData.maxValue?.altOrRaw,
@@ -177,7 +177,7 @@ class _ConvertouchUnitDetailsPageState
                             pageState.details.savedUnitData.maxValue != null,
                         textBoxColor: textBoxColor,
                       ),
-                      ConvertouchParameterItem(
+                      ConvertouchDetailsItem(
                         name: 'Conversion Rule',
                         nameVisible: pageState.details.conversionRule
                                     .readOnlyDescription !=

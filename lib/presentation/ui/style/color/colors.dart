@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_dark.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_light.dart';
 import 'package:flutter/material.dart';
