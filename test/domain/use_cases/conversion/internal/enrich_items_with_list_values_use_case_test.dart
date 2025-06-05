@@ -144,11 +144,9 @@ void main() {
             germanyClothSize,
             40,
             null,
-            listValues: OutputListValuesBatch(
-              items: ObjectUtils.generateNumList(32, 50, step: 2)
-                  .map((v) => ListValueModel.value(v))
-                  .toList(),
-              hasReachedMax: false,
+            listValues: const OutputListValuesBatch(
+              items: [],
+              hasReachedMax: true,
               pageNum: 1,
             ),
           ),
