@@ -6,7 +6,7 @@ import 'package:convertouch/presentation/bloc/common/app/app_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
+class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppStateReady> {
   AppBloc()
       : super(
           const AppStateReady(
@@ -14,6 +14,8 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
             unitGroupsViewMode: ItemsViewMode.grid,
             unitsViewMode: ItemsViewMode.grid,
             paramSetsViewMode: ItemsViewMode.grid,
+            unitTapAction: UnitTapAction.selectReplacingUnit,
+            recalculationOnUnitChange: RecalculationOnUnitChange.otherValues,
             appVersion: unknownAppVersion,
           ),
         ) {
@@ -40,9 +42,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
 
   Future<String> _getAppVersion() async {
     final info = await PackageInfo.fromPlatform();
-
     String buildNum = info.buildNumber.isNotEmpty ? "+${info.buildNumber}" : "";
-
     return "${info.version}$buildNum";
   }
 
@@ -57,10 +57,10 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
     ChangeSetting event,
     Emitter<AppState> emit,
   ) async {
-    Map<String, dynamic> currentStateMap = toJson(state);
+    Map<String, dynamic> currentStateMap = state.toJson();
 
     currentStateMap.update(
-      event.settingKey,
+      event.settingKey.name,
       (value) => event.settingValue,
       ifAbsent: () => event.settingValue,
     );
@@ -71,34 +71,16 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppState> {
       ifAbsent: () => event.fromPage,
     );
 
-    emit(fromJson(currentStateMap));
+    emit(AppStateReady.fromJson(currentStateMap));
   }
 
   @override
-  AppState fromJson(Map<String, dynamic> json) {
-    return AppStateReady(
-      theme: ConvertouchUITheme.valueOf(json[SettingKey.theme.name]),
-      unitGroupsViewMode:
-          ItemsViewMode.valueOf(json[SettingKey.unitGroupsViewMode.name]),
-      unitsViewMode: ItemsViewMode.valueOf(json[SettingKey.unitsViewMode.name]),
-      paramSetsViewMode:
-          ItemsViewMode.valueOf(json[SettingKey.paramSetsViewMode.name]),
-      appVersion: json[SettingKey.appVersion.name] ?? unknownAppVersion,
-      changedFromPage: json['changedFromPage'],
-    );
+  AppStateReady fromJson(Map<String, dynamic> json) {
+    return AppStateReady.fromJson(json);
   }
 
   @override
-  Map<String, dynamic> toJson(AppState state) {
-    if (state is AppStateReady) {
-      return {
-        SettingKey.theme.name: state.theme.value,
-        SettingKey.unitGroupsViewMode.name: state.unitGroupsViewMode.value,
-        SettingKey.unitsViewMode.name: state.unitsViewMode.value,
-        SettingKey.paramSetsViewMode.name: state.paramSetsViewMode.value,
-        SettingKey.appVersion.name: state.appVersion,
-      };
-    }
-    return const {};
+  Map<String, dynamic> toJson(AppStateReady state) {
+    return state.toJson();
   }
 }

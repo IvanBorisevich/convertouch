@@ -118,7 +118,7 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                 onPressed: () {
                   BlocProvider.of<AppBloc>(context).add(
                     ChangeSetting(
-                      settingKey: widget.viewModeSettingKey.name,
+                      settingKey: widget.viewModeSettingKey,
                       settingValue: pageViewMode.next.value,
                       fromPage: widget.pageName,
                     ),

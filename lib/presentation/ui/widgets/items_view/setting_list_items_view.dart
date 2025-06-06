@@ -6,7 +6,7 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_list
 import 'package:flutter/material.dart';
 
 class ConvertouchSettingListItemsView<T> extends StatelessWidget {
-  final String title;
+  final String? title;
   final List<T> values;
   final T? selectedValue;
   final String Function(T) itemTitleMap;
@@ -17,7 +17,7 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingListItemsView({
-    required this.title,
+    this.title,
     this.values = const [],
     this.selectedValue,
     required this.itemTitleMap,
@@ -35,21 +35,22 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
-          height: titleHeight,
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(
-            horizontal: titleHorizontalPadding,
-            vertical: titleVerticalPadding,
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              color: colors.viewTitle.foreground.regular,
-              fontWeight: FontWeight.w700,
+        if (title != null)
+          Container(
+            height: titleHeight,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.symmetric(
+              horizontal: titleHorizontalPadding,
+              vertical: titleVerticalPadding,
+            ),
+            child: Text(
+              title!,
+              style: TextStyle(
+                color: colors.viewTitle.foreground.regular,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-        ),
         ...values.mapIndexed(
           (index, value) {
             return Column(
@@ -62,10 +63,15 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
                   theme: theme,
                 ),
                 if (index != values.length - 1)
-                  const Divider(
+                  Container(
                     height: 1,
-                    thickness: 1,
-                    color: Colors.transparent,
+                    padding: const EdgeInsets.only(left: 48),
+                    decoration: BoxDecoration(
+                      color: colors.settingItem.background.regular,
+                    ),
+                    child: Divider(
+                      color: colors.divider.regular,
+                    ),
                   ),
               ],
             );

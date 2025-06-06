@@ -5,6 +5,8 @@ enum SettingKey {
   unitGroupsViewMode,
   unitsViewMode,
   paramSetsViewMode,
+  conversionUnitTapAction,
+  recalculationOnUnitChange,
   appVersion,
 }
 
@@ -45,19 +47,31 @@ enum ItemsViewMode {
 }
 
 enum UnitTapAction {
-  showUnitInfo("Show Unit Info"),
-  selectReplacingUnit("Select Replacing Unit");
+  selectReplacingUnit(1, "Select Replacing Unit"),
+  showUnitInfo(2, "Show Unit Info");
 
+  final int id;
   final String value;
 
-  const UnitTapAction(this.value);
+  const UnitTapAction(this.id, this.value);
+
+  static UnitTapAction valueOf(int? id) {
+    return values.firstWhereOrNull((element) => id == element.id) ??
+        selectReplacingUnit;
+  }
 }
 
-enum RecalculationOnUnitReplace {
-  currentValue("Recalculate Current Value"),
-  otherValues("Recalculate Other Values");
+enum RecalculationOnUnitChange {
+  otherValues(1, "Recalculate Other Values"),
+  currentValue(2, "Recalculate Current Value");
 
+  final int id;
   final String value;
 
-  const RecalculationOnUnitReplace(this.value);
+  const RecalculationOnUnitChange(this.id, this.value);
+
+  static RecalculationOnUnitChange valueOf(int? id) {
+    return values.firstWhereOrNull((element) => id == element.id) ??
+        otherValues;
+  }
 }

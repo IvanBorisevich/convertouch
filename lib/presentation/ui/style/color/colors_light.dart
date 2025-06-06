@@ -353,16 +353,17 @@ const settingItemColorLight = SettingsColorScheme(
   ),
   settingItem: ConvertouchColorScheme(
     background: ColorVariation(
-      regular: Color(0xFFD5E2FF),
+      regular: Color(0xFFDBE6FF),
       selected: Color(0xFFE5ECFF),
       disabled: Color(0xFFE5ECFF),
     ),
     foreground: ColorVariation(
-      regular: Color(0xFF426F99),
+      regular: Color(0xFF345F87),
     ),
   ),
-  selectedValueColor: ColorVariation(
-    regular: Color(0xFF426F99),
+  divider: ColorVariation.only(Color(0xffe8efff)),
+  selectedValue: ColorVariation(
+    regular: Color(0xFF517FAA),
   ),
   switcher: SwitcherColorScheme(
     track: ConvertouchColorScheme(

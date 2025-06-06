@@ -362,7 +362,8 @@ const settingItemColorDark = SettingsColorScheme(
       regular: Color(0xFFA5CCF1),
     ),
   ),
-  selectedValueColor: ColorVariation(
+  divider: ColorVariation.only(Color(0xFF363D48)),
+  selectedValue: ColorVariation(
     regular: Color(0xFFCCD7E0),
   ),
   switcher: SwitcherColorScheme(

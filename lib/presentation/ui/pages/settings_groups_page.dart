@@ -26,14 +26,14 @@ class ConvertouchSettingsPage extends StatelessWidget {
               children: [
                 ConvertouchSettingListItemsView<ConvertouchUITheme>(
                   title: "Theme",
-                  theme: appState.theme,
                   itemTitleMap: (v) => v.value,
                   values: ConvertouchUITheme.values,
                   selectedValue: appState.theme,
+                  theme: appState.theme,
                   onSelect: (newValue) {
                     BlocProvider.of<AppBloc>(context).add(
                       ChangeSetting(
-                        settingKey: SettingKey.theme.name,
+                        settingKey: SettingKey.theme,
                         settingValue: newValue.value,
                       ),
                     );
@@ -44,19 +44,33 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   settings: [
                     ConvertouchSettingItem<UnitTapAction>(
                       title: "Unit Tap Action",
-                      value: UnitTapAction.selectReplacingUnit,
+                      value: appState.unitTapAction,
                       valueMap: (v) => v.value,
-                      onTap: () {},
-                      selectedValuePosition: SelectedValuePosition.bottom,
+                      possibleValues: UnitTapAction.values,
                       theme: appState.theme,
+                      onSelect: (newValue) {
+                        BlocProvider.of<AppBloc>(context).add(
+                          ChangeSetting(
+                            settingKey: SettingKey.conversionUnitTapAction,
+                            settingValue: newValue.id,
+                          ),
+                        );
+                      }
                     ),
-                    ConvertouchSettingItem<RecalculationOnUnitReplace>(
-                      title: "Recalculation On Unit Replace",
-                      value: RecalculationOnUnitReplace.otherValues,
+                    ConvertouchSettingItem<RecalculationOnUnitChange>(
+                      title: "Recalculation On Unit Change",
+                      value: appState.recalculationOnUnitChange,
                       valueMap: (v) => v.value,
-                      onTap: () {},
-                      selectedValuePosition: SelectedValuePosition.bottom,
+                      possibleValues: RecalculationOnUnitChange.values,
                       theme: appState.theme,
+                        onSelect: (newValue) {
+                          BlocProvider.of<AppBloc>(context).add(
+                            ChangeSetting(
+                              settingKey: SettingKey.recalculationOnUnitChange,
+                              settingValue: newValue.id,
+                            ),
+                          );
+                        }
                     )
                   ],
                   theme: appState.theme,
@@ -68,7 +82,6 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ConvertouchSettingItem(
                       title: "App Version",
                       value: appState.appVersion,
-                      selectedValuePosition: SelectedValuePosition.bottom,
                       onTap: () {
                         showAboutDialog(
                           context: context,

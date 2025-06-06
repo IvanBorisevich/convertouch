@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class AppEvent extends ConvertouchEvent {
@@ -23,9 +24,9 @@ class GetAppSettings extends AppEvent {
   }
 }
 
-class ChangeSetting<T> extends AppEvent {
-  final String settingKey;
-  final T settingValue;
+class ChangeSetting extends AppEvent {
+  final SettingKey settingKey;
+  final dynamic settingValue;
   final PageName? fromPage;
 
   const ChangeSetting({

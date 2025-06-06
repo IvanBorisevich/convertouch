@@ -14,7 +14,10 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
   final String Function(T)? valueMap;
   final bool switched;
   final SelectedValuePosition selectedValuePosition;
-  final void Function() onTap;
+  final void Function()? onTap;
+  final List<T> possibleValues;
+  final bool possibleValuesInDialog;
+  final void Function(T)? onSelect;
   final double height;
   final double horizontalPadding;
   final double verticalPadding;
@@ -25,8 +28,11 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     required this.value,
     this.valueMap,
     this.switched = false,
-    this.selectedValuePosition = SelectedValuePosition.right,
-    required this.onTap,
+    this.selectedValuePosition = SelectedValuePosition.bottom,
+    this.onTap,
+    this.possibleValues = const [],
+    this.possibleValuesInDialog = true,
+    this.onSelect,
     this.height = 60,
     this.horizontalPadding = 17,
     this.verticalPadding = 7,
@@ -41,7 +47,13 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     bool isSwitch = T == bool;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (possibleValues.isNotEmpty && possibleValuesInDialog) {
+          _showRadioDialog(context, colors: colors);
+        } else {
+          onTap?.call();
+        }
+      },
       child: Container(
         height: height,
         padding: EdgeInsets.symmetric(
@@ -126,7 +138,7 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
         valueMap?.call(value) ?? value.toString(),
         style: TextStyle(
           fontSize: fontSize,
-          color: colors.selectedValueColor.regular,
+          color: colors.selectedValue.regular,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -170,9 +182,91 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
         }
         return colors.switcher.track.background.regular;
       }),
-      onChanged: (bool newValue) {
-        onTap.call();
-      },
+      onChanged: null,
     );
+  }
+
+  void _showRadioDialog(
+    BuildContext context, {
+    required SettingsColorScheme colors,
+  }) {
+    T selectedValue = value;
+
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setStateDialog) {
+            return AlertDialog(
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: colors.settingItem.foreground.regular,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0,
+                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              backgroundColor: colors.settingItem.background.regular,
+              content: ListView.builder(
+                shrinkWrap: true,
+                itemCount: possibleValues.length,
+                itemBuilder: (context, index) {
+                  final itemValue = possibleValues[index];
+                  return RadioListTile<T>.adaptive(
+                    title: Text(
+                      valueMap?.call(itemValue) ?? itemValue.toString(),
+                      style: TextStyle(
+                        color: colors.settingItem.foreground.regular,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                    visualDensity:
+                        const VisualDensity(vertical: -4, horizontal: -4),
+                    fillColor: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return colors.settingItem.foreground.selected;
+                      }
+                      if (states.contains(WidgetState.disabled)) {
+                        return colors.settingItem.foreground.disabled;
+                      }
+                      return colors.settingItem.foreground.regular;
+                    }),
+                    value: itemValue,
+                    groupValue: selectedValue,
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        onSelect?.call(newValue);
+                        setStateDialog(() {
+                          selectedValue = newValue;
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  );
+                },
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: colors.selectedValue.regular,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((returnedValue) {});
   }
 }

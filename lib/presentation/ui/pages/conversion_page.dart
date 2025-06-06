@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
@@ -13,6 +14,8 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -52,6 +55,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
   Widget build(BuildContext context) {
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
+    final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final paramSetsBloc = BlocProvider.of<ConversionParamSetsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
@@ -260,31 +264,44 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                 conversion.convertedUnitValues,
                                 sourceUnitId: conversion.srcUnitValue?.unit.id,
                                 onUnitItemTap: (item) {
-                                  unitsBloc.add(
-                                    FetchItems(
-                                      params: UnitsFetchParams(
-                                        parentItemId: conversion.unitGroup.id,
-                                        parentItemType: ItemType.unitGroup,
+                                  if (appState.unitTapAction ==
+                                      UnitTapAction.selectReplacingUnit) {
+                                    unitsBloc.add(
+                                      FetchItems(
+                                        params: UnitsFetchParams(
+                                          parentItemId: conversion.unitGroup.id,
+                                          parentItemType: ItemType.unitGroup,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
 
-                                  unitsSelectionBloc.add(
-                                    StartItemSelection(
-                                      previouslySelectedId: item.unit.id,
-                                      excludedIds: conversion
-                                          .convertedUnitValues
-                                          .map((e) => e.unit.id)
-                                          .whereNot((id) => id == item.unit.id)
-                                          .toList(),
-                                    ),
-                                  );
+                                    unitsSelectionBloc.add(
+                                      StartItemSelection(
+                                        previouslySelectedId: item.unit.id,
+                                        excludedIds: conversion
+                                            .convertedUnitValues
+                                            .map((e) => e.unit.id)
+                                            .whereNot(
+                                                (id) => id == item.unit.id)
+                                            .toList(),
+                                      ),
+                                    );
 
-                                  navigationBloc.add(
-                                    const NavigateToPage(
-                                      pageName: PageName.unitsPageForConversion,
-                                    ),
-                                  );
+                                    navigationBloc.add(
+                                      const NavigateToPage(
+                                        pageName:
+                                            PageName.unitsPageForConversion,
+                                      ),
+                                    );
+                                  } else if (appState.unitTapAction ==
+                                      UnitTapAction.showUnitInfo) {
+                                    unitDetailsBloc.add(
+                                      GetExistingUnitDetails(
+                                        unit: item.unit,
+                                        unitGroup: unitGroup,
+                                      ),
+                                    );
+                                  }
                                 },
                                 onTextValueChanged: (item, value) {
                                   conversionBloc.add(
