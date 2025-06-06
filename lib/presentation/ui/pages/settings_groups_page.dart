@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
@@ -43,26 +42,25 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   title: "Conversion Page",
                   settings: [
                     ConvertouchSettingItem<UnitTapAction>(
-                      title: "Unit Tap Action",
-                      value: appState.unitTapAction,
-                      valueMap: (v) => v.value,
-                      possibleValues: UnitTapAction.values,
-                      theme: appState.theme,
-                      onSelect: (newValue) {
-                        BlocProvider.of<AppBloc>(context).add(
-                          ChangeSetting(
-                            settingKey: SettingKey.conversionUnitTapAction,
-                            settingValue: newValue.id,
-                          ),
-                        );
-                      }
-                    ),
+                        title: "Unit Tap Action",
+                        value: appState.unitTapAction,
+                        valueMap: (v) => v.value,
+                        possibleValues: UnitTapAction.values,
+                        theme: appState.theme,
+                        onSelect: (newValue) {
+                          BlocProvider.of<AppBloc>(context).add(
+                            ChangeSetting(
+                              settingKey: SettingKey.conversionUnitTapAction,
+                              settingValue: newValue.id,
+                            ),
+                          );
+                        }),
                     ConvertouchSettingItem<RecalculationOnUnitChange>(
-                      title: "Recalculation On Unit Change",
-                      value: appState.recalculationOnUnitChange,
-                      valueMap: (v) => v.value,
-                      possibleValues: RecalculationOnUnitChange.values,
-                      theme: appState.theme,
+                        title: "Recalculation On Unit Change",
+                        value: appState.recalculationOnUnitChange,
+                        valueMap: (v) => v.value,
+                        possibleValues: RecalculationOnUnitChange.values,
+                        theme: appState.theme,
                         onSelect: (newValue) {
                           BlocProvider.of<AppBloc>(context).add(
                             ChangeSetting(
@@ -70,8 +68,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                               settingValue: newValue.id,
                             ),
                           );
-                        }
-                    )
+                        })
                   ],
                   theme: appState.theme,
                 ),
@@ -82,14 +79,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ConvertouchSettingItem(
                       title: "App Version",
                       value: appState.appVersion,
-                      onTap: () {
-                        showAboutDialog(
-                          context: context,
-                          applicationName: appName,
-                          applicationVersion: "Version: ${appState.appVersion}",
-                          applicationLegalese: "©2025, Made by johnbor7",
-                        );
-                      },
+                      showAboutDialog: true,
                       theme: appState.theme,
                     ),
                   ],

@@ -8,6 +8,17 @@ class IconUtils {
 
   const IconUtils._();
 
+  static Image getImage(
+    String imageName, {
+    double size = defaultIconSize,
+  }) {
+    return Image.asset(
+      "$iconAssetsPathPrefix/$imageName",
+      width: size,
+      height: size,
+    );
+  }
+
   static ImageIcon getIcon(
     String iconName, {
     Color? color,
@@ -26,6 +37,7 @@ class IconUtils {
     String iconName, {
     Color color = Colors.black,
     AlignmentGeometry alignment = Alignment.center,
+    double size = defaultIconSize,
   }) {
     return SvgPicture.asset(
       "$iconAssetsPathPrefix/$iconName",
@@ -34,7 +46,8 @@ class IconUtils {
         BlendMode.srcIn,
       ),
       alignment: alignment,
-      width: defaultIconSize,
+      width: size,
+      height: size,
     );
   }
 

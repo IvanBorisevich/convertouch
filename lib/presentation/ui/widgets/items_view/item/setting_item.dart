@@ -1,6 +1,8 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
 
 enum SelectedValuePosition {
@@ -13,6 +15,7 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
   final T value;
   final String Function(T)? valueMap;
   final bool switched;
+  final bool showAboutDialog;
   final SelectedValuePosition selectedValuePosition;
   final void Function()? onTap;
   final List<T> possibleValues;
@@ -28,6 +31,7 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     required this.value,
     this.valueMap,
     this.switched = false,
+    this.showAboutDialog = false,
     this.selectedValuePosition = SelectedValuePosition.bottom,
     this.onTap,
     this.possibleValues = const [],
@@ -48,7 +52,15 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (possibleValues.isNotEmpty && possibleValuesInDialog) {
+        if (showAboutDialog) {
+          _showAboutDialog(
+            context,
+            colors: colors,
+            applicationName: appName,
+            applicationVersion: valueMap?.call(value) ?? value.toString(),
+            applicationLegalese: appLegalese,
+          );
+        } else if (possibleValues.isNotEmpty && possibleValuesInDialog) {
           _showRadioDialog(context, colors: colors);
         } else {
           onTap?.call();
@@ -256,6 +268,120 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
                 TextButton(
                   child: Text(
                     'Cancel',
+                    style: TextStyle(
+                      color: colors.selectedValue.regular,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((returnedValue) {});
+  }
+
+  void _showAboutDialog(
+    BuildContext context, {
+    required SettingsColorScheme colors,
+    required String applicationName,
+    required String applicationVersion,
+    required String applicationLegalese,
+  }) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setStateDialog) {
+            return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              backgroundColor: colors.settingItem.background.regular,
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 2,
+                    ),
+                    child: IconUtils.getImage(
+                      "app-logo.png",
+                      size: 35,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        applicationName,
+                        style: TextStyle(
+                          fontSize: 21,
+                          color: colors.settingItem.foreground.regular,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      Text(
+                        applicationVersion,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.settingItem.foreground.regular,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Text(
+                          applicationLegalese,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colors.settingItem.foreground.regular,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              titlePadding: const EdgeInsets.only(
+                top: 10,
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              actionsPadding: const EdgeInsets.only(
+                right: 10,
+                bottom: 5,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'View Licenses',
+                    style: TextStyle(
+                      color: colors.selectedValue.regular,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () {
+                    showLicensePage(
+                      context: context,
+                      applicationName: applicationName,
+                      applicationVersion: applicationVersion,
+                      applicationLegalese: applicationLegalese,
+                    );
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Close',
                     style: TextStyle(
                       color: colors.selectedValue.regular,
                       fontWeight: FontWeight.w600,
