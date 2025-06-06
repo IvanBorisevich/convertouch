@@ -198,10 +198,13 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
             return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
               title: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 18,
                   color: colors.settingItem.foreground.regular,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0,

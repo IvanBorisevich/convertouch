@@ -19,7 +19,6 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,22 +107,9 @@ class ConvertouchApp extends StatelessWidget {
       child: DismissKeyboard(
         child: appBlocBuilder(
           builderFunc: (appState) {
-            final statusBarColor =
-                pageColors[appState.theme]!.appBar.background.regular;
-            final systemNavbarColor =
-                pageColors[appState.theme]!.bottomBar.background.regular;
-            Brightness iconBrightness =
-                appState.theme == ConvertouchUITheme.dark
-                    ? Brightness.light
-                    : Brightness.dark;
-
             SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
-                statusBarColor: statusBarColor,
-                statusBarIconBrightness: iconBrightness,
-                systemNavigationBarColor: systemNavbarColor,
-                systemNavigationBarIconBrightness: iconBrightness,
-                systemNavigationBarDividerColor: systemNavbarColor,
+              buildSystemUiOverlayStyle(
+                theme: appState.theme,
               ),
             );
 

@@ -26,6 +26,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
@@ -301,3 +302,27 @@ final Map<ConvertouchSysAction, void Function()> _snackBarActions = {
     );
   },
 };
+
+SystemUiOverlayStyle buildSystemUiOverlayStyle({
+  required ConvertouchUITheme theme,
+  bool dialogOpened = false,
+}) {
+  final statusUpBarColor = dialogOpened
+      ? pageColors[theme]!.appBar.background.regular.withValues(alpha: 0.3)
+      : pageColors[theme]!.appBar.background.regular;
+
+  final systemBottomNavbarColor = dialogOpened
+      ? pageColors[theme]!.bottomBar.background.regular.withValues(alpha: 0.3)
+      : pageColors[theme]!.bottomBar.background.regular;
+
+  Brightness iconBrightness =
+      theme == ConvertouchUITheme.dark ? Brightness.light : Brightness.dark;
+
+  return SystemUiOverlayStyle(
+    statusBarColor: statusUpBarColor,
+    statusBarIconBrightness: iconBrightness,
+    systemNavigationBarColor: systemBottomNavbarColor,
+    systemNavigationBarIconBrightness: iconBrightness,
+    systemNavigationBarDividerColor: Colors.transparent,
+  );
+}
