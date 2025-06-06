@@ -39,6 +39,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
       final modifiedConvertedValues = await newConvertedUnitValues(
         oldConvertedUnitValues: oldConvertedUnitValues,
+        unitGroup: modifiedGroup,
+        params: input.conversion.params?.active,
         delta: input.delta,
       );
 
@@ -90,7 +92,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         params: newParams,
       );
 
-      if (input.recalculateUnitValues) {
+      if (input.delta.recalculateUnitValues) {
         var convertedUnitValues = _calculateUnitValues(
           InputConversionModel(
             unitGroup: modifiedGroup,
@@ -162,6 +164,8 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
     required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
+    required UnitGroupModel unitGroup,
+    required ConversionParamSetValueModel? params,
     required D delta,
   }) async {
     return oldConvertedUnitValues;

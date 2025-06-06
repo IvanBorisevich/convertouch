@@ -11,6 +11,8 @@ class RemoveConversionItemsUseCase
   @override
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
     required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
+    required UnitGroupModel unitGroup,
+    required ConversionParamSetValueModel? params,
     required RemoveConversionItemsDelta delta,
   }) async {
     oldConvertedUnitValues.removeWhere(

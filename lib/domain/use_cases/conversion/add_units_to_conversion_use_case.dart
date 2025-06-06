@@ -22,6 +22,8 @@ class AddUnitsToConversionUseCase
   @override
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
     required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
+    required UnitGroupModel unitGroup,
+    required ConversionParamSetValueModel? params,
     required AddUnitsToConversionDelta delta,
   }) async {
     List<int> newUnitIds = delta.unitIds

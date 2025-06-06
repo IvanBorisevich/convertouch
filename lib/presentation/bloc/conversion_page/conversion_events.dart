@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -181,23 +182,27 @@ class RemoveConversionItems extends ModifyConversion {
 class ReplaceConversionItemUnit extends ModifyConversion {
   final UnitModel newUnit;
   final int oldUnitId;
+  final RecalculationOnUnitChange recalculationMode;
 
   const ReplaceConversionItemUnit({
     required this.newUnit,
     required this.oldUnitId,
+    required this.recalculationMode,
   });
 
   @override
   List<Object?> get props => [
         newUnit,
         oldUnitId,
+        recalculationMode,
       ];
 
   @override
   String toString() {
     return 'ReplaceConversionItemUnit{'
         'newUnit: $newUnit, '
-        'oldUnitId: $oldUnitId}';
+        'oldUnitId: $oldUnitId, '
+        'recalculationMode: $recalculationMode}';
   }
 }
 

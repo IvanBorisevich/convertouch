@@ -195,7 +195,6 @@ class ConversionBloc
           editedGroup: event.editedGroup,
         ),
         conversion: state.conversion,
-        recalculateUnitValues: false,
       ),
     );
 
@@ -279,7 +278,6 @@ class ConversionBloc
           unitIds: event.unitIds,
         ),
         conversion: state.conversion,
-        recalculateUnitValues: false,
       ),
     );
     await _handleAndEmit(result, emit);
@@ -294,6 +292,7 @@ class ConversionBloc
         delta: ReplaceConversionItemUnitDelta(
           newUnit: event.newUnit,
           oldUnitId: event.oldUnitId,
+          recalculationMode: event.recalculationMode,
         ),
         conversion: state.conversion,
       ),
@@ -418,7 +417,6 @@ class ConversionBloc
           paramId: event.paramId,
         ),
         conversion: state.conversion,
-        recalculateUnitValues: false,
       ),
     );
     await _handleAndEmit(result, emit, enrichWithListValues: false);
@@ -434,7 +432,6 @@ class ConversionBloc
           unitId: event.unitId,
         ),
         conversion: state.conversion,
-        recalculateUnitValues: false,
       ),
     );
     await _handleAndEmit(result, emit, enrichWithListValues: false);

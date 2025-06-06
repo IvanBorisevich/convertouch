@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -5,17 +6,17 @@ import 'package:convertouch/domain/model/unit_model.dart';
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
   final T delta;
-  final bool recalculateUnitValues;
 
   const InputConversionModifyModel({
     required this.conversion,
     required this.delta,
-    this.recalculateUnitValues = true,
   });
 }
 
 abstract class ConversionModifyDelta {
   const ConversionModifyDelta();
+
+  bool get recalculateUnitValues => true;
 }
 
 abstract class ConversionUnitValuesModifyDelta extends ConversionModifyDelta {
@@ -51,6 +52,9 @@ class EditConversionGroupDelta extends ConversionModifyDelta {
   const EditConversionGroupDelta({
     required this.editedGroup,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
 class EditConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
@@ -88,16 +92,25 @@ class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
   const RemoveConversionItemsDelta({
     required this.unitIds,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
 class ReplaceConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
   final UnitModel newUnit;
   final int oldUnitId;
+  final RecalculationOnUnitChange recalculationMode;
 
   const ReplaceConversionItemUnitDelta({
     required this.newUnit,
     required this.oldUnitId,
+    required this.recalculationMode,
   });
+
+  @override
+  bool get recalculateUnitValues =>
+      recalculationMode == RecalculationOnUnitChange.otherValues;
 }
 
 class AddParamSetsDelta extends ConversionParamsModifyDelta {
@@ -163,6 +176,9 @@ class FetchMoreListValuesOfParamDelta extends FetchMoreListValuesOfItemDelta {
   const FetchMoreListValuesOfParamDelta({
     required this.paramId,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
 class FetchMoreListValuesOfConversionItemDelta
@@ -172,4 +188,7 @@ class FetchMoreListValuesOfConversionItemDelta
   const FetchMoreListValuesOfConversionItemDelta({
     required this.unitId,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }

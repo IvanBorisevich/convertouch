@@ -18,7 +18,6 @@ Future<void> testCase<T extends ConversionModifyDelta>({
   ConversionUnitValueModel? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
   required List<ConversionUnitValueModel> expectedUnitValues,
-  bool recalculateUnitValues = true,
 }) async {
   ConversionModel actual = ObjectUtils.tryGet(
     await useCase.execute(
@@ -30,7 +29,6 @@ Future<void> testCase<T extends ConversionModifyDelta>({
           params: currentParams,
         ),
         delta: delta,
-        recalculateUnitValues: recalculateUnitValues,
       ),
     ),
   );

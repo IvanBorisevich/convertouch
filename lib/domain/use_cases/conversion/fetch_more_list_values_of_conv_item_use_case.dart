@@ -19,6 +19,8 @@ class FetchMoreListValuesOfConvItemUseCase
   @override
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
     required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
+    required UnitGroupModel unitGroup,
+    required ConversionParamSetValueModel? params,
     required FetchMoreListValuesOfConversionItemDelta delta,
   }) async {
     ConversionUnitValueModel unitValue = oldConvertedUnitValues[delta.unitId]!;
