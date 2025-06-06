@@ -363,7 +363,7 @@ const settingItemColorDark = SettingsColorScheme(
     ),
   ),
   selectedValueColor: ColorVariation(
-    regular: Color(0xFFA5CCF1),
+    regular: Color(0xFFCCD7E0),
   ),
   switcher: SwitcherColorScheme(
     track: ConvertouchColorScheme(

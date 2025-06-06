@@ -43,3 +43,21 @@ enum ItemsViewMode {
     }
   }
 }
+
+enum UnitTapAction {
+  showUnitInfo("Show Unit Info"),
+  selectReplacingUnit("Select Replacing Unit");
+
+  final String value;
+
+  const UnitTapAction(this.value);
+}
+
+enum RecalculationOnUnitReplace {
+  currentValue("Recalculate Current Value"),
+  otherValues("Recalculate Other Values");
+
+  final String value;
+
+  const RecalculationOnUnitReplace(this.value);
+}

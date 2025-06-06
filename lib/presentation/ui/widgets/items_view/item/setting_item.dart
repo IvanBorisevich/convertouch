@@ -9,14 +9,15 @@ enum SelectedValuePosition {
 }
 
 class ConvertouchSettingItem<T> extends StatelessWidget {
-  static const double horizontalPadding = 9;
-
   final String title;
   final T value;
   final String Function(T)? valueMap;
   final bool switched;
   final SelectedValuePosition selectedValuePosition;
   final void Function() onTap;
+  final double height;
+  final double horizontalPadding;
+  final double verticalPadding;
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingItem({
@@ -26,6 +27,9 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     this.switched = false,
     this.selectedValuePosition = SelectedValuePosition.right,
     required this.onTap,
+    this.height = 60,
+    this.horizontalPadding = 17,
+    this.verticalPadding = 7,
     required this.theme,
     super.key,
   });
@@ -36,40 +40,43 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
 
     bool isSwitch = T == bool;
 
-    return Container(
-      height: 55,
-      padding: const EdgeInsets.symmetric(
-        vertical: 4,
-        horizontal: horizontalPadding,
-      ),
-      decoration: BoxDecoration(
-        color: colors.settingItem.background.regular,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                _title(colors: colors),
-                _selectedValue(
-                  colors: colors,
-                  visible: !isSwitch &&
-                      selectedValuePosition == SelectedValuePosition.bottom,
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPadding,
+          horizontal: horizontalPadding,
+        ),
+        decoration: BoxDecoration(
+          color: colors.settingItem.background.regular,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  _title(colors: colors),
+                  _selectedValue(
+                    colors: colors,
+                    visible: !isSwitch &&
+                        selectedValuePosition == SelectedValuePosition.bottom,
+                  ),
+                ],
+              ),
             ),
-          ),
-          _selectedValue(
-            colors: colors,
-            visible: !isSwitch &&
-                selectedValuePosition == SelectedValuePosition.right,
-          ),
-          _switch(
-            colors: colors,
-            visible: isSwitch,
-            active: switched,
-          ),
-        ],
+            _selectedValue(
+              colors: colors,
+              visible: !isSwitch &&
+                  selectedValuePosition == SelectedValuePosition.right,
+            ),
+            _switch(
+              colors: colors,
+              visible: isSwitch,
+              active: switched,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -80,12 +87,16 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     return Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
+        // decoration: BoxDecoration(
+        //   color: Colors.yellow,
+        // ),
         child: Text(
           title,
           style: TextStyle(
             color: colors.settingItem.foreground.regular,
             fontSize: 17,
             fontWeight: FontWeight.w500,
+            letterSpacing: 0,
           ),
         ),
       ),
@@ -97,23 +108,19 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     bool visible = false,
   }) {
     if (!visible) {
-      return const SizedBox(height: 1);
+      return const SizedBox(height: 3);
     }
 
     double fontSize =
-        selectedValuePosition == SelectedValuePosition.right ? 16 : 13;
-    double rightPadding = selectedValuePosition == SelectedValuePosition.right
-        ? horizontalPadding
-        : 0;
+        selectedValuePosition == SelectedValuePosition.bottom ? 13 : 14;
 
     return Container(
       height: selectedValuePosition == SelectedValuePosition.bottom ? 23 : null,
       alignment: selectedValuePosition == SelectedValuePosition.bottom
-          ? Alignment.topLeft
+          ? Alignment.centerLeft
           : Alignment.centerRight,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 1,
-        right: rightPadding,
       ),
       child: Text(
         valueMap?.call(value) ?? value.toString(),

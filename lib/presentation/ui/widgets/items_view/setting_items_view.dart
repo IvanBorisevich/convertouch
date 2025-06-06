@@ -8,11 +8,17 @@ import 'package:flutter/material.dart';
 class ConvertouchSettingItemsView extends StatelessWidget {
   final String title;
   final List<ConvertouchSettingItem> settings;
+  final double titleHeight;
+  final double titleHorizontalPadding;
+  final double titleVerticalPadding;
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingItemsView({
     required this.title,
     this.settings = const [],
+    this.titleHeight = 40,
+    this.titleHorizontalPadding = 18,
+    this.titleVerticalPadding = 10,
     required this.theme,
     super.key,
   });
@@ -24,17 +30,17 @@ class ConvertouchSettingItemsView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 30,
+          height: titleHeight,
           alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
+          padding: EdgeInsets.symmetric(
+            horizontal: titleHorizontalPadding,
+            vertical: titleVerticalPadding,
           ),
           child: Text(
             title,
             style: TextStyle(
               color: colors.viewTitle.foreground.regular,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),

@@ -11,6 +11,9 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
   final T? selectedValue;
   final String Function(T) itemTitleMap;
   final void Function(T) onSelect;
+  final double titleHeight;
+  final double titleHorizontalPadding;
+  final double titleVerticalPadding;
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingListItemsView({
@@ -19,6 +22,9 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
     this.selectedValue,
     required this.itemTitleMap,
     required this.onSelect,
+    this.titleHeight = 40,
+    this.titleHorizontalPadding = 18,
+    this.titleVerticalPadding = 10,
     required this.theme,
     super.key,
   });
@@ -30,17 +36,17 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 30,
+          height: titleHeight,
           alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
+          padding: EdgeInsets.symmetric(
+            horizontal: titleHorizontalPadding,
+            vertical: titleVerticalPadding,
           ),
           child: Text(
             title,
             style: TextStyle(
               color: colors.viewTitle.foreground.regular,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
