@@ -188,28 +188,29 @@ class ConversionRepositoryImpl extends ConversionRepository {
               )
               .toList(),
         );
-      }
 
-      if (conversion.params != null) {
-        log("Inserting conversion params");
+        if (conversion.params != null) {
+          log("Inserting conversion params");
 
-        for (var paramSetValue in conversion.params!.paramSetValues) {
-          await conversionParamValueDao.insertBatch(
-              database,
-              paramSetValue.paramValues
-                  .mapIndexed(
-                    (index, item) => ConversionParamValueTranslator.I.fromModel(
-                      item,
-                      sequenceNum: index,
-                      conversionId: resultConversion.id,
-                    ),
-                  )
-                  .toList());
+          for (var paramSetValue in conversion.params!.paramSetValues) {
+            await conversionParamValueDao.insertBatch(
+                database,
+                paramSetValue.paramValues
+                    .mapIndexed(
+                      (index, item) => ConversionParamValueTranslator.I.fromModel(
+                    item,
+                    sequenceNum: index,
+                    conversionId: resultConversion.id,
+                  ),
+                )
+                    .toList());
+          }
         }
       }
 
       return Right(resultConversion);
     } catch (e, stackTrace) {
+      log("Error when merging a conversion: $e");
       return Left(
         DatabaseException(
           message: "Error when merging a conversion",
