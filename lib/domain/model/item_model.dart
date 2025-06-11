@@ -37,6 +37,13 @@ class ItemSearchMatch {
     this.lexemes = const [],
     this.matchedLexemeIndex = -1,
   });
+
+  @override
+  String toString() {
+    return 'ItemSearchMatch{'
+        'lexemes: $lexemes, '
+        'matchedLexemeIndex: $matchedLexemeIndex}';
+  }
 }
 
 abstract class IdNameSearchableItemModel extends IdNameItemModel {

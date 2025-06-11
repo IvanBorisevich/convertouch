@@ -62,8 +62,8 @@ class IconUtils {
     );
   }
 
-  static Widget getUnitGroupIcon({
-    String? iconName,
+  static Widget getItemLogoIcon({
+    required String? iconName,
     Color? color,
     double size = defaultIconSize,
   }) {

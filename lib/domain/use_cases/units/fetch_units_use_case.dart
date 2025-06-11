@@ -47,7 +47,7 @@ class FetchUnitsUseCase
   @override
   UnitModel addSearchMatch(UnitModel item, String searchString) {
     return item.copyWith(
-      nameMatch: ObjectUtils.toSearchMatch(item.name, searchString),
+      nameMatch: ObjectUtils.toSearchMatch(item.itemName, searchString),
       codeMatch: ObjectUtils.toSearchMatch(item.code, searchString),
     );
   }

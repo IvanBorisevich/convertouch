@@ -18,7 +18,11 @@ abstract class UnitDaoDb extends UnitDao {
       'from $unitsTableName u '
       'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where g.id = :unitGroupId '
-      'and (u.name like :searchString or u.code like :searchString) '
+      'and ('
+      ' u.name like :searchString'
+      ' or u.code like :searchString'
+      ' or u.symbol like :searchString'
+      ') '
       'order by u.code '
       'limit :pageSize offset :offset')
   Future<List<UnitEntity>> searchWithGroupId({
@@ -58,7 +62,11 @@ abstract class UnitDaoDb extends UnitDao {
       'inner join $conversionParamUnitsTableName p on p.unit_id = u.id '
       'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where p.param_id = :paramId '
-      'and (u.name like :searchString or u.code like :searchString) '
+      'and ('
+      ' u.name like :searchString'
+      ' or u.code like :searchString'
+      ' or u.symbol like :searchString'
+      ') '
       'order by u.code '
       'limit :pageSize offset :offset')
   Future<List<UnitEntity>> searchWithParamIdAndPossibleUnits({
@@ -79,7 +87,11 @@ abstract class UnitDaoDb extends UnitDao {
       'inner join $unitsTableName u on u.unit_group_id = p.unit_group_id '
       'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where p.id = :paramId '
-      'and (u.name like :searchString or u.code like :searchString) '
+      'and ('
+      ' u.name like :searchString'
+      ' or u.code like :searchString'
+      ' or u.symbol like :searchString'
+      ') '
       'order by u.code '
       'limit :pageSize offset :offset')
   Future<List<UnitEntity>> searchWithParamId({

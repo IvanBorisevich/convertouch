@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -134,17 +134,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   Widget build(BuildContext context) {
     final checkIconVisible =
         widget.checkableItemsVisible || widget.removalModeEnabled;
-
-    if (T == UnitGroupModel) {
-      _itemColors = unitGroupItemColors;
-      _emptyViewColors = unitGroupPageEmptyViewColor;
-    } else if (T == UnitModel) {
-      _itemColors = unitItemColors;
-      _emptyViewColors = unitPageEmptyViewColor;
-    } else {
-      _itemColors = paramSetItemColors;
-      _emptyViewColors = paramSetPageEmptyViewColor;
-    }
 
     return itemsListBlocBuilder(
       bloc: widget.itemsListBloc,
@@ -340,12 +329,14 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     required Color foreground,
     required Color matchForeground,
     required Color matchBackground,
+    required double iconSize,
+    required double fontSize,
   }) {
     if (item is UnitGroupModel) {
-      return IconUtils.getUnitGroupIcon(
+      return IconUtils.getItemLogoIcon(
         iconName: item.iconName,
         color: foreground,
-        size: 29,
+        size: iconSize,
       );
     }
 
@@ -354,17 +345,18 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         sourceString: item.code,
         match: item.codeMatch,
         foreground: foreground,
-        fontSize: 17,
+        fontSize: fontSize,
+        fontWeight: FontWeight.w700,
         matchBackground: matchBackground,
         matchForeground: matchForeground,
       );
     }
 
-    if (item is ConversionParamModel) {
-      return IconUtils.getUnitGroupIcon(
+    if (item is ConversionParamSetModel) {
+      return IconUtils.getItemLogoIcon(
         iconName: IconNames.parameters,
         color: foreground,
-        size: 29,
+        size: iconSize,
       );
     }
 

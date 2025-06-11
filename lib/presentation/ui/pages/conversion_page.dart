@@ -175,9 +175,8 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                               onParamSetAdd: () {
                                 paramSetsBloc.add(
                                   FetchItems(
-                                    params: UnitsFetchParams(
+                                    params: ParamSetsFetchParams(
                                       parentItemId: unitGroup.id,
-                                      parentItemType: ItemType.unitGroup,
                                     ),
                                   ),
                                 );

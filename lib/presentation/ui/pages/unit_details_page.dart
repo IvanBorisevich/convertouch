@@ -19,10 +19,10 @@ import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
-import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -90,11 +90,13 @@ class _ConvertouchUnitDetailsPageState
                                   required Color foreground,
                                   required Color matchForeground,
                                   required Color matchBackground,
+                                  required double iconSize,
+                                  required double fontSize,
                                 }) {
-                                  return IconUtils.getUnitGroupIcon(
+                                  return IconUtils.getItemLogoIcon(
                                     iconName: item.iconName,
                                     color: foreground,
-                                    size: 29,
+                                    size: iconSize,
                                   );
                                 },
                                 onTap: () {

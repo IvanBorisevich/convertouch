@@ -399,7 +399,7 @@ class _$UnitDaoDb extends UnitDaoDb {
     required int offset,
   }) async {
     return _queryAdapter.queryList(
-        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where g.id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where g.id = ?2 and ( u.name like ?1 or u.code like ?1 or u.symbol like ?1) order by u.code limit ?3 offset ?4',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [searchString, unitGroupId, pageSize, offset]);
   }
@@ -424,7 +424,7 @@ class _$UnitDaoDb extends UnitDaoDb {
     required int offset,
   }) async {
     return _queryAdapter.queryList(
-        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join conversion_param_units p on p.unit_id = u.id inner join unit_groups g on g.id = u.unit_group_id where p.param_id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join conversion_param_units p on p.unit_id = u.id inner join unit_groups g on g.id = u.unit_group_id where p.param_id = ?2 and ( u.name like ?1 or u.code like ?1 or u.symbol like ?1) order by u.code limit ?3 offset ?4',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [searchString, paramId, pageSize, offset]);
   }
@@ -437,7 +437,7 @@ class _$UnitDaoDb extends UnitDaoDb {
     required int offset,
   }) async {
     return _queryAdapter.queryList(
-        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from conversion_params p inner join units u on u.unit_group_id = p.unit_group_id inner join unit_groups g on g.id = u.unit_group_id where p.id = ?2 and (u.name like ?1 or u.code like ?1) order by u.code limit ?3 offset ?4',
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from conversion_params p inner join units u on u.unit_group_id = p.unit_group_id inner join unit_groups g on g.id = u.unit_group_id where p.id = ?2 and ( u.name like ?1 or u.code like ?1 or u.symbol like ?1) order by u.code limit ?3 offset ?4',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
         arguments: [searchString, paramId, pageSize, offset]);
   }
