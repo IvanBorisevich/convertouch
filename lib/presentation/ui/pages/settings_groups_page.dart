@@ -72,10 +72,16 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ),
                     SwitcherSettingItem(
                       title: "Keep Params On Conversion Cleanup",
-                      value: true,
+                      value: appState.keepParamsOnConversionCleanup,
                       theme: appState.theme,
                       onSwitch: (newValue) {
-                        print("new switcher value = $newValue");
+                        BlocProvider.of<AppBloc>(context).add(
+                          ChangeSetting(
+                            settingKey:
+                                SettingKey.keepParamsOnConversionCleanup,
+                            settingValue: newValue,
+                          ),
+                        );
                       },
                     ),
                   ],

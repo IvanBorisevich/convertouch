@@ -82,7 +82,7 @@ class ConversionBloc
         ) {
     on<GetConversion>(_onGetConversion);
     on<SaveConversion>(_onSaveConversion);
-    on<ClearConversion>(_onClearConversion);
+    on<CleanupConversion>(_onCleanupConversion);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<AddUnitsToConversion>(_onAddUnitsToConversion);
     on<EditConversionItemUnit>(_onEditConversionItemUnit);
@@ -170,19 +170,31 @@ class ConversionBloc
     }
   }
 
-  _onClearConversion(
-    ClearConversion event,
+  _onCleanupConversion(
+    CleanupConversion event,
     Emitter<ConversionState> emit,
-  ) {
-    emit(
-      ConversionBuilt(
-        conversion: ConversionModel.noItems(
-          id: state.conversion.id,
-          unitGroup: state.conversion.unitGroup,
-          params: state.conversion.params,
-        ),
-      ),
+  ) async {
+    var emptyConversion = ConversionModel.noItems(
+      id: state.conversion.id,
+      unitGroup: state.conversion.unitGroup,
+      params: state.conversion.params,
     );
+
+    if (event.keepParams) {
+      emit(
+        ConversionBuilt(
+          conversion: emptyConversion,
+        ),
+      );
+    } else {
+      final result = await removeParamSetsFromConversionUseCase.execute(
+        InputConversionModifyModel<RemoveParamSetsDelta>(
+          delta: const RemoveParamSetsDelta.all(),
+          conversion: emptyConversion,
+        ),
+      );
+      await _handleAndEmit(result, emit);
+    }
   }
 
   _onEditConversionGroup(

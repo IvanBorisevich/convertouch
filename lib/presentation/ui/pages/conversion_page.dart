@@ -150,7 +150,12 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         text: "Clear Conversion",
                         icon: Icons.delete_outline_rounded,
                         onTap: () {
-                          conversionBloc.add(const ClearConversion());
+                          conversionBloc.add(
+                            CleanupConversion(
+                              keepParams:
+                                  appState.keepParamsOnConversionCleanup,
+                            ),
+                          );
                         },
                       ),
                     ],

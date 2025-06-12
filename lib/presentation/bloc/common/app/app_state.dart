@@ -13,6 +13,7 @@ class AppStateReady extends AppState {
   final ItemsViewMode paramSetsViewMode;
   final UnitTapAction unitTapAction;
   final RecalculationOnUnitChange recalculationOnUnitChange;
+  final bool keepParamsOnConversionCleanup;
   final PageName? changedFromPage;
   final String appVersion;
 
@@ -23,6 +24,7 @@ class AppStateReady extends AppState {
     required this.paramSetsViewMode,
     required this.unitTapAction,
     required this.recalculationOnUnitChange,
+    required this.keepParamsOnConversionCleanup,
     this.changedFromPage,
     required this.appVersion,
   });
@@ -36,6 +38,7 @@ class AppStateReady extends AppState {
         changedFromPage,
         unitTapAction,
         recalculationOnUnitChange,
+        keepParamsOnConversionCleanup,
         appVersion,
       ];
 
@@ -48,6 +51,8 @@ class AppStateReady extends AppState {
       SettingKey.appVersion.name: appVersion,
       SettingKey.conversionUnitTapAction.name: unitTapAction.id,
       SettingKey.recalculationOnUnitChange.name: recalculationOnUnitChange.id,
+      SettingKey.keepParamsOnConversionCleanup.name:
+          keepParamsOnConversionCleanup,
     };
   }
 
@@ -64,6 +69,8 @@ class AppStateReady extends AppState {
           UnitTapAction.valueOf(json?[SettingKey.conversionUnitTapAction.name]),
       recalculationOnUnitChange: RecalculationOnUnitChange.valueOf(
           json?[SettingKey.recalculationOnUnitChange.name]),
+      keepParamsOnConversionCleanup:
+          json?[SettingKey.keepParamsOnConversionCleanup.name] ?? true,
       appVersion: json?[SettingKey.appVersion.name] ?? unknownAppVersion,
       changedFromPage: json?['changedFromPage'],
     );
@@ -78,6 +85,7 @@ class AppStateReady extends AppState {
         'paramSetsViewMode: $paramSetsViewMode, '
         'unitTapAction: $unitTapAction, '
         'recalculationOnUnitChange: $recalculationOnUnitChange, '
+        'keepParamsOnConversionCleanup: $keepParamsOnConversionCleanup, '
         'changedFromPage: $changedFromPage, '
         'appVersion: $appVersion}';
   }

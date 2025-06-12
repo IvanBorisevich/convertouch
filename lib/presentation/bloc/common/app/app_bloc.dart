@@ -16,6 +16,7 @@ class AppBloc extends ConvertouchPersistentBloc<AppEvent, AppStateReady> {
             paramSetsViewMode: ItemsViewMode.grid,
             unitTapAction: UnitTapAction.selectReplacingUnit,
             recalculationOnUnitChange: RecalculationOnUnitChange.otherValues,
+            keepParamsOnConversionCleanup: true,
             appVersion: unknownAppVersion,
           ),
         ) {

@@ -7,6 +7,7 @@ enum SettingKey {
   paramSetsViewMode,
   conversionUnitTapAction,
   recalculationOnUnitChange,
+  keepParamsOnConversionCleanup,
   appVersion,
 }
 

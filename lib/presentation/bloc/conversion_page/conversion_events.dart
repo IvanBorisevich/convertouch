@@ -51,12 +51,17 @@ class SaveConversion extends ConversionEvent {
   }
 }
 
-class ClearConversion extends ConversionEvent {
-  const ClearConversion();
+class CleanupConversion extends ConversionEvent {
+  final bool keepParams;
+
+  const CleanupConversion({
+    required this.keepParams,
+  });
 
   @override
   String toString() {
-    return 'ClearConversion{}';
+    return 'CleanupConversion{'
+        'keepParams: $keepParams}';
   }
 }
 
