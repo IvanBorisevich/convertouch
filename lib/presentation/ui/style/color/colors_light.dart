@@ -369,12 +369,12 @@ const settingItemColorLight = SettingsColorScheme(
     track: ConvertouchColorScheme(
       border: ColorVariation(
         regular: Color(0xFF426F99),
-        selected: Color(0xFF7FA1C0),
+        selected: noColor,
         disabled: Color(0xFF94B4D2),
       ),
       background: ColorVariation(
         regular: noColor,
-        selected: Color(0xFF7FA1C0),
+        selected: Color(0xFFAEC3F1),
         disabled: Color(0xFF94B4D2),
       ),
     ),

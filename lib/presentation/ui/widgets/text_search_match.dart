@@ -25,8 +25,6 @@ class TextSearchMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("source string: $sourceString, match: $match");
-
     return RichText(
       text: match != ItemSearchMatch.none
           ? TextSpan(

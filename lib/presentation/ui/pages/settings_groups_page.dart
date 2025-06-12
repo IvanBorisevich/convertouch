@@ -5,7 +5,6 @@ import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/setting_items_view.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/setting_list_items_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,46 +39,55 @@ class ConvertouchSettingsPage extends StatelessWidget {
                 ),
                 ConvertouchSettingItemsView(
                   title: "Conversion Page",
-                  settings: [
-                    ConvertouchSettingItem<UnitTapAction>(
-                        title: "Unit Tap Action",
-                        value: appState.unitTapAction,
-                        valueMap: (v) => v.value,
-                        possibleValues: UnitTapAction.values,
-                        theme: appState.theme,
-                        onSelect: (newValue) {
-                          BlocProvider.of<AppBloc>(context).add(
-                            ChangeSetting(
-                              settingKey: SettingKey.conversionUnitTapAction,
-                              settingValue: newValue.id,
-                            ),
-                          );
-                        }),
-                    ConvertouchSettingItem<RecalculationOnUnitChange>(
-                        title: "Recalculation On Unit Change",
-                        value: appState.recalculationOnUnitChange,
-                        valueMap: (v) => v.value,
-                        possibleValues: RecalculationOnUnitChange.values,
-                        theme: appState.theme,
-                        onSelect: (newValue) {
-                          BlocProvider.of<AppBloc>(context).add(
-                            ChangeSetting(
-                              settingKey: SettingKey.recalculationOnUnitChange,
-                              settingValue: newValue.id,
-                            ),
-                          );
-                        })
+                  items: [
+                    SelectorSettingItem<UnitTapAction>(
+                      title: "Unit Tap Action",
+                      selectedValue: appState.unitTapAction,
+                      valueMap: (v) => v.value,
+                      possibleValues: UnitTapAction.values,
+                      theme: appState.theme,
+                      onPossibleValueSelect: (newValue) {
+                        BlocProvider.of<AppBloc>(context).add(
+                          ChangeSetting(
+                            settingKey: SettingKey.conversionUnitTapAction,
+                            settingValue: newValue.id,
+                          ),
+                        );
+                      },
+                    ),
+                    SelectorSettingItem<RecalculationOnUnitChange>(
+                      title: "Recalculation On Unit Change",
+                      selectedValue: appState.recalculationOnUnitChange,
+                      valueMap: (v) => v.value,
+                      possibleValues: RecalculationOnUnitChange.values,
+                      theme: appState.theme,
+                      onPossibleValueSelect: (newValue) {
+                        BlocProvider.of<AppBloc>(context).add(
+                          ChangeSetting(
+                            settingKey: SettingKey.recalculationOnUnitChange,
+                            settingValue: newValue.id,
+                          ),
+                        );
+                      },
+                    ),
+                    SwitcherSettingItem(
+                      title: "Keep Params On Conversion Cleanup",
+                      value: true,
+                      theme: appState.theme,
+                      onSwitch: (newValue) {
+                        print("new switcher value = $newValue");
+                      },
+                    ),
                   ],
                   theme: appState.theme,
                 ),
                 ConvertouchSettingItemsView(
                   title: "About",
                   theme: appState.theme,
-                  settings: [
-                    ConvertouchSettingItem(
+                  items: [
+                    AboutSettingItem(
                       title: "App Version",
                       value: appState.appVersion,
-                      showAboutDialog: true,
                       theme: appState.theme,
                     ),
                   ],

@@ -370,12 +370,12 @@ const settingItemColorDark = SettingsColorScheme(
     track: ConvertouchColorScheme(
       border: ColorVariation(
         regular: Color(0xFF88A3BD),
-        selected: Color(0xFF7FA1C0),
+        selected: noColor,
         disabled: Color(0xFF94B4D2),
       ),
       background: ColorVariation(
         regular: noColor,
-        selected: Color(0xFF7FA1C0),
+        selected: Color(0xFF6184A3),
         disabled: Color(0xFF94B4D2),
       ),
     ),

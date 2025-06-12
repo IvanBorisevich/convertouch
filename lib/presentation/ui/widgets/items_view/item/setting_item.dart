@@ -3,43 +3,44 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/radio_dialog.dart';
 import 'package:flutter/material.dart';
 
-enum SelectedValuePosition {
+enum SubtitlePosition {
   bottom,
   right,
 }
 
-class ConvertouchSettingItem<T> extends StatelessWidget {
+const double _itemHeight = 60;
+const EdgeInsets _itemPadding = EdgeInsets.only(
+  top: 7,
+  bottom: 7,
+  left: 15,
+  right: 10,
+);
+
+class ConvertouchSettingItem extends StatelessWidget {
   final String title;
-  final T value;
-  final String Function(T)? valueMap;
-  final bool switched;
-  final bool showAboutDialog;
-  final SelectedValuePosition selectedValuePosition;
-  final void Function()? onTap;
-  final List<T> possibleValues;
-  final bool possibleValuesInDialog;
-  final void Function(T)? onSelect;
+  final String? subtitle;
+  final Widget? leading;
+  final Widget? trailing;
+  final double? titleLineHeight;
+  final SubtitlePosition? subtitlePosition;
   final double height;
-  final double horizontalPadding;
-  final double verticalPadding;
+  final EdgeInsets padding;
+  final void Function()? onTap;
   final ConvertouchUITheme theme;
 
   const ConvertouchSettingItem({
     required this.title,
-    required this.value,
-    this.valueMap,
-    this.switched = false,
-    this.showAboutDialog = false,
-    this.selectedValuePosition = SelectedValuePosition.bottom,
+    this.subtitle,
+    this.leading,
+    this.trailing,
+    this.titleLineHeight,
+    this.subtitlePosition,
+    this.height = _itemHeight,
+    this.padding = _itemPadding,
     this.onTap,
-    this.possibleValues = const [],
-    this.possibleValuesInDialog = true,
-    this.onSelect,
-    this.height = 60,
-    this.horizontalPadding = 17,
-    this.verticalPadding = 7,
     required this.theme,
     super.key,
   });
@@ -48,106 +49,74 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     SettingsColorScheme colors = settingItemColors[theme]!;
 
-    bool isSwitch = T == bool;
-
     return GestureDetector(
-      onTap: () {
-        if (showAboutDialog) {
-          _showAboutDialog(
-            context,
-            colors: colors,
-            applicationName: appName,
-            applicationVersion: valueMap?.call(value) ?? value.toString(),
-            applicationLegalese: appLegalese,
-          );
-        } else if (possibleValues.isNotEmpty && possibleValuesInDialog) {
-          _showRadioDialog(context, colors: colors);
-        } else {
-          onTap?.call();
-        }
-      },
+      onTap: onTap,
       child: Container(
         height: height,
-        padding: EdgeInsets.symmetric(
-          vertical: verticalPadding,
-          horizontal: horizontalPadding,
-        ),
+        padding: padding,
         decoration: BoxDecoration(
           color: colors.settingItem.background.regular,
         ),
         child: Row(
           children: [
+            leading ?? const SizedBox.shrink(),
             Expanded(
               child: Column(
                 children: [
-                  _title(colors: colors),
-                  _selectedValue(
-                    colors: colors,
-                    visible: !isSwitch &&
-                        selectedValuePosition == SelectedValuePosition.bottom,
-                  ),
+                  _title(colors),
+                  (subtitlePosition == SubtitlePosition.bottom
+                          ? _subtitle(colors)
+                          : null) ??
+                      const SizedBox.shrink(),
                 ],
               ),
             ),
-            _selectedValue(
-              colors: colors,
-              visible: !isSwitch &&
-                  selectedValuePosition == SelectedValuePosition.right,
-            ),
-            _switch(
-              colors: colors,
-              visible: isSwitch,
-              active: switched,
-            ),
+            (subtitlePosition == SubtitlePosition.right
+                    ? _subtitle(colors)
+                    : null) ??
+                const SizedBox.shrink(),
+            trailing ?? const SizedBox.shrink(),
           ],
         ),
       ),
     );
   }
 
-  Widget _title({
-    required SettingsColorScheme colors,
-  }) {
+  Widget _title(SettingsColorScheme colors) {
     return Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
-        // decoration: BoxDecoration(
-        //   color: Colors.yellow,
-        // ),
         child: Text(
           title,
           style: TextStyle(
             color: colors.settingItem.foreground.regular,
-            fontSize: 17,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
             letterSpacing: 0,
+            height: titleLineHeight,
           ),
         ),
       ),
     );
   }
 
-  Widget _selectedValue({
-    required SettingsColorScheme colors,
-    bool visible = false,
-  }) {
-    if (!visible) {
-      return const SizedBox(height: 3);
+  Widget? _subtitle(SettingsColorScheme colors) {
+    if (subtitle == null) {
+      return null;
     }
 
-    double fontSize =
-        selectedValuePosition == SelectedValuePosition.bottom ? 13 : 14;
+    double fontSize = subtitlePosition == SubtitlePosition.bottom ? 13 : 14;
 
     return Container(
-      height: selectedValuePosition == SelectedValuePosition.bottom ? 23 : null,
-      alignment: selectedValuePosition == SelectedValuePosition.bottom
+      height: subtitlePosition == SubtitlePosition.bottom ? 23 : null,
+      alignment: subtitlePosition == SubtitlePosition.bottom
           ? Alignment.centerLeft
           : Alignment.centerRight,
       padding: const EdgeInsets.only(
         left: 1,
       ),
       child: Text(
-        valueMap?.call(value) ?? value.toString(),
+        subtitle!,
         style: TextStyle(
           fontSize: fontSize,
           color: colors.selectedValue.regular,
@@ -156,23 +125,49 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
       ),
     );
   }
+}
+
+class SwitcherSettingItem extends StatelessWidget {
+  final String title;
+  final bool value;
+  final void Function(bool)? onSwitch;
+  final ConvertouchUITheme theme;
+
+  const SwitcherSettingItem({
+    required this.title,
+    required this.value,
+    this.onSwitch,
+    required this.theme,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    SettingsColorScheme colors = settingItemColors[theme]!;
+
+    return ConvertouchSettingItem(
+      title: title,
+      titleLineHeight: 1.1,
+      trailing: _switch(
+        colors: colors,
+        active: value,
+      ),
+      onTap: () {
+        onSwitch?.call(!value);
+      },
+      theme: theme,
+    );
+  }
 
   Widget _switch({
     required SettingsColorScheme colors,
-    bool visible = false,
     bool active = false,
   }) {
-    if (!visible) {
-      return const SizedBox.shrink();
-    }
-    return Switch(
+    return Switch.adaptive(
       value: active,
       activeColor: colors.settingItem.foreground.selected,
       thumbColor: WidgetStateProperty.resolveWith(
         (states) {
-          if (states.contains(WidgetState.disabled)) {
-            return colors.settingItem.foreground.disabled;
-          }
           return colors.settingItem.foreground.regular;
         },
       ),
@@ -180,21 +175,51 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
         if (states.contains(WidgetState.selected)) {
           return colors.switcher.track.border.selected;
         }
-        if (states.contains(WidgetState.disabled)) {
-          return colors.switcher.track.border.disabled;
-        }
         return colors.switcher.track.border.regular;
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return colors.switcher.track.background.selected;
         }
-        if (states.contains(WidgetState.disabled)) {
-          return colors.switcher.track.background.disabled;
-        }
-        return colors.switcher.track.background.regular;
+        return Colors.transparent;
       }),
       onChanged: null,
+    );
+  }
+}
+
+class SelectorSettingItem<T> extends StatelessWidget {
+  final String title;
+  final T selectedValue;
+  final String Function(T)? valueMap;
+  final List<T> possibleValues;
+  final void Function(T)? onPossibleValueSelect;
+  final SubtitlePosition selectedValuePosition;
+  final ConvertouchUITheme theme;
+
+  const SelectorSettingItem({
+    required this.title,
+    required this.selectedValue,
+    this.valueMap,
+    required this.possibleValues,
+    this.onPossibleValueSelect,
+    this.selectedValuePosition = SubtitlePosition.bottom,
+    required this.theme,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    SettingsColorScheme colors = settingItemColors[theme]!;
+
+    return ConvertouchSettingItem(
+      title: title,
+      subtitle: valueMap?.call(selectedValue) ?? selectedValue.toString(),
+      subtitlePosition: selectedValuePosition,
+      theme: theme,
+      onTap: () {
+        _showRadioDialog(context, colors: colors);
+      },
     );
   }
 
@@ -202,87 +227,69 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     BuildContext context, {
     required SettingsColorScheme colors,
   }) {
-    T selectedValue = value;
+    T currentValue = selectedValue;
 
     showDialog<T>(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
-            return AlertDialog(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              title: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: colors.settingItem.foreground.regular,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0,
-                ),
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              backgroundColor: colors.settingItem.background.regular,
-              content: ListView.builder(
-                shrinkWrap: true,
-                itemCount: possibleValues.length,
-                itemBuilder: (context, index) {
-                  final itemValue = possibleValues[index];
-                  return RadioListTile<T>.adaptive(
-                    title: Text(
-                      valueMap?.call(itemValue) ?? itemValue.toString(),
-                      style: TextStyle(
-                        color: colors.settingItem.foreground.regular,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                    visualDensity:
-                        const VisualDensity(vertical: -4, horizontal: -4),
-                    fillColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return colors.settingItem.foreground.selected;
-                      }
-                      if (states.contains(WidgetState.disabled)) {
-                        return colors.settingItem.foreground.disabled;
-                      }
-                      return colors.settingItem.foreground.regular;
-                    }),
-                    value: itemValue,
-                    groupValue: selectedValue,
-                    onChanged: (newValue) {
-                      if (newValue != null) {
-                        onSelect?.call(newValue);
-                        setStateDialog(() {
-                          selectedValue = newValue;
-                        });
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  );
-                },
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: colors.selectedValue.regular,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+            return ConvertouchRadioDialog<T>(
+              title: title,
+              selectedValue: currentValue,
+              valueMap: valueMap,
+              possibleValues: possibleValues,
+              colors: colors,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  onPossibleValueSelect?.call(newValue);
+                  setStateDialog(() {
+                    currentValue = newValue;
+                  });
+                  Navigator.of(context).pop();
+                }
+              },
             );
           },
         );
       },
     ).then((returnedValue) {});
+  }
+}
+
+class AboutSettingItem extends StatelessWidget {
+  final String title;
+  final String value;
+  final SubtitlePosition selectedValuePosition;
+  final ConvertouchUITheme theme;
+
+  const AboutSettingItem({
+    required this.title,
+    required this.value,
+    this.selectedValuePosition = SubtitlePosition.bottom,
+    required this.theme,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    SettingsColorScheme colors = settingItemColors[theme]!;
+
+    return ConvertouchSettingItem(
+      title: title,
+      subtitle: value,
+      subtitlePosition: selectedValuePosition,
+      theme: theme,
+      onTap: () {
+        _showAboutDialog(
+          context,
+          colors: colors,
+          applicationName: appName,
+          applicationVersion: value,
+          applicationLegalese: appLegalese,
+        );
+      },
+    );
   }
 
   void _showAboutDialog(
@@ -292,7 +299,7 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
     required String applicationVersion,
     required String applicationLegalese,
   }) {
-    showDialog<T>(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -397,5 +404,66 @@ class ConvertouchSettingItem<T> extends StatelessWidget {
         );
       },
     ).then((returnedValue) {});
+  }
+}
+
+class RadioSettingItem<T> extends StatelessWidget {
+  final String title;
+  final T value;
+  final T? selectedValue;
+  final bool disabled;
+  final void Function(T) onSelect;
+  final ConvertouchUITheme theme;
+
+  const RadioSettingItem({
+    required this.title,
+    required this.value,
+    this.selectedValue,
+    this.disabled = false,
+    required this.onSelect,
+    required this.theme,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    SettingsColorScheme colors = settingItemColors[theme]!;
+
+    return ConvertouchSettingItem(
+      title: title,
+      leading: _radio(colors: colors),
+      height: 52,
+      padding: const EdgeInsets.only(
+        left: 2,
+        right: 10,
+        top: 4,
+        bottom: 4,
+      ),
+      theme: theme,
+      onTap: () {
+        if (!disabled) {
+          onSelect.call(value);
+        }
+      },
+    );
+  }
+
+  Widget _radio({
+    required SettingsColorScheme colors,
+  }) {
+    return Radio<T>.adaptive(
+      groupValue: selectedValue,
+      value: value,
+      onChanged: null,
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return colors.settingItem.foreground.selected;
+        }
+        if (states.contains(WidgetState.disabled)) {
+          return colors.settingItem.foreground.disabled;
+        }
+        return colors.settingItem.foreground.regular;
+      }),
+    );
   }
 }
