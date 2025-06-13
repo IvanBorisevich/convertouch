@@ -2,8 +2,9 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
-import 'package:convertouch/presentation/ui/widgets/radio_dialog.dart';
+import 'package:convertouch/presentation/ui/utils/common_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/dialog/about_dialog.dart';
+import 'package:convertouch/presentation/ui/widgets/dialog/radio_dialog.dart';
 import 'package:flutter/material.dart';
 
 enum SubtitlePosition {
@@ -229,8 +230,9 @@ class SelectorSettingItem<T> extends StatelessWidget {
   }) {
     T currentValue = selectedValue;
 
-    showDialog<T>(
+    showConvertouchDialog<T>(
       context: context,
+      currentTheme: theme,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
@@ -284,6 +286,7 @@ class AboutSettingItem extends StatelessWidget {
         _showAboutDialog(
           context,
           colors: colors,
+          theme: theme,
           applicationName: appName,
           applicationVersion: value,
           applicationLegalese: appLegalese,
@@ -295,110 +298,21 @@ class AboutSettingItem extends StatelessWidget {
   void _showAboutDialog(
     BuildContext context, {
     required SettingsColorScheme colors,
+    required ConvertouchUITheme theme,
     required String applicationName,
     required String applicationVersion,
     required String applicationLegalese,
   }) {
-    showDialog(
+    showConvertouchDialog(
+      currentTheme: theme,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
-            return AlertDialog(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              backgroundColor: colors.settingItem.background.regular,
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 2,
-                    ),
-                    child: IconUtils.getImage(
-                      "app-logo.png",
-                      size: 35,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        applicationName,
-                        style: TextStyle(
-                          fontSize: 21,
-                          color: colors.settingItem.foreground.regular,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                      Text(
-                        applicationVersion,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colors.settingItem.foreground.regular,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        child: Text(
-                          applicationLegalese,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: colors.settingItem.foreground.regular,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              titlePadding: const EdgeInsets.only(
-                top: 10,
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              actionsPadding: const EdgeInsets.only(
-                right: 10,
-                bottom: 5,
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    'View Licenses',
-                    style: TextStyle(
-                      color: colors.selectedValue.regular,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onPressed: () {
-                    showLicensePage(
-                      context: context,
-                      applicationName: applicationName,
-                      applicationVersion: applicationVersion,
-                      applicationLegalese: applicationLegalese,
-                    );
-                  },
-                ),
-                TextButton(
-                  child: Text(
-                    'Close',
-                    style: TextStyle(
-                      color: colors.selectedValue.regular,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+            return ConvertouchAboutDialog(
+              applicationVersion: applicationVersion,
+              applicationLegalese: applicationLegalese,
+              colors: colors,
             );
           },
         );

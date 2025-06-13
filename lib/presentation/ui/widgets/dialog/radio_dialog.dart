@@ -34,7 +34,7 @@ class ConvertouchRadioDialog<T> extends StatelessWidget {
           letterSpacing: 0,
         ),
       ),
-      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+      contentPadding: EdgeInsets.zero,
       backgroundColor: colors.settingItem.background.regular,
       content: ListView.builder(
         shrinkWrap: true,

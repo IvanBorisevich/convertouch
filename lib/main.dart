@@ -19,9 +19,9 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_dark.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_light.dart';
+import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -110,13 +110,6 @@ class ConvertouchApp extends StatelessWidget {
       child: DismissKeyboard(
         child: appBlocBuilder(
           builderFunc: (appState) {
-            // SystemChrome.setSystemUIOverlayStyle(
-            //   buildSystemUiOverlayStyle(
-            //     context: context,
-            //     theme: appState.theme,
-            //   ),
-            // );
-
             return MaterialApp(
               title: appName,
               themeAnimationDuration: Duration.zero,
@@ -127,7 +120,8 @@ class ConvertouchApp extends StatelessWidget {
                       pageColorSchemeLight.appBar.background.regular,
                 ),
                 bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  backgroundColor: pageColorSchemeLight.bottomBar.background.regular,
+                  backgroundColor:
+                      pageColorSchemeLight.bottomBar.background.regular,
                 ),
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.light,
@@ -140,7 +134,8 @@ class ConvertouchApp extends StatelessWidget {
                       pageColorSchemeDark.appBar.background.regular,
                 ),
                 bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  backgroundColor: pageColorSchemeDark.bottomBar.background.regular,
+                  backgroundColor:
+                      pageColorSchemeDark.bottomBar.background.regular,
                 ),
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.dark,
@@ -152,7 +147,6 @@ class ConvertouchApp extends StatelessWidget {
                   : ThemeMode.light,
               home: AnnotatedRegion(
                 value: buildSystemUiOverlayStyle(
-                  context: context,
                   theme: appState.theme,
                 ),
                 child: const ConvertouchScaffold(),
@@ -163,25 +157,4 @@ class ConvertouchApp extends StatelessWidget {
       ),
     );
   }
-}
-
-SystemUiOverlayStyle buildSystemUiOverlayStyle({
-  required BuildContext context,
-  required ConvertouchUITheme theme,
-  bool dialogOpened = false,
-}) {
-  final statusUpBarColor = pageColors[theme]!.appBar.background.regular;
-  final systemBottomNavbarColor =
-      pageColors[theme]!.bottomBar.background.regular;
-
-  Brightness iconBrightness =
-      theme == ConvertouchUITheme.dark ? Brightness.light : Brightness.dark;
-
-  return SystemUiOverlayStyle(
-    statusBarColor: statusUpBarColor,
-    statusBarIconBrightness: iconBrightness,
-    systemNavigationBarColor: systemBottomNavbarColor,
-    systemNavigationBarIconBrightness: iconBrightness,
-    systemNavigationBarDividerColor: Colors.transparent,
-  );
 }
