@@ -29,11 +29,13 @@ class ConvertouchPage extends StatelessWidget {
     return appBlocBuilder(
       builderFunc: (appState) {
         PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+
         return SafeArea(
           child: Scaffold(
             backgroundColor: pageColorScheme.page.background.regular,
             appBar: AppBar(
               scrolledUnderElevation: 0.0,
+              elevation: 0,
               leading: Builder(
                 builder: (context) {
                   if (customLeadingIcon != null) {
@@ -64,8 +66,6 @@ class ConvertouchPage extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              backgroundColor: pageColorScheme.appBar.background.regular,
-              elevation: 0,
               actions: appBarRightWidgets,
             ),
             body: body,

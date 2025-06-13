@@ -210,8 +210,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                       currentIndex: selectedItem.index,
                       elevation: 0,
                       selectedFontSize: 12,
-                      backgroundColor:
-                          pageColorScheme.bottomBar.background.regular,
                       unselectedItemColor:
                           pageColorScheme.bottomBar.foreground.regular,
                       selectedItemColor:
@@ -302,27 +300,3 @@ final Map<ConvertouchSysAction, void Function()> _snackBarActions = {
     );
   },
 };
-
-SystemUiOverlayStyle buildSystemUiOverlayStyle({
-  required ConvertouchUITheme theme,
-  bool dialogOpened = false,
-}) {
-  final statusUpBarColor = dialogOpened
-      ? pageColors[theme]!.appBar.background.regular.withValues(alpha: 0.3)
-      : pageColors[theme]!.appBar.background.regular;
-
-  final systemBottomNavbarColor = dialogOpened
-      ? pageColors[theme]!.bottomBar.background.regular.withValues(alpha: 0.3)
-      : pageColors[theme]!.bottomBar.background.regular;
-
-  Brightness iconBrightness =
-      theme == ConvertouchUITheme.dark ? Brightness.light : Brightness.dark;
-
-  return SystemUiOverlayStyle(
-    statusBarColor: statusUpBarColor,
-    statusBarIconBrightness: iconBrightness,
-    systemNavigationBarColor: systemBottomNavbarColor,
-    systemNavigationBarIconBrightness: iconBrightness,
-    systemNavigationBarDividerColor: Colors.transparent,
-  );
-}

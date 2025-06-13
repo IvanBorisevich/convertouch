@@ -42,95 +42,98 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder(builderFunc: (appState) {
-      PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-      SearchBarColorScheme searchBarColorScheme =
-          widget.customColor ?? searchBarColors[appState.theme]!;
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+        SearchBarColorScheme searchBarColorScheme =
+            widget.customColor ?? searchBarColors[appState.theme]!;
 
-      ItemsViewMode pageViewMode;
+        ItemsViewMode pageViewMode;
 
-      if (widget.viewModeSettingKey == SettingKey.unitGroupsViewMode) {
-        pageViewMode = appState.unitGroupsViewMode;
-      } else if (widget.viewModeSettingKey == SettingKey.unitsViewMode) {
-        pageViewMode = appState.unitsViewMode;
-      } else if (widget.viewModeSettingKey == SettingKey.paramSetsViewMode) {
-        pageViewMode = appState.paramSetsViewMode;
-      } else {
-        pageViewMode = ItemsViewMode.grid;
-      }
+        if (widget.viewModeSettingKey == SettingKey.unitGroupsViewMode) {
+          pageViewMode = appState.unitGroupsViewMode;
+        } else if (widget.viewModeSettingKey == SettingKey.unitsViewMode) {
+          pageViewMode = appState.unitsViewMode;
+        } else if (widget.viewModeSettingKey == SettingKey.paramSetsViewMode) {
+          pageViewMode = appState.paramSetsViewMode;
+        } else {
+          pageViewMode = ItemsViewMode.grid;
+        }
 
-      return Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: pageColorScheme.appBar.background.regular,
-        ),
-        padding: const EdgeInsets.only(
-          left: 7,
-          bottom: 8,
-          right: 7,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ConvertouchTextBox(
-                controller: _searchFieldController,
-                onValueChanged: widget.onSearchStringChanged,
-                hintText: widget.placeholder,
-                fontSize: 15,
-                letterSpacing: 0,
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: searchBarColorScheme.textBox.foreground.regular,
-                ),
-                suffixIcon: _searchFieldController.text.isNotEmpty
-                    ? IconButton(
-                        onPressed: () {
-                          widget.onSearchReset?.call();
-                          setState(() {
-                            _searchFieldController.clear();
-                          });
-                        },
-                        icon: const Icon(Icons.close_rounded),
-                      )
-                    : null,
-                colors: searchBarColorScheme.textBox,
-                contentPadding: const EdgeInsets.symmetric(vertical: 7),
-              ),
-            ),
-            const SizedBox(width: 7),
-            Container(
-              width: 43,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                color: searchBarColorScheme.viewModeButton.background.regular,
-              ),
-              child: IconButton(
-                icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                  Icon(
-                    itemViewModeIconMap[pageViewMode.next],
-                    size: 22,
-                    key: ValueKey(pageViewMode),
+        return Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: pageColorScheme.appBar.background.regular,
+          ),
+          padding: const EdgeInsets.only(
+            left: 7,
+            bottom: 8,
+            right: 7,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ConvertouchTextBox(
+                  controller: _searchFieldController,
+                  onValueChanged: widget.onSearchStringChanged,
+                  hintText: widget.placeholder,
+                  fontSize: 15,
+                  letterSpacing: 0,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: searchBarColorScheme.textBox.foreground.regular,
                   ),
+                  suffixIcon: _searchFieldController.text.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            widget.onSearchReset?.call();
+                            setState(() {
+                              _searchFieldController.clear();
+                            });
+                          },
+                          icon: const Icon(Icons.close_rounded),
+                        )
+                      : null,
+                  colors: searchBarColorScheme.textBox,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 7),
                 ),
-                splashColor: noColor,
-                highlightColor: noColor,
-                onPressed: () {
-                  BlocProvider.of<AppBloc>(context).add(
-                    ChangeSetting(
-                      settingKey: widget.viewModeSettingKey,
-                      settingValue: pageViewMode.next.value,
-                      fromPage: widget.pageName,
-                    ),
-                  );
-                },
-                color: searchBarColorScheme.viewModeButton.foreground.regular,
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              const SizedBox(width: 7),
+              Container(
+                width: 43,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  color: searchBarColorScheme.viewModeButton.background.regular,
+                ),
+                child: IconButton(
+                  icon:
+                      ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                    Icon(
+                      itemViewModeIconMap[pageViewMode.next],
+                      size: 22,
+                      key: ValueKey(pageViewMode),
+                    ),
+                  ),
+                  splashColor: noColor,
+                  highlightColor: noColor,
+                  onPressed: () {
+                    BlocProvider.of<AppBloc>(context).add(
+                      ChangeSetting(
+                        settingKey: widget.viewModeSettingKey,
+                        settingValue: pageViewMode.next.value,
+                        fromPage: widget.pageName,
+                      ),
+                    );
+                  },
+                  color: searchBarColorScheme.viewModeButton.foreground.regular,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
