@@ -346,3 +346,37 @@ List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(10, 20,
           step: 10, fractionDigits: 0, divisor: unit?.coefficient),
     ]);
+
+const Map<String, List<ListValueModel>> _unitCodeDiameterRanges = {
+  "mm": [
+    ListValueModel(value: "14.5", alt: "..14.5"),
+    ListValueModel(value: "15", alt: "14.5 - 15"),
+    ListValueModel(value: "15.3", alt: "15 - 15.3"),
+    ListValueModel(value: "15.6", alt: "15.3 - 15.6"),
+    ListValueModel(value: "16.2", alt: "15.6 - 16.2"),
+    ListValueModel(value: "16.6", alt: "16.2 - 16.6"),
+    ListValueModel(value: "16.9", alt: "16.6 - 16.9"),
+    ListValueModel(value: "17.2", alt: "16.9 - 17.2"),
+    ListValueModel(value: "17.8", alt: "17.2 - 17.8"),
+    ListValueModel(value: "18.1", alt: "17.8 - 18.1"),
+    ListValueModel(value: "18.5", alt: "18.1 - 18.5"),
+    ListValueModel(value: "19.1", alt: "18.5 - 19.1"),
+    ListValueModel(value: "19.4", alt: "19.1 - 19.4"),
+    ListValueModel(value: "19.7", alt: "19.4 - 19.7"),
+    ListValueModel(value: "20.4", alt: "19.7 - 20.4"),
+    ListValueModel(value: "20.7", alt: "20.4 - 20.7"),
+    ListValueModel(value: "21", alt: "20.7 - 21"),
+    ListValueModel(value: "21.6", alt: "21 - 21.6"),
+    ListValueModel(value: "22", alt: "21.6 - 22"),
+    ListValueModel(value: "22.3", alt: "22 - 22.3"),
+    ListValueModel(value: "22.9", alt: "22.3 - 22.9"),
+    ListValueModel(value: "23.2", alt: "22.9 - 23.2"),
+    ListValueModel(value: "23.6", alt: "23.2 - 23.6"),
+    ListValueModel(value: "23.9", alt: "23.6 - 23.9"),
+    ListValueModel(value: "Infinity", alt: "23.9.."),
+  ],
+  "cm": []
+};
+
+List<ListValueModel> _ringDiameterRanges({UnitModel? unit}) =>
+    _unitCodeDiameterRanges[unit?.code] ?? [];
