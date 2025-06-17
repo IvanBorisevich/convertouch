@@ -8,7 +8,8 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   static const double defaultWidth = 80;
   static const double defaultHeight = 80;
-  static const double defaultBorderRadius = 15;
+  static const double defaultTitleHeight = defaultHeight * 0.4;
+  static const double defaultBorderRadius = 17;
 
   final T item;
   final bool checkIconVisible;
@@ -21,8 +22,8 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     required Color foreground,
     required Color matchForeground,
     required Color matchBackground,
-      required double iconSize,
-      required double fontSize,
+    required double iconSize,
+    required double fontSize,
   }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
@@ -85,24 +86,23 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                   ),
             Column(
               children: [
-                Container(
-                  width: defaultWidth,
-                  height: defaultHeight * 0.6,
-                  alignment: Alignment.center,
-                  child: logoFunc.call(
-                    item,
-                    foreground: foreground,
-                    matchForeground: matchForeground,
-                    matchBackground: matchBackground,
-                    iconSize: 29,
-                    fontSize: 17,
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: logoFunc.call(
+                      item,
+                      foreground: foreground,
+                      matchForeground: matchForeground,
+                      matchBackground: matchBackground,
+                      iconSize: 29,
+                      fontSize: 17,
+                    ),
                   ),
                 ),
                 Container(
-                  width: defaultWidth,
-                  height: defaultHeight * (1 - 0.6),
+                  height: defaultTitleHeight,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 7),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   decoration: BoxDecoration(
                     color: titleBackground,
                     borderRadius: const BorderRadius.only(

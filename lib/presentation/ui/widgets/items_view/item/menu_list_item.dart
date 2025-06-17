@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   static const double defaultHeight = 50;
-  static const double _borderRadius = 15;
+  static const double _borderRadius = 17;
 
   final T item;
   final bool checkIconVisible;
