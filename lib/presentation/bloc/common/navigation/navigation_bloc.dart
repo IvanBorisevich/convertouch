@@ -61,6 +61,7 @@ class NavigationBloc
         nextPageName: event.pageName,
         openedNavbarItems: prev.openedNavbarItems,
         isBottomNavbarOpenedFirstTime: prev.isBottomNavbarOpenedFirstTime,
+        isReplaced: event.replace,
       ),
     );
   }

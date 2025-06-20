@@ -20,11 +20,12 @@ abstract class ModifyConversion extends ConversionEvent {
 class GetConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;
+  final void Function(ConversionModel?)? processCurrentConversion;
 
   const GetConversion({
     required this.unitGroup,
     this.processPrevConversion,
-    super.onComplete,
+    this.processCurrentConversion,
   });
 
   @override

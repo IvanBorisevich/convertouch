@@ -153,7 +153,7 @@ class ConversionBloc
       event.processPrevConversion?.call(prev.conversion);
     }
 
-    event.onComplete?.call();
+    event.processCurrentConversion?.call(conversion);
   }
 
   _onSaveConversion(

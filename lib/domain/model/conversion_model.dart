@@ -101,6 +101,8 @@ class ConversionModel extends IdNameItemModel {
 
   bool get exists => this != none;
 
+  bool get hasItems => convertedUnitValues.isNotEmpty;
+
   @override
   String toString() {
     return 'ConversionModel{'

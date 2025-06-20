@@ -34,7 +34,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
         return ConvertouchPage(
           title: itemsSelectionState.singleItemSelectionMode
               ? 'Change Unit'
-              : 'Add Units To Conversion',
+              : 'Add To Conversion',
           body: ConvertouchMenuItemsView(
             itemsListBloc: unitsBloc,
             pageName: PageName.unitsPageForConversion,
@@ -46,8 +46,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                   ReplaceConversionItemUnit(
                     newUnit: unit,
                     oldUnitId: itemsSelectionState.selectedId!,
-                    recalculationMode:
-                        appBloc.state.recalculationOnUnitChange,
+                    recalculationMode: appBloc.state.recalculationOnUnitChange,
                   ),
                 );
                 navigationBloc.add(const NavigateBack());
@@ -83,7 +82,16 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                       unitIds: itemsSelectionState.markedIds,
                     ),
                   );
-                  navigationBloc.add(const NavigateBack());
+                  if (conversionBloc.state.conversion.hasItems) {
+                    navigationBloc.add(const NavigateBack());
+                  } else {
+                    navigationBloc.add(
+                      const NavigateToPage(
+                        pageName: PageName.conversionPage,
+                        replace: true,
+                      ),
+                    );
+                  }
                 },
                 colorScheme: floatingButtonColor,
               );

@@ -26,7 +26,6 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
@@ -78,26 +77,21 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
             return prev != next && next is NavigationDone;
           },
           listener: (_, state) {
-            if (state is NavigationDone) {
-              GlobalKey<NavigatorState> navKey =
-                  _screenNavigatorKeys[state.selectedNavbarItem]!;
+            if (state is! NavigationDone) {
+              return;
+            }
 
-              if (state.nextPageName != null && state.exception == null) {
-                navKey.currentState?.pushNamed(state.nextPageName!.name);
-              } else if (state.exception != null && state.exception!.isError) {
-                navKey.currentState?.push(
-                  MaterialPageRoute(
-                    builder: (context) => ConvertouchErrorPage(
-                      error: state.exception!,
-                    ),
-                  ),
-                );
-              } else if (state.exception != null && !state.exception!.isError) {
-                showSnackBar(
-                  context,
-                  exception: state.exception!,
-                  theme: appState.theme,
-                );
+            GlobalKey<NavigatorState> navKey =
+                _screenNavigatorKeys[state.selectedNavbarItem]!;
+
+            if (state.exception == null) {
+              if (state.nextPageName != null) {
+                if (!state.isReplaced) {
+                  navKey.currentState?.pushNamed(state.nextPageName!.name);
+                } else {
+                  navKey.currentState
+                      ?.pushReplacementNamed(state.nextPageName!.name);
+                }
               } else if (state.navigateBack && !state.navigateBackToRoot) {
                 navKey.currentState?.pop();
               } else if (state.navigateBack && state.navigateBackToRoot) {
@@ -105,6 +99,20 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                   (route) => route.isFirst,
                 );
               }
+            } else if (state.exception!.isError) {
+              navKey.currentState?.push(
+                MaterialPageRoute(
+                  builder: (context) => ConvertouchErrorPage(
+                    error: state.exception!,
+                  ),
+                ),
+              );
+            } else {
+              showSnackBar(
+                context,
+                exception: state.exception!,
+                theme: appState.theme,
+              );
             }
           },
           builder: (_, state) {

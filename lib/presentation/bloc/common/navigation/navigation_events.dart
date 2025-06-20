@@ -31,19 +31,24 @@ class SelectBottomNavbarItem extends NavigationEvent {
 
 class NavigateToPage extends NavigationEvent {
   final PageName pageName;
+  final bool replace;
 
   const NavigateToPage({
     required this.pageName,
+    this.replace = false,
   });
 
   @override
   List<Object?> get props => [
         pageName,
+    replace,
       ];
 
   @override
   String toString() {
-    return 'NavigateToPage{pageName: $pageName}';
+    return 'NavigateToPage{'
+        'pageName: $pageName, '
+        'replace: $replace}';
   }
 }
 
