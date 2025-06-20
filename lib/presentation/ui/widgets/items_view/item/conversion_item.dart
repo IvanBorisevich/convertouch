@@ -6,8 +6,15 @@ import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
+enum ControlPosition {
+  left,
+  right;
+}
+
 class ConvertouchConversionItem<T extends ConversionItemValueModel>
     extends StatefulWidget {
+  static const double _defaultSpacing = 7;
+
   final T item;
   final int? index;
   final void Function()? onTap;
@@ -16,7 +23,10 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final bool wrapped;
   final bool isSource;
   final bool disabled;
-  final bool controlsVisible;
+  final bool dragDropControlVisible;
+  final bool removalControlVisible;
+  final double spacing;
+  final double horizontalPadding;
   final String Function(T) itemNameFunc;
   final String? Function(T) unitItemCodeFunc;
   final ConversionItemColorScheme colors;
@@ -30,7 +40,10 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
     this.wrapped = false,
     this.isSource = false,
     this.disabled = false,
-    this.controlsVisible = true,
+    this.dragDropControlVisible = true,
+    this.removalControlVisible = true,
+    this.spacing = _defaultSpacing,
+    this.horizontalPadding = _defaultSpacing,
     required this.itemNameFunc,
     required this.unitItemCodeFunc,
     required this.colors,
@@ -47,9 +60,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
   static const double _unitButtonWidth = 90;
   static const double _unitButtonBorderRadius = 15;
   static const double _containerHeight = ConvertouchTextBox.defaultHeight;
-  static const double _wrapContainerVerticalPadding = 7;
   static const double _wrapContainerHeight =
-      _containerHeight + _wrapContainerVerticalPadding * 2;
+      _containerHeight + ConvertouchConversionItem._defaultSpacing * 2;
 
   late bool _isFocused;
 
@@ -83,7 +95,9 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     return Container(
       height: widget.wrapped ? _wrapContainerHeight : _containerHeight,
       padding: widget.wrapped
-          ? const EdgeInsets.symmetric(vertical: _wrapContainerVerticalPadding)
+          ? const EdgeInsets.symmetric(
+              vertical: ConvertouchConversionItem._defaultSpacing,
+            )
           : null,
       decoration: BoxDecoration(
         color:
@@ -91,7 +105,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
       ),
       child: Row(
         children: [
-          widget.controlsVisible
+          SizedBox(width: widget.horizontalPadding),
+          widget.dragDropControlVisible
               ? _wrapIntoDragListener(
                   index: widget.index,
                   child: _handler(
@@ -99,6 +114,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                         !widget.isSource ? Icons.drag_indicator_outlined : null,
                     textLogo: widget.isSource ? '𝑥' : null,
                     handlerColor: handlerColor,
+                    controlPosition: ControlPosition.left,
                   ),
                 )
               : const SizedBox.shrink(),
@@ -142,7 +158,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               ? Container(
                   width: _unitButtonWidth,
                   height: ConvertouchTextBox.defaultHeight,
-                  padding: const EdgeInsets.only(left: 7),
+                  padding: EdgeInsets.only(left: widget.spacing),
                   child: TextButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
@@ -180,13 +196,15 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   ),
                 )
               : const SizedBox.shrink(),
-          widget.controlsVisible
+          widget.removalControlVisible
               ? _handler(
                   iconLogo: Icons.remove,
                   handlerColor: handlerColor,
+                  controlPosition: ControlPosition.right,
                   onTap: widget.onRemove,
                 )
               : const SizedBox.shrink(),
+          SizedBox(width: widget.horizontalPadding),
         ],
       ),
     );
@@ -207,6 +225,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
   Widget _handler({
     IconData? iconLogo,
     String? textLogo,
+    required ControlPosition controlPosition,
     required ConvertouchColorScheme handlerColor,
     void Function()? onTap,
   }) {
@@ -246,8 +265,9 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 7,
+      padding: EdgeInsets.only(
+        left: controlPosition == ControlPosition.right ? widget.spacing : 0,
+        right: controlPosition == ControlPosition.left ? widget.spacing : 0,
       ),
       child: GestureDetector(
         onTap: onTap,

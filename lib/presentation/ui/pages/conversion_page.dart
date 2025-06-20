@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
@@ -359,7 +360,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     .convertedUnitValues
                                     .map((unitValue) => unitValue.unit.id)
                                     .toList(),
-                                markedItemsSelectionMinNum: 2,
+                                markedItemsSelectionMinNum: unitValuesMinNum,
                               ),
                             );
                             navigationBloc.add(

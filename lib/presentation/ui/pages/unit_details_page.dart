@@ -205,7 +205,10 @@ class _ConvertouchUnitDetailsPageState
                                     .details.conversionRule.configEditable,
                                 itemNameFunc: (item) => item.unit.name,
                                 unitItemCodeFunc: (item) => item.unit.code,
-                                controlsVisible: false,
+                                dragDropControlVisible: false,
+                                removalControlVisible: false,
+                                horizontalPadding: 0,
+                                spacing: 10,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateUnitValueInUnitDetails(
@@ -229,7 +232,10 @@ class _ConvertouchUnitDetailsPageState
                                     .details.conversionRule.configEditable,
                                 itemNameFunc: (item) => item.unit.name,
                                 unitItemCodeFunc: (item) => item.unit.code,
-                                controlsVisible: false,
+                                dragDropControlVisible: false,
+                                removalControlVisible: false,
+                                horizontalPadding: 0,
+                                spacing: 10,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateArgumentUnitValueInUnitDetails(

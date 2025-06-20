@@ -334,7 +334,8 @@ class ConversionParamsView extends StatelessWidget {
     return Expanded(
       child: ConvertouchConversionItem(
         paramItem,
-        controlsVisible: false,
+        dragDropControlVisible: false,
+        removalControlVisible: false,
         itemNameFunc: (item) => item.param.name,
         unitItemCodeFunc: (item) => item.unit?.code,
         onTap: () {

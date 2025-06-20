@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
@@ -31,7 +32,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _viewTopPadding = 7;
+  static const double _viewPadding = 7;
   static const double _bottomSpacing = 85;
 
   @override
@@ -58,7 +59,7 @@ class _ConvertouchConversionItemsViewState
         );
       },
       padding: const EdgeInsets.only(
-        top: _viewTopPadding,
+        top: _viewPadding,
         bottom: _bottomSpacing,
       ),
       itemBuilder: (context, index) {
@@ -76,6 +77,8 @@ class _ConvertouchConversionItemsViewState
             disabled: !widget.convertedItems[index].unit.invertible,
             itemNameFunc: (item) => item.unit.itemName,
             unitItemCodeFunc: (item) => item.unit.code,
+            removalControlVisible:
+                widget.convertedItems.length > unitValuesMinNum,
             onTap: () {
               widget.onUnitItemTap?.call(widget.convertedItems[index]);
             },
