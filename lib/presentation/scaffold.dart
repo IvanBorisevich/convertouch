@@ -252,7 +252,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     required ConvertouchUITheme theme,
     int durationInSec = 2,
   }) {
-    SnackBarColorScheme snackBarColor = pageColors[theme]!.snackBar;
+    SeverityColorScheme snackBarColor = pageColors[theme]!.snackBar;
 
     Color foreground;
     switch (exception.severity) {

@@ -79,7 +79,7 @@ class _ConvertouchConversionItemsViewState
             unitItemCodeFunc: (item) => item.unit.code,
             removalControlVisible:
                 widget.convertedItems.length > unitValuesMinNum,
-            onTap: () {
+            onUnitItemTap: () {
               widget.onUnitItemTap?.call(widget.convertedItems[index]);
             },
             onValueChanged: (value) {
@@ -94,6 +94,9 @@ class _ConvertouchConversionItemsViewState
             colors: conversionItemColors[widget.theme]!,
           ),
         );
+      },
+      onReorderStart: (index) {
+        FocusScope.of(context).unfocus();
       },
       onReorder: (int oldIndex, int newIndex) {
         setState(() {

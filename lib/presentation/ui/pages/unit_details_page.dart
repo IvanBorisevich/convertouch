@@ -243,7 +243,7 @@ class _ConvertouchUnitDetailsPageState
                                     ),
                                   );
                                 },
-                                onTap: () {
+                                onUnitItemTap: () {
                                   unitsBlocForDetails.add(
                                     FetchItems(
                                       params: UnitsFetchParams(

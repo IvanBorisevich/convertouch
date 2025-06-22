@@ -338,7 +338,7 @@ class ConversionParamsView extends StatelessWidget {
         removalControlVisible: false,
         itemNameFunc: (item) => item.param.name,
         unitItemCodeFunc: (item) => item.unit?.code,
-        onTap: () {
+        onUnitItemTap: () {
           onParamUnitTap?.call(paramItem);
         },
         onValueChanged: (value) {

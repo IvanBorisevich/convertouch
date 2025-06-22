@@ -17,7 +17,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
 
   final T item;
   final int? index;
-  final void Function()? onTap;
+  final void Function()? onUnitItemTap;
   final void Function(String?)? onValueChanged;
   final void Function()? onRemove;
   final bool wrapped;
@@ -34,7 +34,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   const ConvertouchConversionItem(
     this.item, {
     this.index,
-    this.onTap,
+    this.onUnitItemTap,
     this.onValueChanged,
     this.onRemove,
     this.wrapped = false,
@@ -162,7 +162,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   child: TextButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-                      widget.onTap?.call();
+                      widget.onUnitItemTap?.call();
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
@@ -201,7 +201,10 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   iconLogo: Icons.remove,
                   handlerColor: handlerColor,
                   controlPosition: ControlPosition.right,
-                  onTap: widget.onRemove,
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    widget.onRemove?.call();
+                  },
                 )
               : const SizedBox.shrink(),
           SizedBox(width: widget.horizontalPadding),

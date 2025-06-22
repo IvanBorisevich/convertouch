@@ -1,7 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/widgets/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap =
     {
@@ -45,6 +50,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final String label;
   final bool autofocus;
   final bool readonly;
+  final bool Function(String?)? isTextValid;
   final void Function(String)? onValueChanged;
   final void Function()? onValueClean;
   final void Function()? onFocusSelected;
@@ -70,6 +76,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.label = "",
     this.autofocus = false,
     this.readonly = false,
+    this.isTextValid,
     this.onValueChanged,
     this.onValueClean,
     this.onFocusSelected,
@@ -95,6 +102,7 @@ class ConvertouchTextBox extends StatefulWidget {
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
+  late final SuperTooltipController _tooltipController;
 
   TextEditingController? _defaultController;
   FocusNode? _defaultFocusNode;
@@ -121,6 +129,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
     _focusNode.addListener(_focusListener);
 
+    _tooltipController = SuperTooltipController();
+
     super.initState();
   }
 
@@ -129,6 +139,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     _defaultController?.dispose();
     _focusNode.removeListener(_focusListener);
     _defaultFocusNode?.dispose();
+    _tooltipController.dispose();
     super.dispose();
   }
 
@@ -151,16 +162,29 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     }
   }
 
-  void _focusListener() {
+  void _focusListener() async {
     if (widget.readonly) {
       return;
     }
 
     if (_focusNode.hasFocus) {
       widget.onFocusSelected?.call();
+      await _isValid(_controller.text);
     } else {
       widget.onFocusLeft?.call();
+      await _tooltipController.hideTooltip();
     }
+  }
+
+  Future<bool> _isValid(String newValue) async {
+    bool isValid = widget.isTextValid?.call(newValue) ?? true;
+    if (!isValid || newValue == '2') {
+      await _tooltipController.showTooltip();
+    } else if (_tooltipController.isVisible) {
+      await _tooltipController.hideTooltip();
+    }
+
+    return isValid;
   }
 
   @override
@@ -185,85 +209,98 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       hintColor = widget.colors.hint.regular;
     }
 
-    return SizedBox(
-      height: widget.height,
-      child: TextField(
-        readOnly: widget.readonly,
-        maxLength: widget.maxTextLength,
-        textAlignVertical: TextAlignVertical.center,
-        obscureText: false,
-        autofocus: widget.autofocus,
-        focusNode: _focusNode,
-        controller: _controller,
-        inputFormatters: inputRegExp != null
-            ? [FilteringTextInputFormatter.allow(inputRegExp)]
-            : null,
-        keyboardType: inputValueTypeToKeyboardTypeMap[widget.valueType],
-        onChanged: (newValue) {
-          widget.onValueChanged?.call(newValue);
-        },
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(widget.borderRadius)),
-            borderSide: BorderSide(
-              color: borderColor,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(widget.borderRadius)),
-            borderSide: BorderSide(
-              color: borderColor,
-            ),
-          ),
-          label: Container(
-            padding: widget.labelPadding,
-            decoration: BoxDecoration(
-              color: widget.colors.background.regular,
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-            ),
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width / 2,
-            ),
-            child: Text(
-              widget.label,
-              maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                foreground: Paint()..color = borderColor,
+    return BlocListener<NavigationBloc, NavigationState>(
+        listener: (_, navigationState) {
+      if (_tooltipController.isVisible) {
+        FocusScope.of(context).unfocus();
+      }
+    },
+    child: ConvertouchTooltip(
+      text: "Test tooltip",
+      controller: _tooltipController,
+      colors: widget.colors.tooltip,
+      child: SizedBox(
+        height: widget.height,
+        child: TextField(
+          readOnly: widget.readonly,
+          maxLength: widget.maxTextLength,
+          textAlignVertical: TextAlignVertical.center,
+          obscureText: false,
+          autofocus: widget.autofocus,
+          focusNode: _focusNode,
+          controller: _controller,
+          inputFormatters: inputRegExp != null
+              ? [FilteringTextInputFormatter.allow(inputRegExp)]
+              : null,
+          keyboardType: inputValueTypeToKeyboardTypeMap[widget.valueType],
+          onChanged: (newValue) async {
+            if (await _isValid(newValue)) {
+              widget.onValueChanged?.call(newValue);
+            }
+          },
+          decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius)),
+              borderSide: BorderSide(
+                color: borderColor,
               ),
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius)),
+              borderSide: BorderSide(
+                color: borderColor,
+              ),
+            ),
+            label: Container(
+              padding: widget.labelPadding,
+              decoration: BoxDecoration(
+                color: widget.colors.background.regular,
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+              ),
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width / 2,
+              ),
+              child: Text(
+                widget.label,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.fade,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  foreground: Paint()..color = borderColor,
+                ),
+              ),
+            ),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: widget.hintText ?? '-',
+            hintStyle: TextStyle(
+              foreground: Paint()..color = hintColor,
+            ),
+            contentPadding: widget.contentPadding,
+            counterText: "",
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: _suffixIcon(),
+            suffixIconColor: foregroundColor,
+            suffixText: widget.textLengthCounterVisible
+                ? '${_controller.text.length}/${widget.maxTextLength}'
+                : null,
+            filled: true,
+            fillColor: widget.colors.background.regular,
           ),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: widget.hintText ?? '-',
-          hintStyle: TextStyle(
-            foreground: Paint()..color = hintColor,
+          style: TextStyle(
+            foreground: Paint()..color = foregroundColor,
+            fontSize: widget.fontSize,
+            fontWeight: FontWeight.w500,
+            fontFamily: quicksandFontFamily,
+            letterSpacing: widget.letterSpacing,
           ),
-          contentPadding: widget.contentPadding,
-          counterText: "",
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: _suffixIcon(),
-          suffixIconColor: foregroundColor,
-          suffixText: widget.textLengthCounterVisible
-              ? '${_controller.text.length}/${widget.maxTextLength}'
-              : null,
-          filled: true,
-          fillColor: widget.colors.background.regular,
+          textAlign: TextAlign.start,
         ),
-        style: TextStyle(
-          foreground: Paint()..color = foregroundColor,
-          fontSize: widget.fontSize,
-          fontWeight: FontWeight.w500,
-          fontFamily: quicksandFontFamily,
-          letterSpacing: widget.letterSpacing,
-        ),
-        textAlign: TextAlign.start,
       ),
-    );
+    ),);
   }
 
   Widget? _suffixIcon() {
@@ -278,7 +315,10 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           color: widget.colors.foreground.regular,
           size: 17,
         ),
-        onPressed: widget.onValueClean,
+        onPressed: () async {
+          widget.onValueClean?.call();
+          await _tooltipController.hideTooltip();
+        },
       );
     }
 

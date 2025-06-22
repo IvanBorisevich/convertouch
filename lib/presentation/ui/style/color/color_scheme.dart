@@ -77,13 +77,15 @@ class SettingsColorScheme {
   });
 }
 
-class SnackBarColorScheme extends ConvertouchColorScheme {
+class SeverityColorScheme extends ConvertouchColorScheme {
+  static const SeverityColorScheme none = SeverityColorScheme();
+
   final ColorVariation foregroundError;
   final ColorVariation foregroundWarning;
   final ColorVariation foregroundInfo;
   final ColorVariation action;
 
-  const SnackBarColorScheme({
+  const SeverityColorScheme({
     super.border,
     super.background,
     this.foregroundError = ColorVariation.none,
@@ -96,6 +98,7 @@ class SnackBarColorScheme extends ConvertouchColorScheme {
 class InputBoxColorScheme extends ConvertouchColorScheme {
   final ColorVariation hint;
   final ConvertouchColorScheme dropdown;
+  final SeverityColorScheme tooltip;
 
   const InputBoxColorScheme({
     super.border,
@@ -103,6 +106,7 @@ class InputBoxColorScheme extends ConvertouchColorScheme {
     super.foreground,
     this.hint = ColorVariation.none,
     this.dropdown = ConvertouchColorScheme.none,
+    this.tooltip = SeverityColorScheme.none,
   });
 }
 
@@ -135,7 +139,7 @@ class PageColorScheme {
   final ConvertouchColorScheme appBar;
   final ConvertouchColorScheme page;
   final ConvertouchColorScheme bottomBar;
-  final SnackBarColorScheme snackBar;
+  final SeverityColorScheme snackBar;
 
   const PageColorScheme({
     required this.appBar,

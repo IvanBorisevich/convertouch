@@ -66,6 +66,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.0+4
   sliding_up_panel: ^2.0.0+1
   dynamic_tabbar: ^1.0.9
+  super_tooltip: ^2.0.9
 
 dev_dependencies:
   flutter_test:

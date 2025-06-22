@@ -12,7 +12,7 @@ const pageColorSchemeLight = PageColorScheme(
     background: ColorVariation.only(Color(0xffe8efff)),
     foreground: ColorVariation.only(Color(0xFF426F99)),
   ),
-  snackBar: SnackBarColorScheme(
+  snackBar: SeverityColorScheme(
     background: ColorVariation.only(Color(0xFF384867)),
     foregroundError: ColorVariation.only(Color(0xFFFFAAAA)),
     foregroundWarning: ColorVariation.only(Color(0xFFEADFB8)),
@@ -286,6 +286,12 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
     dropdown: ConvertouchColorScheme(
       background: ColorVariation.only(Color(0xffabc4fd)),
       foreground: ColorVariation.only(Color(0xFF1D578C)),
+    ),
+    tooltip: SeverityColorScheme(
+      background: ColorVariation.only(Color(0xff637fc6)),
+      foregroundError: ColorVariation.only(Color(0xFFFFBDBD)),
+      foregroundWarning: ColorVariation.only(Color(0xFFFFEADD)),
+      foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),
     ),
   ),
   background: ColorVariation.only(Color(0xffe7f2ff)),
