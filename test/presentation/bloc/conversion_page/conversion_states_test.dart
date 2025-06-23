@@ -21,7 +21,7 @@ void main() {
         iconName: "clothes-size-group.png",
         conversionType: ConversionType.formula,
         refreshable: false,
-        valueType: ConvertouchValueType.integerPositive,
+        valueType: ConvertouchValueType.integerNonNegative,
         oob: true,
       ),
       params: ConversionParamSetValueBulkModel(
@@ -66,7 +66,7 @@ void main() {
         iconName: "clothes-size-group.png",
         conversionType: ConversionType.formula,
         refreshable: false,
-        valueType: ConvertouchValueType.integerPositive,
+        valueType: ConvertouchValueType.integerNonNegative,
         oob: true,
       ),
       params: ConversionParamSetValueBulkModel(

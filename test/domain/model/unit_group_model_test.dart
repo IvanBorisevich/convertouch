@@ -6,7 +6,7 @@ void main() {
   const UnitGroupModel unitGroup = UnitGroupModel(
     id: 1,
     name: 'Money',
-    valueType: ConvertouchValueType.decimalPositive,
+    valueType: ConvertouchValueType.decimalNonNegative,
   );
 
   const Map<String, dynamic> unitGroupJson = {

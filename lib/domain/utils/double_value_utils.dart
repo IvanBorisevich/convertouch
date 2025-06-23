@@ -126,23 +126,6 @@ class DoubleValueUtils {
     );
   }
 
-  static bool between({
-    required double? value,
-    double? min,
-    double? max,
-  }) {
-    if (value == null) {
-      return true;
-    }
-    if (value.isNaN) {
-      return false;
-    }
-    value = _valueOrZero(value);
-    min = _valueOrZero(min ?? double.negativeInfinity);
-    max = _valueOrZero(max ?? double.infinity);
-    return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
-  }
-
   static double roundToPrecision(double v, int fractionDigits) {
     num p = pow(10, fractionDigits);
     return (v * p).roundToDouble() / p;
@@ -152,10 +135,6 @@ class DoubleValueUtils {
     return _trimTrailingZerosInDouble(value.toStringAsFixed(
       value.truncateToDouble() == value ? 0 : fractionDigits,
     ));
-  }
-
-  static double _valueOrZero(double value) {
-    return value != 0 ? value : 0;
   }
 
   static String _trimTrailingZerosInDouble(String doubleStr) {

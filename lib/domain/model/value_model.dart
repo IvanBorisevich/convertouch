@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
@@ -83,11 +84,10 @@ class ValueModel extends Equatable {
   }
 
   ValueModel? betweenOrNull(ValueModel? min, ValueModel? max) {
-    return DoubleValueUtils.between(
-      value: numVal,
-      min: min?.numVal,
-      max: max?.numVal,
-    )
+    return NumRange.closed(
+      min?.numVal,
+      max?.numVal,
+    ).contains(numVal)
         ? this
         : null;
   }

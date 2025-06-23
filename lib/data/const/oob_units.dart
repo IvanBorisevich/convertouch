@@ -5,7 +5,7 @@ const unitsV1 = [
   {
     "groupName": GroupNames.length,
     "iconName": "length-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "mm", "name": "Millimeter", "coefficient": 0.001},
@@ -24,7 +24,7 @@ const unitsV1 = [
   {
     "groupName": "Area",
     "iconName": "area-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "mm²", "name": "Square Millimeter", "coefficient": 1E-6},
@@ -36,7 +36,7 @@ const unitsV1 = [
   {
     "groupName": "Volume",
     "iconName": "volume-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "mm³", "name": "Cubic Millimeter", "coefficient": 1E-9},
@@ -50,7 +50,7 @@ const unitsV1 = [
   {
     "groupName": GroupNames.mass,
     "iconName": "mass-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "g", "name": "Gram", "coefficient": 0.001},
@@ -80,7 +80,7 @@ const unitsV1 = [
   {
     "groupName": GroupNames.currency,
     "iconName": "currency-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "conversionType": ConversionType.dynamic,
     "refreshable": true,
@@ -825,7 +825,7 @@ const unitsV1 = [
   {
     "groupName": "Pressure",
     "iconName": "pressure-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "Pa", "name": "pascal", "coefficient": 1},
@@ -842,7 +842,7 @@ const unitsV1 = [
   {
     "groupName": "Speed",
     "iconName": "speed-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
     "units": [
       {"code": "m/s", "name": "meter per second", "coefficient": 1},
@@ -977,7 +977,7 @@ const unitsV4 = [
   {
     "groupName": GroupNames.clothesSize,
     "iconName": "clothes-size-group.png",
-    "valueType": ConvertouchValueType.integerPositive,
+    "valueType": ConvertouchValueType.integerNonNegative,
     "conversionType": ConversionType.formula,
     "units": [
       {
@@ -995,49 +995,49 @@ const unitsV4 = [
       {
         "code": CountryCode.fr,
         "name": "France",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeFr,
       },
       {
         "code": CountryCode.eu,
         "name": "Europe",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeEu,
       },
       {
         "code": CountryCode.ru,
         "name": "Russia",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeRu,
       },
       {
         "code": CountryCode.it,
         "name": "Italy",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeIt,
       },
       {
         "code": CountryCode.uk,
         "name": "United Kingdom",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeUk,
       },
       {
         "code": CountryCode.us,
         "name": "USA",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeUs,
       },
       {
         "code": CountryCode.es,
         "name": "Spain",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeEs,
       },
       {
         "code": CountryCode.de,
         "name": "Germany",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.clothesSizeDe,
       },
     ],
@@ -1045,13 +1045,13 @@ const unitsV4 = [
   {
     "groupName": GroupNames.ringSize,
     "iconName": "ring-size-group.png",
-    "valueType": ConvertouchValueType.decimalPositive,
+    "valueType": ConvertouchValueType.decimalNonNegative,
     "conversionType": ConversionType.formula,
     "units": [
       {
         "code": CountryCode.us,
         "name": "USA",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.ringSizeUs,
       },
       {
@@ -1063,38 +1063,98 @@ const unitsV4 = [
       {
         "code": CountryCode.de,
         "name": "Germany",
-        "valueType": ConvertouchValueType.integerPositive,
+        "valueType": ConvertouchValueType.integerNonNegative,
         "listType": ConvertouchListType.ringSizeDe,
       },
       {
         "code": CountryCode.es,
         "name": "Spain",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.ringSizeEs,
       },
       {
         "code": CountryCode.fr,
         "name": "France",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.ringSizeFr,
       },
       {
         "code": CountryCode.ru,
         "name": "Russia",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.ringSizeRu,
       },
       {
         "code": CountryCode.it,
         "name": "Italy",
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.ringSizeIt,
       },
       {
         "code": CountryCode.jp,
         "name": "Japan",
-        "valueType": ConvertouchValueType.integerPositive,
+        "valueType": ConvertouchValueType.integerNonNegative,
         "listType": ConvertouchListType.ringSizeJp,
+      },
+    ],
+  },
+];
+
+const unitsV5 = [
+  {
+    "groupName": GroupNames.temperature,
+    "units": [
+      {
+        "code": UnitCodes.degreeCelsius,
+        forUpdate: {
+          "minValue": -273.15,
+        },
+      },
+      {
+        "code": UnitCodes.degreeFahrenheit,
+        forUpdate: {
+          "minValue": -459.67,
+        },
+      },
+      {
+        "code": UnitCodes.degreeKelvin,
+        forUpdate: {
+          "minValue": 0,
+          "valueType": ConvertouchValueType.decimalNonNegative,
+        },
+      },
+      {
+        "code": UnitCodes.degreeRankine,
+        forUpdate: {
+          "minValue": 0,
+          "valueType": ConvertouchValueType.decimalNonNegative,
+        },
+      },
+      {
+        "code": UnitCodes.degreeDelisle,
+        forUpdate: {
+          "minValue": 0,
+          "maxValue": 559.73,
+          "valueType": ConvertouchValueType.decimalNonNegative,
+        },
+      },
+      {
+        "code": UnitCodes.degreeNewton,
+        forUpdate: {
+          "minValue": -90.14,
+        },
+      },
+      {
+        "code": UnitCodes.degreeReaumur,
+        forUpdate: {
+          "minValue": -218.52,
+        },
+      },
+      {
+        "code": UnitCodes.degreeRomer,
+        forUpdate: {
+          "minValue": -135.9,
+        },
       },
     ],
   },

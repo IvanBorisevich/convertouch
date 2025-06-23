@@ -15,7 +15,7 @@ const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap =
     signed: true,
     decimal: false,
   ),
-  ConvertouchValueType.integerPositive: TextInputType.numberWithOptions(
+  ConvertouchValueType.integerNonNegative: TextInputType.numberWithOptions(
     signed: false,
     decimal: false,
   ),
@@ -23,7 +23,7 @@ const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap =
     signed: true,
     decimal: true,
   ),
-  ConvertouchValueType.decimalPositive: TextInputType.numberWithOptions(
+  ConvertouchValueType.decimalNonNegative: TextInputType.numberWithOptions(
     signed: false,
     decimal: true,
   ),
@@ -33,9 +33,9 @@ const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap =
 final Map<ConvertouchValueType, RegExp> inputValueTypeToRegExpMap = {
   ConvertouchValueType.text: RegExp(r'(^[\S ]+$)'),
   ConvertouchValueType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
-  ConvertouchValueType.integerPositive: RegExp(r'(^\d+$)'),
+  ConvertouchValueType.integerNonNegative: RegExp(r'(^\d+$)'),
   ConvertouchValueType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
-  ConvertouchValueType.decimalPositive: RegExp(r'(^\d+\.?\d*$)'),
+  ConvertouchValueType.decimalNonNegative: RegExp(r'(^\d+\.?\d*$)'),
   ConvertouchValueType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
 };
 
@@ -51,7 +51,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool autofocus;
   final bool readonly;
   final bool Function(String?)? isValueValid;
-  final String invalidValueTooltipMessage;
+  final String? invalidValueTooltipMessage;
   final void Function(String)? onValueChanged;
   final void Function()? onValueClean;
   final void Function()? onFocusSelected;
@@ -78,7 +78,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.autofocus = false,
     this.readonly = false,
     this.isValueValid,
-    this.invalidValueTooltipMessage = "Invalid value",
+    this.invalidValueTooltipMessage,
     this.onValueChanged,
     this.onValueClean,
     this.onFocusSelected,
@@ -150,18 +150,22 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.text != oldWidget.text) {
-      String newText = widget.text ?? "";
-      int offset = _controller.selection.baseOffset;
-
-      if (offset > newText.length) {
-        offset = newText.length;
-      }
-
-      _controller.value = _controller.value.copyWith(
-        text: widget.text ?? "",
-        selection: TextSelection.collapsed(offset: offset),
-      );
+      _updateTextValue();
     }
+  }
+
+  void _updateTextValue() {
+    String newText = widget.text ?? "";
+    int offset = _controller.selection.baseOffset;
+
+    if (offset > newText.length) {
+      offset = newText.length;
+    }
+
+    _controller.value = _controller.value.copyWith(
+      text: widget.text ?? "",
+      selection: TextSelection.collapsed(offset: offset),
+    );
   }
 
   void _focusListener() async {
@@ -174,6 +178,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       await _isValid(_controller.text);
     } else {
       widget.onFocusLeft?.call();
+      _updateTextValue();
       await _tooltipController.hideTooltip();
     }
   }

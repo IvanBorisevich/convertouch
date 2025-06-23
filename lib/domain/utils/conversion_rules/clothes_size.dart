@@ -88,8 +88,7 @@ ValueModel? getHeightByClothesSize({
       criterion?.heightCmRange.valOrRight(currentHeight) ?? currentHeight);
 }
 
-const Map<Person,
-        Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
+const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
     _clothesSizes = {
   Person.man: {
     Garment.shirt: MappingTable(
@@ -224,8 +223,8 @@ const Map<Person,
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftOpen(190, double.infinity),
-            waistCmRange: NumRange.leftOpen(98, double.infinity),
+            heightCmRange: NumRange.open(190, double.infinity),
+            waistCmRange: NumRange.open(98, double.infinity),
           ),
           row: {
             CountryCode.inter: "3XL",
@@ -356,8 +355,8 @@ const Map<Person,
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftOpen(188, double.infinity),
-            waistCmRange: NumRange.leftOpen(94, double.infinity),
+            heightCmRange: NumRange.open(188, double.infinity),
+            waistCmRange: NumRange.open(94, double.infinity),
           ),
           row: {
             CountryCode.inter: "3XL",
@@ -490,8 +489,8 @@ const Map<Person,
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftOpen(186, double.infinity),
-            waistCmRange: NumRange.leftOpen(82, double.infinity),
+            heightCmRange: NumRange.open(186, double.infinity),
+            waistCmRange: NumRange.open(82, double.infinity),
           ),
           row: {
             CountryCode.inter: "XXL",
@@ -622,8 +621,8 @@ const Map<Person,
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftOpen(186, double.infinity),
-            waistCmRange: NumRange.leftOpen(82, double.infinity),
+            heightCmRange: NumRange.open(186, double.infinity),
+            waistCmRange: NumRange.open(82, double.infinity),
           ),
           row: {
             CountryCode.inter: "XXL",

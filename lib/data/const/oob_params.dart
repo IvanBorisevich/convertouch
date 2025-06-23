@@ -21,7 +21,7 @@ const conversionParamsV1 = [
       {
         "name": ParamNames.height,
         "calculable": true,
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "unitGroupName": GroupNames.length,
         "defaultUnitCode": "cm",
         "possibleUnitCodes": [
@@ -41,7 +41,7 @@ const conversionParamsV1 = [
       {
         "name": ParamNames.circumference,
         "calculable": true,
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "unitGroupName": GroupNames.length,
         "defaultUnitCode": "mm",
         "possibleUnitCodes": [
@@ -60,7 +60,7 @@ const conversionParamsV1 = [
       {
         "name": ParamNames.diameter,
         "calculable": true,
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "unitGroupName": GroupNames.length,
         "defaultUnitCode": "mm",
         "possibleUnitCodes": [
@@ -79,7 +79,7 @@ const conversionParamsV1 = [
       {
         "name": ParamNames.barWeight,
         "calculable": false,
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "listType": ConvertouchListType.barbellBarWeight,
         "unitGroupName": GroupNames.mass,
         "defaultUnitCode": "kg",
@@ -91,7 +91,7 @@ const conversionParamsV1 = [
       {
         "name": ParamNames.oneSideWeight,
         "calculable": true,
-        "valueType": ConvertouchValueType.decimalPositive,
+        "valueType": ConvertouchValueType.decimalNonNegative,
         "unitGroupName": GroupNames.mass,
         "defaultUnitCode": "kg",
         "possibleUnitCodes": [

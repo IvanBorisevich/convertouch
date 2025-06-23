@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/utils/double_value_utils.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -93,6 +93,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
     String itemName = widget.itemNameFunc.call(widget.item);
     String? itemCode = widget.unitItemCodeFunc.call(widget.item);
 
+    var itemValuesRange = NumRange.closed(widget.item.min, widget.item.max);
+
     return Container(
       height: widget.wrapped ? _wrapContainerHeight : _containerHeight,
       padding: widget.wrapped
@@ -130,16 +132,14 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               label: itemName,
               borderRadius: 15,
               valueType: widget.item.valueType,
+              invalidValueTooltipMessage: itemValuesRange.validationMessage,
               isValueValid: (value) {
                 if (value == null) {
                   return true;
                 }
 
-                return DoubleValueUtils.between(
-                  value: double.tryParse(value),
-                  min: widget.item.min,
-                  max: widget.item.max,
-                );
+                return
+                  itemValuesRange.contains(double.tryParse(value));
               },
               onChanged: (value) {
                 if (value != '.' && value != '-') {

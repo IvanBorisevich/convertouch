@@ -7,7 +7,7 @@ void main() {
     id: 1,
     name: "Height",
     unitGroupId: 1,
-    valueType: ConvertouchValueType.decimalPositive,
+    valueType: ConvertouchValueType.decimalNonNegative,
     paramSetId: 1,
   );
 

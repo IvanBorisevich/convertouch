@@ -206,40 +206,4 @@ void main() {
       expect(DoubleValueUtils.format(1.0), "1");
     });
   });
-
-  group('Check if a value is between two values', () {
-    test('Positive cases', () {
-      expect(DoubleValueUtils.between(value: 1, min: 0, max: 2), true);
-      expect(DoubleValueUtils.between(value: -1, min: -2, max: 0), true);
-      expect(DoubleValueUtils.between(value: 0, min: 0, max: 0), true);
-      expect(DoubleValueUtils.between(value: 0.0, min: 0.0, max: 0.0), true);
-      expect(DoubleValueUtils.between(value: 0.0, min: -0.0, max: 0.0), true);
-      expect(DoubleValueUtils.between(value: 0.0, min: 0.0, max: -0.0), true);
-      expect(DoubleValueUtils.between(value: 0.0, min: -0.0, max: -0.0), true);
-      expect(DoubleValueUtils.between(value: -0.0, min: -0.0, max: -0.0), true);
-      expect(DoubleValueUtils.between(value: -0.0, min: 0.0, max: 0.1), true);
-      expect(DoubleValueUtils.between(value: 123, min: null, max: null), true);
-      expect(DoubleValueUtils.between(value: 123), true);
-      expect(DoubleValueUtils.between(value: double.negativeInfinity), true);
-      expect(DoubleValueUtils.between(value: double.infinity), true);
-      expect(DoubleValueUtils.between(value: null), true);
-      expect(DoubleValueUtils.between(value: null, min: 1, max: 3), true);
-      expect(DoubleValueUtils.between(value: null, min: 1000, max: 3), true);
-    });
-
-    test('Negative cases', () {
-      expect(DoubleValueUtils.between(value: 1, min: 2, max: 1), false);
-      expect(DoubleValueUtils.between(value: 1, min: 5, max: 8), false);
-      expect(DoubleValueUtils.between(value: -0.5, min: 0), false);
-      expect(DoubleValueUtils.between(value: double.nan), false);
-      expect(
-          DoubleValueUtils.between(value: double.nan, min: 2, max: 3), false);
-      expect(DoubleValueUtils.between(value: double.infinity, min: 1, max: 3),
-          false);
-      expect(
-          DoubleValueUtils.between(
-              value: double.negativeInfinity, min: 1, max: 3),
-          false);
-    });
-  });
 }

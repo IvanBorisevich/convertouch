@@ -4,43 +4,43 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 const mockUnitGroupWithoutUnits = UnitGroupModel(
   id: 0,
   name: "name",
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const mockUnitGroupWithOneBaseUnit = UnitGroupModel(
   id: 1,
   name: "name1",
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const mockUnitGroupWithMultipleBaseUnits = UnitGroupModel(
   id: 2,
   name: "name2",
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const mockUnitGroupWithOneBaseUnitOob = UnitGroupModel(
   id: 3,
   name: "name3",
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const mockUnitGroupWithMultipleBaseUnitsOob = UnitGroupModel(
   id: 4,
   name: "name4",
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const UnitGroupModel lengthGroup = UnitGroupModel(
   id: 5,
   name: GroupNames.length,
-  valueType: ConvertouchValueType.decimalPositive,
+  valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const UnitGroupModel clothesSizeGroup = UnitGroupModel(
   id: 6,
   name: GroupNames.clothesSize,
-  valueType: ConvertouchValueType.integerPositive,
+  valueType: ConvertouchValueType.integerNonNegative,
   conversionType: ConversionType.formula,
 );
 

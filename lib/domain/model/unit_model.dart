@@ -39,7 +39,7 @@ class UnitModel extends IdNameSearchableItemModel {
       : this(
           name: "",
           code: "",
-          valueType: ConvertouchValueType.decimalPositive,
+          valueType: ConvertouchValueType.decimalNonNegative,
         );
 
   UnitModel copyWith({

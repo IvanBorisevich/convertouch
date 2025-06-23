@@ -53,7 +53,7 @@ class UnitGroupModel extends IdNameSearchableItemModel {
   const UnitGroupModel._()
       : this(
           name: "",
-          valueType: ConvertouchValueType.decimalPositive,
+          valueType: ConvertouchValueType.decimalNonNegative,
         );
 
   bool get exists => this != none;

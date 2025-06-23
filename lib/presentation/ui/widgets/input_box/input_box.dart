@@ -23,7 +23,7 @@ class ConvertouchInputBox extends StatefulWidget {
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
   final bool Function(String?)? isValueValid;
-  final String invalidValueTooltipMessage;
+  final String? invalidValueTooltipMessage;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
   final double borderRadius;
@@ -51,7 +51,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.onFocusSelected,
     this.onFocusLeft,
     this.isValueValid,
-    this.invalidValueTooltipMessage = "Invalid value",
+    this.invalidValueTooltipMessage,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
     this.borderRadius = 15,

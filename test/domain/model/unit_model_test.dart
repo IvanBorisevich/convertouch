@@ -7,7 +7,7 @@ void main() {
     id: 1,
     name: 'Meter',
     code: 'm',
-    valueType: ConvertouchValueType.decimalPositive,
+    valueType: ConvertouchValueType.decimalNonNegative,
   );
 
   const Map<String, dynamic> unitJson = {

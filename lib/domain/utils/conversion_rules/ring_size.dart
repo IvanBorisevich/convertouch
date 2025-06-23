@@ -443,7 +443,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.leftOpen(23.9, double.infinity),
+        diameterMmRange: NumRange.open(23.9, double.infinity),
       ),
       row: {
         CountryCode.us: 15,
