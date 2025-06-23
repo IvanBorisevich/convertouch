@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 enum ControlPosition {
   left,
@@ -26,6 +27,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
   final bool disabled;
   final bool dragDropControlVisible;
   final bool removalControlVisible;
+  final bool isLast;
   final double spacing;
   final double horizontalPadding;
   final String Function(T) itemNameFunc;
@@ -43,6 +45,7 @@ class ConvertouchConversionItem<T extends ConversionItemValueModel>
     this.disabled = false,
     this.dragDropControlVisible = true,
     this.removalControlVisible = true,
+    this.isLast = false,
     this.spacing = _defaultSpacing,
     this.horizontalPadding = _defaultSpacing,
     required this.itemNameFunc,
@@ -129,6 +132,8 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               selectedListValue: widget.item.value?.toListValueModel(),
               itemUnit: widget.item.unitItem,
               readonly: widget.disabled,
+              tooltipDirection:
+                  widget.isLast ? TooltipDirection.up : TooltipDirection.down,
               label: itemName,
               borderRadius: 15,
               valueType: widget.item.valueType,

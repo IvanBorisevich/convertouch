@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 class ConvertouchInputBox extends StatefulWidget {
   final String? value;
@@ -18,6 +19,7 @@ class ConvertouchInputBox extends StatefulWidget {
   final String label;
   final bool autofocus;
   final bool readonly;
+  final TooltipDirection tooltipDirection;
   final void Function(String?)? onChanged;
   final void Function()? onClean;
   final void Function()? onFocusSelected;
@@ -46,6 +48,7 @@ class ConvertouchInputBox extends StatefulWidget {
     this.label = "",
     this.autofocus = false,
     this.readonly = false,
+    this.tooltipDirection = TooltipDirection.down,
     this.onChanged,
     this.onClean,
     this.onFocusSelected,
@@ -107,6 +110,7 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
       onFocusLeft: widget.onFocusLeft,
       isValueValid: widget.isValueValid,
       invalidValueTooltipMessage: widget.invalidValueTooltipMessage,
+      tooltipDirection: widget.tooltipDirection,
       maxTextLength: widget.maxTextLength,
       textLengthCounterVisible: widget.textLengthCounterVisible,
       borderRadius: widget.borderRadius,

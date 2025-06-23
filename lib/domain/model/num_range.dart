@@ -101,7 +101,7 @@ class NumRange {
   }
 
   String get rangeName => "${(includeLeft && left.isFinite) ? '[' : '('}"
-      "${left.isFinite ? left : '-∞'}..${right.isFinite ? right : '+∞'}"
+      "${left.isFinite ? left : '-∞'} .. ${right.isFinite ? right : '+∞'}"
       "${(includeRight && right.isFinite) ? ']' : ')'}";
 }
 

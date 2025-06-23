@@ -289,7 +289,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
       foreground: ColorVariation.only(Color(0xFFBFD3E3)),
     ),
     tooltip: SeverityColorScheme(
-      background: ColorVariation.only(Color(0xFF26292F)),
+      background: ColorVariation.only(Color(0xFF2A2E35)),
       foregroundError: ColorVariation.only(Color(0xFFFBB4B4)),
       foregroundWarning: ColorVariation.only(Color(0xFFFDD7BE)),
       foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),

@@ -52,6 +52,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final bool readonly;
   final bool Function(String?)? isValueValid;
   final String? invalidValueTooltipMessage;
+  final TooltipDirection tooltipDirection;
   final void Function(String)? onValueChanged;
   final void Function()? onValueClean;
   final void Function()? onFocusSelected;
@@ -79,6 +80,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.readonly = false,
     this.isValueValid,
     this.invalidValueTooltipMessage,
+    this.tooltipDirection = TooltipDirection.down,
     this.onValueChanged,
     this.onValueClean,
     this.onFocusSelected,
@@ -225,6 +227,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
       child: ConvertouchTooltip(
         text: widget.invalidValueTooltipMessage,
         controller: _tooltipController,
+        tooltipDirection: widget.tooltipDirection,
         colors: widget.colors.tooltip,
         child: SizedBox(
           height: widget.height,

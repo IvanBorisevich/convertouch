@@ -8,6 +8,7 @@ class ConvertouchTooltip extends StatelessWidget {
   final SuperTooltipController? controller;
   final SeverityColorScheme colors;
   final ExceptionSeverity severity;
+  final TooltipDirection tooltipDirection;
   final Widget child;
 
   const ConvertouchTooltip({
@@ -15,6 +16,7 @@ class ConvertouchTooltip extends StatelessWidget {
     this.controller,
     required this.colors,
     this.severity = ExceptionSeverity.warning,
+    this.tooltipDirection = TooltipDirection.down,
     required this.child,
     super.key,
   });
@@ -40,11 +42,13 @@ class ConvertouchTooltip extends StatelessWidget {
 
     return SuperTooltip(
       controller: controller,
+      popupDirection: tooltipDirection,
       hasShadow: false,
       arrowTipDistance: 20,
       arrowTipRadius: 2,
       arrowLength: 5,
       arrowBaseWidth: 10,
+      minimumOutsideMargin: 10,
       showBarrier: false,
       backgroundColor: colors.background.regular,
       borderColor: colors.background.regular,

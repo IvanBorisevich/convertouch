@@ -234,6 +234,7 @@ class _ConvertouchUnitDetailsPageState
                                 unitItemCodeFunc: (item) => item.unit.code,
                                 dragDropControlVisible: false,
                                 removalControlVisible: false,
+                                isLast: true,
                                 horizontalPadding: 0,
                                 spacing: 10,
                                 onValueChanged: (value) {

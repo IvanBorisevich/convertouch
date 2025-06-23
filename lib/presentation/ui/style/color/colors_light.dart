@@ -332,7 +332,7 @@ const unitsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
 );
 
 const conversionPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF5980A6)),
+  background: ColorVariation.only(Color(0xFF3F74A8)),
   foreground: ColorVariation.only(Color(0xFFF5F7FF)),
 );
 
