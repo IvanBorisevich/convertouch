@@ -164,19 +164,23 @@ enum Cron {
 enum ConvertouchValueType {
   text(1, "Text"),
   integer(2, "Integer", defaultValueStr: "1"),
-  integerPositive(3, "Positive Integer", defaultValueStr: "1"),
+  integerPositive(3, "Positive Integer", defaultValueStr: "1", min: 0),
   decimal(4, "Decimal", defaultValueStr: "1"),
-  decimalPositive(5, "Positive Decimal", defaultValueStr: "1"),
+  decimalPositive(5, "Positive Decimal", defaultValueStr: "1", min: 0),
   hexadecimal(6, "Hexadecimal", defaultValueStr: "1");
 
   final int id;
   final String name;
   final String? defaultValueStr;
+  final double? min;
+  final double? max;
 
   const ConvertouchValueType(
     this.id,
     this.name, {
     this.defaultValueStr,
+    this.min,
+    this.max,
   });
 
   static ConvertouchValueType? valueOf(int? value) {

@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -129,6 +130,17 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
               label: itemName,
               borderRadius: 15,
               valueType: widget.item.valueType,
+              isValueValid: (value) {
+                if (value == null) {
+                  return true;
+                }
+
+                return DoubleValueUtils.between(
+                  value: double.tryParse(value),
+                  min: widget.item.min,
+                  max: widget.item.max,
+                );
+              },
               onChanged: (value) {
                 if (value != '.' && value != '-') {
                   widget.onValueChanged?.call(value);

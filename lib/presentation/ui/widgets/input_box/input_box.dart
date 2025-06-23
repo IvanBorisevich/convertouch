@@ -22,6 +22,8 @@ class ConvertouchInputBox extends StatefulWidget {
   final void Function()? onClean;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
+  final bool Function(String?)? isValueValid;
+  final String invalidValueTooltipMessage;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
   final double borderRadius;
@@ -48,6 +50,8 @@ class ConvertouchInputBox extends StatefulWidget {
     this.onClean,
     this.onFocusSelected,
     this.onFocusLeft,
+    this.isValueValid,
+    this.invalidValueTooltipMessage = "Invalid value",
     this.maxTextLength,
     this.textLengthCounterVisible = false,
     this.borderRadius = 15,
@@ -101,6 +105,8 @@ class _ConvertouchInputBoxState extends State<ConvertouchInputBox> {
       onValueClean: widget.onClean,
       onFocusSelected: widget.onFocusSelected,
       onFocusLeft: widget.onFocusLeft,
+      isValueValid: widget.isValueValid,
+      invalidValueTooltipMessage: widget.invalidValueTooltipMessage,
       maxTextLength: widget.maxTextLength,
       textLengthCounterVisible: widget.textLengthCounterVisible,
       borderRadius: widget.borderRadius,
