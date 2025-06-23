@@ -38,9 +38,9 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   num? get defaultNumVal => defaultValue?.numVal;
 
-  double? get max => unitItem?.maxValue?.numVal ?? valueType.max;
-
   double? get min => unitItem?.minValue?.numVal ?? valueType.min;
+
+  double? get max => unitItem?.maxValue?.numVal;
 
   ConvertouchValueType get valueType;
 
