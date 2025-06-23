@@ -138,8 +138,7 @@ class _ConvertouchConversionItemState<T extends ConversionItemValueModel>
                   return true;
                 }
 
-                return
-                  itemValuesRange.contains(double.tryParse(value));
+                return itemValuesRange.contains(double.tryParse(value));
               },
               onChanged: (value) {
                 if (value != '.' && value != '-') {

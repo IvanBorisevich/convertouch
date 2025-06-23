@@ -26,7 +26,6 @@ class ConvertouchTooltip extends StatelessWidget {
     }
 
     Color foreground;
-
     switch (severity) {
       case ExceptionSeverity.info:
         foreground = colors.foregroundInfo.regular;
@@ -41,10 +40,10 @@ class ConvertouchTooltip extends StatelessWidget {
 
     return SuperTooltip(
       controller: controller,
-      shadowColor: Colors.transparent,
-      arrowTipDistance: 10,
+      hasShadow: false,
+      arrowTipDistance: 20,
       arrowTipRadius: 2,
-      arrowLength: 10,
+      arrowLength: 5,
       arrowBaseWidth: 10,
       showBarrier: false,
       backgroundColor: colors.background.regular,

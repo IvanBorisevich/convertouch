@@ -69,33 +69,57 @@ class NumRange {
       return null;
     }
 
-    String suffix = left.isFinite && right.isFinite ? " in range" : "";
-    return "Value should be$suffix $name";
-  }
-
-  String get name {
     if (left.isFinite && right.isInfinite) {
       if (left == 0) {
-        return includeLeft ? "non-negative" : "positive";
+        return includeLeft
+            ? _ValidationMessage.nonNegative.text
+            : _ValidationMessage.positive.text;
       } else {
-        return includeLeft ? "not less than $left" : "greater than $left";
+        return includeLeft
+            ? _ValidationMessage.notLessThan.withParam(left.toString())
+            : _ValidationMessage.greaterThan.withParam(left.toString());
       }
     }
 
     if (left.isFinite && right.isFinite) {
-      return "${includeLeft ? '[' : '('}"
-          "$left..$right"
-          "${includeRight ? ']' : ')'}";
+      return _ValidationMessage.inside.withParam(rangeName);
     }
 
     if (left.isInfinite && right.isFinite) {
       if (right == 0) {
-        return includeRight ? "non-positive" : "negative";
+        return includeRight
+            ? _ValidationMessage.nonPositive.text
+            : _ValidationMessage.negative.text;
       } else {
-        return includeRight ? "not greater than $right" : "less than $right";
+        return includeRight
+            ? _ValidationMessage.notGreaterThan.withParam(right.toString())
+            : _ValidationMessage.lessThan.withParam(right.toString());
       }
     }
 
-    return "any";
+    return null;
   }
+
+  String get rangeName => "${(includeLeft && left.isFinite) ? '[' : '('}"
+      "${left.isFinite ? left : '-∞'}..${right.isFinite ? right : '+∞'}"
+      "${(includeRight && right.isFinite) ? ']' : ')'}";
+}
+
+enum _ValidationMessage {
+  negative("Value should be negative"),
+  nonNegative("Value should be non-negative"),
+  positive("Value should be positive"),
+  nonPositive("Value should be non-positive"),
+  greaterThan("Value should be greater than {}"),
+  notGreaterThan("Value should not be greater than {}"),
+  lessThan("Value should be less than {}"),
+  notLessThan("Value should be at least {}"),
+  inside("Value should be in range {}"),
+  ;
+
+  final String text;
+
+  const _ValidationMessage(this.text);
+
+  String withParam(String p) => text.replaceFirst('{}', p);
 }

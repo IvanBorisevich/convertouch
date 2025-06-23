@@ -80,7 +80,7 @@ void main() {
 
       expect(
         const NumRange.closed(10, null).validationMessage,
-        'Value should be not less than 10',
+        'Value should be at least 10',
       );
 
       expect(
@@ -90,7 +90,7 @@ void main() {
 
       expect(
         const NumRange.closed(null, 20).validationMessage,
-        'Value should be not greater than 20',
+        'Value should not be greater than 20',
       );
 
       expect(
@@ -187,7 +187,7 @@ void main() {
 
       expect(
         const NumRange.leftOpen(null, 20).validationMessage,
-        'Value should be not greater than 20',
+        'Value should not be greater than 20',
       );
 
       expect(
@@ -226,7 +226,7 @@ void main() {
 
       expect(
         const NumRange.rightOpen(10, null).validationMessage,
-        'Value should be not less than 10',
+        'Value should be at least 10',
       );
 
       expect(
