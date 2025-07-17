@@ -90,13 +90,11 @@ class _ConvertouchUnitDetailsPageState
                                   required Color foreground,
                                   required Color matchForeground,
                                   required Color matchBackground,
-                                  required double iconSize,
                                   required double fontSize,
                                 }) {
                                   return IconUtils.getItemLogoIcon(
                                     iconName: item.iconName,
                                     color: foreground,
-                                    size: iconSize,
                                   );
                                 },
                                 onTap: () {

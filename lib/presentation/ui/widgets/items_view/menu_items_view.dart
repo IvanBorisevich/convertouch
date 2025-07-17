@@ -69,8 +69,10 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   late Map<ConvertouchUITheme, ConvertouchColorScheme> _emptyViewColors;
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
-
   late final String _noItemsLabel;
+
+  bool _isInitialized = false;
+  late final int _gridItemsNumInRow;
 
   @override
   void initState() {
@@ -89,6 +91,24 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       _emptyViewColors = paramSetPageEmptyViewColor;
       _noItemsLabel = "Parameters list is empty";
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isInitialized) {
+      _initStateByContext();
+      _isInitialized = true;
+    }
+  }
+
+  void _initStateByContext() {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    _gridItemsNumInRow = ((screenWidth - _itemsSpacing) /
+            (ConvertouchMenuGridItem.defaultWidth + _itemsSpacing))
+        .floor();
 
     onLoadMore() {
       widget.itemsListBloc.add(
@@ -115,7 +135,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         controller: _gridScrollController,
         hasReachedMax: widget.itemsListBloc.state.itemsFetch.hasReachedMax,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
-        itemsNumInRow: 4,
+        itemsNumInRow: _gridItemsNumInRow,
         itemHeight: ConvertouchMenuGridItem.defaultHeight,
         itemsSpacing: _itemsSpacing,
         onLoad: onLoadMore,
@@ -228,8 +248,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                             bottom: _bottomSpacing,
                           ),
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: _gridItemsNumInRow,
                             crossAxisSpacing: _itemsSpacing,
                             mainAxisSpacing: _itemsSpacing,
                           ),
@@ -329,14 +349,12 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     required Color foreground,
     required Color matchForeground,
     required Color matchBackground,
-    required double iconSize,
     required double fontSize,
   }) {
     if (item is UnitGroupModel) {
       return IconUtils.getItemLogoIcon(
         iconName: item.iconName,
         color: foreground,
-        size: iconSize,
       );
     }
 
@@ -356,7 +374,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       return IconUtils.getItemLogoIcon(
         iconName: IconNames.parameters,
         color: foreground,
-        size: iconSize,
+        // size: iconSize,
       );
     }
 

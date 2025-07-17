@@ -22,7 +22,6 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     required Color foreground,
     required Color matchForeground,
     required Color matchBackground,
-    required double iconSize,
     required double fontSize,
   }) logoFunc;
   final void Function()? onTap;
@@ -87,15 +86,17 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
             Column(
               children: [
                 Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: logoFunc.call(
-                      item,
-                      foreground: foreground,
-                      matchForeground: matchForeground,
-                      matchBackground: matchBackground,
-                      iconSize: 29,
-                      fontSize: 17,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: logoFunc.call(
+                        item,
+                        foreground: foreground,
+                        matchForeground: matchForeground,
+                        matchBackground: matchBackground,
+                        fontSize: 17,
+                      ),
                     ),
                   ),
                 ),

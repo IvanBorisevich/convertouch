@@ -22,7 +22,6 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     required Color foreground,
     required Color matchForeground,
     required Color matchBackground,
-    required double iconSize,
     required double fontSize,
   }) logoFunc;
   final void Function()? onTap;
@@ -76,7 +75,6 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
                 foreground: foreground,
                 matchForeground: matchForeground,
                 matchBackground: matchBackground,
-                iconSize: 24,
                 fontSize: 16,
               ),
             ),

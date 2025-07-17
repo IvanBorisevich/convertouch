@@ -22,7 +22,7 @@ class IconUtils {
   static ImageIcon getIcon(
     String iconName, {
     Color? color,
-    double size = defaultIconSize,
+    double? size,
   }) {
     return ImageIcon(
       AssetImage(
@@ -65,7 +65,7 @@ class IconUtils {
   static Widget getItemLogoIcon({
     required String? iconName,
     Color? color,
-    double size = defaultIconSize,
+    double? size,
   }) {
     return getIcon(
       iconName ?? defaultUnitGroupIconAssetName,
