@@ -69,13 +69,16 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
                   ? defaultHeight * 1.1
                   : defaultHeight * 1.7,
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: logoFunc.call(
-                item,
-                foreground: foreground,
-                matchForeground: matchForeground,
-                matchBackground: matchBackground,
-                fontSize: 16,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: logoFunc.call(
+                  item,
+                  foreground: foreground,
+                  matchForeground: matchForeground,
+                  matchBackground: matchBackground,
+                  fontSize: 16,
+                ),
               ),
             ),
             VerticalDivider(
