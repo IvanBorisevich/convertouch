@@ -22,7 +22,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Area",
+    "groupName": GroupNames.area,
     "iconName": "area-group.png",
     "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
@@ -34,7 +34,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Volume",
+    "groupName": GroupNames.volume,
     "iconName": "volume-group.png",
     "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
@@ -928,7 +928,7 @@ const unitsV1 = [
 
 const unitsV2 = [
   {
-    "groupName": "Volume",
+    "groupName": GroupNames.volume,
     "units": [
       {
         "code": "cm",
@@ -942,7 +942,7 @@ const unitsV2 = [
 
 const unitsV3 = [
   {
-    "groupName": "Volume",
+    "groupName": GroupNames.volume,
     "units": [
       {"code": "mL", "name": "Milliliter", "coefficient": 1E-6},
       {"code": "L", "name": "Liter", "coefficient": 1E-3},
@@ -1157,5 +1157,77 @@ const unitsV5 = [
         },
       },
     ],
+  },
+];
+
+const unitsV6 = [
+  {
+    "groupName": GroupNames.volume,
+    "units": [
+      {"code": "imp pt", "name": "Imperial pint", "coefficient": 0.000568261},
+      {"code": "US pt", "name": "US pint", "coefficient": 0.000473179},
+      {"code": "US dpt", "name": "US dry pint", "coefficient": 0.000550614},
+      {"code": "imp gal", "name": "Imperial gallon", "coefficient": 0.00454609},
+      {
+        "code": "gal",
+        forUpdate: {
+          "code": "US gal",
+          "name": "US gallon",
+        },
+      },
+      {"code": "US dgal", "name": "US dry gallon", "coefficient": 0.004405},
+      {"code": "imp bu", "name": "Imperial bushel", "coefficient": 0.03636872},
+      {"code": "US bu", "name": "US bushel", "coefficient": 0.03523907017},
+      {"code": "imp pk", "name": "Imperial peck", "coefficient": 0.00909218},
+      {"code": "US pk", "name": "US peck", "coefficient": 0.00880977},
+      {"code": "imp qt", "name": "Imperial quart", "coefficient": 0.0011365225},
+      {"code": "US qt", "name": "US quart", "coefficient": 0.000946352946},
+      {
+        "code": "US dqt",
+        "name": "US dry quart",
+        "coefficient": 0.001101220942715
+      },
+      {
+        "code": "imp gi",
+        "name": "Imperial gill",
+        "coefficient": 0.0001420653125
+      },
+      {"code": "US gi", "name": "US gill", "coefficient": 0.00011829411825},
+      {
+        "code": "imp fl oz",
+        "name": "Imperial fluid ounce",
+        "coefficient": 0.0000284130625
+      },
+      {
+        "code": "US fl oz",
+        "name": "US customary fluid ounce",
+        "coefficient": 0.0000295735295625
+      },
+      {
+        "code": "US ffl oz",
+        "name": "US food labeling fluid ounce",
+        "coefficient": 0.00003
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.mass,
+    "units": [
+      {"code": "oz t", "name": "Troy ounce", "coefficient": 0.0311034768},
+      {"code": "st.", "name": "Stone", "coefficient": 6.35029318},
+    ]
+  },
+  {
+    "groupName": GroupNames.area,
+    "units": [
+      {"code": "a", "name": "Are", "coefficient": 100},
+      {"code": "ha", "name": "Hectare", "coefficient": 1E+4},
+      {"code": "km²", "name": "Square Kilometer", "coefficient": 1E+6},
+      {"code": "ac", "name": "Acre", "coefficient": 4046.8564224},
+      {"code": "in²", "name": "Square Inch", "coefficient": 0.00064516},
+      {"code": "yd²", "name": "Square Yard", "coefficient": 0.83612736},
+      {"code": "mi²", "name": "Square Mile", "coefficient": 2589988.11},
+      {"code": "ft²", "name": "Square Foot", "coefficient": 0.09290304},
+    ]
   },
 ];

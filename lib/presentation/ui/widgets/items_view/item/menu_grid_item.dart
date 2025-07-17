@@ -89,7 +89,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                   child: FittedBox(
                     fit: BoxFit.contain,
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       child: logoFunc.call(
                         item,
                         foreground: foreground,

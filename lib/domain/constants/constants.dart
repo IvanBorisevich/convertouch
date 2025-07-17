@@ -12,6 +12,8 @@ abstract class GroupNames {
   const GroupNames._();
 
   static const length = "Length";
+  static const volume = "Volume";
+  static const area = "Area";
   static const temperature = "Temperature";
   static const currency = "Currency";
   static const clothesSize = "Clothes Size";
