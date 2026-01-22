@@ -308,7 +308,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     );
                                   }
                                 },
-                                onTextValueChanged: (item, value) {
+                                onValueChanged: (item, value) {
                                   conversionBloc.add(
                                     EditConversionItemValue(
                                       newValue: value,

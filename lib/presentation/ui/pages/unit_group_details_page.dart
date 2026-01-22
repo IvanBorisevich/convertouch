@@ -12,8 +12,8 @@ import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart'
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
+import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,11 +75,13 @@ class _ConvertouchUnitGroupDetailsPageState
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         valueChangeController: _unitGroupNameController,
                         onValueChanged: (value) {
-                          unitGroupDetailsBloc.add(
-                            UpdateUnitGroupName(
-                              newValue: value,
-                            ),
-                          );
+                          if (value != null) {
+                            unitGroupDetailsBloc.add(
+                              UpdateUnitGroupName(
+                                newValue: value,
+                              ),
+                            );
+                          }
                         },
                         textBoxColor: textBoxColor,
                       ),
@@ -98,16 +100,16 @@ class _ConvertouchUnitGroupDetailsPageState
                         name: "Values Minimum",
                         visible:
                             unitGroupDetailsState.draftGroup.minValue != null,
-                        value: unitGroupDetailsState
-                            .draftGroup.minValue?.altOrRaw,
+                        value:
+                            unitGroupDetailsState.draftGroup.minValue?.altOrRaw,
                         textBoxColor: textBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Maximum",
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue != null,
-                        value: unitGroupDetailsState
-                            .draftGroup.maxValue?.altOrRaw,
+                        value:
+                            unitGroupDetailsState.draftGroup.maxValue?.altOrRaw,
                         textBoxColor: textBoxColor,
                       ),
                       refreshingJobsBlocBuilder(

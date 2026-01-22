@@ -1,64 +1,28 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
+import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-const Map<ConvertouchValueType, TextInputType> inputValueTypeToKeyboardTypeMap =
-    {
-  ConvertouchValueType.text: TextInputType.text,
-  ConvertouchValueType.integer: TextInputType.numberWithOptions(
-    signed: true,
-    decimal: false,
-  ),
-  ConvertouchValueType.integerNonNegative: TextInputType.numberWithOptions(
-    signed: false,
-    decimal: false,
-  ),
-  ConvertouchValueType.decimal: TextInputType.numberWithOptions(
-    signed: true,
-    decimal: true,
-  ),
-  ConvertouchValueType.decimalNonNegative: TextInputType.numberWithOptions(
-    signed: false,
-    decimal: true,
-  ),
-  ConvertouchValueType.hexadecimal: TextInputType.text,
-};
-
-final Map<ConvertouchValueType, RegExp> inputValueTypeToRegExpMap = {
-  ConvertouchValueType.text: RegExp(r'(^[\S ]+$)'),
-  ConvertouchValueType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
-  ConvertouchValueType.integerNonNegative: RegExp(r'(^\d+$)'),
-  ConvertouchValueType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
-  ConvertouchValueType.decimalNonNegative: RegExp(r'(^\d+\.?\d*$)'),
-  ConvertouchValueType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
-};
-
 class ConvertouchTextBox extends StatefulWidget {
-  static const double defaultHeight = 55;
-
-  final String? text;
-  final String? hintText;
+  final TextBoxModel model;
   final TextEditingController? controller;
   final FocusNode? focusNode;
-  final ConvertouchValueType valueType;
-  final String label;
   final bool autofocus;
-  final bool readonly;
   final bool Function(String?)? isValueValid;
-  final String? invalidValueTooltipMessage;
-  final TooltipDirection tooltipDirection;
-  final void Function(String)? onValueChanged;
-  final void Function()? onValueClean;
+  final void Function(String?)? onValueChanged;
+  final void Function()? onValueCleaned;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
-  final int? maxTextLength;
-  final bool textLengthCounterVisible;
+  final TooltipDirection tooltipDirection;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
@@ -70,31 +34,24 @@ class ConvertouchTextBox extends StatefulWidget {
   final double? letterSpacing;
 
   const ConvertouchTextBox({
-    this.text,
-    this.hintText,
+    required this.model,
     this.controller,
     this.focusNode,
-    this.valueType = ConvertouchValueType.text,
-    this.label = "",
     this.autofocus = false,
-    this.readonly = false,
     this.isValueValid,
-    this.invalidValueTooltipMessage,
     this.tooltipDirection = TooltipDirection.down,
     this.onValueChanged,
-    this.onValueClean,
+    this.onValueCleaned,
     this.onFocusSelected,
     this.onFocusLeft,
-    this.maxTextLength,
-    this.textLengthCounterVisible = false,
-    this.borderRadius = 15,
+    this.borderRadius = InputBoxConstants.defaultBorderRadius,
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPadding = const EdgeInsets.all(17),
+    this.contentPadding = InputBoxConstants.defaultContentPadding,
     this.labelPadding,
-    this.height = defaultHeight,
-    this.fontSize = 17,
+    this.height = InputBoxConstants.defaultHeight,
+    this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
     super.key,
   });
@@ -103,46 +60,49 @@ class ConvertouchTextBox extends StatefulWidget {
   State createState() => _ConvertouchTextBoxState();
 }
 
-class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
+class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
+    with FocusNodeMixin, TextControllerMixin {
   late final FocusNode _focusNode;
+  void Function()? _focusListener;
+
   late final TextEditingController _controller;
   late final SuperTooltipController _tooltipController;
 
-  TextEditingController? _defaultController;
-  FocusNode? _defaultFocusNode;
-
   @override
   void initState() {
-    if (widget.controller != null) {
-      _controller = widget.controller!;
-    } else {
-      _defaultController = TextEditingController();
-      _controller = _defaultController!;
-    }
-
-    if (_controller.text.isEmpty) {
-      _controller.text = widget.text ?? "";
-    }
-
-    if (widget.focusNode != null) {
-      _focusNode = widget.focusNode!;
-    } else {
-      _defaultFocusNode = FocusNode();
-      _focusNode = _defaultFocusNode!;
-    }
-
-    _focusNode.addListener(_focusListener);
-
     _tooltipController = SuperTooltipController();
+
+    _controller = initOrGetController(
+      widget.controller,
+      initialValue: widget.model.focusedText,
+    );
+
+    _focusNode = initOrGetFocusNode(widget.focusNode);
+
+    if (!widget.model.readonly) {
+      _focusListener = addFocusListener(
+        focusNode: _focusNode,
+        onFocusSelected: () async {
+          widget.onFocusSelected?.call();
+          await _isValid(_controller.text);
+        },
+        onFocusLeft: () async {
+          widget.onFocusLeft?.call();
+          await _tooltipController.hideTooltip();
+        },
+      );
+    }
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _defaultController?.dispose();
-    _focusNode.removeListener(_focusListener);
-    _defaultFocusNode?.dispose();
+    _controller.dispose();
+    disposeFocusNode(
+      focusNode: _focusNode,
+      focusListener: _focusListener,
+    );
     _tooltipController.dispose();
     super.dispose();
   }
@@ -151,37 +111,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
   void didUpdateWidget(ConvertouchTextBox oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.text != oldWidget.text) {
-      _updateTextValue();
-    }
-  }
-
-  void _updateTextValue() {
-    String newText = widget.text ?? "";
-    int offset = _controller.selection.baseOffset;
-
-    if (offset > newText.length) {
-      offset = newText.length;
+    if (widget.model.value != oldWidget.model.value && _focusNode.hasFocus) {
+      updateTextControllerValue(_controller, widget.model.focusedText);
     }
 
-    _controller.value = _controller.value.copyWith(
-      text: widget.text ?? "",
-      selection: TextSelection.collapsed(offset: offset),
-    );
-  }
-
-  void _focusListener() async {
-    if (widget.readonly) {
-      return;
-    }
-
-    if (_focusNode.hasFocus) {
-      widget.onFocusSelected?.call();
-      await _isValid(_controller.text);
-    } else {
-      widget.onFocusLeft?.call();
-      _updateTextValue();
-      await _tooltipController.hideTooltip();
+    if (widget.model.unfocusedValue != oldWidget.model.unfocusedValue &&
+        !_focusNode.hasFocus) {
+      updateTextControllerValue(_controller, widget.model.unfocusedText);
     }
   }
 
@@ -198,13 +134,13 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
 
   @override
   Widget build(BuildContext context) {
-    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.valueType];
+    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.model.initialType];
 
     Color borderColor;
     Color foregroundColor;
     Color hintColor;
 
-    if (widget.readonly) {
+    if (widget.model.readonly) {
       borderColor = widget.colors.border.disabled;
       foregroundColor = widget.colors.foreground.disabled;
       hintColor = widget.colors.hint.disabled;
@@ -225,15 +161,15 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
         }
       },
       child: ConvertouchTooltip(
-        text: widget.invalidValueTooltipMessage,
+        text: widget.model.invalidValueMessage,
         controller: _tooltipController,
         tooltipDirection: widget.tooltipDirection,
         colors: widget.colors.tooltip,
         child: SizedBox(
           height: widget.height,
           child: TextField(
-            readOnly: widget.readonly,
-            maxLength: widget.maxTextLength,
+            readOnly: widget.model.readonly,
+            maxLength: widget.model.maxTextLength,
             textAlignVertical: TextAlignVertical.center,
             obscureText: false,
             autofocus: widget.autofocus,
@@ -242,7 +178,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
             inputFormatters: inputRegExp != null
                 ? [FilteringTextInputFormatter.allow(inputRegExp)]
                 : null,
-            keyboardType: inputValueTypeToKeyboardTypeMap[widget.valueType],
+            keyboardType:
+                inputValueTypeToKeyboardTypeMap[widget.model.initialType],
             onChanged: (newValue) async {
               if (await _isValid(newValue)) {
                 widget.onValueChanged?.call(newValue);
@@ -273,7 +210,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
                   maxWidth: MediaQuery.of(context).size.width / 2,
                 ),
                 child: Text(
-                  widget.label,
+                  widget.model.labelText,
                   maxLines: 1,
                   softWrap: false,
                   overflow: TextOverflow.fade,
@@ -285,7 +222,9 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
                 ),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: widget.hintText ?? '-',
+              hintText: _focusNode.hasFocus
+                  ? widget.model.hint
+                  : widget.model.unfocusedHint,
               hintStyle: TextStyle(
                 foreground: Paint()..color = hintColor,
               ),
@@ -294,8 +233,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
               prefixIcon: widget.prefixIcon,
               suffixIcon: _suffixIcon(),
               suffixIconColor: foregroundColor,
-              suffixText: widget.textLengthCounterVisible
-                  ? '${_controller.text.length}/${widget.maxTextLength}'
+              suffixText: widget.model.textLengthCounterVisible
+                  ? '${_controller.text.length}/${widget.model.maxTextLength}'
                   : null,
               filled: true,
               fillColor: widget.colors.background.regular,
@@ -327,7 +266,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox> {
           size: 17,
         ),
         onPressed: () async {
-          widget.onValueClean?.call();
+          _controller.clear();
+          widget.onValueCleaned?.call();
           await _tooltipController.hideTooltip();
         },
       );

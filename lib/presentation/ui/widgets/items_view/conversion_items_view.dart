@@ -1,6 +1,8 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
+import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
@@ -10,7 +12,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionUnitValueModel> convertedItems;
   final int? sourceUnitId;
   final void Function(ConversionUnitValueModel)? onUnitItemTap;
-  final void Function(ConversionUnitValueModel, String?)? onTextValueChanged;
+  final void Function(ConversionUnitValueModel, dynamic)? onValueChanged;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
   final double listItemSpacingAfterLast;
   final ConvertouchUITheme theme;
@@ -19,7 +21,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.convertedItems, {
     this.sourceUnitId,
     this.onUnitItemTap,
-    this.onTextValueChanged,
+    this.onValueChanged,
     this.onItemRemoveTap,
     this.listItemSpacingAfterLast = 90,
     required this.theme,
@@ -69,27 +71,24 @@ class _ConvertouchConversionItemsViewState
           key: Key('$index'),
           padding: const EdgeInsets.only(),
           child: ConvertouchConversionItem(
-            item,
-            index: index,
-            isSource:
-                widget.convertedItems[index].unit.id == widget.sourceUnitId,
-            isLast: index == widget.convertedItems.length - 1,
-            wrapped: true,
-            disabled: !widget.convertedItems[index].unit.invertible,
-            itemNameFunc: (item) => item.unit.itemName,
-            unitItemCodeFunc: (item) => item.unit.code,
-            removalControlVisible:
-                widget.convertedItems.length > unitValuesMinNum,
+            ConversionItemModel(
+              inputBoxModel: InputBoxModel.ofValue(
+                item,
+                readonly: !item.unit.invertible,
+              ),
+              unit: item.unit,
+              index: index,
+              isSource: item.unit.id == widget.sourceUnitId,
+              isLast: index == widget.convertedItems.length - 1,
+              removable: widget.convertedItems.length > unitValuesMinNum,
+            ),
             onUnitItemTap: () {
-              widget.onUnitItemTap?.call(widget.convertedItems[index]);
+              widget.onUnitItemTap?.call(item);
             },
             onValueChanged: (value) {
-              widget.onTextValueChanged?.call(
-                widget.convertedItems[index],
-                value,
-              );
+              widget.onValueChanged?.call(item, value);
             },
-            onRemove: () {
+            onItemRemoved: () {
               widget.onItemRemoveTap?.call(item);
             },
             colors: conversionItemColors[widget.theme]!,

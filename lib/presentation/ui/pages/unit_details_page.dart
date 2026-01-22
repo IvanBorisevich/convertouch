@@ -15,6 +15,8 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
+import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
@@ -132,11 +134,13 @@ class _ConvertouchUnitDetailsPageState
                         editable: pageState.details.editMode,
                         textBoxColor: textBoxColor,
                         onValueChanged: (value) {
-                          unitDetailsBloc.add(
-                            UpdateUnitNameInUnitDetails(
-                              newValue: value,
-                            ),
-                          );
+                          if (value != null) {
+                            unitDetailsBloc.add(
+                              UpdateUnitNameInUnitDetails(
+                                newValue: value,
+                              ),
+                            );
+                          }
                         },
                       ),
                       ConvertouchDetailsItem(
@@ -149,11 +153,13 @@ class _ConvertouchUnitDetailsPageState
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
                         onValueChanged: (value) {
-                          unitDetailsBloc.add(
-                            UpdateUnitCodeInUnitDetails(
-                              newValue: value,
-                            ),
-                          );
+                          if (value != null) {
+                            unitDetailsBloc.add(
+                              UpdateUnitCodeInUnitDetails(
+                                newValue: value,
+                              ),
+                            );
+                          }
                         },
                       ),
                       ConvertouchDetailsItem(
@@ -193,18 +199,21 @@ class _ConvertouchUnitDetailsPageState
                             children: [
                               const SizedBox(height: 10),
                               ConvertouchConversionItem(
-                                ConversionUnitValueModel(
+                                ConversionItemModel(
+                                  inputBoxModel: InputBoxModel.ofValue(
+                                    ConversionUnitValueModel(
+                                      unit: pageState.details.resultUnit,
+                                      value: pageState
+                                          .details.conversionRule.unitValue,
+                                      defaultValue: ValueModel.one,
+                                    ),
+                                    readonly: !pageState
+                                        .details.conversionRule.configEditable,
+                                  ),
                                   unit: pageState.details.resultUnit,
-                                  value: pageState
-                                      .details.conversionRule.unitValue,
-                                  defaultValue: ValueModel.one,
+                                  draggable: false,
+                                  removable: false,
                                 ),
-                                disabled: !pageState
-                                    .details.conversionRule.configEditable,
-                                itemNameFunc: (item) => item.unit.name,
-                                unitItemCodeFunc: (item) => item.unit.code,
-                                dragDropControlVisible: false,
-                                removalControlVisible: false,
                                 horizontalPadding: 0,
                                 spacing: 10,
                                 onValueChanged: (value) {
@@ -218,21 +227,23 @@ class _ConvertouchUnitDetailsPageState
                               ),
                               const SizedBox(height: 12),
                               ConvertouchConversionItem(
-                                ConversionUnitValueModel(
-                                  unit:
-                                      pageState.details.conversionRule.argUnit,
-                                  value: pageState
-                                      .details.conversionRule.draftArgValue,
-                                  defaultValue: pageState
-                                      .details.conversionRule.savedArgValue,
+                                ConversionItemModel(
+                                  inputBoxModel: InputBoxModel.ofValue(
+                                    ConversionUnitValueModel(
+                                      unit: pageState
+                                          .details.conversionRule.argUnit,
+                                      value: pageState
+                                          .details.conversionRule.draftArgValue,
+                                      defaultValue: pageState
+                                          .details.conversionRule.savedArgValue,
+                                    ),
+                                    readonly: !pageState
+                                        .details.conversionRule.configEditable,
+                                  ),
+                                  draggable: false,
+                                  removable: false,
+                                  isLast: true,
                                 ),
-                                disabled: !pageState
-                                    .details.conversionRule.configEditable,
-                                itemNameFunc: (item) => item.unit.name,
-                                unitItemCodeFunc: (item) => item.unit.code,
-                                dragDropControlVisible: false,
-                                removalControlVisible: false,
-                                isLast: true,
                                 horizontalPadding: 0,
                                 spacing: 10,
                                 onValueChanged: (value) {

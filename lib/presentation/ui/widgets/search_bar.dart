@@ -4,13 +4,15 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
+import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
+import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchSearchBar extends StatefulWidget {
+class ConvertouchSearchBar extends StatelessWidget {
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String? placeholder;
@@ -29,32 +31,20 @@ class ConvertouchSearchBar extends StatefulWidget {
   });
 
   @override
-  State createState() => _ConvertouchSearchBarState();
-}
-
-class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
-  static const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
-    ItemsViewMode.list: Icons.reorder_outlined,
-    ItemsViewMode.grid: Icons.grid_view_rounded,
-  };
-
-  final TextEditingController _searchFieldController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
         PageColorScheme pageColorScheme = pageColors[appState.theme]!;
         SearchBarColorScheme searchBarColorScheme =
-            widget.customColor ?? searchBarColors[appState.theme]!;
+            customColor ?? searchBarColors[appState.theme]!;
 
         ItemsViewMode pageViewMode;
 
-        if (widget.viewModeSettingKey == SettingKey.unitGroupsViewMode) {
+        if (viewModeSettingKey == SettingKey.unitGroupsViewMode) {
           pageViewMode = appState.unitGroupsViewMode;
-        } else if (widget.viewModeSettingKey == SettingKey.unitsViewMode) {
+        } else if (viewModeSettingKey == SettingKey.unitsViewMode) {
           pageViewMode = appState.unitsViewMode;
-        } else if (widget.viewModeSettingKey == SettingKey.paramSetsViewMode) {
+        } else if (viewModeSettingKey == SettingKey.paramSetsViewMode) {
           pageViewMode = appState.paramSetsViewMode;
         } else {
           pageViewMode = ItemsViewMode.grid;
@@ -75,26 +65,18 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
             children: [
               Expanded(
                 child: ConvertouchTextBox(
-                  controller: _searchFieldController,
-                  onValueChanged: widget.onSearchStringChanged,
-                  hintText: widget.placeholder,
+                  model: TextBoxModel(
+                    hint: placeholder,
+                    unfocusedHint: placeholder,
+                  ),
+                  onValueChanged: onSearchStringChanged,
                   fontSize: 15,
                   letterSpacing: 0,
                   prefixIcon: Icon(
                     Icons.search,
                     color: searchBarColorScheme.textBox.foreground.regular,
                   ),
-                  suffixIcon: _searchFieldController.text.isNotEmpty
-                      ? IconButton(
-                          onPressed: () {
-                            widget.onSearchReset?.call();
-                            setState(() {
-                              _searchFieldController.clear();
-                            });
-                          },
-                          icon: const Icon(Icons.close_rounded),
-                        )
-                      : null,
+                  onValueCleaned: onSearchReset,
                   colors: searchBarColorScheme.textBox,
                   contentPadding: const EdgeInsets.symmetric(vertical: 7),
                 ),
@@ -120,9 +102,9 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
                   onPressed: () {
                     BlocProvider.of<AppBloc>(context).add(
                       ChangeSetting(
-                        settingKey: widget.viewModeSettingKey,
+                        settingKey: viewModeSettingKey,
                         settingValue: pageViewMode.next.value,
-                        fromPage: widget.pageName,
+                        fromPage: pageName,
                       ),
                     );
                   },
@@ -134,11 +116,5 @@ class _ConvertouchSearchBarState extends State<ConvertouchSearchBar> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _searchFieldController.dispose();
-    super.dispose();
   }
 }

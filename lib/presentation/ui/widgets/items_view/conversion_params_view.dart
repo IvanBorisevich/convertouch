@@ -4,9 +4,11 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
+import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
+import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
@@ -23,7 +25,7 @@ class ConversionParamsView extends StatelessWidget {
   static const double _maxBodyHeight = 255;
   static const double _tabPanelHeight = 50;
   static const double _footerHeight = 28;
-  static const double _paramsSpacing = 10;
+  static const double _paramsSpacing = 0;
   static const double _tabHeight = 40;
 
   final ConversionParamSetValueBulkModel? params;
@@ -63,7 +65,7 @@ class ConversionParamsView extends StatelessWidget {
 
     for (var paramSetValue in params!.paramSetValues) {
       int numOfParams = paramSetValue.paramValues.length;
-      double paramSetHeight = numOfParams * ConvertouchTextBox.defaultHeight +
+      double paramSetHeight = numOfParams * InputBoxConstants.defaultHeight +
           numOfParams * _paramsSpacing +
           _paramsSpacing;
 
@@ -333,11 +335,12 @@ class ConversionParamsView extends StatelessWidget {
   }) {
     return Expanded(
       child: ConvertouchConversionItem(
-        paramItem,
-        dragDropControlVisible: false,
-        removalControlVisible: false,
-        itemNameFunc: (item) => item.param.name,
-        unitItemCodeFunc: (item) => item.unit?.code,
+        ConversionItemModel(
+          inputBoxModel: InputBoxModel.ofValue(paramItem),
+          unit: paramItem.unitItem,
+          draggable: false,
+          removable: false,
+        ),
         onUnitItemTap: () {
           onParamUnitTap?.call(paramItem);
         },

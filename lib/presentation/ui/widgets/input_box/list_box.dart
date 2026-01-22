@@ -1,54 +1,46 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
+import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchListBox extends StatefulWidget {
-  static const double defaultHeight = 55;
-
-  final OutputListValuesBatch listValuesBatch;
-  final ListValueModel? selectedValue;
+  final ListBoxModel model;
   final FocusNode? focusNode;
-  final String label;
   final bool autofocus;
-  final bool disabled;
-  final bool dropdownSearchVisible;
-  final String? dropdownSearchHint;
-  final void Function(String?)? onChanged;
+  final void Function(ListValueModel?)? onValueChanged;
   final void Function()? onFocusSelected;
   final void Function()? onFocusLeft;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final EdgeInsetsGeometry contentPadding;
   final double height;
   final double fontSize;
   final EdgeInsetsGeometry? labelPadding;
 
   const ConvertouchListBox({
-    required this.listValuesBatch,
-    this.selectedValue,
+    required this.model,
     this.focusNode,
-    this.label = "",
     this.autofocus = false,
-    this.disabled = false,
-    this.dropdownSearchVisible = false,
-    this.dropdownSearchHint,
-    this.onChanged,
+    this.onValueChanged,
     this.onFocusSelected,
     this.onFocusLeft,
-    this.borderRadius = 15,
+    this.borderRadius = InputBoxConstants.defaultBorderRadius,
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.height = defaultHeight,
-    this.fontSize = 17,
+    this.contentPadding = InputBoxConstants.defaultContentPadding,
+    this.height = InputBoxConstants.defaultHeight,
+    this.fontSize = InputBoxConstants.defaultFontSize,
     this.labelPadding,
     super.key,
   });
@@ -58,50 +50,42 @@ class ConvertouchListBox extends StatefulWidget {
 }
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox>
-    with ItemsLazyLoadingMixin {
-  static const String hintText = 'N/A';
+    with ItemsLazyLoadingMixin, FocusNodeMixin {
+  static const String defaultHint = 'N/A';
+  static const String defaultDropdownSearchHint = 'Search item...';
 
   final TextEditingController _dropdownSearchController =
       TextEditingController();
 
   late bool _isDropdownOpen;
   late final FocusNode _focusNode;
-  FocusNode? _defaultFocusNode;
+  void Function()? _focusListener;
 
   @override
   void initState() {
     _isDropdownOpen = false;
 
-    if (widget.focusNode != null) {
-      _focusNode = widget.focusNode!;
-    } else {
-      _defaultFocusNode = FocusNode();
-      _focusNode = _defaultFocusNode!;
-    }
+    _focusNode = initOrGetFocusNode(widget.focusNode);
 
-    _focusNode.addListener(_focusListener);
+    if (!widget.model.readonly) {
+      _focusListener = addFocusListener(
+        focusNode: _focusNode,
+        onFocusSelected: widget.onFocusSelected,
+        onFocusLeft: widget.onFocusLeft,
+      );
+    }
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _focusNode.removeListener(_focusListener);
-    _defaultFocusNode?.dispose();
+    disposeFocusNode(
+      focusNode: _focusNode,
+      focusListener: _focusListener,
+    );
     _dropdownSearchController.dispose();
     super.dispose();
-  }
-
-  void _focusListener() {
-    if (widget.disabled) {
-      return;
-    }
-
-    if (_focusNode.hasFocus) {
-      widget.onFocusSelected?.call();
-    } else {
-      widget.onFocusLeft?.call();
-    }
   }
 
   @override
@@ -111,7 +95,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
     Color hintColor;
     ConvertouchColorScheme dropdownMenu = widget.colors.dropdown;
 
-    if (widget.disabled) {
+    if (widget.model.readonly) {
       borderColor = widget.colors.border.disabled;
       foregroundColor = widget.colors.foreground.disabled;
       hintColor = widget.colors.hint.disabled;
@@ -135,15 +119,17 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
         child: DropdownButtonFormField2<ListValueModel>(
           isExpanded: true,
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(17),
+            contentPadding: widget.contentPadding,
             enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius)),
               borderSide: BorderSide(
                 color: borderColor,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius)),
               borderSide: BorderSide(
                 color: borderColor,
               ),
@@ -158,7 +144,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
                 maxWidth: MediaQuery.of(context).size.width / 2,
               ),
               child: Text(
-                widget.label,
+                widget.model.labelText,
                 maxLines: 1,
                 softWrap: false,
                 overflow: TextOverflow.fade,
@@ -174,14 +160,14 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
             fillColor: widget.colors.background.regular,
           ),
           hint: Text(
-            hintText,
+            defaultHint,
             style: TextStyle(
               fontSize: 16,
               color: hintColor,
             ),
           ),
-          value: widget.selectedValue,
-          items: widget.listValuesBatch.items
+          value: widget.model.value,
+          items: widget.model.listValues
               .map(
                 (value) => DropdownMenuItem(
                   value: value,
@@ -198,9 +184,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
                 ),
               )
               .toList(),
-          onChanged: (item) {
-            widget.onChanged?.call(item?.value);
-          },
+          onChanged: widget.onValueChanged,
           style: TextStyle(
             fontSize: widget.fontSize,
             fontWeight: FontWeight.w500,
@@ -211,12 +195,12 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
           selectedItemBuilder: (context) {
-            return widget.listValuesBatch.items.map(
+            return widget.model.listValues.map(
               (value) {
                 return Container(
                   padding: EdgeInsets.zero,
                   child: Text(
-                    widget.selectedValue?.itemName ?? hintText,
+                    widget.model.value?.itemName ?? defaultHint,
                     style: TextStyle(
                       fontSize: 16,
                       overflow: TextOverflow.ellipsis,
@@ -261,43 +245,40 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
           buttonStyleData: const ButtonStyleData(
             padding: EdgeInsets.zero,
           ),
-          dropdownSearchData: widget.dropdownSearchVisible
-              ? DropdownSearchData(
-                  searchController: _dropdownSearchController,
-                  searchInnerWidgetHeight: 60,
-                  searchInnerWidget: Container(
-                    height: 60,
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
-                    ),
-                    child: TextFormField(
-                      maxLines: 1,
-                      controller: _dropdownSearchController,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 17,
-                          vertical: 8,
-                        ),
-                        hintText: widget.dropdownSearchHint ??
-                            'Search for an item...',
-                        hintStyle: const TextStyle(fontSize: 15),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        ),
-                      ),
-                    ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: _dropdownSearchController,
+            searchInnerWidgetHeight: 60,
+            searchInnerWidget: Container(
+              height: 60,
+              padding: const EdgeInsets.only(
+                top: 8,
+                bottom: 4,
+                right: 8,
+                left: 8,
+              ),
+              child: TextFormField(
+                maxLines: 1,
+                controller: _dropdownSearchController,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 17,
+                    vertical: 8,
                   ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value?.value
-                            .toLowerCase()
-                            .contains(searchValue.toLowerCase()) ??
-                        false;
-                  },
-                )
-              : null,
+                  hintText: defaultDropdownSearchHint,
+                  hintStyle: TextStyle(fontSize: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                ),
+              ),
+            ),
+            searchMatchFn: (item, searchValue) {
+              return item.value?.value
+                      .toLowerCase()
+                      .contains(searchValue.toLowerCase()) ??
+                  false;
+            },
+          ),
           onMenuStateChange: (isOpen) {
             if (!isOpen) {
               _dropdownSearchController.clear();
