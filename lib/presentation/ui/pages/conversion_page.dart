@@ -316,6 +316,15 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     ),
                                   );
                                 },
+                                onValueFocused: (item, value) {
+                                  conversionBloc.add(
+                                    EditConversionItemValue(
+                                      newValue: value,
+                                      unitId: item.unit.id,
+                                      proceedAfterValidation: false,
+                                    ),
+                                  );
+                                },
                                 onItemRemoveTap: (item) {
                                   conversionBloc.add(
                                     RemoveConversionItems(

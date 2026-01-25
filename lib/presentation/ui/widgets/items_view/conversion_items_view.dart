@@ -13,6 +13,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final int? sourceUnitId;
   final void Function(ConversionUnitValueModel)? onUnitItemTap;
   final void Function(ConversionUnitValueModel, dynamic)? onValueChanged;
+  final void Function(ConversionUnitValueModel, dynamic)? onValueFocused;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
   final double listItemSpacingAfterLast;
   final ConvertouchUITheme theme;
@@ -22,6 +23,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.sourceUnitId,
     this.onUnitItemTap,
     this.onValueChanged,
+    this.onValueFocused,
     this.onItemRemoveTap,
     this.listItemSpacingAfterLast = 90,
     required this.theme,
@@ -87,6 +89,9 @@ class _ConvertouchConversionItemsViewState
             },
             onValueChanged: (value) {
               widget.onValueChanged?.call(item, value);
+            },
+            onValueFocused: (value) {
+              widget.onValueFocused?.call(item, value);
             },
             onItemRemoved: () {
               widget.onItemRemoveTap?.call(item);

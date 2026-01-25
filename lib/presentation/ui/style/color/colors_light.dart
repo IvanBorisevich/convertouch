@@ -3,6 +3,13 @@ import 'package:convertouch/presentation/ui/style/color/color_variation.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
+const validationTooltipColorSchemeLight = SeverityColorScheme(
+  background: ColorVariation.only(Color(0xff637fc6)),
+  foregroundError: ColorVariation.only(Color(0xFFFFBDBD)),
+  foregroundWarning: ColorVariation.only(Color(0xFFFFEADD)),
+  foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),
+);
+
 const pageColorSchemeLight = PageColorScheme(
   appBar: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xff7f9dec)),
@@ -34,6 +41,7 @@ const searchBarColorSchemeLight = SearchBarColorScheme(
     background: ColorVariation.only(Color(0xFFF6F9FF)),
     foreground: ColorVariation.only(Color(0xFF426F99)),
     hint: ColorVariation.only(Color(0xFF5C93C7)),
+    tooltip: validationTooltipColorSchemeLight,
   ),
   viewModeButton: ConvertouchColorScheme(
     background: ColorVariation.only(Color(0xffc1d7ff)),
@@ -287,12 +295,7 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
       background: ColorVariation.only(Color(0xffabc4fd)),
       foreground: ColorVariation.only(Color(0xFF1D578C)),
     ),
-    tooltip: SeverityColorScheme(
-      background: ColorVariation.only(Color(0xff637fc6)),
-      foregroundError: ColorVariation.only(Color(0xFFFFBDBD)),
-      foregroundWarning: ColorVariation.only(Color(0xFFFFEADD)),
-      foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),
-    ),
+    tooltip: validationTooltipColorSchemeLight,
   ),
   background: ColorVariation.only(Color(0xffe7f2ff)),
   unitButton: ConvertouchColorScheme(

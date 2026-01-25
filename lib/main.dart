@@ -6,9 +6,11 @@ import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
@@ -60,6 +62,12 @@ class ConvertouchApp extends StatelessWidget {
             ..add(
               const GetAppSettingsInit(),
             ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<InputValidationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConvertouchTooltipBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<NavigationBloc>(),

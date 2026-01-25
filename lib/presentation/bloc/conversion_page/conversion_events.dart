@@ -8,12 +8,16 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 abstract class ConversionEvent extends ConvertouchEvent {
   const ConversionEvent({
     super.onComplete,
+    super.validateInput,
+    super.proceedAfterValidation,
   });
 }
 
 abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion({
     super.onComplete,
+    super.validateInput,
+    super.proceedAfterValidation,
   });
 }
 
@@ -130,6 +134,8 @@ class EditConversionItemValue extends ModifyConversion {
     required this.newValue,
     this.newDefaultValue,
     required this.unitId,
+    super.validateInput,
+    super.proceedAfterValidation,
   });
 
   @override
@@ -137,6 +143,8 @@ class EditConversionItemValue extends ModifyConversion {
         newValue,
         newDefaultValue,
         unitId,
+        validateInput,
+        proceedAfterValidation,
       ];
 
   @override

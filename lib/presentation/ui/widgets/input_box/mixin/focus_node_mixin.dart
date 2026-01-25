@@ -24,10 +24,10 @@ mixin FocusNodeMixin {
 
   void disposeFocusNode({
     required FocusNode focusNode,
-    void Function()? focusListener,
+    void Function()? listener,
   }) {
-    if (focusListener != null) {
-      focusNode.removeListener(focusListener);
+    if (listener != null) {
+      focusNode.removeListener(listener);
     }
     focusNode.dispose();
   }

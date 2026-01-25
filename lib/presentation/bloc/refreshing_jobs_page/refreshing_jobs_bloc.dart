@@ -120,6 +120,7 @@ class RefreshingJobsBloc
               newValue: null,
               newDefaultValue: networkData.dynamicValue!.value,
               unitId: networkData.dynamicValue!.unitId,
+              validateInput: false,
             ),
           );
         }

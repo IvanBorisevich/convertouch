@@ -9,7 +9,6 @@ class TextBoxModel extends InputBoxModel {
   final ConvertouchValueType initialType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
-  final String? invalidValueMessage;
 
   const TextBoxModel({
     this.value,
@@ -21,7 +20,6 @@ class TextBoxModel extends InputBoxModel {
     this.initialType = ConvertouchValueType.text,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
-    this.invalidValueMessage,
   });
 
   String get focusedText => value ?? '';

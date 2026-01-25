@@ -20,6 +20,7 @@ class ConvertouchConversionItem<M extends InputBoxModel>
   final ConversionItemModel<M> model;
   final void Function()? onUnitItemTap;
   final void Function(dynamic)? onValueChanged;
+  final void Function(dynamic)? onValueFocused;
   final void Function()? onItemRemoved;
   final double spacing;
   final double horizontalPadding;
@@ -29,6 +30,7 @@ class ConvertouchConversionItem<M extends InputBoxModel>
     this.model, {
     this.onUnitItemTap,
     this.onValueChanged,
+    this.onValueFocused,
     this.onItemRemoved,
     this.spacing = _defaultSpacing,
     this.horizontalPadding = _defaultSpacing,
@@ -88,14 +90,8 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
               tooltipDirection: widget.model.isLast
                   ? TooltipDirection.up
                   : TooltipDirection.down,
-              // isValueValid: (value) {
-              //   if (value == null) {
-              //     return true;
-              //   }
-              //
-              //   return itemValuesRange.contains(double.tryParse(value));
-              // },
               onValueChanged: widget.onValueChanged,
+              onFocusSelected: widget.onValueFocused,
               suffixIcon: _suffixIcon(),
               colors: textBoxColor,
               labelPadding: widget.model.isSource

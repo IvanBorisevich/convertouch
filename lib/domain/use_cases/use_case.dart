@@ -1,26 +1,26 @@
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:either_dart/either.dart';
 
-abstract class UseCase<InputType, OutputType> {
+abstract class UseCase<I, O> {
   const UseCase();
 
-  Future<Either<ConvertouchException, OutputType>> execute(InputType input);
+  Future<Either<ConvertouchException, O>> execute(I input);
 }
 
-abstract class UseCaseGeneric<InputType, OutputType> {
-  const UseCaseGeneric();
+abstract class UseCaseGenericInput<I, O> {
+  const UseCaseGenericInput();
 
-  Future<Either<ConvertouchException, OutputType>> execute<T>(InputType input);
+  Future<Either<ConvertouchException, O>> execute<T>(I input);
 }
 
-abstract class ReactiveUseCase<InputType, OutputType> {
-  const ReactiveUseCase();
-
-  Either<ConvertouchException, Stream<OutputType>> execute(InputType input);
-}
-
-abstract class UseCaseNoInput<OutputType> {
+abstract class UseCaseNoInput<O> {
   const UseCaseNoInput();
 
-  Future<Either<ConvertouchException, OutputType>> execute();
+  Future<Either<ConvertouchException, O>> execute();
+}
+
+abstract class ReactiveUseCase<I, O> {
+  const ReactiveUseCase();
+
+  Either<ConvertouchException, Stream<O>> execute(I input);
 }

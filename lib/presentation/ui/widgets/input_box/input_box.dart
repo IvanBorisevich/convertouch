@@ -1,3 +1,4 @@
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
@@ -6,6 +7,7 @@ import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
@@ -14,9 +16,8 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
   final bool autofocus;
   final TooltipDirection tooltipDirection;
   final void Function(dynamic)? onValueChanged;
-  final bool Function(dynamic)? isValueValid;
-  final void Function()? onFocusSelected;
-  final void Function()? onFocusLeft;
+  final void Function(dynamic)? onFocusSelected;
+  final void Function(dynamic)? onFocusLeft;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
@@ -35,7 +36,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
     this.onValueChanged,
     this.onFocusSelected,
     this.onFocusLeft,
-    this.isValueValid,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     required this.colors,
     this.prefixIcon,
@@ -55,15 +55,10 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         model: model as TextBoxModel,
         focusNode: focusNode,
         autofocus: autofocus,
-        isValueValid: isValueValid,
         tooltipDirection: tooltipDirection,
-        onValueChanged: (value) {
-          if (value != '.' && value != '-') {
-            onValueChanged?.call(value);
-          }
-        },
-        onFocusSelected: onFocusSelected,
-        onFocusLeft: onFocusLeft,
+        onValueChanged: onValueChanged,
+        onValueFocused: onFocusSelected,
+        onValueUnfocused: onFocusLeft,
         borderRadius: borderRadius,
         colors: colors,
         prefixIcon: prefixIcon,
@@ -73,6 +68,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         height: height,
         fontSize: fontSize,
         letterSpacing: letterSpacing,
+        validationBloc: BlocProvider.of<InputValidationBloc>(context),
       );
     }
 
@@ -82,8 +78,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         focusNode: focusNode,
         autofocus: autofocus,
         onValueChanged: onValueChanged,
-        onFocusSelected: onFocusSelected,
-        onFocusLeft: onFocusLeft,
         borderRadius: borderRadius,
         colors: colors,
         prefixIcon: prefixIcon,

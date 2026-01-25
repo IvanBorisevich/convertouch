@@ -16,8 +16,6 @@ class ConvertouchListBox extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final void Function(ListValueModel?)? onValueChanged;
-  final void Function()? onFocusSelected;
-  final void Function()? onFocusLeft;
   final double borderRadius;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
@@ -32,8 +30,6 @@ class ConvertouchListBox extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.onValueChanged,
-    this.onFocusSelected,
-    this.onFocusLeft,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     required this.colors,
     this.prefixIcon,
@@ -59,21 +55,12 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
 
   late bool _isDropdownOpen;
   late final FocusNode _focusNode;
-  void Function()? _focusListener;
 
   @override
   void initState() {
     _isDropdownOpen = false;
 
     _focusNode = initOrGetFocusNode(widget.focusNode);
-
-    if (!widget.model.readonly) {
-      _focusListener = addFocusListener(
-        focusNode: _focusNode,
-        onFocusSelected: widget.onFocusSelected,
-        onFocusLeft: widget.onFocusLeft,
-      );
-    }
 
     super.initState();
   }
@@ -82,7 +69,6 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
   void dispose() {
     disposeFocusNode(
       focusNode: _focusNode,
-      focusListener: _focusListener,
     );
     _dropdownSearchController.dispose();
     super.dispose();

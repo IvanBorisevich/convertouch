@@ -37,10 +37,7 @@ Widget blocBuilderWrap<
       if (state is PageStateType) {
         return builderFunc.call(state);
       }
-      return const SizedBox(
-        height: 0,
-        width: 0,
-      );
+      return const SizedBox.shrink();
     },
   );
 }

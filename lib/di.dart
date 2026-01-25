@@ -29,6 +29,7 @@ import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/select_list_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
@@ -65,8 +66,10 @@ import 'package:convertouch/domain/use_cases/units/fetch_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
@@ -211,6 +214,10 @@ Future<void> _initTranslators() async {
 }
 
 Future<void> _initUseCases() async {
+  locator.registerLazySingleton<ValidateInputUseCase>(
+    () => const ValidateInputUseCase(),
+  );
+
   locator.registerLazySingleton<CalculateDefaultValueUseCase>(
     () => CalculateDefaultValueUseCase(
       dynamicValueRepository: locator(),
@@ -422,6 +429,16 @@ Future<void> _initBloc() async {
     () => AppBloc(),
   );
 
+  locator.registerLazySingleton<InputValidationBloc>(
+    () => InputValidationBloc(
+      validateInputUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ConvertouchTooltipBloc>(
+    () => ConvertouchTooltipBloc(),
+  );
+
   locator.registerLazySingleton<NavigationBloc>(
     () => NavigationBloc(),
   );
@@ -512,6 +529,7 @@ Future<void> _initBloc() async {
       enrichItemsWithListValuesUseCase: locator(),
       fetchMoreListValuesOfParamUseCase: locator(),
       fetchMoreListValuesOfConvItemUseCase: locator(),
+      inputValidationBloc: locator(),
       navigationBloc: locator(),
     ),
   );
