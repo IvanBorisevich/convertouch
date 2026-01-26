@@ -10,18 +10,12 @@ class NumInRangeValidator extends InputValidator {
 
   @override
   InputValidatorResult validate(String? input) {
-    // if (input == null || numRange.contains(double.tryParse(input))) {
-    //   return InputValidatorResult.failed(numRange.validationMessage);
-    // }
-    //
-    // return const InputValidatorResult.successful();
+    NumRange numRange = NumRange.closed(min, max);
 
-    print("validator input = $input");
-
-    if (input == null || input.length <= 2) {
-      return InputValidatorResult.successful();
+    if (input == null || numRange.contains(double.tryParse(input))) {
+      return InputValidatorResult.failed(numRange.validationMessage);
     }
 
-    return InputValidatorResult.failed("Failed value $input");
+    return const InputValidatorResult.successful();
   }
 }

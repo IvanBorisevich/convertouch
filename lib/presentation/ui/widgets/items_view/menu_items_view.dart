@@ -5,10 +5,7 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
-import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
@@ -22,7 +19,6 @@ import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavi
 import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     P extends ItemsFetchParams> extends StatefulWidget {
@@ -169,17 +165,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
               pageName: widget.pageName,
               viewModeSettingKey: widget.viewModeSettingKey,
               onSearchStringChanged: (text) {
-                BlocProvider.of<InputValidationBloc>(context).add(
-                  ValidateInput(input: text, validators: [
-                    NumInRangeValidator(1, 2),
-                  ], onSuccess: () async {
-                    widget.itemsListBloc.add(
-                      FetchItems<P>(
-                        searchString: text,
-                        params: state.itemsFetch.params,
-                      ),
-                    );
-                  }),
+                widget.itemsListBloc.add(
+                  FetchItems<P>(
+                    searchString: text,
+                    params: state.itemsFetch.params,
+                  ),
                 );
               },
               onSearchReset: () {
