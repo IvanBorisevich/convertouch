@@ -2,7 +2,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -172,14 +171,14 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
               onSearchStringChanged: (text) {
                 BlocProvider.of<InputValidationBloc>(context).add(
                   ValidateInput(input: text, validators: [
-                    NumInRangeValidator(NumRange.closed(1, 2)),
+                    NumInRangeValidator(1, 2),
                   ], onSuccess: () async {
-                    // widget.itemsListBloc.add(
-                    //   FetchItems<P>(
-                    //     searchString: text,
-                    //     params: state.itemsFetch.params,
-                    //   ),
-                    // );
+                    widget.itemsListBloc.add(
+                      FetchItems<P>(
+                        searchString: text,
+                        params: state.itemsFetch.params,
+                      ),
+                    );
                   }),
                 );
               },

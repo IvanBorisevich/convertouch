@@ -17,12 +17,14 @@ class InputValidationWrapper extends StatefulWidget {
   final Color tooltipBackgroundColor;
   final Color tooltipForegroundColor;
   final TooltipDirection tooltipDirection;
+  final bool resetValidationOnNavigate;
 
   const InputValidationWrapper({
     required this.focusNode,
     required this.tooltipBackgroundColor,
     required this.tooltipForegroundColor,
     this.tooltipDirection = TooltipDirection.down,
+    this.resetValidationOnNavigate = true,
     required this.child,
     super.key,
   });
@@ -39,12 +41,15 @@ class _InputValidationWrapperState extends State<InputValidationWrapper> {
     return MultiBlocListener(
       listeners: [
         BlocListener<NavigationBloc, NavigationState>(
+          listenWhen: (prev, current) => widget.resetValidationOnNavigate,
           listener: (_, navigationState) {
             widget.focusNode.unfocus();
 
-            BlocProvider.of<InputValidationBloc>(context).add(
-              const ResetValidation(),
-            );
+            if (_tooltipController.isVisible) {
+              BlocProvider.of<InputValidationBloc>(context).add(
+                const ResetValidation(),
+              );
+            }
           },
         ),
         BlocListener<InputValidationBloc, InputValidationState>(

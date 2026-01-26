@@ -31,7 +31,6 @@ class ConvertouchTooltip extends StatelessWidget {
       showBarrier: false,
       backgroundColor: backgroundColor,
       borderColor: backgroundColor,
-      hideTooltipOnBarrierTap: true,
       content: content,
       child: child,
     );

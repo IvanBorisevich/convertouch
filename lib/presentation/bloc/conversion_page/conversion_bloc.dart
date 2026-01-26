@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
@@ -22,14 +21,12 @@ import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
@@ -261,67 +258,40 @@ class ConversionBloc
     Emitter<ConversionState> emit,
   ) async {
     if (event.validateInput) {
-      var conversionItem = state.conversion.convertedUnitValues
-          .where((element) => element.unit.id == event.unitId)
-          .firstOrNull;
+      inputValidationBloc.interceptAndValidate(
+        input: event.newValue,
+        validatorsFunc: () {
+          var conversionItem = state.conversion.convertedUnitValues
+              .where((element) => element.unit.id == event.unitId)
+              .firstOrNull;
 
-      inputValidationBloc.add(
-        ValidateInput(input: event.newValue, validators: [
-          conversionItem != null
-              ? NumInRangeValidator(
-                  NumRange.closed(conversionItem.min, conversionItem.max),
-                )
-              : const SuccessValidator(),
-          const NumSignsValidator(),
-        ]),
+          return [
+            NumInRangeValidator(conversionItem?.min, conversionItem?.max),
+            const NumSignsValidator(),
+          ];
+        },
+        onSuccess: () {
+          if (event.proceedAfterValidation) {
+            add(event.copyWith(validateInput: false));
+          }
+        },
       );
+
+      return;
     }
 
-    // if (event.validateInput) {
-    //   var conversionItem = state.conversion.convertedUnitValues
-    //       .where((element) => element.unit.id == event.unitId)
-    //       .firstOrNull;
-    //
-    //   final result = await validateInputUseCase.execute(
-    //     InputValidationModel(input: event.newValue, validators: [
-    //       conversionItem != null
-    //           ? NumInRangeValidator(
-    //               NumRange.closed(conversionItem.min, conversionItem.max),
-    //             )
-    //           : const SuccessValidator(),
-    //       const NumSignsValidator(),
-    //     ]),
-    //   );
-    //
-    //   final validationResult = ObjectUtils.tryGet(result);
-    //
-    //   if (validationResult.message != null) {
-    //     emit(
-    //       state.copyWith(
-    //         validationMessage: validationResult.message,
-    //       ),
-    //     );
-    //   }
-    //
-    //   if (!validationResult.proceedOnSuccess) {
-    //     return;
-    //   }
-    // }
+    final result = await editConversionItemValueUseCase.execute(
+      InputConversionModifyModel<EditConversionItemValueDelta>(
+        delta: EditConversionItemValueDelta(
+          newValue: event.newValue,
+          newDefaultValue: event.newDefaultValue,
+          unitId: event.unitId,
+        ),
+        conversion: state.conversion,
+      ),
+    );
 
-    if (event.proceedAfterValidation) {
-      // final result = await editConversionItemValueUseCase.execute(
-      //   InputConversionModifyModel<EditConversionItemValueDelta>(
-      //     delta: EditConversionItemValueDelta(
-      //       newValue: event.newValue,
-      //       newDefaultValue: event.newDefaultValue,
-      //       unitId: event.unitId,
-      //     ),
-      //     conversion: state.conversion,
-      //   ),
-      // );
-      //
-      // await _handleAndEmit(result, emit);
-    }
+    await _handleAndEmit(result, emit);
   }
 
   _onUpdateConversionCoefficients(

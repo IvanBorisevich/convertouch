@@ -8,7 +8,7 @@ abstract class InputValidationEvent extends ConvertouchEvent {
 class ValidateInput extends InputValidationEvent {
   final String? input;
   final List<InputValidator> validators;
-  final Future<void> Function()? onSuccess;
+  final void Function()? onSuccess;
 
   const ValidateInput({
     required this.input,
@@ -17,7 +17,7 @@ class ValidateInput extends InputValidationEvent {
   });
 
   ValidateInput copyWith({
-    Future<void> Function()? onSuccess,
+    void Function()? onSuccess,
   }) {
     return ValidateInput(
       input: input,

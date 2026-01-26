@@ -138,6 +138,20 @@ class EditConversionItemValue extends ModifyConversion {
     super.proceedAfterValidation,
   });
 
+  EditConversionItemValue copyWith({
+    bool? validateInput,
+    bool? proceedAfterValidation,
+  }) {
+    return EditConversionItemValue(
+      newValue: newValue,
+      newDefaultValue: newDefaultValue,
+      unitId: unitId,
+      validateInput: validateInput ?? this.validateInput,
+      proceedAfterValidation:
+          proceedAfterValidation ?? this.proceedAfterValidation,
+    );
+  }
+
   @override
   List<Object?> get props => [
         newValue,
@@ -152,7 +166,9 @@ class EditConversionItemValue extends ModifyConversion {
     return 'EditConversionItemValue{'
         'newValue: $newValue, '
         'newDefaultValue: $newDefaultValue, '
-        'unitId: $unitId}';
+        'unitId: $unitId, '
+        'validateInput: $validateInput, '
+        'proceedAfterValidation: $proceedAfterValidation}';
   }
 }
 

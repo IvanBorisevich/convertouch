@@ -3,9 +3,10 @@ import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/model/input_validator_result.dart';
 
 class NumInRangeValidator extends InputValidator {
-  final NumRange numRange;
+  final double? min;
+  final double? max;
 
-  const NumInRangeValidator(this.numRange);
+  const NumInRangeValidator(this.min, this.max);
 
   @override
   InputValidatorResult validate(String? input) {

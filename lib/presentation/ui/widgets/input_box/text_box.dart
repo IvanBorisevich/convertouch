@@ -30,6 +30,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final double height;
   final double fontSize;
   final double? letterSpacing;
+  final bool resetValidationOnNavigate;
   final InputValidationBloc? validationBloc;
 
   const ConvertouchTextBox({
@@ -51,6 +52,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
+    this.resetValidationOnNavigate = true,
     this.validationBloc,
     super.key,
   });
@@ -141,6 +143,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
       tooltipBackgroundColor: widget.colors.tooltip.background.regular,
       tooltipForegroundColor: widget.colors.tooltip.foregroundWarning.regular,
       tooltipDirection: widget.tooltipDirection,
+      resetValidationOnNavigate: widget.resetValidationOnNavigate,
       child: SizedBox(
         height: widget.height,
         child: TextField(

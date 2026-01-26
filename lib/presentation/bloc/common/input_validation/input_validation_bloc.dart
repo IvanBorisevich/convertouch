@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/use_case_model/input/input_validation_model.dart';
 import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart';
+import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/model/input_validator_result.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -37,7 +38,7 @@ class InputValidationBloc
       emit(const InputValidationSuccess());
 
       if (validation.proceedOnSuccess) {
-        await event.onSuccess?.call();
+        event.onSuccess?.call();
       }
     }
   }
@@ -49,15 +50,17 @@ class InputValidationBloc
     emit(const InputValidationSuccess());
   }
 
-  Future<void> interceptWithValidation({
-    bool validate = true,
-    required ValidateInput validationEvent,
-    required Future<void> Function() funcWithoutValidation,
+  void interceptAndValidate({
+    required String? input,
+    required List<InputValidator> Function() validatorsFunc,
+    required void Function() onSuccess,
   }) async {
-    if (validate) {
-      add(validationEvent);
-    } else {
-      await funcWithoutValidation.call();
-    }
+    add(
+      ValidateInput(
+        input: input,
+        validators: validatorsFunc.call(),
+        onSuccess: onSuccess,
+      ),
+    );
   }
 }
