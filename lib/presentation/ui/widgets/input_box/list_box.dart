@@ -109,26 +109,34 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
         child: DropdownButtonFormField2<ListValueModel>(
           isExpanded: true,
           decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: widget.borderRadius,
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderWidth > 0
+                  ? BorderSide(
+                      color: borderColor,
+                      width: widget.borderWidth,
+                    )
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderWidth > 0
+                  ? BorderSide(
+                      color: borderColor,
+                      width: widget.borderWidth,
+                    )
+                  : BorderSide.none,
+            ),
             contentPadding: EdgeInsets.only(
               top: widget.height / 2,
               left: widget.contentPaddingLeft,
               right: widget.contentPaddingRight,
             ),
             isDense: true,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: BorderSide(
-                color: borderColor,
-                width: widget.borderWidth,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: BorderSide(
-                color: borderColor,
-                width: widget.borderWidth,
-              ),
-            ),
             label: Container(
               padding: widget.labelPadding,
               decoration: BoxDecoration(
@@ -144,8 +152,8 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   foreground: Paint()..color = borderColor,
                 ),
               ),

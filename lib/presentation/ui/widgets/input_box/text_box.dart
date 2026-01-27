@@ -267,8 +267,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
 
   Widget? _suffixCloseIcon() {
     if (_controller.text.isNotEmpty && _focusNode.hasFocus) {
-      return Container(
-        // color: Colors.green,
+      return SizedBox(
         width: 26,
         child: IconButton(
           padding: EdgeInsets.zero,

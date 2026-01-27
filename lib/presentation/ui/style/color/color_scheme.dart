@@ -122,16 +122,18 @@ class SearchBarColorScheme {
 
 class ConversionItemColorScheme extends ConvertouchColorScheme {
   final InputBoxColorScheme textBox;
-  final ConvertouchColorScheme unitButton;
-  final ConvertouchColorScheme handler;
-  final ColorVariation wrapBackground;
+  final ColorVariation unitButton;
+  final ColorVariation prefixWidget;
+  final ColorVariation suffixWidget;
+  final ColorVariation removalIcon;
   final ColorVariation divider;
 
   const ConversionItemColorScheme({
     required this.textBox,
     required this.unitButton,
-    this.handler = ConvertouchColorScheme.none,
-    this.wrapBackground = ColorVariation.none,
+    this.prefixWidget = ColorVariation.none,
+    this.suffixWidget = ColorVariation.none,
+    this.removalIcon = ColorVariation.none,
     this.divider = ColorVariation.none,
     super.background,
   });

@@ -5,7 +5,7 @@ import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 class ConversionItemModel<M extends InputBoxModel> implements ElementModel {
   final M inputBoxModel;
   final UnitModel? unit;
-  final int? index;
+  final int index;
   final bool draggable;
   final bool removable;
   final bool isSource;
@@ -14,7 +14,7 @@ class ConversionItemModel<M extends InputBoxModel> implements ElementModel {
   const ConversionItemModel({
     required this.inputBoxModel,
     this.unit,
-    this.index,
+    this.index = 0,
     this.draggable = true,
     this.removable = true,
     this.isSource = false,

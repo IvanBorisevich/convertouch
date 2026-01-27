@@ -25,7 +25,7 @@ class ConversionParamsView extends StatelessWidget {
   static const double _maxBodyHeight = 255;
   static const double _tabPanelHeight = 50;
   static const double _footerHeight = 28;
-  static const double _paramsSpacing = 0;
+  static const double _paramsSpacing = 8;
   static const double _tabHeight = 40;
 
   final ConversionParamSetValueBulkModel? params;
@@ -302,25 +302,17 @@ class ConversionParamsView extends StatelessWidget {
                 child: Container(
                   width: width,
                   height: height,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
                       Radius.circular(12),
                     ),
-                    border: Border.all(
-                      color: paramItem.calculated
-                          ? colors.paramItem.handler.border.selected
-                          : colors.paramItem.handler.border.regular,
-                    ),
-                    color: paramItem.calculated
-                        ? colors.paramItem.handler.background.selected
-                        : colors.paramItem.handler.background.regular,
                   ),
                   child: Icon(
                     Icons.sync_alt_rounded,
                     size: 17,
                     color: paramItem.calculated
-                        ? colors.paramItem.handler.foreground.selected
-                        : colors.paramItem.handler.foreground.regular,
+                        ? colors.paramItem.suffixWidget.selected
+                        : colors.paramItem.suffixWidget.regular,
                   ),
                 ),
               ),

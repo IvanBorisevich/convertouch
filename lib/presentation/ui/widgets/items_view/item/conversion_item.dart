@@ -33,14 +33,22 @@ class ConvertouchConversionItem<M extends InputBoxModel>
 
 class _ConvertouchConversionItemState<M extends InputBoxModel>
     extends State<ConvertouchConversionItem<M>> {
+  bool _isFocused = false;
+
   @override
   Widget build(BuildContext context) {
+    bool prefixWidgetsExist = widget.model.draggable;
+    bool suffixWidgetsExist =
+        widget.model.unit != null || widget.model.removable;
+
     return Container(
       height: InputBoxConstants.defaultHeight,
       decoration: BoxDecoration(
         borderRadius: InputBoxConstants.defaultBorderRadius,
         border: Border.all(
-          color: widget.colors.textBox.border.regular,
+          color: _isFocused
+              ? widget.colors.textBox.border.focused
+              : widget.colors.textBox.border.regular,
           width: 1,
         ),
         color: widget.colors.textBox.background.regular,
@@ -48,9 +56,9 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       child: Row(
         children: [
           _prefixWidget(
-            visible: widget.model.draggable && widget.model.index != null,
+            visible: widget.model.draggable,
             widget: ReorderableDragStartListener(
-              index: widget.model.index!,
+              index: widget.model.index,
               child: Container(
                 width: 32,
                 padding: const EdgeInsets.only(left: 3),
@@ -66,14 +74,16 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               height: -0.3,
-                              color: widget.colors.handler.foreground.regular,
+                              color: widget.colors.prefixWidget.selected,
                             ),
                           ),
                         ),
                       )
                     : Icon(
                         Icons.drag_indicator_outlined,
-                        color: widget.colors.handler.foreground.regular,
+                        color: _isFocused
+                            ? widget.colors.prefixWidget.focused
+                            : widget.colors.prefixWidget.regular,
                         size: 20,
                       ),
               ),
@@ -88,27 +98,29 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                   ? TooltipDirection.up
                   : TooltipDirection.down,
               onValueChanged: widget.onValueChanged,
-              onFocusSelected: widget.onValueFocused,
+              onFocusSelected: (value) {
+                setState(() {
+                  _isFocused = true;
+                });
+                widget.onValueFocused?.call(value);
+              },
+              onFocusLeft: (value) {
+                setState(() {
+                  _isFocused = false;
+                });
+              },
               colors: widget.colors.textBox,
               labelPadding: const EdgeInsets.only(
                 left: 4,
                 right: 4,
                 bottom: 4,
               ),
-              contentPaddingLeft: 12,
-              contentPaddingRight: 12,
-            ),
-          ),
-          Container(
-            width: 34,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {},
-              icon: Icon(
-                Icons.copy_rounded,
-                color: widget.colors.handler.foreground.regular,
-                size: 19,
-              ),
+              contentPaddingLeft: prefixWidgetsExist
+                  ? 12
+                  : InputBoxConstants.defaultContentPaddingLeft,
+              contentPaddingRight: suffixWidgetsExist
+                  ? 12
+                  : InputBoxConstants.defaultContentPaddingRight,
             ),
           ),
           _suffixWidget(
@@ -127,7 +139,9 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 child: Text(
                   widget.model.unit!.code,
                   style: TextStyle(
-                    color: widget.colors.unitButton.foreground.regular,
+                    color: _isFocused
+                        ? widget.colors.unitButton.focused
+                        : widget.colors.unitButton.regular,
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
@@ -149,7 +163,9 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 },
                 icon: Icon(
                   Icons.remove,
-                  color: widget.colors.handler.foreground.regular,
+                  color: _isFocused
+                      ? widget.colors.removalIcon.focused
+                      : widget.colors.removalIcon.regular,
                   size: 20,
                 ),
               ),
@@ -158,105 +174,6 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
         ],
       ),
     );
-
-    // return Container(
-    //   height: _wrapContainerHeight,
-    //   padding: const EdgeInsets.symmetric(
-    //     vertical: ConvertouchConversionItem._defaultSpacing,
-    //   ),
-    //   decoration: BoxDecoration(
-    //     color: widget.model.isSource
-    //         ? wrapBackgroundColor.regular
-    //         : Colors.transparent,
-    //   ),
-    //   child: Row(
-    //     children: [
-    //       SizedBox(width: widget.horizontalPadding),
-    //       widget.model.draggable && widget.model.index != null
-    //           ? ReorderableDragStartListener(
-    //               index: widget.model.index!,
-    //               child: _handler(
-    //                 iconLogo: !widget.model.isSource
-    //                     ? Icons.drag_indicator_outlined
-    //                     : null,
-    //                 textLogo: widget.model.isSource ? '𝑥' : null,
-    //                 handlerColor: handlerColor,
-    //                 controlPosition: ControlPosition.left,
-    //               ),
-    //             )
-    //           : const SizedBox.shrink(),
-    //       Expanded(
-    //         child: ConvertouchInputBox(
-    //           model: widget.model.inputBoxModel,
-    //           tooltipDirection: widget.model.isLast
-    //               ? TooltipDirection.up
-    //               : TooltipDirection.down,
-    //           onValueChanged: widget.onValueChanged,
-    //           onFocusSelected: widget.onValueFocused,
-    //           suffixIcon: _suffixIcon(),
-    //           colors: textBoxColor,
-    //           labelPadding: widget.model.isSource
-    //               ? const EdgeInsets.symmetric(horizontal: 4)
-    //               : null,
-    //         ),
-    //       ),
-    //       widget.model.unit != null
-    //           ? Container(
-    //               width: _unitButtonWidth,
-    //               height: InputBoxConstants.defaultHeight,
-    //               padding: EdgeInsets.only(left: widget.spacing),
-    //               child: TextButton(
-    //                 onPressed: () {
-    //                   FocusScope.of(context).unfocus();
-    //                   widget.onUnitItemTap?.call();
-    //                 },
-    //                 style: ButtonStyle(
-    //                   backgroundColor: WidgetStateProperty.all(
-    //                     widget.model.isSource
-    //                         ? unitButtonColor.background.selected
-    //                         : unitButtonColor.background.regular,
-    //                   ),
-    //                   shape: WidgetStateProperty.all(
-    //                     RoundedRectangleBorder(
-    //                       side: BorderSide(
-    //                         color: widget.model.isSource
-    //                             ? unitButtonColor.border.selected
-    //                             : unitButtonColor.border.regular,
-    //                         width: 1,
-    //                       ),
-    //                       borderRadius: const BorderRadius.all(
-    //                         Radius.circular(_unitButtonBorderRadius),
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 child: Text(
-    //                   widget.model.unit!.code,
-    //                   style: TextStyle(
-    //                     color: unitButtonColor.foreground.regular,
-    //                     fontSize: 15,
-    //                     fontWeight: FontWeight.w700,
-    //                   ),
-    //                   maxLines: 1,
-    //                 ),
-    //               ),
-    //             )
-    //           : const SizedBox.shrink(),
-    //       widget.model.removable
-    //           ? _handler(
-    //               iconLogo: Icons.remove,
-    //               handlerColor: handlerColor,
-    //               controlPosition: ControlPosition.right,
-    //               onTap: () {
-    //                 FocusScope.of(context).unfocus();
-    //                 widget.onItemRemoved?.call();
-    //               },
-    //             )
-    //           : const SizedBox.shrink(),
-    //       SizedBox(width: widget.horizontalPadding),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _prefixWidget({
@@ -293,7 +210,9 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
 
   Widget _verticalDivider() {
     return VerticalDivider(
-      color: widget.colors.divider.regular,
+      color: _isFocused
+          ? widget.colors.divider.focused
+          : widget.colors.divider.regular,
       indent: 10,
       endIndent: 10,
       width: 2,
