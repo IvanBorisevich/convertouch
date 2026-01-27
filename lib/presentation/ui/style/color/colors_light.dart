@@ -297,6 +297,11 @@ const conversionItemColorSchemeLight = ConversionItemColorScheme(
     ),
     tooltip: validationTooltipColorSchemeLight,
   ),
+  divider: ColorVariation(
+    regular: Color(0xFFBAD2EC),
+    focused: Color(0xFF233B50),
+    disabled: Color(0xFF90A8C0),
+  ),
   background: ColorVariation.only(Color(0xffe7f2ff)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(

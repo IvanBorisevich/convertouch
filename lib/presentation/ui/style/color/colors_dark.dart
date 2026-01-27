@@ -281,7 +281,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
     background: ColorVariation.only(Color(0xFF363D48)),
     border: ColorVariation(
       regular: Color(0xFF84A1BD),
-      focused: Color(0xFF98BAD9),
+      focused: Color(0xFFA1C7EA),
       disabled: Color(0xFF687A8C),
     ),
     foreground: ColorVariation(
@@ -298,6 +298,11 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
     ),
     tooltip: validationTooltipColorSchemeDark,
   ),
+  divider: ColorVariation(
+    regular: Color(0xFF506578),
+    focused: Color(0xFFA1C7EA),
+    disabled: Color(0xFF687A8C),
+  ),
   background: ColorVariation.only(Color(0xFF373F4B)),
   unitButton: ConvertouchColorScheme(
     border: ColorVariation(
@@ -309,7 +314,7 @@ const conversionItemColorSchemeDark = ConversionItemColorScheme(
       selected: Color(0xFF5B6A88),
     ),
     foreground: ColorVariation(
-      regular: Color(0xFFADCEEC),
+      regular: Color(0xFF63A4E4),
     ),
   ),
   handler: ConvertouchColorScheme(

@@ -214,8 +214,6 @@ class _ConvertouchUnitDetailsPageState
                                   draggable: false,
                                   removable: false,
                                 ),
-                                horizontalPadding: 0,
-                                spacing: 10,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateUnitValueInUnitDetails(
@@ -244,8 +242,6 @@ class _ConvertouchUnitDetailsPageState
                                   removable: false,
                                   isLast: true,
                                 ),
-                                horizontalPadding: 0,
-                                spacing: 10,
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateArgumentUnitValueInUnitDetails(

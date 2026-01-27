@@ -125,12 +125,14 @@ class ConversionItemColorScheme extends ConvertouchColorScheme {
   final ConvertouchColorScheme unitButton;
   final ConvertouchColorScheme handler;
   final ColorVariation wrapBackground;
+  final ColorVariation divider;
 
   const ConversionItemColorScheme({
     required this.textBox,
     required this.unitButton,
     this.handler = ConvertouchColorScheme.none,
     this.wrapBackground = ColorVariation.none,
+    this.divider = ColorVariation.none,
     super.background,
   });
 }

@@ -36,7 +36,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _viewPadding = 7;
+  static const double _viewPadding = 9;
   static const double _bottomSpacing = 85;
 
   @override
@@ -65,13 +65,15 @@ class _ConvertouchConversionItemsViewState
       padding: const EdgeInsets.only(
         top: _viewPadding,
         bottom: _bottomSpacing,
+        left: _viewPadding,
+        right: _viewPadding,
       ),
       itemBuilder: (context, index) {
         ConversionUnitValueModel item = widget.convertedItems[index];
 
         return Padding(
           key: Key('$index'),
-          padding: const EdgeInsets.only(),
+          padding: const EdgeInsets.only(bottom: _viewPadding),
           child: ConvertouchConversionItem(
             ConversionItemModel(
               inputBoxModel: InputBoxModel.ofValue(

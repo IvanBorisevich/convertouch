@@ -21,11 +21,15 @@ class ConvertouchTextBox extends StatefulWidget {
   final void Function(String?)? onValueUnfocused;
   final void Function()? onValueCleaned;
   final TooltipDirection tooltipDirection;
-  final double borderRadius;
+  final BorderRadius borderRadius;
+  final double borderWidth;
+  final double contentPaddingLeft;
+  final double contentPaddingRight;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
+  final double prefixIconPaddingLeft;
+  final double prefixIconPaddingRight;
   final Widget? suffixIcon;
-  final EdgeInsetsGeometry contentPadding;
   final EdgeInsetsGeometry? labelPadding;
   final double height;
   final double fontSize;
@@ -44,10 +48,15 @@ class ConvertouchTextBox extends StatefulWidget {
     this.onValueFocused,
     this.onValueUnfocused,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
+    this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
+    this.prefixIconPaddingLeft = InputBoxConstants.defaultPrefixIconPaddingLeft,
+    this.prefixIconPaddingRight =
+        InputBoxConstants.defaultPrefixIconPaddingRight,
     this.suffixIcon,
-    this.contentPadding = InputBoxConstants.defaultContentPadding,
+    this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
+    this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
     this.labelPadding,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
@@ -161,19 +170,27 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               inputValueTypeToKeyboardTypeMap[widget.model.initialType],
           onChanged: widget.onValueChanged,
           decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: widget.borderRadius,
+              borderSide: BorderSide.none,
+            ),
             enabledBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(widget.borderRadius)),
-              borderSide: BorderSide(
-                color: borderColor,
-              ),
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderWidth > 0
+                  ? BorderSide(
+                      color: borderColor,
+                      width: widget.borderWidth,
+                    )
+                  : BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(widget.borderRadius)),
-              borderSide: BorderSide(
-                color: borderColor,
-              ),
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderWidth > 0
+                  ? BorderSide(
+                      color: borderColor,
+                      width: widget.borderWidth,
+                    )
+                  : BorderSide.none,
             ),
             label: Container(
               padding: widget.labelPadding,
@@ -190,8 +207,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   foreground: Paint()..color = borderColor,
                 ),
               ),
@@ -203,10 +220,31 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             hintStyle: TextStyle(
               foreground: Paint()..color = hintColor,
             ),
-            contentPadding: widget.contentPadding,
+            contentPadding: EdgeInsets.only(
+              top: widget.height / 2,
+              left: widget.contentPaddingLeft,
+              right: widget.contentPaddingRight,
+            ),
+            isDense: true,
             counterText: "",
-            prefixIcon: widget.prefixIcon,
-            suffixIcon: _suffixIcon(),
+            prefixIcon: _iconPaddingWrapper(
+              icon: widget.prefixIcon,
+              paddingLeft: widget.prefixIconPaddingLeft,
+              paddingRight: widget.prefixIconPaddingRight,
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 0,
+              minHeight: 0,
+            ),
+            suffixIcon: _iconPaddingWrapper(
+              icon: widget.suffixIcon ?? _suffixCloseIcon(),
+              paddingLeft: 0,
+              paddingRight: 0,
+            ),
+            suffixIconConstraints: const BoxConstraints(
+              minWidth: 0,
+              minHeight: 0,
+            ),
             suffixIconColor: foregroundColor,
             suffixText: widget.model.textLengthCounterVisible
                 ? '${_controller.text.length}/${widget.model.maxTextLength}'
@@ -227,26 +265,44 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
     );
   }
 
-  Widget? _suffixIcon() {
-    if (widget.suffixIcon != null) {
-      return widget.suffixIcon;
-    }
-
+  Widget? _suffixCloseIcon() {
     if (_controller.text.isNotEmpty && _focusNode.hasFocus) {
-      return IconButton(
-        icon: Icon(
-          Icons.close_rounded,
-          color: widget.colors.foreground.regular,
-          size: 17,
+      return Container(
+        // color: Colors.green,
+        width: 26,
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          icon: Icon(
+            Icons.close_rounded,
+            color: widget.colors.foreground.regular,
+            size: 17,
+          ),
+          onPressed: () {
+            _controller.clear();
+            widget.onValueCleaned?.call();
+            widget.onValueChanged?.call(null);
+          },
         ),
-        onPressed: () {
-          _controller.clear();
-          widget.onValueCleaned?.call();
-          widget.onValueChanged?.call(null);
-        },
       );
     }
 
     return null;
+  }
+
+  Widget? _iconPaddingWrapper({
+    required Widget? icon,
+    required double paddingLeft,
+    required double paddingRight,
+  }) {
+    if (icon == null) {
+      return null;
+    }
+    return Padding(
+      padding: EdgeInsets.only(
+        left: paddingLeft,
+        right: paddingRight,
+      ),
+      child: icon,
+    );
   }
 }

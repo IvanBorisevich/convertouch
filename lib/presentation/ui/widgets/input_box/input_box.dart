@@ -18,11 +18,13 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
   final void Function(dynamic)? onValueChanged;
   final void Function(dynamic)? onFocusSelected;
   final void Function(dynamic)? onFocusLeft;
-  final double borderRadius;
+  final BorderRadius borderRadius;
+  final double borderWidth;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final EdgeInsetsGeometry contentPadding;
+  final double contentPaddingLeft;
+  final double contentPaddingRight;
   final EdgeInsetsGeometry? labelPadding;
   final double height;
   final double fontSize;
@@ -37,10 +39,12 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
     this.onFocusSelected,
     this.onFocusLeft,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
+    this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPadding = InputBoxConstants.defaultContentPadding,
+    this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
+    this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
     this.labelPadding,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
@@ -60,10 +64,12 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         onValueFocused: onFocusSelected,
         onValueUnfocused: onFocusLeft,
         borderRadius: borderRadius,
+        borderWidth: borderWidth,
         colors: colors,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        contentPadding: contentPadding,
+        contentPaddingLeft: contentPaddingLeft,
+        contentPaddingRight: contentPaddingRight,
         labelPadding: labelPadding,
         height: height,
         fontSize: fontSize,
@@ -79,10 +85,12 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         autofocus: autofocus,
         onValueChanged: onValueChanged,
         borderRadius: borderRadius,
+        borderWidth: borderWidth,
         colors: colors,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        contentPadding: contentPadding,
+        contentPaddingLeft: contentPaddingLeft,
+        contentPaddingRight: contentPaddingRight,
         height: height,
         fontSize: fontSize,
         labelPadding: labelPadding,

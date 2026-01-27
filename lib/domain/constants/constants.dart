@@ -59,7 +59,6 @@ abstract class UnitCodes {
 abstract class IconNames {
   const IconNames._();
 
-  static const oneWayConversion = "one_way_conversion.svg";
   static const parameters = "parameters.png";
 }
 

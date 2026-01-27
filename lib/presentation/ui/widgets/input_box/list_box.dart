@@ -16,11 +16,13 @@ class ConvertouchListBox extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final void Function(ListValueModel?)? onValueChanged;
-  final double borderRadius;
+  final BorderRadius borderRadius;
+  final double borderWidth;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final EdgeInsetsGeometry contentPadding;
+  final double contentPaddingLeft;
+  final double contentPaddingRight;
   final double height;
   final double fontSize;
   final EdgeInsetsGeometry? labelPadding;
@@ -31,10 +33,12 @@ class ConvertouchListBox extends StatefulWidget {
     this.autofocus = false,
     this.onValueChanged,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
+    this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPadding = InputBoxConstants.defaultContentPadding,
+    this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
+    this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.labelPadding,
@@ -105,19 +109,24 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
         child: DropdownButtonFormField2<ListValueModel>(
           isExpanded: true,
           decoration: InputDecoration(
-            contentPadding: widget.contentPadding,
+            contentPadding: EdgeInsets.only(
+              top: widget.height / 2,
+              left: widget.contentPaddingLeft,
+              right: widget.contentPaddingRight,
+            ),
+            isDense: true,
             enabledBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(widget.borderRadius)),
+              borderRadius: widget.borderRadius,
               borderSide: BorderSide(
                 color: borderColor,
+                width: widget.borderWidth,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(widget.borderRadius)),
+              borderRadius: widget.borderRadius,
               borderSide: BorderSide(
                 color: borderColor,
+                width: widget.borderWidth,
               ),
             ),
             label: Container(

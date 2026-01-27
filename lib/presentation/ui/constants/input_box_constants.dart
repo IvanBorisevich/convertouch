@@ -4,9 +4,15 @@ import 'package:flutter/material.dart';
 
 abstract interface class InputBoxConstants {
   static const double defaultHeight = 55;
-  static const double defaultBorderRadius = 15;
+  static const double defaultBorderRadiusNum = 15;
+  static const Radius defaultRadius = Radius.circular(defaultBorderRadiusNum);
+  static const BorderRadius defaultBorderRadius =
+      BorderRadius.all(defaultRadius);
   static const double defaultFontSize = 17;
-  static const defaultContentPadding = EdgeInsets.all(17);
+  static const double defaultContentPaddingLeft = 17;
+  static const double defaultContentPaddingRight = 17;
+  static const double defaultPrefixIconPaddingLeft = 10;
+  static const double defaultPrefixIconPaddingRight = 10;
 }
 
 const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
