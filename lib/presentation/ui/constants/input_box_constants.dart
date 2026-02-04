@@ -8,11 +8,12 @@ abstract interface class InputBoxConstants {
   static const Radius defaultRadius = Radius.circular(defaultBorderRadiusNum);
   static const BorderRadius defaultBorderRadius =
       BorderRadius.all(defaultRadius);
+  static const double defaultBorderWidth = 1;
   static const double defaultFontSize = 17;
   static const double defaultContentPaddingLeft = 17;
   static const double defaultContentPaddingRight = 17;
-  static const double defaultPrefixIconPaddingLeft = 10;
-  static const double defaultPrefixIconPaddingRight = 10;
+  static const double defaultIconPaddingLeft = 10;
+  static const double defaultIconPaddingRight = 10;
 }
 
 const Map<ItemsViewMode, IconData> itemViewModeIconMap = {

@@ -137,7 +137,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                   borderRadius: InputBoxConstants.defaultBorderRadius,
                 ),
                 child: Text(
-                  widget.model.unit!.code,
+                  widget.model.unit?.code ?? "",
                   style: TextStyle(
                     color: _isFocused
                         ? widget.colors.unitButton.focused

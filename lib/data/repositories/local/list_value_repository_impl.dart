@@ -189,9 +189,73 @@ List<ListValueModel> _clothesSizesEs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(34, 48, step: 2),
     ]);
 
+List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
+      44,
+      46.5,
+      48,
+      49.5,
+      50.5,
+      52,
+      53,
+      54.5,
+      55.5,
+      57,
+      58,
+      59.5,
+      61,
+      62,
+      63.5,
+      64.5,
+      66,
+      67,
+      68.5,
+      69.5,
+      71,
+      72.5,
+      73.5,
+      75
+    ]));
+
+List<ListValueModel> _ringSizesRu({UnitModel? unit}) =>
+    _ringSizesFr();
+
 List<ListValueModel> _ringSizesUs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(3, 15, step: 0.5, fractionDigits: 1),
     ]);
+
+List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
+    _wrapList(ObjectUtils.fromNumList([
+      4,
+      5.5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12.5,
+      14,
+      15,
+      16,
+      17.5,
+      19,
+      20,
+      21.5,
+      23,
+      24,
+      25,
+      26.5,
+      28,
+      28.5,
+      32,
+      33,
+      35
+    ]));
+
+List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
+  ...ObjectUtils.generateNumList(10, 20,
+      step: 10, fractionDigits: 0, divisor: unit?.coefficient),
+]);
 
 List<ListValueModel> _ringSizesUk({UnitModel? unit}) => _wrapList([
       'F',
@@ -276,73 +340,9 @@ List<ListValueModel> _ringSizesEs({UnitModel? unit}) =>
       35,
     ]));
 
-List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
-    _wrapList(ObjectUtils.fromNumList([
-      44,
-      46.5,
-      48,
-      49.5,
-      50.5,
-      52,
-      53,
-      54.5,
-      55.5,
-      57,
-      58,
-      59.5,
-      61,
-      62,
-      63.5,
-      64.5,
-      66,
-      67,
-      68.5,
-      69.5,
-      71,
-      72.5,
-      73.5,
-      75
-    ]));
-
-List<ListValueModel> _ringSizesRu({UnitModel? unit}) =>
-    _ringSizesFr(unit: unit);
-
-List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
-    _wrapList(ObjectUtils.fromNumList([
-      4,
-      5.5,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12.5,
-      14,
-      15,
-      16,
-      17.5,
-      19,
-      20,
-      21.5,
-      23,
-      24,
-      25,
-      26.5,
-      28,
-      28.5,
-      32,
-      33,
-      35
-    ]));
-
 List<ListValueModel> _ringSizesJp({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.fromNumList([4, 5, 7, 8, 9, 10, 11]),
       ...ObjectUtils.generateNumList(13, 20),
       ...ObjectUtils.generateNumList(22, 23),
       ...ObjectUtils.fromNumList([24, 25, 26, 27]),
-    ]);
-
-List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
-      ...ObjectUtils.generateNumList(10, 20,
-          step: 10, fractionDigits: 0, divisor: unit?.coefficient),
     ]);

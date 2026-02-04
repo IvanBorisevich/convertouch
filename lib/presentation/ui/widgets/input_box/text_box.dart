@@ -27,8 +27,8 @@ class ConvertouchTextBox extends StatefulWidget {
   final double contentPaddingRight;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
-  final double prefixIconPaddingLeft;
-  final double prefixIconPaddingRight;
+  final double iconPaddingLeft;
+  final double iconPaddingRight;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? labelPadding;
   final double height;
@@ -38,7 +38,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final InputValidationBloc? validationBloc;
 
   const ConvertouchTextBox({
-    required this.model,
+    this.model = TextBoxModel.empty,
     this.controller,
     this.focusNode,
     this.autofocus = false,
@@ -51,9 +51,8 @@ class ConvertouchTextBox extends StatefulWidget {
     this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
-    this.prefixIconPaddingLeft = InputBoxConstants.defaultPrefixIconPaddingLeft,
-    this.prefixIconPaddingRight =
-        InputBoxConstants.defaultPrefixIconPaddingRight,
+    this.iconPaddingLeft = InputBoxConstants.defaultIconPaddingLeft,
+    this.iconPaddingRight = InputBoxConstants.defaultIconPaddingRight,
     this.suffixIcon,
     this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
     this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
@@ -72,16 +71,25 @@ class ConvertouchTextBox extends StatefulWidget {
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
     with FocusNodeMixin, TextControllerMixin {
-  late final FocusNode _focusNode;
-  void Function()? _focusListener;
+  final ValueNotifier<bool> _closeIconVisibilityNotifier =
+      ValueNotifier<bool>(false);
 
+  late final FocusNode _focusNode;
   late final TextEditingController _controller;
+
+  void Function()? _focusListener;
+  void Function()? _textValueListener;
+
+  late String _hint;
 
   @override
   void initState() {
+    _hint = widget.model.hintUnfocused;
+
     _controller = initOrGetController(
       widget.controller,
-      initialValue: widget.model.focusedText,
+      initialValue:
+          widget.autofocus ? widget.model.value : widget.model.valueUnfocused,
     );
 
     _focusNode = initOrGetFocusNode(widget.focusNode);
@@ -90,13 +98,29 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
       _focusListener = addFocusListener(
         focusNode: _focusNode,
         onFocusSelected: () {
-          setState(() {});
           widget.onValueFocused?.call(_controller.text);
+          _closeIconVisibilityNotifier.value = _controller.text.isNotEmpty;
+          updateTextControllerValue(_controller, widget.model.value);
+          setState(() {
+            _hint = widget.model.hint;
+          });
         },
         onFocusLeft: () {
-          setState(() {});
           widget.onValueUnfocused?.call(_controller.text);
           widget.validationBloc?.add(const ResetValidation());
+          _closeIconVisibilityNotifier.value = false;
+          updateTextControllerValue(_controller, widget.model.valueUnfocused);
+          setState(() {
+            _hint = widget.model.hintUnfocused;
+          });
+        },
+      );
+
+      _textValueListener = addTextValueListener(
+        controller: _controller,
+        onValueChange: (value) {
+          _closeIconVisibilityNotifier.value =
+              _focusNode.hasFocus && value != null && value.isNotEmpty;
         },
       );
     }
@@ -106,12 +130,21 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (widget.controller == null) {
+      disposeTextController(
+        controller: _controller,
+        listener: _textValueListener,
+      );
+    }
 
-    disposeFocusNode(
-      focusNode: _focusNode,
-      listener: _focusListener,
-    );
+    if (widget.focusNode == null) {
+      disposeFocusNode(
+        focusNode: _focusNode,
+        listener: _focusListener,
+      );
+    }
+
+    _closeIconVisibilityNotifier.dispose();
 
     super.dispose();
   }
@@ -120,14 +153,17 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
   void didUpdateWidget(ConvertouchTextBox oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.model.value != oldWidget.model.value) {
-      updateTextControllerValue(_controller, widget.model.focusedText);
+    if (_focusNode.hasFocus && widget.model.value != oldWidget.model.value) {
+      updateTextControllerValue(_controller, widget.model.value);
+    } else if (!_focusNode.hasFocus &&
+        widget.model.valueUnfocused != oldWidget.model.valueUnfocused) {
+      updateTextControllerValue(_controller, widget.model.valueUnfocused);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.model.initialType];
+    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.model.valueType];
 
     Color borderColor;
     Color foregroundColor;
@@ -167,18 +203,27 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               ? [FilteringTextInputFormatter.allow(inputRegExp)]
               : null,
           keyboardType:
-              inputValueTypeToKeyboardTypeMap[widget.model.initialType],
+              inputValueTypeToKeyboardTypeMap[widget.model.valueType],
           onChanged: widget.onValueChanged,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: widget.borderRadius,
               borderSide: BorderSide.none,
             ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderWidth > 0
+                  ? BorderSide(
+                      color: widget.colors.border.disabled,
+                      width: widget.borderWidth,
+                    )
+                  : BorderSide.none,
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: widget.borderRadius,
               borderSide: widget.borderWidth > 0
                   ? BorderSide(
-                      color: borderColor,
+                      color: widget.colors.border.regular,
                       width: widget.borderWidth,
                     )
                   : BorderSide.none,
@@ -187,7 +232,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               borderRadius: widget.borderRadius,
               borderSide: widget.borderWidth > 0
                   ? BorderSide(
-                      color: borderColor,
+                      color: widget.colors.border.focused,
                       width: widget.borderWidth,
                     )
                   : BorderSide.none,
@@ -214,9 +259,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               ),
             ),
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: _focusNode.hasFocus
-                ? widget.model.hint
-                : widget.model.unfocusedHint,
+            hintText: _hint,
             hintStyle: TextStyle(
               foreground: Paint()..color = hintColor,
             ),
@@ -229,8 +272,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             counterText: "",
             prefixIcon: _iconPaddingWrapper(
               icon: widget.prefixIcon,
-              paddingLeft: widget.prefixIconPaddingLeft,
-              paddingRight: widget.prefixIconPaddingRight,
+              paddingLeft: widget.iconPaddingLeft,
+              paddingRight: widget.iconPaddingRight,
             ),
             prefixIconConstraints: const BoxConstraints(
               minWidth: 0,
@@ -238,8 +281,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             ),
             suffixIcon: _iconPaddingWrapper(
               icon: widget.suffixIcon ?? _suffixCloseIcon(),
-              paddingLeft: 0,
-              paddingRight: 0,
+              paddingLeft: widget.iconPaddingLeft,
+              paddingRight: widget.iconPaddingRight,
             ),
             suffixIconConstraints: const BoxConstraints(
               minWidth: 0,
@@ -266,26 +309,32 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
   }
 
   Widget? _suffixCloseIcon() {
-    if (_controller.text.isNotEmpty && _focusNode.hasFocus) {
-      return SizedBox(
-        width: 26,
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          icon: Icon(
-            Icons.close_rounded,
-            color: widget.colors.foreground.regular,
-            size: 17,
-          ),
-          onPressed: () {
-            _controller.clear();
-            widget.onValueCleaned?.call();
-            widget.onValueChanged?.call(null);
-          },
-        ),
-      );
-    }
+    return ValueListenableBuilder(
+      valueListenable: _closeIconVisibilityNotifier,
+      builder: (_, visible, child) {
+        if (!visible) {
+          return const SizedBox.shrink();
+        }
 
-    return null;
+        return SizedBox(
+          width: 26,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              Icons.close_rounded,
+              color: widget.colors.foreground.regular,
+              size: 17,
+            ),
+            onPressed: () {
+              _controller.clear();
+              widget.onValueCleaned?.call();
+              widget.onValueChanged?.call(null);
+              _closeIconVisibilityNotifier.value = false;
+            },
+          ),
+        );
+      },
+    );
   }
 
   Widget? _iconPaddingWrapper({

@@ -191,31 +191,33 @@ enum ConvertouchListType {
   person(1, preselected: false),
   garment(2, preselected: false),
   clothesSizeInter(3),
-  clothesSizeUs(4),
+  clothesSizeUs(4, listValuesType: ConvertouchValueType.integerNonNegative),
   clothesSizeJp(5),
-  clothesSizeFr(6),
-  clothesSizeEu(7),
-  clothesSizeRu(8),
-  clothesSizeIt(9),
-  clothesSizeUk(10),
-  clothesSizeDe(11),
-  clothesSizeEs(12),
-  ringSizeFr(13),
-  ringSizeRu(14),
-  ringSizeUs(15),
-  ringSizeIt(16),
-  barbellBarWeight(17),
+  clothesSizeFr(6, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeEu(7, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeRu(8, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeIt(9, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeUk(10, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeDe(11, listValuesType: ConvertouchValueType.integerNonNegative),
+  clothesSizeEs(12, listValuesType: ConvertouchValueType.integerNonNegative),
+  ringSizeFr(13, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringSizeRu(14, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringSizeUs(15, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringSizeIt(16, listValuesType: ConvertouchValueType.decimalNonNegative),
+  barbellBarWeight(17, listValuesType: ConvertouchValueType.decimalNonNegative),
   ringSizeUk(18),
-  ringSizeDe(19),
-  ringSizeEs(20),
-  ringSizeJp(21),
+  ringSizeDe(19, listValuesType: ConvertouchValueType.integerNonNegative),
+  ringSizeEs(20, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringSizeJp(21, listValuesType: ConvertouchValueType.integerNonNegative),
   ;
 
   final int id;
   final bool preselected;
+  final ConvertouchValueType listValuesType;
 
   const ConvertouchListType(
     this.id, {
+    this.listValuesType = ConvertouchValueType.text,
     this.preselected = true,
   });
 

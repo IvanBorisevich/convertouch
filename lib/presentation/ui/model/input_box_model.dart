@@ -4,10 +4,12 @@ import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 
 abstract class InputBoxModel implements ElementModel {
+  final String hint;
   final String labelText;
   final bool readonly;
 
   const InputBoxModel({
+    this.hint = '',
     this.labelText = '',
     this.readonly = false,
   });
@@ -36,19 +38,20 @@ abstract class InputBoxModel implements ElementModel {
       return ListBoxModel(
         value: model.value?.toListValueModel(),
         listValues: model.listValues!.items,
+        listType: model.listType!,
         readonly: readonly,
         labelText: model.unit.itemName,
       ) as T;
     }
 
     return TextBoxModel(
-      value: model.value?.raw,
-      hint: model.defaultValue?.raw,
+      value: model.value?.raw ?? '',
+      hint: model.defaultValue?.raw ?? '',
       readonly: readonly,
       labelText: model.unit.itemName,
-      unfocusedValue: model.value?.alt,
-      unfocusedHint: model.defaultValue?.alt,
-      initialType: model.valueType,
+      valueUnfocused: model.value?.alt ?? '',
+      hintUnfocused: model.defaultValue?.alt ?? '',
+      valueType: model.valueType,
     ) as T;
   }
 
@@ -60,19 +63,20 @@ abstract class InputBoxModel implements ElementModel {
       return ListBoxModel(
         value: model.value?.toListValueModel(),
         listValues: model.listValues!.items,
+        listType: model.listType!,
         labelText: model.param.name,
         readonly: readonly,
       ) as T;
     }
 
     return TextBoxModel(
-      value: model.value?.raw,
-      hint: model.defaultValue?.raw,
+      value: model.value?.raw ?? '',
+      hint: model.defaultValue?.raw ?? '',
       readonly: readonly,
-      unfocusedValue: model.value?.alt,
-      unfocusedHint: model.defaultValue?.alt,
+      valueUnfocused: model.value?.alt ?? '',
+      hintUnfocused: model.defaultValue?.alt ?? '',
       labelText: model.param.name,
-      initialType: model.valueType,
+      valueType: model.valueType,
     ) as T;
   }
 }

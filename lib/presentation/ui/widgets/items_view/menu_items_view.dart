@@ -25,7 +25,7 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
   final ItemsListBloc<T, P> itemsListBloc;
   final PageName pageName;
   final SettingKey viewModeSettingKey;
-  final String? searchBarPlaceholder;
+  final String searchBarPlaceholder;
   final void Function(T)? onItemTap;
   final void Function(T)? onItemTapForRemoval;
   final void Function(T)? onItemLongPress;
@@ -41,7 +41,7 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     required this.itemsListBloc,
     required this.pageName,
     required this.viewModeSettingKey,
-    this.searchBarPlaceholder,
+    this.searchBarPlaceholder = "Search...",
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,

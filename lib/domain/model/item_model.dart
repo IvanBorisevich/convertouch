@@ -63,6 +63,8 @@ abstract class IdNameSearchableItemModel extends IdNameItemModel {
 }
 
 class ListValueModel extends IdNameSearchableItemModel {
+  static const ListValueModel none = ListValueModel(value: '');
+
   final String value;
   final String? alt;
 

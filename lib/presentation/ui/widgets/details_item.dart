@@ -46,8 +46,8 @@ class ConvertouchDetailsItem extends StatelessWidget {
       child: editable
           ? ConvertouchTextBox(
               model: TextBoxModel(
-                unfocusedHint: value,
-                labelText: headerTitle ?? "",
+                hintUnfocused: value ?? '',
+                labelText: headerTitle ?? '',
                 maxTextLength: editableValueMaxLength,
                 textLengthCounterVisible: editableValueLengthVisible,
               ),

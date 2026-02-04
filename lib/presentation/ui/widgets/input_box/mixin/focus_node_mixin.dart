@@ -10,7 +10,7 @@ mixin FocusNodeMixin {
     void Function()? onFocusSelected,
     void Function()? onFocusLeft,
   }) {
-    focusListener() async {
+    focusListener() {
       if (focusNode.hasFocus) {
         onFocusSelected?.call();
       } else {

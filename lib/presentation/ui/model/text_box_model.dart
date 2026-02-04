@@ -2,31 +2,24 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 
 class TextBoxModel extends InputBoxModel {
-  final String? value;
-  final String? hint;
-  final String? unfocusedValue;
-  final String? unfocusedHint;
-  final ConvertouchValueType initialType;
+  static const TextBoxModel empty = TextBoxModel();
+
+  final String value;
+  final String valueUnfocused;
+  final String hintUnfocused;
+  final ConvertouchValueType valueType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
 
   const TextBoxModel({
-    this.value,
-    this.hint,
+    this.value = '',
+    super.hint,
+    this.valueUnfocused = '',
+    this.hintUnfocused = '',
     super.readonly,
     super.labelText,
-    this.unfocusedValue,
-    this.unfocusedHint,
-    this.initialType = ConvertouchValueType.text,
+    this.valueType = ConvertouchValueType.text,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
   });
-
-  String get focusedText => value ?? '';
-
-  String get focusedHintText => hint ?? '';
-
-  String get unfocusedText => unfocusedValue ?? focusedText;
-
-  String get unfocusedHintText => unfocusedHint ?? focusedHintText;
 }

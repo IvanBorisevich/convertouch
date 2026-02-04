@@ -4,8 +4,10 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
+import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +53,6 @@ class ConvertouchListBox extends StatefulWidget {
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox>
     with ItemsLazyLoadingMixin, FocusNodeMixin {
-  static const String defaultHint = 'N/A';
-  static const String defaultDropdownSearchHint = 'Search item...';
-
   final TextEditingController _dropdownSearchController =
       TextEditingController();
 
@@ -163,7 +162,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
             fillColor: widget.colors.background.regular,
           ),
           hint: Text(
-            defaultHint,
+            widget.model.hint,
             style: TextStyle(
               fontSize: 16,
               color: hintColor,
@@ -203,7 +202,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
                 return Container(
                   padding: EdgeInsets.zero,
                   child: Text(
-                    widget.model.value?.itemName ?? defaultHint,
+                    widget.model.value?.itemName ?? widget.model.hint,
                     style: TextStyle(
                       fontSize: 16,
                       overflow: TextOverflow.ellipsis,
@@ -248,40 +247,37 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
           buttonStyleData: const ButtonStyleData(
             padding: EdgeInsets.zero,
           ),
-          dropdownSearchData: DropdownSearchData(
-            searchController: _dropdownSearchController,
-            searchInnerWidgetHeight: 60,
-            searchInnerWidget: Container(
-              height: 60,
-              padding: const EdgeInsets.only(
-                top: 8,
-                bottom: 4,
-                right: 8,
-                left: 8,
-              ),
-              child: TextFormField(
-                maxLines: 1,
-                controller: _dropdownSearchController,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 17,
-                    vertical: 8,
+          dropdownSearchData: widget.model.searchEnabled
+              ? DropdownSearchData(
+                  searchController: _dropdownSearchController,
+                  searchInnerWidgetHeight: 60,
+                  searchInnerWidget: Container(
+                    height: 60,
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 4,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: ConvertouchTextBox(
+                      model: TextBoxModel(
+                        hintUnfocused: widget.model.searchHint,
+                        valueType: widget.model.listType.listValuesType,
+                      ),
+                      controller: _dropdownSearchController,
+                      borderWidth: 0,
+                      fontSize: 15,
+                      colors: widget.colors,
+                    ),
                   ),
-                  hintText: defaultDropdownSearchHint,
-                  hintStyle: TextStyle(fontSize: 15),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                ),
-              ),
-            ),
-            searchMatchFn: (item, searchValue) {
-              return item.value?.value
-                      .toLowerCase()
-                      .contains(searchValue.toLowerCase()) ??
-                  false;
-            },
-          ),
+                  searchMatchFn: (item, searchValue) {
+                    return item.value?.value
+                            .toLowerCase()
+                            .contains(searchValue.toLowerCase()) ??
+                        false;
+                  },
+                )
+              : null,
           onMenuStateChange: (isOpen) {
             if (!isOpen) {
               _dropdownSearchController.clear();

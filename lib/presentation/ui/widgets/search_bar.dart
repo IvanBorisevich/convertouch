@@ -15,14 +15,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchSearchBar extends StatelessWidget {
   final PageName pageName;
   final SettingKey viewModeSettingKey;
-  final String? placeholder;
+  final String placeholder;
   final void Function(String?)? onSearchStringChanged;
   final void Function()? onSearchReset;
   final SearchBarColorScheme? customColor;
 
   const ConvertouchSearchBar({
     required this.pageName,
-    this.placeholder,
+    this.placeholder = "Search...",
     required this.viewModeSettingKey,
     this.onSearchStringChanged,
     this.onSearchReset,
@@ -67,7 +67,7 @@ class ConvertouchSearchBar extends StatelessWidget {
                 child: ConvertouchTextBox(
                   model: TextBoxModel(
                     hint: placeholder,
-                    unfocusedHint: placeholder,
+                    hintUnfocused: placeholder,
                   ),
                   onValueChanged: onSearchStringChanged,
                   onValueFocused: onSearchStringChanged,
@@ -80,8 +80,8 @@ class ConvertouchSearchBar extends StatelessWidget {
                     color: searchBarColorScheme.textBox.foreground.regular,
                     size: 22,
                   ),
-                  prefixIconPaddingLeft: 12,
-                  prefixIconPaddingRight: 0,
+                  iconPaddingLeft: 12,
+                  iconPaddingRight: 0,
                   colors: searchBarColorScheme.textBox,
                 ),
               ),
