@@ -21,18 +21,19 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
 
     statusTopBarColor = Color.alphaBlend(
       _dimmingOverlayColor,
-      pageColors[theme]!.appBar.background.regular,
+      appColors[theme].page.appBar.background.regular,
     );
 
     systemBottomNavbarColor = Color.alphaBlend(
       _dimmingOverlayColor,
-      pageColors[theme]!.bottomBar.background.regular,
+      appColors[theme].page.bottomBar.background.regular,
     );
 
     iconBrightness = Brightness.light;
   } else {
-    statusTopBarColor = pageColors[theme]!.appBar.background.regular;
-    systemBottomNavbarColor = pageColors[theme]!.bottomBar.background.regular;
+    statusTopBarColor = appColors[theme].page.appBar.background.regular;
+    systemBottomNavbarColor =
+        appColors[theme].page.bottomBar.background.regular;
     iconBrightness =
         theme == ConvertouchUITheme.dark ? Brightness.light : Brightness.dark;
   }

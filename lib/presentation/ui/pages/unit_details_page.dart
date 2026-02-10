@@ -18,8 +18,8 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -55,9 +55,10 @@ class _ConvertouchUnitDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        InputBoxColorScheme textBoxColor = unitTextBoxColors[appState.theme]!;
-        ConvertouchColorScheme floatingButtonColor =
-            unitsPageFloatingButtonColors[appState.theme]!;
+        InputBoxColorScheme inputBoxColor =
+            appColors[appState.theme].unitDetailsInputBox;
+        WidgetColorScheme floatingButtonColor =
+            appColors[appState.theme].unitsPageFloatingButton;
 
         return unitDetailsBlocBuilder(
           builderFunc: (pageState) {
@@ -84,7 +85,9 @@ class _ConvertouchUnitDetailsPageState
                                 checkIconVisible: false,
                                 checkIconVisibleIfUnchecked: false,
                                 checked: false,
-                                colors: unitGroupItemColors[appState.theme]!,
+                                colors: appColors[appState.theme]
+                                    .unitGroupsMenu
+                                    .menuItem,
                                 disabled: false,
                                 editIconVisible: false,
                                 logoFunc: (
@@ -125,14 +128,14 @@ class _ConvertouchUnitDetailsPageState
                               name: 'Unit Group',
                               value: pageState.details.unitGroup.name,
                               visible: true,
-                              textBoxColor: textBoxColor,
+                              inputBoxColor: inputBoxColor,
                             ),
                       ConvertouchDetailsItem(
                         name: 'Unit Name',
                         value: pageState.details.savedUnitData.name,
                         valueChangeController: _unitNameTextController,
                         editable: pageState.details.editMode,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                         onValueChanged: (value) {
                           if (value != null) {
                             unitDetailsBloc.add(
@@ -148,7 +151,7 @@ class _ConvertouchUnitDetailsPageState
                         value: pageState.details.savedUnitData.code,
                         valueChangeController: _unitCodeTextController,
                         editable: pageState.details.editMode,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
@@ -165,7 +168,7 @@ class _ConvertouchUnitDetailsPageState
                       ConvertouchDetailsItem(
                         name: 'Value Type',
                         value: pageState.details.draftUnitData.valueType.name,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Min Value',
@@ -173,7 +176,7 @@ class _ConvertouchUnitDetailsPageState
                             pageState.details.savedUnitData.minValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.minValue != null,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Max Value',
@@ -181,7 +184,7 @@ class _ConvertouchUnitDetailsPageState
                             pageState.details.savedUnitData.maxValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Conversion Rule',
@@ -191,7 +194,7 @@ class _ConvertouchUnitDetailsPageState
                             pageState.details.conversionRule.configVisible,
                         value: pageState
                             .details.conversionRule.readOnlyDescription,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                         content: Visibility(
                           visible: pageState.details.editMode &&
                               pageState.details.conversionRule.configVisible,
@@ -221,7 +224,8 @@ class _ConvertouchUnitDetailsPageState
                                     ),
                                   );
                                 },
-                                colors: conversionItemColors[appState.theme]!,
+                                colors:
+                                    appColors[appState.theme].conversionItem,
                               ),
                               const SizedBox(height: 12),
                               ConvertouchConversionItem(
@@ -275,7 +279,8 @@ class _ConvertouchUnitDetailsPageState
                                     ),
                                   );
                                 },
-                                colors: conversionItemColors[appState.theme]!,
+                                colors:
+                                    appColors[appState.theme].conversionItem,
                               ),
                               const SizedBox(height: 25),
                             ],

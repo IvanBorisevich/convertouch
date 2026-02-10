@@ -1,9 +1,9 @@
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class NoItemsInfoLabel extends StatelessWidget {
   final String text;
-  final ConvertouchColorScheme colors;
+  final WidgetColorScheme colors;
 
   const NoItemsInfoLabel({
     required this.text,

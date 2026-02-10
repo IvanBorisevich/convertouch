@@ -3,7 +3,7 @@ import 'package:convertouch/presentation/bloc/common/input_validation/input_vali
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_wrapper.dart';
@@ -170,23 +170,23 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
     Color hintColor;
 
     if (widget.model.readonly) {
-      borderColor = widget.colors.border.disabled;
-      foregroundColor = widget.colors.foreground.disabled;
-      hintColor = widget.colors.hint.disabled;
+      borderColor = widget.colors.textBox.border.disabled;
+      foregroundColor = widget.colors.textBox.foreground.disabled;
+      hintColor = widget.colors.textBox.hint.disabled;
     } else if (_focusNode.hasFocus) {
-      borderColor = widget.colors.border.focused;
-      foregroundColor = widget.colors.foreground.focused;
-      hintColor = widget.colors.hint.focused;
+      borderColor = widget.colors.textBox.border.focused;
+      foregroundColor = widget.colors.textBox.foreground.focused;
+      hintColor = widget.colors.textBox.hint.focused;
     } else {
-      borderColor = widget.colors.border.regular;
-      foregroundColor = widget.colors.foreground.regular;
-      hintColor = widget.colors.hint.regular;
+      borderColor = widget.colors.textBox.border.regular;
+      foregroundColor = widget.colors.textBox.foreground.regular;
+      hintColor = widget.colors.textBox.hint.regular;
     }
 
     return InputValidationWrapper(
       focusNode: _focusNode,
-      tooltipBackgroundColor: widget.colors.tooltip.background.regular,
-      tooltipForegroundColor: widget.colors.tooltip.foregroundWarning.regular,
+      tooltipBackgroundColor: widget.colors.textBox.tooltip.background.regular,
+      tooltipForegroundColor: widget.colors.textBox.tooltip.foreground.warning,
       tooltipDirection: widget.tooltipDirection,
       resetValidationOnNavigate: widget.resetValidationOnNavigate,
       child: SizedBox(
@@ -214,7 +214,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               borderRadius: widget.borderRadius,
               borderSide: widget.borderWidth > 0
                   ? BorderSide(
-                      color: widget.colors.border.disabled,
+                      color: widget.colors.textBox.border.disabled,
                       width: widget.borderWidth,
                     )
                   : BorderSide.none,
@@ -223,7 +223,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               borderRadius: widget.borderRadius,
               borderSide: widget.borderWidth > 0
                   ? BorderSide(
-                      color: widget.colors.border.regular,
+                      color: widget.colors.textBox.border.regular,
                       width: widget.borderWidth,
                     )
                   : BorderSide.none,
@@ -232,7 +232,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               borderRadius: widget.borderRadius,
               borderSide: widget.borderWidth > 0
                   ? BorderSide(
-                      color: widget.colors.border.focused,
+                      color: widget.colors.textBox.border.focused,
                       width: widget.borderWidth,
                     )
                   : BorderSide.none,
@@ -240,7 +240,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             label: Container(
               padding: widget.labelPadding,
               decoration: BoxDecoration(
-                color: widget.colors.background.regular,
+                color: widget.colors.textBox.background.regular,
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
               constraints: BoxConstraints(
@@ -293,7 +293,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
                 ? '${_controller.text.length}/${widget.model.maxTextLength}'
                 : null,
             filled: true,
-            fillColor: widget.colors.background.regular,
+            fillColor: widget.colors.textBox.background.regular,
           ),
           style: TextStyle(
             foreground: Paint()..color = foregroundColor,
@@ -322,7 +322,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             padding: EdgeInsets.zero,
             icon: Icon(
               Icons.close_rounded,
-              color: widget.colors.foreground.regular,
+              color: widget.colors.textBox.foreground.regular,
               size: 17,
             ),
             onPressed: () {

@@ -21,8 +21,7 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
-import 'package:convertouch/presentation/ui/style/color/colors_dark.dart';
-import 'package:convertouch/presentation/ui/style/color/colors_light.dart';
+import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
@@ -124,12 +123,18 @@ class ConvertouchApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 appBarTheme: AppBarTheme(
-                  backgroundColor:
-                      pageColorSchemeLight.appBar.background.regular,
+                  backgroundColor: appColors[ConvertouchUITheme.light]
+                      .page
+                      .appBar
+                      .background
+                      .regular,
                 ),
                 bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  backgroundColor:
-                      pageColorSchemeLight.bottomBar.background.regular,
+                  backgroundColor: appColors[ConvertouchUITheme.light]
+                      .page
+                      .bottomBar
+                      .background
+                      .regular,
                 ),
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.light,
@@ -138,12 +143,18 @@ class ConvertouchApp extends StatelessWidget {
               ),
               darkTheme: ThemeData(
                 appBarTheme: AppBarTheme(
-                  backgroundColor:
-                      pageColorSchemeDark.appBar.background.regular,
+                  backgroundColor: appColors[ConvertouchUITheme.dark]
+                      .page
+                      .appBar
+                      .background
+                      .regular,
                 ),
                 bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                  backgroundColor:
-                      pageColorSchemeDark.bottomBar.background.regular,
+                  backgroundColor: appColors[ConvertouchUITheme.dark]
+                      .page
+                      .bottomBar
+                      .background
+                      .regular,
                 ),
                 fontFamily: quicksandFontFamily,
                 brightness: Brightness.dark,

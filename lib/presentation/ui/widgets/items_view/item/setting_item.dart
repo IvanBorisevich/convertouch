@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/about_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/radio_dialog.dart';
@@ -48,7 +48,7 @@ class ConvertouchSettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
     return GestureDetector(
       onTap: onTap,
@@ -56,7 +56,7 @@ class ConvertouchSettingItem extends StatelessWidget {
         height: height,
         padding: padding,
         decoration: BoxDecoration(
-          color: colors.settingItem.background.regular,
+          color: colors.background.regular,
         ),
         child: Row(
           children: [
@@ -83,14 +83,14 @@ class ConvertouchSettingItem extends StatelessWidget {
     );
   }
 
-  Widget _title(SettingsColorScheme colors) {
+  Widget _title(SettingItemColorScheme colors) {
     return Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
         child: Text(
           title,
           style: TextStyle(
-            color: colors.settingItem.foreground.regular,
+            color: colors.foreground.regular,
             fontSize: 16,
             fontWeight: FontWeight.w500,
             letterSpacing: 0,
@@ -101,7 +101,7 @@ class ConvertouchSettingItem extends StatelessWidget {
     );
   }
 
-  Widget? _subtitle(SettingsColorScheme colors) {
+  Widget? _subtitle(SettingItemColorScheme colors) {
     if (subtitle == null) {
       return null;
     }
@@ -144,7 +144,7 @@ class SwitcherSettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
     return ConvertouchSettingItem(
       title: title,
@@ -161,15 +161,15 @@ class SwitcherSettingItem extends StatelessWidget {
   }
 
   Widget _switch({
-    required SettingsColorScheme colors,
+    required SettingItemColorScheme colors,
     bool active = false,
   }) {
     return Switch.adaptive(
       value: active,
-      activeColor: colors.settingItem.foreground.selected,
+      activeColor: colors.foreground.selected,
       thumbColor: WidgetStateProperty.resolveWith(
         (states) {
-          return colors.settingItem.foreground.regular;
+          return colors.foreground.regular;
         },
       ),
       trackOutlineColor: WidgetStateProperty.resolveWith((states) {
@@ -211,7 +211,7 @@ class SelectorSettingItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
     return ConvertouchSettingItem(
       title: title,
@@ -226,7 +226,7 @@ class SelectorSettingItem<T> extends StatelessWidget {
 
   void _showRadioDialog(
     BuildContext context, {
-    required SettingsColorScheme colors,
+    required SettingItemColorScheme colors,
   }) {
     T currentValue = selectedValue;
 
@@ -275,7 +275,7 @@ class AboutSettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
     return ConvertouchSettingItem(
       title: title,
@@ -297,7 +297,7 @@ class AboutSettingItem extends StatelessWidget {
 
   void _showAboutDialog(
     BuildContext context, {
-    required SettingsColorScheme colors,
+    required SettingItemColorScheme colors,
     required ConvertouchUITheme theme,
     required String applicationName,
     required String applicationVersion,
@@ -341,7 +341,7 @@ class RadioSettingItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
     return ConvertouchSettingItem(
       title: title,
@@ -363,7 +363,7 @@ class RadioSettingItem<T> extends StatelessWidget {
   }
 
   Widget _radio({
-    required SettingsColorScheme colors,
+    required SettingItemColorScheme colors,
   }) {
     return Radio<T>.adaptive(
       groupValue: selectedValue,
@@ -371,12 +371,12 @@ class RadioSettingItem<T> extends StatelessWidget {
       onChanged: null,
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return colors.settingItem.foreground.selected;
+          return colors.foreground.selected;
         }
         if (states.contains(WidgetState.disabled)) {
-          return colors.settingItem.foreground.disabled;
+          return colors.foreground.disabled;
         }
-        return colors.settingItem.foreground.regular;
+        return colors.foreground.regular;
       }),
     );
   }

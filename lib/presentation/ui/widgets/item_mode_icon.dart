@@ -1,18 +1,18 @@
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchItemModeIcon extends StatelessWidget {
   final IconData iconData;
   final bool active;
   final double size;
-  final ConvertouchColorScheme colors;
+  final WidgetColorScheme colors;
   final EdgeInsets padding;
 
   const ConvertouchItemModeIcon({
     required this.iconData,
     this.active = false,
     this.size = 15,
-    this.colors = ConvertouchColorScheme.none,
+    this.colors = WidgetColorScheme.none,
     this.padding = EdgeInsets.zero,
     super.key,
   });
@@ -20,14 +20,14 @@ class ConvertouchItemModeIcon extends StatelessWidget {
   const ConvertouchItemModeIcon.checkbox({
     this.active = false,
     this.size = 11,
-    this.colors = ConvertouchColorScheme.none,
+    this.colors = WidgetColorScheme.none,
     this.padding = EdgeInsets.zero,
     super.key,
   }) : iconData = Icons.check_outlined;
 
   const ConvertouchItemModeIcon.edit({
     this.size = 8,
-    this.colors = ConvertouchColorScheme.none,
+    this.colors = WidgetColorScheme.none,
     this.padding = EdgeInsets.zero,
     super.key,
   })  : iconData = Icons.edit,

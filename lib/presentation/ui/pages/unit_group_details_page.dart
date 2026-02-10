@@ -10,8 +10,8 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:flutter/material.dart';
@@ -44,10 +44,10 @@ class _ConvertouchUnitGroupDetailsPageState
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        InputBoxColorScheme textBoxColor =
-            unitGroupTextBoxColors[appState.theme]!;
-        ConvertouchColorScheme floatingButtonColor =
-            unitGroupsPageFloatingButtonColors[appState.theme]!;
+        InputBoxColorScheme inputBoxColor =
+            appColors[appState.theme].unitGroupDetailsInputBox;
+        WidgetColorScheme floatingButtonColor =
+            appColors[appState.theme].unitGroupsPageFloatingButton;
 
         return unitGroupDetailsBlocBuilder(
           bloc: unitGroupDetailsBloc,
@@ -83,18 +83,18 @@ class _ConvertouchUnitGroupDetailsPageState
                             );
                           }
                         },
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Conversion Type",
                         value: unitGroupDetailsState
                             .draftGroup.conversionType.name,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Type",
                         value: unitGroupDetailsState.draftGroup.valueType.name,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Minimum",
@@ -102,7 +102,7 @@ class _ConvertouchUnitGroupDetailsPageState
                             unitGroupDetailsState.draftGroup.minValue != null,
                         value:
                             unitGroupDetailsState.draftGroup.minValue?.altOrRaw,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Maximum",
@@ -110,7 +110,7 @@ class _ConvertouchUnitGroupDetailsPageState
                             unitGroupDetailsState.draftGroup.maxValue != null,
                         value:
                             unitGroupDetailsState.draftGroup.maxValue?.altOrRaw,
-                        textBoxColor: textBoxColor,
+                        inputBoxColor: inputBoxColor,
                       ),
                       refreshingJobsBlocBuilder(
                         builderFunc: (jobState) {
@@ -128,14 +128,14 @@ class _ConvertouchUnitGroupDetailsPageState
                                   height: 1,
                                   indent: 5,
                                   endIndent: 5,
-                                  color: textBoxColor.border.regular,
+                                  color: inputBoxColor.textBox.border.regular,
                                 ),
                               ),
                               ConvertouchDetailsItem(
                                 name: "Last Refreshed",
                                 value:
                                     jobState.currentLastRefreshedStr ?? 'Never',
-                                textBoxColor: textBoxColor,
+                                inputBoxColor: inputBoxColor,
                               ),
                               // ConvertouchParameterItem(
                               //   name: "Data Source",

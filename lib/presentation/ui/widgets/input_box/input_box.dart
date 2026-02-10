@@ -3,7 +3,7 @@ import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/list_box.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';

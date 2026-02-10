@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +25,7 @@ class ConvertouchSettingItemsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingGroupColorScheme colors = appColors[theme].settingGroup;
 
     return Column(
       children: [
@@ -81,7 +81,7 @@ class ConvertouchSettingListItemsView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SettingsColorScheme colors = settingItemColors[theme]!;
+    SettingGroupColorScheme colors = appColors[theme].settingGroup;
 
     return Column(
       children: [

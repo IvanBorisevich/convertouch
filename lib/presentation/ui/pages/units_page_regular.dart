@@ -11,8 +11,8 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
@@ -83,10 +83,10 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
               ),
               floatingActionButton: appBlocBuilder(
                 builderFunc: (appState) {
-                  ConvertouchColorScheme floatingButtonColor =
-                      unitsPageFloatingButtonColors[appState.theme]!;
-                  ConvertouchColorScheme removalButtonColor =
-                      removalFloatingButtonColors[appState.theme]!;
+                  WidgetColorScheme floatingButtonColor =
+                      appColors[appState.theme].unitsPageFloatingButton;
+                  WidgetColorScheme removalButtonColor =
+                      appColors[appState.theme].removalFloatingButton;
 
                   return itemsSelectionState.showCancelIcon
                       ? ConvertouchFloatingActionButton.removal(

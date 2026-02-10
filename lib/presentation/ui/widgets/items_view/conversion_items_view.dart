@@ -45,7 +45,7 @@ class _ConvertouchConversionItemsViewState
       return Center(
         child: NoItemsInfoLabel(
           text: "No conversion items added",
-          colors: unitPageEmptyViewColor[widget.theme]!,
+          colors: appColors[widget.theme].unitsMenu.noItemsInfoBox,
         ),
       );
     }
@@ -98,7 +98,7 @@ class _ConvertouchConversionItemsViewState
             onItemRemoved: () {
               widget.onItemRemoveTap?.call(item);
             },
-            colors: conversionItemColors[widget.theme]!,
+            colors: appColors[widget.theme].conversionItem,
           ),
         );
       },

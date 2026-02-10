@@ -5,7 +5,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_state
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
@@ -82,20 +82,20 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
     Color borderColor;
     Color foregroundColor;
     Color hintColor;
-    ConvertouchColorScheme dropdownMenu = widget.colors.dropdown;
+    WidgetColorScheme dropdownMenu = widget.colors.dropdown;
 
     if (widget.model.readonly) {
-      borderColor = widget.colors.border.disabled;
-      foregroundColor = widget.colors.foreground.disabled;
-      hintColor = widget.colors.hint.disabled;
+      borderColor = widget.colors.textBox.border.disabled;
+      foregroundColor = widget.colors.textBox.foreground.disabled;
+      hintColor = widget.colors.textBox.hint.disabled;
     } else if (_focusNode.hasFocus) {
-      borderColor = widget.colors.border.focused;
-      foregroundColor = widget.colors.foreground.focused;
-      hintColor = widget.colors.hint.focused;
+      borderColor = widget.colors.textBox.border.focused;
+      foregroundColor = widget.colors.textBox.foreground.focused;
+      hintColor = widget.colors.textBox.hint.focused;
     } else {
-      borderColor = widget.colors.border.regular;
-      foregroundColor = widget.colors.foreground.regular;
-      hintColor = widget.colors.hint.regular;
+      borderColor = widget.colors.textBox.border.regular;
+      foregroundColor = widget.colors.textBox.foreground.regular;
+      hintColor = widget.colors.textBox.hint.regular;
     }
 
     return BlocListener<NavigationBloc, NavigationState>(
@@ -139,7 +139,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
             label: Container(
               padding: widget.labelPadding,
               decoration: BoxDecoration(
-                color: widget.colors.background.regular,
+                color: widget.colors.textBox.background.regular,
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
               constraints: BoxConstraints(
@@ -159,7 +159,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
             ),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             filled: true,
-            fillColor: widget.colors.background.regular,
+            fillColor: widget.colors.textBox.background.regular,
           ),
           hint: Text(
             widget.model.hint,

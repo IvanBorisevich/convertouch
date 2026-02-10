@@ -18,7 +18,6 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -130,17 +129,13 @@ class ConversionGroupsPage extends StatelessWidget {
           ),
           floatingActionButton: appBlocBuilder(
             builderFunc: (appState) {
-              ConvertouchColorScheme floatingButtonColor =
-                  unitGroupsPageFloatingButtonColors[appState.theme]!;
-              ConvertouchColorScheme removalButtonColor =
-                  removalFloatingButtonColors[appState.theme]!;
-
               return itemsSelectionState.showCancelIcon
                   ? ConvertouchFloatingActionButton.removal(
                       visible: itemsSelectionState.markedIds.isNotEmpty,
                       extraLabelText:
                           itemsSelectionState.markedIds.length.toString(),
-                      colorScheme: removalButtonColor,
+                      colorScheme:
+                          appColors[appState.theme].removalFloatingButton,
                       onClick: () {
                         unitGroupsBloc.add(
                           RemoveItems(
@@ -159,7 +154,8 @@ class ConversionGroupsPage extends StatelessWidget {
                         );
                       },
                       visible: true,
-                      colorScheme: floatingButtonColor,
+                      colorScheme: appColors[appState.theme]
+                          .unitGroupsPageFloatingButton,
                     );
             },
           ),

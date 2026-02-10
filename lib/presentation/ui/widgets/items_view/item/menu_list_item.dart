@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
   }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
-  final ListItemColorScheme colors;
+  final MenuItemColorScheme colors;
 
   const ConvertouchMenuListItem(
     this.item, {

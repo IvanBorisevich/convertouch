@@ -1,34 +1,49 @@
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/color_variation.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/app_color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/multi_color.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-const validationTooltipColorSchemeLight = SeverityColorScheme(
-  background: ColorVariation.only(Color(0xff637fc6)),
-  foregroundError: ColorVariation.only(Color(0xFFFFBDBD)),
-  foregroundWarning: ColorVariation.only(Color(0xFFFFEADD)),
-  foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),
+const colorSchemeLight = AppColorScheme(
+  notification: _notification,
+  page: _page,
+  searchBox: _searchBox,
+  errorInfoBox: _errorInfoBox,
+  unitGroupsPageFloatingButton: _unitGroupsPageFloatingButton,
+  unitGroupsMenu: _unitGroupsMenu,
+  unitGroupDetailsInputBox: _unitGroupDetailsTextBox,
+  unitsPageFloatingButton: _unitsPageFloatingButton,
+  unitsMenu: _unitsMenu,
+  unitDetailsInputBox: _unitDetailsTextBox,
+  conversionPageFloatingButton: _conversionPageFloatingButton,
+  conversionItem: _conversionItem,
+  refreshFloatingButton: _refreshFloatingButton,
+  removalFloatingButton: _removalFloatingButton,
+  paramSetPanel: _paramSetPanel,
+  settingGroup: _settingGroup,
 );
 
-const pageColorSchemeLight = PageColorScheme(
-  appBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff7f9dec)),
-    foreground: ColorVariation.only(Color(0xFF1D5180)),
+const _notification = NotificationColorScheme(
+  background: MultiColor.only(Color(0xFF384867)),
+  foreground: MultiColor(
+    regular: Color(0xFFA3D4FF),
+    warning: Color(0xFFEADFB8),
+    error: Color(0xFFFFAAAA),
   ),
-  page: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffe8efff)),
-    foreground: ColorVariation.only(Color(0xFF426F99)),
+  action: MultiColor.only(Color(0xFFB6D5F6)),
+);
+
+const _page = PageColorScheme(
+  appBar: WidgetColorScheme(
+    background: MultiColor.only(Color(0xff7f9dec)),
+    foreground: MultiColor.only(Color(0xFF1D5180)),
   ),
-  snackBar: SeverityColorScheme(
-    background: ColorVariation.only(Color(0xFF384867)),
-    foregroundError: ColorVariation.only(Color(0xFFFFAAAA)),
-    foregroundWarning: ColorVariation.only(Color(0xFFEADFB8)),
-    foregroundInfo: ColorVariation.only(Color(0xFFA3D4FF)),
-    action: ColorVariation.only(Color(0xFFB6D5F6)),
+  body: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffe8efff)),
+    foreground: MultiColor.only(Color(0xFF426F99)),
   ),
-  bottomBar: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff7f9dec)),
-    foreground: ColorVariation(
+  bottomBar: WidgetColorScheme(
+    background: MultiColor.only(Color(0xff7f9dec)),
+    foreground: MultiColor(
       regular: Color(0xFF1D5180),
       selected: Color(0xFF1C3750),
       disabled: Color(0xFFA0C4F5),
@@ -36,308 +51,300 @@ const pageColorSchemeLight = PageColorScheme(
   ),
 );
 
-const searchBarColorSchemeLight = SearchBarColorScheme(
-  textBox: InputBoxColorScheme(
-    background: ColorVariation.only(Color(0xFFF6F9FF)),
-    foreground: ColorVariation.only(Color(0xFF426F99)),
-    hint: ColorVariation.only(Color(0xFF5C93C7)),
-    tooltip: validationTooltipColorSchemeLight,
+const _searchBox = SearchBoxColorScheme(
+  inputBox: InputBoxColorScheme(
+    textBox: TextBoxColorScheme(
+      background: MultiColor.only(Color(0xFFF6F9FF)),
+      foreground: MultiColor.only(Color(0xFF426F99)),
+      hint: MultiColor.only(Color(0xFF5C93C7)),
+      tooltip: _notification,
+    ),
   ),
-  viewModeButton: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffc1d7ff)),
-    foreground: ColorVariation.only(Color(0xFF4D79A1)),
+  viewModeButton: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffc1d7ff)),
+    foreground: MultiColor.only(Color(0xFF4D79A1)),
   ),
 );
 
-const conversionItemColorSchemeLight = ConversionItemColorScheme(
-  textBox: InputBoxColorScheme(
-    background: ColorVariation.only(Color(0xffe8efff)),
-    border: ColorVariation(
+const _errorInfoBox = WidgetColorScheme(
+  background: MultiColor.only(Color(0xFFBCD6FF)),
+  foreground: MultiColor.only(Color(0xFF426F99)),
+);
+
+const _unitGroupsPageFloatingButton = WidgetColorScheme(
+  background: MultiColor.only(Color(0xFF6A69D5)),
+  foreground: MultiColor.only(Color(0xFFDEE9FF)),
+);
+
+const _unitGroupsMenu = MenuViewColorScheme(
+  noItemsInfoBox: WidgetColorScheme(
+    foreground: MultiColor.only(Color(0xFF45459A)),
+  ),
+  menuItem: MenuItemColorScheme(
+    border: MultiColor(
+      regular: Color(0xffc6d7fd),
+      selected: Color(0xFF535D91),
+    ),
+    background: MultiColor(
+      regular: Color(0xffc6d7fd),
+      selected: Color(0xff9db3ea),
+    ),
+    titleBackground: MultiColor(
+      regular: Color(0xffb8caf6),
+      selected: Color(0xffaabce8),
+    ),
+    matchBackground: MultiColor.only(Color(0xff9aafe0)),
+    matchForeground: MultiColor.only(Color(0xFF1E1E3D)),
+    foreground: MultiColor(
+      regular: Color(0xFF303073),
+      selected: Color(0xFF303073),
+    ),
+    divider: MultiColor(
+      regular: Color(0xFF353D69),
+      selected: Color(0xFF303073),
+    ),
+    checkBox: WidgetColorScheme(
+      border: MultiColor(
+        regular: Color(0xFF303073),
+      ),
+      background: MultiColor(
+        regular: Color(0xffe8efff),
+        selected: Color(0xFF303073),
+      ),
+      foreground: MultiColor(
+        regular: Colors.transparent,
+        selected: Colors.white,
+      ),
+    ),
+    modeIcon: WidgetColorScheme(
+      border: MultiColor(
+        regular: Color(0xffaebfe7),
+      ),
+      background: MultiColor(
+        regular: Color(0xffaebfe7),
+      ),
+      foreground: MultiColor(
+        regular: Color(0xFF303073),
+      ),
+    ),
+  ),
+);
+
+const _unitGroupDetailsTextBox = InputBoxColorScheme(
+  textBox: TextBoxColorScheme(
+    border: MultiColor(
+      regular: Color(0xFF6766D3),
+      disabled: Color(0xFF6160BE),
+    ),
+    foreground: MultiColor(
+      regular: Color(0xFF4544AB),
+      disabled: Color(0xFF414194),
+    ),
+    hint: MultiColor(
+      regular: Color(0xFF7574E1),
+    ),
+  ),
+);
+
+const _unitsPageFloatingButton = WidgetColorScheme(
+  background: MultiColor.only(Color(0xFF5189BE)),
+  foreground: MultiColor.only(Color(0xFFDEE9FF)),
+);
+
+const _unitsMenu = MenuViewColorScheme(
+  noItemsInfoBox: WidgetColorScheme(
+    foreground: MultiColor.only(Color(0xFF3B6083)),
+  ),
+  menuItem: MenuItemColorScheme(
+    border: MultiColor(
+      regular: Color(0xFFAAC9F1),
+      disabled: Color(0xAEB1CFF5),
+    ),
+    background: MultiColor(
+      regular: Color(0xFFAAC9F1),
+      disabled: Color(0x9EBFD8FA),
+    ),
+    titleBackground: MultiColor(
+      regular: Color(0xFF99C1EF),
+      disabled: Color(0x9EB1CBEF),
+    ),
+    matchBackground: MultiColor.only(Color(0xFF80ADE7)),
+    matchForeground: MultiColor.only(Color(0xFF264E72)),
+    foreground: MultiColor(
+      regular: Color(0xFF2C6396),
+      disabled: Color(0xB25086BB),
+    ),
+    divider: MultiColor(
+      regular: Color(0xFF2C6396),
+      disabled: Color(0xB2366C9F),
+    ),
+    checkBox: WidgetColorScheme(
+      border: MultiColor(
+        regular: Color(0xFF467CAD),
+      ),
+      background: MultiColor(
+        regular: Color(0xffe8efff),
+        selected: Color(0xFF467CAD),
+      ),
+      foreground: MultiColor(
+        regular: Colors.transparent,
+        selected: Colors.white,
+      ),
+    ),
+    modeIcon: WidgetColorScheme(
+      border: MultiColor(
+        regular: Color(0xFF96B5DC),
+      ),
+      background: MultiColor(
+        regular: Color(0xFF96B5DC),
+      ),
+      foreground: MultiColor(
+        regular: Color(0xFF2C6396),
+      ),
+    ),
+  ),
+);
+
+const _unitDetailsTextBox = InputBoxColorScheme(
+  textBox: TextBoxColorScheme(
+    border: MultiColor(
       regular: Color(0xFF4F7498),
       focused: Color(0xFF233B50),
       disabled: Color(0xFF90A8C0),
     ),
-    foreground: ColorVariation(
+    foreground: MultiColor(
       regular: Color(0xBE143656),
       disabled: Color(0xFF90A8C0),
     ),
-    hint: ColorVariation(
+    hint: MultiColor(
       regular: Color(0xFF799BBB),
       disabled: Color(0xBE73ACE5),
     ),
-    dropdown: ConvertouchColorScheme(
-      background: ColorVariation.only(Color(0xffabc4fd)),
-      foreground: ColorVariation.only(Color(0xFF1D578C)),
-    ),
-    tooltip: validationTooltipColorSchemeLight,
   ),
-  divider: ColorVariation(
+);
+
+const _conversionPageFloatingButton = WidgetColorScheme(
+  background: MultiColor.only(Color(0xFF3F74A8)),
+  foreground: MultiColor.only(Color(0xFFF5F7FF)),
+);
+
+const _conversionItemTextBox = TextBoxColorScheme(
+  background: MultiColor.only(Color(0xffe8efff)),
+  border: MultiColor(
+    regular: Color(0xFF4F7498),
+    focused: Color(0xFF233B50),
+    disabled: Color(0xFF90A8C0),
+  ),
+  foreground: MultiColor(
+    regular: Color(0xBE143656),
+    disabled: Color(0xFF90A8C0),
+  ),
+  hint: MultiColor(
+    regular: Color(0xFF799BBB),
+    disabled: Color(0xBE73ACE5),
+  ),
+  tooltip: _notification,
+);
+
+const _conversionItem = ConversionItemColorScheme(
+  inputBox: InputBoxColorScheme(
+    textBox: _conversionItemTextBox,
+    dropdown: DropdownColorScheme(
+      background: MultiColor.only(Color(0xffabc4fd)),
+      foreground: MultiColor.only(Color(0xFF1D578C)),
+      search: _conversionItemTextBox,
+    ),
+  ),
+  divider: MultiColor(
     regular: Color(0xFFBAD2EC),
     focused: Color(0xFF233B50),
     disabled: Color(0xFF90A8C0),
   ),
-  background: ColorVariation.only(Color(0xffe7f2ff)),
-  unitButton: ColorVariation.only(Color(0xFF2C6396)),
-  prefixWidget: ColorVariation(
+  background: MultiColor.only(Color(0xffe7f2ff)),
+  unitButton: MultiColor.only(Color(0xFF2C6396)),
+  prefixWidget: MultiColor(
     regular: Color(0xFF7799B9),
     selected: Color(0xFF2C6396),
   ),
 );
 
-const paramSetColorSchemeLight = ParamSetPanelColorScheme(
-  tab: ConvertouchColorScheme(
-    background: ColorVariation(
+const _refreshFloatingButton = WidgetColorScheme(
+  border: MultiColor(
+    regular: Color(0xFF2095B7),
+  ),
+  foreground: MultiColor(
+    regular: Color(0xFFE8E8FF),
+    selected: Color(0xFF2095B7),
+  ),
+  background: MultiColor.only(Color(0xFF2095B7)),
+);
+
+const _removalFloatingButton = WidgetColorScheme(
+  border: MultiColor.only(Color(0xFFFCFEFF)),
+  background: MultiColor.only(Color(0xFFD36422)),
+  foreground: MultiColor.only(Color(0xFFDEE9FF)),
+);
+
+const _paramSetPanel = ParamSetPanelColorScheme(
+  tab: WidgetColorScheme(
+    background: MultiColor(
       regular: Color(0xffdae5ff),
     ),
-    foreground: ColorVariation(
+    foreground: MultiColor(
       regular: Color(0xFF2D6698),
     ),
   ),
-  toolset: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffc6d6ff)),
-    foreground: ColorVariation(
+  toolset: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffc6d6ff)),
+    foreground: MultiColor(
       regular: Color(0xFF235475),
       disabled: Color(0xFF97B0C7),
     ),
   ),
-  removalIcon: ColorVariation.only(Color(0xFFB6441C)),
-  footer: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xffabbff3)),
-    foreground: ColorVariation.only(Color(0xFF6C9CC9)),
+  removalIcon: MultiColor.only(Color(0xFFB6441C)),
+  footer: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffabbff3)),
+    foreground: MultiColor.only(Color(0xFF6C9CC9)),
   ),
-  paramItem: conversionItemColorSchemeLight,
+  paramItem: _conversionItem,
 );
 
-const unitBottomLoaderLight = ListItemColorScheme(
-  background: ColorVariation.only(Color(0xFFC7DDFA)),
-  foreground: ColorVariation.only(Color(0xFF2C6396)),
-);
-
-const unitGroupBottomLoaderLight = ListItemColorScheme(
-  background: ColorVariation.only(Color(0xffccd9f8)),
-  foreground: ColorVariation.only(Color(0xFF303073)),
-);
-
-const unitGroupItemColorSchemeLight = ListItemColorScheme(
-  border: ColorVariation(
-    regular: Color(0xffc6d7fd),
-    selected: Color(0xFF535D91),
+const _settingGroup = SettingGroupColorScheme(
+  viewTitle: WidgetColorScheme(
+    foreground: MultiColor.only(Color(0xFF426F99)),
   ),
-  background: ColorVariation(
-    regular: Color(0xffc6d7fd),
-    selected: Color(0xff9db3ea),
-  ),
-  titleBackground: ColorVariation(
-    regular: Color(0xffb8caf6),
-    selected: Color(0xffaabce8),
-  ),
-  matchBackground: ColorVariation.only(Color(0xff9aafe0)),
-  matchForeground: ColorVariation.only(Color(0xFF1E1E3D)),
-  foreground: ColorVariation(
-    regular: Color(0xFF303073),
-    selected: Color(0xFF303073),
-  ),
-  divider: ColorVariation(
-    regular: Color(0xFF353D69),
-    selected: Color(0xFF303073),
-  ),
-  checkBox: ConvertouchColorScheme(
-    border: ColorVariation(
-      regular: Color(0xFF303073),
-    ),
-    background: ColorVariation(
-      regular: Color(0xffe8efff),
-      selected: Color(0xFF303073),
-    ),
-    foreground: ColorVariation(
-      regular: noColor,
-      selected: Colors.white,
-    ),
-  ),
-  modeIcon: ConvertouchColorScheme(
-    border: ColorVariation(
-      regular: Color(0xffaebfe7),
-    ),
-    background: ColorVariation(
-      regular: Color(0xffaebfe7),
-    ),
-    foreground: ColorVariation(
-      regular: Color(0xFF303073),
-    ),
-  ),
-);
-
-const unitItemColorSchemeLight = ListItemColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFFAAC9F1),
-    disabled: Color(0xAEB1CFF5),
-  ),
-  background: ColorVariation(
-    regular: Color(0xFFAAC9F1),
-    disabled: Color(0x9EBFD8FA),
-  ),
-  titleBackground: ColorVariation(
-    regular: Color(0xFF99C1EF),
-    disabled: Color(0x9EB1CBEF),
-  ),
-  matchBackground: ColorVariation.only(Color(0xFF80ADE7)),
-  matchForeground: ColorVariation.only(Color(0xFF264E72)),
-  foreground: ColorVariation(
-    regular: Color(0xFF2C6396),
-    disabled: Color(0xB25086BB),
-  ),
-  divider: ColorVariation(
-    regular: Color(0xFF2C6396),
-    disabled: Color(0xB2366C9F),
-  ),
-  checkBox: ConvertouchColorScheme(
-    border: ColorVariation(
-      regular: Color(0xFF467CAD),
-    ),
-    background: ColorVariation(
-      regular: Color(0xffe8efff),
-      selected: Color(0xFF467CAD),
-    ),
-    foreground: ColorVariation(
-      regular: noColor,
-      selected: Colors.white,
-    ),
-  ),
-  modeIcon: ConvertouchColorScheme(
-    border: ColorVariation(
-      regular: Color(0xFF96B5DC),
-    ),
-    background: ColorVariation(
-      regular: Color(0xFF96B5DC),
-    ),
-    foreground: ColorVariation(
-      regular: Color(0xFF2C6396),
-    ),
-  ),
-);
-
-const unitGroupPageInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFE1D8F5)),
-);
-
-const unitPageInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFBCD6FF)),
-);
-
-const unitGroupPageEmptyViewColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF45459A)),
-);
-
-const unitPageEmptyViewColorLight = ConvertouchColorScheme(
-  foreground: ColorVariation.only(Color(0xFF3B6083)),
-);
-
-const unitTextBoxColorLight = InputBoxColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFF4F7498),
-    focused: Color(0xFF233B50),
-    disabled: Color(0xFF90A8C0),
-  ),
-  foreground: ColorVariation(
-    regular: Color(0xBE143656),
-    disabled: Color(0xFF90A8C0),
-  ),
-  hint: ColorVariation(
-    regular: Color(0xFF799BBB),
-    disabled: Color(0xBE73ACE5),
-  ),
-  dropdown: ConvertouchColorScheme(
-    background: ColorVariation.only(Color(0xff9eb7f3)),
-    foreground: ColorVariation.only(Color(0xFF134470)),
-  ),
-);
-
-const unitGroupTextBoxColorLight = InputBoxColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFF6766D3),
-    disabled: Color(0xFF6160BE),
-  ),
-  foreground: ColorVariation(
-    regular: Color(0xFF4544AB),
-    disabled: Color(0xFF414194),
-  ),
-  hint: ColorVariation(
-    regular: Color(0xFF7574E1),
-  ),
-);
-
-const unitGroupsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF6A69D5)),
-  foreground: ColorVariation.only(Color(0xFFDEE9FF)),
-);
-
-const unitsPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF5189BE)),
-  foreground: ColorVariation.only(Color(0xFFDEE9FF)),
-);
-
-const conversionPageFloatingButtonColorSchemeLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFF3F74A8)),
-  foreground: ColorVariation.only(Color(0xFFF5F7FF)),
-);
-
-const refreshButtonColorSchemeLight = ConvertouchColorScheme(
-  border: ColorVariation(
-    regular: Color(0xFF2095B7),
-  ),
-  foreground: ColorVariation(
-    regular: Color(0xFFE8E8FF),
-    selected: Color(0xFF2095B7),
-  ),
-  background: ColorVariation.only(Color(0xFF2095B7)),
-);
-
-const removalFloatingButtonColorLight = ConvertouchColorScheme(
-  border: ColorVariation.only(Color(0xFFFCFEFF)),
-  background: ColorVariation.only(Color(0xFFD36422)),
-  foreground: ColorVariation.only(Color(0xFFDEE9FF)),
-);
-
-const settingItemColorLight = SettingsColorScheme(
-  viewTitle: ConvertouchColorScheme(
-    foreground: ColorVariation.only(Color(0xFF426F99)),
-  ),
-  settingItem: ConvertouchColorScheme(
-    background: ColorVariation(
+  divider: MultiColor.only(Color(0xffe8efff)),
+  settingItem: SettingItemColorScheme(
+    background: MultiColor(
       regular: Color(0xFFDBE6FF),
       selected: Color(0xFFE5ECFF),
       disabled: Color(0xFFE5ECFF),
     ),
-    foreground: ColorVariation(
+    foreground: MultiColor(
       regular: Color(0xFF345F87),
     ),
-  ),
-  divider: ColorVariation.only(Color(0xffe8efff)),
-  selectedValue: ColorVariation(
-    regular: Color(0xFF517FAA),
-  ),
-  switcher: SwitcherColorScheme(
-    track: ConvertouchColorScheme(
-      border: ColorVariation(
-        regular: Color(0xFF426F99),
-        selected: noColor,
-        disabled: Color(0xFF94B4D2),
+    selectedValue: MultiColor(
+      regular: Color(0xFF517FAA),
+    ),
+    switcher: SwitcherColorScheme(
+      thumb: WidgetColorScheme(
+        background: MultiColor(
+          regular: Color(0xFF426F99),
+          disabled: Color(0xFF94B4D2),
+        ),
       ),
-      background: ColorVariation(
-        regular: noColor,
-        selected: Color(0xFFAEC3F1),
-        disabled: Color(0xFF94B4D2),
+      track: WidgetColorScheme(
+        border: MultiColor(
+          regular: Color(0xFF426F99),
+          selected: Colors.transparent,
+          disabled: Color(0xFF94B4D2),
+        ),
+        background: MultiColor(
+          regular: Colors.transparent,
+          selected: Color(0xFFAEC3F1),
+          disabled: Color(0xFF94B4D2),
+        ),
       ),
     ),
   ),
-);
-
-const alertDialogColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFD5E2FF)),
-  foreground: ColorVariation.only(Color(0xFF426F99)),
-);
-
-const errorInfoBoxColorLight = ConvertouchColorScheme(
-  background: ColorVariation.only(Color(0xFFBCD6FF)),
-  foreground: ColorVariation.only(Color(0xFF426F99)),
 );

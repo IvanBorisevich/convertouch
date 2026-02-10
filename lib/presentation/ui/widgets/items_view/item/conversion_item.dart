@@ -2,7 +2,7 @@ import 'package:convertouch/presentation/ui/constants/conversion_item_constants.
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
@@ -47,11 +47,11 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
         borderRadius: InputBoxConstants.defaultBorderRadius,
         border: Border.all(
           color: _isFocused
-              ? widget.colors.textBox.border.focused
-              : widget.colors.textBox.border.regular,
+              ? widget.colors.inputBox.textBox.border.focused
+              : widget.colors.inputBox.textBox.border.regular,
           width: 1,
         ),
-        color: widget.colors.textBox.background.regular,
+        color: widget.colors.inputBox.textBox.background.regular,
       ),
       child: Row(
         children: [
@@ -109,7 +109,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                   _isFocused = false;
                 });
               },
-              colors: widget.colors.textBox,
+              colors: widget.colors.inputBox,
               labelPadding: const EdgeInsets.only(
                 left: 4,
                 right: 4,

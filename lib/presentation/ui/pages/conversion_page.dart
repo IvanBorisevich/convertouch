@@ -21,8 +21,8 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
@@ -71,9 +71,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
       },
       child: appBlocBuilder(
         builderFunc: (appState) {
-          PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-          ConvertouchColorScheme floatingButtonColor =
-              conversionPageFloatingButtonColors[appState.theme]!;
+          PageColorScheme pageColorScheme = appColors[appState.theme].page;
+          WidgetColorScheme floatingButtonColor =
+              appColors[appState.theme].conversionPageFloatingButton;
 
           return singleGroupBlocBuilder(
             builderFunc: (singleGroupState) {

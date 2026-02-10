@@ -10,8 +10,8 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +70,8 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
           ),
           floatingActionButton: appBlocBuilder(
             builderFunc: (appState) {
-              ConvertouchColorScheme floatingButtonColor =
-                  unitsPageFloatingButtonColors[appState.theme]!;
+              WidgetColorScheme floatingButtonColor =
+                  appColors[appState.theme].unitsPageFloatingButton;
 
               return ConvertouchFloatingActionButton(
                 icon: Icons.check_outlined,

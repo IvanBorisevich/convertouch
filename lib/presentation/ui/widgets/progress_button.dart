@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -15,7 +15,7 @@ class ConvertouchProgressButton extends StatelessWidget {
   final void Function()? onProgressIndicatorClick;
   final void Function()? onProgressIndicatorErrorIconClick;
   final EdgeInsets? margin;
-  final ConvertouchColorScheme colorsInProgress;
+  final WidgetColorScheme colorsInProgress;
   final Color? progressIndicatorErrorIconColor;
 
   const ConvertouchProgressButton({

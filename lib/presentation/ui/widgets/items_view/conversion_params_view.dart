@@ -7,7 +7,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
@@ -59,7 +59,7 @@ class ConversionParamsView extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    ParamSetPanelColorScheme colors = paramSetColors[theme]!;
+    ParamSetPanelColorScheme colors = appColors[theme].paramSetPanel;
 
     double paramSetMaxHeight = 0;
 

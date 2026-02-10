@@ -1,25 +1,30 @@
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 
-class ColorVariation {
-  static const ColorVariation none = ColorVariation.only(noColor);
+class MultiColor {
+  static const MultiColor none = MultiColor.only(Colors.transparent);
 
   final Color _regular;
   final Color? _selected;
   final Color? _focused;
   final Color? _disabled;
+  final Color? _warning;
+  final Color? _error;
 
-  const ColorVariation({
+  const MultiColor({
     required Color regular,
     Color? selected,
     Color? focused,
     Color? disabled,
+    Color? warning,
+    Color? error,
   })  : _regular = regular,
         _selected = selected,
         _focused = focused,
-        _disabled = disabled;
+        _disabled = disabled,
+        _warning = warning,
+        _error = error;
 
-  const ColorVariation.only(Color color)
+  const MultiColor.only(Color color)
       : this(
           regular: color,
         );
@@ -31,4 +36,8 @@ class ColorVariation {
   Color get focused => _focused ?? _regular;
 
   Color get selected => _selected ?? _regular;
+
+  Color get warning => _warning ?? _regular;
+
+  Color get error => _error ?? _regular;
 }

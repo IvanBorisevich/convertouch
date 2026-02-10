@@ -1,12 +1,12 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchAboutDialog extends StatelessWidget {
   final String applicationVersion;
   final String applicationLegalese;
-  final SettingsColorScheme colors;
+  final SettingItemColorScheme colors;
 
   const ConvertouchAboutDialog({
     required this.applicationLegalese,
@@ -21,7 +21,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
-      backgroundColor: colors.settingItem.background.regular,
+      backgroundColor: colors.background.regular,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -43,7 +43,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
                 appName,
                 style: TextStyle(
                   fontSize: 21,
-                  color: colors.settingItem.foreground.regular,
+                  color: colors.foreground.regular,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0,
                 ),
@@ -52,7 +52,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
                 applicationVersion,
                 style: TextStyle(
                   fontSize: 12,
-                  color: colors.settingItem.foreground.regular,
+                  color: colors.foreground.regular,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0,
                 ),
@@ -63,7 +63,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
                   applicationLegalese,
                   style: TextStyle(
                     fontSize: 12,
-                    color: colors.settingItem.foreground.regular,
+                    color: colors.foreground.regular,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0,
                   ),

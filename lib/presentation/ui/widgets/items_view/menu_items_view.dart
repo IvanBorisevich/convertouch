@@ -8,8 +8,8 @@ import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
@@ -65,8 +65,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   static const double _itemsSpacing = 8;
   static const double _bottomSpacing = 85;
 
-  late Map<ConvertouchUITheme, ListItemColorScheme> _itemColors;
-  late Map<ConvertouchUITheme, ConvertouchColorScheme> _emptyViewColors;
+  late Map<ConvertouchUITheme, MenuViewColorScheme> _menuColors;
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
   late final String _noItemsLabel;
@@ -79,17 +78,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     super.initState();
 
     if (T == UnitGroupModel) {
-      _itemColors = unitGroupItemColors;
-      _emptyViewColors = unitGroupPageEmptyViewColor;
+      _menuColors = appColors.unitGroupsMenuColors;
       _noItemsLabel = "Unit groups list is empty";
-    } else if (T == UnitModel) {
-      _itemColors = unitItemColors;
-      _emptyViewColors = unitPageEmptyViewColor;
-      _noItemsLabel = "Units list is empty";
     } else {
-      _itemColors = paramSetItemColors;
-      _emptyViewColors = paramSetPageEmptyViewColor;
-      _noItemsLabel = "Parameters list is empty";
+      _menuColors = appColors.unitsMenuColors;
+      _noItemsLabel = "Units list is empty";
     }
   }
 
@@ -191,12 +184,12 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                       return Center(
                         child: NoItemsInfoLabel(
                           text: _noItemsLabel,
-                          colors: _emptyViewColors[appState.theme]!,
+                          colors: _menuColors[appState.theme]!.noItemsInfoBox,
                         ),
                       );
                     }
 
-                    var itemColors = _itemColors[appState.theme]!;
+                    var itemColors = _menuColors[appState.theme]!.menuItem;
 
                     ItemsViewMode itemsViewMode;
 
@@ -281,7 +274,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     required T item,
     required int index,
     required int itemsNum,
-    required ListItemColorScheme itemColors,
+    required MenuItemColorScheme itemColors,
     required ItemsViewMode itemsViewMode,
     required bool checkIconVisible,
   }) {

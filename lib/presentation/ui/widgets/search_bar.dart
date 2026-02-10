@@ -6,8 +6,8 @@ import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +18,7 @@ class ConvertouchSearchBar extends StatelessWidget {
   final String placeholder;
   final void Function(String?)? onSearchStringChanged;
   final void Function()? onSearchReset;
-  final SearchBarColorScheme? customColor;
+  final SearchBoxColorScheme? customColor;
 
   const ConvertouchSearchBar({
     required this.pageName,
@@ -34,9 +34,9 @@ class ConvertouchSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
-        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
-        SearchBarColorScheme searchBarColorScheme =
-            customColor ?? searchBarColors[appState.theme]!;
+        PageColorScheme pageColorScheme = appColors[appState.theme].page;
+        SearchBoxColorScheme searchBarColorScheme =
+            customColor ?? appColors[appState.theme].searchBox;
 
         ItemsViewMode pageViewMode;
 
@@ -77,12 +77,13 @@ class ConvertouchSearchBar extends StatelessWidget {
                   letterSpacing: 0,
                   prefixIcon: Icon(
                     Icons.search,
-                    color: searchBarColorScheme.textBox.foreground.regular,
+                    color: searchBarColorScheme
+                        .inputBox.textBox.foreground.regular,
                     size: 22,
                   ),
                   iconPaddingLeft: 12,
                   iconPaddingRight: 0,
-                  colors: searchBarColorScheme.textBox,
+                  colors: searchBarColorScheme.inputBox,
                 ),
               ),
               const SizedBox(width: 7),
@@ -101,8 +102,8 @@ class ConvertouchSearchBar extends StatelessWidget {
                       key: ValueKey(pageViewMode),
                     ),
                   ),
-                  splashColor: noColor,
-                  highlightColor: noColor,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                   onPressed: () {
                     BlocProvider.of<AppBloc>(context).add(
                       ChangeSetting(

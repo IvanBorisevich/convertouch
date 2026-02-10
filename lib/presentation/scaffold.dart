@@ -22,8 +22,8 @@ import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion_params.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +70,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
-        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+        PageColorScheme pageColorScheme = appColors[appState.theme].page;
 
         return BlocConsumer<NavigationBloc, NavigationState>(
           listenWhen: (prev, next) {
@@ -252,18 +252,18 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     required ConvertouchUITheme theme,
     int durationInSec = 2,
   }) {
-    SeverityColorScheme snackBarColor = pageColors[theme]!.snackBar;
+    NotificationColorScheme snackBarColor = appColors[theme].notification;
 
     Color foreground;
     switch (exception.severity) {
       case ExceptionSeverity.warning:
-        foreground = snackBarColor.foregroundWarning.regular;
+        foreground = snackBarColor.foreground.warning;
         break;
       case ExceptionSeverity.error:
-        foreground = snackBarColor.foregroundError.regular;
+        foreground = snackBarColor.foreground.error;
         break;
       case ExceptionSeverity.info:
-        foreground = snackBarColor.foregroundInfo.regular;
+        foreground = snackBarColor.foreground.regular;
         break;
     }
 

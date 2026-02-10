@@ -1,7 +1,7 @@
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,11 +28,11 @@ class ConvertouchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
-        PageColorScheme pageColorScheme = pageColors[appState.theme]!;
+        PageColorScheme pageColorScheme = appColors[appState.theme].page;
 
         return SafeArea(
           child: Scaffold(
-            backgroundColor: pageColorScheme.page.background.regular,
+            backgroundColor: pageColorScheme.body.background.regular,
             appBar: AppBar(
               scrolledUnderElevation: 0.0,
               elevation: 0,

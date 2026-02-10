@@ -1,5 +1,5 @@
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double bottomMargin;
-  final InputBoxColorScheme textBoxColor;
+  final InputBoxColorScheme inputBoxColor;
 
   const ConvertouchDetailsItem({
     required this.name,
@@ -29,7 +29,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
     this.editableValueMaxLength,
     this.editableValueLengthVisible = false,
     this.bottomMargin = 20,
-    required this.textBoxColor,
+    required this.inputBoxColor,
     super.key,
   });
 
@@ -53,7 +53,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
               ),
               controller: valueChangeController,
               onValueChanged: onValueChanged,
-              colors: textBoxColor,
+              colors: inputBoxColor,
             )
           : SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -68,7 +68,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: textBoxColor.border.regular,
+                              color: inputBoxColor.textBox.border.regular,
                             ),
                           ),
                         )
@@ -79,7 +79,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,
-                            color: textBoxColor.foreground.regular,
+                            color: inputBoxColor.textBox.foreground.regular,
                           ),
                         )
                       : const SizedBox.shrink(),

@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchRadioDialog<T> extends StatelessWidget {
@@ -7,7 +7,7 @@ class ConvertouchRadioDialog<T> extends StatelessWidget {
   final String Function(T)? valueMap;
   final List<T> possibleValues;
   final void Function(T?)? onChanged;
-  final SettingsColorScheme colors;
+  final SettingItemColorScheme colors;
 
   const ConvertouchRadioDialog({
     required this.title,
@@ -29,13 +29,13 @@ class ConvertouchRadioDialog<T> extends StatelessWidget {
         title,
         style: TextStyle(
           fontSize: 18,
-          color: colors.settingItem.foreground.regular,
+          color: colors.foreground.regular,
           fontWeight: FontWeight.w500,
           letterSpacing: 0,
         ),
       ),
       contentPadding: EdgeInsets.zero,
-      backgroundColor: colors.settingItem.background.regular,
+      backgroundColor: colors.background.regular,
       content: ListView.builder(
         shrinkWrap: true,
         itemCount: possibleValues.length,
@@ -45,7 +45,7 @@ class ConvertouchRadioDialog<T> extends StatelessWidget {
             title: Text(
               valueMap?.call(itemValue) ?? itemValue.toString(),
               style: TextStyle(
-                color: colors.settingItem.foreground.regular,
+                color: colors.foreground.regular,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0,
@@ -54,12 +54,12 @@ class ConvertouchRadioDialog<T> extends StatelessWidget {
             visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
             fillColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.selected)) {
-                return colors.settingItem.foreground.selected;
+                return colors.foreground.selected;
               }
               if (states.contains(WidgetState.disabled)) {
-                return colors.settingItem.foreground.disabled;
+                return colors.foreground.disabled;
               }
-              return colors.settingItem.foreground.regular;
+              return colors.foreground.regular;
             }),
             value: itemValue,
             groupValue: selectedValue,

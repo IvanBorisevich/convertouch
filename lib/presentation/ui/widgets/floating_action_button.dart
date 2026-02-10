@@ -1,4 +1,4 @@
-import 'package:convertouch/presentation/ui/style/color/color_scheme.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchFloatingActionButton extends StatelessWidget {
@@ -9,7 +9,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final bool visible;
   final bool extraLabelVisible;
   final String extraLabelText;
-  final ConvertouchColorScheme colorScheme;
+  final WidgetColorScheme colorScheme;
 
   const ConvertouchFloatingActionButton({
     required this.icon,
