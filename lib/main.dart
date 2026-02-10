@@ -21,7 +21,7 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';

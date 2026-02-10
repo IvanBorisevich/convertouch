@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,9 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final void Function(ConversionUnitValueModel, dynamic)? onValueChanged;
   final void Function(ConversionUnitValueModel, dynamic)? onValueFocused;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
-  final double listItemSpacingAfterLast;
+  final double horizontalSpacing;
+  final double verticalSpacing;
+  final double verticalSpacingAfterLast;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
@@ -25,7 +27,9 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onItemRemoveTap,
-    this.listItemSpacingAfterLast = 90,
+    this.horizontalSpacing = 10,
+    this.verticalSpacing = 12,
+    this.verticalSpacingAfterLast = 85,
     required this.theme,
     super.key,
   });
@@ -36,9 +40,6 @@ class ConvertouchConversionItemsView extends StatefulWidget {
 
 class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
-  static const double _viewPadding = 9;
-  static const double _bottomSpacing = 85;
-
   @override
   Widget build(BuildContext context) {
     if (widget.convertedItems.isEmpty) {
@@ -62,18 +63,20 @@ class _ConvertouchConversionItemsViewState
           child: child, // place your ui
         );
       },
-      padding: const EdgeInsets.only(
-        top: _viewPadding,
-        bottom: _bottomSpacing,
-        left: _viewPadding,
-        right: _viewPadding,
+      padding: EdgeInsets.only(
+        top: widget.verticalSpacing,
+        bottom: widget.verticalSpacingAfterLast,
+        left: widget.horizontalSpacing,
+        right: widget.horizontalSpacing,
       ),
       itemBuilder: (context, index) {
         ConversionUnitValueModel item = widget.convertedItems[index];
 
         return Padding(
           key: Key('$index'),
-          padding: const EdgeInsets.only(bottom: _viewPadding),
+          padding: EdgeInsets.only(
+            bottom: widget.verticalSpacing,
+          ),
           child: ConvertouchConversionItem(
             ConversionItemModel(
               inputBoxModel: InputBoxModel.ofValue(

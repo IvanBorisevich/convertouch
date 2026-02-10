@@ -11,7 +11,7 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -36,59 +36,63 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
           builderFunc: (singleGroupState) {
             UnitGroupModel unitGroup = singleGroupState.unitGroup;
 
-            return ConvertouchPage(
-              title: "${unitGroup.name} units",
-              customLeadingIcon: itemsSelectionState.showCancelIcon
-                  ? CancelItemsSelectionIcon(
-                      bloc: unitsSelectionBloc,
-                    )
-                  : null,
-              body: ConvertouchMenuItemsView(
-                itemsListBloc: unitsBloc,
-                pageName: PageName.unitsPageRegular,
-                viewModeSettingKey: SettingKey.unitsViewMode,
-                checkedItemIds: itemsSelectionState.markedIds,
-                searchBarPlaceholder: "Search units...",
-                selectedItemId: null,
-                disabledItemIds: const [],
-                removalModeEnabled: itemsSelectionState.showCancelIcon,
-                checkableItemsVisible: itemsSelectionState.showCancelIcon,
-                editableItemsVisible: true,
-                onItemTap: (unit) {
-                  unitDetailsBloc.add(
-                    GetExistingUnitDetails(
-                      unit: unit,
-                      unitGroup: unitGroup,
-                    ),
-                  );
-                },
-                onItemTapForRemoval: (unit) {
-                  unitsSelectionBloc.add(
-                    SelectSingleItem(
-                      id: unit.id,
-                    ),
-                  );
-                },
-                onItemLongPress: (unit) {
-                  if (!itemsSelectionState.showCancelIcon) {
-                    unitsSelectionBloc.add(
-                      StartItemsMarking(
-                        showCancelIcon: true,
-                        previouslyMarkedIds: [unit.id],
-                        excludedIds: unitsBloc.state.oobIds,
-                      ),
-                    );
-                  }
-                },
-              ),
-              floatingActionButton: appBlocBuilder(
-                builderFunc: (appState) {
-                  WidgetColorScheme floatingButtonColor =
-                      appColors[appState.theme].unitsPageFloatingButton;
-                  WidgetColorScheme removalButtonColor =
-                      appColors[appState.theme].removalFloatingButton;
+            return appBlocBuilder(
+              builderFunc: (appState) {
+                WidgetColorScheme floatingButtonColor =
+                    appColors[appState.theme].unitsPageFloatingButton;
+                WidgetColorScheme removalButtonColor =
+                    appColors[appState.theme].removalFloatingButton;
 
-                  return itemsSelectionState.showCancelIcon
+                return ConvertouchPage(
+                  title: "${unitGroup.name} units",
+                  colors: appColors[appState.theme].page,
+                  customLeadingIcon: itemsSelectionState.showCancelIcon
+                      ? CancelItemsSelectionIcon(
+                          bloc: unitsSelectionBloc,
+                        )
+                      : null,
+                  body: ConvertouchMenuItemsView(
+                    itemsListBloc: unitsBloc,
+                    pageName: PageName.unitsPageRegular,
+                    viewModeSettingKey: SettingKey.unitsViewMode,
+                    checkedItemIds: itemsSelectionState.markedIds,
+                    searchBarPlaceholder: "Search units...",
+                    noItemsLabel: 'No units',
+                    colors: appColors[appState.theme].unitsMenu,
+                    itemsViewMode: appState.unitsViewMode,
+                    selectedItemId: null,
+                    disabledItemIds: const [],
+                    removalModeEnabled: itemsSelectionState.showCancelIcon,
+                    checkableItemsVisible: itemsSelectionState.showCancelIcon,
+                    editableItemsVisible: true,
+                    onItemTap: (unit) {
+                      unitDetailsBloc.add(
+                        GetExistingUnitDetails(
+                          unit: unit,
+                          unitGroup: unitGroup,
+                        ),
+                      );
+                    },
+                    onItemTapForRemoval: (unit) {
+                      unitsSelectionBloc.add(
+                        SelectSingleItem(
+                          id: unit.id,
+                        ),
+                      );
+                    },
+                    onItemLongPress: (unit) {
+                      if (!itemsSelectionState.showCancelIcon) {
+                        unitsSelectionBloc.add(
+                          StartItemsMarking(
+                            showCancelIcon: true,
+                            previouslyMarkedIds: [unit.id],
+                            excludedIds: unitsBloc.state.oobIds,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  floatingActionButton: itemsSelectionState.showCancelIcon
                       ? ConvertouchFloatingActionButton.removal(
                           visible: itemsSelectionState.markedIds.isNotEmpty,
                           extraLabelText:
@@ -122,9 +126,9 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                             );
                           },
                           colorScheme: floatingButtonColor,
-                        );
-                },
-              ),
+                        ),
+                );
+              },
             );
           },
         );

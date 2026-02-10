@@ -22,7 +22,7 @@ import 'package:convertouch/presentation/ui/pages/units_page_for_conversion.dart
 import 'package:convertouch/presentation/ui/pages/units_page_for_conversion_params.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_for_unit_details.dart';
 import 'package:convertouch/presentation/ui/pages/units_page_regular.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';

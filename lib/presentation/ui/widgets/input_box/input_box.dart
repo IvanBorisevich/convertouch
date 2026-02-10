@@ -26,6 +26,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
   final double contentPaddingLeft;
   final double contentPaddingRight;
   final EdgeInsetsGeometry? labelPadding;
+  final double labelFontSize;
   final double height;
   final double fontSize;
   final double? letterSpacing;
@@ -46,6 +47,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
     this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
     this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
     this.labelPadding,
+    this.labelFontSize = InputBoxConstants.defaultLabelFontSize,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
@@ -71,6 +73,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         contentPaddingLeft: contentPaddingLeft,
         contentPaddingRight: contentPaddingRight,
         labelPadding: labelPadding,
+        labelFontSize: labelFontSize,
         height: height,
         fontSize: fontSize,
         letterSpacing: letterSpacing,
@@ -94,6 +97,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
         height: height,
         fontSize: fontSize,
         labelPadding: labelPadding,
+        labelFontSize: labelFontSize,
       );
     }
 

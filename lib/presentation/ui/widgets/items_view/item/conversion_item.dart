@@ -93,7 +93,6 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
             child: ConvertouchInputBox(
               model: widget.model.inputBoxModel,
               borderWidth: 0,
-              borderRadius: InputBoxConstants.defaultBorderRadius,
               tooltipDirection: widget.model.isLast
                   ? TooltipDirection.up
                   : TooltipDirection.down,

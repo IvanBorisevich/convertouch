@@ -3,6 +3,7 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/setting_items_view.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
       builderFunc: (appState) {
         return ConvertouchPage(
           title: "Settings",
+          colors: appColors[appState.theme].page,
           body: SingleChildScrollView(
             child: Column(
               children: [

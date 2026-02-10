@@ -18,7 +18,7 @@ import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
@@ -67,6 +67,7 @@ class _ConvertouchUnitDetailsPageState
 
             return ConvertouchPage(
               title: pageState.details.existingUnit ? 'Unit Info' : 'New Unit',
+              colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.only(

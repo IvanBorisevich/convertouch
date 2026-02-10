@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

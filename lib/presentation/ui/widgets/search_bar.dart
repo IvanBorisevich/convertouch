@@ -6,7 +6,7 @@ import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
 import 'package:flutter/material.dart';
@@ -72,17 +72,17 @@ class ConvertouchSearchBar extends StatelessWidget {
                   onValueChanged: onSearchStringChanged,
                   onValueFocused: onSearchStringChanged,
                   onValueCleaned: onSearchReset,
-                  fontSize: 14,
-                  contentPaddingLeft: 0,
+                  fontSize: 15,
+                  borderWidth: 0,
                   letterSpacing: 0,
                   prefixIcon: Icon(
                     Icons.search,
                     color: searchBarColorScheme
                         .inputBox.textBox.foreground.regular,
-                    size: 22,
+                    size: 20,
                   ),
-                  iconPaddingLeft: 12,
-                  iconPaddingRight: 0,
+                  prefixIconPaddingLeft: 12,
+                  prefixIconPaddingRight: 5,
                   colors: searchBarColorScheme.inputBox,
                 ),
               ),

@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,29 +25,37 @@ class ConvertouchUnitGroupsPageForUnitDetails extends StatelessWidget {
     return itemsSelectionBlocBuilder(
       bloc: unitGroupSelectionBloc,
       builderFunc: (itemsSelectionState) {
-        return ConvertouchPage(
-          title: "Select Group",
-          body: ConvertouchMenuItemsView(
-            itemsListBloc: unitGroupsBloc,
-            pageName: PageName.unitGroupsPageForUnitDetails,
-            viewModeSettingKey: SettingKey.unitGroupsViewMode,
-            searchBarPlaceholder: "Search unit groups...",
-            onItemTap: (unitGroup) {
-              unitDetailsBloc.add(
-                ChangeGroupInUnitDetails(
-                  unitGroup: unitGroup,
-                ),
-              );
-            },
-            onItemTapForRemoval: null,
-            onItemLongPress: null,
-            checkedItemIds: const [],
-            disabledItemIds: const [],
-            selectedItemId: itemsSelectionState.selectedId,
-            editableItemsVisible: false,
-            checkableItemsVisible: true,
-            removalModeEnabled: false,
-          ),
+        return appBlocBuilder(
+          builderFunc: (appState) {
+            return ConvertouchPage(
+              title: "Select Group",
+              colors: appColors[appState.theme].page,
+              body: ConvertouchMenuItemsView(
+                itemsListBloc: unitGroupsBloc,
+                pageName: PageName.unitGroupsPageForUnitDetails,
+                viewModeSettingKey: SettingKey.unitGroupsViewMode,
+                searchBarPlaceholder: "Search unit groups...",
+                noItemsLabel: 'No unit groups',
+                colors: appColors[appState.theme].unitGroupsMenu,
+                itemsViewMode: appState.unitGroupsViewMode,
+                onItemTapForRemoval: null,
+                onItemLongPress: null,
+                checkedItemIds: const [],
+                disabledItemIds: const [],
+                selectedItemId: itemsSelectionState.selectedId,
+                editableItemsVisible: false,
+                checkableItemsVisible: true,
+                removalModeEnabled: false,
+                onItemTap: (unitGroup) {
+                  unitDetailsBloc.add(
+                    ChangeGroupInUnitDetails(
+                      unitGroup: unitGroup,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );

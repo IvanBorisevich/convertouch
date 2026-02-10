@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,29 +24,37 @@ class ConvertouchUnitsPageForUnitDetails extends StatelessWidget {
     return itemsSelectionBlocBuilder(
       bloc: itemsSelectionBloc,
       builderFunc: (itemsSelectionState) {
-        return ConvertouchPage(
-          title: "Select Argument Unit",
-          body: ConvertouchMenuItemsView(
-            itemsListBloc: unitsBloc,
-            pageName: PageName.unitsPageForUnitDetails,
-            viewModeSettingKey: SettingKey.unitsViewMode,
-            searchBarPlaceholder: "Search units...",
-            onItemTap: (unit) {
-              unitDetailsBloc.add(
-                ChangeArgumentUnitInUnitDetails(
-                  argumentUnit: unit,
-                ),
-              );
-            },
-            onItemTapForRemoval: null,
-            onItemLongPress: null,
-            checkedItemIds: const [],
-            disabledItemIds: itemsSelectionState.excludedIds,
-            selectedItemId: itemsSelectionState.selectedId,
-            editableItemsVisible: false,
-            checkableItemsVisible: true,
-            removalModeEnabled: false,
-          ),
+        return appBlocBuilder(
+          builderFunc: (appState) {
+            return ConvertouchPage(
+              title: "Select Argument Unit",
+              colors: appColors[appState.theme].page,
+              body: ConvertouchMenuItemsView(
+                itemsListBloc: unitsBloc,
+                pageName: PageName.unitsPageForUnitDetails,
+                viewModeSettingKey: SettingKey.unitsViewMode,
+                searchBarPlaceholder: "Search units...",
+                noItemsLabel: 'No units',
+                colors: appColors[appState.theme].unitsMenu,
+                itemsViewMode: appState.unitsViewMode,
+                onItemTapForRemoval: null,
+                onItemLongPress: null,
+                checkedItemIds: const [],
+                disabledItemIds: itemsSelectionState.excludedIds,
+                selectedItemId: itemsSelectionState.selectedId,
+                editableItemsVisible: false,
+                checkableItemsVisible: true,
+                removalModeEnabled: false,
+                onItemTap: (unit) {
+                  unitDetailsBloc.add(
+                    ChangeArgumentUnitInUnitDetails(
+                      argumentUnit: unit,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );

@@ -10,7 +10,7 @@ import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -59,6 +59,7 @@ class _ConvertouchUnitGroupDetailsPageState
               title: unitGroupDetailsState.isExistingGroup
                   ? 'Group Info'
                   : 'New Group',
+              colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.only(

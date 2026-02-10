@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
@@ -36,6 +35,9 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
   final bool checkableItemsVisible;
   final bool checkIconVisibleIfUnchecked;
   final bool removalModeEnabled;
+  final ItemsViewMode itemsViewMode;
+  final MenuViewColorScheme colors;
+  final String noItemsLabel;
 
   const ConvertouchMenuItemsView({
     required this.itemsListBloc,
@@ -52,6 +54,9 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     this.checkableItemsVisible = false,
     this.checkIconVisibleIfUnchecked = false,
     this.removalModeEnabled = false,
+    required this.itemsViewMode,
+    required this.colors,
+    this.noItemsLabel = "No Items",
     super.key,
   });
 
@@ -65,26 +70,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   static const double _itemsSpacing = 8;
   static const double _bottomSpacing = 85;
 
-  late Map<ConvertouchUITheme, MenuViewColorScheme> _menuColors;
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
-  late final String _noItemsLabel;
 
   bool _isInitialized = false;
   late final int _gridItemsNumInRow;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (T == UnitGroupModel) {
-      _menuColors = appColors.unitGroupsMenuColors;
-      _noItemsLabel = "Unit groups list is empty";
-    } else {
-      _menuColors = appColors.unitsMenuColors;
-      _noItemsLabel = "Units list is empty";
-    }
-  }
 
   @override
   void didChangeDependencies() {
@@ -176,32 +166,20 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
             Expanded(
               child: ScrollConfiguration(
                 behavior: NoGlowScrollBehavior(),
-                child: appBlocBuilder(
-                  builderFunc: (appState) {
+                child: LayoutBuilder(
+                  builder: (_, constraints) {
                     List<T> allItems = state.itemsFetch.items;
 
                     if (allItems.isEmpty) {
                       return Center(
                         child: NoItemsInfoLabel(
-                          text: _noItemsLabel,
-                          colors: _menuColors[appState.theme]!.noItemsInfoBox,
+                          text: widget.noItemsLabel,
+                          colors: widget.colors.noItemsInfoBox,
                         ),
                       );
                     }
 
-                    var itemColors = _menuColors[appState.theme]!.menuItem;
-
-                    ItemsViewMode itemsViewMode;
-
-                    if (T == UnitGroupModel) {
-                      itemsViewMode = appState.unitGroupsViewMode;
-                    } else if (T == UnitModel) {
-                      itemsViewMode = appState.unitsViewMode;
-                    } else {
-                      itemsViewMode = appState.paramSetsViewMode;
-                    }
-
-                    switch (itemsViewMode) {
+                    switch (widget.itemsViewMode) {
                       case ItemsViewMode.list:
                         return ListView.builder(
                           controller: _listScrollController,
@@ -222,8 +200,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                               item: allItems[index],
                               index: index,
                               itemsNum: allItems.length,
-                              itemColors: itemColors,
-                              itemsViewMode: itemsViewMode,
+                              itemColors: widget.colors.menuItem,
+                              itemsViewMode: widget.itemsViewMode,
                               checkIconVisible: checkIconVisible,
                             );
                           },
@@ -252,8 +230,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                               item: allItems[index],
                               index: index,
                               itemsNum: allItems.length,
-                              itemColors: itemColors,
-                              itemsViewMode: itemsViewMode,
+                              itemColors: widget.colors.menuItem,
+                              itemsViewMode: widget.itemsViewMode,
                               checkIconVisible: checkIconVisible,
                             );
                           },
@@ -291,11 +269,16 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     bool editIconVisible = !item.oob && widget.editableItemsVisible;
 
     onTap() {
-      _onItemTap(
-        context,
-        item,
-        callable: !selected && !disabled,
-      );
+      if (widget.removalModeEnabled) {
+        if (!item.oob) {
+          widget.onItemTapForRemoval?.call(item);
+        }
+      } else {
+        if (!selected && !disabled) {
+          FocusScope.of(context).unfocus();
+          widget.onItemTap?.call(item);
+        }
+      }
     }
 
     onLongPress() {
@@ -372,22 +355,5 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     }
 
     return const SizedBox.shrink();
-  }
-
-  void _onItemTap(
-    BuildContext context,
-    T item, {
-    bool callable = true,
-  }) {
-    if (widget.removalModeEnabled) {
-      if (!item.oob) {
-        widget.onItemTapForRemoval?.call(item);
-      }
-    } else {
-      if (callable) {
-        FocusScope.of(context).unfocus();
-        widget.onItemTap?.call(item);
-      }
-    }
   }
 }

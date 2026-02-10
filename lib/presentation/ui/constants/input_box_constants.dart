@@ -10,6 +10,7 @@ abstract interface class InputBoxConstants {
       BorderRadius.all(defaultRadius);
   static const double defaultBorderWidth = 1;
   static const double defaultFontSize = 17;
+  static const double defaultLabelFontSize = 16;
   static const double defaultContentPaddingLeft = 17;
   static const double defaultContentPaddingRight = 17;
   static const double defaultIconPaddingLeft = 10;

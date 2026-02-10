@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item.dart';
 import 'package:flutter/material.dart';

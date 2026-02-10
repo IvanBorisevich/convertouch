@@ -9,7 +9,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
@@ -33,50 +33,58 @@ class ConversionParamSetsPage extends StatelessWidget {
       builderFunc: (itemsSelectionState) {
         return singleGroupBlocBuilder(
           builderFunc: (singleGroupState) {
-            return ConvertouchPage(
-              title: 'Add Parameters',
-              body: ConvertouchMenuItemsView(
-                itemsListBloc: paramSetsBloc,
-                pageName: PageName.paramSetsPage,
-                viewModeSettingKey: SettingKey.paramSetsViewMode,
-                searchBarPlaceholder: "Search parameters...",
-                onItemTap: (paramSet) {
-                  paramSetsSelectionBloc.add(
-                    SelectSingleItem(
-                      id: paramSet.id,
-                    ),
-                  );
-                },
-                onItemTapForRemoval: null,
-                onItemLongPress: null,
-                checkedItemIds: itemsSelectionState.markedIds,
-                disabledItemIds: itemsSelectionState.excludedIds,
-                selectedItemId: itemsSelectionState.selectedId,
-                editableItemsVisible: false,
-                checkableItemsVisible: true,
-                checkIconVisibleIfUnchecked: true,
-                removalModeEnabled: false,
-              ),
-              floatingActionButton: appBlocBuilder(
-                builderFunc: (appState) {
-                  WidgetColorScheme floatingButtonColor =
-                      appColors[appState.theme].unitsPageFloatingButton;
-
-                  return ConvertouchFloatingActionButton(
-                    icon: Icons.check_outlined,
-                    visible: itemsSelectionState.canMarkedItemsBeSelected,
-                    onClick: () {
-                      conversionBloc.add(
-                        AddParamSetsToConversion(
-                          paramSetIds: itemsSelectionState.markedIds,
+            return appBlocBuilder(
+              builderFunc: (appState) {
+                return ConvertouchPage(
+                  title: 'Add Parameters',
+                  colors: appColors[appState.theme].page,
+                  body: ConvertouchMenuItemsView(
+                    itemsListBloc: paramSetsBloc,
+                    pageName: PageName.paramSetsPage,
+                    viewModeSettingKey: SettingKey.paramSetsViewMode,
+                    searchBarPlaceholder: "Search parameters...",
+                    noItemsLabel: 'No parameters',
+                    colors: appColors[appState.theme].unitsMenu,
+                    itemsViewMode: appState.paramSetsViewMode,
+                    onItemTapForRemoval: null,
+                    onItemLongPress: null,
+                    checkedItemIds: itemsSelectionState.markedIds,
+                    disabledItemIds: itemsSelectionState.excludedIds,
+                    selectedItemId: itemsSelectionState.selectedId,
+                    editableItemsVisible: false,
+                    checkableItemsVisible: true,
+                    checkIconVisibleIfUnchecked: true,
+                    removalModeEnabled: false,
+                    onItemTap: (paramSet) {
+                      paramSetsSelectionBloc.add(
+                        SelectSingleItem(
+                          id: paramSet.id,
                         ),
                       );
-                      navigationBloc.add(const NavigateBack());
                     },
-                    colorScheme: floatingButtonColor,
-                  );
-                },
-              ),
+                  ),
+                  floatingActionButton: appBlocBuilder(
+                    builderFunc: (appState) {
+                      WidgetColorScheme floatingButtonColor =
+                          appColors[appState.theme].unitsPageFloatingButton;
+
+                      return ConvertouchFloatingActionButton(
+                        icon: Icons.check_outlined,
+                        visible: itemsSelectionState.canMarkedItemsBeSelected,
+                        onClick: () {
+                          conversionBloc.add(
+                            AddParamSetsToConversion(
+                              paramSetIds: itemsSelectionState.markedIds,
+                            ),
+                          );
+                          navigationBloc.add(const NavigateBack());
+                        },
+                        colorScheme: floatingButtonColor,
+                      );
+                    },
+                  ),
+                );
+              },
             );
           },
         );

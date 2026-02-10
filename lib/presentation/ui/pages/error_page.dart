@@ -3,8 +3,8 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,10 +22,12 @@ class ConvertouchErrorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
-        WidgetColorScheme errorInfoBoxColor = appColors[appState.theme].errorInfoBox;
+        WidgetColorScheme errorInfoBoxColor =
+            appColors[appState.theme].errorInfoBox;
 
         return ConvertouchPage(
           title: pageTitle,
+          colors: appColors[appState.theme].page,
           body: Padding(
             padding: const EdgeInsets.only(
               left: 12,

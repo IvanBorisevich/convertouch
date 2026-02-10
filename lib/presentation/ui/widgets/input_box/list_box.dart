@@ -28,6 +28,7 @@ class ConvertouchListBox extends StatefulWidget {
   final double height;
   final double fontSize;
   final EdgeInsetsGeometry? labelPadding;
+  final double labelFontSize;
 
   const ConvertouchListBox({
     required this.model,
@@ -44,6 +45,7 @@ class ConvertouchListBox extends StatefulWidget {
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.labelPadding,
+    this.labelFontSize = InputBoxConstants.defaultLabelFontSize,
     super.key,
   });
 
@@ -151,7 +153,7 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: widget.labelFontSize,
                   fontWeight: FontWeight.w600,
                   foreground: Paint()..color = borderColor,
                 ),

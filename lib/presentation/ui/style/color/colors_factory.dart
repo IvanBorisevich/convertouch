@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/presentation/ui/style/color/colors_dark.dart';
-import 'package:convertouch/presentation/ui/style/color/colors_light.dart';
+import 'package:convertouch/presentation/ui/style/color/schemes/dark.dart';
+import 'package:convertouch/presentation/ui/style/color/schemes/light.dart';
 import 'package:convertouch/presentation/ui/style/color/model/app_color_scheme.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 

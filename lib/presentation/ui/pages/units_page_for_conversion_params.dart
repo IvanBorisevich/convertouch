@@ -8,8 +8,8 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.da
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/style/color/colors.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/menu_items_view.dart';
 import 'package:flutter/material.dart';
@@ -28,45 +28,49 @@ class ConvertouchUnitsPageForConversionParams extends StatelessWidget {
     return itemsSelectionBlocBuilder(
       bloc: unitsSelectionBloc,
       builderFunc: (itemsSelectionState) {
-        return ConvertouchPage(
-          title: 'Change Unit Of Parameter',
-          body: singleParamBlocBuilder(
-            builderFunc: (singleParamState) {
-              return ConvertouchMenuItemsView(
-                itemsListBloc: unitsBloc,
-                pageName: PageName.unitsPageForConversionParams,
-                viewModeSettingKey: SettingKey.unitsViewMode,
-                searchBarPlaceholder: "Search units...",
-                onItemTap: (unit) {
-                  if (singleParamState.param != null) {
-                    conversionBloc.add(
-                      ReplaceConversionParamUnit(
-                        newUnit: unit,
-                        paramId: singleParamState.param!.id,
-                        paramSetId: singleParamState.param!.paramSetId,
-                      ),
-                    );
-                  }
-                  navigationBloc.add(const NavigateBack());
-                },
-                onItemTapForRemoval: null,
-                onItemLongPress: null,
-                checkedItemIds: itemsSelectionState.markedIds,
-                disabledItemIds: itemsSelectionState.excludedIds,
-                selectedItemId: itemsSelectionState.selectedId,
-                editableItemsVisible: false,
-                checkableItemsVisible: true,
-                checkIconVisibleIfUnchecked: true,
-                removalModeEnabled: false,
-              );
-            },
-          ),
-          floatingActionButton: appBlocBuilder(
-            builderFunc: (appState) {
-              WidgetColorScheme floatingButtonColor =
-                  appColors[appState.theme].unitsPageFloatingButton;
+        return appBlocBuilder(
+          builderFunc: (appState) {
+            WidgetColorScheme floatingButtonColor =
+                appColors[appState.theme].unitsPageFloatingButton;
 
-              return ConvertouchFloatingActionButton(
+            return ConvertouchPage(
+              title: 'Change Unit Of Parameter',
+              colors: appColors[appState.theme].page,
+              body: singleParamBlocBuilder(
+                builderFunc: (singleParamState) {
+                  return ConvertouchMenuItemsView(
+                    itemsListBloc: unitsBloc,
+                    pageName: PageName.unitsPageForConversionParams,
+                    viewModeSettingKey: SettingKey.unitsViewMode,
+                    searchBarPlaceholder: "Search units...",
+                    noItemsLabel: 'No units',
+                    colors: appColors[appState.theme].unitsMenu,
+                    itemsViewMode: appState.unitsViewMode,
+                    onItemTapForRemoval: null,
+                    onItemLongPress: null,
+                    checkedItemIds: itemsSelectionState.markedIds,
+                    disabledItemIds: itemsSelectionState.excludedIds,
+                    selectedItemId: itemsSelectionState.selectedId,
+                    editableItemsVisible: false,
+                    checkableItemsVisible: true,
+                    checkIconVisibleIfUnchecked: true,
+                    removalModeEnabled: false,
+                    onItemTap: (unit) {
+                      if (singleParamState.param != null) {
+                        conversionBloc.add(
+                          ReplaceConversionParamUnit(
+                            newUnit: unit,
+                            paramId: singleParamState.param!.id,
+                            paramSetId: singleParamState.param!.paramSetId,
+                          ),
+                        );
+                      }
+                      navigationBloc.add(const NavigateBack());
+                    },
+                  );
+                },
+              ),
+              floatingActionButton: ConvertouchFloatingActionButton(
                 icon: Icons.check_outlined,
                 visible: itemsSelectionState.canMarkedItemsBeSelected,
                 onClick: () {
@@ -78,9 +82,9 @@ class ConvertouchUnitsPageForConversionParams extends StatelessWidget {
                   navigationBloc.add(const NavigateBack());
                 },
                 colorScheme: floatingButtonColor,
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     );

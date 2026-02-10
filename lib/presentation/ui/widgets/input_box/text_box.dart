@@ -27,10 +27,13 @@ class ConvertouchTextBox extends StatefulWidget {
   final double contentPaddingRight;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
-  final double iconPaddingLeft;
-  final double iconPaddingRight;
+  final double prefixIconPaddingLeft;
+  final double prefixIconPaddingRight;
+  final double suffixIconPaddingLeft;
+  final double suffixIconPaddingRight;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? labelPadding;
+  final double labelFontSize;
   final double height;
   final double fontSize;
   final double? letterSpacing;
@@ -51,12 +54,15 @@ class ConvertouchTextBox extends StatefulWidget {
     this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
-    this.iconPaddingLeft = InputBoxConstants.defaultIconPaddingLeft,
-    this.iconPaddingRight = InputBoxConstants.defaultIconPaddingRight,
+    this.prefixIconPaddingLeft = InputBoxConstants.defaultIconPaddingLeft,
+    this.prefixIconPaddingRight = InputBoxConstants.defaultIconPaddingRight,
     this.suffixIcon,
+    this.suffixIconPaddingLeft = InputBoxConstants.defaultIconPaddingLeft,
+    this.suffixIconPaddingRight = InputBoxConstants.defaultIconPaddingRight,
     this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
     this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
     this.labelPadding,
+    this.labelFontSize = InputBoxConstants.defaultLabelFontSize,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
@@ -189,7 +195,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
       tooltipForegroundColor: widget.colors.textBox.tooltip.foreground.warning,
       tooltipDirection: widget.tooltipDirection,
       resetValidationOnNavigate: widget.resetValidationOnNavigate,
-      child: SizedBox(
+      child: Container(
         height: widget.height,
         child: TextField(
           readOnly: widget.model.readonly,
@@ -202,8 +208,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
           inputFormatters: inputRegExp != null
               ? [FilteringTextInputFormatter.allow(inputRegExp)]
               : null,
-          keyboardType:
-              inputValueTypeToKeyboardTypeMap[widget.model.valueType],
+          keyboardType: inputValueTypeToKeyboardTypeMap[widget.model.valueType],
           onChanged: widget.onValueChanged,
           decoration: InputDecoration(
             border: OutlineInputBorder(
@@ -252,7 +257,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: widget.labelFontSize,
                   fontWeight: FontWeight.w600,
                   foreground: Paint()..color = borderColor,
                 ),
@@ -272,8 +277,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             counterText: "",
             prefixIcon: _iconPaddingWrapper(
               icon: widget.prefixIcon,
-              paddingLeft: widget.iconPaddingLeft,
-              paddingRight: widget.iconPaddingRight,
+              paddingLeft: widget.prefixIconPaddingLeft,
+              paddingRight: widget.prefixIconPaddingRight,
             ),
             prefixIconConstraints: const BoxConstraints(
               minWidth: 0,
@@ -281,8 +286,8 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
             ),
             suffixIcon: _iconPaddingWrapper(
               icon: widget.suffixIcon ?? _suffixCloseIcon(),
-              paddingLeft: widget.iconPaddingLeft,
-              paddingRight: widget.iconPaddingRight,
+              paddingLeft: widget.suffixIconPaddingLeft,
+              paddingRight: widget.suffixIconPaddingRight,
             ),
             suffixIconConstraints: const BoxConstraints(
               minWidth: 0,
