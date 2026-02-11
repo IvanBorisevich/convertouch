@@ -146,6 +146,10 @@ const _unitGroupDetailsTextBox = InputBoxColorScheme(
     hint: MultiColor(
       regular: Color(0xFF8594F1),
     ),
+    label: MultiColor(
+      regular: Color(0xFF8594F1),
+      disabled: Color(0x90A5B2FF),
+    ),
   ),
 );
 
@@ -246,7 +250,10 @@ const _conversionItemTextBox = TextBoxColorScheme(
     regular: Color(0xFF84A1BD),
     disabled: Color(0xFF7C9EBE),
   ),
-  label: MultiColor.only(Color(0xFF63A4E4)),
+  label: MultiColor(
+    regular: Color(0xFF63A4E4),
+    disabled: Color(0xFF5382B1),
+  ),
   tooltip: _notification,
 );
 

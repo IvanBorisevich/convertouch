@@ -141,7 +141,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         },
         onValueCleaned: widget.onValueCleaned,
         borderRadius: widget.borderRadius,
-        borderWidth: widget.borderWidth,
+        borderWidth: 0,
         colors: widget.colors,
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
@@ -149,6 +149,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         labelPadding: widget.labelPadding,
         fontSize: widget.fontSize,
         letterSpacing: widget.letterSpacing,
+        standalone: false,
         validationBloc: BlocProvider.of<InputValidationBloc>(context),
       );
     }
@@ -165,6 +166,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
         fontSize: widget.fontSize,
+        contentPadding: contentPadding,
         labelPadding: widget.labelPadding,
       );
     }

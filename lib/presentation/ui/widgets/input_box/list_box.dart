@@ -23,8 +23,7 @@ class ConvertouchListBox extends StatefulWidget {
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final double contentPaddingLeft;
-  final double contentPaddingRight;
+  final EdgeInsetsGeometry contentPadding;
   final double height;
   final double fontSize;
   final EdgeInsetsGeometry? labelPadding;
@@ -39,8 +38,7 @@ class ConvertouchListBox extends StatefulWidget {
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPaddingLeft = 17,
-    this.contentPaddingRight = 17,
+    this.contentPadding = InputBoxConstants.defaultContentPadding,
     this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.labelPadding,
@@ -53,6 +51,8 @@ class ConvertouchListBox extends StatefulWidget {
 
 class _ConvertouchListBoxState extends State<ConvertouchListBox>
     with ItemsLazyLoadingMixin, FocusNodeMixin {
+  static const double _textHeightCoefficient = 1.2;
+
   final TextEditingController _dropdownSearchController =
       TextEditingController();
 
@@ -79,23 +79,23 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
 
   @override
   Widget build(BuildContext context) {
-    Color borderColor;
     Color foregroundColor;
     Color hintColor;
+    Color labelColor;
     WidgetColorScheme dropdownMenu = widget.colors.dropdown;
 
     if (widget.model.readonly) {
-      borderColor = widget.colors.textBox.border.disabled;
       foregroundColor = widget.colors.textBox.foreground.disabled;
       hintColor = widget.colors.textBox.hint.disabled;
+      labelColor = widget.colors.textBox.label.disabled;
     } else if (_focusNode.hasFocus) {
-      borderColor = widget.colors.textBox.border.focused;
       foregroundColor = widget.colors.textBox.foreground.focused;
       hintColor = widget.colors.textBox.hint.focused;
+      labelColor = widget.colors.textBox.label.focused;
     } else {
-      borderColor = widget.colors.textBox.border.regular;
       foregroundColor = widget.colors.textBox.foreground.regular;
       hintColor = widget.colors.textBox.hint.regular;
+      labelColor = widget.colors.textBox.label.regular;
     }
 
     return BlocListener<NavigationBloc, NavigationState>(
@@ -104,189 +104,180 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
           Navigator.of(context).pop();
         }
       },
-      child: DropdownButtonHideUnderline(
-        child: DropdownButtonFormField2<ListValueModel>(
-          isExpanded: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: widget.borderWidth > 0
-                  ? BorderSide(
-                      color: borderColor,
-                      width: widget.borderWidth,
-                    )
-                  : BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: widget.borderWidth > 0
-                  ? BorderSide(
-                      color: borderColor,
-                      width: widget.borderWidth,
-                    )
-                  : BorderSide.none,
-            ),
-            contentPadding: EdgeInsets.only(
-              top: widget.height / 2,
-              left: widget.contentPaddingLeft,
-              right: widget.contentPaddingRight,
-            ),
-            isDense: true,
-            label: Container(
-              padding: widget.labelPadding,
-              decoration: BoxDecoration(
-                color: widget.colors.textBox.background.regular,
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
+      child: Container(
+        padding: widget.contentPadding,
+        alignment: Alignment.center,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButtonFormField2<ListValueModel>(
+            isExpanded: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: widget.borderRadius,
+                borderSide: BorderSide.none,
               ),
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width / 2,
-              ),
-              child: Text(
-                widget.model.labelText,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  foreground: Paint()..color = borderColor,
+              contentPadding: const EdgeInsets.symmetric(vertical: 7),
+              isDense: true,
+              label: Container(
+                padding: widget.labelPadding,
+                decoration: BoxDecoration(
+                  color: widget.colors.textBox.background.regular,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                ),
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                ),
+                child: Text(
+                  widget.model.labelText,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    foreground: Paint()..color = labelColor,
+                  ),
                 ),
               ),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              filled: true,
+              fillColor: widget.colors.textBox.background.regular,
+              constraints: BoxConstraints(
+                maxHeight: widget.fontSize * _textHeightCoefficient +
+                    widget.contentPadding.vertical,
+              ),
             ),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            filled: true,
-            fillColor: widget.colors.textBox.background.regular,
-          ),
-          hint: Text(
-            widget.model.hint,
             style: TextStyle(
-              fontSize: 16,
-              color: hintColor,
+              fontSize: widget.fontSize,
+              fontWeight: FontWeight.w500,
+              fontFamily: quicksandFontFamily,
+              height: _textHeightCoefficient,
             ),
-          ),
-          value: widget.model.value,
-          items: widget.model.listValues
-              .map(
-                (value) => DropdownMenuItem(
-                  value: value,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Text(
-                      value.itemName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: dropdownMenu.foreground.regular,
+            hint: Text(
+              widget.model.hint,
+              style: TextStyle(
+                fontSize: 16,
+                color: hintColor,
+              ),
+            ),
+            value: widget.model.value,
+            items: widget.model.listValues
+                .map(
+                  (value) => DropdownMenuItem(
+                    value: value,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 17),
+                      child: Text(
+                        value.itemName,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: dropdownMenu.foreground.regular,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-              .toList(),
-          onChanged: widget.onValueChanged,
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.w500,
-            fontFamily: quicksandFontFamily,
-          ),
-          /*
+                )
+                .toList(),
+            onChanged: widget.onValueChanged,
+            /*
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
-          selectedItemBuilder: (context) {
-            return widget.model.listValues.map(
-              (value) {
-                return Container(
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    widget.model.value?.itemName ?? widget.model.hint,
-                    style: TextStyle(
-                      fontSize: 16,
-                      overflow: TextOverflow.ellipsis,
-                      fontWeight: FontWeight.w600,
-                      foreground: Paint()..color = foregroundColor,
-                    ),
-                    maxLines: 1,
-                  ),
-                );
-              },
-            ).toList();
-          },
-          iconStyleData: IconStyleData(
-            icon: Icon(
-              Icons.expand_more_rounded,
-              color: foregroundColor,
-            ),
-            iconSize: 24,
-          ),
-          dropdownStyleData: DropdownStyleData(
-            scrollbarTheme: ScrollbarThemeData(
-              thickness: WidgetStateProperty.all(4),
-              thumbColor: WidgetStateProperty.all(
-                dropdownMenu.foreground.regular,
-              ),
-              trackColor: WidgetStateProperty.all(Colors.transparent),
-              trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-              trackVisibility: WidgetStateProperty.all(true),
-              radius: const Radius.circular(10),
-            ),
-            maxHeight: 250,
-            elevation: 0,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(17)),
-              color: dropdownMenu.background.regular,
-            ),
-            padding: EdgeInsets.zero,
-          ),
-          menuItemStyleData: const MenuItemStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          dropdownSearchData: widget.model.searchEnabled
-              ? DropdownSearchData(
-                  searchController: _dropdownSearchController,
-                  searchInnerWidgetHeight: 60,
-                  searchInnerWidget: Container(
-                    height: 60,
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
-                    ),
-                    child: ConvertouchTextBox(
-                      model: TextBoxModel(
-                        hintUnfocused: widget.model.searchHint,
-                        valueType: widget.model.listType.listValuesType,
+            selectedItemBuilder: (context) {
+              return widget.model.listValues.map(
+                (value) {
+                  return Container(
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      widget.model.value?.itemName ?? widget.model.hint,
+                      style: TextStyle(
+                        fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.w600,
+                        foreground: Paint()..color = foregroundColor,
                       ),
-                      controller: _dropdownSearchController,
-                      borderWidth: 0,
-                      fontSize: 15,
-                      colors: widget.colors,
+                      maxLines: 1,
                     ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value?.value
-                            .toLowerCase()
-                            .contains(searchValue.toLowerCase()) ??
-                        false;
-                  },
-                )
-              : null,
-          onMenuStateChange: (isOpen) {
-            if (!isOpen) {
-              _dropdownSearchController.clear();
-            }
+                  );
+                },
+              ).toList();
+            },
+            iconStyleData: IconStyleData(
+              icon: Icon(
+                Icons.expand_more_rounded,
+                color: foregroundColor,
+              ),
+              iconSize: 24,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              scrollbarTheme: ScrollbarThemeData(
+                thickness: WidgetStateProperty.all(4),
+                thumbColor: WidgetStateProperty.all(
+                  dropdownMenu.foreground.regular,
+                ),
+                trackColor: WidgetStateProperty.all(Colors.transparent),
+                trackBorderColor: WidgetStateProperty.all(Colors.transparent),
+                trackVisibility: WidgetStateProperty.all(true),
+                radius: const Radius.circular(10),
+              ),
+              maxHeight: 250,
+              elevation: 0,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(17)),
+                color: dropdownMenu.background.regular,
+              ),
+              padding: EdgeInsets.zero,
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.zero,
+            ),
+            buttonStyleData: const ButtonStyleData(
+              padding: EdgeInsets.zero,
+            ),
+            dropdownSearchData: widget.model.searchEnabled
+                ? DropdownSearchData(
+                    searchController: _dropdownSearchController,
+                    searchInnerWidgetHeight: 60,
+                    searchInnerWidget: Container(
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 4,
+                        right: 8,
+                        left: 8,
+                      ),
+                      child: ConvertouchTextBox(
+                        model: TextBoxModel(
+                          hint: widget.model.searchHint,
+                          hintUnfocused: widget.model.searchHint,
+                          valueType: widget.model.listType.listValuesType,
+                        ),
+                        controller: _dropdownSearchController,
+                        borderWidth: 0,
+                        fontSize: 15,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        colors: widget.colors,
+                      ),
+                    ),
+                    searchMatchFn: (item, searchValue) {
+                      return item.value?.value
+                              .toLowerCase()
+                              .contains(searchValue.toLowerCase()) ??
+                          false;
+                    },
+                  )
+                : null,
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                _dropdownSearchController.clear();
+              }
 
-            setState(() {
-              _isDropdownOpen = isOpen;
-            });
-          },
+              setState(() {
+                _isDropdownOpen = isOpen;
+              });
+            },
+          ),
         ),
       ),
     );

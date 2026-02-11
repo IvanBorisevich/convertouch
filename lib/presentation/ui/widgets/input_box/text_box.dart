@@ -31,6 +31,7 @@ class ConvertouchTextBox extends StatefulWidget {
   final double fontSize;
   final double? letterSpacing;
   final bool resetValidationOnNavigate;
+  final bool standalone;
   final InputValidationBloc? validationBloc;
 
   const ConvertouchTextBox({
@@ -53,6 +54,7 @@ class ConvertouchTextBox extends StatefulWidget {
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
     this.resetValidationOnNavigate = true,
+    this.standalone = true,
     this.validationBloc,
     super.key,
   });
@@ -63,7 +65,7 @@ class ConvertouchTextBox extends StatefulWidget {
 
 class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
     with FocusNodeMixin, TextControllerMixin {
-  static const double textHeightCoefficient = 1.2;
+  static const double _textHeightCoefficient = 1.2;
 
   final ValueNotifier<bool> _closeIconVisibilityNotifier =
       ValueNotifier<bool>(false);
@@ -190,6 +192,21 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
         child: Container(
           padding: widget.contentPadding,
           alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: widget.standalone
+                ? widget.colors.textBox.background.regular
+                : null,
+            borderRadius: widget.borderRadius,
+            border: widget.standalone && widget.borderWidth > 0
+                ? Border.all(
+                    color: _focusNode.hasFocus
+                        ? widget.colors.textBox.border.focused
+                        : widget.colors.textBox.border.regular,
+                    width: widget.borderWidth,
+                    strokeAlign: BorderSide.strokeAlignOutside,
+                  )
+                : null,
+          ),
           child: TextField(
             readOnly: widget.model.readonly,
             maxLength: widget.model.maxTextLength,
@@ -252,7 +269,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               filled: true,
               fillColor: widget.colors.textBox.background.regular,
               constraints: BoxConstraints(
-                maxHeight: widget.fontSize * textHeightCoefficient +
+                maxHeight: widget.fontSize * _textHeightCoefficient +
                     widget.contentPadding.vertical,
               ),
             ),
@@ -262,7 +279,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
               fontWeight: FontWeight.w500,
               fontFamily: quicksandFontFamily,
               letterSpacing: widget.letterSpacing,
-              height: textHeightCoefficient,
+              height: _textHeightCoefficient,
             ),
             textAlign: TextAlign.start,
           ),
@@ -279,21 +296,17 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
           return const SizedBox.shrink();
         }
 
-        return SizedBox(
-          width: 26,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(
-              Icons.close_rounded,
-              color: widget.colors.textBox.foreground.regular,
-              size: 17,
-            ),
-            onPressed: () {
-              _controller.clear();
-              widget.onValueCleaned?.call();
-              widget.onValueChanged?.call(null);
-              _closeIconVisibilityNotifier.value = false;
-            },
+        return GestureDetector(
+          onTap: () {
+            _controller.clear();
+            widget.onValueCleaned?.call();
+            widget.onValueChanged?.call(null);
+            _closeIconVisibilityNotifier.value = false;
+          },
+          child: Icon(
+            Icons.close_rounded,
+            color: widget.colors.textBox.foreground.regular,
+            size: 17,
           ),
         );
       },
