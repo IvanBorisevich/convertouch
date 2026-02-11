@@ -59,6 +59,11 @@ const _searchBox = SearchBoxColorScheme(
       hint: MultiColor.only(Color(0xFF8791A1)),
       tooltip: _notification,
     ),
+    divider: MultiColor(
+      regular: Color(0xFF506578),
+      focused: Color(0xFF5D7488),
+      disabled: Color(0xFF687A8C),
+    ),
   ),
   viewModeButton: WidgetColorScheme(
     background: MultiColor.only(Color(0xFF383D46)),
@@ -241,6 +246,7 @@ const _conversionItemTextBox = TextBoxColorScheme(
     regular: Color(0xFF84A1BD),
     disabled: Color(0xFF7C9EBE),
   ),
+  label: MultiColor.only(Color(0xFF63A4E4)),
   tooltip: _notification,
 );
 
@@ -252,13 +258,13 @@ const _conversionItem = ConversionItemColorScheme(
       foreground: MultiColor.only(Color(0xFFBFD3E3)),
       search: _conversionItemTextBox,
     ),
+    divider: MultiColor(
+      regular: Color(0xFF506578),
+      focused: Color(0xFF5D7488),
+      disabled: Color(0xFF687A8C),
+    ),
   ),
   unitButton: MultiColor.only(Color(0xFF63A4E4)),
-  divider: MultiColor(
-    regular: Color(0xFF506578),
-    focused: Color(0xFF5D7488),
-    disabled: Color(0xFF687A8C),
-  ),
   prefixWidget: MultiColor(
     regular: Color(0xFF7E9CB7),
     selected: Color(0xFFA6C7E5),

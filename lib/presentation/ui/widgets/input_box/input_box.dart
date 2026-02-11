@@ -10,24 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
+class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final M model;
   final FocusNode? focusNode;
   final bool autofocus;
   final TooltipDirection tooltipDirection;
   final void Function(dynamic)? onValueChanged;
-  final void Function(dynamic)? onFocusSelected;
-  final void Function(dynamic)? onFocusLeft;
+  final void Function(dynamic)? onValueFocused;
+  final void Function(dynamic)? onValueUnfocused;
+  final void Function()? onValueCleaned;
   final BorderRadius borderRadius;
   final double borderWidth;
   final InputBoxColorScheme colors;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final double contentPaddingLeft;
-  final double contentPaddingRight;
-  final EdgeInsetsGeometry? labelPadding;
-  final double labelFontSize;
-  final double height;
+  final List<Widget?> prefixWidgets;
+  final List<Widget?> suffixWidgets;
+  final EdgeInsets contentPadding;
+  final EdgeInsets? labelPadding;
   final double fontSize;
   final double? letterSpacing;
 
@@ -35,73 +35,153 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatelessWidget {
     required this.model,
     this.focusNode,
     this.autofocus = false,
-    required this.tooltipDirection,
+    this.tooltipDirection = TooltipDirection.down,
     this.onValueChanged,
-    this.onFocusSelected,
-    this.onFocusLeft,
+    this.onValueFocused,
+    this.onValueUnfocused,
+    this.onValueCleaned,
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     this.borderWidth = 1,
     required this.colors,
     this.prefixIcon,
     this.suffixIcon,
-    this.contentPaddingLeft = InputBoxConstants.defaultContentPaddingLeft,
-    this.contentPaddingRight = InputBoxConstants.defaultContentPaddingRight,
+    this.prefixWidgets = const [],
+    this.suffixWidgets = const [],
+    this.contentPadding = InputBoxConstants.defaultContentPadding,
     this.labelPadding,
-    this.labelFontSize = InputBoxConstants.defaultLabelFontSize,
-    this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
     super.key,
   });
 
   @override
+  State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
+}
+
+class _ConvertouchInputBoxState<M extends InputBoxModel>
+    extends State<ConvertouchInputBox<M>> {
+  bool _isFocused = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (model is TextBoxModel) {
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.colors.textBox.background.regular,
+        borderRadius: widget.borderRadius,
+        border: Border.all(
+          color: _isFocused
+              ? widget.colors.textBox.border.focused
+              : widget.colors.textBox.border.regular,
+          width: widget.borderWidth,
+        ),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            ...widget.prefixWidgets.map(
+              (widget) => widget != null
+                  ? Row(
+                      children: [
+                        widget,
+                        _verticalDivider(),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            Expanded(
+              child: _inputField(context),
+            ),
+            ...widget.suffixWidgets.map(
+              (widget) => widget != null
+                  ? Row(
+                      children: [
+                        _verticalDivider(),
+                        widget,
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _inputField(BuildContext context) {
+    bool prefixIconsExist =
+        widget.prefixWidgets.nonNulls.isNotEmpty || widget.prefixIcon != null;
+    bool suffixIconsExist =
+        widget.suffixWidgets.nonNulls.isNotEmpty || widget.suffixIcon != null;
+
+    EdgeInsetsGeometry contentPadding = EdgeInsets.only(
+      top: widget.contentPadding.top,
+      bottom: widget.contentPadding.bottom,
+      left: prefixIconsExist ? 10 : 17,
+      right: suffixIconsExist ? 10 : 17,
+    );
+
+    if (widget.model is TextBoxModel) {
       return ConvertouchTextBox(
-        model: model as TextBoxModel,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        tooltipDirection: tooltipDirection,
-        onValueChanged: onValueChanged,
-        onValueFocused: onFocusSelected,
-        onValueUnfocused: onFocusLeft,
-        borderRadius: borderRadius,
-        borderWidth: borderWidth,
-        colors: colors,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        contentPaddingLeft: contentPaddingLeft,
-        contentPaddingRight: contentPaddingRight,
-        labelPadding: labelPadding,
-        labelFontSize: labelFontSize,
-        height: height,
-        fontSize: fontSize,
-        letterSpacing: letterSpacing,
+        model: widget.model as TextBoxModel,
+        focusNode: widget.focusNode,
+        autofocus: widget.autofocus,
+        tooltipDirection: widget.tooltipDirection,
+        onValueChanged: widget.onValueChanged,
+        onValueFocused: (value) {
+          widget.onValueFocused?.call(value);
+          setState(() {
+            _isFocused = true;
+          });
+        },
+        onValueUnfocused: (value) {
+          widget.onValueUnfocused?.call(value);
+          setState(() {
+            _isFocused = false;
+          });
+        },
+        onValueCleaned: widget.onValueCleaned,
+        borderRadius: widget.borderRadius,
+        borderWidth: widget.borderWidth,
+        colors: widget.colors,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
+        contentPadding: contentPadding,
+        labelPadding: widget.labelPadding,
+        fontSize: widget.fontSize,
+        letterSpacing: widget.letterSpacing,
         validationBloc: BlocProvider.of<InputValidationBloc>(context),
       );
     }
 
-    if (model is ListBoxModel) {
+    if (widget.model is ListBoxModel) {
       return ConvertouchListBox(
-        model: model as ListBoxModel,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        onValueChanged: onValueChanged,
-        borderRadius: borderRadius,
-        borderWidth: borderWidth,
-        colors: colors,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        contentPaddingLeft: contentPaddingLeft,
-        contentPaddingRight: contentPaddingRight,
-        height: height,
-        fontSize: fontSize,
-        labelPadding: labelPadding,
-        labelFontSize: labelFontSize,
+        model: widget.model as ListBoxModel,
+        focusNode: widget.focusNode,
+        autofocus: widget.autofocus,
+        onValueChanged: widget.onValueChanged,
+        borderRadius: widget.borderRadius,
+        borderWidth: widget.borderWidth,
+        colors: widget.colors,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
+        fontSize: widget.fontSize,
+        labelPadding: widget.labelPadding,
       );
     }
 
     throw Exception(
-        "Cannot create input box by model of type ${model.runtimeType}");
+        "Cannot create input box by model of type ${widget.model.runtimeType}");
+  }
+
+  Widget _verticalDivider() {
+    return VerticalDivider(
+      color: _isFocused
+          ? widget.colors.divider.focused
+          : widget.colors.divider.regular,
+      indent: 10,
+      endIndent: 10,
+      width: 2,
+      thickness: 2,
+    );
   }
 }

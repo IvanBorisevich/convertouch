@@ -11,10 +11,12 @@ abstract interface class InputBoxConstants {
   static const double defaultBorderWidth = 1;
   static const double defaultFontSize = 17;
   static const double defaultLabelFontSize = 16;
-  static const double defaultContentPaddingLeft = 17;
-  static const double defaultContentPaddingRight = 17;
-  static const double defaultIconPaddingLeft = 10;
-  static const double defaultIconPaddingRight = 10;
+  static const EdgeInsets defaultContentPadding = EdgeInsets.only(
+    top: 7,
+    bottom: 7,
+    left: 17,
+    right: 17,
+  );
 }
 
 const Map<ItemsViewMode, IconData> itemViewModeIconMap = {

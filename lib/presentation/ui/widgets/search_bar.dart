@@ -8,7 +8,7 @@ import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,7 +51,7 @@ class ConvertouchSearchBar extends StatelessWidget {
         }
 
         return Container(
-          height: 50,
+          // height: 50,
           decoration: BoxDecoration(
             color: pageColorScheme.appBar.background.regular,
           ),
@@ -60,61 +60,54 @@ class ConvertouchSearchBar extends StatelessWidget {
             bottom: 8,
             right: 7,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ConvertouchTextBox(
-                  model: TextBoxModel(
-                    hint: placeholder,
-                    hintUnfocused: placeholder,
+          child: ConvertouchInputBox(
+            model: TextBoxModel(
+              hint: placeholder,
+              hintUnfocused: placeholder,
+            ),
+            onValueChanged: (value) {
+              onSearchStringChanged?.call(value);
+            },
+            onValueFocused: (value) {
+              onSearchStringChanged?.call(value);
+            },
+            onValueCleaned: onSearchReset,
+            colors: searchBarColorScheme.inputBox,
+            fontSize: 15,
+            borderWidth: 0,
+            letterSpacing: 0,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 10,
+            ),
+            prefixIcon: Icon(
+              Icons.search,
+              color: searchBarColorScheme.inputBox.textBox.foreground.regular,
+              size: 22,
+            ),
+            suffixWidgets: [
+              IconButton(
+                padding: const EdgeInsets.only(right: 2),
+                visualDensity: VisualDensity.compact,
+                icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                  Icon(
+                    itemViewModeIconMap[pageViewMode.next],
+                    key: ValueKey(pageViewMode),
+                    size: 22,
                   ),
-                  onValueChanged: onSearchStringChanged,
-                  onValueFocused: onSearchStringChanged,
-                  onValueCleaned: onSearchReset,
-                  fontSize: 15,
-                  borderWidth: 0,
-                  letterSpacing: 0,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: searchBarColorScheme
-                        .inputBox.textBox.foreground.regular,
-                    size: 20,
-                  ),
-                  prefixIconPaddingLeft: 12,
-                  prefixIconPaddingRight: 5,
-                  colors: searchBarColorScheme.inputBox,
                 ),
-              ),
-              const SizedBox(width: 7),
-              Container(
-                width: 43,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  color: searchBarColorScheme.viewModeButton.background.regular,
-                ),
-                child: IconButton(
-                  icon:
-                      ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                    Icon(
-                      itemViewModeIconMap[pageViewMode.next],
-                      size: 22,
-                      key: ValueKey(pageViewMode),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  BlocProvider.of<AppBloc>(context).add(
+                    ChangeSetting(
+                      settingKey: viewModeSettingKey,
+                      settingValue: pageViewMode.next.value,
+                      fromPage: pageName,
                     ),
-                  ),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onPressed: () {
-                    BlocProvider.of<AppBloc>(context).add(
-                      ChangeSetting(
-                        settingKey: viewModeSettingKey,
-                        settingValue: pageViewMode.next.value,
-                        fromPage: pageName,
-                      ),
-                    );
-                  },
-                  color: searchBarColorScheme.viewModeButton.foreground.regular,
-                ),
+                  );
+                },
+                color: searchBarColorScheme.viewModeButton.foreground.regular,
               ),
             ],
           ),

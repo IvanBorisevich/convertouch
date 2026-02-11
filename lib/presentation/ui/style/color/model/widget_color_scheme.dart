@@ -43,6 +43,7 @@ class TextBoxColorScheme extends WidgetColorScheme {
   static const TextBoxColorScheme none = TextBoxColorScheme();
 
   final MultiColor hint;
+  final MultiColor label;
   final NotificationColorScheme tooltip;
 
   const TextBoxColorScheme({
@@ -50,6 +51,7 @@ class TextBoxColorScheme extends WidgetColorScheme {
     super.background,
     super.foreground,
     this.hint = MultiColor.none,
+    this.label = MultiColor.none,
     this.tooltip = NotificationColorScheme.none,
   });
 }
@@ -72,10 +74,12 @@ class DropdownColorScheme extends WidgetColorScheme {
 class InputBoxColorScheme {
   final TextBoxColorScheme textBox;
   final DropdownColorScheme dropdown;
+  final MultiColor divider;
 
   const InputBoxColorScheme({
     this.textBox = TextBoxColorScheme.none,
     this.dropdown = DropdownColorScheme.none,
+    this.divider = MultiColor.none,
   });
 }
 
@@ -128,7 +132,6 @@ class ConversionItemColorScheme extends WidgetColorScheme {
   final MultiColor prefixWidget;
   final MultiColor suffixWidget;
   final MultiColor removalIcon;
-  final MultiColor divider;
 
   const ConversionItemColorScheme({
     required this.inputBox,
@@ -136,7 +139,6 @@ class ConversionItemColorScheme extends WidgetColorScheme {
     this.prefixWidget = MultiColor.none,
     this.suffixWidget = MultiColor.none,
     this.removalIcon = MultiColor.none,
-    this.divider = MultiColor.none,
     super.background,
   });
 }
