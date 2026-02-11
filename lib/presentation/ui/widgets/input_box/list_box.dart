@@ -24,7 +24,6 @@ class ConvertouchListBox extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry contentPadding;
-  final double height;
   final double fontSize;
   final EdgeInsetsGeometry? labelPadding;
 
@@ -39,7 +38,6 @@ class ConvertouchListBox extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.contentPadding = InputBoxConstants.defaultContentPadding,
-    this.height = InputBoxConstants.defaultHeight,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.labelPadding,
     super.key,
@@ -119,10 +117,6 @@ class _ConvertouchListBoxState extends State<ConvertouchListBox>
               isDense: true,
               label: Container(
                 padding: widget.labelPadding,
-                decoration: BoxDecoration(
-                  color: widget.colors.textBox.background.regular,
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                ),
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 2,
                 ),

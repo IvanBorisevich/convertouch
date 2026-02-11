@@ -181,8 +181,7 @@ class _ConvertouchTextBoxState extends State<ConvertouchTextBox>
 
     return InputValidationWrapper(
       focusNode: _focusNode,
-      tooltipBackgroundColor: widget.colors.textBox.tooltip.background.regular,
-      tooltipForegroundColor: widget.colors.textBox.tooltip.foreground.warning,
+      colors: widget.colors.textBox.tooltip,
       tooltipDirection: widget.tooltipDirection,
       resetValidationOnNavigate: widget.resetValidationOnNavigate,
       child: GestureDetector(

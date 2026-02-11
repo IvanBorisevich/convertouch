@@ -5,6 +5,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_events.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,15 +14,13 @@ import 'package:super_tooltip/super_tooltip.dart';
 class InputValidationWrapper extends StatelessWidget {
   final FocusNode focusNode;
   final Widget child;
-  final Color tooltipBackgroundColor;
-  final Color tooltipForegroundColor;
   final TooltipDirection tooltipDirection;
   final bool resetValidationOnNavigate;
+  final NotificationColorScheme colors;
 
   const InputValidationWrapper({
     required this.focusNode,
-    required this.tooltipBackgroundColor,
-    required this.tooltipForegroundColor,
+    required this.colors,
     this.tooltipDirection = TooltipDirection.down,
     this.resetValidationOnNavigate = true,
     required this.child,
@@ -54,7 +53,7 @@ class InputValidationWrapper extends StatelessWidget {
       ],
       child: ConvertouchTooltip(
         focusNode: focusNode,
-        backgroundColor: tooltipBackgroundColor,
+        backgroundColor: colors.background.regular,
         tooltipDirection: tooltipDirection,
         content: BlocBuilder<InputValidationBloc, InputValidationState>(
           builder: (_, validationState) {
@@ -62,7 +61,7 @@ class InputValidationWrapper extends StatelessWidget {
               return Text(
                 validationState.errorMessage,
                 style: TextStyle(
-                  color: tooltipForegroundColor,
+                  color: colors.foreground.warning,
                   fontWeight: FontWeight.w500,
                 ),
               );
