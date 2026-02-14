@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 mixin TextControllerMixin {
   TextEditingController initOrGetController(
     TextEditingController? controller, {
-    String initialValue = '',
+    String? initialValue,
   }) {
     var resultController = controller ?? TextEditingController();
 
-    if (initialValue.isNotEmpty) {
-      updateTextControllerValue(resultController, initialValue);
+    if (initialValue != null && initialValue.isNotEmpty) {
+      updateTextControllerValue(resultController, newValue: initialValue);
     }
 
     return resultController;
@@ -17,7 +17,7 @@ mixin TextControllerMixin {
   void Function() addTextValueListener({
     required TextEditingController controller,
     required void Function(String?)? onValueChange,
-}) {
+  }) {
     textValueListener() {
       onValueChange?.call(controller.text);
     }
@@ -27,17 +27,23 @@ mixin TextControllerMixin {
   }
 
   void updateTextControllerValue(
-    TextEditingController controller,
-    String newValue,
-  ) {
+    TextEditingController controller, {
+    String? newValue,
+  }) {
+    String newVal = newValue ?? '';
+
+    if (controller.text == newVal) {
+      return;
+    }
+
     int offset = controller.selection.baseOffset;
 
-    if (offset > newValue.length) {
-      offset = newValue.length;
+    if (offset > newVal.length) {
+      offset = newVal.length;
     }
 
     controller.value = controller.value.copyWith(
-      text: newValue,
+      text: newVal,
       selection: TextSelection.collapsed(offset: offset),
     );
   }

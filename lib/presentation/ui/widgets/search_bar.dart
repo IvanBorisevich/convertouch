@@ -68,9 +68,6 @@ class ConvertouchSearchBar extends StatelessWidget {
             onValueChanged: (value) {
               onSearchStringChanged?.call(value);
             },
-            onValueFocused: (value) {
-              onSearchStringChanged?.call(value);
-            },
             onValueCleaned: onSearchReset,
             colors: searchBarColorScheme.inputBox,
             fontSize: 15,

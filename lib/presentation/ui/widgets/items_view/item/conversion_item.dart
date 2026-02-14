@@ -43,6 +43,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       colors: widget.colors.inputBox,
       tooltipDirection:
           widget.model.isLast ? TooltipDirection.up : TooltipDirection.down,
+      changeValueOnFocusChanged: true,
       onValueChanged: widget.onValueChanged,
       onValueFocused: (value) {
         setState(() {
@@ -113,6 +114,24 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                       fontWeight: FontWeight.w700,
                     ),
                     maxLines: 1,
+                  ),
+                ),
+              )
+            : null,
+        widget.model.removable
+            ? Container(
+                padding: const EdgeInsets.only(right: 1),
+                width: 35,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    widget.onItemRemoved?.call();
+                  },
+                  icon: Icon(
+                    Icons.remove,
+                    color: widget.colors.removalIcon.regular,
+                    size: 20,
                   ),
                 ),
               )

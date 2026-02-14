@@ -4,18 +4,18 @@ import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 class TextBoxModel extends InputBoxModel {
   static const TextBoxModel empty = TextBoxModel();
 
-  final String value;
-  final String valueUnfocused;
-  final String hintUnfocused;
+  final String? value;
+  final String? valueUnfocused;
+  final String? hintUnfocused;
   final ConvertouchValueType valueType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
 
   const TextBoxModel({
-    this.value = '',
+    this.value,
     super.hint,
-    this.valueUnfocused = '',
-    this.hintUnfocused = '',
+    this.valueUnfocused,
+    this.hintUnfocused,
     super.readonly,
     super.labelText,
     this.valueType = ConvertouchValueType.text,

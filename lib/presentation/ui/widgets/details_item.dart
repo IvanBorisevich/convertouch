@@ -1,6 +1,6 @@
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/text_box.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchDetailsItem extends StatelessWidget {
@@ -44,15 +44,17 @@ class ConvertouchDetailsItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomMargin),
       child: editable
-          ? ConvertouchTextBox(
+          ? ConvertouchInputBox(
               model: TextBoxModel(
                 hintUnfocused: value ?? '',
                 labelText: headerTitle ?? '',
                 maxTextLength: editableValueMaxLength,
                 textLengthCounterVisible: editableValueLengthVisible,
               ),
-              controller: valueChangeController,
-              onValueChanged: onValueChanged,
+              textController: valueChangeController,
+              onValueChanged: (value) {
+                onValueChanged?.call(value);
+              },
               colors: inputBoxColor,
             )
           : SizedBox(

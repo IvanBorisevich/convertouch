@@ -13,9 +13,9 @@ class NumInRangeValidator extends InputValidator {
     NumRange numRange = NumRange.closed(min, max);
 
     if (input == null || numRange.contains(double.tryParse(input))) {
-      return InputValidatorResult.failed(numRange.validationMessage);
+      return const InputValidatorResult.successful();
     }
 
-    return const InputValidatorResult.successful();
+    return InputValidatorResult.failed(numRange.validationMessage);
   }
 }

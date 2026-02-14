@@ -10,10 +10,10 @@ const colorSchemeDark = AppColorScheme(
   errorInfoBox: _errorInfoBox,
   unitGroupsPageFloatingButton: _unitGroupsPageFloatingButton,
   unitGroupsMenu: _unitGroupsMenu,
-  unitGroupDetailsInputBox: _unitGroupDetailsTextBox,
+  unitGroupDetailsInputBox: _unitGroupDetailsInputBox,
   unitsPageFloatingButton: _unitsPageFloatingButton,
   unitsMenu: _unitsMenu,
-  unitDetailsInputBox: _unitDetailsTextBox,
+  unitDetailsInputBox: _unitDetailsInputBox,
   conversionPageFloatingButton: _conversionPageFloatingButton,
   conversionItem: _conversionItem,
   refreshFloatingButton: _refreshFloatingButton,
@@ -133,8 +133,9 @@ const _unitGroupsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitGroupDetailsTextBox = InputBoxColorScheme(
+const _unitGroupDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
+    background: MultiColor.only(Color(0xFF363D48)),
     border: MultiColor(
       regular: Color(0xFF8594F1),
       disabled: Color(0x90A5B2FF),
@@ -212,8 +213,9 @@ const _unitsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitDetailsTextBox = InputBoxColorScheme(
+const _unitDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
+    background: MultiColor.only(Color(0xFF363D48)),
     border: MultiColor(
       regular: Color(0xFF84A1BD),
       focused: Color(0xFF98BAD9),
@@ -263,7 +265,6 @@ const _conversionItem = ConversionItemColorScheme(
     dropdown: DropdownColorScheme(
       background: MultiColor.only(Color(0xFF3F4857)),
       foreground: MultiColor.only(Color(0xFFBFD3E3)),
-      search: _conversionItemTextBox,
     ),
     divider: MultiColor(
       regular: Color(0xFF506578),
@@ -276,10 +277,7 @@ const _conversionItem = ConversionItemColorScheme(
     regular: Color(0xFF7E9CB7),
     selected: Color(0xFFA6C7E5),
   ),
-  removalIcon: MultiColor(
-    regular: Color(0xFF936051),
-    focused: Color(0xFFBC7E6C),
-  ),
+  removalIcon: MultiColor.only(Color(0xFFD56E41)),
 );
 
 const _refreshFloatingButton = WidgetColorScheme(

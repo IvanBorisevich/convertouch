@@ -4,13 +4,13 @@ import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 
 abstract class InputBoxModel implements ElementModel {
-  final String hint;
-  final String labelText;
+  final String? hint;
+  final String? labelText;
   final bool readonly;
 
   const InputBoxModel({
-    this.hint = '',
-    this.labelText = '',
+    this.hint,
+    this.labelText,
     this.readonly = false,
   });
 
@@ -45,12 +45,12 @@ abstract class InputBoxModel implements ElementModel {
     }
 
     return TextBoxModel(
-      value: model.value?.raw ?? '',
-      hint: model.defaultValue?.raw ?? '',
+      value: model.value?.raw,
+      hint: model.defaultValue?.raw,
       readonly: readonly,
       labelText: model.unit.itemName,
-      valueUnfocused: model.value?.alt ?? '',
-      hintUnfocused: model.defaultValue?.alt ?? '',
+      valueUnfocused: model.value?.alt ?? model.value?.raw,
+      hintUnfocused: model.defaultValue?.alt ?? model.defaultValue?.raw,
       valueType: model.valueType,
     ) as T;
   }
@@ -70,11 +70,11 @@ abstract class InputBoxModel implements ElementModel {
     }
 
     return TextBoxModel(
-      value: model.value?.raw ?? '',
-      hint: model.defaultValue?.raw ?? '',
+      value: model.value?.raw,
+      hint: model.defaultValue?.raw,
       readonly: readonly,
-      valueUnfocused: model.value?.alt ?? '',
-      hintUnfocused: model.defaultValue?.alt ?? '',
+      valueUnfocused: model.value?.alt ?? model.value?.raw,
+      hintUnfocused: model.defaultValue?.alt ?? model.defaultValue?.raw,
       labelText: model.param.name,
       valueType: model.valueType,
     ) as T;

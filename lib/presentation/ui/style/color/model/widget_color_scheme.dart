@@ -59,14 +59,12 @@ class TextBoxColorScheme extends WidgetColorScheme {
 class DropdownColorScheme extends WidgetColorScheme {
   static const DropdownColorScheme none = DropdownColorScheme();
 
-  final TextBoxColorScheme search;
   final MultiColor divider;
 
   const DropdownColorScheme({
     super.border,
     super.background,
     super.foreground,
-    this.search = TextBoxColorScheme.none,
     this.divider = MultiColor.none,
   });
 }
