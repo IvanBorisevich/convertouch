@@ -8,42 +8,30 @@ mixin TextControllerMixin {
     var resultController = controller ?? TextEditingController();
 
     if (initialValue != null && initialValue.isNotEmpty) {
-      updateTextControllerValue(resultController, newValue: initialValue);
+      updateTextControllerValue(resultController, value: initialValue);
     }
 
     return resultController;
   }
 
-  void Function() addTextValueListener({
-    required TextEditingController controller,
-    required void Function(String?)? onValueChange,
-  }) {
-    textValueListener() {
-      onValueChange?.call(controller.text);
-    }
-
-    controller.addListener(textValueListener);
-    return textValueListener;
-  }
-
   void updateTextControllerValue(
     TextEditingController controller, {
-    String? newValue,
+    String? value,
   }) {
-    String newVal = newValue ?? '';
+    String newValue = value ?? '';
 
-    if (controller.text == newVal) {
+    if (controller.text == newValue) {
       return;
     }
 
     int offset = controller.selection.baseOffset;
 
-    if (offset > newVal.length) {
-      offset = newVal.length;
+    if (offset > newValue.length) {
+      offset = newValue.length;
     }
 
     controller.value = controller.value.copyWith(
-      text: newVal,
+      text: newValue,
       selection: TextSelection.collapsed(offset: offset),
     );
   }

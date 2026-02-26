@@ -21,8 +21,6 @@ import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
-import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -257,29 +255,6 @@ class ConversionBloc
     EditConversionItemValue event,
     Emitter<ConversionState> emit,
   ) async {
-    if (event.validateInput) {
-      inputValidationBloc.interceptAndValidate(
-        input: event.newValue,
-        validatorsFunc: () {
-          var conversionItem = state.conversion.convertedUnitValues
-              .where((element) => element.unit.id == event.unitId)
-              .firstOrNull;
-
-          return [
-            NumInRangeValidator(conversionItem?.min, conversionItem?.max),
-            const NumSignsValidator(),
-          ];
-        },
-        onSuccess: () {
-          if (event.proceedAfterValidation) {
-            add(event.copyWith(validateInput: false));
-          }
-        },
-      );
-
-      return;
-    }
-
     final result = await editConversionItemValueUseCase.execute(
       InputConversionModifyModel<EditConversionItemValueDelta>(
         delta: EditConversionItemValueDelta(

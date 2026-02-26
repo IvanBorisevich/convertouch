@@ -13,4 +13,11 @@ class InputValidatorResult {
   const InputValidatorResult.failed(this.message) : proceedOnSuccess = false;
 
   bool get successful => message == null;
+
+  @override
+  String toString() {
+    return 'InputValidatorResult{'
+        'message: $message, '
+        'proceedOnSuccess: $proceedOnSuccess}';
+  }
 }

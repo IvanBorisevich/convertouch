@@ -83,6 +83,8 @@ class _ConvertouchConversionItemsViewState
                 item,
                 readonly: !item.unit.invertible,
               ),
+              min: item.min,
+              max: item.max,
               unit: item.unit,
               index: index,
               isSource: item.unit.id == widget.sourceUnitId,

@@ -47,9 +47,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
 
   @override
   void initState() {
+    super.initState();
     _isPopupMenuOpen = false;
     _panelController = PanelController();
-    super.initState();
   }
 
   @override
@@ -314,15 +314,6 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     EditConversionItemValue(
                                       newValue: value,
                                       unitId: item.unit.id,
-                                    ),
-                                  );
-                                },
-                                onValueFocused: (item, value) {
-                                  conversionBloc.add(
-                                    EditConversionItemValue(
-                                      newValue: value,
-                                      unitId: item.unit.id,
-                                      proceedAfterValidation: false,
                                     ),
                                   );
                                 },

@@ -3,19 +3,13 @@ import 'package:equatable/equatable.dart';
 
 abstract class ConvertouchEvent extends Equatable {
   final void Function()? onComplete;
-  final bool validateInput;
-  final bool proceedAfterValidation;
 
   const ConvertouchEvent({
     this.onComplete,
-    this.validateInput = true,
-    this.proceedAfterValidation = true,
   });
 
   @override
   List<Object?> get props => [
-    validateInput,
-    proceedAfterValidation,
   ];
 }
 

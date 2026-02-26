@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/model/use_case_model/input/input_validation_model.dart';
 import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart';
-import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/model/input_validator_result.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -14,7 +13,7 @@ class InputValidationBloc
 
   InputValidationBloc({
     required this.validateInputUseCase,
-  }) : super(const InputValidationSuccess()) {
+  }) : super(const InputValidationSuccess(key: null)) {
     on<ValidateInput>(_onValidateInput);
     on<ResetValidation>(_onResetValidation);
   }
@@ -33,9 +32,18 @@ class InputValidationBloc
     InputValidatorResult validation = ObjectUtils.tryGet(validationResult);
 
     if (!validation.successful) {
-      emit(InputValidationErrorState(validation.message!));
+      emit(
+        InputValidationErrorState(
+          key: event.key,
+          errorMessage: validation.message!,
+        ),
+      );
     } else {
-      emit(const InputValidationSuccess());
+      emit(
+        InputValidationSuccess(
+          key: event.key,
+        ),
+      );
 
       if (validation.proceedOnSuccess) {
         event.onSuccess?.call();
@@ -47,19 +55,9 @@ class InputValidationBloc
     ResetValidation event,
     Emitter<InputValidationState> emit,
   ) async {
-    emit(const InputValidationSuccess());
-  }
-
-  void interceptAndValidate({
-    required String? input,
-    required List<InputValidator> Function() validatorsFunc,
-    required void Function() onSuccess,
-  }) async {
-    add(
-      ValidateInput(
-        input: input,
-        validators: validatorsFunc.call(),
-        onSuccess: onSuccess,
+    emit(
+      InputValidationSuccess(
+        key: event.key,
       ),
     );
   }

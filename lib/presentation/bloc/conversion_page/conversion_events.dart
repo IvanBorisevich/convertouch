@@ -8,16 +8,12 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 abstract class ConversionEvent extends ConvertouchEvent {
   const ConversionEvent({
     super.onComplete,
-    super.validateInput,
-    super.proceedAfterValidation,
   });
 }
 
 abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion({
     super.onComplete,
-    super.validateInput,
-    super.proceedAfterValidation,
   });
 }
 
@@ -134,31 +130,13 @@ class EditConversionItemValue extends ModifyConversion {
     required this.newValue,
     this.newDefaultValue,
     required this.unitId,
-    super.validateInput,
-    super.proceedAfterValidation,
   });
-
-  EditConversionItemValue copyWith({
-    bool? validateInput,
-    bool? proceedAfterValidation,
-  }) {
-    return EditConversionItemValue(
-      newValue: newValue,
-      newDefaultValue: newDefaultValue,
-      unitId: unitId,
-      validateInput: validateInput ?? this.validateInput,
-      proceedAfterValidation:
-          proceedAfterValidation ?? this.proceedAfterValidation,
-    );
-  }
 
   @override
   List<Object?> get props => [
         newValue,
         newDefaultValue,
         unitId,
-        validateInput,
-        proceedAfterValidation,
       ];
 
   @override
@@ -166,9 +144,7 @@ class EditConversionItemValue extends ModifyConversion {
     return 'EditConversionItemValue{'
         'newValue: $newValue, '
         'newDefaultValue: $newDefaultValue, '
-        'unitId: $unitId, '
-        'validateInput: $validateInput, '
-        'proceedAfterValidation: $proceedAfterValidation}';
+        'unitId: $unitId}';
   }
 }
 

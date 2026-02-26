@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchTooltipBloc
     extends ConvertouchBloc<ConvertouchTooltipEvent, ConvertouchTooltipState> {
-  ConvertouchTooltipBloc() : super(const TooltipHidden()) {
+  ConvertouchTooltipBloc() : super(const TooltipHidden(key: null)) {
     on<ShowTooltip>(_onShowTooltip);
     on<HideTooltip>(_onHideTooltip);
   }
@@ -14,13 +14,21 @@ class ConvertouchTooltipBloc
     ShowTooltip event,
     Emitter<ConvertouchTooltipState> emit,
   ) async {
-    emit(const TooltipVisible());
+    emit(
+      TooltipVisible(
+        key: event.key,
+      ),
+    );
   }
 
   _onHideTooltip(
     HideTooltip event,
     Emitter<ConvertouchTooltipState> emit,
   ) async {
-    emit(const TooltipHidden());
+    emit(
+      TooltipHidden(
+        key: event.key,
+      ),
+    );
   }
 }

@@ -1,8 +1,5 @@
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_states.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_events.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -11,47 +8,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-class InputValidationWrapper extends StatelessWidget {
+class InputValidationTooltip extends StatelessWidget {
   final FocusNode focusNode;
   final Widget child;
   final TooltipDirection tooltipDirection;
-  final bool resetValidationOnNavigate;
   final NotificationColorScheme colors;
 
-  const InputValidationWrapper({
+  const InputValidationTooltip({
+    required Key validationKey,
     required this.focusNode,
     required this.colors,
     this.tooltipDirection = TooltipDirection.down,
-    this.resetValidationOnNavigate = true,
     required this.child,
-    super.key,
-  });
+  }) : super(key: validationKey);
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<NavigationBloc, NavigationState>(
-          listenWhen: (prev, current) => resetValidationOnNavigate,
-          listener: (_, navigationState) {
-            focusNode.unfocus();
+    return BlocListener<InputValidationBloc, InputValidationState>(
+      listenWhen: (prev, next) => next.key == key,
+      listener: (_, validationState) {
+        print(
+            "${DateTime.now()} [validation bloc listener] Sending tooltip event with key: $key");
 
-            BlocProvider.of<InputValidationBloc>(context).add(
-              const ResetValidation(),
-            );
-          },
-        ),
-        BlocListener<InputValidationBloc, InputValidationState>(
-          listener: (_, validationState) {
-            BlocProvider.of<ConvertouchTooltipBloc>(context).add(
-              validationState is InputValidationErrorState
-                  ? const ShowTooltip()
-                  : const HideTooltip(),
-            );
-          },
-        ),
-      ],
+        BlocProvider.of<ConvertouchTooltipBloc>(context).add(
+          validationState is InputValidationErrorState
+              ? ShowTooltip(key: key)
+              : HideTooltip(key: key),
+        );
+      },
       child: ConvertouchTooltip(
+        key: key,
         focusNode: focusNode,
         backgroundColor: colors.background.regular,
         tooltipDirection: tooltipDirection,

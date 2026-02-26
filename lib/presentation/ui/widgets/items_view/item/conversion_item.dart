@@ -1,3 +1,5 @@
+import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
+import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
 import 'package:convertouch/presentation/ui/constants/conversion_item_constants.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
@@ -41,6 +43,10 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       model: widget.model.inputBoxModel,
       borderWidth: 0,
       colors: widget.colors.inputBox,
+      validators: [
+        const NumSignsValidator(),
+        NumInRangeValidator(widget.model.min, widget.model.max),
+      ],
       tooltipDirection:
           widget.model.isLast ? TooltipDirection.up : TooltipDirection.down,
       changeValueOnFocusChanged: true,

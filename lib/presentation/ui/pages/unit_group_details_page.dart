@@ -30,8 +30,8 @@ class _ConvertouchUnitGroupDetailsPageState
 
   @override
   void initState() {
-    _unitGroupNameController = TextEditingController();
     super.initState();
+    _unitGroupNameController = TextEditingController();
   }
 
   @override

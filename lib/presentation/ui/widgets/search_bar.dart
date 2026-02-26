@@ -51,7 +51,6 @@ class ConvertouchSearchBar extends StatelessWidget {
         }
 
         return Container(
-          // height: 50,
           decoration: BoxDecoration(
             color: pageColorScheme.appBar.background.regular,
           ),

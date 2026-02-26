@@ -1,5 +1,8 @@
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_states.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
@@ -10,6 +13,7 @@ class ConvertouchTooltip extends StatefulWidget {
   final SuperTooltipController? controller;
   final Color backgroundColor;
   final TooltipDirection tooltipDirection;
+  final bool closeOnNavigate;
   final Widget child;
 
   const ConvertouchTooltip({
@@ -18,6 +22,7 @@ class ConvertouchTooltip extends StatefulWidget {
     this.controller,
     required this.backgroundColor,
     this.tooltipDirection = TooltipDirection.down,
+    this.closeOnNavigate = true,
     required this.child,
     super.key,
   });
@@ -26,34 +31,70 @@ class ConvertouchTooltip extends StatefulWidget {
   State createState() => _ConvertouchTooltipState();
 }
 
-class _ConvertouchTooltipState extends State<ConvertouchTooltip> {
+class _ConvertouchTooltipState extends State<ConvertouchTooltip>
+    with FocusNodeMixin {
   late final SuperTooltipController _controller;
+
+  late void Function() _focusListener;
 
   @override
   void initState() {
+    super.initState();
+
     _controller = widget.controller ?? SuperTooltipController();
 
-    super.initState();
+    _focusListener = addFocusListener(
+      focusNode: widget.focusNode,
+      onFocusLeft: () async {
+        if (_controller.isVisible) {
+          print(
+              "${DateTime.now()} [onFocusLeft method] hide tooltip on focus left with key: ${widget.key}");
+          await _controller.hideTooltip();
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
+
+    widget.focusNode.removeListener(_focusListener);
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ConvertouchTooltipBloc, ConvertouchTooltipState>(
-      listener: (_, tooltipState) async {
-        if (tooltipState is TooltipHidden || !widget.focusNode.hasFocus) {
-          if (_controller.isVisible) {
-            await _controller.hideTooltip();
-          }
-        } else if (tooltipState is TooltipVisible && !_controller.isVisible) {
-          await _controller.showTooltip();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NavigationBloc, NavigationState>(
+          listenWhen: (prev, current) =>
+              prev != current &&
+              widget.closeOnNavigate &&
+              widget.focusNode.hasFocus,
+          listener: (_, navigationState) {
+            widget.focusNode.unfocus();
+          },
+        ),
+        BlocListener<ConvertouchTooltipBloc, ConvertouchTooltipState>(
+          listenWhen: (prev, current) => current.key == widget.key,
+          listener: (_, tooltipState) async {
+            print(
+                "${DateTime.now()} [tooltip bloc listener] tooltip state received: ${tooltipState}");
+            if (tooltipState is TooltipHidden && _controller.isVisible) {
+              print(
+                  "${DateTime.now()} [tooltip bloc listener] hide tooltip with key: ${widget.key}");
+              await _controller.hideTooltip();
+            } else if (tooltipState is TooltipVisible &&
+                !_controller.isVisible) {
+              print(
+                  "${DateTime.now()} [tooltip bloc listener] show tooltip with key: ${widget.key}");
+              await _controller.showTooltip();
+            }
+          },
+        ),
+      ],
       child: SuperTooltip(
         controller: _controller,
         popupDirection: widget.tooltipDirection,

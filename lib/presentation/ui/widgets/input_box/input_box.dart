@@ -1,5 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
@@ -9,7 +12,7 @@ import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
-import 'package:convertouch/presentation/ui/widgets/input_validation_wrapper.dart';
+import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +30,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final void Function(dynamic)? onValueFocused;
   final void Function(dynamic)? onValueUnfocused;
   final void Function()? onValueCleaned;
+  final List<InputValidator> validators;
   final BorderRadius borderRadius;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -50,6 +54,7 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.onValueFocused,
     this.onValueUnfocused,
     this.onValueCleaned,
+    this.validators = const [],
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     this.borderWidth = 1,
     required this.colors,
@@ -74,6 +79,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     with FocusNodeMixin, TextControllerMixin, ItemsLazyLoadingMixin {
   static const double _textHeightCoefficient = 1.2;
 
+  Key? _validationKey;
+
   late final FocusNode _focusNode;
   void Function()? _focusListener;
 
@@ -81,7 +88,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   late final TextEditingController _dropdownSearchController;
 
   late final TextEditingController _textController;
-  void Function()? _textValueListener;
 
   String? _hint;
 
@@ -95,6 +101,12 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
   @override
   void initState() {
+    super.initState();
+
+    if (widget.validators.isNotEmpty) {
+      _validationKey = UniqueKey();
+    }
+
     _setInitialColors();
 
     bool prefixIconsExist =
@@ -116,8 +128,59 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     } else if (widget.model is ListBoxModel) {
       _initListBoxState(widget.model as ListBoxModel);
     }
+  }
 
-    super.initState();
+  void _initTextBoxState(TextBoxModel model) {
+    _hint = model.hintUnfocused;
+
+    _textController = initOrGetController(
+      widget.textController,
+      initialValue: widget.autofocus ? model.value : model.valueUnfocused,
+    );
+
+    _focusListener = addFocusListener(
+      focusNode: _focusNode,
+      onFocusSelected: () {
+        _wrapWithValidation(
+          context: context,
+          func: widget.onValueFocused,
+        )?.call(_textController.text);
+
+        if (widget.changeValueOnFocusChanged) {
+          updateTextControllerValue(
+            _textController,
+            value: model.value,
+          );
+        }
+
+        setState(() {
+          _hint = model.hint;
+        });
+      },
+      onFocusLeft: () {
+        _wrapWithValidationReset(
+          context: context,
+          func: widget.onValueUnfocused,
+        )?.call(_textController.text);
+
+        if (widget.changeValueOnFocusChanged) {
+          updateTextControllerValue(
+            _textController,
+            value: model.valueUnfocused,
+          );
+        }
+
+        setState(() {
+          _hint = model.hintUnfocused;
+        });
+      },
+    );
+  }
+
+  void _initListBoxState(ListBoxModel model) {
+    _hint = model.hint;
+    _dropdownSearchController = TextEditingController();
+    _isDropdownOpen = false;
   }
 
   @override
@@ -138,6 +201,18 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     super.dispose();
   }
 
+  void _disposeTextBox() {
+    if (widget.textController == null) {
+      disposeTextController(
+        controller: _textController,
+      );
+    }
+  }
+
+  void _disposeListBox() {
+    _dropdownSearchController.dispose();
+  }
+
   @override
   void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -156,74 +231,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     }
   }
 
-  void _initTextBoxState(TextBoxModel model) {
-    _hint = model.hintUnfocused;
-
-    _textController = initOrGetController(
-      widget.textController,
-      initialValue: widget.autofocus ? model.value : model.valueUnfocused,
-    );
-
-    if (!model.readonly) {
-      _focusListener = addFocusListener(
-        focusNode: _focusNode,
-        onFocusSelected: () {
-          widget.onValueFocused?.call(_textController.text);
-
-          if (widget.changeValueOnFocusChanged) {
-            updateTextControllerValue(
-              _textController,
-              newValue: model.value,
-            );
-          }
-
-          setState(() {
-            _hint = model.hint;
-          });
-        },
-        onFocusLeft: () {
-          widget.onValueUnfocused?.call(_textController.text);
-          // widget.validationBloc?.add(const ResetValidation());
-
-          if (widget.changeValueOnFocusChanged) {
-            updateTextControllerValue(
-              _textController,
-              newValue: model.valueUnfocused,
-            );
-          }
-
-          setState(() {
-            _hint = model.hintUnfocused;
-          });
-        },
-      );
-
-      _textValueListener = addTextValueListener(
-        controller: _textController,
-        onValueChange: (value) {},
-      );
-    }
-  }
-
-  void _initListBoxState(ListBoxModel model) {
-    _hint = model.hint;
-    _dropdownSearchController = TextEditingController();
-    _isDropdownOpen = false;
-  }
-
-  void _disposeTextBox() {
-    if (widget.textController == null) {
-      disposeTextController(
-        controller: _textController,
-        listener: _textValueListener,
-      );
-    }
-  }
-
-  void _disposeListBox() {
-    _dropdownSearchController.dispose();
-  }
-
   void _updateTextBox({
     required TextBoxModel oldModel,
     required TextBoxModel newModel,
@@ -231,13 +238,13 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     if (_focusNode.hasFocus && newModel.value != oldModel.value) {
       updateTextControllerValue(
         _textController,
-        newValue: newModel.value,
+        value: newModel.value,
       );
     } else if (!_focusNode.hasFocus &&
         newModel.valueUnfocused != oldModel.valueUnfocused) {
       updateTextControllerValue(
         _textController,
-        newValue: newModel.valueUnfocused,
+        value: newModel.valueUnfocused,
       );
     }
   }
@@ -316,32 +323,57 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     required Widget child,
     EdgeInsetsGeometry? contentPadding,
   }) {
-    return GestureDetector(
-      onTap: () {
-        _focusNode.requestFocus();
-      },
-      child: Container(
-        padding: contentPadding,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: widget.borderRadius,
+    return _validationWrapper(
+      child: GestureDetector(
+        onTap: () {
+          _focusNode.requestFocus();
+        },
+        child: Container(
+          padding: contentPadding,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: widget.borderRadius,
+          ),
+          child: child,
         ),
-        child: child,
       ),
+    );
+  }
+
+  Widget _validationWrapper({
+    required Widget child,
+  }) {
+    if (_validationKey == null) {
+      return child;
+    }
+
+    return InputValidationTooltip(
+      validationKey: _validationKey!,
+      focusNode: _focusNode,
+      colors: widget.colors.textBox.tooltip,
+      tooltipDirection: widget.tooltipDirection,
+      child: child,
     );
   }
 
   Widget _inputField(BuildContext context) {
     if (widget.model is TextBoxModel) {
       return _textField(
+        context,
         model: widget.model as TextBoxModel,
         controller: _textController,
+        onValueChanged: _wrapWithValidation(
+          context: context,
+          func: widget.onValueChanged,
+        ),
       );
     }
 
     if (widget.model is ListBoxModel) {
       return _listField(
+        context,
         model: widget.model as ListBoxModel,
+        onValueChanged: widget.onValueChanged,
       );
     }
 
@@ -349,103 +381,97 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         "Cannot create input box by model of type ${widget.model.runtimeType}");
   }
 
-  Widget _textField({
+  Widget _textField(
+    BuildContext context, {
     required TextBoxModel model,
     required TextEditingController controller,
+    void Function(String)? onValueChanged,
   }) {
     RegExp? inputRegExp = inputValueTypeToRegExpMap[model.valueType];
 
-    return InputValidationWrapper(
+    return TextField(
+      readOnly: model.readonly,
+      maxLength: model.maxTextLength,
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: false,
+      autofocus: widget.autofocus,
       focusNode: _focusNode,
-      colors: widget.colors.textBox.tooltip,
-      tooltipDirection: widget.tooltipDirection,
-      child: GestureDetector(
-        onTap: () {
-          _focusNode.requestFocus();
-        },
-        child: TextField(
-          readOnly: model.readonly,
-          maxLength: model.maxTextLength,
-          textAlignVertical: TextAlignVertical.center,
-          obscureText: false,
-          autofocus: widget.autofocus,
-          focusNode: _focusNode,
-          controller: controller,
-          inputFormatters: inputRegExp != null
-              ? [FilteringTextInputFormatter.allow(inputRegExp)]
-              : null,
-          keyboardType: inputValueTypeToKeyboardTypeMap[model.valueType],
-          onChanged: widget.onValueChanged,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: BorderSide.none,
-            ),
-            label: model.labelText != null
-                ? Container(
-                    padding: widget.labelPadding,
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 2,
-                    ),
-                    child: Text(
-                      model.labelText!,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        foreground: Paint()..color = _labelColor,
-                      ),
-                    ),
-                  )
-                : null,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            alignLabelWithHint: true,
-            hintText: _hint,
-            hintStyle: TextStyle(
-              foreground: Paint()..color = _hintColor,
-            ),
-            isDense: true,
-            counterText: "",
-            contentPadding: const EdgeInsets.symmetric(vertical: 7),
-            prefixIcon: widget.prefixIcon,
-            prefixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
-            ),
-            suffixIcon: widget.suffixIcon ?? _suffixCloseIcon(),
-            suffixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
-            ),
-            suffixIconColor: _foregroundColor,
-            suffixText: model.textLengthCounterVisible
-                ? '${controller.text.length}/${model.maxTextLength}'
-                : null,
-            filled: true,
-            fillColor: widget.colors.textBox.background.regular,
-            constraints: BoxConstraints(
-              maxHeight: widget.fontSize * _textHeightCoefficient +
-                  _contentPadding.vertical,
-            ),
-          ),
-          style: TextStyle(
-            foreground: Paint()..color = _foregroundColor,
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.w500,
-            fontFamily: quicksandFontFamily,
-            letterSpacing: widget.letterSpacing,
-            height: _textHeightCoefficient,
-          ),
-          textAlign: TextAlign.start,
+      controller: controller,
+      inputFormatters: inputRegExp != null
+          ? [FilteringTextInputFormatter.allow(inputRegExp)]
+          : null,
+      keyboardType: inputValueTypeToKeyboardTypeMap[model.valueType],
+      onChanged: onValueChanged,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: widget.borderRadius,
+          borderSide: BorderSide.none,
+        ),
+        label: model.labelText != null
+            ? Container(
+                padding: widget.labelPadding,
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                ),
+                child: Text(
+                  model.labelText!,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    foreground: Paint()..color = _labelColor,
+                  ),
+                ),
+              )
+            : null,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        alignLabelWithHint: true,
+        hintText: _hint,
+        hintStyle: TextStyle(
+          foreground: Paint()..color = _hintColor,
+        ),
+        isDense: true,
+        counterText: "",
+        contentPadding: const EdgeInsets.symmetric(vertical: 7),
+        prefixIcon: widget.prefixIcon,
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 0,
+          minHeight: 0,
+        ),
+        suffixIcon: widget.suffixIcon ?? _suffixCloseIcon(),
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: 0,
+          minHeight: 0,
+        ),
+        suffixIconColor: _foregroundColor,
+        suffixText: model.textLengthCounterVisible
+            ? '${controller.text.length}/${model.maxTextLength}'
+            : null,
+        filled: true,
+        fillColor: widget.colors.textBox.background.regular,
+        constraints: BoxConstraints(
+          maxHeight: widget.fontSize * _textHeightCoefficient +
+              _contentPadding.vertical,
         ),
       ),
+      style: TextStyle(
+        foreground: Paint()..color = _foregroundColor,
+        fontSize: widget.fontSize,
+        fontWeight: FontWeight.w500,
+        fontFamily: quicksandFontFamily,
+        letterSpacing: widget.letterSpacing,
+        height: _textHeightCoefficient,
+      ),
+      textAlign: TextAlign.start,
     );
   }
 
-  Widget _listField({
+  Widget _listField(
+    BuildContext context, {
     required ListBoxModel model,
+    void Function(ListValueModel?)? onValueChanged,
   }) {
     DropdownColorScheme dropdownMenu = widget.colors.dropdown;
 
@@ -525,7 +551,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                 ),
               )
               .toList(),
-          onChanged: widget.onValueChanged,
+          onChanged: onValueChanged,
           /*
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
@@ -598,6 +624,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                         horizontal: 10,
                       ),
                       child: _textField(
+                        context,
                         model: TextBoxModel(
                           hint: model.searchHint,
                           hintUnfocused: model.searchHint,
@@ -638,7 +665,10 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       onTap: () {
         _textController.clear();
         widget.onValueCleaned?.call();
-        widget.onValueChanged?.call(null);
+        _wrapWithValidationReset(
+          context: context,
+          func: widget.onValueChanged,
+        )?.call(null);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -663,5 +693,45 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       width: 2,
       thickness: 2,
     );
+  }
+
+  void Function(dynamic)? _wrapWithValidation({
+    required BuildContext context,
+    required void Function(dynamic)? func,
+    bool validateEmptyValue = false,
+  }) {
+    if (_validationKey == null) {
+      return func;
+    }
+
+    return (value) {
+      if (!validateEmptyValue && (value == null || value.isEmpty)) {
+        return func?.call(value);
+      }
+
+      BlocProvider.of<InputValidationBloc>(context).add(
+        ValidateInput(
+          key: _validationKey!,
+          input: value,
+          validators: widget.validators,
+          onSuccess: () {
+            func?.call(value);
+          },
+        ),
+      );
+    };
+  }
+
+  void Function(dynamic)? _wrapWithValidationReset({
+    required BuildContext context,
+    required void Function(dynamic)? func,
+  }) {
+    if (_validationKey != null) {
+      BlocProvider.of<InputValidationBloc>(context).add(
+        ResetValidation(key: _validationKey!),
+      );
+    }
+
+    return func;
   }
 }

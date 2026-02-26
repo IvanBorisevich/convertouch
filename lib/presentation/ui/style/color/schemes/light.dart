@@ -270,7 +270,6 @@ const _conversionItem = ConversionItemColorScheme(
     ),
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),
-      focused: Color(0xFF233B50),
       disabled: Color(0xFF90A8C0),
     ),
   ),

@@ -1,23 +1,35 @@
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class ConvertouchTooltipEvent extends ConvertouchEvent {
-  const ConvertouchTooltipEvent();
+  final Key? key;
+
+  const ConvertouchTooltipEvent({
+    this.key,
+  });
+
+  @override
+  List<Object?> get props => [key];
 }
 
 class ShowTooltip extends ConvertouchTooltipEvent {
-  const ShowTooltip();
+  const ShowTooltip({
+    super.key,
+  });
 
   @override
   String toString() {
-    return 'ShowTooltip{}';
+    return 'ShowTooltip{key: $key}';
   }
 }
 
 class HideTooltip extends ConvertouchTooltipEvent {
-  const HideTooltip();
+  const HideTooltip({
+    super.key,
+  });
 
   @override
   String toString() {
-    return 'HideTooltip{}';
+    return 'HideTooltip{key: $key}';
   }
 }
