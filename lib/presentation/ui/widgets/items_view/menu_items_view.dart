@@ -148,7 +148,6 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
               pageName: widget.pageName,
               viewModeSettingKey: widget.viewModeSettingKey,
               onSearchStringChanged: (text) {
-                print("serch string changed to '$text'");
                 widget.itemsListBloc.add(
                   FetchItems<P>(
                     searchString: text,

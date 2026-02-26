@@ -27,9 +27,6 @@ class InputValidationTooltip extends StatelessWidget {
     return BlocListener<InputValidationBloc, InputValidationState>(
       listenWhen: (prev, next) => next.key == key,
       listener: (_, validationState) {
-        print(
-            "${DateTime.now()} [validation bloc listener] Sending tooltip event with key: $key");
-
         BlocProvider.of<ConvertouchTooltipBloc>(context).add(
           validationState is InputValidationErrorState
               ? ShowTooltip(key: key)

@@ -47,8 +47,6 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
       focusNode: widget.focusNode,
       onFocusLeft: () async {
         if (_controller.isVisible) {
-          print(
-              "${DateTime.now()} [onFocusLeft method] hide tooltip on focus left with key: ${widget.key}");
           await _controller.hideTooltip();
         }
       },
@@ -80,16 +78,10 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
         BlocListener<ConvertouchTooltipBloc, ConvertouchTooltipState>(
           listenWhen: (prev, current) => current.key == widget.key,
           listener: (_, tooltipState) async {
-            print(
-                "${DateTime.now()} [tooltip bloc listener] tooltip state received: ${tooltipState}");
             if (tooltipState is TooltipHidden && _controller.isVisible) {
-              print(
-                  "${DateTime.now()} [tooltip bloc listener] hide tooltip with key: ${widget.key}");
               await _controller.hideTooltip();
             } else if (tooltipState is TooltipVisible &&
                 !_controller.isVisible) {
-              print(
-                  "${DateTime.now()} [tooltip bloc listener] show tooltip with key: ${widget.key}");
               await _controller.showTooltip();
             }
           },
