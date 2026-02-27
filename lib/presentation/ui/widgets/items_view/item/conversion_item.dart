@@ -42,6 +42,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
     return ConvertouchInputBox(
       model: widget.model.inputBoxModel,
       borderWidth: 0,
+      fontSize: 18,
       colors: widget.colors.inputBox,
       validators: [
         const NumSignsValidator(),

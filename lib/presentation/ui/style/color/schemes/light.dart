@@ -61,7 +61,6 @@ const _searchBox = SearchBoxColorScheme(
     ),
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),
-      focused: Color(0xFF233B50),
       disabled: Color(0xFF90A8C0),
     ),
   ),
@@ -243,7 +242,7 @@ const _conversionItemTextBox = TextBoxColorScheme(
   background: MultiColor.only(Color(0xffe8efff)),
   border: MultiColor(
     regular: Color(0xFF4F7498),
-    focused: Color(0xFF233B50),
+    focused: Color(0xFF1B2F40),
     disabled: Color(0xFF90A8C0),
   ),
   foreground: MultiColor(

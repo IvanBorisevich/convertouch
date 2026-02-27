@@ -12,10 +12,10 @@ abstract interface class InputBoxConstants {
   static const double defaultFontSize = 17;
   static const double defaultLabelFontSize = 16;
   static const EdgeInsets defaultContentPadding = EdgeInsets.only(
-    top: 7,
-    bottom: 7,
-    left: 17,
-    right: 17,
+    top: 8,
+    bottom: 9,
+    left: 10,
+    right: 10,
   );
 }
 

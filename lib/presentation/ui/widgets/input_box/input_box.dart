@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
@@ -34,10 +35,10 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final BorderRadius borderRadius;
   final double borderWidth;
   final InputBoxColorScheme colors;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
+  final bool prefixRightmostDividerVisible;
+  final bool suffixLeftmostDividerVisible;
   final EdgeInsets contentPadding;
   final EdgeInsets? labelPadding;
   final double fontSize;
@@ -58,10 +59,10 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     this.borderWidth = 1,
     required this.colors,
-    this.prefixIcon,
-    this.suffixIcon,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
+    this.prefixRightmostDividerVisible = true,
+    this.suffixLeftmostDividerVisible = true,
     this.contentPadding = InputBoxConstants.defaultContentPadding,
     this.labelPadding,
     this.fontSize = InputBoxConstants.defaultFontSize,
@@ -97,8 +98,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   late Color _borderColor;
   late Color _dividerColor;
 
-  late EdgeInsetsGeometry _contentPadding;
-
   @override
   void initState() {
     super.initState();
@@ -108,18 +107,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     }
 
     _setInitialColors();
-
-    bool prefixIconsExist =
-        widget.prefixWidgets.nonNulls.isNotEmpty || widget.prefixIcon != null;
-    bool suffixIconsExist =
-        widget.suffixWidgets.nonNulls.isNotEmpty || widget.suffixIcon != null;
-
-    _contentPadding = EdgeInsets.only(
-      top: widget.contentPadding.top,
-      bottom: widget.contentPadding.bottom,
-      left: prefixIconsExist ? 10 : 17,
-      right: suffixIconsExist ? 10 : 17,
-    );
 
     _focusNode = initOrGetFocusNode(widget.focusNode);
 
@@ -155,6 +142,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
         setState(() {
           _hint = model.hint;
+          _setFocusedColors();
         });
       },
       onFocusLeft: () {
@@ -172,6 +160,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
         setState(() {
           _hint = model.hintUnfocused;
+          _setInitialColors();
         });
       },
     );
@@ -181,6 +170,20 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _hint = model.hint;
     _dropdownSearchController = TextEditingController();
     _isDropdownOpen = false;
+
+    _focusListener = addFocusListener(
+      focusNode: _focusNode,
+      onFocusSelected: () {
+        setState(() {
+          _setFocusedColors();
+        });
+      },
+      onFocusLeft: () {
+        setState(() {
+          _setInitialColors();
+        });
+      },
+    );
   }
 
   @override
@@ -222,12 +225,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         oldModel: oldWidget.model as TextBoxModel,
         newModel: widget.model as TextBoxModel,
       );
-    }
-
-    if (_focusNode.hasFocus) {
-      _setFocusedColors();
-    } else {
-      _setInitialColors();
     }
   }
 
@@ -287,28 +284,37 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       child: IntrinsicHeight(
         child: Row(
           children: [
-            ...widget.prefixWidgets.map(
-              (widget) => widget != null
+            ...widget.prefixWidgets.mapIndexed(
+              (index, prefixWidget) => prefixWidget != null
                   ? Row(
                       children: [
-                        widget,
-                        _verticalDivider(),
+                        prefixWidget,
+                        index < widget.prefixWidgets.length - 1 ||
+                                index == widget.prefixWidgets.length - 1 &&
+                                    widget.prefixRightmostDividerVisible
+                            ? _verticalDivider()
+                            : const SizedBox.shrink(),
                       ],
                     )
                   : const SizedBox.shrink(),
             ),
             Expanded(
               child: _inputFieldWrapper(
-                contentPadding: _contentPadding,
+                contentPadding: widget.contentPadding,
                 child: _inputField(context),
               ),
             ),
-            ...widget.suffixWidgets.map(
-              (widget) => widget != null
+            _suffixCloseIcon(),
+            ...widget.suffixWidgets.mapIndexed(
+              (index, suffixWidget) => suffixWidget != null
                   ? Row(
                       children: [
-                        _verticalDivider(),
-                        widget,
+                        index < widget.suffixWidgets.length - 1 ||
+                                index == widget.suffixWidgets.length - 1 &&
+                                    widget.suffixLeftmostDividerVisible
+                            ? _verticalDivider()
+                            : const SizedBox.shrink(),
+                        suffixWidget,
                       ],
                     )
                   : const SizedBox.shrink(),
@@ -435,17 +441,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         isDense: true,
         counterText: "",
         contentPadding: const EdgeInsets.symmetric(vertical: 7),
-        prefixIcon: widget.prefixIcon,
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
-        suffixIcon: widget.suffixIcon ?? _suffixCloseIcon(),
-        suffixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
-        suffixIconColor: _foregroundColor,
         suffixText: model.textLengthCounterVisible
             ? '${controller.text.length}/${model.maxTextLength}'
             : null,
@@ -453,7 +448,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         fillColor: widget.colors.textBox.background.regular,
         constraints: BoxConstraints(
           maxHeight: widget.fontSize * _textHeightCoefficient +
-              _contentPadding.vertical,
+              widget.contentPadding.vertical,
         ),
       ),
       style: TextStyle(
@@ -515,7 +510,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             fillColor: widget.colors.textBox.background.regular,
             constraints: BoxConstraints(
               maxHeight: widget.fontSize * _textHeightCoefficient +
-                  _contentPadding.vertical,
+                  widget.contentPadding.vertical,
             ),
           ),
           style: TextStyle(
@@ -656,9 +651,9 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  Widget? _suffixCloseIcon() {
+  Widget _suffixCloseIcon() {
     if (!_focusNode.hasFocus || _textController.text.isEmpty) {
-      return null;
+      return const SizedBox.shrink();
     }
 
     return GestureDetector(
@@ -670,16 +665,19 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
           func: widget.onValueChanged,
         )?.call(null);
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.colors.textBox.foreground.regular,
-          shape: BoxShape.circle,
-        ),
-        padding: const EdgeInsets.all(2),
-        child: Icon(
-          Icons.close_rounded,
-          color: widget.colors.textBox.background.regular,
-          size: 12,
+      child: Padding(
+        padding: EdgeInsets.only(right: widget.contentPadding.right),
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.colors.textBox.foreground.regular,
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(2),
+          child: Icon(
+            Icons.close_rounded,
+            color: widget.colors.textBox.background.regular,
+            size: 12,
+          ),
         ),
       ),
     );

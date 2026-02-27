@@ -76,11 +76,18 @@ class ConvertouchSearchBar extends StatelessWidget {
               vertical: 5,
               horizontal: 10,
             ),
-            prefixIcon: Icon(
-              Icons.search,
-              color: searchBarColorScheme.inputBox.textBox.foreground.regular,
-              size: 22,
-            ),
+            prefixWidgets: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Icon(
+                  Icons.search,
+                  color:
+                      searchBarColorScheme.inputBox.textBox.foreground.regular,
+                  size: 22,
+                ),
+              ),
+            ],
+            prefixRightmostDividerVisible: false,
             suffixWidgets: [
               IconButton(
                 padding: const EdgeInsets.only(right: 2),
