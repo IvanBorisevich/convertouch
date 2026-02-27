@@ -217,7 +217,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (M == TextBoxModel) {
+    if (widget.model is TextBoxModel) {
       _updateTextBox(
         oldModel: oldWidget.model as TextBoxModel,
         newModel: widget.model as TextBoxModel,

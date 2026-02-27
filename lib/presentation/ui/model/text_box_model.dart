@@ -22,4 +22,15 @@ class TextBoxModel extends InputBoxModel {
     this.maxTextLength,
     this.textLengthCounterVisible = false,
   });
+
+  @override
+  String toString() {
+    return 'TextBoxModel{'
+        'value: $value, '
+        'valueUnfocused: $valueUnfocused, '
+        'hintUnfocused: $hintUnfocused, '
+        'valueType: $valueType, '
+        'maxTextLength: $maxTextLength, '
+        'textLengthCounterVisible: $textLengthCounterVisible}';
+  }
 }
