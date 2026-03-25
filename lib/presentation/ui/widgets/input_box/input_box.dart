@@ -14,7 +14,6 @@ import 'package:convertouch/presentation/ui/style/color/model/widget_color_schem
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,35 +21,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
-  final M model;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final TooltipDirection tooltipDirection;
-  final TextEditingController? textController;
-  final void Function(dynamic)? onValueChanged;
-  final void Function(dynamic)? onValueFocused;
-  final void Function(dynamic)? onValueUnfocused;
-  final void Function()? onValueCleaned;
-  final List<InputValidator> validators;
-  final BorderRadius borderRadius;
-  final double borderWidth;
-  final InputBoxColorScheme colors;
-  final List<Widget?> prefixWidgets;
-  final List<Widget?> suffixWidgets;
-  final bool prefixRightmostDividerVisible;
-  final bool suffixLeftmostDividerVisible;
-  final EdgeInsets contentPadding;
-  final EdgeInsets? labelPadding;
-  final double fontSize;
-  final double? letterSpacing;
-  final bool changeValueOnFocusChanged;
-
   const ConvertouchInputBox({
     required this.model,
     this.focusNode,
     this.autofocus = false,
     this.tooltipDirection = TooltipDirection.down,
-    this.textController,
+    this.controller,
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
@@ -63,35 +39,48 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.suffixWidgets = const [],
     this.prefixRightmostDividerVisible = true,
     this.suffixLeftmostDividerVisible = true,
-    this.contentPadding = InputBoxConstants.defaultContentPadding,
-    this.labelPadding,
+    this.inputFieldMargin = InputBoxConstants.defaultInputFieldMargin,
     this.fontSize = InputBoxConstants.defaultFontSize,
     this.letterSpacing,
     this.changeValueOnFocusChanged = false,
+    this.floatingLabelBehavior,
     super.key,
   });
+
+  final M model;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final TooltipDirection tooltipDirection;
+  final TextEditingController? controller;
+  final void Function(dynamic)? onValueChanged;
+  final void Function(dynamic)? onValueFocused;
+  final void Function(dynamic)? onValueUnfocused;
+  final void Function()? onValueCleaned;
+  final List<InputValidator> validators;
+  final BorderRadius borderRadius;
+  final double borderWidth;
+  final InputBoxColorScheme colors;
+  final List<Widget?> prefixWidgets;
+  final List<Widget?> suffixWidgets;
+  final bool prefixRightmostDividerVisible;
+  final bool suffixLeftmostDividerVisible;
+  final EdgeInsets inputFieldMargin;
+  final double fontSize;
+  final double? letterSpacing;
+  final bool changeValueOnFocusChanged;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
 }
 
 class _ConvertouchInputBoxState<M extends InputBoxModel>
-    extends State<ConvertouchInputBox<M>>
-    with FocusNodeMixin, TextControllerMixin, ItemsLazyLoadingMixin {
-  static const double _textHeightCoefficient = 1.2;
-
+    extends State<ConvertouchInputBox<M>> with FocusNodeMixin {
   Key? _validationKey;
-
   late final FocusNode _focusNode;
   void Function()? _focusListener;
 
-  late bool _isDropdownOpen;
-  late final TextEditingController _dropdownSearchController;
-
-  late final TextEditingController _textController;
-
-  String? _hint;
-
+  late Color _backgroundColor;
   late Color _foregroundColor;
   late Color _hintColor;
   late Color _labelColor;
@@ -102,75 +91,13 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   void initState() {
     super.initState();
 
+    _setInitialColors();
+
     if (widget.validators.isNotEmpty) {
       _validationKey = UniqueKey();
     }
 
-    _setInitialColors();
-
-    _focusNode = initOrGetFocusNode(widget.focusNode);
-
-    if (widget.model is TextBoxModel) {
-      _initTextBoxState(widget.model as TextBoxModel);
-    } else if (widget.model is ListBoxModel) {
-      _initListBoxState(widget.model as ListBoxModel);
-    }
-  }
-
-  void _initTextBoxState(TextBoxModel model) {
-    _hint = model.hintUnfocused;
-
-    _textController = initOrGetController(
-      widget.textController,
-      initialValue: widget.autofocus ? model.value : model.valueUnfocused,
-    );
-
-    _focusListener = addFocusListener(
-      focusNode: _focusNode,
-      onFocusSelected: () {
-        _wrapWithValidation(
-          context: context,
-          func: widget.onValueFocused,
-        )?.call(_textController.text);
-
-        if (widget.changeValueOnFocusChanged) {
-          updateTextControllerValue(
-            _textController,
-            value: model.value,
-          );
-        }
-
-        setState(() {
-          _hint = model.hint;
-          _setFocusedColors();
-        });
-      },
-      onFocusLeft: () {
-        _wrapWithValidationReset(
-          context: context,
-          func: widget.onValueUnfocused,
-        )?.call(_textController.text);
-
-        if (widget.changeValueOnFocusChanged) {
-          updateTextControllerValue(
-            _textController,
-            value: model.valueUnfocused,
-          );
-        }
-
-        setState(() {
-          _hint = model.hintUnfocused;
-          _setInitialColors();
-        });
-      },
-    );
-  }
-
-  void _initListBoxState(ListBoxModel model) {
-    _hint = model.hint;
-    _dropdownSearchController = TextEditingController();
-    _isDropdownOpen = false;
-
+    _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _focusListener = addFocusListener(
       focusNode: _focusNode,
       onFocusSelected: () {
@@ -179,21 +106,13 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         });
       },
       onFocusLeft: () {
-        setState(() {
-          _setInitialColors();
-        });
+        _setInitialColors();
       },
     );
   }
 
   @override
   void dispose() {
-    if (widget.model is TextBoxModel) {
-      _disposeTextBox();
-    } else if (widget.model is ListBoxModel) {
-      _disposeListBox();
-    }
-
     if (widget.focusNode == null) {
       disposeFocusNode(
         focusNode: _focusNode,
@@ -204,56 +123,16 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     super.dispose();
   }
 
-  void _disposeTextBox() {
-    if (widget.textController == null) {
-      disposeTextController(
-        controller: _textController,
-      );
-    }
-  }
-
-  void _disposeListBox() {
-    _dropdownSearchController.dispose();
-  }
-
-  @override
-  void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.model is TextBoxModel) {
-      _updateTextBox(
-        oldModel: oldWidget.model as TextBoxModel,
-        newModel: widget.model as TextBoxModel,
-      );
-    }
-  }
-
-  void _updateTextBox({
-    required TextBoxModel oldModel,
-    required TextBoxModel newModel,
-  }) {
-    if (_focusNode.hasFocus && newModel.value != oldModel.value) {
-      updateTextControllerValue(
-        _textController,
-        value: newModel.value,
-      );
-    } else if (!_focusNode.hasFocus &&
-        newModel.valueUnfocused != oldModel.valueUnfocused) {
-      updateTextControllerValue(
-        _textController,
-        value: newModel.valueUnfocused,
-      );
-    }
-  }
-
   void _setInitialColors() {
     if (widget.model.readonly) {
+      _backgroundColor = widget.colors.textBox.background.disabled;
       _foregroundColor = widget.colors.textBox.foreground.disabled;
       _hintColor = widget.colors.textBox.hint.disabled;
       _labelColor = widget.colors.textBox.label.disabled;
       _borderColor = widget.colors.textBox.border.disabled;
       _dividerColor = widget.colors.divider.disabled;
     } else {
+      _backgroundColor = widget.colors.textBox.background.regular;
       _foregroundColor = widget.colors.textBox.foreground.regular;
       _hintColor = widget.colors.textBox.hint.regular;
       _labelColor = widget.colors.textBox.label.regular;
@@ -263,6 +142,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   }
 
   void _setFocusedColors() {
+    _backgroundColor = widget.colors.textBox.background.focused;
     _foregroundColor = widget.colors.textBox.foreground.focused;
     _hintColor = widget.colors.textBox.hint.focused;
     _labelColor = widget.colors.textBox.label.focused;
@@ -274,12 +154,14 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.colors.textBox.background.regular,
+        color: _backgroundColor,
         borderRadius: widget.borderRadius,
-        border: Border.all(
-          color: _borderColor,
-          width: widget.borderWidth,
-        ),
+        border: widget.borderWidth > 0
+            ? Border.all(
+                color: _borderColor,
+                width: widget.borderWidth,
+              )
+            : null,
       ),
       child: IntrinsicHeight(
         child: Row(
@@ -300,8 +182,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             ),
             Expanded(
               child: _inputFieldWrapper(
-                contentPadding: widget.contentPadding,
-                child: _inputField(context),
+                contentPadding: widget.inputFieldMargin,
+                child: _inputField(widget.model),
               ),
             ),
             _suffixCloseIcon(),
@@ -322,6 +204,16 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _verticalDivider() {
+    return VerticalDivider(
+      color: _dividerColor,
+      indent: 10,
+      endIndent: 10,
+      width: 2,
+      thickness: 2,
     );
   }
 
@@ -346,6 +238,81 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
+  Widget _inputField(M model) {
+    if (model is TextBoxModel) {
+      return _TextField(
+        model: model,
+        autofocus: widget.autofocus,
+        controller: widget.controller,
+        focusNode: _focusNode,
+        validators: widget.validators,
+        changeValueOnFocusChanged: widget.changeValueOnFocusChanged,
+        onValueChanged: widget.onValueChanged,
+        onValueFocused: _wrapWithValidation(
+          context: context,
+          func: widget.onValueFocused,
+        ),
+        onValueUnfocused: _wrapWithValidationReset(
+          context: context,
+          func: widget.onValueUnfocused,
+        ),
+        onValueCleaned: widget.onValueCleaned,
+        foregroundColor: _foregroundColor,
+        hintColor: _hintColor,
+        labelColor: _labelColor,
+        fontSize: widget.fontSize,
+        margin: widget.inputFieldMargin,
+        borderRadius: widget.borderRadius,
+      );
+    }
+
+    if (model is ListBoxModel) {
+      return _ListField(
+        model: model,
+        controller: widget.controller,
+        onValueChanged: widget.onValueChanged,
+        foregroundColor: _foregroundColor,
+        hintColor: _hintColor,
+        labelColor: _labelColor,
+        fontSize: widget.fontSize,
+        margin: widget.inputFieldMargin,
+        borderRadius: widget.borderRadius,
+        dropdownColors: widget.colors.dropdown,
+      );
+    }
+
+    throw Exception(
+      "Cannot create input box by model of type ${widget.model.runtimeType}",
+    );
+  }
+
+  Widget _suffixCloseIcon() {
+    if (!_focusNode.hasFocus ||
+        widget.controller == null ||
+        widget.controller!.text.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return GestureDetector(
+      onTap: widget.onValueCleaned,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7),
+        child: Container(
+          decoration: BoxDecoration(
+            color: _foregroundColor,
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(2),
+          child: Icon(
+            Icons.close_rounded,
+            color: _backgroundColor,
+            size: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _validationWrapper({
     required Widget child,
   }) {
@@ -359,337 +326,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       colors: widget.colors.textBox.tooltip,
       tooltipDirection: widget.tooltipDirection,
       child: child,
-    );
-  }
-
-  Widget _inputField(BuildContext context) {
-    if (widget.model is TextBoxModel) {
-      return _textField(
-        context,
-        model: widget.model as TextBoxModel,
-        controller: _textController,
-        onValueChanged: _wrapWithValidation(
-          context: context,
-          func: widget.onValueChanged,
-        ),
-      );
-    }
-
-    if (widget.model is ListBoxModel) {
-      return _listField(
-        context,
-        model: widget.model as ListBoxModel,
-        onValueChanged: widget.onValueChanged,
-      );
-    }
-
-    throw Exception(
-        "Cannot create input box by model of type ${widget.model.runtimeType}");
-  }
-
-  Widget _textField(
-    BuildContext context, {
-    required TextBoxModel model,
-    required TextEditingController controller,
-    void Function(String)? onValueChanged,
-  }) {
-    RegExp? inputRegExp = inputValueTypeToRegExpMap[model.valueType];
-
-    return TextField(
-      readOnly: model.readonly,
-      maxLength: model.maxTextLength,
-      textAlignVertical: TextAlignVertical.center,
-      obscureText: false,
-      autofocus: widget.autofocus,
-      focusNode: _focusNode,
-      controller: controller,
-      inputFormatters: inputRegExp != null
-          ? [FilteringTextInputFormatter.allow(inputRegExp)]
-          : null,
-      keyboardType: inputValueTypeToKeyboardTypeMap[model.valueType],
-      onChanged: onValueChanged,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: widget.borderRadius,
-          borderSide: BorderSide.none,
-        ),
-        label: model.labelText != null
-            ? Container(
-                padding: widget.labelPadding,
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width / 2,
-                ),
-                child: Text(
-                  model.labelText!,
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    foreground: Paint()..color = _labelColor,
-                  ),
-                ),
-              )
-            : null,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        alignLabelWithHint: true,
-        hintText: _hint,
-        hintStyle: TextStyle(
-          foreground: Paint()..color = _hintColor,
-        ),
-        isDense: true,
-        counterText: "",
-        contentPadding: const EdgeInsets.symmetric(vertical: 7),
-        suffixText: model.textLengthCounterVisible
-            ? '${controller.text.length}/${model.maxTextLength}'
-            : null,
-        filled: true,
-        fillColor: widget.colors.textBox.background.regular,
-        constraints: BoxConstraints(
-          maxHeight: widget.fontSize * _textHeightCoefficient +
-              widget.contentPadding.vertical,
-        ),
-      ),
-      style: TextStyle(
-        foreground: Paint()..color = _foregroundColor,
-        fontSize: widget.fontSize,
-        fontWeight: FontWeight.w500,
-        fontFamily: quicksandFontFamily,
-        letterSpacing: widget.letterSpacing,
-        height: _textHeightCoefficient,
-      ),
-      textAlign: TextAlign.start,
-    );
-  }
-
-  Widget _listField(
-    BuildContext context, {
-    required ListBoxModel model,
-    void Function(ListValueModel?)? onValueChanged,
-  }) {
-    DropdownColorScheme dropdownMenu = widget.colors.dropdown;
-
-    return BlocListener<NavigationBloc, NavigationState>(
-      listener: (_, navigationState) {
-        if (_isDropdownOpen) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: DropdownButtonHideUnderline(
-        child: DropdownButtonFormField2<ListValueModel>(
-          isExpanded: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: widget.borderRadius,
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 7),
-            isDense: true,
-            label: model.labelText != null
-                ? Container(
-                    padding: widget.labelPadding,
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 2,
-                    ),
-                    child: Text(
-                      model.labelText!,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        foreground: Paint()..color = _labelColor,
-                      ),
-                    ),
-                  )
-                : null,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            filled: true,
-            fillColor: widget.colors.textBox.background.regular,
-            constraints: BoxConstraints(
-              maxHeight: widget.fontSize * _textHeightCoefficient +
-                  widget.contentPadding.vertical,
-            ),
-          ),
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.w500,
-            fontFamily: quicksandFontFamily,
-            height: _textHeightCoefficient,
-          ),
-          hint: _hint != null
-              ? Text(
-                  _hint!,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _hintColor,
-                  ),
-                )
-              : null,
-          value: model.value,
-          items: model.listValues
-              .map(
-                (value) => DropdownMenuItem(
-                  value: value,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Text(
-                      value.itemName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: dropdownMenu.foreground.regular,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-          onChanged: onValueChanged,
-          /*
-        selectedItemBuilder is used as a workaround in order to align paddings between
-        DropdownButtonFormField2, its label over the border and DropdownMenuItem
-         */
-          selectedItemBuilder: (context) {
-            return model.listValues.map(
-              (value) {
-                return Container(
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    model.value?.itemName ?? _hint ?? '',
-                    style: TextStyle(
-                      fontSize: 16,
-                      overflow: TextOverflow.ellipsis,
-                      fontWeight: FontWeight.w600,
-                      foreground: Paint()..color = _foregroundColor,
-                    ),
-                    maxLines: 1,
-                  ),
-                );
-              },
-            ).toList();
-          },
-          iconStyleData: IconStyleData(
-            icon: Icon(
-              Icons.expand_more_rounded,
-              color: _foregroundColor,
-            ),
-            iconSize: 20,
-          ),
-          dropdownStyleData: DropdownStyleData(
-            scrollbarTheme: ScrollbarThemeData(
-              thickness: WidgetStateProperty.all(4),
-              thumbColor: WidgetStateProperty.all(
-                dropdownMenu.foreground.regular,
-              ),
-              trackColor: WidgetStateProperty.all(Colors.transparent),
-              trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-              trackVisibility: WidgetStateProperty.all(true),
-              radius: const Radius.circular(10),
-            ),
-            maxHeight: 250,
-            elevation: 0,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(17)),
-              color: dropdownMenu.background.regular,
-            ),
-            padding: EdgeInsets.zero,
-          ),
-          menuItemStyleData: const MenuItemStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          dropdownSearchData: model.searchEnabled
-              ? DropdownSearchData(
-                  searchController: _dropdownSearchController,
-                  searchInnerWidgetHeight: 60,
-                  searchInnerWidget: Container(
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
-                    ),
-                    child: _inputFieldWrapper(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
-                      ),
-                      child: _textField(
-                        context,
-                        model: TextBoxModel(
-                          hint: model.searchHint,
-                          hintUnfocused: model.searchHint,
-                          valueType: model.listType.listValuesType,
-                        ),
-                        controller: _dropdownSearchController,
-                      ),
-                    ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value?.value
-                            .toLowerCase()
-                            .contains(searchValue.toLowerCase()) ??
-                        false;
-                  },
-                )
-              : null,
-          onMenuStateChange: (isOpen) {
-            if (!isOpen) {
-              _dropdownSearchController.clear();
-            }
-
-            setState(() {
-              _isDropdownOpen = isOpen;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _suffixCloseIcon() {
-    if (!_focusNode.hasFocus || _textController.text.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return GestureDetector(
-      onTap: () {
-        _textController.clear();
-        widget.onValueCleaned?.call();
-        _wrapWithValidationReset(
-          context: context,
-          func: widget.onValueChanged,
-        )?.call(null);
-      },
-      child: Padding(
-        padding: EdgeInsets.only(right: widget.contentPadding.right),
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.colors.textBox.foreground.regular,
-            shape: BoxShape.circle,
-          ),
-          padding: const EdgeInsets.all(2),
-          child: Icon(
-            Icons.close_rounded,
-            color: widget.colors.textBox.background.regular,
-            size: 12,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _verticalDivider() {
-    return VerticalDivider(
-      color: _dividerColor,
-      indent: 10,
-      endIndent: 10,
-      width: 2,
-      thickness: 2,
     );
   }
 
@@ -732,4 +368,478 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
     return func;
   }
+}
+
+// Text field -----------------------------------------------------------------
+
+class _TextField extends StatefulWidget {
+  const _TextField({
+    required this.model,
+    this.controller,
+    required this.autofocus,
+    required this.focusNode,
+    this.validators = const [],
+    this.changeValueOnFocusChanged = true,
+    this.onValueChanged,
+    this.onValueFocused,
+    this.onValueUnfocused,
+    this.onValueCleaned,
+    required this.foregroundColor,
+    required this.hintColor,
+    required this.labelColor,
+    required this.fontSize,
+    required this.margin,
+    required this.borderRadius,
+  });
+
+  final TextBoxModel model;
+  final TextEditingController? controller;
+  final bool autofocus;
+  final FocusNode focusNode;
+  final List<InputValidator> validators;
+  final bool changeValueOnFocusChanged;
+  final void Function(String)? onValueChanged;
+  final void Function(String)? onValueFocused;
+  final void Function(String)? onValueUnfocused;
+  final void Function()? onValueCleaned;
+  final Color foregroundColor;
+  final Color hintColor;
+  final Color labelColor;
+  final double fontSize;
+  final EdgeInsets margin;
+  final BorderRadius borderRadius;
+
+  @override
+  State<StatefulWidget> createState() => _TextFieldState();
+}
+
+class _TextFieldState extends State<_TextField>
+    with FocusNodeMixin, TextControllerMixin {
+  late TextEditingController _controller;
+  late void Function() _focusListener;
+
+  String? _hint;
+
+  @override
+  void initState() {
+    _hint = widget.model.hintUnfocused;
+
+    _controller = initOrGetController(
+      initial: widget.controller,
+      initialValue:
+          widget.autofocus ? widget.model.value : widget.model.valueUnfocused,
+    );
+
+    _focusListener = addFocusListener(
+      focusNode: widget.focusNode,
+      onFocusSelected: () {
+        widget.onValueFocused?.call(_controller.text);
+
+        if (widget.changeValueOnFocusChanged) {
+          updateTextControllerValue(
+            _controller,
+            value: widget.model.value,
+          );
+        }
+
+        setState(() {
+          _hint = widget.model.hint;
+        });
+      },
+      onFocusLeft: () {
+        widget.onValueUnfocused?.call(_controller.text);
+
+        if (widget.changeValueOnFocusChanged) {
+          updateTextControllerValue(
+            _controller,
+            value: widget.model.valueUnfocused,
+          );
+        }
+
+        setState(() {
+          _hint = widget.model.hintUnfocused;
+        });
+      },
+    );
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      disposeTextController(
+        controller: _controller,
+      );
+    }
+
+    widget.focusNode.removeListener(_focusListener);
+
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(_TextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _updateTextBox(
+      oldModel: oldWidget.model,
+      newModel: widget.model,
+    );
+  }
+
+  void _updateTextBox({
+    required TextBoxModel oldModel,
+    required TextBoxModel newModel,
+  }) {
+    if (widget.focusNode.hasFocus && newModel.value != oldModel.value) {
+      updateTextControllerValue(
+        _controller,
+        value: newModel.value,
+      );
+    } else if (!widget.focusNode.hasFocus &&
+        newModel.valueUnfocused != oldModel.valueUnfocused) {
+      updateTextControllerValue(
+        _controller,
+        value: newModel.valueUnfocused,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.model.valueType];
+
+    return TextField(
+      readOnly: widget.model.readonly,
+      maxLength: widget.model.maxTextLength,
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: false,
+      autofocus: widget.autofocus,
+      focusNode: widget.focusNode,
+      controller: _controller,
+      inputFormatters: inputRegExp != null
+          ? [FilteringTextInputFormatter.allow(inputRegExp)]
+          : null,
+      keyboardType: inputValueTypeToKeyboardTypeMap[widget.model.valueType],
+      onChanged: widget.onValueChanged,
+      decoration: _inputFieldDecoration(
+        context,
+        margin: widget.margin,
+        fontSize: widget.fontSize,
+        borderRadius: widget.borderRadius,
+        labelText: widget.model.labelText,
+        hintText: _hint,
+        hintColor: widget.hintColor,
+        labelColor: widget.labelColor,
+      ).copyWith(
+        counterText: "",
+        suffixText: widget.model.textLengthCounterVisible
+            ? '${_controller.text.length}/${widget.model.maxTextLength}'
+            : null,
+      ),
+      style: _inputFieldTextStyle(
+        fontSize: widget.fontSize,
+        foregroundColor: widget.foregroundColor,
+      ),
+      textAlign: TextAlign.start,
+    );
+  }
+}
+
+// List field -----------------------------------------------------------------
+
+class _ListField extends StatefulWidget {
+  const _ListField({
+    required this.model,
+    this.controller,
+    this.onValueChanged,
+    required this.foregroundColor,
+    required this.hintColor,
+    required this.labelColor,
+    required this.fontSize,
+    required this.margin,
+    required this.borderRadius,
+    required this.dropdownColors,
+  });
+
+  final ListBoxModel model;
+  final TextEditingController? controller;
+  final void Function(String)? onValueChanged;
+  final Color foregroundColor;
+  final Color hintColor;
+  final Color labelColor;
+  final double fontSize;
+  final EdgeInsets margin;
+  final BorderRadius borderRadius;
+  final DropdownColorScheme dropdownColors;
+
+  @override
+  State<StatefulWidget> createState() => _ListFieldState();
+}
+
+class _ListFieldState extends State<_ListField> with FocusNodeMixin {
+  late bool _isDropdownOpen;
+
+  TextEditingController? _dropdownSearchController;
+  FocusNode? _dropdownSearchFocusNode;
+  String? _hint;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _hint = widget.model.hint;
+    _isDropdownOpen = false;
+
+    _dropdownSearchFocusNode = initOrGetFocusNode();
+
+    if (widget.model.searchEnabled) {
+      _dropdownSearchController = TextEditingController();
+      _dropdownSearchFocusNode = initOrGetFocusNode();
+    }
+  }
+
+  @override
+  void dispose() {
+    disposeFocusNode(focusNode: _dropdownSearchFocusNode);
+    _dropdownSearchController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<NavigationBloc, NavigationState>(
+      listener: (_, navigationState) {
+        if (_isDropdownOpen) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: DropdownButtonHideUnderline(
+        child: DropdownButtonFormField2<ListValueModel>(
+          isExpanded: true,
+          decoration: _inputFieldDecoration(
+            context,
+            margin: widget.margin,
+            fontSize: widget.fontSize,
+            borderRadius: widget.borderRadius,
+            labelText: widget.model.labelText,
+            hintText: _hint,
+            hintColor: widget.hintColor,
+            labelColor: widget.labelColor,
+          ),
+          style: _inputFieldTextStyle(
+            fontSize: widget.fontSize,
+            foregroundColor: widget.foregroundColor,
+          ),
+          value: widget.model.value,
+          items: widget.model.listValues
+              .map(
+                (value) => DropdownMenuItem(
+                  value: value,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 17),
+                    child: Text(
+                      value.itemName,
+                      style: TextStyle(
+                        fontSize: widget.fontSize,
+                        color: widget.dropdownColors.foreground.regular,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              widget.onValueChanged?.call(value.value);
+            }
+          },
+          /*
+        selectedItemBuilder is used as a workaround in order to align paddings between
+        DropdownButtonFormField2, its label over the border and DropdownMenuItem
+         */
+          selectedItemBuilder: (context) {
+            return widget.model.listValues.map(
+              (value) {
+                return Container(
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    widget.model.value?.itemName ?? _hint ?? '',
+                    style: _inputFieldTextStyle(
+                      fontSize: widget.fontSize,
+                      foregroundColor: widget.foregroundColor,
+                    ),
+                    maxLines: 1,
+                  ),
+                );
+              },
+            ).toList();
+          },
+          iconStyleData: IconStyleData(
+            icon: Icon(
+              Icons.expand_more_rounded,
+              color: widget.foregroundColor,
+            ),
+            iconSize: 20,
+          ),
+          dropdownStyleData: DropdownStyleData(
+            scrollbarTheme: ScrollbarThemeData(
+              thickness: WidgetStateProperty.all(4),
+              thumbColor: WidgetStateProperty.all(
+                widget.dropdownColors.foreground.regular,
+              ),
+              trackColor: WidgetStateProperty.all(Colors.transparent),
+              trackBorderColor: WidgetStateProperty.all(Colors.transparent),
+              trackVisibility: WidgetStateProperty.all(true),
+              radius: const Radius.circular(10),
+            ),
+            maxHeight: 250,
+            elevation: 0,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(17)),
+              color: widget.dropdownColors.background.regular,
+            ),
+            padding: EdgeInsets.zero,
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.zero,
+          ),
+          buttonStyleData: const ButtonStyleData(
+            padding: EdgeInsets.zero,
+          ),
+          dropdownSearchData: _dropdownSearchController != null &&
+                  _dropdownSearchFocusNode != null
+              ? DropdownSearchData(
+                  searchController: _dropdownSearchController,
+                  searchInnerWidgetHeight: 80,
+                  searchInnerWidget: Container(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 4,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: ConvertouchInputBox(
+                      model: TextBoxModel(
+                        hint: widget.model.searchHint,
+                        hintUnfocused: widget.model.searchHint,
+                        valueType: widget.model.listType.listValuesType,
+                      ),
+                      colors: InputBoxColorScheme(
+                        textBox: widget.dropdownColors.searchBox,
+                      ),
+                      inputFieldMargin: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 5,
+                      ),
+                      prefixWidgets: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 7),
+                          child: Icon(
+                            Icons.search,
+                            color: widget.foregroundColor,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                      prefixRightmostDividerVisible: false,
+                      controller: _dropdownSearchController,
+                      fontSize: 15,
+                    ),
+                  ),
+                  searchMatchFn: (item, searchValue) {
+                    return item.value?.value
+                            .toLowerCase()
+                            .contains(searchValue.toLowerCase()) ??
+                        false;
+                  },
+                )
+              : null,
+          onMenuStateChange: (isOpen) {
+            if (!isOpen) {
+              _dropdownSearchController?.clear();
+            }
+
+            setState(() {
+              _isDropdownOpen = isOpen;
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// Shared methods -------------------------------------------------------------
+
+InputDecoration _inputFieldDecoration(
+  BuildContext context, {
+  required EdgeInsets margin,
+  required double fontSize,
+  required BorderRadius borderRadius,
+  required String? labelText,
+  required String? hintText,
+  required Color? hintColor,
+  required Color? labelColor,
+  FloatingLabelBehavior? floatingLabelBehavior,
+}) {
+  return InputDecoration(
+    border: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide.none,
+    ),
+    label: labelText != null && labelColor != null
+        ? Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width / 2,
+            ),
+            child: Text(
+              labelText,
+              maxLines: 1,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 15,
+                overflow: TextOverflow.fade,
+                fontWeight: FontWeight.w600,
+                foreground: Paint()..color = labelColor,
+              ),
+            ),
+          )
+        : null,
+    floatingLabelBehavior: floatingLabelBehavior,
+    alignLabelWithHint: true,
+    isDense: true,
+    contentPadding: labelText != null
+        ? const EdgeInsets.symmetric(
+            vertical: InputBoxConstants.labeledInputFieldVerticalPadding,
+          )
+        : EdgeInsets.zero,
+    filled: true,
+    fillColor: Colors.transparent,
+    constraints: BoxConstraints(
+      maxHeight:
+          fontSize * InputBoxConstants.textHeightCoefficient + margin.vertical,
+    ),
+    hintText: hintText,
+    hintStyle: hintColor != null
+        ? TextStyle(
+            foreground: Paint()..color = hintColor,
+          )
+        : null,
+  );
+}
+
+TextStyle _inputFieldTextStyle({
+  required double fontSize,
+  required Color foregroundColor,
+}) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w500,
+    fontFamily: quicksandFontFamily,
+    overflow: TextOverflow.fade,
+    height: InputBoxConstants.textHeightCoefficient,
+    foreground: Paint()..color = foregroundColor,
+  );
 }

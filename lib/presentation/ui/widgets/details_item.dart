@@ -46,12 +46,12 @@ class ConvertouchDetailsItem extends StatelessWidget {
       child: editable
           ? ConvertouchInputBox(
               model: TextBoxModel(
-                hintUnfocused: value ?? '',
-                labelText: headerTitle ?? '',
+                hintUnfocused: value,
+                labelText: headerTitle,
                 maxTextLength: editableValueMaxLength,
                 textLengthCounterVisible: editableValueLengthVisible,
               ),
-              textController: valueChangeController,
+              controller: valueChangeController,
               onValueChanged: (value) {
                 onValueChanged?.call(value);
               },

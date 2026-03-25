@@ -60,7 +60,7 @@ class _ConvertouchConversionItemsViewState
         return Material(
           key: ValueKey(index),
           color: Colors.transparent,
-          child: child, // place your ui
+          child: child,
         );
       },
       padding: EdgeInsets.only(

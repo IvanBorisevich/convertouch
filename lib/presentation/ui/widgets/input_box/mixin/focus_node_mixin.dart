@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 mixin FocusNodeMixin {
-  FocusNode initOrGetFocusNode(FocusNode? focusNode) {
-    return focusNode ?? FocusNode();
+  FocusNode initOrGetFocusNode({FocusNode? initial}) {
+    return initial ?? FocusNode();
   }
 
   void Function() addFocusListener({
@@ -23,12 +23,12 @@ mixin FocusNodeMixin {
   }
 
   void disposeFocusNode({
-    required FocusNode focusNode,
+    required FocusNode? focusNode,
     void Function()? listener,
   }) {
     if (listener != null) {
-      focusNode.removeListener(listener);
+      focusNode?.removeListener(listener);
     }
-    focusNode.dispose();
+    focusNode?.dispose();
   }
 }

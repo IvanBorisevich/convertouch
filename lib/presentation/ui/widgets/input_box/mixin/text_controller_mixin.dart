@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 mixin TextControllerMixin {
-  TextEditingController initOrGetController(
-    TextEditingController? controller, {
+  TextEditingController initOrGetController({
+    TextEditingController? initial,
     String? initialValue,
   }) {
-    var resultController = controller ?? TextEditingController();
+    var resultController = initial ?? TextEditingController();
 
     if (initialValue != null && initialValue.isNotEmpty) {
       updateTextControllerValue(resultController, value: initialValue);

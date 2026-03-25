@@ -104,6 +104,7 @@ const _unitGroupsMenu = MenuViewColorScheme(
     ),
     divider: MultiColor(
       regular: Color(0xffa6baee),
+      selected: Color(0xffa6baee),
     ),
     checkBox: WidgetColorScheme(
       border: MultiColor(
@@ -264,6 +265,7 @@ const _conversionItem = ConversionItemColorScheme(
     dropdown: DropdownColorScheme(
       background: MultiColor.only(Color(0xFF3F4857)),
       foreground: MultiColor.only(Color(0xFFBFD3E3)),
+      searchBox: _conversionItemTextBox,
     ),
     divider: MultiColor(
       regular: Color(0xFF506578),

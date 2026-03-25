@@ -7,7 +7,7 @@ class ConversionItemModel<M extends InputBoxModel> implements ElementModel {
   final double? min;
   final double? max;
   final UnitModel? unit;
-  final int index;
+  final int? index;
   final bool draggable;
   final bool removable;
   final bool isSource;
@@ -18,7 +18,7 @@ class ConversionItemModel<M extends InputBoxModel> implements ElementModel {
     this.min,
     this.max,
     this.unit,
-    this.index = 0,
+    this.index,
     this.draggable = true,
     this.removable = true,
     this.isSource = false,

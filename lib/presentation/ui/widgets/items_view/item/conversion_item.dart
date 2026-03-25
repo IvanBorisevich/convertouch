@@ -41,7 +41,6 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
   Widget build(BuildContext context) {
     return ConvertouchInputBox(
       model: widget.model.inputBoxModel,
-      borderWidth: 0,
       fontSize: 18,
       colors: widget.colors.inputBox,
       validators: [
@@ -64,27 +63,22 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
         });
       },
       prefixWidgets: [
-        widget.model.draggable
+        widget.model.draggable && widget.model.index != null
             ? ReorderableDragStartListener(
-                index: widget.model.index,
+                index: widget.model.index!,
                 child: Container(
-                  width: 32,
+                  width: 35,
+                  color: Colors.transparent,
                   padding: const EdgeInsets.only(left: 3),
                   alignment: Alignment.center,
                   child: widget.model.isSource
-                      ? Container(
-                          alignment: Alignment.center,
-                          child: TextButton(
-                            onPressed: null,
-                            child: Text(
-                              '𝑥',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                height: -0.3,
-                                color: widget.colors.prefixWidget.selected,
-                              ),
-                            ),
+                      ? Text(
+                          '𝑥',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            height: -0.3,
+                            color: widget.colors.prefixWidget.selected,
                           ),
                         )
                       : Icon(
@@ -112,7 +106,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                     borderRadius: InputBoxConstants.defaultBorderRadius,
                   ),
                   child: Text(
-                    widget.model.unit?.code ?? "",
+                    widget.model.unit!.code,
                     style: TextStyle(
                       color: _isFocused
                           ? widget.colors.unitButton.focused
@@ -126,16 +120,15 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
               )
             : null,
         widget.model.removable
-            ? Container(
-                padding: const EdgeInsets.only(right: 1),
-                width: 35,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    widget.onItemRemoved?.call();
-                  },
-                  icon: Icon(
+            ? GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                  widget.onItemRemoved?.call();
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(right: 1),
+                  width: 35,
+                  child: Icon(
                     Icons.remove,
                     color: widget.colors.removalIcon.regular,
                     size: 20,

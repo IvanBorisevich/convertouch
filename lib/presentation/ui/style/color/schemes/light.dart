@@ -101,7 +101,6 @@ const _unitGroupsMenu = MenuViewColorScheme(
     matchForeground: MultiColor.only(Color(0xFF1E1E3D)),
     foreground: MultiColor(
       regular: Color(0xFF303073),
-      selected: Color(0xFF303073),
     ),
     divider: MultiColor(
       regular: Color(0xFF353D69),
@@ -266,13 +265,13 @@ const _conversionItem = ConversionItemColorScheme(
     dropdown: DropdownColorScheme(
       background: MultiColor.only(Color(0xffabc4fd)),
       foreground: MultiColor.only(Color(0xFF1D578C)),
+      searchBox: _conversionItemTextBox,
     ),
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),
       disabled: Color(0xFF90A8C0),
     ),
   ),
-  background: MultiColor.only(Color(0xffe7f2ff)),
   unitButton: MultiColor.only(Color(0xFF2C6396)),
   prefixWidget: MultiColor(
     regular: Color(0xFF7799B9),
