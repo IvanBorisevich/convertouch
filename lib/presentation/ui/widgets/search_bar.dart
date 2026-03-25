@@ -72,11 +72,11 @@ class ConvertouchSearchBar extends StatelessWidget {
             fontSize: 15,
             borderWidth: 0,
             letterSpacing: 0,
-            // inputFieldPadding: const EdgeInsets.only(
-            //   top: 0,
-            //   bottom: 0,
-            //   right: 7,
-            // ),
+            inputFieldMargin: const EdgeInsets.only(
+              top: 0,
+              bottom: 0,
+              right: 7,
+            ),
             prefixWidgets: [
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5),
