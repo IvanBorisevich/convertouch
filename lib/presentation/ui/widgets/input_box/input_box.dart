@@ -360,13 +360,15 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     required BuildContext context,
     required void Function(dynamic)? func,
   }) {
-    if (_validationKey != null) {
-      BlocProvider.of<InputValidationBloc>(context).add(
-        ResetValidation(key: _validationKey!),
-      );
-    }
+    return (value) {
+      if (_validationKey != null) {
+        BlocProvider.of<InputValidationBloc>(context).add(
+          ResetValidation(key: _validationKey!),
+        );
+      }
 
-    return func;
+      return func?.call(value);
+    };
   }
 }
 
