@@ -50,9 +50,9 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final bool autofocus;
   final TooltipDirection tooltipDirection;
   final TextEditingController? controller;
-  final void Function(dynamic)? onValueChanged;
-  final void Function(dynamic)? onValueFocused;
-  final void Function(dynamic)? onValueUnfocused;
+  final void Function(String)? onValueChanged;
+  final void Function(String)? onValueFocused;
+  final void Function(String)? onValueUnfocused;
   final List<InputValidator> validators;
   final BorderRadius borderRadius;
   final double borderWidth;
@@ -337,9 +337,9 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  void Function(dynamic)? _wrapWithValidation({
+  void Function(String)? _wrapWithValidation({
     required BuildContext context,
-    required void Function(dynamic)? func,
+    required void Function(String)? func,
     bool validateEmptyValue = false,
   }) {
     if (_validationKey == null) {
@@ -347,7 +347,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     }
 
     return (value) {
-      if (!validateEmptyValue && (value == null || value.isEmpty)) {
+      if (!validateEmptyValue && value.isEmpty) {
         return _wrapWithValidationReset(
           context: context,
           func: func,
@@ -367,9 +367,9 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     };
   }
 
-  void Function(dynamic)? _wrapWithValidationReset({
+  void Function(String)? _wrapWithValidationReset({
     required BuildContext context,
-    required void Function(dynamic)? func,
+    required void Function(String)? func,
   }) {
     return (value) {
       if (_validationKey != null) {

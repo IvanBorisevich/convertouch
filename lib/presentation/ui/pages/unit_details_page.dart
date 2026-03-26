@@ -138,13 +138,11 @@ class _ConvertouchUnitDetailsPageState
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
                         onValueChanged: (value) {
-                          if (value != null) {
-                            unitDetailsBloc.add(
-                              UpdateUnitNameInUnitDetails(
-                                newValue: value,
-                              ),
-                            );
-                          }
+                          unitDetailsBloc.add(
+                            UpdateUnitNameInUnitDetails(
+                              newValue: value,
+                            ),
+                          );
                         },
                       ),
                       ConvertouchDetailsItem(
@@ -157,13 +155,11 @@ class _ConvertouchUnitDetailsPageState
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
                         onValueChanged: (value) {
-                          if (value != null) {
-                            unitDetailsBloc.add(
-                              UpdateUnitCodeInUnitDetails(
-                                newValue: value,
-                              ),
-                            );
-                          }
+                          unitDetailsBloc.add(
+                            UpdateUnitCodeInUnitDetails(
+                              newValue: value,
+                            ),
+                          );
                         },
                       ),
                       ConvertouchDetailsItem(
@@ -221,7 +217,7 @@ class _ConvertouchUnitDetailsPageState
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateUnitValueInUnitDetails(
-                                      newValue: value ?? "",
+                                      newValue: value,
                                     ),
                                   );
                                 },
@@ -250,7 +246,7 @@ class _ConvertouchUnitDetailsPageState
                                 onValueChanged: (value) {
                                   unitDetailsBloc.add(
                                     UpdateArgumentUnitValueInUnitDetails(
-                                      newValue: value ?? "",
+                                      newValue: value,
                                     ),
                                   );
                                 },

@@ -13,8 +13,8 @@ class ConvertouchConversionItem<M extends InputBoxModel>
     extends StatefulWidget {
   final ConversionItemModel<M> model;
   final void Function()? onUnitItemTap;
-  final void Function(dynamic)? onValueChanged;
-  final void Function(dynamic)? onValueFocused;
+  final void Function(String)? onValueChanged;
+  final void Function(String)? onValueFocused;
   final void Function()? onItemRemoved;
   final ConversionItemColorScheme colors;
 
