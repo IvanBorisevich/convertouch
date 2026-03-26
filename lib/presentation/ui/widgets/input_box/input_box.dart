@@ -40,7 +40,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.suffixLeftmostDividerVisible = true,
     this.inputFieldMargin = InputBoxConstants.defaultInputFieldMargin,
     this.fontSize = InputBoxConstants.defaultFontSize,
-    this.letterSpacing,
     this.changeValueOnFocusChanged = false,
     this.floatingLabelBehavior,
     super.key,
@@ -64,7 +63,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final bool suffixLeftmostDividerVisible;
   final EdgeInsets inputFieldMargin;
   final double fontSize;
-  final double? letterSpacing;
   final bool changeValueOnFocusChanged;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
@@ -265,6 +263,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
         borderRadius: widget.borderRadius,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
 
@@ -280,6 +279,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         margin: widget.inputFieldMargin,
         borderRadius: widget.borderRadius,
         dropdownColors: widget.colors.dropdown,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
 
@@ -402,6 +402,7 @@ class _TextField extends StatefulWidget {
     required this.fontSize,
     required this.margin,
     required this.borderRadius,
+    this.floatingLabelBehavior,
   });
 
   final TextBoxModel model;
@@ -419,6 +420,7 @@ class _TextField extends StatefulWidget {
   final double fontSize;
   final EdgeInsets margin;
   final BorderRadius borderRadius;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _TextFieldState();
@@ -535,6 +537,7 @@ class _TextFieldState extends State<_TextField>
         hintText: _hint,
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
       ).copyWith(
         counterText: "",
         suffixText: widget.model.textLengthCounterVisible
@@ -564,6 +567,7 @@ class _ListField extends StatefulWidget {
     required this.margin,
     required this.borderRadius,
     required this.dropdownColors,
+    this.floatingLabelBehavior,
   });
 
   final ListBoxModel model;
@@ -576,6 +580,7 @@ class _ListField extends StatefulWidget {
   final EdgeInsets margin;
   final BorderRadius borderRadius;
   final DropdownColorScheme dropdownColors;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _ListFieldState();
@@ -630,6 +635,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             hintText: _hint,
             hintColor: widget.hintColor,
             labelColor: widget.labelColor,
+            floatingLabelBehavior: widget.floatingLabelBehavior,
           ),
           style: _inputFieldTextStyle(
             fontSize: widget.fontSize,
