@@ -50,6 +50,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       tooltipDirection:
           widget.model.isLast ? TooltipDirection.up : TooltipDirection.down,
       changeValueOnFocusChanged: true,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
       onValueChanged: widget.onValueChanged,
       onValueFocused: (value) {
         setState(() {

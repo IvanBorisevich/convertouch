@@ -6,12 +6,17 @@ mixin TextControllerMixin {
     String? initialValue,
   }) {
     var resultController = initial ?? TextEditingController();
-
-    if (initialValue != null && initialValue.isNotEmpty) {
-      updateTextControllerValue(resultController, value: initialValue);
-    }
-
+    initControllerValue(resultController, initialValue);
     return resultController;
+  }
+
+  void initControllerValue(
+    TextEditingController controller,
+    String? initialValue,
+  ) {
+    if (initialValue != null && initialValue.isNotEmpty) {
+      updateTextControllerValue(controller, value: initialValue);
+    }
   }
 
   void updateTextControllerValue(

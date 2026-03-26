@@ -16,16 +16,14 @@ class ConvertouchSearchBar extends StatelessWidget {
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String placeholder;
-  final void Function(String?)? onSearchStringChanged;
-  final void Function()? onSearchReset;
+  final void Function(String?)? onValueChanged;
   final SearchBoxColorScheme? customColor;
 
   const ConvertouchSearchBar({
     required this.pageName,
     this.placeholder = "Search...",
     required this.viewModeSettingKey,
-    this.onSearchStringChanged,
-    this.onSearchReset,
+    this.onValueChanged,
     this.customColor,
     super.key,
   });
@@ -65,9 +63,8 @@ class ConvertouchSearchBar extends StatelessWidget {
               hintUnfocused: placeholder,
             ),
             onValueChanged: (value) {
-              onSearchStringChanged?.call(value);
+              onValueChanged?.call(value);
             },
-            onValueCleaned: onSearchReset,
             colors: searchBarColorScheme.inputBox,
             fontSize: 15,
             borderWidth: 0,

@@ -30,7 +30,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.onValueCleaned,
     this.validators = const [],
     this.borderRadius = InputBoxConstants.defaultBorderRadius,
     this.borderWidth = 1,
@@ -55,7 +54,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final void Function(dynamic)? onValueChanged;
   final void Function(dynamic)? onValueFocused;
   final void Function(dynamic)? onValueUnfocused;
-  final void Function()? onValueCleaned;
   final List<InputValidator> validators;
   final BorderRadius borderRadius;
   final double borderWidth;
@@ -75,10 +73,12 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
 }
 
 class _ConvertouchInputBoxState<M extends InputBoxModel>
-    extends State<ConvertouchInputBox<M>> with FocusNodeMixin {
+    extends State<ConvertouchInputBox<M>>
+    with FocusNodeMixin, TextControllerMixin {
   Key? _validationKey;
   late final FocusNode _focusNode;
   void Function()? _focusListener;
+  late final TextEditingController _controller;
 
   late Color _backgroundColor;
   late Color _foregroundColor;
@@ -97,6 +97,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       _validationKey = UniqueKey();
     }
 
+    _controller = initOrGetController(initial: widget.controller);
+
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _focusListener = addFocusListener(
       focusNode: _focusNode,
@@ -106,13 +108,21 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         });
       },
       onFocusLeft: () {
-        _setInitialColors();
+        setState(() {
+          _setInitialColors();
+        });
       },
     );
   }
 
   @override
   void dispose() {
+    if (widget.controller == null) {
+      disposeTextController(
+        controller: _controller,
+      );
+    }
+
     if (widget.focusNode == null) {
       disposeFocusNode(
         focusNode: _focusNode,
@@ -181,12 +191,23 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                   : const SizedBox.shrink(),
             ),
             Expanded(
-              child: _inputFieldWrapper(
-                contentPadding: widget.inputFieldMargin,
-                child: _inputField(widget.model),
+              child: _validationWrapper(
+                child: GestureDetector(
+                  onTap: () {
+                    _focusNode.requestFocus();
+                  },
+                  child: Container(
+                    padding: widget.inputFieldMargin,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: widget.borderRadius,
+                    ),
+                    child: _inputField(widget.model),
+                  ),
+                ),
               ),
             ),
-            _suffixCloseIcon(),
+            _suffixCloseIcon(context),
             ...widget.suffixWidgets.mapIndexed(
               (index, suffixWidget) => suffixWidget != null
                   ? Row(
@@ -217,37 +238,19 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  Widget _inputFieldWrapper({
-    required Widget child,
-    EdgeInsetsGeometry? contentPadding,
-  }) {
-    return _validationWrapper(
-      child: GestureDetector(
-        onTap: () {
-          _focusNode.requestFocus();
-        },
-        child: Container(
-          padding: contentPadding,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: widget.borderRadius,
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-
   Widget _inputField(M model) {
     if (model is TextBoxModel) {
       return _TextField(
         model: model,
         autofocus: widget.autofocus,
-        controller: widget.controller,
+        controller: _controller,
         focusNode: _focusNode,
         validators: widget.validators,
         changeValueOnFocusChanged: widget.changeValueOnFocusChanged,
-        onValueChanged: widget.onValueChanged,
+        onValueChanged: _wrapWithValidation(
+          context: context,
+          func: widget.onValueChanged,
+        ),
         onValueFocused: _wrapWithValidation(
           context: context,
           func: widget.onValueFocused,
@@ -256,7 +259,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
           context: context,
           func: widget.onValueUnfocused,
         ),
-        onValueCleaned: widget.onValueCleaned,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
         labelColor: _labelColor,
@@ -286,15 +288,21 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  Widget _suffixCloseIcon() {
-    if (!_focusNode.hasFocus ||
-        widget.controller == null ||
-        widget.controller!.text.isEmpty) {
+  Widget _suffixCloseIcon(BuildContext context) {
+    if (widget.model is ListBoxModel ||
+        !_focusNode.hasFocus ||
+        _controller.text.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return GestureDetector(
-      onTap: widget.onValueCleaned,
+      onTap: () {
+        _controller.clear();
+        _wrapWithValidationReset(
+          context: context,
+          func: widget.onValueChanged,
+        )?.call("");
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 7),
         child: Container(
@@ -340,7 +348,10 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
     return (value) {
       if (!validateEmptyValue && (value == null || value.isEmpty)) {
-        return func?.call(value);
+        return _wrapWithValidationReset(
+          context: context,
+          func: func,
+        )?.call(value);
       }
 
       BlocProvider.of<InputValidationBloc>(context).add(
@@ -377,7 +388,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 class _TextField extends StatefulWidget {
   const _TextField({
     required this.model,
-    this.controller,
+    required this.controller,
     required this.autofocus,
     required this.focusNode,
     this.validators = const [],
@@ -385,7 +396,6 @@ class _TextField extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.onValueCleaned,
     required this.foregroundColor,
     required this.hintColor,
     required this.labelColor,
@@ -395,7 +405,7 @@ class _TextField extends StatefulWidget {
   });
 
   final TextBoxModel model;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final bool autofocus;
   final FocusNode focusNode;
   final List<InputValidator> validators;
@@ -403,7 +413,6 @@ class _TextField extends StatefulWidget {
   final void Function(String)? onValueChanged;
   final void Function(String)? onValueFocused;
   final void Function(String)? onValueUnfocused;
-  final void Function()? onValueCleaned;
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
@@ -417,7 +426,6 @@ class _TextField extends StatefulWidget {
 
 class _TextFieldState extends State<_TextField>
     with FocusNodeMixin, TextControllerMixin {
-  late TextEditingController _controller;
   late void Function() _focusListener;
 
   String? _hint;
@@ -426,20 +434,19 @@ class _TextFieldState extends State<_TextField>
   void initState() {
     _hint = widget.model.hintUnfocused;
 
-    _controller = initOrGetController(
-      initial: widget.controller,
-      initialValue:
-          widget.autofocus ? widget.model.value : widget.model.valueUnfocused,
+    initControllerValue(
+      widget.controller,
+      widget.autofocus ? widget.model.value : widget.model.valueUnfocused,
     );
 
     _focusListener = addFocusListener(
       focusNode: widget.focusNode,
       onFocusSelected: () {
-        widget.onValueFocused?.call(_controller.text);
+        widget.onValueFocused?.call(widget.controller.text);
 
         if (widget.changeValueOnFocusChanged) {
           updateTextControllerValue(
-            _controller,
+            widget.controller,
             value: widget.model.value,
           );
         }
@@ -449,11 +456,11 @@ class _TextFieldState extends State<_TextField>
         });
       },
       onFocusLeft: () {
-        widget.onValueUnfocused?.call(_controller.text);
+        widget.onValueUnfocused?.call(widget.controller.text);
 
         if (widget.changeValueOnFocusChanged) {
           updateTextControllerValue(
-            _controller,
+            widget.controller,
             value: widget.model.valueUnfocused,
           );
         }
@@ -469,12 +476,6 @@ class _TextFieldState extends State<_TextField>
 
   @override
   void dispose() {
-    if (widget.controller == null) {
-      disposeTextController(
-        controller: _controller,
-      );
-    }
-
     widget.focusNode.removeListener(_focusListener);
 
     super.dispose();
@@ -496,13 +497,13 @@ class _TextFieldState extends State<_TextField>
   }) {
     if (widget.focusNode.hasFocus && newModel.value != oldModel.value) {
       updateTextControllerValue(
-        _controller,
+        widget.controller,
         value: newModel.value,
       );
     } else if (!widget.focusNode.hasFocus &&
         newModel.valueUnfocused != oldModel.valueUnfocused) {
       updateTextControllerValue(
-        _controller,
+        widget.controller,
         value: newModel.valueUnfocused,
       );
     }
@@ -519,7 +520,7 @@ class _TextFieldState extends State<_TextField>
       obscureText: false,
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      controller: _controller,
+      controller: widget.controller,
       inputFormatters: inputRegExp != null
           ? [FilteringTextInputFormatter.allow(inputRegExp)]
           : null,
@@ -537,7 +538,7 @@ class _TextFieldState extends State<_TextField>
       ).copyWith(
         counterText: "",
         suffixText: widget.model.textLengthCounterVisible
-            ? '${_controller.text.length}/${widget.model.maxTextLength}'
+            ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
             : null,
       ),
       style: _inputFieldTextStyle(
