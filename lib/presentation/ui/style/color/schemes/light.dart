@@ -259,13 +259,25 @@ const _conversionItemTextBox = TextBoxColorScheme(
   tooltip: _notification,
 );
 
+const _dropdownSearchBox = TextBoxColorScheme(
+  background: MultiColor.only(Color(0xffe8efff)),
+  foreground: MultiColor(
+    regular: Color(0xBE143656),
+    disabled: Color(0xFF90A8C0),
+  ),
+  hint: MultiColor(
+    regular: Color(0xFF799BBB),
+    disabled: Color(0xBE73ACE5),
+  ),
+);
+
 const _conversionItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _conversionItemTextBox,
     dropdown: DropdownColorScheme(
       background: MultiColor.only(Color(0xffabc4fd)),
       foreground: MultiColor.only(Color(0xFF1D578C)),
-      searchBox: _conversionItemTextBox,
+      searchBox: _dropdownSearchBox,
     ),
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),

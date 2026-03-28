@@ -10,6 +10,18 @@ mixin TextControllerMixin {
     return resultController;
   }
 
+  void Function() addTextListener({
+    required TextEditingController controller,
+    void Function()? onValueChanged,
+  }) {
+    textListener() {
+      onValueChanged?.call();
+    }
+
+    controller.addListener(textListener);
+    return textListener;
+  }
+
   void initControllerValue(
     TextEditingController controller,
     String? initialValue,

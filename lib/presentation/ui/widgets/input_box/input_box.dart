@@ -77,6 +77,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   late final FocusNode _focusNode;
   void Function()? _focusListener;
   late final TextEditingController _controller;
+  late final void Function() _controllerListener;
+  late final ValueNotifier<bool> _closeIconNotifier;
 
   late Color _backgroundColor;
   late Color _foregroundColor;
@@ -95,20 +97,43 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       _validationKey = UniqueKey();
     }
 
-    _controller = initOrGetController(initial: widget.controller);
-
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
+    _controller = initOrGetController(initial: widget.controller);
+    _closeIconNotifier = ValueNotifier(false);
+
     _focusListener = addFocusListener(
       focusNode: _focusNode,
       onFocusSelected: () {
+        _closeIconNotifier.value = widget.model is! ListBoxModel &&
+            _controller.text.isNotEmpty;
+
+        if (!mounted) {
+          return;
+        }
+
         setState(() {
           _setFocusedColors();
         });
       },
       onFocusLeft: () {
+        _closeIconNotifier.value = false;
+
+        if (!mounted) {
+          return;
+        }
+
         setState(() {
           _setInitialColors();
         });
+      },
+    );
+
+    _controllerListener = addTextListener(
+      controller: _controller,
+      onValueChanged: () {
+        _closeIconNotifier.value = widget.model is! ListBoxModel &&
+            _focusNode.hasFocus &&
+            _controller.text.isNotEmpty;
       },
     );
   }
@@ -118,6 +143,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     if (widget.controller == null) {
       disposeTextController(
         controller: _controller,
+        listener: _controllerListener,
       );
     }
 
@@ -289,35 +315,39 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   }
 
   Widget _suffixCloseIcon(BuildContext context) {
-    if (widget.model is ListBoxModel ||
-        !_focusNode.hasFocus ||
-        _controller.text.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    return ValueListenableBuilder(
+      valueListenable: _closeIconNotifier,
+      builder: (_, value, child) {
+        if (!value) {
+          return const SizedBox.shrink();
+        }
 
-    return GestureDetector(
-      onTap: () {
-        _controller.clear();
-        _wrapWithValidationReset(
-          context: context,
-          func: widget.onValueChanged,
-        )?.call("");
+        return GestureDetector(
+          onTap: () {
+            _controller.clear();
+            _wrapWithValidationReset(
+              context: context,
+              func: widget.onValueChanged,
+            )?.call("");
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7),
+            color: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: _foregroundColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.close_rounded,
+                color: _backgroundColor,
+                size: 12,
+              ),
+            ),
+          ),
+        );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7),
-        child: Container(
-          decoration: BoxDecoration(
-            color: _foregroundColor,
-            shape: BoxShape.circle,
-          ),
-          padding: const EdgeInsets.all(2),
-          child: Icon(
-            Icons.close_rounded,
-            color: _backgroundColor,
-            size: 12,
-          ),
-        ),
-      ),
     );
   }
 
@@ -600,8 +630,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _hint = widget.model.hint;
     _isDropdownOpen = false;
 
-    _dropdownSearchFocusNode = initOrGetFocusNode();
-
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
       _dropdownSearchFocusNode = initOrGetFocusNode();
@@ -754,6 +782,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       ],
                       prefixRightmostDividerVisible: false,
                       controller: _dropdownSearchController,
+                      focusNode: _dropdownSearchFocusNode,
                       fontSize: 15,
                     ),
                   ),
