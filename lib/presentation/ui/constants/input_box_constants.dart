@@ -19,6 +19,8 @@ abstract interface class InputBoxConstants {
 
   static const double labeledInputFieldVerticalPadding = 3;
   static const double textHeightCoefficient = 1.2;
+
+  static const int nonSearchableListItemsMinLimit = 5;
 }
 
 const Map<ItemsViewMode, IconData> itemViewModeIconMap = {
