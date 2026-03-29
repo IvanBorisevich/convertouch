@@ -61,7 +61,7 @@ dependencies:
   stream_transform: ^2.0.0
   bloc_concurrency: ^0.1.0
   app_settings: ^5.1.1
-  dropdown_button2: ^2.3.8
+  dropdown_button2: ^3.0.0
   timeago: ^3.7.0
   sqflite_common_ffi: ^2.3.0+4
   sliding_up_panel: ^2.0.0+1

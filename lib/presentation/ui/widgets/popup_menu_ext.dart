@@ -38,8 +38,9 @@ class ConvertouchPopupMenu extends StatelessWidget {
         onMenuStateChange: onMenuStateChange,
         items: items
             .map(
-              (item) => DropdownMenuItem<PopupMenuItemModel>(
+              (item) => DropdownItem<PopupMenuItemModel>(
                 value: item,
+                height: 40,
                 onTap: item.onTap,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +95,6 @@ class ConvertouchPopupMenu extends StatelessWidget {
           overlayColor: WidgetStateColor.resolveWith(
             (states) => highlightColor,
           ),
-          customHeights: List.filled(items.length, 40),
           padding: const EdgeInsets.symmetric(horizontal: 17),
         ),
       ),

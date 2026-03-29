@@ -104,23 +104,19 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _focusListener = addFocusListener(
       focusNode: _focusNode,
       onFocusSelected: () {
-        _closeIconNotifier.value = widget.model is! ListBoxModel &&
-            _controller.text.isNotEmpty;
+        if (!mounted) return;
 
-        if (!mounted) {
-          return;
-        }
+        _closeIconNotifier.value =
+            widget.model is! ListBoxModel && _controller.text.isNotEmpty;
 
         setState(() {
           _setFocusedColors();
         });
       },
       onFocusLeft: () {
-        _closeIconNotifier.value = false;
+        if (!mounted) return;
 
-        if (!mounted) {
-          return;
-        }
+        _closeIconNotifier.value = false;
 
         setState(() {
           _setInitialColors();
@@ -131,6 +127,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _controllerListener = addTextListener(
       controller: _controller,
       onValueChanged: () {
+        if (!mounted) return;
+
         _closeIconNotifier.value = widget.model is! ListBoxModel &&
             _focusNode.hasFocus &&
             _controller.text.isNotEmpty;
@@ -153,6 +151,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         listener: _focusListener,
       );
     }
+
+    _closeIconNotifier.dispose();
 
     super.dispose();
   }
@@ -618,6 +618,7 @@ class _ListField extends StatefulWidget {
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
+  late ValueNotifier<ListValueModel?> _selectedValueNotifier;
 
   TextEditingController? _dropdownSearchController;
   FocusNode? _dropdownSearchFocusNode;
@@ -629,6 +630,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _hint = widget.model.hint;
     _isDropdownOpen = false;
+    _selectedValueNotifier = ValueNotifier(widget.model.value);
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -640,6 +642,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
     _dropdownSearchController?.dispose();
+    _selectedValueNotifier.dispose();
     super.dispose();
   }
 
@@ -669,10 +672,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             fontSize: widget.fontSize,
             foregroundColor: widget.foregroundColor,
           ),
-          value: widget.model.value,
+          valueListenable: _selectedValueNotifier,
           items: widget.model.listValues
               .map(
-                (value) => DropdownMenuItem(
+                (value) => DropdownItem(
                   value: value,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -742,18 +745,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           menuItemStyleData: const MenuItemStyleData(
             padding: EdgeInsets.zero,
           ),
-          buttonStyleData: const ButtonStyleData(
+          buttonStyleData: const FormFieldButtonStyleData(
             padding: EdgeInsets.zero,
           ),
           dropdownSearchData: _dropdownSearchController != null &&
                   _dropdownSearchFocusNode != null
               ? DropdownSearchData(
                   searchController: _dropdownSearchController,
-                  searchInnerWidgetHeight: 80,
-                  searchInnerWidget: Container(
+                  searchBarWidgetHeight: 80,
+                  searchBarWidget: Container(
                     padding: const EdgeInsets.only(
                       top: 8,
-                      bottom: 4,
+                      bottom: 0,
                       right: 8,
                       left: 8,
                     ),
@@ -792,6 +795,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                             .contains(searchValue.toLowerCase()) ??
                         false;
                   },
+                  noResultsWidget: const DropdownItem(
+                    enabled: false,
+                    alignment: Alignment.center,
+                    height: 30,
+                    child: Text(
+                      "No items found",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 )
               : null,
           onMenuStateChange: (isOpen) {
