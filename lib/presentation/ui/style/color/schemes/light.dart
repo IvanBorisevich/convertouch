@@ -275,7 +275,7 @@ const _conversionItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _conversionItemTextBox,
     dropdown: DropdownColorScheme(
-      background: MultiColor.only(Color(0xffabc4fd)),
+      background: MultiColor.only(Color(0xff9eb6fb)),
       foreground: MultiColor.only(Color(0xFF1D578C)),
       searchBox: _dropdownSearchBox,
     ),
@@ -319,7 +319,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
     ),
   ),
   toolset: WidgetColorScheme(
-    background: MultiColor.only(Color(0xffc6d6ff)),
+    background: MultiColor.only(Color(0xffc7d6fd)),
     foreground: MultiColor(
       regular: Color(0xFF235475),
       disabled: Color(0xFF97B0C7),
@@ -327,7 +327,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
   ),
   removalIcon: MultiColor.only(Color(0xFFB6441C)),
   footer: WidgetColorScheme(
-    background: MultiColor.only(Color(0xffabbff3)),
+    background: MultiColor.only(Color(0xffbdd0ff)),
     foreground: MultiColor.only(Color(0xFF6C9CC9)),
   ),
   paramItem: _conversionItem,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class ConvertouchPopupMenu extends StatelessWidget {
   static const double _defaultWidth = 200;
+  static const double _defaultHeight = 200;
 
   final List<PopupMenuItemModel> items;
   final Color backgroundColor;
@@ -80,16 +81,13 @@ class ConvertouchPopupMenu extends StatelessWidget {
         onChanged: (value) {},
         dropdownStyleData: DropdownStyleData(
           width: width ?? _defaultWidth,
+          maxHeight: _defaultHeight,
           padding: const EdgeInsets.symmetric(vertical: 7),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(7)),
             color: backgroundColor,
           ),
-          openInterval: const Interval(
-            0.15,
-            0.25,
-          ),
-          isOverButton: true,
+          openInterval: const Interval(0.25, 0.5, curve: Curves.ease),
         ),
         menuItemStyleData: MenuItemStyleData(
           overlayColor: WidgetStateColor.resolveWith(

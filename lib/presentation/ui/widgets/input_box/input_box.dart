@@ -682,7 +682,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     child: Text(
                       value.itemName,
                       style: TextStyle(
-                        fontSize: widget.fontSize,
+                        fontSize: 17,
                         color: widget.dropdownColors.foreground.regular,
                       ),
                     ),
@@ -741,6 +741,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               color: widget.dropdownColors.background.regular,
             ),
             padding: EdgeInsets.zero,
+            openInterval: const Interval(0, 0.5, curve: Curves.ease),
+            offset: const Offset(0, -7.5),
           ),
           menuItemStyleData: const MenuItemStyleData(
             padding: EdgeInsets.zero,
@@ -755,10 +757,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   searchBarWidgetHeight: 80,
                   searchBarWidget: Container(
                     padding: const EdgeInsets.only(
-                      top: 8,
+                      top: 6,
                       bottom: 0,
-                      right: 8,
-                      left: 8,
+                      right: 6,
+                      left: 6,
                     ),
                     child: ConvertouchInputBox(
                       model: TextBoxModel(
@@ -770,7 +772,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         textBox: widget.dropdownColors.searchBox,
                       ),
                       inputFieldMargin: const EdgeInsets.symmetric(
-                        vertical: 7,
+                        vertical: 8,
                         horizontal: 5,
                       ),
                       prefixWidgets: [
@@ -894,5 +896,6 @@ TextStyle _inputFieldTextStyle({
     overflow: TextOverflow.fade,
     height: InputBoxConstants.textHeightCoefficient,
     foreground: Paint()..color = foregroundColor,
+    letterSpacing: 0,
   );
 }
