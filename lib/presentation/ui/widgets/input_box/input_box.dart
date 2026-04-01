@@ -91,8 +91,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   void initState() {
     super.initState();
 
-    _setInitialColors();
-
     if (widget.validators.isNotEmpty) {
       _validationKey = UniqueKey();
     }
@@ -100,6 +98,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
     _closeIconNotifier = ValueNotifier(false);
+
+    _setColors();
 
     _focusListener = addFocusListener(
       focusNode: _focusNode,
@@ -110,7 +110,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             widget.model is! ListBoxModel && _controller.text.isNotEmpty;
 
         setState(() {
-          _setFocusedColors();
+          _setColors();
         });
       },
       onFocusLeft: () {
@@ -119,7 +119,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         _closeIconNotifier.value = false;
 
         setState(() {
-          _setInitialColors();
+          _setColors();
         });
       },
     );
@@ -157,7 +157,16 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     super.dispose();
   }
 
-  void _setInitialColors() {
+  @override
+  void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.colors != oldWidget.colors) {
+      _setColors();
+    }
+  }
+
+  void _setColors() {
     if (widget.model.readonly) {
       _backgroundColor = widget.colors.textBox.background.disabled;
       _foregroundColor = widget.colors.textBox.foreground.disabled;
@@ -165,6 +174,13 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       _labelColor = widget.colors.textBox.label.disabled;
       _borderColor = widget.colors.textBox.border.disabled;
       _dividerColor = widget.colors.divider.disabled;
+    } else if (_focusNode.hasFocus) {
+      _backgroundColor = widget.colors.textBox.background.focused;
+      _foregroundColor = widget.colors.textBox.foreground.focused;
+      _hintColor = widget.colors.textBox.hint.focused;
+      _labelColor = widget.colors.textBox.label.focused;
+      _borderColor = widget.colors.textBox.border.focused;
+      _dividerColor = widget.colors.divider.focused;
     } else {
       _backgroundColor = widget.colors.textBox.background.regular;
       _foregroundColor = widget.colors.textBox.foreground.regular;
@@ -173,15 +189,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       _borderColor = widget.colors.textBox.border.regular;
       _dividerColor = widget.colors.divider.regular;
     }
-  }
-
-  void _setFocusedColors() {
-    _backgroundColor = widget.colors.textBox.background.focused;
-    _foregroundColor = widget.colors.textBox.foreground.focused;
-    _hintColor = widget.colors.textBox.hint.focused;
-    _labelColor = widget.colors.textBox.label.focused;
-    _borderColor = widget.colors.textBox.border.focused;
-    _dividerColor = widget.colors.divider.focused;
   }
 
   @override
