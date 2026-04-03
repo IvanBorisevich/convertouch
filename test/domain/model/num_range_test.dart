@@ -100,7 +100,7 @@ void main() {
 
       expect(
         const NumRange.closed(10, 20).validationMessage,
-        'Value should be in range [10..20]',
+        'Value should be in range [10 .. 20]',
       );
     });
 
@@ -148,7 +148,7 @@ void main() {
 
       expect(
         const NumRange.open(10, 20).validationMessage,
-        'Value should be in range (10..20)',
+        'Value should be in range (10 .. 20)',
       );
     });
 
@@ -197,7 +197,7 @@ void main() {
 
       expect(
         const NumRange.leftOpen(10, 20).validationMessage,
-        'Value should be in range (10..20]',
+        'Value should be in range (10 .. 20]',
       );
     });
 
@@ -246,7 +246,7 @@ void main() {
 
       expect(
         const NumRange.rightOpen(10, 20).validationMessage,
-        'Value should be in range [10..20)',
+        'Value should be in range [10 .. 20)',
       );
     });
   });

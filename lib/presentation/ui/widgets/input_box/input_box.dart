@@ -699,6 +699,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               .toList(),
           onChanged: (value) {
             if (value != null) {
+              _selectedValueNotifier.value = value;
               widget.onValueChanged?.call(value.value);
             }
           },
