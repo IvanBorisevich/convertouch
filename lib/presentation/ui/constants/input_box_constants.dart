@@ -17,9 +17,7 @@ abstract interface class InputBoxConstants {
     horizontal: 12,
   );
 
-  static const double labeledInputFieldVerticalPadding = 3;
   static const double textHeightCoefficient = 1.2;
-
   static const int nonSearchableListItemsMinLimit = 5;
 }
 

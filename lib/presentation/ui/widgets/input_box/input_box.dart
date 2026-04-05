@@ -575,8 +575,10 @@ class _TextFieldState extends State<_TextField>
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
         floatingLabelBehavior: widget.floatingLabelBehavior,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
       ).copyWith(
-        counterText: "",
         suffixText: widget.model.textLengthCounterVisible
             ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
             : null,
@@ -674,6 +676,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             hintColor: widget.hintColor,
             labelColor: widget.labelColor,
             floatingLabelBehavior: widget.floatingLabelBehavior,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 3,
+            ),
           ),
           style: _inputFieldTextStyle(
             fontSize: widget.fontSize,
@@ -688,9 +693,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     padding: const EdgeInsets.symmetric(horizontal: 17),
                     child: Text(
                       value.itemName,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: widget.dropdownColors.foreground.regular,
+                      style: _inputFieldTextStyle(
+                        fontSize: widget.fontSize,
+                        foregroundColor:
+                            widget.dropdownColors.foreground.regular,
                       ),
                     ),
                   ),
@@ -710,16 +716,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           selectedItemBuilder: (context) {
             return widget.model.listValues.map(
               (value) {
-                return Container(
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    widget.model.value?.itemName ?? _hint ?? '',
-                    style: _inputFieldTextStyle(
-                      fontSize: widget.fontSize,
-                      foregroundColor: widget.foregroundColor,
-                    ),
-                    maxLines: 1,
+                return Text(
+                  widget.model.value?.itemName ?? _hint ?? '',
+                  style: _inputFieldTextStyle(
+                    fontSize: widget.fontSize,
+                    foregroundColor: widget.foregroundColor,
                   ),
+                  maxLines: 1,
                 );
               },
             ).toList();
@@ -814,6 +817,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: 0,
                       ),
                     ),
                   ),
@@ -845,6 +849,7 @@ InputDecoration _inputFieldDecoration(
   required String? hintText,
   required Color? hintColor,
   required Color? labelColor,
+  required EdgeInsets contentPadding,
   FloatingLabelBehavior? floatingLabelBehavior,
 }) {
   return InputDecoration(
@@ -866,6 +871,7 @@ InputDecoration _inputFieldDecoration(
                 overflow: TextOverflow.fade,
                 fontWeight: FontWeight.w600,
                 foreground: Paint()..color = labelColor,
+                letterSpacing: 0,
               ),
             ),
           )
@@ -873,11 +879,7 @@ InputDecoration _inputFieldDecoration(
     floatingLabelBehavior: floatingLabelBehavior,
     alignLabelWithHint: true,
     isDense: true,
-    contentPadding: labelText != null
-        ? const EdgeInsets.symmetric(
-            vertical: InputBoxConstants.labeledInputFieldVerticalPadding,
-          )
-        : EdgeInsets.zero,
+    contentPadding: labelText != null ? contentPadding : EdgeInsets.zero,
     filled: true,
     fillColor: Colors.transparent,
     constraints: BoxConstraints(
@@ -888,6 +890,7 @@ InputDecoration _inputFieldDecoration(
     hintStyle: hintColor != null
         ? TextStyle(
             foreground: Paint()..color = hintColor,
+            letterSpacing: 0,
           )
         : null,
   );
