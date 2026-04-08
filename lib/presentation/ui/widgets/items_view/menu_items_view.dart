@@ -19,7 +19,7 @@ import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-const double _itemsSpacing = 8;
+const double _spacing = 8;
 const double _bottomSpacing = 85;
 const String _defaultSearchPlaceholder = "Search...";
 const String _defaultNoItemsLabel = "No Items";
@@ -91,9 +91,9 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   void _initStateByContext() {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    _gridItemsNumInRow = ((screenWidth - _itemsSpacing) /
-            (defaultMenuGridItemWidth + _itemsSpacing))
-        .floor();
+    _gridItemsNumInRow =
+        ((screenWidth - _spacing) / (defaultMenuGridItemWidth + _spacing))
+            .floor();
 
     onLoadMore() {
       widget.itemsListBloc.add(
@@ -109,7 +109,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
         itemsNumInRow: 1,
         itemHeight: defaultMenuListItemHeight,
-        itemsSpacing: _itemsSpacing,
+        itemsSpacing: _spacing,
         onLoad: onLoadMore,
       );
     });
@@ -122,7 +122,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
         itemsNumInRow: _gridItemsNumInRow,
         itemHeight: defaultMenuGridItemHeight,
-        itemsSpacing: _itemsSpacing,
+        itemsSpacing: _spacing,
         onLoad: onLoadMore,
       );
     });
@@ -181,11 +181,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                           physics: const AlwaysScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: allItems.length,
-                          itemExtent: defaultMenuListItemHeight + _itemsSpacing,
+                          itemExtent: defaultMenuListItemHeight + _spacing,
                           padding: const EdgeInsets.only(
-                            top: _itemsSpacing,
-                            left: _itemsSpacing,
-                            right: _itemsSpacing,
+                            top: _spacing,
+                            left: _spacing,
+                            right: _spacing,
                             bottom: _bottomSpacing,
                           ),
                           itemBuilder: (context, index) {
@@ -207,16 +207,16 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                           shrinkWrap: true,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.only(
-                            top: _itemsSpacing,
-                            left: _itemsSpacing,
-                            right: _itemsSpacing,
+                            top: _spacing,
+                            left: _spacing,
+                            right: _spacing,
                             bottom: _bottomSpacing,
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: _gridItemsNumInRow,
-                            crossAxisSpacing: _itemsSpacing,
-                            mainAxisSpacing: _itemsSpacing,
+                            crossAxisSpacing: _spacing,
+                            mainAxisSpacing: _spacing,
                           ),
                           itemBuilder: (context, index) {
                             return _itemBuilder.call(
@@ -283,7 +283,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       case ItemsViewMode.list:
         return Padding(
           padding: const EdgeInsets.only(
-            bottom: _itemsSpacing,
+            bottom: _spacing,
           ),
           child: ConvertouchMenuListItem(
             item,
@@ -322,29 +322,42 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     required double fontSize,
   }) {
     if (item is UnitGroupModel) {
-      return IconUtils.getItemLogoIcon(
-        iconName: item.iconName,
-        color: foreground,
+      return FittedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: IconUtils.getItemLogoIcon(
+            iconName: item.iconName,
+            color: foreground,
+          ),
+        ),
       );
     }
 
     if (item is UnitModel) {
-      return TextSearchMatch(
-        sourceString: item.code,
-        match: item.codeMatch,
-        foreground: foreground,
-        fontSize: fontSize,
-        fontWeight: FontWeight.w700,
-        matchBackground: matchBackground,
-        matchForeground: matchForeground,
+      return Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(12),
+        child: TextSearchMatch(
+          sourceString: item.code,
+          match: item.codeMatch,
+          foreground: foreground,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w700,
+          matchBackground: matchBackground,
+          matchForeground: matchForeground,
+        ),
       );
     }
 
     if (item is ConversionParamSetModel) {
-      return IconUtils.getItemLogoIcon(
-        iconName: IconNames.parameters,
-        color: foreground,
-        // size: iconSize,
+      return FittedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: IconUtils.getItemLogoIcon(
+            iconName: IconNames.parameters,
+            color: foreground,
+          ),
+        ),
       );
     }
 

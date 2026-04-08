@@ -11,6 +11,7 @@ class TextSearchMatch extends StatelessWidget {
   final Color? matchForeground;
   final Color? matchBackground;
   final FontWeight fontWeight;
+  final int maxLines;
 
   const TextSearchMatch({
     required this.match,
@@ -20,12 +21,16 @@ class TextSearchMatch extends StatelessWidget {
     this.matchForeground,
     this.matchBackground,
     this.fontWeight = FontWeight.w600,
+    this.maxLines = 1,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return RichText(
+      overflow: TextOverflow.ellipsis,
+      maxLines: maxLines,
+      textAlign: TextAlign.center,
       text: match != ItemSearchMatch.none
           ? TextSpan(
               children: match.lexemes
@@ -58,8 +63,6 @@ class TextSearchMatch extends StatelessWidget {
                 letterSpacing: 0,
               ),
             ),
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
     );
   }
 }

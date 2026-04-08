@@ -4,10 +4,12 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-const double defaultMenuGridItemWidth = 80;
-const double defaultMenuGridItemHeight = 80;
+const double defaultMenuGridItemWidth = 100;
+const double defaultMenuGridItemHeight = 100;
 const double _defaultTitleHeight = defaultMenuGridItemHeight * 0.4;
 const double _defaultBorderRadius = 17;
+const double _logoFontSize = 20;
+const double _titleFontSize = 13;
 
 class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
@@ -86,18 +88,12 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
             Column(
               children: [
                 Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: logoFunc.call(
-                        item,
-                        foreground: foreground,
-                        matchForeground: matchForeground,
-                        matchBackground: matchBackground,
-                        fontSize: 17,
-                      ),
-                    ),
+                  child: logoFunc.call(
+                    item,
+                    foreground: foreground,
+                    matchForeground: matchForeground,
+                    matchBackground: matchBackground,
+                    fontSize: _logoFontSize,
                   ),
                 ),
                 Container(
@@ -117,7 +113,8 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                     foreground: foreground,
                     matchBackground: matchBackground,
                     matchForeground: matchForeground,
-                    fontSize: 11,
+                    fontSize: _titleFontSize,
+                    maxLines: 2,
                   ),
                 ),
               ],
