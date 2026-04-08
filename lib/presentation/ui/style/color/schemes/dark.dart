@@ -23,6 +23,8 @@ const colorSchemeDark = AppColorScheme(
   settingGroup: _settingGroup,
 );
 
+const Color pageBackground = Color(0xFF363D48);
+
 const _notification = NotificationColorScheme(
   background: MultiColor.only(Color(0xFF384867)),
   foreground: MultiColor(
@@ -39,7 +41,7 @@ const _page = PageColorScheme(
     foreground: MultiColor.only(Color(0xFFBDCDDA)),
   ),
   body: WidgetColorScheme(
-    background: MultiColor.only(Color(0xFF363D48)),
+    background: MultiColor.only(pageBackground),
     foreground: MultiColor.only(Color(0xFFCCD7E0)),
   ),
   bottomBar: WidgetColorScheme(
@@ -120,7 +122,7 @@ const _unitGroupsMenu = MenuViewColorScheme(
         regular: Color(0xff849ad2),
       ),
       background: MultiColor(
-        regular: Color(0xFF363D48),
+        regular: pageBackground,
         selected: Color(0xff849ad2),
       ),
       foreground: MultiColor(
@@ -144,7 +146,7 @@ const _unitGroupsMenu = MenuViewColorScheme(
 
 const _unitGroupDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
-    background: MultiColor.only(Color(0xFF363D48)),
+    background: MultiColor.only(pageBackground),
     border: MultiColor(
       regular: Color(0xFF8594F1),
       disabled: Color(0x90A5B2FF),
@@ -200,7 +202,7 @@ const _unitsMenu = MenuViewColorScheme(
         regular: Color(0xFF6F98BD),
       ),
       background: MultiColor(
-        regular: Color(0xFF363D48),
+        regular: pageBackground,
         selected: Color(0xFF6F98BD),
       ),
       foreground: MultiColor(
@@ -224,7 +226,7 @@ const _unitsMenu = MenuViewColorScheme(
 
 const _unitDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
-    background: MultiColor.only(Color(0xFF363D48)),
+    background: MultiColor.only(pageBackground),
     border: MultiColor(
       regular: Color(0xFF84A1BD),
       focused: Color(0xFF98BAD9),
@@ -247,7 +249,7 @@ const _conversionPageFloatingButton = WidgetColorScheme(
 );
 
 const _conversionItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(Color(0xFF363D48)),
+  background: MultiColor.only(pageBackground),
   border: MultiColor(
     regular: Color(0xFF84A1BD),
     focused: Color(0xFFA1C7EA),
@@ -269,7 +271,7 @@ const _conversionItemTextBox = TextBoxColorScheme(
 );
 
 const _dropdownSearchBox = TextBoxColorScheme(
-  background: MultiColor.only(Color(0xFF363D48)),
+  background: MultiColor.only(pageBackground),
   foreground: MultiColor(
     regular: Color(0xFFA3C2DE),
     disabled: Color(0xFF687A8C),
@@ -313,7 +315,7 @@ const _refreshFloatingButton = WidgetColorScheme(
 );
 
 const _removalFloatingButton = WidgetColorScheme(
-  border: MultiColor.only(Color(0xFF373F4B)),
+  border: MultiColor.only(pageBackground),
   background: MultiColor.only(Color(0xFF9D5225)),
   foreground: MultiColor.only(Color(0xFFDEE9FF)),
 );
@@ -400,7 +402,7 @@ const _settingGroup = SettingGroupColorScheme(
   viewTitle: WidgetColorScheme(
     foreground: MultiColor.only(Color(0xFFCCD7E0)),
   ),
-  divider: MultiColor.only(Color(0xFF363D48)),
+  divider: MultiColor.only(pageBackground),
   settingItem: SettingItemColorScheme(
     background: MultiColor(
       regular: Color(0xFF3C4450),
