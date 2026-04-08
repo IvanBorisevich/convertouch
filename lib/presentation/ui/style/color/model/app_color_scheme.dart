@@ -4,6 +4,7 @@ class AppColorScheme {
   // common
   final NotificationColorScheme notification;
   final PageColorScheme page;
+  final DropdownColorScheme popupMenu;
   final SearchBoxColorScheme searchBox;
   final WidgetColorScheme errorInfoBox;
 
@@ -30,6 +31,7 @@ class AppColorScheme {
   const AppColorScheme({
     required this.notification,
     required this.page,
+    required this.popupMenu,
     required this.searchBox,
     required this.errorInfoBox,
     required this.unitGroupsPageFloatingButton,

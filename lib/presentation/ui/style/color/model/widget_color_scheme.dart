@@ -59,14 +59,18 @@ class TextBoxColorScheme extends WidgetColorScheme {
 class DropdownColorScheme extends WidgetColorScheme {
   static const DropdownColorScheme none = DropdownColorScheme();
 
+  final MultiColor icon;
   final MultiColor divider;
+  final MultiColor removalItem;
   final TextBoxColorScheme searchBox;
 
   const DropdownColorScheme({
     super.border,
     super.background,
     super.foreground,
+    this.icon = MultiColor.none,
     this.divider = MultiColor.none,
+    this.removalItem = MultiColor.none,
     this.searchBox = TextBoxColorScheme.none,
   });
 }
@@ -143,18 +147,32 @@ class ConversionItemColorScheme extends WidgetColorScheme {
   });
 }
 
-class ParamSetPanelColorScheme {
+class TabPanelColorScheme {
+  static const TabPanelColorScheme none = TabPanelColorScheme();
+
+  final MultiColor background;
   final WidgetColorScheme tab;
-  final WidgetColorScheme toolset;
+  final WidgetColorScheme leadingIcon;
+  final WidgetColorScheme trailingIcon;
+
+  const TabPanelColorScheme({
+    this.background = MultiColor.none,
+    this.tab = WidgetColorScheme.none,
+    this.leadingIcon = WidgetColorScheme.none,
+    this.trailingIcon = WidgetColorScheme.none,
+  });
+}
+
+class ParamSetPanelColorScheme {
+  final TabPanelColorScheme tabPanel;
+  final WidgetColorScheme body;
   final WidgetColorScheme footer;
-  final MultiColor removalIcon;
   final ConversionItemColorScheme paramItem;
 
   const ParamSetPanelColorScheme({
-    this.tab = WidgetColorScheme.none,
-    this.toolset = WidgetColorScheme.none,
+    this.tabPanel = TabPanelColorScheme.none,
+    this.body = WidgetColorScheme.none,
     this.footer = WidgetColorScheme.none,
-    this.removalIcon = MultiColor.none,
     required this.paramItem,
   });
 }

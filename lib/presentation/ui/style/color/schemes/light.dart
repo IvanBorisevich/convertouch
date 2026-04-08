@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 const colorSchemeLight = AppColorScheme(
   notification: _notification,
   page: _page,
+  popupMenu: _popupMenu,
   searchBox: _searchBox,
   errorInfoBox: _errorInfoBox,
   unitGroupsPageFloatingButton: _unitGroupsPageFloatingButton,
@@ -49,6 +50,14 @@ const _page = PageColorScheme(
       disabled: Color(0xFFA0C4F5),
     ),
   ),
+);
+
+const _popupMenu = DropdownColorScheme(
+  background: MultiColor.only(Color(0xff7f9dec)),
+  foreground: MultiColor.only(Color(0xFF1D5180)),
+  divider: MultiColor.only(Color(0xff6c8adc)),
+  icon: MultiColor.only(Color(0xFF1D5180)),
+  removalItem: MultiColor.only(Color(0xFF7C3D19)),
 );
 
 const _searchBox = SearchBoxColorScheme(
@@ -309,28 +318,82 @@ const _removalFloatingButton = WidgetColorScheme(
   foreground: MultiColor.only(Color(0xFFDEE9FF)),
 );
 
-const _paramSetPanel = ParamSetPanelColorScheme(
-  tab: WidgetColorScheme(
-    background: MultiColor(
-      regular: Color(0xffdae5ff),
+const _paramItemTextBox = TextBoxColorScheme(
+  background: MultiColor.only(Color(0xffcbd9ff)),
+  border: MultiColor(
+    regular: Color(0xFF4F7498),
+    focused: Color(0xFF1B2F40),
+    disabled: Color(0xFF90A8C0),
+  ),
+  foreground: MultiColor(
+    regular: Color(0xBE143656),
+    disabled: Color(0xFF90A8C0),
+  ),
+  hint: MultiColor(
+    regular: Color(0xFF799BBB),
+    disabled: Color(0xBE73ACE5),
+  ),
+  label: MultiColor(
+    regular: Color(0xFF2C6396),
+    disabled: Color(0xFF3F72A1),
+  ),
+  tooltip: _notification,
+);
+
+const _paramItem = ConversionItemColorScheme(
+  inputBox: InputBoxColorScheme(
+    textBox: _paramItemTextBox,
+    dropdown: DropdownColorScheme(
+      background: MultiColor.only(Color(0xff9eb6fb)),
+      foreground: MultiColor.only(Color(0xFF1D578C)),
+      searchBox: _dropdownSearchBox,
     ),
-    foreground: MultiColor(
-      regular: Color(0xFF2D6698),
+    divider: MultiColor(
+      regular: Color(0xFFBAD2EC),
+      disabled: Color(0xFF90A8C0),
     ),
   ),
-  toolset: WidgetColorScheme(
-    background: MultiColor.only(Color(0xffc7d6fd)),
-    foreground: MultiColor(
-      regular: Color(0xFF235475),
-      disabled: Color(0xFF97B0C7),
-    ),
+  unitButton: MultiColor.only(Color(0xFF2C6396)),
+  prefixWidget: MultiColor(
+    regular: Color(0xFF7799B9),
+    selected: Color(0xFF2C6396),
   ),
   removalIcon: MultiColor.only(Color(0xFFB6441C)),
+);
+
+const _paramSetPanel = ParamSetPanelColorScheme(
+  tabPanel: TabPanelColorScheme(
+    tab: WidgetColorScheme(
+      background: MultiColor(
+        regular: Color(0xffb6c8f8),
+        selected: Color(0xFF4379AA),
+      ),
+      foreground: MultiColor(
+        regular: Color(0xFF295175),
+        selected: Color(0xffe4edff),
+      ),
+    ),
+    leadingIcon: WidgetColorScheme(
+      foreground: MultiColor(
+        regular: Color(0xFFB6441C),
+        disabled: Color(0xFFBF907F),
+      ),
+    ),
+    trailingIcon: WidgetColorScheme(
+      foreground: MultiColor(
+        regular: Color(0xFF2D6698),
+        disabled: Color(0xFF85A2BC),
+      ),
+    ),
+  ),
+  body: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffcbd9ff)),
+  ),
   footer: WidgetColorScheme(
-    background: MultiColor.only(Color(0xffbdd0ff)),
+    background: MultiColor.only(Color(0xffadc2f6)),
     foreground: MultiColor.only(Color(0xFF6C9CC9)),
   ),
-  paramItem: _conversionItem,
+  paramItem: _paramItem,
 );
 
 const _settingGroup = SettingGroupColorScheme(

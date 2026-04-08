@@ -28,7 +28,7 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.onValueFocused,
     this.onItemRemoveTap,
     this.horizontalSpacing = 10,
-    this.verticalSpacing = 12,
+    this.verticalSpacing = 10,
     this.verticalSpacingAfterLast = 85,
     required this.theme,
     super.key,

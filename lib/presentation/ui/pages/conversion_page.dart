@@ -71,7 +71,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
       },
       child: appBlocBuilder(
         builderFunc: (appState) {
-          PageColorScheme pageColorScheme = appColors[appState.theme].page;
+          PageColorScheme pageColors = appColors[appState.theme].page;
+          DropdownColorScheme popupColors = appColors[appState.theme].popupMenu;
+
           WidgetColorScheme floatingButtonColor =
               appColors[appState.theme].conversionPageFloatingButton;
 
@@ -81,7 +83,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
 
               return ConvertouchPage(
                 title: unitGroup.name,
-                colors: pageColorScheme,
+                colors: pageColors,
                 appBarRightWidgets: [
                   conversionBlocBuilder(
                     builderFunc: (pageState) {
@@ -90,7 +92,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         child: IconButton(
                           icon: IconUtils.getIcon(
                             IconNames.parameters,
-                            color: pageColorScheme.appBar.foreground.regular,
+                            color: pageColors.appBar.foreground.regular,
                             size: 22,
                           ),
                           onPressed: () {
@@ -106,64 +108,132 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       );
                     },
                   ),
-                  ConvertouchPopupMenu(
-                    width: 210,
-                    onMenuStateChange: (isOpen) {
-                      setState(() {
-                        _isPopupMenuOpen = isOpen;
-                      });
-                    },
-                    items: [
-                      PopupMenuItemModel(
-                        text: unitGroup.oob ? 'Group Info' : 'Edit Group',
-                        icon: unitGroup.oob
-                            ? Icons.info_outline_rounded
-                            : Icons.edit_outlined,
-                        onTap: () {
-                          unitGroupDetailsBloc.add(
-                            GetExistingUnitGroupDetails(
-                              unitGroup: unitGroup,
-                            ),
-                          );
+                  conversionBlocBuilder(
+                    builderFunc: (pageState) {
+                      bool paramsCanBeAdded =
+                          pageState.conversion.params != null &&
+                              pageState.conversion.params!.paramSetsCanBeAdded;
+                      bool paramsCanBeRemoved = pageState.conversion.params !=
+                              null &&
+                          pageState.conversion.params!.optionalParamSetsExist;
+                      bool paramsOptionsExist =
+                          paramsCanBeAdded || paramsCanBeRemoved;
+
+                      return ConvertouchPopupMenu(
+                        width: 230,
+                        colors: popupColors,
+                        customIcon: Icon(
+                          Icons.more_vert_rounded,
+                          color: pageColors.appBar.foreground.regular,
+                        ),
+                        onMenuStateChange: (isOpen) {
+                          setState(() {
+                            _isPopupMenuOpen = isOpen;
+                          });
                         },
-                      ),
-                      PopupMenuItemModel(
-                        text: "Units Dictionary",
-                        icon: Icons.dashboard_customize_outlined,
-                        onTap: () {
-                          unitsBloc.add(
-                            FetchItems(
-                              params: UnitsFetchParams(
-                                parentItemId: unitGroup.id,
-                                parentItemType: ItemType.unitGroup,
-                              ),
-                              onFirstFetch: () {
-                                navigationBloc.add(
-                                  const NavigateToPage(
-                                    pageName: PageName.unitsPageRegular,
+                        items: [
+                          paramsCanBeAdded
+                              ? PopupMenuItemModel(
+                                  text: 'Add Parameters',
+                                  icon: Icons.add,
+                                  onTap: () {
+                                    paramSetsBloc.add(
+                                      FetchItems(
+                                        params: ParamSetsFetchParams(
+                                          parentItemId: unitGroup.id,
+                                        ),
+                                      ),
+                                    );
+                                    unitsSelectionBloc.add(
+                                      StartItemsMarking(
+                                        previouslyMarkedIds: pageState
+                                            .conversion.params?.paramSetValues
+                                            .map((item) => item.paramSet.id)
+                                            .toList(),
+                                        excludedIds: pageState.conversion.params
+                                                ?.paramSetValues
+                                                .where((item) =>
+                                                    item.paramSet.mandatory)
+                                                .map((item) => item.paramSet.id)
+                                                .toList() ??
+                                            [],
+                                      ),
+                                    );
+                                    navigationBloc.add(
+                                      const NavigateToPage(
+                                        pageName: PageName.paramSetsPage,
+                                      ),
+                                    );
+                                  },
+                                )
+                              : null,
+                          paramsCanBeRemoved
+                              ? PopupMenuItemModel(
+                                  text: 'Remove Parameters',
+                                  icon: Icons.delete_outline_rounded,
+                                  iconColor: popupColors.removalItem.regular,
+                                  textColor: popupColors.removalItem.regular,
+                                  onTap: () {
+                                    conversionBloc.add(
+                                      const RemoveAllParamSetsFromConversion(),
+                                    );
+                                  },
+                                )
+                              : null,
+                          paramsOptionsExist
+                              ? PopupMenuItemModel.divider
+                              : null,
+                          PopupMenuItemModel(
+                            text: unitGroup.oob ? 'Group Info' : 'Edit Group',
+                            icon: unitGroup.oob
+                                ? Icons.info_outline_rounded
+                                : Icons.edit_outlined,
+                            onTap: () {
+                              unitGroupDetailsBloc.add(
+                                GetExistingUnitGroupDetails(
+                                  unitGroup: unitGroup,
+                                ),
+                              );
+                            },
+                          ),
+                          PopupMenuItemModel(
+                            text: "Units Dictionary",
+                            icon: Icons.dashboard_customize_outlined,
+                            onTap: () {
+                              unitsBloc.add(
+                                FetchItems(
+                                  params: UnitsFetchParams(
+                                    parentItemId: unitGroup.id,
+                                    parentItemType: ItemType.unitGroup,
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      PopupMenuItemModel(
-                        text: "Clear Conversion",
-                        icon: Icons.delete_outline_rounded,
-                        onTap: () {
-                          conversionBloc.add(
-                            CleanupConversion(
-                              keepParams:
-                                  appState.keepParamsOnConversionCleanup,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                    backgroundColor: pageColorScheme.appBar.background.regular,
-                    iconColor: pageColorScheme.appBar.foreground.regular,
-                    textColor: pageColorScheme.appBar.foreground.regular,
+                                  onFirstFetch: () {
+                                    navigationBloc.add(
+                                      const NavigateToPage(
+                                        pageName: PageName.unitsPageRegular,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          PopupMenuItemModel(
+                            text: "Clear Conversion",
+                            icon: Icons.delete_outline_rounded,
+                            iconColor: popupColors.removalItem.regular,
+                            textColor: popupColors.removalItem.regular,
+                            onTap: () {
+                              conversionBloc.add(
+                                CleanupConversion(
+                                  keepParams:
+                                      appState.keepParamsOnConversionCleanup,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
                 body: Container(
@@ -258,12 +328,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   const RemoveSelectedParamSetFromConversion(),
                                 );
                               },
-                              onParamSetsBulkRemove: () {
-                                conversionBloc.add(
-                                  const RemoveAllParamSetsFromConversion(),
-                                );
-                              },
-                              theme: appState.theme,
+                              colors: appColors[appState.theme].paramSetPanel,
                             ),
                             Expanded(
                               child: ConvertouchConversionItemsView(
