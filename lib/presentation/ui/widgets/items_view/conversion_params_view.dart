@@ -17,6 +17,8 @@ const double _paramItemHeight = 75;
 const double _minBodyHeight = 150;
 const double _maxBodyHeight = 255;
 const double _tabPanelHeight = 50;
+const double _tabHeight = 35;
+const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
 
@@ -51,11 +53,12 @@ class ConversionParamsView extends StatelessWidget {
     }
 
     double paramSetMaxHeight = params!.paramSetValues
-        .map((paramSetValue) =>
-            paramSetValue.paramValues.length *
-                (_paramItemHeight + _paramsSpacing) +
-            _paramsSpacing)
-        .max;
+            .map((paramSetValue) =>
+                paramSetValue.paramValues.length *
+                    (_paramItemHeight + _paramsSpacing) +
+                _paramsSpacing)
+            .maxOrNull ??
+        0;
 
     double bodyHeight = _tabPanelHeight + paramSetMaxHeight;
 
@@ -104,14 +107,14 @@ class ConversionParamsView extends StatelessWidget {
                           (index, item) => TabData(
                             index: index,
                             title: Tab(
+                              height: _tabHeight,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
-                                  vertical: 7,
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
-                                    Radius.circular(15),
+                                    Radius.circular(_tabRadius),
                                   ),
                                   color: index == params!.selectedIndex
                                       ? colors.tabPanel.tab.background.selected
@@ -133,22 +136,27 @@ class ConversionParamsView extends StatelessWidget {
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    params!.selectedParamSetCanBeRemoved
-                                        ? const SizedBox(width: 7)
-                                        : const SizedBox.shrink(),
                                     Visibility(
                                       visible:
                                           params!.selectedParamSetCanBeRemoved,
                                       child: GestureDetector(
                                         onTap: onSelectedParamSetRemove,
-                                        child: Icon(
-                                          Icons.close,
-                                          color: index == params!.selectedIndex
-                                              ? colors.tabPanel.tab.foreground
-                                                  .selected
-                                              : colors.tabPanel.tab.foreground
-                                                  .regular,
-                                          size: 15,
+                                        child: Container(
+                                          padding: const EdgeInsets.only(
+                                            left: 7,
+                                          ),
+                                          color: Colors.transparent,
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            Icons.close,
+                                            color:
+                                                index == params!.selectedIndex
+                                                    ? colors.tabPanel.tab
+                                                        .foreground.selected
+                                                    : colors.tabPanel.tab
+                                                        .foreground.regular,
+                                            size: 15,
+                                          ),
                                         ),
                                       ),
                                     ),
