@@ -8,6 +8,9 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_i
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:flutter/material.dart';
 
+const double _spacing = 10;
+const double _bottomSpacing = 85;
+
 class ConvertouchConversionItemsView extends StatefulWidget {
   final List<ConversionUnitValueModel> convertedItems;
   final int? sourceUnitId;
@@ -15,9 +18,6 @@ class ConvertouchConversionItemsView extends StatefulWidget {
   final void Function(ConversionUnitValueModel, dynamic)? onValueChanged;
   final void Function(ConversionUnitValueModel, dynamic)? onValueFocused;
   final void Function(ConversionUnitValueModel)? onItemRemoveTap;
-  final double horizontalSpacing;
-  final double verticalSpacing;
-  final double verticalSpacingAfterLast;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView(
@@ -27,9 +27,6 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onItemRemoveTap,
-    this.horizontalSpacing = 10,
-    this.verticalSpacing = 10,
-    this.verticalSpacingAfterLast = 85,
     required this.theme,
     super.key,
   });
@@ -63,19 +60,19 @@ class _ConvertouchConversionItemsViewState
           child: child,
         );
       },
-      padding: EdgeInsets.only(
-        top: widget.verticalSpacing,
-        bottom: widget.verticalSpacingAfterLast,
-        left: widget.horizontalSpacing,
-        right: widget.horizontalSpacing,
+      padding: const EdgeInsets.only(
+        top: _spacing,
+        bottom: _bottomSpacing,
+        left: _spacing,
+        right: _spacing,
       ),
       itemBuilder: (context, index) {
         ConversionUnitValueModel item = widget.convertedItems[index];
 
         return Padding(
           key: Key('$index'),
-          padding: EdgeInsets.only(
-            bottom: widget.verticalSpacing,
+          padding: const EdgeInsets.only(
+            bottom: _spacing,
           ),
           child: ConvertouchConversionItem(
             ConversionItemModel(

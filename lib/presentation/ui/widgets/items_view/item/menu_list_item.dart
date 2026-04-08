@@ -6,11 +6,11 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
+const double defaultMenuListItemHeight = 50;
+const double _borderRadius = 17;
+
 class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
-  static const double defaultHeight = 50;
-  static const double _borderRadius = 17;
-
   final T item;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
@@ -57,7 +57,7 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
       onTap: onTap,
       onLongPress: onLongPress,
       child: Container(
-        height: defaultHeight,
+        height: defaultMenuListItemHeight,
         decoration: BoxDecoration(
           color: background,
           borderRadius: const BorderRadius.all(Radius.circular(_borderRadius)),
@@ -66,8 +66,8 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
           children: [
             Container(
               width: T == UnitGroupModel || T == ConversionParamSetModel
-                  ? defaultHeight * 1.1
-                  : defaultHeight * 1.7,
+                  ? defaultMenuListItemHeight * 1.1
+                  : defaultMenuListItemHeight * 1.7,
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FittedBox(

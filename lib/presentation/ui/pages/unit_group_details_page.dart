@@ -76,13 +76,11 @@ class _ConvertouchUnitGroupDetailsPageState
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         valueChangeController: _unitGroupNameController,
                         onValueChanged: (value) {
-                          if (value != null) {
-                            unitGroupDetailsBloc.add(
-                              UpdateUnitGroupName(
-                                newValue: value,
-                              ),
-                            );
-                          }
+                          unitGroupDetailsBloc.add(
+                            UpdateUnitGroupName(
+                              newValue: value,
+                            ),
+                          );
                         },
                         inputBoxColor: inputBoxColor,
                       ),
@@ -138,11 +136,6 @@ class _ConvertouchUnitGroupDetailsPageState
                                     jobState.currentLastRefreshedStr ?? 'Never',
                                 inputBoxColor: inputBoxColor,
                               ),
-                              // ConvertouchParameterItem(
-                              //   name: "Data Source",
-                              //   value: jobState.currentDataSourceUrl,
-                              //   textBoxColor: textBoxColor,
-                              // ),
                             ],
                           );
                         },

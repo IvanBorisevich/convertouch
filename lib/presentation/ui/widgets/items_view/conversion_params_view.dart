@@ -3,7 +3,6 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
-import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -14,13 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class ConversionParamsView extends StatelessWidget {
-  static const double _minBodyHeight = 150;
-  static const double _maxBodyHeight = 255;
-  static const double _tabPanelHeight = 50;
-  static const double _footerHeight = 28;
-  static const double _paramsSpacing = 10;
+const double _paramItemHeight = 75;
+const double _minBodyHeight = 150;
+const double _maxBodyHeight = 255;
+const double _tabPanelHeight = 50;
+const double _footerHeight = 28;
+const double _paramsSpacing = 10;
 
+class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
   final PanelController panelController;
   final void Function()? onParamSetAdd;
@@ -50,18 +50,12 @@ class ConversionParamsView extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    double paramSetMaxHeight = 0;
-
-    for (var paramSetValue in params!.paramSetValues) {
-      int numOfParams = paramSetValue.paramValues.length;
-      double paramSetHeight = numOfParams * InputBoxConstants.defaultHeight +
-          numOfParams * _paramsSpacing +
-          _paramsSpacing;
-
-      if (paramSetHeight > paramSetMaxHeight) {
-        paramSetMaxHeight = paramSetHeight;
-      }
-    }
+    double paramSetMaxHeight = params!.paramSetValues
+        .map((paramSetValue) =>
+            paramSetValue.paramValues.length *
+                (_paramItemHeight + _paramsSpacing) +
+            _paramsSpacing)
+        .max;
 
     double bodyHeight = _tabPanelHeight + paramSetMaxHeight;
 

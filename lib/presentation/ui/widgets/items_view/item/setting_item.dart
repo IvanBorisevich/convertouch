@@ -12,12 +12,24 @@ enum SubtitlePosition {
   right,
 }
 
-const double _itemHeight = 60;
-const EdgeInsets _itemPadding = EdgeInsets.only(
+const double _defaultItemHeight = 60;
+const double _radioItemHeight = 52;
+const double _bottomSubtitleHeight = 23;
+const double _bottomSubtitleFontSize = 13;
+const double _rightSubtitleFontSize = 14;
+
+const EdgeInsets _defaultItemPadding = EdgeInsets.only(
   top: 7,
   bottom: 7,
   left: 15,
   right: 10,
+);
+
+const EdgeInsets _radioItemPadding = EdgeInsets.only(
+  left: 2,
+  right: 10,
+  top: 4,
+  bottom: 4,
 );
 
 class ConvertouchSettingItem extends StatelessWidget {
@@ -39,8 +51,8 @@ class ConvertouchSettingItem extends StatelessWidget {
     this.trailing,
     this.titleLineHeight,
     this.subtitlePosition,
-    this.height = _itemHeight,
-    this.padding = _itemPadding,
+    this.height = _defaultItemHeight,
+    this.padding = _defaultItemPadding,
     this.onTap,
     required this.theme,
     super.key,
@@ -106,10 +118,14 @@ class ConvertouchSettingItem extends StatelessWidget {
       return null;
     }
 
-    double fontSize = subtitlePosition == SubtitlePosition.bottom ? 13 : 14;
+    double fontSize = subtitlePosition == SubtitlePosition.bottom
+        ? _bottomSubtitleFontSize
+        : _rightSubtitleFontSize;
 
     return Container(
-      height: subtitlePosition == SubtitlePosition.bottom ? 23 : null,
+      height: subtitlePosition == SubtitlePosition.bottom
+          ? _bottomSubtitleHeight
+          : null,
       alignment: subtitlePosition == SubtitlePosition.bottom
           ? Alignment.centerLeft
           : Alignment.centerRight,
@@ -346,13 +362,8 @@ class RadioSettingItem<T> extends StatelessWidget {
     return ConvertouchSettingItem(
       title: title,
       leading: _radio(colors: colors),
-      height: 52,
-      padding: const EdgeInsets.only(
-        left: 2,
-        right: 10,
-        top: 4,
-        bottom: 4,
-      ),
+      height: _radioItemHeight,
+      padding: _radioItemPadding,
       theme: theme,
       onTap: () {
         if (!disabled) {

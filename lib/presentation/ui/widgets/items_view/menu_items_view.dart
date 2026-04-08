@@ -19,6 +19,11 @@ import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
+const double _itemsSpacing = 8;
+const double _bottomSpacing = 85;
+const String _defaultSearchPlaceholder = "Search...";
+const String _defaultNoItemsLabel = "No Items";
+
 class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     P extends ItemsFetchParams> extends StatefulWidget {
   final ItemsListBloc<T, P> itemsListBloc;
@@ -43,7 +48,7 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     required this.itemsListBloc,
     required this.pageName,
     required this.viewModeSettingKey,
-    this.searchBarPlaceholder = "Search...",
+    this.searchBarPlaceholder = _defaultSearchPlaceholder,
     this.onItemTap,
     this.onItemTapForRemoval,
     this.onItemLongPress,
@@ -56,7 +61,7 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
     this.removalModeEnabled = false,
     required this.itemsViewMode,
     required this.colors,
-    this.noItemsLabel = "No Items",
+    this.noItemsLabel = _defaultNoItemsLabel,
     super.key,
   });
 
@@ -67,9 +72,6 @@ class ConvertouchMenuItemsView<T extends IdNameSearchableItemModel,
 class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         P extends ItemsFetchParams>
     extends State<ConvertouchMenuItemsView<T, P>> with ItemsLazyLoadingMixin {
-  static const double _itemsSpacing = 8;
-  static const double _bottomSpacing = 85;
-
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
 
@@ -90,7 +92,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     double screenWidth = MediaQuery.of(context).size.width;
 
     _gridItemsNumInRow = ((screenWidth - _itemsSpacing) /
-            (ConvertouchMenuGridItem.defaultWidth + _itemsSpacing))
+            (defaultMenuGridItemWidth + _itemsSpacing))
         .floor();
 
     onLoadMore() {
@@ -106,7 +108,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         hasReachedMax: widget.itemsListBloc.state.itemsFetch.hasReachedMax,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
         itemsNumInRow: 1,
-        itemHeight: ConvertouchMenuListItem.defaultHeight,
+        itemHeight: defaultMenuListItemHeight,
         itemsSpacing: _itemsSpacing,
         onLoad: onLoadMore,
       );
@@ -119,7 +121,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         hasReachedMax: widget.itemsListBloc.state.itemsFetch.hasReachedMax,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
         itemsNumInRow: _gridItemsNumInRow,
-        itemHeight: ConvertouchMenuGridItem.defaultHeight,
+        itemHeight: defaultMenuGridItemHeight,
         itemsSpacing: _itemsSpacing,
         onLoad: onLoadMore,
       );
@@ -179,8 +181,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                           physics: const AlwaysScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: allItems.length,
-                          itemExtent: ConvertouchMenuListItem.defaultHeight +
-                              _itemsSpacing,
+                          itemExtent: defaultMenuListItemHeight + _itemsSpacing,
                           padding: const EdgeInsets.only(
                             top: _itemsSpacing,
                             left: _itemsSpacing,

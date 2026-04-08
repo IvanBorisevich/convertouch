@@ -1,13 +1,15 @@
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
-import 'package:convertouch/presentation/ui/constants/conversion_item_constants.dart';
-import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+
+const double _dragHandlerWidth = 35;
+const double _removalButtonWidth = 35;
+const double _unitButtonWidth = 76;
 
 class ConvertouchConversionItem<M extends InputBoxModel>
     extends StatefulWidget {
@@ -67,7 +69,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
             ? ReorderableDragStartListener(
                 index: widget.model.index!,
                 child: Container(
-                  width: 35,
+                  width: _dragHandlerWidth,
                   color: Colors.transparent,
                   padding: const EdgeInsets.only(left: 3),
                   alignment: Alignment.center,
@@ -101,10 +103,8 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: ConversionItemConstants.defaultUnitButtonWidth,
-                  decoration: const BoxDecoration(
-                    borderRadius: InputBoxConstants.defaultBorderRadius,
-                  ),
+                  width: _unitButtonWidth,
+                  color: Colors.transparent,
                   child: Text(
                     widget.model.unit!.code,
                     style: TextStyle(
@@ -127,7 +127,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 },
                 child: Container(
                   padding: const EdgeInsets.only(right: 1),
-                  width: 35,
+                  width: _removalButtonWidth,
                   child: Icon(
                     Icons.remove,
                     color: widget.colors.removalIcon.regular,

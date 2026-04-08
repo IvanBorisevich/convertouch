@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item
 import 'package:flutter/material.dart';
 
 const double _titleHeight = 40;
+
 const EdgeInsets _titlePadding = EdgeInsets.symmetric(
   horizontal: 15,
   vertical: 10,

@@ -1,8 +1,9 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
+
+const int _nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxModel implements ElementModel {
   final String? hint;
@@ -42,8 +43,8 @@ abstract class InputBoxModel implements ElementModel {
         listType: model.listType!,
         readonly: readonly,
         labelText: model.unit.itemName,
-        searchEnabled: model.listValues!.items.length >
-            InputBoxConstants.nonSearchableListItemsMinLimit,
+        searchEnabled:
+            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
       ) as T;
     }
 
@@ -69,8 +70,8 @@ abstract class InputBoxModel implements ElementModel {
         listType: model.listType!,
         labelText: model.param.name,
         readonly: readonly,
-        searchEnabled: model.listValues!.items.length >
-            InputBoxConstants.nonSearchableListItemsMinLimit,
+        searchEnabled:
+            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
       ) as T;
     }
 

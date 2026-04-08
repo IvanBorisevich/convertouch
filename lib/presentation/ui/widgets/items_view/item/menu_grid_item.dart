@@ -4,13 +4,13 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
+const double defaultMenuGridItemWidth = 80;
+const double defaultMenuGridItemHeight = 80;
+const double _defaultTitleHeight = defaultMenuGridItemHeight * 0.4;
+const double _defaultBorderRadius = 17;
+
 class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
-  static const double defaultWidth = 80;
-  static const double defaultHeight = 80;
-  static const double defaultTitleHeight = defaultHeight * 0.4;
-  static const double defaultBorderRadius = 17;
-
   final T item;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
@@ -58,12 +58,12 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
       onTap: onTap,
       onLongPress: onLongPress,
       child: Container(
-        width: defaultWidth,
-        height: defaultHeight,
+        width: defaultMenuGridItemWidth,
+        height: defaultMenuGridItemHeight,
         decoration: BoxDecoration(
           color: background,
           borderRadius: const BorderRadius.all(
-            Radius.circular(defaultBorderRadius),
+            Radius.circular(_defaultBorderRadius),
           ),
         ),
         child: Stack(
@@ -101,14 +101,14 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                   ),
                 ),
                 Container(
-                  height: defaultTitleHeight,
+                  height: _defaultTitleHeight,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   decoration: BoxDecoration(
                     color: titleBackground,
                     borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(defaultBorderRadius),
-                      bottomRight: Radius.circular(defaultBorderRadius),
+                      bottomLeft: Radius.circular(_defaultBorderRadius),
+                      bottomRight: Radius.circular(_defaultBorderRadius),
                     ),
                   ),
                   child: TextSearchMatch(

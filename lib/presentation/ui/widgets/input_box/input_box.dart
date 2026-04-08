@@ -6,7 +6,6 @@ import 'package:convertouch/presentation/bloc/common/input_validation/input_vali
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
-import 'package:convertouch/presentation/ui/constants/input_box_constants.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
@@ -20,6 +19,45 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
+const Map<ConvertouchValueType, TextInputType> _valueTypeToKeyboardType = {
+  ConvertouchValueType.text: TextInputType.text,
+  ConvertouchValueType.integer: TextInputType.numberWithOptions(
+    signed: true,
+    decimal: false,
+  ),
+  ConvertouchValueType.integerNonNegative: TextInputType.numberWithOptions(
+    signed: false,
+    decimal: false,
+  ),
+  ConvertouchValueType.decimal: TextInputType.numberWithOptions(
+    signed: true,
+    decimal: true,
+  ),
+  ConvertouchValueType.decimalNonNegative: TextInputType.numberWithOptions(
+    signed: false,
+    decimal: true,
+  ),
+  ConvertouchValueType.hexadecimal: TextInputType.text,
+};
+
+final Map<ConvertouchValueType, RegExp> _valueTypeToRegExp = {
+  ConvertouchValueType.text: RegExp(r'(^[\S ]+$)'),
+  ConvertouchValueType.integer: RegExp(r'(^[.-]?$)|(^-?\d+$)'),
+  ConvertouchValueType.integerNonNegative: RegExp(r'(^\d+$)'),
+  ConvertouchValueType.decimal: RegExp(r'(^[.-]?$)|(^-?\d+\.?\d*$)'),
+  ConvertouchValueType.decimalNonNegative: RegExp(r'(^\d+\.?\d*$)'),
+  ConvertouchValueType.hexadecimal: RegExp(r'^0[xX][\da-fA-F]+$'),
+};
+
+const BorderRadius _borderRadius = BorderRadius.all(Radius.circular(15));
+const double _textHeightCoefficient = 1.2;
+
+const double _defaultFontSize = 17;
+const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
+  vertical: 10,
+  horizontal: 12,
+);
+
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   const ConvertouchInputBox({
     required this.model,
@@ -31,15 +69,14 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.onValueFocused,
     this.onValueUnfocused,
     this.validators = const [],
-    this.borderRadius = InputBoxConstants.defaultBorderRadius,
     this.borderWidth = 1,
     required this.colors,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
     this.prefixRightmostDividerVisible = true,
     this.suffixLeftmostDividerVisible = true,
-    this.inputFieldMargin = InputBoxConstants.defaultInputFieldMargin,
-    this.fontSize = InputBoxConstants.defaultFontSize,
+    this.inputFieldMargin = _defaultInputFieldMargin,
+    this.fontSize = _defaultFontSize,
     this.changeValueOnFocusChanged = false,
     this.floatingLabelBehavior,
     super.key,
@@ -54,7 +91,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final void Function(String)? onValueFocused;
   final void Function(String)? onValueUnfocused;
   final List<InputValidator> validators;
-  final BorderRadius borderRadius;
   final double borderWidth;
   final InputBoxColorScheme colors;
   final List<Widget?> prefixWidgets;
@@ -196,7 +232,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     return Container(
       decoration: BoxDecoration(
         color: _backgroundColor,
-        borderRadius: widget.borderRadius,
+        borderRadius: _borderRadius,
         border: widget.borderWidth > 0
             ? Border.all(
                 color: _borderColor,
@@ -230,8 +266,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                   child: Container(
                     padding: widget.inputFieldMargin,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: widget.borderRadius,
+                    decoration: const BoxDecoration(
+                      borderRadius: _borderRadius,
                     ),
                     child: _inputField(widget.model),
                   ),
@@ -295,7 +331,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         labelColor: _labelColor,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
-        borderRadius: widget.borderRadius,
         floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
@@ -310,7 +345,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         labelColor: _labelColor,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
-        borderRadius: widget.borderRadius,
         dropdownColors: widget.colors.dropdown,
         floatingLabelBehavior: widget.floatingLabelBehavior,
       );
@@ -438,7 +472,6 @@ class _TextField extends StatefulWidget {
     required this.labelColor,
     required this.fontSize,
     required this.margin,
-    required this.borderRadius,
     this.floatingLabelBehavior,
   });
 
@@ -456,7 +489,6 @@ class _TextField extends StatefulWidget {
   final Color labelColor;
   final double fontSize;
   final EdgeInsets margin;
-  final BorderRadius borderRadius;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
@@ -550,7 +582,7 @@ class _TextFieldState extends State<_TextField>
 
   @override
   Widget build(BuildContext context) {
-    RegExp? inputRegExp = inputValueTypeToRegExpMap[widget.model.valueType];
+    RegExp? inputRegExp = _valueTypeToRegExp[widget.model.valueType];
 
     return TextField(
       readOnly: widget.model.readonly,
@@ -563,13 +595,12 @@ class _TextFieldState extends State<_TextField>
       inputFormatters: inputRegExp != null
           ? [FilteringTextInputFormatter.allow(inputRegExp)]
           : null,
-      keyboardType: inputValueTypeToKeyboardTypeMap[widget.model.valueType],
+      keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
       onChanged: widget.onValueChanged,
       decoration: _inputFieldDecoration(
         context,
         margin: widget.margin,
         fontSize: widget.fontSize,
-        borderRadius: widget.borderRadius,
         labelText: widget.model.labelText,
         hintText: _hint,
         hintColor: widget.hintColor,
@@ -604,7 +635,6 @@ class _ListField extends StatefulWidget {
     required this.labelColor,
     required this.fontSize,
     required this.margin,
-    required this.borderRadius,
     required this.dropdownColors,
     this.floatingLabelBehavior,
   });
@@ -617,7 +647,6 @@ class _ListField extends StatefulWidget {
   final Color labelColor;
   final double fontSize;
   final EdgeInsets margin;
-  final BorderRadius borderRadius;
   final DropdownColorScheme dropdownColors;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
@@ -670,7 +699,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             context,
             margin: widget.margin,
             fontSize: widget.fontSize,
-            borderRadius: widget.borderRadius,
             labelText: widget.model.labelText,
             hintText: _hint,
             hintColor: widget.hintColor,
@@ -844,7 +872,6 @@ InputDecoration _inputFieldDecoration(
   BuildContext context, {
   required EdgeInsets margin,
   required double fontSize,
-  required BorderRadius borderRadius,
   required String? labelText,
   required String? hintText,
   required Color? hintColor,
@@ -853,8 +880,8 @@ InputDecoration _inputFieldDecoration(
   FloatingLabelBehavior? floatingLabelBehavior,
 }) {
   return InputDecoration(
-    border: OutlineInputBorder(
-      borderRadius: borderRadius,
+    border: const OutlineInputBorder(
+      borderRadius: _borderRadius,
       borderSide: BorderSide.none,
     ),
     label: labelText != null && labelColor != null
@@ -883,8 +910,7 @@ InputDecoration _inputFieldDecoration(
     filled: true,
     fillColor: Colors.transparent,
     constraints: BoxConstraints(
-      maxHeight:
-          fontSize * InputBoxConstants.textHeightCoefficient + margin.vertical,
+      maxHeight: fontSize * _textHeightCoefficient + margin.vertical,
     ),
     hintText: hintText,
     hintStyle: hintColor != null
@@ -905,7 +931,7 @@ TextStyle _inputFieldTextStyle({
     fontWeight: FontWeight.w500,
     fontFamily: quicksandFontFamily,
     overflow: TextOverflow.fade,
-    height: InputBoxConstants.textHeightCoefficient,
+    height: _textHeightCoefficient,
     foreground: Paint()..color = foregroundColor,
     letterSpacing: 0,
   );
