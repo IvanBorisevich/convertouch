@@ -4,6 +4,7 @@ import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
+const String _noValueHint = '-';
 
 abstract class InputBoxModel implements ElementModel {
   final String? hint;
@@ -20,69 +21,40 @@ abstract class InputBoxModel implements ElementModel {
     M model, {
     bool readonly = false,
   }) {
+    if (model.listValues?.items != null && model.listValues!.items.isNotEmpty) {
+      return ListBoxModel(
+        value: model.value?.toListValueModel(),
+        hint: _noValueHint,
+        listValues: model.listValues!.items,
+        listType: model.listType!,
+        readonly: readonly,
+        labelText: _getLabelText(model),
+        searchEnabled:
+            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
+      ) as T;
+    } else {
+      return TextBoxModel(
+        value: model.value?.raw,
+        valueUnfocused: model.value?.alt ?? model.value?.raw,
+        hint: model.defaultValue?.raw,
+        hintUnfocused:
+            model.defaultValue?.alt ?? model.defaultValue?.raw ?? _noValueHint,
+        readonly: readonly,
+        labelText: _getLabelText(model),
+        valueType: model.valueType,
+      ) as T;
+    }
+  }
+
+  static String? _getLabelText<M extends ConversionItemValueModel>(M model) {
     if (model is ConversionUnitValueModel) {
-      return _ofUnitValue(model, readonly: readonly);
+      return model.unit.itemName;
     }
 
     if (model is ConversionParamValueModel) {
-      return _ofParamValue(model, readonly: readonly);
+      return model.param.name;
     }
 
-    throw Exception("Cannot create input box model "
-        "by conversion item model type ${model.runtimeType}");
-  }
-
-  static T _ofUnitValue<T extends InputBoxModel>(
-    ConversionUnitValueModel model, {
-    bool readonly = false,
-  }) {
-    if (model.listValues?.items != null && model.listValues!.items.isNotEmpty) {
-      return ListBoxModel(
-        value: model.value?.toListValueModel(),
-        listValues: model.listValues!.items,
-        listType: model.listType!,
-        readonly: readonly,
-        labelText: model.unit.itemName,
-        searchEnabled:
-            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
-      ) as T;
-    }
-
-    return TextBoxModel(
-      value: model.value?.raw,
-      hint: model.defaultValue?.raw,
-      readonly: readonly,
-      labelText: model.unit.itemName,
-      valueUnfocused: model.value?.alt ?? model.value?.raw,
-      hintUnfocused: model.defaultValue?.alt ?? model.defaultValue?.raw,
-      valueType: model.valueType,
-    ) as T;
-  }
-
-  static T _ofParamValue<T extends InputBoxModel>(
-    ConversionParamValueModel model, {
-    bool readonly = false,
-  }) {
-    if (model.listValues?.items != null && model.listValues!.items.isNotEmpty) {
-      return ListBoxModel(
-        value: model.value?.toListValueModel(),
-        listValues: model.listValues!.items,
-        listType: model.listType!,
-        labelText: model.param.name,
-        readonly: readonly,
-        searchEnabled:
-            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
-      ) as T;
-    }
-
-    return TextBoxModel(
-      value: model.value?.raw,
-      hint: model.defaultValue?.raw,
-      readonly: readonly,
-      valueUnfocused: model.value?.alt ?? model.value?.raw,
-      hintUnfocused: model.defaultValue?.alt ?? model.defaultValue?.raw,
-      labelText: model.param.name,
-      valueType: model.valueType,
-    ) as T;
+    return null;
   }
 }

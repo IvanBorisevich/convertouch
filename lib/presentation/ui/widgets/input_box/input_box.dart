@@ -58,6 +58,8 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
   horizontal: 12,
 );
 
+const String _defaultSearchHint = "Search...";
+
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   const ConvertouchInputBox({
     required this.model,
@@ -503,7 +505,9 @@ class _TextFieldState extends State<_TextField>
 
   @override
   void initState() {
-    _hint = widget.model.hintUnfocused;
+    super.initState();
+
+    _hint = widget.autofocus ? widget.model.hint : widget.model.hintUnfocused;
 
     initControllerValue(
       widget.controller,
@@ -541,8 +545,6 @@ class _TextFieldState extends State<_TextField>
         });
       },
     );
-
-    super.initState();
   }
 
   @override
@@ -803,8 +805,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     ),
                     child: ConvertouchInputBox(
                       model: TextBoxModel(
-                        hint: widget.model.searchHint,
-                        hintUnfocused: widget.model.searchHint,
+                        hint: widget.model.searchHint ?? _defaultSearchHint,
+                        hintUnfocused:
+                            widget.model.searchHint ?? _defaultSearchHint,
                         valueType: widget.model.listType.listValuesType,
                       ),
                       colors: InputBoxColorScheme(

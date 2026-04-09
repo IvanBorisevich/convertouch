@@ -13,8 +13,8 @@ class TextBoxModel extends InputBoxModel {
 
   const TextBoxModel({
     this.value,
-    super.hint,
     this.valueUnfocused,
+    super.hint,
     this.hintUnfocused,
     super.readonly,
     super.labelText,
@@ -28,7 +28,10 @@ class TextBoxModel extends InputBoxModel {
     return 'TextBoxModel{'
         'value: $value, '
         'valueUnfocused: $valueUnfocused, '
+        'hint: $hint, '
         'hintUnfocused: $hintUnfocused, '
+        'readonly: $readonly, '
+        'labelText: $labelText, '
         'valueType: $valueType, '
         'maxTextLength: $maxTextLength, '
         'textLengthCounterVisible: $textLengthCounterVisible}';

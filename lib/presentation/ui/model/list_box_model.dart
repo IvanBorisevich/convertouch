@@ -6,17 +6,17 @@ class ListBoxModel extends InputBoxModel {
   final ListValueModel? value;
   final List<ListValueModel> listValues;
   final ConvertouchListType listType;
-  final String searchHint;
+  final String? searchHint;
   final bool searchEnabled;
 
   const ListBoxModel({
     this.value,
     required this.listType,
-    super.hint = 'N/A',
+    super.hint,
     super.readonly,
     super.labelText,
     this.listValues = const [],
-    this.searchHint = 'Search...',
+    this.searchHint,
     this.searchEnabled = true,
   });
 }
