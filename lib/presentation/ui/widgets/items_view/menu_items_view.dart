@@ -19,6 +19,7 @@ import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
+const int _gridItemsNumInRow = 3;
 const double _spacing = 8;
 const double _bottomSpacing = 85;
 const String _defaultSearchPlaceholder = "Search...";
@@ -75,8 +76,10 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   late final ScrollController _listScrollController;
   late final ScrollController _gridScrollController;
 
+  late double _gridItemWidth;
+  late double _gridItemHeight;
+
   bool _isInitialized = false;
-  late final int _gridItemsNumInRow;
 
   @override
   void didChangeDependencies() {
@@ -91,9 +94,10 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   void _initStateByContext() {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    _gridItemsNumInRow =
-        ((screenWidth - _spacing) / (defaultMenuGridItemWidth + _spacing))
-            .floor();
+    _gridItemWidth = ((screenWidth - (_gridItemsNumInRow + 1) * _spacing) /
+            _gridItemsNumInRow)
+        .roundToDouble();
+    _gridItemHeight = _gridItemWidth;
 
     onLoadMore() {
       widget.itemsListBloc.add(
@@ -121,7 +125,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
         hasReachedMax: widget.itemsListBloc.state.itemsFetch.hasReachedMax,
         itemsNum: widget.itemsListBloc.state.itemsFetch.items.length,
         itemsNumInRow: _gridItemsNumInRow,
-        itemHeight: defaultMenuGridItemHeight,
+        itemHeight: _gridItemHeight,
         itemsSpacing: _spacing,
         onLoad: onLoadMore,
       );
@@ -213,7 +217,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                             bottom: _bottomSpacing,
                           ),
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: _gridItemsNumInRow,
                             crossAxisSpacing: _spacing,
                             mainAxisSpacing: _spacing,
@@ -301,6 +305,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       case ItemsViewMode.grid:
         return ConvertouchMenuGridItem(
           item,
+          width: _gridItemWidth,
+          height: _gridItemHeight,
           checked: checked || selected,
           colors: itemColors,
           disabled: disabled,

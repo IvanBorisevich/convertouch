@@ -48,6 +48,7 @@ class TextSearchMatch extends StatelessWidget {
                         fontSize: fontSize,
                         fontWeight: fontWeight,
                         letterSpacing: 0,
+                        height: 1,
                       ),
                     ),
                   )
@@ -61,6 +62,7 @@ class TextSearchMatch extends StatelessWidget {
                 fontWeight: fontWeight,
                 color: foreground,
                 letterSpacing: 0,
+                height: 1,
               ),
             ),
     );

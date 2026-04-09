@@ -4,16 +4,16 @@ import 'package:convertouch/presentation/ui/widgets/item_mode_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-const double defaultMenuGridItemWidth = 100;
-const double defaultMenuGridItemHeight = 100;
-const double _defaultTitleHeight = defaultMenuGridItemHeight * 0.4;
+const int _titleMaxLines = 2;
+const double _titleHeightFactor = 0.4;
 const double _defaultBorderRadius = 17;
 const double _logoFontSize = 20;
-const double _titleFontSize = 13;
 
 class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
   final T item;
+  final double width;
+  final double height;
   final bool checkIconVisible;
   final bool checkIconVisibleIfUnchecked;
   final bool checked;
@@ -32,6 +32,8 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
 
   const ConvertouchMenuGridItem(
     this.item, {
+    required this.width,
+    required this.height,
     required this.checkIconVisible,
     required this.checkIconVisibleIfUnchecked,
     required this.checked,
@@ -56,12 +58,15 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     Color matchBackground = colors.matchBackground.regular;
     Color matchForeground = colors.matchForeground.regular;
 
+    double titleHeight = height * _titleHeightFactor;
+    double titleFontSize = titleHeight / (_titleMaxLines + 1);
+
     return GestureDetector(
       onTap: onTap,
       onLongPress: onLongPress,
       child: Container(
-        width: defaultMenuGridItemWidth,
-        height: defaultMenuGridItemHeight,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           color: background,
           borderRadius: const BorderRadius.all(
@@ -97,7 +102,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                   ),
                 ),
                 Container(
-                  height: _defaultTitleHeight,
+                  height: titleHeight,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   decoration: BoxDecoration(
@@ -113,8 +118,8 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                     foreground: foreground,
                     matchBackground: matchBackground,
                     matchForeground: matchForeground,
-                    fontSize: _titleFontSize,
-                    maxLines: 2,
+                    fontSize: titleFontSize,
+                    maxLines: _titleMaxLines,
                   ),
                 ),
               ],
