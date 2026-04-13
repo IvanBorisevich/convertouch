@@ -21,12 +21,6 @@ typedef MappingRuleByUnitValueFunc = Map<String, String>? Function({
   required UnitModel unit,
 });
 
-typedef ParamValueByUnitValueFunc = ValueModel? Function({
-  required ValueModel? value,
-  required UnitModel unit,
-  required ConversionParamSetValueModel params,
-});
-
 typedef UnitValueByParamValuesFunc = ValueModel? Function({
   required UnitModel unit,
   required ConversionParamSetValueModel params,
@@ -172,25 +166,21 @@ ConversionParamValueModel calculateParamValueBySrcValue({
 
     value = ValueModel.any(mapping?[srcUnitValue.unit.code]);
   } else {
-    ParamValueByUnitValueFunc? func =
-        _nonListParamValueBySrcValueRules[unitGroup.name]?[params.paramSet.name]
-            ?[param.name];
+    ConversionRule paramBySrc = ConversionRule.paramByUnitValue(
+      func: _nonListParamValueBySrcValueRules[unitGroup.name]
+          ?[params.paramSet.name]?[param.name],
+      unit: srcUnitValue.unit,
+    );
 
-    value = func
-        ?.call(
-          value: srcUnitValue.value,
-          unit: srcUnitValue.unit,
-          params: params,
-        )
+    value = Converter(srcUnitValue.value, params: params)
+        .apply(paramBySrc)
+        .value
         ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
 
     if (srcUnitValue.listType == null) {
-      defaultValue = func
-          ?.call(
-            value: srcUnitValue.defaultValue,
-            unit: srcUnitValue.unit,
-            params: params,
-          )
+      defaultValue = Converter(srcUnitValue.defaultValue, params: params)
+          .apply(paramBySrc)
+          .value
           ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
     }
   }

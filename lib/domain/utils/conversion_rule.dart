@@ -1,20 +1,30 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 typedef FunctionWithParams = ValueModel? Function(ValueModel?,
     {ConversionParamSetValueModel? params});
 typedef FunctionWithoutParams = ValueModel? Function(ValueModel?);
+typedef ParamValueByUnitValueFunc = ValueModel? Function({
+  required ValueModel? value,
+  required UnitModel unit,
+  required ConversionParamSetValueModel params,
+});
 
 class Converter {
   final ValueModel? value;
+  final ConversionParamSetValueModel? params;
 
-  const Converter(this.value);
+  const Converter(
+    this.value, {
+    this.params,
+  });
 
   Converter apply(ConversionRule? conversionRule) {
-    ValueModel? y = conversionRule?.func?.call(value);
-    return Converter(y);
+    ValueModel? y = conversionRule?.func?.call(value, params: params);
+    return Converter(y, params: params);
   }
 }
 
@@ -83,6 +93,17 @@ class ConversionRule {
                 }
               : null,
           desc: desc,
+        );
+
+  ConversionRule.paramByUnitValue({
+    required ParamValueByUnitValueFunc? func,
+    required UnitModel unit,
+  }) : this(
+          func: (x, {ConversionParamSetValueModel? params}) {
+            return params != null
+                ? func?.call(value: x, unit: unit, params: params)
+                : null;
+          },
         );
 
   factory ConversionRule.coefficient(
