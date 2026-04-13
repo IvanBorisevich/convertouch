@@ -21,7 +21,7 @@ typedef MappingRuleByUnitValueFunc = Map<String, String>? Function({
   required UnitModel unit,
 });
 
-typedef UnitValueByParamValuesFunc = ValueModel? Function({
+typedef UnitValueByParamFunc = ValueModel? Function({
   required UnitModel unit,
   required ConversionParamSetValueModel params,
 });
@@ -41,7 +41,7 @@ const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
 };
 
 const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
-    _nonListParamValueBySrcValueRules = {
+    _nonListParamBySrcValueRules = {
   GroupNames.clothesSize: {
     ParamSetNames.byHeight: {
       ParamNames.height: getHeightByClothesSize,
@@ -62,8 +62,8 @@ const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
   },
 };
 
-const Map<String, Map<String, UnitValueByParamValuesFunc>>
-    _nonListSrcValueByParamValuesRules = {
+const Map<String, Map<String, UnitValueByParamFunc>>
+    _nonListSrcValueByParamsRules = {
   GroupNames.mass: {
     ParamSetNames.barbellWeight: getBarbellFullMass,
   },
@@ -112,11 +112,11 @@ List<ConversionUnitValueModel> calculateUnitValues(
     ValueModel? value;
 
     if (mappingTable != null) {
-      value = MappingConverter(
-        input.sourceUnitValue.value,
+      value = MappingConverter(mappingTable).valueBySrcValue(
+        srcValue: input.sourceUnitValue.value,
         srcUnitCode: input.sourceUnitValue.unit.code,
-        mapping: mappingTable,
-      ).mappedValue(tgtUnit.code);
+        tgtUnitCode: tgtUnit.code,
+      );
     } else {
       value = Converter(input.sourceUnitValue.value)
           .apply(xToBase)
@@ -164,11 +164,11 @@ ConversionParamValueModel calculateParamValueBySrcValue({
       srcValue: srcUnitValue.eitherValue,
     );
 
-    value = ValueModel.any(mapping?[srcUnitValue.unit.code]);
+    value = MappingConverter(mapping).valueByCode(srcUnitValue.unit.code);
   } else {
     ConversionRule paramBySrc = ConversionRule.paramByUnitValue(
-      func: _nonListParamValueBySrcValueRules[unitGroup.name]
-          ?[params.paramSet.name]?[param.name],
+      func: _nonListParamBySrcValueRules[unitGroup.name]?[params.paramSet.name]
+          ?[param.name],
       unit: srcUnitValue.unit,
     );
 
@@ -201,20 +201,20 @@ ConversionUnitValueModel calculateSrcValueByParams({
   required UnitGroupModel unitGroup,
 }) {
   if (srcUnit.listType != null) {
-    Map<String, String>? mappingTable = getMappingByParams(
+    Map<String, String>? mapping = getMappingByParams(
       unitGroupName: unitGroup.name,
       params: params,
     );
 
-    String? newValue = mappingTable?[srcUnit.code];
+    ValueModel? value = MappingConverter(mapping).valueByCode(srcUnit.code);
+
     return ConversionUnitValueModel(
       unit: srcUnit,
-      value: ValueModel.any(newValue),
+      value: value,
     );
   } else {
-    UnitValueByParamValuesFunc? func =
-        _nonListSrcValueByParamValuesRules[unitGroup.name]
-            ?[params.paramSet.name];
+    UnitValueByParamFunc? func =
+        _nonListSrcValueByParamsRules[unitGroup.name]?[params.paramSet.name];
 
     ValueModel? value = func
         ?.call(

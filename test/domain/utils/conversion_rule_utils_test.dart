@@ -155,79 +155,81 @@ void main() {
           params: clothesParams,
         )!;
 
+        MappingConverter converter = MappingConverter(mapping);
+
         test('RU -> EU', () {
           expect(
-            MappingConverter(
-              ValueModel.numeric(42),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(42),
               srcUnitCode: CountryCode.ru.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.eu.name),
+              tgtUnitCode: CountryCode.eu.name,
+            ),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> RU', () {
           expect(
-            MappingConverter(
-              ValueModel.numeric(42),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(42),
               srcUnitCode: CountryCode.eu.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.ru.name),
+              tgtUnitCode: CountryCode.ru.name,
+            ),
             ValueModel.numeric(42),
           );
         });
 
         test('INT -> RU', () {
           expect(
-            MappingConverter(
-              ValueModel.str("XXS"),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.str("XXS"),
               srcUnitCode: CountryCode.inter.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.ru.name),
+              tgtUnitCode: CountryCode.ru.name,
+            ),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> INT', () {
           expect(
-            MappingConverter(
-              ValueModel.numeric(42),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(42),
               srcUnitCode: CountryCode.eu.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.inter.name),
+              tgtUnitCode: CountryCode.inter.name,
+            ),
             ValueModel.str("XXS"),
           );
         });
 
         test('EU -> RU (unacceptable value)', () {
           expect(
-            MappingConverter(
-              ValueModel.numeric(33),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(33),
               srcUnitCode: CountryCode.eu.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.ru.name),
+              tgtUnitCode: CountryCode.ru.name,
+            ),
             null,
           );
         });
 
         test('RU -> EU (no value)', () {
           expect(
-            MappingConverter(
-              null,
+            converter.valueBySrcValue(
+              srcValue: null,
               srcUnitCode: CountryCode.ru.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.eu.name),
+              tgtUnitCode: CountryCode.eu.name,
+            ),
             null,
           );
         });
 
         test('RU -> RU', () {
           expect(
-            MappingConverter(
-              ValueModel.numeric(42),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(42),
               srcUnitCode: CountryCode.ru.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.ru.name),
+              tgtUnitCode: CountryCode.ru.name,
+            ),
             ValueModel.numeric(42),
           );
         });
@@ -247,13 +249,15 @@ void main() {
           params: ringParams,
         )!;
 
+        MappingConverter converter = MappingConverter(mapping);
+
         test('FR -> ES | should find match by non-null src value', () {
           expect(
-            MappingConverter(
-              ValueModel.any(75),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(75),
               srcUnitCode: CountryCode.fr.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.es.name),
+              tgtUnitCode: CountryCode.es.name,
+            ),
             ValueModel.numeric(35),
           );
         });
@@ -262,22 +266,22 @@ void main() {
             'FR -> ES | should not find match '
             'by src value not from the mapping', () {
           expect(
-            MappingConverter(
-              ValueModel.any(400),
+            converter.valueBySrcValue(
+              srcValue: ValueModel.numeric(400),
               srcUnitCode: CountryCode.fr.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.es.name),
+              tgtUnitCode: CountryCode.es.name,
+            ),
             null,
           );
         });
 
         test('DE -> ES | should find match by null src value', () {
           expect(
-            MappingConverter(
-              null,
+            converter.valueBySrcValue(
+              srcValue: null,
               srcUnitCode: CountryCode.de.name,
-              mapping: mapping,
-            ).mappedValue(CountryCode.es.name),
+              tgtUnitCode: CountryCode.es.name,
+            ),
             ValueModel.numeric(35),
           );
         });

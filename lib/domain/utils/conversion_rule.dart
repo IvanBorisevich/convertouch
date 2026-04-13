@@ -29,26 +29,26 @@ class Converter {
 }
 
 class MappingConverter {
-  final ValueModel? value;
-  final String srcUnitCode;
-  final Map<String, String> mapping;
+  final Map<String, String>? mapping;
 
-  const MappingConverter(
-    this.value, {
-    required this.srcUnitCode,
-    required this.mapping,
-  });
+  const MappingConverter(this.mapping);
 
-  ValueModel? mappedValue(String tgtUnitCode) {
-    if (value?.raw != mapping[srcUnitCode]) {
+  ValueModel? valueBySrcValue({
+    required ValueModel? srcValue,
+    required String srcUnitCode,
+    required String tgtUnitCode,
+  }) {
+    if (srcValue?.raw != mapping?[srcUnitCode]) {
       return null;
     }
 
-    String? tgtRawValue = mapping[tgtUnitCode];
+    return valueByCode(tgtUnitCode);
+  }
 
-    return tgtRawValue != null
-        ? ValueModel.any(ListValueModel.value(tgtRawValue))
-        : null;
+  ValueModel? valueByCode(String code) {
+    String? value = mapping?[code];
+
+    return value != null ? ValueModel.any(ListValueModel.value(value)) : null;
   }
 }
 
