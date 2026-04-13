@@ -89,7 +89,7 @@ class ConversionParamsView extends StatelessWidget {
                     showBackIcon: false,
                     showNextIcon: false,
                     tabAlignment: TabAlignment.center,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: _paramsSpacing),
                     indicator: const UnderlineTabIndicator(
                       borderSide: BorderSide.none,
                     ),

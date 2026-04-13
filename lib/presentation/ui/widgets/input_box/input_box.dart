@@ -55,7 +55,7 @@ const double _textHeightCoefficient = 1.2;
 const double _defaultFontSize = 17;
 const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
   vertical: 10,
-  horizontal: 12,
+  horizontal: 14,
 );
 
 const String _defaultSearchHint = "Search...";
@@ -374,7 +374,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             )?.call("");
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7),
+            padding: const EdgeInsets.only(right: 14),
             color: Colors.transparent,
             child: Container(
               padding: const EdgeInsets.all(2),
