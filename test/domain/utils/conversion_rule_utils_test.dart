@@ -11,7 +11,7 @@ import '../model/mock/mock_unit.dart';
 import '../model/mock/mock_unit_group.dart';
 
 void main() {
-  group('Convert by a formula rule', () {
+  group('Convert by a function rule', () {
     group('Without parameters', () {
       group('Two-way conversion (e. g. temperature)', () {
         ConversionRule fahrenheitToCelsius = rules.getRule(

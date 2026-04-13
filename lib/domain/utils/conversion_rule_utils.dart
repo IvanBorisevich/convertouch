@@ -12,36 +12,15 @@ import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
 
-typedef MappingRuleByParamFunc = Map<String, String>? Function(
-  ConversionParamSetValueModel,
-);
-
-typedef MappingRuleByUnitValueFunc = Map<String, String>? Function({
-  required ValueModel? value,
-  required UnitModel unit,
-});
-
-typedef UnitValueByParamFunc = ValueModel? Function({
-  required UnitModel unit,
-  required ConversionParamSetValueModel params,
-});
+// Function rules
 
 final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
     _formulaRules = {
   GroupNames.temperature: temperatureRules,
 };
 
-const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
-  GroupNames.clothesSize: getClothesSizesMapByParams,
-  GroupNames.ringSize: getRingSizesMapByParams,
-};
-
-const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
-  GroupNames.ringSize: getRingSizesMapByValue,
-};
-
 const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
-    _nonListParamBySrcValueRules = {
+_nonListParamBySrcValueRules = {
   GroupNames.clothesSize: {
     ParamSetNames.byHeight: {
       ParamNames.height: getHeightByClothesSize,
@@ -62,11 +41,22 @@ const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
   },
 };
 
-const Map<String, Map<String, UnitValueByParamFunc>>
-    _nonListSrcValueByParamsRules = {
+const Map<String, Map<String, UnitValueByParamValueFunc>>
+_nonListSrcValueByParamsRules = {
   GroupNames.mass: {
     ParamSetNames.barbellWeight: getBarbellFullMass,
   },
+};
+
+// Mapping rules -------------------------------------------------------------
+
+const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
+  GroupNames.clothesSize: getClothesSizesMapByParams,
+  GroupNames.ringSize: getRingSizesMapByParams,
+};
+
+const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
+  GroupNames.ringSize: getRingSizesMapByValue,
 };
 
 //----------------------------------------------------------------------------
@@ -166,10 +156,10 @@ ConversionParamValueModel calculateParamValueBySrcValue({
 
     value = MappingConverter(mapping).valueByCode(srcUnitValue.unit.code);
   } else {
-    ConversionRule paramBySrc = ConversionRule.paramByUnitValue(
+    ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
       func: _nonListParamBySrcValueRules[unitGroup.name]?[params.paramSet.name]
           ?[param.name],
-      unit: srcUnitValue.unit,
+      srcUnit: srcUnitValue.unit,
     );
 
     value = Converter(srcUnitValue.value, params: params)
@@ -213,14 +203,15 @@ ConversionUnitValueModel calculateSrcValueByParams({
       value: value,
     );
   } else {
-    UnitValueByParamFunc? func =
-        _nonListSrcValueByParamsRules[unitGroup.name]?[params.paramSet.name];
+    ConversionRule srcByParam = ConversionRule.srcValueByParam(
+      func: _nonListSrcValueByParamsRules[unitGroup.name]
+          ?[params.paramSet.name],
+      srcUnit: srcUnit,
+    );
 
-    ValueModel? value = func
-        ?.call(
-          unit: srcUnit,
-          params: params,
-        )
+    ValueModel? value = Converter.noInitValue(params: params)
+        .apply(srcByParam)
+        .value
         ?.betweenOrNull(srcUnit.minValue, srcUnit.maxValue);
 
     return ConversionUnitValueModel(

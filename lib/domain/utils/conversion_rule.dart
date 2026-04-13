@@ -6,12 +6,30 @@ import 'package:convertouch/domain/model/value_model.dart';
 
 typedef FunctionWithParams = ValueModel? Function(ValueModel?,
     {ConversionParamSetValueModel? params});
+
 typedef FunctionWithoutParams = ValueModel? Function(ValueModel?);
+
 typedef ParamValueByUnitValueFunc = ValueModel? Function({
   required ValueModel? value,
   required UnitModel unit,
   required ConversionParamSetValueModel params,
 });
+
+typedef UnitValueByParamValueFunc = ValueModel? Function({
+  required UnitModel unit,
+  required ConversionParamSetValueModel params,
+});
+
+typedef MappingRuleByParamFunc = Map<String, String>? Function(
+  ConversionParamSetValueModel,
+);
+
+typedef MappingRuleByUnitValueFunc = Map<String, String>? Function({
+  required ValueModel? value,
+  required UnitModel unit,
+});
+
+// Converters ----------------------------------------------------------------
 
 class Converter {
   final ValueModel? value;
@@ -21,6 +39,8 @@ class Converter {
     this.value, {
     this.params,
   });
+
+  const Converter.noInitValue({this.params}) : value = null;
 
   Converter apply(ConversionRule? conversionRule) {
     ValueModel? y = conversionRule?.func?.call(value, params: params);
@@ -51,6 +71,8 @@ class MappingConverter {
     return value != null ? ValueModel.any(ListValueModel.value(value)) : null;
   }
 }
+
+// Conversion rules ----------------------------------------------------------
 
 enum ConversionRuleType {
   xToBase,
@@ -95,13 +117,24 @@ class ConversionRule {
           desc: desc,
         );
 
-  ConversionRule.paramByUnitValue({
+  ConversionRule.paramBySrcValue({
     required ParamValueByUnitValueFunc? func,
-    required UnitModel unit,
+    required UnitModel srcUnit,
   }) : this(
           func: (x, {ConversionParamSetValueModel? params}) {
             return params != null
-                ? func?.call(value: x, unit: unit, params: params)
+                ? func?.call(value: x, unit: srcUnit, params: params)
+                : null;
+          },
+        );
+
+  ConversionRule.srcValueByParam({
+    required UnitValueByParamValueFunc? func,
+    required UnitModel srcUnit,
+  }) : this(
+          func: (x, {ConversionParamSetValueModel? params}) {
+            return params != null
+                ? func?.call(unit: srcUnit, params: params)
                 : null;
           },
         );
