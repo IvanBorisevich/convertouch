@@ -167,12 +167,15 @@ ConversionParamValueModel calculateParamValueBySrcValue({
         .value
         ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
 
-    if (srcUnitValue.listType == null) {
-      defaultValue = Converter(srcUnitValue.defaultValue, params: params)
-          .apply(paramBySrc)
-          .value
-          ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
-    }
+    defaultValue = Converter(
+      srcUnitValue.listType == null
+          ? srcUnitValue.defaultValue
+          : srcUnitValue.value,
+      params: params,
+    )
+        .apply(paramBySrc)
+        .value
+        ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
   }
 
   return ConversionParamValueModel(

@@ -203,11 +203,11 @@ void main() {
                 selectedIndex: 0,
                 totalCount: 1,
               ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 50, 1),
+              currentSrc: ConversionUnitValueModel.tuple(kilogram, 60, 22),
               currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 50, 1),
+                ConversionUnitValueModel.tuple(kilogram, 60, 22),
                 ConversionUnitValueModel.tuple(
-                    pound, 50 / pound.coefficient!, 1),
+                    pound, 60 / pound.coefficient!, 22 / pound.coefficient!),
               ],
               expectedSrc: ConversionUnitValueModel.tuple(kilogram, 100, 1),
               expectedUnitValues: [
@@ -434,7 +434,8 @@ void main() {
         group('New src value does not exist | new src default value exists',
             () {
           test(
-              "The param 'One Side Weight' is not empty and should be calculated", () async {
+              "The param 'One Side Weight' is not empty and should be calculated",
+              () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -480,7 +481,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, null, 40,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, null, 40,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -1255,7 +1257,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 170, null,
+                      ConversionParamValueModel.tuple(heightParam, 170, 170,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1308,7 +1310,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 184, null,
+                      ConversionParamValueModel.tuple(heightParam, 184, 184,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1360,7 +1362,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, null,
+                      ConversionParamValueModel.tuple(heightParam, 165, 165,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1412,7 +1414,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 150, null,
+                      ConversionParamValueModel.tuple(heightParam, 150, 150,
                           unit: centimeter, calculated: true),
                     ],
                   )

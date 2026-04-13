@@ -66,7 +66,7 @@ void main() {
                         ConversionParamValueModel.tuple(
                           circumferenceParam,
                           14.5 * pi,
-                          null,
+                          14.5 * pi,
                           unit: millimeter,
                           calculated: true,
                         ),
@@ -114,8 +114,12 @@ void main() {
                       paramSet: ringSizeByDiameterParamSet,
                       paramValues: [
                         ConversionParamValueModel.tuple(
-                            diameterParam, 14.5, null,
-                            unit: millimeter, calculated: true),
+                          diameterParam,
+                          14.5,
+                          14.5,
+                          unit: millimeter,
+                          calculated: true,
+                        ),
                       ],
                     ),
                     ConversionParamSetValueModel(
@@ -124,7 +128,7 @@ void main() {
                         ConversionParamValueModel.tuple(
                           circumferenceParam,
                           14.5 * pi,
-                          null,
+                          14.5 * pi,
                           unit: millimeter,
                           calculated: true,
                         ),
@@ -546,7 +550,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: ringSizeByDiameterParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14.5, null,
+                      ConversionParamValueModel.tuple(diameterParam, 14.5, 14.5,
                           unit: millimeter, calculated: true),
                     ],
                   ),
@@ -556,7 +560,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
                         14.5 * pi,
-                        null,
+                        14.5 * pi,
                         unit: millimeter,
                         calculated: true,
                       ),
