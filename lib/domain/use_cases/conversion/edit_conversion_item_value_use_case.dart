@@ -58,7 +58,7 @@ class EditConversionItemValueUseCase
       map: (paramValue, paramSetValue) async {
         return rules.calculateParamValueBySrcValue(
           srcUnitValue: srcUnitValue,
-          unitGroupName: unitGroup.name,
+          unitGroup: unitGroup,
           params: paramSetValue,
           param: paramValue.param,
         );

@@ -66,7 +66,7 @@ void main() {
                         ConversionParamValueModel.tuple(
                           circumferenceParam,
                           14.5 * pi,
-                          1,
+                          null,
                           unit: millimeter,
                           calculated: true,
                         ),
@@ -113,7 +113,8 @@ void main() {
                     ConversionParamSetValueModel(
                       paramSet: ringSizeByDiameterParamSet,
                       paramValues: [
-                        ConversionParamValueModel.tuple(diameterParam, 14.5, 1,
+                        ConversionParamValueModel.tuple(
+                            diameterParam, 14.5, null,
                             unit: millimeter, calculated: true),
                       ],
                     ),
@@ -123,7 +124,7 @@ void main() {
                         ConversionParamValueModel.tuple(
                           circumferenceParam,
                           14.5 * pi,
-                          1,
+                          null,
                           unit: millimeter,
                           calculated: true,
                         ),
@@ -171,12 +172,68 @@ void main() {
                       paramSet: barbellWeightParamSet,
                       paramValues: [
                         ConversionParamValueModel.tuple(
-                            barWeightParam, 10, null,
-                            unit: kilogram),
+                          barWeightParam,
+                          10,
+                          null,
+                          unit: kilogram,
+                        ),
                         ConversionParamValueModel.tuple(
                           oneSideWeightParam,
                           15,
-                          1,
+                          null,
+                          unit: kilogram,
+                          calculated: true,
+                        ),
+                      ],
+                    ),
+                  ],
+                  selectedParamSetCanBeRemoved: true,
+                  optionalParamSetsExist: true,
+                  paramSetsCanBeAdded: false,
+                  selectedIndex: 0,
+                  totalCount: 1,
+                ),
+              );
+            });
+
+            test(
+                'Bar weight param should be set by default,'
+                'one side weight param should be auto-calculated '
+                '(default values only)', () async {
+              await testCase(
+                unitGroup: massGroup,
+                useCase: useCase,
+                delta: AddParamSetsDelta(
+                  paramSetIds: [
+                    barbellWeightParamSet.id,
+                  ],
+                ),
+                currentParams: null,
+                currentSrc: ConversionUnitValueModel.tuple(ton, null, 1),
+                currentUnitValues: [
+                  ConversionUnitValueModel.tuple(kilogram, null, 1000),
+                  ConversionUnitValueModel.tuple(ton, null, 1),
+                ],
+                expectedSrc: ConversionUnitValueModel.tuple(ton, null, 1),
+                expectedUnitValues: [
+                  ConversionUnitValueModel.tuple(kilogram, null, 1000),
+                  ConversionUnitValueModel.tuple(ton, null, 1),
+                ],
+                expectedParams: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: barbellWeightParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          barWeightParam,
+                          10,
+                          null,
+                          unit: kilogram,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          oneSideWeightParam,
+                          null,
+                          (1000 - 10) / 2,
                           unit: kilogram,
                           calculated: true,
                         ),
@@ -227,7 +284,7 @@ void main() {
       group('New mandatory param set', () {
         group('With mapping table (clothes size)', () {
           test(
-              'Height param should be set by default, '
+              'Height param should not be set by default, '
               'other params should not be auto-calculated', () async {
             await testCase(
               unitGroup: clothesSizeGroup,
@@ -250,7 +307,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
-                      ConversionParamValueModel.tuple(heightParam, null, 1,
+                      ConversionParamValueModel.tuple(heightParam, null, null,
                           unit: centimeter, calculated: true),
                     ],
                   ),
@@ -489,7 +546,7 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: ringSizeByDiameterParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14.5, 1,
+                      ConversionParamValueModel.tuple(diameterParam, 14.5, null,
                           unit: millimeter, calculated: true),
                     ],
                   ),
@@ -499,7 +556,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
                         14.5 * pi,
-                        1,
+                        null,
                         unit: millimeter,
                         calculated: true,
                       ),

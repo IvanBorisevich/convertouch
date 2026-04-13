@@ -132,7 +132,7 @@ class AddParamSetsToConversionUseCase
           var newParamValue = srcUnitValue != null
               ? rules.calculateParamValueBySrcValue(
                   srcUnitValue: srcUnitValue,
-                  unitGroupName: unitGroup.name,
+                  unitGroup: unitGroup,
                   params: paramSetValue,
                   param: paramValue.param,
                 )

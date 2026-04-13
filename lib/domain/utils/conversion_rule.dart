@@ -3,34 +3,48 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-typedef FunctionWithParams = ValueModel? Function(
-    ValueModel?, ConversionParamSetValueModel params);
-typedef FunctionWithOptionalParams = ValueModel? Function(ValueModel?,
+typedef FunctionWithParams = ValueModel? Function(ValueModel?,
     {ConversionParamSetValueModel? params});
 typedef FunctionWithoutParams = ValueModel? Function(ValueModel?);
 
-ValueModel? _identityFunc(
-  ValueModel? x, {
-  ConversionParamSetValueModel? params,
-}) {
-  return x;
-}
-
 class Converter {
   final ValueModel? value;
-  final ConversionParamSetValueModel? params;
 
-  const Converter(
-    this.value, {
-    this.params,
-  });
+  const Converter(this.value);
 
   Converter apply(ConversionRule? conversionRule) {
-    ValueModel? y = value != ValueModel.undef
-        ? conversionRule?.func?.call(value, params: params)
-        : null;
-    return Converter(y, params: params);
+    ValueModel? y = conversionRule?.func?.call(value);
+    return Converter(y);
   }
+}
+
+class MappingConverter {
+  final ValueModel? value;
+  final String srcUnitCode;
+  final Map<String, String> mapping;
+
+  const MappingConverter(
+    this.value, {
+    required this.srcUnitCode,
+    required this.mapping,
+  });
+
+  ValueModel? mappedValue(String tgtUnitCode) {
+    if (value?.raw != mapping[srcUnitCode]) {
+      return null;
+    }
+
+    String? tgtRawValue = mapping[tgtUnitCode];
+
+    return tgtRawValue != null
+        ? ValueModel.any(ListValueModel.value(tgtRawValue))
+        : null;
+  }
+}
+
+enum ConversionRuleType {
+  xToBase,
+  baseToY,
 }
 
 class ConversionRule {
@@ -39,7 +53,7 @@ class ConversionRule {
     desc: baseUnitConversionRule,
   );
 
-  final FunctionWithOptionalParams? func;
+  final FunctionWithParams? func;
   final String? desc;
 
   const ConversionRule({
@@ -47,18 +61,7 @@ class ConversionRule {
     this.desc,
   });
 
-  ConversionRule.withParams({
-    required FunctionWithParams? func,
-    String? desc,
-  }) : this(
-          func: func != null
-              ? (x, {ConversionParamSetValueModel? params}) =>
-                  func.call(x, params!)
-              : null,
-          desc: desc,
-        );
-
-  ConversionRule.noParams({
+  ConversionRule.functionWithoutParams({
     required FunctionWithoutParams? func,
     String? desc,
   }) : this(
@@ -68,7 +71,7 @@ class ConversionRule {
           desc: desc,
         );
 
-  ConversionRule.num({
+  ConversionRule.numFunction({
     required double Function(double)? func,
     String? desc,
   }) : this(
@@ -81,71 +84,30 @@ class ConversionRule {
               : null,
           desc: desc,
         );
+
+  factory ConversionRule.coefficient(
+    double c, {
+    required ConversionRuleType ruleType,
+    String? desc,
+  }) {
+    switch (ruleType) {
+      case ConversionRuleType.xToBase:
+        return ConversionRule.numFunction(
+          func: (x) => x * c,
+          desc: desc ?? "y = x * $c",
+        );
+      case ConversionRuleType.baseToY:
+        return ConversionRule.numFunction(
+          func: (x) => x / c,
+          desc: desc ?? "y = x / $c",
+        );
+    }
+  }
 }
 
-class UnitRule {
-  static const identity = UnitRule(
-    xToBase: ConversionRule.identity,
-    baseToY: ConversionRule.identity,
-  );
-
-  final ConversionRule xToBase;
-  final ConversionRule baseToY;
-
-  const UnitRule({
-    required this.xToBase,
-    required this.baseToY,
-  });
-
-  UnitRule.plain({
-    required FunctionWithOptionalParams? xToBase,
-    required FunctionWithOptionalParams? baseToY,
-    String? xToBaseStr,
-    String? baseToYStr,
-  }) : this(
-          xToBase: ConversionRule(
-            func: xToBase,
-            desc: xToBaseStr,
-          ),
-          baseToY: ConversionRule(
-            func: baseToY,
-            desc: baseToYStr,
-          ),
-        );
-
-  UnitRule.num({
-    required double Function(double)? xToBase,
-    required double Function(double)? baseToY,
-    String? xToBaseStr,
-    String? baseToYStr,
-  }) : this(
-          xToBase: ConversionRule.num(
-            func: xToBase,
-            desc: xToBaseStr,
-          ),
-          baseToY: ConversionRule.num(
-            func: baseToY,
-            desc: baseToYStr,
-          ),
-        );
-
-  UnitRule.coefficient(double c)
-      : this.num(
-          xToBase: (x) => x * c,
-          baseToY: (x) => x / c,
-        );
-
-  UnitRule.mappingTable({
-    required Map<String, String> mapping,
-    required String unitCode,
-  }) : this.plain(
-          xToBase: (x, {params}) {
-            return mapping[unitCode] == x?.raw ? x : ValueModel.undef;
-          },
-          baseToY: (x, {params}) {
-            return mapping[unitCode] != null
-                ? ValueModel.any(ListValueModel.value(mapping[unitCode]!))
-                : null;
-          },
-        );
+ValueModel? _identityFunc(
+  ValueModel? x, {
+  ConversionParamSetValueModel? params,
+}) {
+  return x;
 }

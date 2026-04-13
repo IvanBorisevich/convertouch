@@ -8,61 +8,93 @@ import 'package:test/test.dart';
 
 import '../model/mock/mock_param.dart';
 import '../model/mock/mock_unit.dart';
+import '../model/mock/mock_unit_group.dart';
 
 void main() {
   group('Convert by a formula rule', () {
     group('Without parameters', () {
-      test(
-        'Two-way conversion (e. g. temperature)',
-        () {
-          UnitRule fahrenheitRule = rules.getFormulaRule(
-            unitGroupName: GroupNames.temperature,
-            unitCode: UnitCodes.degreeFahrenheit,
-          )!;
+      group('Two-way conversion (e. g. temperature)', () {
+        ConversionRule fahrenheitToCelsius = rules.getRule(
+          unitGroup: temperatureGroup,
+          unit: degreeFahrenheit,
+          ruleType: ConversionRuleType.xToBase,
+        )!;
 
-          UnitRule? kelvinRule = rules.getFormulaRule(
-            unitGroupName: GroupNames.temperature,
-            unitCode: UnitCodes.degreeKelvin,
-          );
+        ConversionRule celsiusToFahrenheit = rules.getRule(
+          unitGroup: temperatureGroup,
+          unit: degreeFahrenheit,
+          ruleType: ConversionRuleType.baseToY,
+        )!;
 
+        ConversionRule kelvinToCelsius = rules.getRule(
+          unitGroup: temperatureGroup,
+          unit: degreeKelvin,
+          ruleType: ConversionRuleType.xToBase,
+        )!;
+
+        ConversionRule celsiusToKelvin = rules.getRule(
+          unitGroup: temperatureGroup,
+          unit: degreeKelvin,
+          ruleType: ConversionRuleType.baseToY,
+        )!;
+
+        test('Fahrenheit -> Kelvin', () {
           expect(
             Converter(ValueModel.numeric(32))
-                .apply(fahrenheitRule.xToBase)
-                .apply(kelvinRule?.baseToY)
+                .apply(fahrenheitToCelsius)
+                .apply(celsiusToKelvin)
                 .value,
             ValueModel.numeric(273.15),
           );
+        });
 
+        test('Kelvin -> Fahrenheit', () {
           expect(
             Converter(ValueModel.numeric(273.15))
-                .apply(kelvinRule?.xToBase)
-                .apply(fahrenheitRule.baseToY)
+                .apply(kelvinToCelsius)
+                .apply(celsiusToFahrenheit)
                 .value,
             ValueModel.numeric(32),
           );
+        });
 
+        test('Kelvin -> Celsius', () {
           expect(
-            Converter(ValueModel.numeric(32))
-                .apply(fahrenheitRule.xToBase)
-                .apply(fahrenheitRule.baseToY)
+            Converter(ValueModel.numeric(273.15)).apply(kelvinToCelsius).value,
+            ValueModel.zero,
+          );
+        });
+
+        test('Celsius -> Kelvin', () {
+          expect(
+            const Converter(ValueModel.zero).apply(celsiusToKelvin).value,
+            ValueModel.numeric(273.15),
+          );
+        });
+
+        test('Kelvin -> Kelvin', () {
+          expect(
+            Converter(ValueModel.numeric(100))
+                .apply(kelvinToCelsius)
+                .apply(celsiusToKelvin)
                 .value,
-            ValueModel.numeric(32),
+            ValueModel.numeric(100),
           );
 
           expect(
             const Converter(null)
-                .apply(fahrenheitRule.xToBase)
-                .apply(fahrenheitRule.baseToY)
+                .apply(kelvinToCelsius)
+                .apply(celsiusToKelvin)
                 .value,
             null,
           );
-        },
-      );
+        });
+      });
 
       test(
         'One-way conversion (e. g. text size)',
         () {
-          ConversionRule strLen = ConversionRule.noParams(
+          ConversionRule strLen = ConversionRule.functionWithoutParams(
             func: (x) => ValueModel.any(x?.raw.length),
           );
 
@@ -106,139 +138,122 @@ void main() {
     });
 
     group('With parameters', () {
-      ConversionParamSetValueModel clothesParams = ConversionParamSetValueModel(
-        paramSet: clothesSizeParamSet,
-        paramValues: [
-          ConversionParamValueModel.tuple(personParam, "Man", null),
-          ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-          ConversionParamValueModel.tuple(heightParam, 150, 1,
-              unit: centimeter),
-        ],
-      );
-
       group('Clothes size', () {
-        Map<String, String> mappingTable = rules.getMappingTableByParams(
+        ConversionParamSetValueModel clothesParams =
+            ConversionParamSetValueModel(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(heightParam, 150, 1,
+                unit: centimeter),
+          ],
+        );
+
+        Map<String, String> mapping = rules.getMappingByParams(
           unitGroupName: GroupNames.clothesSize,
           params: clothesParams,
         )!;
 
-        UnitRule ruSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.ru.name,
-        );
-
-        UnitRule euSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.eu.name,
-        );
-
-        UnitRule interSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.inter.name,
-        );
-
         test('RU -> EU', () {
           expect(
-            Converter(ValueModel.numeric(42), params: clothesParams)
-                .apply(ruSize.xToBase)
-                .apply(euSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.numeric(42),
+              srcUnitCode: CountryCode.ru.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.eu.name),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> RU', () {
           expect(
-            Converter(ValueModel.numeric(42), params: clothesParams)
-                .apply(euSize.xToBase)
-                .apply(ruSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.numeric(42),
+              srcUnitCode: CountryCode.eu.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.ru.name),
             ValueModel.numeric(42),
           );
         });
 
         test('INT -> RU', () {
           expect(
-            Converter(ValueModel.str("XXS"), params: clothesParams)
-                .apply(interSize.xToBase)
-                .apply(ruSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.str("XXS"),
+              srcUnitCode: CountryCode.inter.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.ru.name),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> INT', () {
           expect(
-            Converter(ValueModel.numeric(42), params: clothesParams)
-                .apply(euSize.xToBase)
-                .apply(interSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.numeric(42),
+              srcUnitCode: CountryCode.eu.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.inter.name),
             ValueModel.str("XXS"),
           );
         });
 
         test('EU -> RU (unacceptable value)', () {
           expect(
-            Converter(ValueModel.numeric(33), params: clothesParams)
-                .apply(euSize.xToBase)
-                .apply(ruSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.numeric(33),
+              srcUnitCode: CountryCode.eu.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.ru.name),
             null,
           );
         });
 
         test('RU -> EU (no value)', () {
           expect(
-            Converter(null, params: clothesParams)
-                .apply(ruSize.xToBase)
-                .apply(euSize.baseToY)
-                .value,
+            MappingConverter(
+              null,
+              srcUnitCode: CountryCode.ru.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.eu.name),
             null,
           );
         });
 
         test('RU -> RU', () {
           expect(
-            Converter(ValueModel.numeric(42), params: clothesParams)
-                .apply(ruSize.xToBase)
-                .apply(ruSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.numeric(42),
+              srcUnitCode: CountryCode.ru.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.ru.name),
             ValueModel.numeric(42),
           );
         });
       });
 
       group('Ring size', () {
-        Map<String, String> mappingTable = {
-          CountryCode.us: 15,
-          CountryCode.uk: "Z+5",
-          CountryCode.es: 35,
-          CountryCode.fr: 75,
-          CountryCode.ru: 75,
-          CountryCode.it: 35,
-        }.map((k, v) => MapEntry(k.name, v.toString()));
-
-        UnitRule deSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.de.name,
+        ConversionParamSetValueModel ringParams = ConversionParamSetValueModel(
+          paramSet: ringSizeByDiameterParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(diameterParam, 24, 1,
+                unit: millimeter),
+          ],
         );
 
-        UnitRule esSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.es.name,
-        );
-
-        UnitRule frSize = UnitRule.mappingTable(
-          mapping: mappingTable,
-          unitCode: CountryCode.fr.name,
-        );
+        Map<String, String> mapping = rules.getMappingByParams(
+          unitGroupName: GroupNames.ringSize,
+          params: ringParams,
+        )!;
 
         test('FR -> ES | should find match by non-null src value', () {
           expect(
-            Converter(ValueModel.any(75))
-                .apply(frSize.xToBase)
-                .apply(esSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.any(75),
+              srcUnitCode: CountryCode.fr.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.es.name),
             ValueModel.numeric(35),
           );
         });
@@ -247,20 +262,22 @@ void main() {
             'FR -> ES | should not find match '
             'by src value not from the mapping', () {
           expect(
-            Converter(ValueModel.any(400))
-                .apply(frSize.xToBase)
-                .apply(esSize.baseToY)
-                .value,
+            MappingConverter(
+              ValueModel.any(400),
+              srcUnitCode: CountryCode.fr.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.es.name),
             null,
           );
         });
 
         test('DE -> ES | should find match by null src value', () {
           expect(
-            Converter(ValueModel.any(null))
-                .apply(deSize.xToBase)
-                .apply(esSize.baseToY)
-                .value,
+            MappingConverter(
+              null,
+              srcUnitCode: CountryCode.de.name,
+              mapping: mapping,
+            ).mappedValue(CountryCode.es.name),
             ValueModel.numeric(35),
           );
         });
@@ -273,50 +290,93 @@ void main() {
       group(
         'Two-way conversion',
         () {
-          UnitRule centimeterRule = UnitRule.coefficient(0.01);
-          UnitRule kilometerRule = UnitRule.coefficient(1000);
+          ConversionRule cmToM = ConversionRule.coefficient(
+            0.01,
+            ruleType: ConversionRuleType.xToBase,
+          );
+          ConversionRule mToCm = ConversionRule.coefficient(
+            0.01,
+            ruleType: ConversionRuleType.baseToY,
+          );
+
+          ConversionRule kmToM = ConversionRule.coefficient(
+            1000,
+            ruleType: ConversionRuleType.xToBase,
+          );
+          ConversionRule mToKm = ConversionRule.coefficient(
+            1000,
+            ruleType: ConversionRuleType.baseToY,
+          );
 
           test('cm -> km', () {
             expect(
-              Converter(ValueModel.numeric(32))
-                  .apply(centimeterRule.xToBase)
-                  .apply(kilometerRule.baseToY)
-                  .value,
+              Converter(ValueModel.numeric(32)).apply(cmToM).apply(mToKm).value,
               ValueModel.numeric(0.00032),
+            );
+          });
+
+          test('cm -> m', () {
+            expect(
+              Converter(ValueModel.numeric(32)).apply(cmToM).value,
+              ValueModel.numeric(0.32),
             );
           });
 
           test('km -> cm', () {
             expect(
-              Converter(ValueModel.numeric(32))
-                  .apply(kilometerRule.xToBase)
-                  .apply(centimeterRule.baseToY)
-                  .value,
+              Converter(ValueModel.numeric(32)).apply(kmToM).apply(mToCm).value,
               ValueModel.numeric(3200000),
+            );
+          });
+
+          test('km -> m', () {
+            expect(
+              Converter(ValueModel.numeric(32)).apply(kmToM).value,
+              ValueModel.numeric(32000),
             );
           });
 
           test('km -> km', () {
             expect(
-              Converter(ValueModel.numeric(32))
-                  .apply(kilometerRule.xToBase)
-                  .apply(kilometerRule.baseToY)
-                  .value,
+              Converter(ValueModel.numeric(32)).apply(kmToM).apply(mToKm).value,
               ValueModel.numeric(32),
             );
           });
 
           test('km -> km (no value)', () {
             expect(
-              const Converter(null)
-                  .apply(kilometerRule.xToBase)
-                  .apply(kilometerRule.baseToY)
-                  .value,
+              const Converter(null).apply(kmToM).apply(mToKm).value,
               null,
             );
           });
         },
       );
+    });
+  });
+
+  group('Calculate param value by src value', () {
+    group('Non-list param value', () {
+      test("Calculate the param 'One Size Weight' (default values only)", () {
+        expect(
+          rules.calculateParamValueBySrcValue(
+            param: oneSideWeightParam,
+            srcUnitValue: ConversionUnitValueModel.tuple(ton, null, 1),
+            params: ConversionParamSetValueModel(
+              paramSet: barbellWeightParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(barWeightParam, 10, null,
+                    unit: kilogram),
+                ConversionParamValueModel.tuple(oneSideWeightParam, null, 1,
+                    unit: kilogram, calculated: true),
+              ],
+            ),
+            unitGroup: massGroup,
+          ),
+          ConversionParamValueModel.tuple(
+              oneSideWeightParam, null, (1000 - 10) / 2,
+              unit: kilogram, calculated: true),
+        );
+      });
     });
   });
 }

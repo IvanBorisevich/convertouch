@@ -47,7 +47,7 @@ class SelectParamSetInConversionUseCase
       await calculateSourceItemByParamsUseCase.execute(
         InputSourceItemByParamsModel(
           oldSourceUnitValue: oldSourceUnitValue,
-          unitGroupName: unitGroup.name,
+          unitGroup: unitGroup,
           params: activeParams,
         ),
       ),

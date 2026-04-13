@@ -1,14 +1,15 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-ValueModel? getBarbellOneSideWeight({
-  required ConversionUnitValueModel value,
+ValueModel? getBarbellOneSideMass({
+  required ValueModel? value,
+  required UnitModel unit,
   required ConversionParamSetValueModel params,
 }) {
-  num? fullWeight = value.eitherNum;
+  num? fullWeight =
+      value?.numVal != null ? value!.numVal! * unit.coefficient! : null;
   num? barWeight = params.getParamValue(ParamNames.barWeight)?.eitherNum;
 
   if (fullWeight == null || barWeight == null) {
@@ -18,7 +19,7 @@ ValueModel? getBarbellOneSideWeight({
   return ValueModel.any((fullWeight - barWeight) / 2);
 }
 
-ValueModel? getBarbellFullWeight({
+ValueModel? getBarbellFullMass({
   required UnitModel unit,
   required ConversionParamSetValueModel params,
 }) {

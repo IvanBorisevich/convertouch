@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:either_dart/either.dart';
 
-const _alphaCodes = NumRange.closed(65, 90);
+const _alphaCodes = NumRange.leftRightIncluded(65, 90);
 
 class ObjectUtils {
   const ObjectUtils._();

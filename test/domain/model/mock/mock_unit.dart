@@ -203,3 +203,33 @@ const UnitModel esRingSize = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeEs,
 );
+
+const UnitModel ton = UnitModel(
+  id: 19,
+  name: "Ton",
+  code: "T",
+  valueType: ConvertouchValueType.decimalNonNegative,
+  minValue: ValueModel.zero,
+  coefficient: 1000,
+);
+
+const UnitModel degreeFahrenheit = UnitModel(
+  id: 20,
+  name: "Fahrenheit",
+  code: UnitCodes.degreeFahrenheit,
+  valueType: ConvertouchValueType.decimal,
+);
+
+const UnitModel degreeKelvin = UnitModel(
+  id: 21,
+  name: "Kelvin",
+  code: UnitCodes.degreeKelvin,
+  valueType: ConvertouchValueType.decimal,
+);
+
+const UnitModel ruClothesSize = UnitModel(
+  name: "Clothes Size RU",
+  code: 'RU',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  listType: ConvertouchListType.clothesSizeRu,
+);

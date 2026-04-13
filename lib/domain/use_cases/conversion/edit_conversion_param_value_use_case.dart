@@ -71,7 +71,7 @@ class EditConversionParamValueUseCase
       await calculateSourceItemByParamsUseCase.execute(
         InputSourceItemByParamsModel(
           oldSourceUnitValue: oldSourceUnitValue,
-          unitGroupName: unitGroup.name,
+          unitGroup: unitGroup,
           params: activeParams,
         ),
       ),

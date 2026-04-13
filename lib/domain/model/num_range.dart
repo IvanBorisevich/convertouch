@@ -14,7 +14,7 @@ class NumRange {
             'Negative infinity cannot be at right'),
         assert(left != double.infinity, 'Positive infinity cannot be at left');
 
-  const NumRange.leftOpen(num? left, num? right)
+  const NumRange.rightIncluded(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -22,7 +22,7 @@ class NumRange {
           includeRight: true,
         );
 
-  const NumRange.rightOpen(num? left, num? right)
+  const NumRange.leftIncluded(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -30,7 +30,7 @@ class NumRange {
           includeRight: false,
         );
 
-  const NumRange.open(num? left, num? right)
+  const NumRange.leftRightExcluded(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -38,7 +38,7 @@ class NumRange {
           includeRight: false,
         );
 
-  const NumRange.closed(num? left, num? right)
+  const NumRange.leftRightIncluded(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,

@@ -113,6 +113,12 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   UnitModel? get unitItem => unit;
 
   @override
+  List<Object?> get props => [
+    unit,
+    super.props,
+  ];
+
+  @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       "unit": unit.toJson(removeNulls: removeNulls),
@@ -146,12 +152,6 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
       ),
     );
   }
-
-  @override
-  List<Object?> get props => [
-        unit,
-        super.props,
-      ];
 
   @override
   String toString() {

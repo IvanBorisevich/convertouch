@@ -174,8 +174,9 @@ void main() {
     group('Conversion has params', () {
       group('Calculable param is switched on', () {
         group('New src value exists | new src default value exists', () {
-          test('The param is not empty (should be calculated by new value)',
-              () async {
+          test(
+              "The param 'One Side Weight' is not empty "
+              "and should be calculated", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -221,7 +222,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, 40, null,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -235,8 +237,9 @@ void main() {
             );
           });
 
-          test('The param is empty (should be calculated by new value)',
-              () async {
+          test(
+              "The param 'One Side Weight' is empty and should be calculated "
+              "as default one", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -283,7 +286,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, 40, null,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -300,8 +304,9 @@ void main() {
 
         group('New src value exists | new src default value does not exist',
             () {
-          test('The param is not empty (should be calculated by new value)',
-              () async {
+          test(
+              "The param 'One Side Weight' is not empty "
+              "and should be calculated", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -347,7 +352,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, 30, null,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -361,7 +367,7 @@ void main() {
             );
           });
 
-          test('The param is empty (should be calculated by new value)',
+          test("The param 'One Side Weight' is empty and should be calculated",
               () async {
             await testCase(
               unitGroup: massGroup,
@@ -409,7 +415,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, 30, null,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -427,8 +434,7 @@ void main() {
         group('New src value does not exist | new src default value exists',
             () {
           test(
-              'The param is not empty '
-              '(should be calculated by new default value)', () async {
+              "The param 'One Side Weight' is not empty and should be calculated", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -474,7 +480,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                      ConversionParamValueModel.tuple(oneSideWeightParam, null, 40,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -489,8 +495,8 @@ void main() {
           });
 
           test(
-              'The param is empty '
-              '(should be calculated by new default value)', () async {
+              "The param 'One Side Weight' is empty and should be calculated "
+              "as default one", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -537,7 +543,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(barWeightParam, 20, null,
                           unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                      ConversionParamValueModel.tuple(
+                          oneSideWeightParam, null, 40,
                           unit: kilogram, calculated: true),
                     ],
                   ),
@@ -556,9 +563,8 @@ void main() {
             'New src value does not exist | new src default value does not exist',
             () {
           test(
-              'The param is not empty '
-              '(should be calculated by default value of the unit type)',
-              () async {
+              "The param 'One Side Weight' is not empty and should be "
+              "calculated as main one", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -620,9 +626,8 @@ void main() {
           });
 
           test(
-              'The param is empty '
-              '(should be calculated by default value of the unit type)',
-              () async {
+              "The param 'One Side Weight' is empty and should be calculated "
+              "as default one", () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
@@ -1219,7 +1224,7 @@ void main() {
                 unitId: europeanClothSize.id,
               ),
               currentSrc:
-                  ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
+                  ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
               currentParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
@@ -1228,7 +1233,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 167, 1,
+                      ConversionParamValueModel.tuple(heightParam, 160, null,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1250,7 +1255,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 167, 1,
+                      ConversionParamValueModel.tuple(heightParam, 170, null,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1303,7 +1308,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 184, 1,
+                      ConversionParamValueModel.tuple(heightParam, 184, null,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1355,7 +1360,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 1,
+                      ConversionParamValueModel.tuple(heightParam, 165, null,
                           unit: centimeter, calculated: true),
                     ],
                   )
@@ -1407,7 +1412,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 150, 1,
+                      ConversionParamValueModel.tuple(heightParam, 150, null,
                           unit: centimeter, calculated: true),
                     ],
                   )

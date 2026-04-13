@@ -8,9 +8,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:either_dart/either.dart';
 
@@ -93,7 +91,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       );
 
       if (input.delta.recalculateUnitValues) {
-        var convertedUnitValues = _calculateUnitValues(
+        var convertedUnitValues = rules.calculateUnitValues(
           InputConversionModel(
             unitGroup: modifiedGroup,
             params: newParams?.active,
@@ -169,73 +167,5 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     required D delta,
   }) async {
     return oldConvertedUnitValues;
-  }
-
-  List<ConversionUnitValueModel> _calculateUnitValues(
-      InputConversionModel input) {
-    List<ConversionUnitValueModel> convertedUnitValues = [];
-
-    Map<String, String>? mappingTable;
-    if (input.params != null && input.params!.hasAllValues) {
-      mappingTable = rules.getMappingTableByParams(
-        unitGroupName: input.unitGroup.name,
-        params: input.params,
-      );
-    } else {
-      mappingTable = rules.getMappingTableByValue(
-        unitGroupName: input.unitGroup.name,
-        value: input.sourceUnitValue,
-      );
-    }
-
-    ConversionRule? xToBase = rules
-        .getRule(
-          unitGroup: input.unitGroup,
-          unit: input.sourceUnitValue.unit,
-          mappingTable: mappingTable,
-        )
-        ?.xToBase;
-
-    for (var tgtUnit in input.targetUnits) {
-      if (tgtUnit.name == input.sourceUnitValue.unit.name) {
-        convertedUnitValues.add(input.sourceUnitValue);
-        continue;
-      }
-
-      ConversionRule? baseToY = mappingTable != null
-          ? UnitRule.mappingTable(
-              mapping: mappingTable,
-              unitCode: tgtUnit.code,
-            ).baseToY
-          : rules
-              .getRule(
-                unitGroup: input.unitGroup,
-                unit: tgtUnit,
-              )
-              ?.baseToY;
-
-      ValueModel? resultValue = Converter(input.sourceUnitValue.value)
-          .apply(xToBase)
-          .apply(baseToY)
-          .value
-          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
-
-      ValueModel? resultDefValue = tgtUnit.listType == null
-          ? Converter(input.sourceUnitValue.defaultValue)
-              .apply(xToBase)
-              .apply(baseToY)
-              .value
-              ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue)
-          : null;
-
-      convertedUnitValues.add(
-        ConversionUnitValueModel(
-          unit: tgtUnit,
-          value: resultValue,
-          defaultValue: resultDefValue,
-        ),
-      );
-    }
-    return convertedUnitValues;
   }
 }

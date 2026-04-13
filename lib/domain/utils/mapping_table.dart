@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 abstract class Criterion {
   const Criterion();
@@ -51,22 +52,22 @@ class MappingTable<T extends Criterion, K> {
         ?.transform(unitCodeByKey);
   }
 
-  T? getCriterionByValue(ConversionUnitValueModel value) {
-    return _getTableRowByValue(value)?.criterion;
+  T? getCriterionByValue(ValueModel? value, UnitModel unit) {
+    return _getTableRowByValue(value, unit)?.criterion;
   }
 
-  Map<String, String>? getMappingByValue(ConversionUnitValueModel value) {
-    return _getTableRowByValue(value)?.transform(unitCodeByKey);
+  Map<String, String>? getMappingByValue(ValueModel? value, UnitModel unit) {
+    return _getTableRowByValue(value, unit)?.transform(unitCodeByKey);
   }
 
-  MappingRow<T, K>? _getTableRowByValue(ConversionUnitValueModel value) {
+  MappingRow<T, K>? _getTableRowByValue(ValueModel? value, UnitModel unit) {
     if (rows.isEmpty) {
       return null;
     }
 
-    K codeKey = keyByUnitCode?.call(value.unit.code) ?? (value.unit.code as K);
+    K codeKey = keyByUnitCode?.call(unit.code) ?? (unit.code as K);
 
     return rows.firstWhereOrNull((row) =>
-        row.row[codeKey] == value.eitherNum || row.row[codeKey] == value.eitherRaw);
+        row.row[codeKey] == value?.numVal || row.row[codeKey] == value?.raw);
   }
 }

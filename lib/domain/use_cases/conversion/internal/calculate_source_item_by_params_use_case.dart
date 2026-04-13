@@ -58,7 +58,7 @@ class CalculateSourceItemByParamsUseCase
       return Right(
         rules.calculateSrcValueByParams(
           params: input.params!,
-          unitGroupName: input.unitGroupName,
+          unitGroup: input.unitGroup,
           srcUnit: srcUnit,
           defaultValue: defaultValue,
         ),
