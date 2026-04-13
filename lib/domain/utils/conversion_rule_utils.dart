@@ -19,8 +19,8 @@ final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
   GroupNames.temperature: temperatureRules,
 };
 
-const Map<String, Map<String, Map<String, ParamValueByUnitValueFunc>>>
-_nonListParamBySrcValueRules = {
+const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
+    _nonListParamBySrcValueRules = {
   GroupNames.clothesSize: {
     ParamSetNames.byHeight: {
       ParamNames.height: getHeightByClothesSize,
@@ -36,13 +36,13 @@ _nonListParamBySrcValueRules = {
   },
   GroupNames.mass: {
     ParamSetNames.barbellWeight: {
-      ParamNames.oneSideWeight: getBarbellOneSideMass,
+      ParamNames.oneSideWeight: getBarbellOneSideMassByFullMass,
     },
   },
 };
 
-const Map<String, Map<String, UnitValueByParamValueFunc>>
-_nonListSrcValueByParamsRules = {
+const Map<String, Map<String, SrcUnitValueByParamValueFunc>>
+    _nonListSrcValueByParamsRules = {
   GroupNames.mass: {
     ParamSetNames.barbellWeight: getBarbellFullMass,
   },
@@ -204,13 +204,28 @@ ConversionUnitValueModel calculateSrcValueByParams({
     );
   } else {
     ConversionRule srcByParam = ConversionRule.srcValueByParam(
-      func: _nonListSrcValueByParamsRules[unitGroup.name]
+      paramValueFunc: (paramValue) => paramValue.value,
+      srcValueFunc: _nonListSrcValueByParamsRules[unitGroup.name]
+          ?[params.paramSet.name],
+      srcUnit: srcUnit,
+    );
+
+    ConversionRule srcByParamForDefault = ConversionRule.srcValueByParam(
+      paramValueFunc: (paramValue) => paramValue.listType == null
+          ? paramValue.defaultValue
+          : paramValue.value,
+      srcValueFunc: _nonListSrcValueByParamsRules[unitGroup.name]
           ?[params.paramSet.name],
       srcUnit: srcUnit,
     );
 
     ValueModel? value = Converter.noInitValue(params: params)
         .apply(srcByParam)
+        .value
+        ?.betweenOrNull(srcUnit.minValue, srcUnit.maxValue);
+
+    ValueModel? defaultValue = Converter.noInitValue(params: params)
+        .apply(srcByParamForDefault)
         .value
         ?.betweenOrNull(srcUnit.minValue, srcUnit.maxValue);
 

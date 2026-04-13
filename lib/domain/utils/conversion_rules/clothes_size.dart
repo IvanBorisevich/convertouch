@@ -76,8 +76,8 @@ Map<String, String>? getClothesSizesMapByParams(
 }
 
 ValueModel? getHeightByClothesSize({
-  required ValueModel? value,
-  required UnitModel unit,
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
 }) {
   Person? person = params.getValueOfType(ParamNames.person, Person.valueOf);
@@ -85,7 +85,7 @@ ValueModel? getHeightByClothesSize({
   num? currentHeight = params.getParamValue(ParamNames.height)?.numVal;
 
   var criterion =
-      _clothesSizes[person]?[garment]?.getCriterionByValue(value, unit);
+      _clothesSizes[person]?[garment]?.getCriterionByValue(srcValue, srcUnit);
   return ValueModel.any(
       criterion?.heightCmRange.valOrRight(currentHeight) ?? currentHeight);
 }

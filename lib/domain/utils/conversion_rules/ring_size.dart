@@ -64,20 +64,20 @@ Map<String, String>? getRingSizesMapByValue({
 }
 
 ValueModel? getDiameterByRingSize({
-  required ValueModel? value,
-  required UnitModel unit,
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
 }) {
-  var criterion = _ringSizes.getCriterionByValue(value, unit);
+  var criterion = _ringSizes.getCriterionByValue(srcValue, srcUnit);
   return ValueModel.any(criterion?.diameterMmRange.right);
 }
 
 ValueModel? getCircumferenceByRingSize({
-  required ValueModel? value,
-  required UnitModel unit,
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
 }) {
-  var criterion = _ringSizes.getCriterionByValue(value, unit);
+  var criterion = _ringSizes.getCriterionByValue(srcValue, srcUnit);
   return criterion?.diameterMmRange.right != null
       ? ValueModel.any(criterion!.diameterMmRange.right * pi)
       : null;

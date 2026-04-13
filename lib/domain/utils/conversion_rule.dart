@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -9,14 +10,17 @@ typedef FunctionWithParams = ValueModel? Function(ValueModel?,
 
 typedef FunctionWithoutParams = ValueModel? Function(ValueModel?);
 
-typedef ParamValueByUnitValueFunc = ValueModel? Function({
-  required ValueModel? value,
-  required UnitModel unit,
+typedef ParamValueFunc = ValueModel? Function(ConversionParamValueModel);
+
+typedef ParamValueBySrcUnitValueFunc = ValueModel? Function({
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
 });
 
-typedef UnitValueByParamValueFunc = ValueModel? Function({
-  required UnitModel unit,
+typedef SrcUnitValueByParamValueFunc = ValueModel? Function({
+  required UnitModel srcUnit,
+  required ParamValueFunc paramValueFunc,
   required ConversionParamSetValueModel params,
 });
 
@@ -118,24 +122,31 @@ class ConversionRule {
         );
 
   ConversionRule.paramBySrcValue({
-    required ParamValueByUnitValueFunc? func,
+    required ParamValueBySrcUnitValueFunc? func,
     required UnitModel srcUnit,
   }) : this(
           func: (x, {ConversionParamSetValueModel? params}) {
             return params != null
-                ? func?.call(value: x, unit: srcUnit, params: params)
+                ? func?.call(srcValue: x, srcUnit: srcUnit, params: params)
                 : null;
           },
         );
 
   ConversionRule.srcValueByParam({
-    required UnitValueByParamValueFunc? func,
+    required ParamValueFunc paramValueFunc,
+    required SrcUnitValueByParamValueFunc? srcValueFunc,
     required UnitModel srcUnit,
   }) : this(
           func: (x, {ConversionParamSetValueModel? params}) {
-            return params != null
-                ? func?.call(unit: srcUnit, params: params)
-                : null;
+            if (params == null) {
+              return null;
+            }
+
+            return srcValueFunc?.call(
+              srcUnit: srcUnit,
+              params: params,
+              paramValueFunc: paramValueFunc,
+            );
           },
         );
 

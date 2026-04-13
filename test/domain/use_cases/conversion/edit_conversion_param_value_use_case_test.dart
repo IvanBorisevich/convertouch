@@ -54,7 +54,7 @@ void main() {
                   paramValues: [
                     ConversionParamValueModel.tuple(barWeightParam, 10, null,
                         unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                    ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
                         unit: kilogram),
                   ],
                 ),
@@ -65,16 +65,17 @@ void main() {
               selectedIndex: 0,
               totalCount: 1,
             ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+            currentSrc: ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 70, 1),
-              ConversionUnitValueModel.tuple(pound, 70 / pound.coefficient!, 1),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 1),
+              ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
+                  pound, 1010 / pound.coefficient!, 12 / pound.coefficient!),
+            ],
+            expectedSrc: ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+              ConversionUnitValueModel.tuple(
+                  pound, 1020 / pound.coefficient!, 22 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -83,7 +84,7 @@ void main() {
                   paramValues: [
                     ConversionParamValueModel.tuple(barWeightParam, 20, null,
                         unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                    ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
                         unit: kilogram),
                   ],
                 ),
@@ -128,17 +129,17 @@ void main() {
               selectedIndex: 0,
               totalCount: 1,
             ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, 1, null),
+            currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, null),
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 1, null),
+              ConversionUnitValueModel.tuple(kilogram, 70, null),
               ConversionUnitValueModel.tuple(
                   pound, 1 / pound.coefficient!, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 1),
+              ConversionUnitValueModel.tuple(kilogram, 80, 22),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
+                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -192,17 +193,17 @@ void main() {
               selectedIndex: 0,
               totalCount: 1,
             ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 1),
+            currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
             currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, null, 1),
+              ConversionUnitValueModel.tuple(kilogram, 70, 12),
               ConversionUnitValueModel.tuple(
-                  pound, null, 1 / pound.coefficient!),
+                  pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 1),
+              ConversionUnitValueModel.tuple(kilogram, 80, 22),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
+                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -261,11 +262,11 @@ void main() {
               ConversionUnitValueModel.tuple(kilogram, null, null),
               ConversionUnitValueModel.tuple(pound, null, null),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 1),
+            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 1),
+              ConversionUnitValueModel.tuple(kilogram, 80, 22),
               ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 1 / pound.coefficient!),
+                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -322,17 +323,17 @@ void main() {
                 selectedIndex: 0,
                 totalCount: 1,
               ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
               currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, 1),
+                ConversionUnitValueModel.tuple(kilogram, 70, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, 1),
+                    pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -386,17 +387,17 @@ void main() {
                 selectedIndex: 0,
                 totalCount: 1,
               ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 1, null),
+              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, null),
               currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 1, null),
+                ConversionUnitValueModel.tuple(kilogram, 70, null),
                 ConversionUnitValueModel.tuple(
-                    pound, 1 / pound.coefficient!, null),
+                    pound, 70 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -450,17 +451,17 @@ void main() {
                 selectedIndex: 0,
                 totalCount: 1,
               ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 1),
+              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
               currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, null, 1 / pound.coefficient!),
+                    pound, null, 12 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 14),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 14),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 14 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -520,11 +521,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -586,11 +587,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -650,11 +651,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -714,11 +715,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -778,11 +779,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, 90, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -844,11 +845,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 90),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 90 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -909,11 +910,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 90),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 90 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -974,11 +975,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 90),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 90 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1039,11 +1040,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 90),
                 ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 90 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1108,11 +1109,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 70 / pound.coefficient!, 1),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1174,11 +1175,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, 1 / pound.coefficient!, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1240,11 +1241,11 @@ void main() {
                 ConversionUnitValueModel.tuple(
                     pound, null, 1 / pound.coefficient!),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1306,11 +1307,11 @@ void main() {
                 ConversionUnitValueModel.tuple(kilogram, null, null),
                 ConversionUnitValueModel.tuple(pound, null, null),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 12, 1),
+              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 12, 1),
+                ConversionUnitValueModel.tuple(kilogram, null, 12),
                 ConversionUnitValueModel.tuple(
-                    pound, 12 / pound.coefficient!, 1 / pound.coefficient!),
+                    pound, null, 12 / pound.coefficient!),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [

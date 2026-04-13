@@ -2,36 +2,62 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/conversion_rule.dart';
 
-ValueModel? getBarbellOneSideMass({
-  required ValueModel? value,
-  required UnitModel unit,
+ValueModel? getBarbellOneSideMassByFullMass({
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
 }) {
-  num? fullWeight =
-      value?.numVal != null ? value!.numVal! * unit.coefficient! : null;
-  num? barWeight = params.getParamValue(ParamNames.barWeight)?.eitherNum;
+  num? fullWeight = srcValue?.numVal != null
+      ? srcValue!.numVal! * srcUnit.coefficient!
+      : null;
 
-  if (fullWeight == null || barWeight == null) {
+  var barWeightParam = params.getParamValue(ParamNames.barWeight);
+  var oneSideMassParam = params.getParamValue(ParamNames.oneSideWeight);
+
+  num? barWeight = barWeightParam?.eitherNum;
+
+  if (fullWeight == null ||
+      barWeight == null ||
+      barWeightParam?.unit?.coefficient == null ||
+      oneSideMassParam?.unit?.coefficient == null) {
     return null;
   }
 
-  return ValueModel.any((fullWeight - barWeight) / 2);
+  num? result = (fullWeight - barWeight * barWeightParam!.unit!.coefficient!) /
+      2 /
+      oneSideMassParam!.unit!.coefficient!;
+
+  return ValueModel.any(result);
 }
 
 ValueModel? getBarbellFullMass({
-  required UnitModel unit,
+  required UnitModel srcUnit,
+  required ParamValueFunc paramValueFunc,
   required ConversionParamSetValueModel params,
 }) {
-  num? oneSideWeight =
-      params.getParamValue(ParamNames.oneSideWeight)?.eitherNum;
-  var barWeightParam = params.getParamValue(ParamNames.barWeight);
+  var oneSideMass = params.getParamValue(ParamNames.oneSideWeight);
+  var barMass = params.getParamValue(ParamNames.barWeight);
 
-  if (oneSideWeight == null || barWeightParam?.numVal == null) {
+  if (oneSideMass == null || barMass == null || srcUnit.coefficient == null) {
     return null;
   }
 
-  num? barWeight = barWeightParam!.numVal! * barWeightParam.unit!.coefficient!;
+  ValueModel? oneSideMassVal = paramValueFunc.call(oneSideMass);
+  ValueModel? barMassVal = paramValueFunc.call(barMass);
 
-  return ValueModel.any(barWeight + oneSideWeight * 2);
+  num? oneSideMassNum = oneSideMassVal != null
+      ? oneSideMassVal.numVal! * oneSideMass.unit!.coefficient!
+      : null;
+  num? barMassNum = barMassVal != null
+      ? barMassVal.numVal! * barMass.unit!.coefficient!
+      : null;
+
+  if (oneSideMassNum == null || barMassNum == null) {
+    return null;
+  }
+
+  num? result = (barMassNum + oneSideMassNum * 2) / srcUnit.coefficient!;
+  return ValueModel.any(result);
 }

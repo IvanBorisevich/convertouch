@@ -258,7 +258,8 @@ void main() {
       test(
           'Param list value should change as well, '
           'conversion values should remain as is', () async {
-        double expectedNum = 22 * pound.coefficient! + 45 * 2;
+        double expectedSrcValueNum = 22 * pound.coefficient! + 45 * 2;
+        double expectedSrcDefaultValueNum = 22 * pound.coefficient! + 2;
 
         await testCase(
           unitGroup: massGroup,
@@ -282,13 +283,16 @@ void main() {
             ],
             selectedIndex: 0,
           ),
-          currentSrc: ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          currentSrc:
+              ConversionUnitValueModel.tuple(kilogram, expectedSrcValueNum, 12),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+            ConversionUnitValueModel.tuple(kilogram, expectedSrcValueNum, 12),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+          expectedSrc: ConversionUnitValueModel.tuple(
+              kilogram, expectedSrcValueNum, expectedSrcDefaultValueNum),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(kilogram, expectedNum, 1),
+            ConversionUnitValueModel.tuple(
+                kilogram, expectedSrcValueNum, expectedSrcDefaultValueNum),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
