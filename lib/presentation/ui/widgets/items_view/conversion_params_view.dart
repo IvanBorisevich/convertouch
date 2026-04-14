@@ -123,17 +123,23 @@ class ConversionParamsView extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      item.paramSet.name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: index == params!.selectedIndex
-                                            ? colors.tabPanel.tab.foreground
-                                                .selected
-                                            : colors.tabPanel.tab.foreground
-                                                .regular,
-                                        fontWeight: FontWeight.w600,
+                                    Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 7,
+                                      ),
+                                      child: Text(
+                                        item.paramSet.name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: index == params!.selectedIndex
+                                              ? colors.tabPanel.tab.foreground
+                                              .selected
+                                              : colors.tabPanel.tab.foreground
+                                              .regular,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                     Visibility(
@@ -142,9 +148,6 @@ class ConversionParamsView extends StatelessWidget {
                                       child: GestureDetector(
                                         onTap: onSelectedParamSetRemove,
                                         child: Container(
-                                          padding: const EdgeInsets.only(
-                                            left: 7,
-                                          ),
                                           color: Colors.transparent,
                                           alignment: Alignment.center,
                                           child: Icon(
