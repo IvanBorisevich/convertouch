@@ -3,16 +3,15 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 
 class ListBoxModel extends InputBoxModel {
-  final ListValueModel? value;
+  final ListValueModel? listValue;
   final List<ListValueModel> listValues;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
 
   const ListBoxModel({
-    this.value,
+    this.listValue,
     required this.listType,
-    super.hint,
     super.readonly,
     super.labelText,
     this.listValues = const [],

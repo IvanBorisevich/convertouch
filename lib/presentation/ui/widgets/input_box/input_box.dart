@@ -558,28 +558,16 @@ class _TextFieldState extends State<_TextField>
   void didUpdateWidget(_TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _updateTextBox(
-      oldModel: oldWidget.model,
-      newModel: widget.model,
+    updateTextControllerValue(
+      widget.controller,
+      value: widget.focusNode.hasFocus
+          ? widget.model.value
+          : widget.model.valueUnfocused,
     );
-  }
 
-  void _updateTextBox({
-    required TextBoxModel oldModel,
-    required TextBoxModel newModel,
-  }) {
-    if (widget.focusNode.hasFocus && newModel.value != oldModel.value) {
-      updateTextControllerValue(
-        widget.controller,
-        value: newModel.value,
-      );
-    } else if (!widget.focusNode.hasFocus &&
-        newModel.valueUnfocused != oldModel.valueUnfocused) {
-      updateTextControllerValue(
-        widget.controller,
-        value: newModel.valueUnfocused,
-      );
-    }
+    _hint = widget.focusNode.hasFocus
+        ? widget.model.hint
+        : widget.model.hintUnfocused;
   }
 
   @override
@@ -662,15 +650,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   TextEditingController? _dropdownSearchController;
   FocusNode? _dropdownSearchFocusNode;
-  String? _hint;
 
   @override
   void initState() {
     super.initState();
 
-    _hint = widget.model.hint;
     _isDropdownOpen = false;
-    _selectedValueNotifier = ValueNotifier(widget.model.value);
+    _selectedValueNotifier = ValueNotifier(widget.model.listValue);
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -702,7 +688,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             margin: widget.margin,
             fontSize: widget.fontSize,
             labelText: widget.model.labelText,
-            hintText: _hint,
+            hintText: noValueHint,
             hintColor: widget.hintColor,
             labelColor: widget.labelColor,
             floatingLabelBehavior: widget.floatingLabelBehavior,
@@ -747,7 +733,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             return widget.model.listValues.map(
               (value) {
                 return Text(
-                  widget.model.value?.itemName ?? _hint ?? '',
+                  widget.model.listValue?.itemName ?? noValueHint,
                   style: _inputFieldTextStyle(
                     fontSize: widget.fontSize,
                     foregroundColor: widget.foregroundColor,
