@@ -300,6 +300,10 @@ const _conversionItem = ConversionItemColorScheme(
     regular: Color(0xFF7799B9),
     selected: Color(0xFF2C6396),
   ),
+  suffixWidget: MultiColor(
+    regular: Color(0xFF7799B9),
+    selected: Color(0xFF2C6396),
+  ),
   removalIcon: MultiColor.only(Color(0xFFB6441C)),
 );
 
@@ -321,7 +325,7 @@ const _removalFloatingButton = WidgetColorScheme(
 );
 
 const _paramItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(Color(0xffcbd9ff)),
+  background: MultiColor.only(Color(0xffd8e3ff)),
   border: MultiColor(
     regular: Color(0xFF4F7498),
     focused: Color(0xFF1B2F40),
@@ -360,6 +364,10 @@ const _paramItem = ConversionItemColorScheme(
     regular: Color(0xFF7799B9),
     selected: Color(0xFF2C6396),
   ),
+  suffixWidget: MultiColor(
+    regular: Color(0xFF7799B9),
+    selected: Color(0xFF2C6396),
+  ),
   removalIcon: MultiColor.only(Color(0xFFB6441C)),
 );
 
@@ -389,7 +397,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
     ),
   ),
   body: WidgetColorScheme(
-    background: MultiColor.only(Color(0xffcbd9ff)),
+    background: MultiColor.only(Color(0xffd8e3ff)),
   ),
   footer: WidgetColorScheme(
     background: MultiColor.only(Color(0xffadc2f6)),

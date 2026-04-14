@@ -300,6 +300,10 @@ const _conversionItem = ConversionItemColorScheme(
     regular: Color(0xFF7E9CB7),
     selected: Color(0xFFA6C7E5),
   ),
+  suffixWidget: MultiColor(
+    regular: Color(0xFF7E9CB7),
+    selected: Color(0xFFA6C7E5),
+  ),
   removalIcon: MultiColor.only(Color(0xFFD56E41)),
 );
 
@@ -357,6 +361,10 @@ const _paramItem = ConversionItemColorScheme(
   ),
   unitButton: MultiColor.only(Color(0xFF63A4E4)),
   prefixWidget: MultiColor(
+    regular: Color(0xFF7E9CB7),
+    selected: Color(0xFFA6C7E5),
+  ),
+  suffixWidget: MultiColor(
     regular: Color(0xFF7E9CB7),
     selected: Color(0xFFA6C7E5),
   ),

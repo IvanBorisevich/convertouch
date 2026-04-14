@@ -21,6 +21,7 @@ const double _tabHeight = 35;
 const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
+const double _calculationSuffixIconWidth = 50;
 
 class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
@@ -46,8 +47,6 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
-
     if (params == null) {
       return const SizedBox.shrink();
     }
@@ -135,9 +134,9 @@ class ConversionParamsView extends StatelessWidget {
                                         style: TextStyle(
                                           color: index == params!.selectedIndex
                                               ? colors.tabPanel.tab.foreground
-                                              .selected
+                                                  .selected
                                               : colors.tabPanel.tab.foreground
-                                              .regular,
+                                                  .regular,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -178,28 +177,12 @@ class ConversionParamsView extends StatelessWidget {
                                     padding: const EdgeInsets.only(
                                       bottom: _paramsSpacing,
                                     ),
-                                    child: Row(
-                                      children: [
-                                        _param(
-                                          paramItem: paramItem,
-                                          colors: colors.paramItem,
-                                        ),
-                                        _calculationSwitcher(
-                                          areSwitchersShown:
-                                              item.hasMultipleCalculableParams,
-                                          paramItem: paramItem,
-                                          colors: colors.paramItem,
-                                          onTap: () {
-                                            conversionBloc.add(
-                                              ToggleCalculableParam(
-                                                paramId: paramItem.param.id,
-                                                paramSetId:
-                                                    paramItem.param.paramSetId,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
+                                    child: _param(
+                                      context,
+                                      paramItem: paramItem,
+                                      colors: colors.paramItem,
+                                      calculationSwitchersVisible:
+                                          item.hasMultipleCalculableParams,
                                     ),
                                   );
                                 },
@@ -259,65 +242,58 @@ class ConversionParamsView extends StatelessWidget {
     );
   }
 
-  Widget _calculationSwitcher({
+  Widget _param(
+    BuildContext context, {
     required ConversionParamValueModel paramItem,
-    required bool areSwitchersShown,
     required ConversionItemColorScheme colors,
-    required void Function()? onTap,
-    double width = 30,
-    double height = 30,
+    required bool calculationSwitchersVisible,
   }) {
-    return Visibility(
-      visible: areSwitchersShown,
-      child: paramItem.param.calculable
-          ? Padding(
-              padding: const EdgeInsets.only(left: 9),
-              child: GestureDetector(
-                onTap: onTap,
+    return ConvertouchConversionItem(
+      ConversionItemModel(
+        inputBoxModel: InputBoxModel.ofValue(paramItem),
+        min: paramItem.min,
+        max: paramItem.max,
+        unit: paramItem.unitItem,
+        draggable: false,
+        removable: false,
+      ),
+      colors: colors,
+      onUnitItemTap: () {
+        onParamUnitTap?.call(paramItem);
+      },
+      onValueChanged: (value) {
+        onValueChanged?.call(paramItem, value);
+      },
+      suffixWidgets: [
+        calculationSwitchersVisible && paramItem.param.calculable
+            ? GestureDetector(
+                onTap: () {
+                  BlocProvider.of<ConversionBloc>(context).add(
+                    ToggleCalculableParam(
+                      paramId: paramItem.param.id,
+                      paramSetId: paramItem.param.paramSetId,
+                    ),
+                  );
+                },
                 child: Container(
-                  width: width,
-                  height: height,
+                  width: _calculationSuffixIconWidth,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
                     ),
                   ),
                   child: Icon(
-                    Icons.sync_alt_rounded,
-                    size: 17,
+                    paramItem.calculated
+                        ? Icons.calculate
+                        : Icons.calculate_outlined,
                     color: paramItem.calculated
                         ? colors.suffixWidget.selected
                         : colors.suffixWidget.regular,
                   ),
                 ),
-              ),
-            )
-          : const SizedBox.shrink(),
-    );
-  }
-
-  Widget _param({
-    required ConversionParamValueModel paramItem,
-    required ConversionItemColorScheme colors,
-  }) {
-    return Expanded(
-      child: ConvertouchConversionItem(
-        ConversionItemModel(
-          inputBoxModel: InputBoxModel.ofValue(paramItem),
-          min: paramItem.min,
-          max: paramItem.max,
-          unit: paramItem.unitItem,
-          draggable: false,
-          removable: false,
-        ),
-        onUnitItemTap: () {
-          onParamUnitTap?.call(paramItem);
-        },
-        onValueChanged: (value) {
-          onValueChanged?.call(paramItem, value);
-        },
-        colors: colors,
-      ),
+              )
+            : null,
+      ],
     );
   }
 }

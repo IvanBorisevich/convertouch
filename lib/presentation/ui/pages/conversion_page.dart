@@ -249,6 +249,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                             ConversionParamsView(
                               panelController: _panelController,
                               params: conversion.params,
+                              colors: appColors[appState.theme].paramSetPanel,
                               onParamSetAdd: () {
                                 paramSetsBloc.add(
                                   FetchItems(
@@ -328,7 +329,6 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   const RemoveSelectedParamSetFromConversion(),
                                 );
                               },
-                              colors: appColors[appState.theme].paramSetPanel,
                             ),
                             Expanded(
                               child: ConvertouchConversionItemsView(

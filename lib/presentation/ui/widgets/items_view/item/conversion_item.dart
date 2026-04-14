@@ -18,6 +18,8 @@ class ConvertouchConversionItem<M extends InputBoxModel>
   final void Function(String)? onValueChanged;
   final void Function(String)? onValueFocused;
   final void Function()? onItemRemoved;
+  final List<Widget?> prefixWidgets;
+  final List<Widget?> suffixWidgets;
   final ConversionItemColorScheme colors;
 
   const ConvertouchConversionItem(
@@ -26,6 +28,8 @@ class ConvertouchConversionItem<M extends InputBoxModel>
     this.onValueChanged,
     this.onValueFocused,
     this.onItemRemoved,
+    this.prefixWidgets = const [],
+    this.suffixWidgets = const [],
     required this.colors,
     super.key,
   });
@@ -93,8 +97,10 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 ),
               )
             : null,
+        ...widget.prefixWidgets,
       ],
       suffixWidgets: [
+        ...widget.suffixWidgets,
         widget.model.unit != null
             ? GestureDetector(
                 onTap: () {
