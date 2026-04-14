@@ -808,16 +808,17 @@ void main() {
         });
       });
 
-      group('New param value does not exist | default value exists', () {
-        group('Src value exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
+      group('New param value is empty | default value is not empty', () {
+        group('Src value is not empty | default value is not empty', () {
+          test(
+              'Src value should be empty | default value should be '
+              'recalculated', () async {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
               delta: EditConversionParamValueDelta(
                 newValue: null,
-                newDefaultValue: "40",
+                newDefaultValue: "1",
                 paramId: oneSideWeightParam.id,
                 paramSetId: barbellWeightParamSet.id,
               ),
@@ -826,10 +827,18 @@ void main() {
                   ConversionParamSetValueModel(
                     paramSet: barbellWeightParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
+                      ConversionParamValueModel.tuple(
+                        barWeightParam,
+                        20,
+                        null,
+                        unit: kilogram,
+                      ),
+                      ConversionParamValueModel.tuple(
+                        oneSideWeightParam,
+                        30,
+                        1,
+                        unit: kilogram,
+                      ),
                     ],
                   ),
                 ],
@@ -839,28 +848,41 @@ void main() {
                 selectedIndex: 0,
                 totalCount: 1,
               ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+              currentSrc: ConversionUnitValueModel.tuple(ton, 0.08, 0.022),
               currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, 1),
+                ConversionUnitValueModel.tuple(ton, 0.08, 0.022),
                 ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, 1),
+                  pound,
+                  80 / pound.coefficient!,
+                  22 / pound.coefficient!,
+                ),
               ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
+              expectedSrc: ConversionUnitValueModel.tuple(ton, null, 0.022),
               expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 90),
+                ConversionUnitValueModel.tuple(ton, null, 0.022),
                 ConversionUnitValueModel.tuple(
-                    pound, null, 90 / pound.coefficient!),
+                  pound,
+                  null,
+                  22 / pound.coefficient!,
+                ),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
                   ConversionParamSetValueModel(
                     paramSet: barbellWeightParamSet,
                     paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
                       ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 40,
-                          unit: kilogram),
+                        barWeightParam,
+                        20,
+                        null,
+                        unit: kilogram,
+                      ),
+                      ConversionParamValueModel.tuple(
+                        oneSideWeightParam,
+                        null,
+                        1,
+                        unit: kilogram,
+                      ),
                     ],
                   ),
                 ],
