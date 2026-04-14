@@ -673,6 +673,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   }
 
   @override
+  void didUpdateWidget(_ListField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selectedValueNotifier.value = widget.model.listValue;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (_, navigationState) {
