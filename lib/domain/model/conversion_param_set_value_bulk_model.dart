@@ -172,6 +172,13 @@ class ConversionParamSetValueBulkModel extends Equatable {
         : null;
   }
 
+  bool get valid {
+    return active == null ||
+        active != null &&
+            (!active!.paramSet.mandatory ||
+                active!.paramSet.mandatory && active!.hasAllValues);
+  }
+
   @override
   List<Object?> get props => [
         paramSetValues,

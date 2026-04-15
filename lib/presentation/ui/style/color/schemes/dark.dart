@@ -372,36 +372,38 @@ const _paramItem = ConversionItemColorScheme(
 );
 
 const _paramSetPanel = ParamSetPanelColorScheme(
-  tabPanel: TabPanelColorScheme(
-    tab: WidgetColorScheme(
-      background: MultiColor(
-        regular: Color(0xFF3B4351),
-        selected: Color(0xFF6EADE1),
+  slidingPanel: SlidingPanelColorScheme(
+    tabPanel: TabPanelColorScheme(
+      tab: WidgetColorScheme(
+        background: MultiColor(
+          regular: Color(0xFF3B4351),
+          selected: Color(0xFF6EADE1),
+        ),
+        foreground: MultiColor(
+          regular: Color(0xFF77C1FD),
+          selected: Color(0xFF323944),
+        ),
       ),
-      foreground: MultiColor(
-        regular: Color(0xFF77C1FD),
-        selected: Color(0xFF323944),
+      leadingIcon: WidgetColorScheme(
+        foreground: MultiColor(
+          regular: Color(0xFFD56E41),
+          disabled: Color(0xFF775649),
+        ),
+      ),
+      trailingIcon: WidgetColorScheme(
+        foreground: MultiColor(
+          regular: Color(0xFF77C1FD),
+          disabled: Color(0xFF597891),
+        ),
       ),
     ),
-    leadingIcon: WidgetColorScheme(
-      foreground: MultiColor(
-        regular: Color(0xFFD56E41),
-        disabled: Color(0xFF775649),
-      ),
+    body: WidgetColorScheme(
+      background: MultiColor.only(Color(0xFF323944)),
     ),
-    trailingIcon: WidgetColorScheme(
-      foreground: MultiColor(
-        regular: Color(0xFF77C1FD),
-        disabled: Color(0xFF597891),
-      ),
+    footer: WidgetColorScheme(
+      background: MultiColor.only(Color(0xFF4C5970)),
+      foreground: MultiColor.only(Color(0xFF7083A3)),
     ),
-  ),
-  body: WidgetColorScheme(
-    background: MultiColor.only(Color(0xFF323944)),
-  ),
-  footer: WidgetColorScheme(
-    background: MultiColor.only(Color(0xFF4C5970)),
-    foreground: MultiColor.only(Color(0xFF7083A3)),
   ),
   paramItem: _paramItem,
 );

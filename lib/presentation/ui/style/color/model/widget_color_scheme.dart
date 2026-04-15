@@ -163,16 +163,26 @@ class TabPanelColorScheme {
   });
 }
 
-class ParamSetPanelColorScheme {
+class SlidingPanelColorScheme {
+  static const SlidingPanelColorScheme none = SlidingPanelColorScheme();
+
   final TabPanelColorScheme tabPanel;
   final WidgetColorScheme body;
   final WidgetColorScheme footer;
-  final ConversionItemColorScheme paramItem;
 
-  const ParamSetPanelColorScheme({
+  const SlidingPanelColorScheme({
     this.tabPanel = TabPanelColorScheme.none,
     this.body = WidgetColorScheme.none,
     this.footer = WidgetColorScheme.none,
+  });
+}
+
+class ParamSetPanelColorScheme {
+  final SlidingPanelColorScheme slidingPanel;
+  final ConversionItemColorScheme paramItem;
+
+  const ParamSetPanelColorScheme({
+    this.slidingPanel = SlidingPanelColorScheme.none,
     required this.paramItem,
   });
 }

@@ -8,6 +8,7 @@ import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
+import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,18 +68,18 @@ class ConversionParamsView extends StatelessWidget {
       bodyHeight = _maxBodyHeight;
     }
 
-    return SlidingUpPanel(
-      controller: panelController,
-      slideDirection: SlideDirection.DOWN,
+    bool paramsAreValid = params!.valid;
+
+    return ConvertouchSlidingPanel(
+      panelController: panelController,
+      defaultPanelState: paramsAreValid ? PanelState.CLOSED : PanelState.OPEN,
       minHeight: _footerHeight,
       maxHeight: _footerHeight + bodyHeight,
-      color: colors.body.background.regular,
-      boxShadow: null,
-      borderRadius: const BorderRadius.only(
-        bottomLeft: Radius.circular(20),
-        bottomRight: Radius.circular(20),
-      ),
-      panel: Column(
+      colors: colors.slidingPanel,
+      onPanelSlide: () {
+        FocusScope.of(context).unfocus();
+      },
+      content: Column(
         children: [
           SizedBox(
             height: bodyHeight,
@@ -116,8 +117,10 @@ class ConversionParamsView extends StatelessWidget {
                                     Radius.circular(_tabRadius),
                                   ),
                                   color: index == params!.selectedIndex
-                                      ? colors.tabPanel.tab.background.selected
-                                      : colors.tabPanel.tab.background.regular,
+                                      ? colors.slidingPanel.tabPanel.tab
+                                          .background.selected
+                                      : colors.slidingPanel.tabPanel.tab
+                                          .background.regular,
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -133,10 +136,10 @@ class ConversionParamsView extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: index == params!.selectedIndex
-                                              ? colors.tabPanel.tab.foreground
-                                                  .selected
-                                              : colors.tabPanel.tab.foreground
-                                                  .regular,
+                                              ? colors.slidingPanel.tabPanel.tab
+                                                  .foreground.selected
+                                              : colors.slidingPanel.tabPanel.tab
+                                                  .foreground.regular,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -153,10 +156,18 @@ class ConversionParamsView extends StatelessWidget {
                                             Icons.close,
                                             color:
                                                 index == params!.selectedIndex
-                                                    ? colors.tabPanel.tab
-                                                        .foreground.selected
-                                                    : colors.tabPanel.tab
-                                                        .foreground.regular,
+                                                    ? colors
+                                                        .slidingPanel
+                                                        .tabPanel
+                                                        .tab
+                                                        .foreground
+                                                        .selected
+                                                    : colors
+                                                        .slidingPanel
+                                                        .tabPanel
+                                                        .tab
+                                                        .foreground
+                                                        .regular,
                                             size: 15,
                                           ),
                                         ),
@@ -200,8 +211,10 @@ class ConversionParamsView extends StatelessWidget {
                     child: TextButton.icon(
                       onPressed: onParamSetAdd,
                       style: TextButton.styleFrom(
-                        backgroundColor: colors.tabPanel.tab.background.regular,
-                        foregroundColor: colors.tabPanel.tab.foreground.regular,
+                        backgroundColor:
+                            colors.slidingPanel.tabPanel.tab.background.regular,
+                        foregroundColor:
+                            colors.slidingPanel.tabPanel.tab.foreground.regular,
                       ),
                       icon: const Icon(Icons.add),
                       label: const Text(
@@ -220,7 +233,7 @@ class ConversionParamsView extends StatelessWidget {
               height: _footerHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: colors.footer.background.regular,
+                color: colors.slidingPanel.footer.background.regular,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
@@ -230,7 +243,7 @@ class ConversionParamsView extends StatelessWidget {
                 width: 25,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: colors.footer.foreground.regular,
+                  color: colors.slidingPanel.footer.foreground.regular,
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                 ),
               ),
