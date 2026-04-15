@@ -21,7 +21,7 @@ const double _tabHeight = 35;
 const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
-const double _calculationSuffixIconWidth = 50;
+const double _calculationSuffixIconWidth = 40;
 
 class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
@@ -181,8 +181,7 @@ class ConversionParamsView extends StatelessWidget {
                                       context,
                                       paramItem: paramItem,
                                       colors: colors.paramItem,
-                                      calculationSwitchersVisible:
-                                          item.hasMultipleCalculableParams,
+                                      calculationSwitchersVisible: true,
                                     ),
                                   );
                                 },
@@ -264,7 +263,7 @@ class ConversionParamsView extends StatelessWidget {
       onValueChanged: (value) {
         onValueChanged?.call(paramItem, value);
       },
-      suffixWidgets: [
+      prefixWidgets: [
         calculationSwitchersVisible && paramItem.param.calculable
             ? GestureDetector(
                 onTap: () {
@@ -277,6 +276,7 @@ class ConversionParamsView extends StatelessWidget {
                 },
                 child: Container(
                   width: _calculationSuffixIconWidth,
+                  padding: const EdgeInsets.only(left: 2),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
