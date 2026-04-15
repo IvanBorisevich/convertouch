@@ -1,10 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
@@ -12,6 +10,8 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_event
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
@@ -46,6 +46,7 @@ class _ConvertouchUnitsPageForConversionState
   Widget build(BuildContext context) {
     final unitsBloc = BlocProvider.of<UnitsBloc>(context);
     final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
+    final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
     final conversionBloc = BlocProvider.of<ConversionBloc>(context);
     final navigationBloc = BlocProvider.of<NavigationBloc>(context);
@@ -72,13 +73,13 @@ class _ConvertouchUnitsPageForConversionState
                 title: itemsSelectionState.singleItemSelectionMode
                     ? 'Change Unit'
                     : 'Add To Conversion',
-                appBarRightWidgets: [
+                appBarTrailingWidgets: [
                   singleGroupBlocBuilder(
                     builderFunc: (singleGroupState) {
                       UnitGroupModel unitGroup = singleGroupState.unitGroup;
 
                       return ConvertouchPopupMenu(
-                        width: 230,
+                        width: 180,
                         colors: popupColors,
                         customIcon: Icon(
                           Icons.more_vert_rounded,
@@ -103,27 +104,21 @@ class _ConvertouchUnitsPageForConversionState
                               );
                             },
                           ),
-                          PopupMenuItemModel(
-                            text: "Units Dictionary",
-                            icon: Icons.dashboard_customize_outlined,
-                            onTap: () {
-                              unitsBloc.add(
-                                FetchItems(
-                                  params: UnitsFetchParams(
-                                    parentItemId: unitGroup.id,
-                                    parentItemType: ItemType.unitGroup,
-                                  ),
-                                  onFirstFetch: () {
-                                    navigationBloc.add(
-                                      const NavigateToPage(
-                                        pageName: PageName.unitsPageRegular,
+                          !unitGroup.refreshable &&
+                                  unitGroup.conversionType !=
+                                      ConversionType.formula
+                              ? PopupMenuItemModel(
+                                  text: 'Add Unit',
+                                  icon: Icons.add,
+                                  onTap: () {
+                                    unitDetailsBloc.add(
+                                      GetNewUnitDetails(
+                                        unitGroup: unitGroup,
                                       ),
                                     );
                                   },
-                                ),
-                              );
-                            },
-                          ),
+                                )
+                              : null,
                         ],
                       );
                     },

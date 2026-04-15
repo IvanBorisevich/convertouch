@@ -46,7 +46,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                 return ConvertouchPage(
                   title: "${unitGroup.name} units",
                   colors: appColors[appState.theme].page,
-                  customLeadingIcon: itemsSelectionState.showCancelIcon
+                  appBarLeadingWidget: itemsSelectionState.showCancelIcon
                       ? CancelItemsSelectionIcon(
                           bloc: unitsSelectionBloc,
                         )

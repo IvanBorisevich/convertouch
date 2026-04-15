@@ -84,7 +84,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
               return ConvertouchPage(
                 title: unitGroup.name,
                 colors: pageColors,
-                appBarRightWidgets: [
+                appBarTrailingWidgets: [
                   conversionBlocBuilder(
                     builderFunc: (pageState) {
                       return Visibility(

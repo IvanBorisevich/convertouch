@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConvertouchPage extends StatelessWidget {
   final Widget body;
   final String title;
-  final Widget? customLeadingIcon;
-  final List<Widget>? appBarRightWidgets;
+  final Widget? appBarLeadingWidget;
+  final List<Widget>? appBarTrailingWidgets;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation floatingButtonLocation;
   final PageColorScheme colors;
@@ -16,8 +16,8 @@ class ConvertouchPage extends StatelessWidget {
   const ConvertouchPage({
     required this.body,
     required this.title,
-    this.customLeadingIcon,
-    this.appBarRightWidgets,
+    this.appBarLeadingWidget,
+    this.appBarTrailingWidgets,
     this.floatingActionButton,
     this.floatingButtonLocation = FloatingActionButtonLocation.endFloat,
     required this.colors,
@@ -34,8 +34,8 @@ class ConvertouchPage extends StatelessWidget {
           elevation: 0,
           leading: Builder(
             builder: (context) {
-              if (customLeadingIcon != null) {
-                return customLeadingIcon!;
+              if (appBarLeadingWidget != null) {
+                return appBarLeadingWidget!;
               } else if (ModalRoute.of(context)?.canPop == true) {
                 return IconButton(
                   icon: Icon(
@@ -62,7 +62,7 @@ class ConvertouchPage extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          actions: appBarRightWidgets,
+          actions: appBarTrailingWidgets,
         ),
         body: body,
         floatingActionButton: Padding(

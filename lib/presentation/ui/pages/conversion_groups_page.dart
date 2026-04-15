@@ -47,7 +47,7 @@ class ConversionGroupsPage extends StatelessWidget {
           builderFunc: (appState) {
             return ConvertouchPage(
               title: 'Conversion Groups',
-              customLeadingIcon: itemsSelectionState.showCancelIcon
+              appBarLeadingWidget: itemsSelectionState.showCancelIcon
                   ? CancelItemsSelectionIcon(
                       bloc: itemsSelectionBloc,
                     )
