@@ -6,29 +6,29 @@ import 'package:flutter/material.dart';
 class ConvertouchDetailsItem extends StatelessWidget {
   final String name;
   final bool nameVisible;
-  final String? value;
+  final String? draftValue;
+  final String? savedValue;
   final Widget? content;
   final bool visible;
   final bool editable;
-  final TextEditingController? valueChangeController;
   final void Function(String)? onValueChanged;
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
-  final double bottomMargin;
+  final double topMargin;
   final InputBoxColorScheme inputBoxColor;
 
   const ConvertouchDetailsItem({
     required this.name,
     this.nameVisible = true,
-    this.value,
+    this.draftValue,
+    this.savedValue,
     this.content,
     this.visible = true,
     this.editable = false,
-    this.valueChangeController,
     this.onValueChanged,
     this.editableValueMaxLength,
     this.editableValueLengthVisible = false,
-    this.bottomMargin = 20,
+    this.topMargin = 0,
     required this.inputBoxColor,
     super.key,
   });
@@ -42,40 +42,40 @@ class ConvertouchDetailsItem extends StatelessWidget {
     String? headerTitle = nameVisible ? name : null;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomMargin),
+      padding: EdgeInsets.only(top: topMargin),
       child: editable
           ? ConvertouchInputBox(
               model: TextBoxModel(
-                hintUnfocused: value,
+                value: draftValue,
+                valueUnfocused: draftValue,
+                hint: savedValue,
+                hintUnfocused: savedValue,
                 labelText: headerTitle,
                 maxTextLength: editableValueMaxLength,
                 textLengthCounterVisible: editableValueLengthVisible,
               ),
-              controller: valueChangeController,
               onValueChanged: onValueChanged,
               colors: inputBoxColor,
             )
-          : SizedBox(
+          : Container(
               width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   headerTitle != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: Text(
-                            headerTitle,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: inputBoxColor.textBox.border.regular,
-                            ),
+                      ? Text(
+                          headerTitle,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: inputBoxColor.textBox.border.regular,
                           ),
                         )
                       : const SizedBox.shrink(),
-                  value != null
+                  savedValue != null
                       ? Text(
-                          value!,
+                          savedValue!,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,

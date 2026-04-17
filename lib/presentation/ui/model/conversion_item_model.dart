@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
@@ -24,4 +25,27 @@ class ConversionItemModel<M extends InputBoxModel> implements ElementModel {
     this.isSource = false,
     this.isLast = false,
   });
+
+  static ConversionItemModel<T>
+      ofValue<T extends InputBoxModel, M extends ConversionItemValueModel>(
+    M model, {
+    bool readonly = false,
+    int? index,
+    bool draggable = false,
+    bool removable = false,
+    bool isSource = false,
+    bool isLast = false,
+  }) {
+    return ConversionItemModel(
+      inputBoxModel: InputBoxModel.ofValue(model, readonly: readonly),
+      unit: model.unitItem,
+      min: model.min,
+      max: model.max,
+      index: index,
+      draggable: draggable,
+      removable: removable,
+      isSource: isSource,
+      isLast: isLast,
+    );
+  }
 }

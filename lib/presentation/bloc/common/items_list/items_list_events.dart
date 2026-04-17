@@ -5,6 +5,7 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 abstract class ItemsListEvent extends ConvertouchEvent {
   const ItemsListEvent({
     super.onSuccess,
+    super.onError,
   });
 }
 
@@ -21,6 +22,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
     this.firstFetch = true,
     this.params,
     this.onFirstFetch,
+    super.onSuccess,
   });
 
   @override
@@ -49,6 +51,7 @@ class SaveItem<T extends IdNameItemModel> extends ItemsListEvent {
   const SaveItem({
     required this.item,
     this.onItemSave,
+    super.onError,
   });
 
   @override

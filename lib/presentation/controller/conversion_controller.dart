@@ -49,9 +49,6 @@ class ConversionController {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionGroup(
         editedGroup: modifiedGroup,
-        onSuccess: ({info}) {
-          navigationController.navigateBack(context);
-        },
         onError: (error) {
           navigationController.showException(context, exception: error);
         },

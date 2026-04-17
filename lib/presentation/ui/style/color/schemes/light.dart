@@ -152,8 +152,8 @@ const _unitGroupDetailsInputBox = InputBoxColorScheme(
       disabled: Color(0xFF6160BE),
     ),
     foreground: MultiColor(
-      regular: Color(0xFF4544AB),
-      disabled: Color(0xFF414194),
+      regular: Color(0xFF282771),
+      disabled: Color(0xFF454577),
     ),
     hint: MultiColor(
       regular: Color(0xFF7574E1),
@@ -233,12 +233,17 @@ const _unitDetailsInputBox = InputBoxColorScheme(
       disabled: Color(0xFF90A8C0),
     ),
     foreground: MultiColor(
-      regular: Color(0xBE143656),
-      disabled: Color(0xFF90A8C0),
+      regular: Color(0xBE122C45),
+      disabled: Color(0xFF6A87A3),
     ),
     hint: MultiColor(
       regular: Color(0xFF799BBB),
       disabled: Color(0xBE73ACE5),
+    ),
+    label: MultiColor(
+      regular: Color(0xFF4F7498),
+      focused: Color(0xFF233B50),
+      disabled: Color(0xFF90A8C0),
     ),
   ),
 );

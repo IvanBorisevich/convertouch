@@ -17,12 +17,12 @@ final unitsController = di.locator.get<UnitsController>();
 class UnitsController {
   const UnitsController();
 
-  void fetchUnits(
+  void fetchUnits<B extends UnitsBloc>(
     BuildContext context, {
     required int groupId,
     void Function()? onFirstFetch,
   }) {
-    BlocProvider.of<UnitsBloc>(context).add(
+    BlocProvider.of<B>(context).add(
       FetchItems(
         params: UnitsFetchParams(
           parentItemId: groupId,
@@ -34,7 +34,7 @@ class UnitsController {
   }
 
   void showUnits(BuildContext context, {required int groupId}) {
-    fetchUnits(
+    fetchUnits<UnitsBloc>(
       context,
       groupId: groupId,
       onFirstFetch: () {
@@ -58,7 +58,7 @@ class UnitsController {
     List<int> addedUnitIds = const [],
     required int markedItemsSelectionMinNum,
   }) {
-    fetchUnits(context, groupId: groupId);
+    fetchUnits<UnitsBloc>(context, groupId: groupId);
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       StartItemsMarking(
@@ -79,7 +79,7 @@ class UnitsController {
     required int currentUnitId,
     List<int> excludedUnitIds = const [],
   }) {
-    fetchUnits(context, groupId: groupId);
+    fetchUnits<UnitsBloc>(context, groupId: groupId);
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       StartItemSelection(
@@ -129,14 +129,7 @@ class UnitsController {
     required int currentGroupId,
     required int currentArgUnitId,
   }) {
-    BlocProvider.of<UnitsBlocForUnitDetails>(context).add(
-      FetchItems(
-        params: UnitsFetchParams(
-          parentItemId: currentGroupId,
-          parentItemType: ItemType.unitGroup,
-        ),
-      ),
-    );
+    fetchUnits<UnitsBlocForUnitDetails>(context, groupId: currentGroupId);
 
     BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context).add(
       StartItemSelection(
@@ -178,9 +171,12 @@ class UnitsController {
       SaveItem(
         item: unit,
         onItemSave: (savedUnit) {
-          unitsController.fetchUnits(context, groupId: currentGroupId);
-          onSaved?.call(savedUnit);
+          fetchUnits<UnitsBloc>(context, groupId: currentGroupId);
           navigationController.navigateBack(context);
+          onSaved?.call(savedUnit);
+        },
+        onError: (error) {
+          navigationController.showException(context, exception: error);
         },
       ),
     );

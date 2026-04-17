@@ -79,7 +79,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.inputFieldMargin = _defaultInputFieldMargin,
     this.fontSize = _defaultFontSize,
     this.changeValueOnFocusChanged = false,
-    this.floatingLabelBehavior,
     super.key,
   });
 
@@ -101,7 +100,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final EdgeInsets inputFieldMargin;
   final double fontSize;
   final bool changeValueOnFocusChanged;
-  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
@@ -325,7 +323,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         labelColor: _labelColor,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
-        floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
 
@@ -340,7 +337,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
         dropdownColors: widget.colors.dropdown,
-        floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
 
@@ -463,7 +459,6 @@ class _TextField extends StatefulWidget {
     required this.labelColor,
     required this.fontSize,
     required this.margin,
-    this.floatingLabelBehavior,
   });
 
   final TextBoxModel model;
@@ -480,7 +475,6 @@ class _TextField extends StatefulWidget {
   final Color labelColor;
   final double fontSize;
   final EdgeInsets margin;
-  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _TextFieldState();
@@ -584,7 +578,9 @@ class _TextFieldState extends State<_TextField>
         hintText: _hint,
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
-        floatingLabelBehavior: widget.floatingLabelBehavior,
+        floatingLabelBehavior: _hint != null && _hint!.isNotEmpty
+            ? FloatingLabelBehavior.always
+            : null,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 4,
         ),
@@ -615,7 +611,6 @@ class _ListField extends StatefulWidget {
     required this.fontSize,
     required this.margin,
     required this.dropdownColors,
-    this.floatingLabelBehavior,
   });
 
   final ListBoxModel model;
@@ -627,7 +622,6 @@ class _ListField extends StatefulWidget {
   final double fontSize;
   final EdgeInsets margin;
   final DropdownColorScheme dropdownColors;
-  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _ListFieldState();
@@ -687,7 +681,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             hintText: noValueHint,
             hintColor: widget.hintColor,
             labelColor: widget.labelColor,
-            floatingLabelBehavior: widget.floatingLabelBehavior,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
             contentPadding: const EdgeInsets.symmetric(
               vertical: 3,
             ),
@@ -897,6 +891,7 @@ InputDecoration _inputFieldDecoration(
     constraints: BoxConstraints(
       maxHeight: fontSize * _textHeightCoefficient + margin.vertical,
     ),
+    counterText: "",
     hintText: hintText,
     hintStyle: hintColor != null
         ? TextStyle(

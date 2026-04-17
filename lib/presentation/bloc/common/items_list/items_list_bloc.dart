@@ -26,9 +26,11 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         P extends ItemsFetchParams>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T, P>> {
   ItemsListBloc()
-      : super(ItemsFetched<T, P>(
-          itemsFetch: const OutputItemsFetchModel.empty(),
-        )) {
+      : super(
+          ItemsFetched<T, P>(
+            itemsFetch: const OutputItemsFetchModel.empty(),
+          ),
+        ) {
     on<FetchItems<P>>(
       _onFetchItems,
       transformer: throttleDroppable(throttleDuration),
@@ -129,11 +131,12 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     SaveItem<T> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
-    final result = ObjectUtils.tryGet(await saveItem(event.item));
-
-    add(FetchItems<P>());
-
-    event.onItemSave?.call(result);
+    final result = await saveItem(event.item);
+    if (result.isRight) {
+      event.onItemSave?.call(result.right);
+    } else {
+      event.onError?.call(result.left);
+    }
   }
 
   _onRemoveItems(
@@ -141,9 +144,6 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
     ObjectUtils.tryGet(await removeItems(event.ids));
-
-    add(FetchItems<P>());
-
     event.onSuccess?.call();
   }
 

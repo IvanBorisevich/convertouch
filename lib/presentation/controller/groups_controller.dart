@@ -77,8 +77,12 @@ class ConversionGroupsController {
           );
 
           showGroup(context, unitGroup: savedGroup);
+          navigationController.navigateBack(context);
 
           onSaved?.call(savedGroup);
+        },
+        onError: (error) {
+          navigationController.showException(context, exception: error);
         },
       ),
     );

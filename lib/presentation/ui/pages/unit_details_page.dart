@@ -7,7 +7,6 @@ import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -18,17 +17,17 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_i
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:flutter/material.dart';
 
-class ConvertouchUnitDetailsPage extends StatefulWidget {
+const double _verticalSpacing = 12;
+
+const EdgeInsets _pagePadding = EdgeInsets.only(
+  left: 10,
+  top: 10,
+  right: 10,
+  bottom: 70,
+);
+
+class ConvertouchUnitDetailsPage extends StatelessWidget {
   const ConvertouchUnitDetailsPage({super.key});
-
-  @override
-  State createState() => _ConvertouchUnitDetailsPageState();
-}
-
-class _ConvertouchUnitDetailsPageState
-    extends State<ConvertouchUnitDetailsPage> {
-  final _unitNameTextController = TextEditingController();
-  final _unitCodeTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,71 +40,62 @@ class _ConvertouchUnitDetailsPageState
 
         return unitDetailsBlocBuilder(
           builderFunc: (pageState) {
-            _unitNameTextController.text = pageState.details.draftUnitData.name;
-            _unitCodeTextController.text = pageState.details.draftUnitData.code;
-
             return ConvertouchPage(
               title: pageState.details.existingUnit ? 'Unit Info' : 'New Unit',
               colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    top: 23,
-                    right: 20,
-                    bottom: 0,
-                  ),
+                  padding: _pagePadding,
                   child: Column(
                     children: [
                       pageState.details.editMode
-                          ? Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: ConvertouchMenuListItem(
-                                pageState.details.unitGroup,
-                                checkIconVisible: false,
-                                checkIconVisibleIfUnchecked: false,
-                                checked: false,
-                                colors: appColors[appState.theme]
-                                    .unitGroupsMenu
-                                    .menuItem,
-                                disabled: false,
-                                editIconVisible: false,
-                                logoFunc: (
-                                  item, {
-                                  required Color foreground,
-                                  required Color matchForeground,
-                                  required Color matchBackground,
-                                  required double fontSize,
-                                }) {
-                                  return IconUtils.getItemLogoIcon(
-                                    iconName: item.iconName,
-                                    color: foreground,
-                                  );
-                                },
-                                onTap: () {
-                                  FocusScope.of(context).unfocus();
+                          ? ConvertouchMenuListItem(
+                              pageState.details.unitGroup,
+                              checkIconVisible: false,
+                              checkIconVisibleIfUnchecked: false,
+                              checked: false,
+                              colors: appColors[appState.theme]
+                                  .unitGroupsMenu
+                                  .menuItem,
+                              disabled: false,
+                              editIconVisible: false,
+                              logoFunc: (
+                                item, {
+                                required Color foreground,
+                                required Color matchForeground,
+                                required Color matchBackground,
+                                required double fontSize,
+                              }) {
+                                return IconUtils.getItemLogoIcon(
+                                  iconName: item.iconName,
+                                  color: foreground,
+                                );
+                              },
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
 
-                                  groupsController
-                                      .showGroupsForChangeInUnitDetails(
-                                    context,
-                                    currentGroupId:
-                                        pageState.details.unitGroup.id,
-                                  );
-                                },
-                              ),
+                                groupsController
+                                    .showGroupsForChangeInUnitDetails(
+                                  context,
+                                  currentGroupId:
+                                      pageState.details.unitGroup.id,
+                                );
+                              },
                             )
                           : ConvertouchDetailsItem(
                               name: 'Unit Group',
-                              value: pageState.details.unitGroup.name,
+                              savedValue: pageState.details.unitGroup.name,
                               visible: true,
                               inputBoxColor: inputBoxColor,
+                              topMargin: _verticalSpacing,
                             ),
                       ConvertouchDetailsItem(
                         name: 'Unit Name',
-                        value: pageState.details.savedUnitData.name,
-                        valueChangeController: _unitNameTextController,
+                        draftValue: pageState.details.draftUnitData.name,
+                        savedValue: pageState.details.savedUnitData.name,
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                         onValueChanged: (value) {
                           unitDetailsController.updateUnitName(
                             context,
@@ -115,10 +105,11 @@ class _ConvertouchUnitDetailsPageState
                       ),
                       ConvertouchDetailsItem(
                         name: 'Unit Code',
-                        value: pageState.details.savedUnitData.code,
-                        valueChangeController: _unitCodeTextController,
+                        draftValue: pageState.details.draftUnitData.code,
+                        savedValue: pageState.details.savedUnitData.code,
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
@@ -131,24 +122,28 @@ class _ConvertouchUnitDetailsPageState
                       ),
                       ConvertouchDetailsItem(
                         name: 'Value Type',
-                        value: pageState.details.draftUnitData.valueType.name,
+                        savedValue:
+                            pageState.details.draftUnitData.valueType.name,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Min Value',
-                        value:
+                        savedValue:
                             pageState.details.savedUnitData.minValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.minValue != null,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Max Value',
-                        value:
+                        savedValue:
                             pageState.details.savedUnitData.maxValue?.altOrRaw,
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Conversion Rule',
@@ -156,30 +151,26 @@ class _ConvertouchUnitDetailsPageState
                                     .readOnlyDescription !=
                                 null ||
                             pageState.details.conversionRule.configVisible,
-                        value: pageState
+                        savedValue: pageState
                             .details.conversionRule.readOnlyDescription,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                         content: Visibility(
                           visible: pageState.details.editMode &&
                               pageState.details.conversionRule.configVisible,
                           child: Column(
                             children: [
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 7),
                               ConvertouchConversionItem(
-                                ConversionItemModel(
-                                  inputBoxModel: InputBoxModel.ofValue(
-                                    ConversionUnitValueModel(
-                                      unit: pageState.details.resultUnit,
-                                      value: pageState
-                                          .details.conversionRule.unitValue,
-                                      defaultValue: ValueModel.one,
-                                    ),
-                                    readonly: !pageState
-                                        .details.conversionRule.configEditable,
+                                ConversionItemModel.ofValue(
+                                  ConversionUnitValueModel(
+                                    unit: pageState.details.resultUnit,
+                                    value: pageState
+                                        .details.conversionRule.unitValue,
+                                    defaultValue: ValueModel.one,
                                   ),
-                                  unit: pageState.details.resultUnit,
-                                  draggable: false,
-                                  removable: false,
+                                  readonly: !pageState
+                                      .details.conversionRule.configEditable,
                                 ),
                                 onValueChanged: (value) {
                                   unitDetailsController.updateUnitValue(
@@ -190,23 +181,19 @@ class _ConvertouchUnitDetailsPageState
                                 colors:
                                     appColors[appState.theme].conversionItem,
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 8),
                               ConvertouchConversionItem(
-                                ConversionItemModel(
-                                  inputBoxModel: InputBoxModel.ofValue(
-                                    ConversionUnitValueModel(
-                                      unit: pageState
-                                          .details.conversionRule.argUnit,
-                                      value: pageState
-                                          .details.conversionRule.draftArgValue,
-                                      defaultValue: pageState
-                                          .details.conversionRule.savedArgValue,
-                                    ),
-                                    readonly: !pageState
-                                        .details.conversionRule.configEditable,
+                                ConversionItemModel.ofValue(
+                                  ConversionUnitValueModel(
+                                    unit: pageState
+                                        .details.conversionRule.argUnit,
+                                    value: pageState
+                                        .details.conversionRule.draftArgValue,
+                                    defaultValue: pageState
+                                        .details.conversionRule.savedArgValue,
                                   ),
-                                  draggable: false,
-                                  removable: false,
+                                  readonly: !pageState
+                                      .details.conversionRule.configEditable,
                                   isLast: true,
                                 ),
                                 onValueChanged: (value) {
@@ -267,12 +254,5 @@ class _ConvertouchUnitDetailsPageState
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _unitNameTextController.dispose();
-    _unitCodeTextController.dispose();
-    super.dispose();
   }
 }

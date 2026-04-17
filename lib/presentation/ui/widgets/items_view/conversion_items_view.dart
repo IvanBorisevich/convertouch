@@ -86,7 +86,8 @@ class _ConvertouchConversionItemsViewState
               index: index,
               isSource: item.unit.id == widget.sourceUnitId,
               isLast: index == widget.convertedItems.length - 1,
-              removable: widget.convertedItems.length > minimumNumberOfConversionItems,
+              removable:
+                  widget.convertedItems.length > minimumNumberOfConversionItems,
             ),
             onUnitItemTap: () {
               widget.onUnitItemTap?.call(item);

@@ -11,22 +11,17 @@ import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConvertouchUnitGroupDetailsPage extends StatefulWidget {
+const double _verticalSpacing = 12;
+
+const EdgeInsets _pagePadding = EdgeInsets.only(
+  left: 10,
+  top: 10,
+  right: 10,
+  bottom: 0,
+);
+
+class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
   const ConvertouchUnitGroupDetailsPage({super.key});
-
-  @override
-  State createState() => _ConvertouchUnitGroupDetailsPageState();
-}
-
-class _ConvertouchUnitGroupDetailsPageState
-    extends State<ConvertouchUnitGroupDetailsPage> {
-  late final TextEditingController _unitGroupNameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _unitGroupNameController = TextEditingController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +37,6 @@ class _ConvertouchUnitGroupDetailsPageState
         return unitGroupDetailsBlocBuilder(
           bloc: unitGroupDetailsBloc,
           builderFunc: (unitGroupDetailsState) {
-            _unitGroupNameController.text =
-                unitGroupDetailsState.draftGroup.name;
-
             return ConvertouchPage(
               title: unitGroupDetailsState.isExistingGroup
                   ? 'Group Info'
@@ -52,53 +44,53 @@ class _ConvertouchUnitGroupDetailsPageState
               colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    top: 23,
-                    right: 20,
-                    bottom: 0,
-                  ),
+                  padding: _pagePadding,
                   child: Column(
                     children: [
                       ConvertouchDetailsItem(
-                        name: "Name",
-                        value: unitGroupDetailsState.savedGroup.name,
+                        name: "Group Name",
+                        draftValue: unitGroupDetailsState.draftGroup.name,
+                        savedValue: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
-                        valueChangeController: _unitGroupNameController,
+                        inputBoxColor: inputBoxColor,
                         onValueChanged: (value) {
                           unitGroupDetailsController.updateGroupName(
                             context,
                             newValue: value,
                           );
                         },
-                        inputBoxColor: inputBoxColor,
                       ),
                       ConvertouchDetailsItem(
                         name: "Conversion Type",
-                        value: unitGroupDetailsState
+                        savedValue: unitGroupDetailsState
                             .draftGroup.conversionType.name,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Type",
-                        value: unitGroupDetailsState.draftGroup.valueType.name,
+                        savedValue:
+                            unitGroupDetailsState.draftGroup.valueType.name,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Minimum",
                         visible:
                             unitGroupDetailsState.draftGroup.minValue != null,
-                        value:
+                        savedValue:
                             unitGroupDetailsState.draftGroup.minValue?.altOrRaw,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Maximum",
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue != null,
-                        value:
+                        savedValue:
                             unitGroupDetailsState.draftGroup.maxValue?.altOrRaw,
                         inputBoxColor: inputBoxColor,
+                        topMargin: _verticalSpacing,
                       ),
                       refreshingJobsBlocBuilder(
                         builderFunc: (jobState) {
@@ -121,9 +113,10 @@ class _ConvertouchUnitGroupDetailsPageState
                               ),
                               ConvertouchDetailsItem(
                                 name: "Last Refreshed",
-                                value:
+                                savedValue:
                                     jobState.currentLastRefreshedStr ?? 'Never',
                                 inputBoxColor: inputBoxColor,
+                                topMargin: _verticalSpacing,
                               ),
                             ],
                           );
@@ -155,11 +148,5 @@ class _ConvertouchUnitGroupDetailsPageState
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _unitGroupNameController.dispose();
-    super.dispose();
   }
 }
