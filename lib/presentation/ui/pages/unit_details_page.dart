@@ -1,20 +1,11 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
-import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/groups_controller.dart';
+import 'package:convertouch/presentation/controller/unit_details_controller.dart';
+import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
@@ -26,7 +17,6 @@ import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart'
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchUnitDetailsPage extends StatefulWidget {
   const ConvertouchUnitDetailsPage({super.key});
@@ -42,17 +32,6 @@ class _ConvertouchUnitDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final unitGroupsBlocForDetails =
-        BlocProvider.of<UnitGroupsBlocForUnitDetails>(context);
-    final unitsBlocForDetails =
-        BlocProvider.of<UnitsBlocForUnitDetails>(context);
-    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    final unitDetailsBloc = BlocProvider.of<UnitDetailsBloc>(context);
-    final itemsSelectionBloc =
-        BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context);
-    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
-    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
-
     return appBlocBuilder(
       builderFunc: (appState) {
         InputBoxColorScheme inputBoxColor =
@@ -105,22 +84,12 @@ class _ConvertouchUnitDetailsPageState
                                 },
                                 onTap: () {
                                   FocusScope.of(context).unfocus();
-                                  unitGroupsBlocForDetails.add(
-                                    const FetchItems<UnitGroupsFetchParams>(),
-                                  );
 
-                                  itemsSelectionBloc.add(
-                                    StartItemSelection(
-                                      previouslySelectedId:
-                                          pageState.details.unitGroup.id,
-                                    ),
-                                  );
-
-                                  navigationBloc.add(
-                                    const NavigateToPage(
-                                      pageName:
-                                          PageName.unitGroupsPageForUnitDetails,
-                                    ),
+                                  groupsController
+                                      .showGroupsForChangeInUnitDetails(
+                                    context,
+                                    currentGroupId:
+                                        pageState.details.unitGroup.id,
                                   );
                                 },
                               ),
@@ -138,10 +107,9 @@ class _ConvertouchUnitDetailsPageState
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
                         onValueChanged: (value) {
-                          unitDetailsBloc.add(
-                            UpdateUnitNameInUnitDetails(
-                              newValue: value,
-                            ),
+                          unitDetailsController.updateUnitName(
+                            context,
+                            newValue: value,
                           );
                         },
                       ),
@@ -155,10 +123,9 @@ class _ConvertouchUnitDetailsPageState
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
                         onValueChanged: (value) {
-                          unitDetailsBloc.add(
-                            UpdateUnitCodeInUnitDetails(
-                              newValue: value,
-                            ),
+                          unitDetailsController.updateUnitCode(
+                            context,
+                            newValue: value,
                           );
                         },
                       ),
@@ -215,10 +182,9 @@ class _ConvertouchUnitDetailsPageState
                                   removable: false,
                                 ),
                                 onValueChanged: (value) {
-                                  unitDetailsBloc.add(
-                                    UpdateUnitValueInUnitDetails(
-                                      newValue: value,
-                                    ),
+                                  unitDetailsController.updateUnitValue(
+                                    context,
+                                    newValue: value,
                                   );
                                 },
                                 colors:
@@ -244,36 +210,20 @@ class _ConvertouchUnitDetailsPageState
                                   isLast: true,
                                 ),
                                 onValueChanged: (value) {
-                                  unitDetailsBloc.add(
-                                    UpdateArgumentUnitValueInUnitDetails(
-                                      newValue: value,
-                                    ),
+                                  unitDetailsController.updateArgUnitValue(
+                                    context,
+                                    newValue: value,
                                   );
                                 },
                                 onUnitItemTap: () {
-                                  unitsBlocForDetails.add(
-                                    FetchItems(
-                                      params: UnitsFetchParams(
-                                        parentItemId:
-                                            pageState.details.unitGroup.id,
-                                        parentItemType: ItemType.unitGroup,
-                                      ),
-                                    ),
-                                  );
-                                  itemsSelectionBloc.add(
-                                    StartItemSelection(
-                                      previouslySelectedId: pageState
-                                          .details.conversionRule.argUnit.id,
-                                      excludedIds: [
-                                        pageState.details.resultUnit.id
-                                      ],
-                                    ),
-                                  );
-                                  navigationBloc.add(
-                                    const NavigateToPage(
-                                      pageName:
-                                          PageName.unitsPageForUnitDetails,
-                                    ),
+                                  unitsController.showArgUnitsForChange(
+                                    context,
+                                    currentUnitId:
+                                        pageState.details.resultUnit.id,
+                                    currentGroupId:
+                                        pageState.details.unitGroup.id,
+                                    currentArgUnitId: pageState
+                                        .details.conversionRule.argUnit.id,
                                   );
                                 },
                                 colors:
@@ -295,20 +245,17 @@ class _ConvertouchUnitDetailsPageState
                     visible: pageState.details.deltaDetected,
                     onClick: () {
                       FocusScope.of(context).unfocus();
-                      unitsBloc.add(
-                        SaveItem(
-                          item: pageState.details.resultUnit,
-                          onItemSave: (savedUnit) {
-                            conversionBloc.add(
-                              EditConversionItemUnit(
-                                editedUnit: savedUnit,
-                              ),
-                            );
-                            navigationBloc.add(
-                              const NavigateBack(),
-                            );
-                          },
-                        ),
+
+                      unitsController.save(
+                        context,
+                        unit: pageState.details.resultUnit,
+                        currentGroupId: pageState.details.unitGroup.id,
+                        onSaved: (savedUnit) {
+                          conversionController.editConversionItemUnit(
+                            context,
+                            modifiedUnit: savedUnit,
+                          );
+                        },
                       );
                     },
                     colorScheme: floatingButtonColor,

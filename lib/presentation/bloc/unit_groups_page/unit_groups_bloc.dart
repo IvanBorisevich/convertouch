@@ -6,7 +6,6 @@ import 'package:convertouch/domain/use_cases/unit_groups/fetch_unit_groups_use_c
 import 'package:convertouch/domain/use_cases/unit_groups/remove_unit_groups_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_groups/save_unit_group_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:either_dart/either.dart';
 
 typedef OutputUnitGroupsFetch
@@ -17,13 +16,11 @@ class UnitGroupsBloc
   final FetchUnitGroupsUseCase fetchUnitGroupsUseCase;
   final SaveUnitGroupUseCase saveUnitGroupUseCase;
   final RemoveUnitGroupsUseCase removeUnitGroupsUseCase;
-  final NavigationBloc navigationBloc;
 
   UnitGroupsBloc({
     required this.fetchUnitGroupsUseCase,
     required this.saveUnitGroupUseCase,
     required this.removeUnitGroupsUseCase,
-    required this.navigationBloc,
   });
 
   @override
@@ -53,6 +50,5 @@ class UnitGroupsBlocForUnitDetails extends UnitGroupsBloc {
     required super.fetchUnitGroupsUseCase,
     required super.saveUnitGroupUseCase,
     required super.removeUnitGroupsUseCase,
-    required super.navigationBloc,
   });
 }

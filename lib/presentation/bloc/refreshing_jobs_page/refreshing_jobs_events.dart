@@ -1,9 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/network_data_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class RefreshingJobsEvent extends ConvertouchEvent {
-  const RefreshingJobsEvent();
+  const RefreshingJobsEvent({
+    super.onSuccess,
+    super.onError,
+  });
 }
 
 abstract class SingleJobEvent extends RefreshingJobsEvent {
@@ -11,6 +15,8 @@ abstract class SingleJobEvent extends RefreshingJobsEvent {
 
   const SingleJobEvent({
     required this.unitGroupName,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -87,8 +93,13 @@ class ChangeRefreshingJobCron extends SingleJobEvent {
 }
 
 class StartRefreshingJobForConversion extends SingleJobEvent {
+  final void Function(NetworkDataModel)? onFetchSuccess;
+
   const StartRefreshingJobForConversion({
     required super.unitGroupName,
+    this.onFetchSuccess,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -105,6 +116,7 @@ class StartRefreshingJobForConversion extends SingleJobEvent {
 class StopRefreshingJobForConversion extends SingleJobEvent {
   const StopRefreshingJobForConversion({
     required super.unitGroupName,
+    super.onError,
   });
 
   @override

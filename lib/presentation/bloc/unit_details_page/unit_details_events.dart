@@ -3,7 +3,10 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitDetailsEvent extends ConvertouchEvent {
-  const UnitDetailsEvent();
+  const UnitDetailsEvent({
+    super.onSuccess,
+    super.onError,
+  });
 }
 
 class GetNewUnitDetails extends UnitDetailsEvent {
@@ -11,6 +14,8 @@ class GetNewUnitDetails extends UnitDetailsEvent {
 
   const GetNewUnitDetails({
     required this.unitGroup,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -31,6 +36,8 @@ class GetExistingUnitDetails extends UnitDetailsEvent {
   const GetExistingUnitDetails({
     required this.unit,
     required this.unitGroup,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -52,6 +59,8 @@ class ChangeGroupInUnitDetails extends UnitDetailsEvent {
 
   const ChangeGroupInUnitDetails({
     required this.unitGroup,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -71,6 +80,8 @@ class ChangeArgumentUnitInUnitDetails extends UnitDetailsEvent {
 
   const ChangeArgumentUnitInUnitDetails({
     required this.argumentUnit,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -90,6 +101,7 @@ abstract class UpdateUnitTextValues extends UnitDetailsEvent {
 
   const UpdateUnitTextValues({
     required this.newValue,
+    super.onError,
   });
 
   @override
@@ -101,6 +113,7 @@ abstract class UpdateUnitTextValues extends UnitDetailsEvent {
 class UpdateUnitNameInUnitDetails extends UpdateUnitTextValues {
   const UpdateUnitNameInUnitDetails({
     required super.newValue,
+    super.onError,
   });
 
   @override
@@ -113,6 +126,7 @@ class UpdateUnitNameInUnitDetails extends UpdateUnitTextValues {
 class UpdateUnitCodeInUnitDetails extends UpdateUnitTextValues {
   const UpdateUnitCodeInUnitDetails({
     required super.newValue,
+    super.onError,
   });
 
   @override
@@ -125,6 +139,7 @@ class UpdateUnitCodeInUnitDetails extends UpdateUnitTextValues {
 class UpdateUnitValueInUnitDetails extends UpdateUnitTextValues {
   const UpdateUnitValueInUnitDetails({
     required super.newValue,
+    super.onError,
   });
 
   @override
@@ -137,6 +152,7 @@ class UpdateUnitValueInUnitDetails extends UpdateUnitTextValues {
 class UpdateArgumentUnitValueInUnitDetails extends UpdateUnitTextValues {
   const UpdateArgumentUnitValueInUnitDetails({
     required super.newValue,
+    super.onError,
   });
 
   @override

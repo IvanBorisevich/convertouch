@@ -8,7 +8,7 @@ class ShowParam extends ConvertouchEvent {
 
   const ShowParam({
     required this.param,
-    super.onComplete,
+    super.onSuccess,
   });
 
   @override
@@ -23,10 +23,10 @@ class ShowParam extends ConvertouchEvent {
 }
 
 class SingleParamState extends ConvertouchState {
-  final ConversionParamModel? param;
+  final ConversionParamModel param;
 
   const SingleParamState({
-    required this.param,
+    this.param = ConversionParamModel.none,
   });
 
   @override
@@ -42,13 +42,11 @@ class SingleParamState extends ConvertouchState {
 
 class SingleParamBloc
     extends ConvertouchBloc<ConvertouchEvent, SingleParamState> {
-  SingleParamBloc() : super(const SingleParamState(param: null)) {
+  SingleParamBloc() : super(const SingleParamState()) {
     on<ShowParam>((event, emit) {
-      emit(
-        SingleParamState(param: event.param),
-      );
+      emit(SingleParamState(param: event.param));
 
-      event.onComplete?.call();
+      event.onSuccess?.call();
     });
   }
 }

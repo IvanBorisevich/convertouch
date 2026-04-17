@@ -1,13 +1,11 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/setting_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/setting_items_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchSettingsPage extends StatelessWidget {
   const ConvertouchSettingsPage({
@@ -31,11 +29,10 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   selectedValue: appState.theme,
                   theme: appState.theme,
                   onSelect: (newValue) {
-                    BlocProvider.of<AppBloc>(context).add(
-                      ChangeSetting(
-                        settingKey: SettingKey.theme,
-                        settingValue: newValue.value,
-                      ),
+                    settingsController.changeSetting(
+                      context,
+                      key: SettingKey.theme,
+                      newValue: newValue.value,
                     );
                   },
                 ),
@@ -49,11 +46,10 @@ class ConvertouchSettingsPage extends StatelessWidget {
                       possibleValues: UnitTapAction.values,
                       theme: appState.theme,
                       onPossibleValueSelect: (newValue) {
-                        BlocProvider.of<AppBloc>(context).add(
-                          ChangeSetting(
-                            settingKey: SettingKey.conversionUnitTapAction,
-                            settingValue: newValue.id,
-                          ),
+                        settingsController.changeSetting(
+                          context,
+                          key: SettingKey.conversionUnitTapAction,
+                          newValue: newValue.id,
                         );
                       },
                     ),
@@ -64,11 +60,10 @@ class ConvertouchSettingsPage extends StatelessWidget {
                       possibleValues: RecalculationOnUnitChange.values,
                       theme: appState.theme,
                       onPossibleValueSelect: (newValue) {
-                        BlocProvider.of<AppBloc>(context).add(
-                          ChangeSetting(
-                            settingKey: SettingKey.recalculationOnUnitChange,
-                            settingValue: newValue.id,
-                          ),
+                        settingsController.changeSetting(
+                          context,
+                          key: SettingKey.recalculationOnUnitChange,
+                          newValue: newValue.id,
                         );
                       },
                     ),
@@ -77,12 +72,10 @@ class ConvertouchSettingsPage extends StatelessWidget {
                       value: appState.keepParamsOnConversionCleanup,
                       theme: appState.theme,
                       onSwitch: (newValue) {
-                        BlocProvider.of<AppBloc>(context).add(
-                          ChangeSetting(
-                            settingKey:
-                                SettingKey.keepParamsOnConversionCleanup,
-                            settingValue: newValue,
-                          ),
+                        settingsController.changeSetting(
+                          context,
+                          key: SettingKey.keepParamsOnConversionCleanup,
+                          newValue: newValue,
                         );
                       },
                     ),

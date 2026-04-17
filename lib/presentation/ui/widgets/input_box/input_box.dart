@@ -2,10 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/model/list_box_model.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
@@ -427,15 +426,14 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         )?.call(value);
       }
 
-      BlocProvider.of<InputValidationBloc>(context).add(
-        ValidateInput(
-          key: _validationKey!,
-          input: value,
-          validators: widget.validators,
-          onSuccess: () {
-            func?.call(value);
-          },
-        ),
+      validationController.validateInput(
+        context,
+        value: value,
+        key: _validationKey!,
+        validators: widget.validators,
+        onSuccess: ({info}) {
+          func?.call(value);
+        },
       );
     };
   }
@@ -446,9 +444,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   }) {
     return (value) {
       if (_validationKey != null) {
-        BlocProvider.of<InputValidationBloc>(context).add(
-          ResetValidation(key: _validationKey!),
-        );
+        validationController.resetValidation(context, key: _validationKey!);
       }
 
       return func?.call(value);

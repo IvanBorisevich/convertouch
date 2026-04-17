@@ -1,16 +1,18 @@
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ConvertouchEvent extends Equatable {
-  final void Function()? onComplete;
+  final void Function({ConvertouchException? info})? onSuccess;
+  final void Function(ConvertouchException)? onError;
 
   const ConvertouchEvent({
-    this.onComplete,
+    this.onSuccess,
+    this.onError,
   });
 
   @override
-  List<Object?> get props => [
-  ];
+  List<Object?> get props => [];
 }
 
 class ShowState<S extends ConvertouchState> extends ConvertouchEvent {
@@ -26,6 +28,6 @@ class ShowState<S extends ConvertouchState> extends ConvertouchEvent {
 
   @override
   List<Object?> get props => [
-    state,
-  ];
+        state,
+      ];
 }

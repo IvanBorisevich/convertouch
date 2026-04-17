@@ -7,6 +7,7 @@ abstract class InputValidationEvent extends ConvertouchEvent {
 
   const InputValidationEvent({
     required this.key,
+    super.onSuccess,
   });
 
   @override
@@ -16,13 +17,12 @@ abstract class InputValidationEvent extends ConvertouchEvent {
 class ValidateInput extends InputValidationEvent {
   final String input;
   final List<InputValidator> validators;
-  final void Function()? onSuccess;
 
   const ValidateInput({
     required super.key,
     required this.input,
     required this.validators,
-    this.onSuccess,
+    super.onSuccess,
   });
 
   @override

@@ -1,8 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -11,7 +10,6 @@ import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavi
 import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 const double _paramItemHeight = 75;
@@ -280,11 +278,10 @@ class ConversionParamsView extends StatelessWidget {
         calculationSwitchersVisible && paramItem.param.calculable
             ? GestureDetector(
                 onTap: () {
-                  BlocProvider.of<ConversionBloc>(context).add(
-                    ToggleCalculableParam(
-                      paramId: paramItem.param.id,
-                      paramSetId: paramItem.param.paramSetId,
-                    ),
+                  conversionController.toggleParamCalculable(
+                    context,
+                    paramId: paramItem.param.id,
+                    paramSetId: paramItem.param.paramSetId,
                   );
                 },
                 child: Container(

@@ -1,20 +1,14 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitGroupDetailsBloc
     extends ConvertouchBloc<ConvertouchEvent, UnitGroupDetailsState> {
-  final NavigationBloc navigationBloc;
-
-  UnitGroupDetailsBloc({
-    required this.navigationBloc,
-  }) : super(
+  UnitGroupDetailsBloc()
+      : super(
           const UnitGroupDetailsReady(
             savedGroup: UnitGroupModel.none,
             draftGroup: UnitGroupModel.none,
@@ -39,9 +33,8 @@ class UnitGroupDetailsBloc
         canChangesBeSaved: false,
       ),
     );
-    navigationBloc.add(
-      const NavigateToPage(pageName: PageName.unitGroupDetailsPage),
-    );
+
+    event.onSuccess?.call();
   }
 
   _onExistingUnitGroupDetailsGet(
@@ -57,11 +50,7 @@ class UnitGroupDetailsBloc
       ),
     );
 
-    navigationBloc.add(
-      const NavigateToPage(
-        pageName: PageName.unitGroupDetailsPage,
-      ),
-    );
+    event.onSuccess?.call();
   }
 
   _onUnitGroupNameUpdate(

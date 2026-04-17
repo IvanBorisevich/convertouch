@@ -7,13 +7,15 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
   const ConversionEvent({
-    super.onComplete,
+    super.onSuccess,
+    super.onError,
   });
 }
 
 abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion({
-    super.onComplete,
+    super.onSuccess,
+    super.onError,
   });
 }
 
@@ -44,6 +46,7 @@ class SaveConversion extends ConversionEvent {
 
   const SaveConversion({
     required this.conversion,
+    super.onError,
   });
 
   @override
@@ -57,6 +60,7 @@ class CleanupConversion extends ConversionEvent {
 
   const CleanupConversion({
     required this.keepParams,
+    super.onError,
   });
 
   @override
@@ -71,7 +75,8 @@ class EditConversionGroup extends ModifyConversion {
 
   const EditConversionGroup({
     required this.editedGroup,
-    super.onComplete,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -90,6 +95,7 @@ class AddUnitsToConversion extends ModifyConversion {
 
   const AddUnitsToConversion({
     required this.unitIds,
+    super.onError,
   });
 
   @override
@@ -108,6 +114,7 @@ class EditConversionItemUnit extends ModifyConversion {
 
   const EditConversionItemUnit({
     required this.editedUnit,
+    super.onError,
   });
 
   @override
@@ -130,6 +137,7 @@ class EditConversionItemValue extends ModifyConversion {
     required this.newValue,
     this.newDefaultValue,
     required this.unitId,
+    super.onError,
   });
 
   @override
@@ -153,6 +161,7 @@ class UpdateConversionCoefficients extends ModifyConversion {
 
   const UpdateConversionCoefficients({
     required this.updatedUnitCoefs,
+    super.onError,
   });
 
   @override
@@ -171,6 +180,7 @@ class RemoveConversionItems extends ModifyConversion {
 
   const RemoveConversionItems({
     required this.unitIds,
+    super.onError,
   });
 
   @override
@@ -194,6 +204,8 @@ class ReplaceConversionItemUnit extends ModifyConversion {
     required this.newUnit,
     required this.oldUnitId,
     required this.recalculationMode,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -217,6 +229,8 @@ class AddParamSetsToConversion extends ModifyConversion {
 
   const AddParamSetsToConversion({
     required this.paramSetIds,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -231,7 +245,9 @@ class AddParamSetsToConversion extends ModifyConversion {
 }
 
 class RemoveSelectedParamSetFromConversion extends ModifyConversion {
-  const RemoveSelectedParamSetFromConversion();
+  const RemoveSelectedParamSetFromConversion({
+    super.onError,
+  });
 
   @override
   String toString() {
@@ -240,7 +256,9 @@ class RemoveSelectedParamSetFromConversion extends ModifyConversion {
 }
 
 class RemoveAllParamSetsFromConversion extends ModifyConversion {
-  const RemoveAllParamSetsFromConversion();
+  const RemoveAllParamSetsFromConversion({
+    super.onError,
+  });
 
   @override
   String toString() {
@@ -253,6 +271,7 @@ class SelectParamSetInConversion extends ModifyConversion {
 
   const SelectParamSetInConversion({
     required this.newSelectedParamSetIndex,
+    super.onError,
   });
 
   @override
@@ -278,6 +297,7 @@ class EditConversionParamValue extends ModifyConversion {
     this.newDefaultValue,
     required this.paramId,
     required this.paramSetId,
+    super.onError,
   });
 
   @override
@@ -307,6 +327,8 @@ class ReplaceConversionParamUnit extends ModifyConversion {
     required this.newUnit,
     required this.paramId,
     required this.paramSetId,
+    super.onSuccess,
+    super.onError,
   });
 
   @override
@@ -332,6 +354,7 @@ class ToggleCalculableParam extends ModifyConversion {
   const ToggleCalculableParam({
     required this.paramId,
     required this.paramSetId,
+    super.onError,
   });
 
   @override
@@ -346,6 +369,7 @@ abstract class FetchMoreListValues extends ConversionEvent {
 
   const FetchMoreListValues({
     required this.currentBatch,
+    super.onError,
   });
 
   @override
@@ -365,6 +389,7 @@ class FetchMoreListValuesOfParam extends FetchMoreListValues {
   const FetchMoreListValuesOfParam({
     required this.paramId,
     required super.currentBatch,
+    super.onError,
   });
 
   @override
@@ -387,6 +412,7 @@ class FetchMoreListValuesOfConvItem extends FetchMoreListValues {
   const FetchMoreListValuesOfConvItem({
     required this.unitId,
     required super.currentBatch,
+    super.onError,
   });
 
   @override

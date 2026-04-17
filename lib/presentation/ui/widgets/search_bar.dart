@@ -1,15 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
+import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
 import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 const Map<ItemsViewMode, IconData> _itemViewModeIconMap = {
   ItemsViewMode.list: Icons.reorder_outlined,
@@ -103,12 +101,11 @@ class ConvertouchSearchBar extends StatelessWidget {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onPressed: () {
-                  BlocProvider.of<AppBloc>(context).add(
-                    ChangeSetting(
-                      settingKey: viewModeSettingKey,
-                      settingValue: pageViewMode.next.value,
-                      fromPage: pageName,
-                    ),
+                  settingsController.changeSetting(
+                    context,
+                    key: viewModeSettingKey,
+                    newValue: pageViewMode.next.value,
+                    fromPage: pageName,
                   );
                 },
                 color: searchBarColorScheme.viewModeButton.foreground.regular,

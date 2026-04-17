@@ -27,6 +27,12 @@ class UnitGroupModel extends IdNameSearchableItemModel {
           itemType: ItemType.unitGroup,
         );
 
+  const UnitGroupModel._()
+      : this(
+          name: "",
+          valueType: ConvertouchValueType.decimalNonNegative,
+        );
+
   UnitGroupModel copyWith({
     int? id,
     String? name,
@@ -49,12 +55,6 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       oob: oob,
     );
   }
-
-  const UnitGroupModel._()
-      : this(
-          name: "",
-          valueType: ConvertouchValueType.decimalNonNegative,
-        );
 
   bool get exists => this != none;
 

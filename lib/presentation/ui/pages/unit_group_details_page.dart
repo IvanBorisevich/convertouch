@@ -1,14 +1,8 @@
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/groups_controller.dart';
+import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -37,10 +31,6 @@ class _ConvertouchUnitGroupDetailsPageState
   @override
   Widget build(BuildContext context) {
     final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
-    final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
-    final singleGroupBloc = BlocProvider.of<SingleGroupBloc>(context);
-    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
-    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return appBlocBuilder(
       builderFunc: (appState) {
@@ -76,10 +66,9 @@ class _ConvertouchUnitGroupDetailsPageState
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         valueChangeController: _unitGroupNameController,
                         onValueChanged: (value) {
-                          unitGroupDetailsBloc.add(
-                            UpdateUnitGroupName(
-                              newValue: value,
-                            ),
+                          unitGroupDetailsController.updateGroupName(
+                            context,
+                            newValue: value,
                           );
                         },
                         inputBoxColor: inputBoxColor,
@@ -148,28 +137,15 @@ class _ConvertouchUnitGroupDetailsPageState
                 icon: Icons.check_outlined,
                 visible: unitGroupDetailsState.canChangesBeSaved,
                 onClick: () {
-                  unitGroupsBloc.add(
-                    SaveItem(
-                      item: unitGroupDetailsState.draftGroup,
-                      onItemSave: (savedGroup) {
-                        unitGroupsBloc.add(
-                          const FetchItems<UnitGroupsFetchParams>(),
-                        );
-                        singleGroupBloc.add(
-                          ShowGroup(unitGroup: savedGroup),
-                        );
-                        conversionBloc.add(
-                          EditConversionGroup(
-                            editedGroup: savedGroup,
-                            onComplete: () {
-                              navigationBloc.add(
-                                const NavigateBack(),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                  groupsController.save(
+                    context,
+                    unitGroup: unitGroupDetailsState.draftGroup,
+                    onSaved: (savedGroup) {
+                      conversionController.editConversionGroup(
+                        context,
+                        modifiedGroup: savedGroup,
+                      );
+                    },
                   );
                 },
                 colorScheme: floatingButtonColor,

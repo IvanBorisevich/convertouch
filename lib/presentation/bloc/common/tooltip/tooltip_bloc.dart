@@ -14,21 +14,13 @@ class ConvertouchTooltipBloc
     ShowTooltip event,
     Emitter<ConvertouchTooltipState> emit,
   ) async {
-    emit(
-      TooltipVisible(
-        key: event.key,
-      ),
-    );
+    emit(TooltipVisible(key: event.key));
   }
 
   _onHideTooltip(
     HideTooltip event,
     Emitter<ConvertouchTooltipState> emit,
   ) async {
-    emit(
-      TooltipHidden(
-        key: event.key,
-      ),
-    );
+    emit(TooltipHidden(key: event.key));
   }
 }

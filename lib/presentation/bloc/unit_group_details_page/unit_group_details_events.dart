@@ -2,11 +2,15 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitGroupDetailsEvent extends ConvertouchEvent {
-  const UnitGroupDetailsEvent();
+  const UnitGroupDetailsEvent({
+    super.onSuccess,
+  });
 }
 
 class GetNewUnitGroupDetails extends UnitGroupDetailsEvent {
-  const GetNewUnitGroupDetails();
+  const GetNewUnitGroupDetails({
+    super.onSuccess,
+  });
 
   @override
   String toString() {
@@ -19,6 +23,7 @@ class GetExistingUnitGroupDetails extends UnitGroupDetailsEvent {
 
   const GetExistingUnitGroupDetails({
     required this.unitGroup,
+    super.onSuccess,
   });
 
   @override
@@ -36,8 +41,8 @@ class UpdateUnitGroupName extends UnitGroupDetailsEvent {
 
   @override
   List<Object?> get props => [
-    newValue,
-  ];
+        newValue,
+      ];
 
   @override
   String toString() {

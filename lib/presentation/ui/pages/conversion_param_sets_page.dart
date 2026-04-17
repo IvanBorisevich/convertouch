@@ -2,12 +2,9 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -25,8 +22,6 @@ class ConversionParamSetsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final paramSetsBloc = BlocProvider.of<ConversionParamSetsBloc>(context);
     final paramSetsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
-    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
-    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return itemsSelectionBlocBuilder(
       bloc: paramSetsSelectionBloc,
@@ -56,10 +51,9 @@ class ConversionParamSetsPage extends StatelessWidget {
                     checkIconVisibleIfUnchecked: true,
                     removalModeEnabled: false,
                     onItemTap: (paramSet) {
-                      paramSetsSelectionBloc.add(
-                        SelectSingleItem(
-                          id: paramSet.id,
-                        ),
+                      paramSetsController.markForAdding(
+                        context,
+                        paramSetId: paramSet.id,
                       );
                     },
                   ),
@@ -72,12 +66,10 @@ class ConversionParamSetsPage extends StatelessWidget {
                         icon: Icons.check_outlined,
                         visible: itemsSelectionState.canMarkedItemsBeSelected,
                         onClick: () {
-                          conversionBloc.add(
-                            AddParamSetsToConversion(
-                              paramSetIds: itemsSelectionState.markedIds,
-                            ),
+                          conversionController.addParamsToConversion(
+                            context,
+                            paramSetIds: itemsSelectionState.markedIds,
                           );
-                          navigationBloc.add(const NavigateBack());
                         },
                         colorScheme: floatingButtonColor,
                       );

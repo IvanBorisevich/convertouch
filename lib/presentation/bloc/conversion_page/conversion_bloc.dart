@@ -24,9 +24,6 @@ import 'package:convertouch/domain/use_cases/conversion/update_conversion_coeffi
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:either_dart/either.dart';
@@ -55,10 +52,6 @@ class ConversionBloc
   final FetchMoreListValuesOfConvItemUseCase
       fetchMoreListValuesOfConvItemUseCase;
 
-  final InputValidationBloc inputValidationBloc;
-
-  final NavigationBloc navigationBloc;
-
   ConversionBloc({
     required this.getConversionUseCase,
     required this.saveConversionUseCase,
@@ -78,13 +71,7 @@ class ConversionBloc
     required this.enrichItemsWithListValuesUseCase,
     required this.fetchMoreListValuesOfParamUseCase,
     required this.fetchMoreListValuesOfConvItemUseCase,
-    required this.inputValidationBloc,
-    required this.navigationBloc,
-  }) : super(
-          const ConversionBuilt(
-            conversion: ConversionModel.none,
-          ),
-        ) {
+  }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
     on<GetConversion>(_onGetConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
@@ -169,9 +156,7 @@ class ConversionBloc
     var result = await saveConversionUseCase.execute(event.conversion);
 
     if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
+      event.onError?.call(result.left);
     }
   }
 
@@ -186,11 +171,7 @@ class ConversionBloc
     );
 
     if (event.keepParams) {
-      emit(
-        ConversionBuilt(
-          conversion: emptyConversion,
-        ),
-      );
+      emit(ConversionBuilt(conversion: emptyConversion));
     } else {
       final result = await removeParamSetsFromConversionUseCase.execute(
         InputConversionModifyModel<RemoveParamSetsDelta>(
@@ -198,7 +179,7 @@ class ConversionBloc
           conversion: emptyConversion,
         ),
       );
-      await _handleAndEmit(result, emit);
+      await _handleAndEmit(result, emit, onError: event.onError);
     }
   }
 
@@ -215,8 +196,12 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit);
-    event.onComplete?.call();
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onAddUnitsToConversion(
@@ -232,7 +217,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onEditConversionItemUnit(
@@ -248,7 +233,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onEditConversionItemValue(
@@ -266,7 +251,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onUpdateConversionCoefficients(
@@ -282,7 +267,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onRemoveConversionItems(
@@ -297,7 +282,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onReplaceConversionItemUnit(
@@ -314,7 +299,12 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onAddParamSetsToConversion(
@@ -329,7 +319,12 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onRemoveSelectedParamSetFromConversion(
@@ -342,7 +337,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onRemoveAllParamSetsFromConversion(
@@ -355,7 +350,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onSelectParamSetInConversion(
@@ -370,7 +365,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onEditConversionParamValue(
@@ -388,7 +383,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onReplaceConversionParamUnit(
@@ -405,7 +400,12 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onToggleCalculableParam(
@@ -421,7 +421,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit);
+    await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onFetchMoreListValuesOfParam(
@@ -436,7 +436,12 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit, enrichWithListValues: false);
+    await _handleAndEmit(
+      result,
+      emit,
+      enrichWithListValues: false,
+      onError: event.onError,
+    );
   }
 
   _onFetchMoreListValuesOfConvItem(
@@ -451,7 +456,12 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-    await _handleAndEmit(result, emit, enrichWithListValues: false);
+    await _handleAndEmit(
+      result,
+      emit,
+      enrichWithListValues: false,
+      onError: event.onError,
+    );
   }
 
   _handleAndEmit(
@@ -459,11 +469,10 @@ class ConversionBloc
     Emitter<ConversionState> emit, {
     bool enrichWithListValues = true,
     void Function()? onSuccess,
+    void Function(ConvertouchException)? onError,
   }) async {
     if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
+      onError?.call(result.left);
     } else {
       ConversionModel enrichedConversion = enrichWithListValues
           ? ObjectUtils.tryGet(

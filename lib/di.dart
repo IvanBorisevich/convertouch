@@ -78,6 +78,16 @@ import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_blo
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/param_sets_controller.dart';
+import 'package:convertouch/presentation/controller/groups_controller.dart';
+import 'package:convertouch/presentation/controller/navigation_controller.dart';
+import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
+import 'package:convertouch/presentation/controller/settings_controller.dart';
+import 'package:convertouch/presentation/controller/unit_details_controller.dart';
+import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
+import 'package:convertouch/presentation/controller/units_controller.dart';
+import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -107,6 +117,7 @@ Future<void> init() async {
   await _initTranslators();
   await _initUseCases();
   await _initBloc();
+  await _initControllers();
 }
 
 Future<void> _initDao() async {
@@ -460,7 +471,6 @@ Future<void> _initBloc() async {
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
-      navigationBloc: locator(),
     ),
   );
 
@@ -469,7 +479,6 @@ Future<void> _initBloc() async {
       fetchUnitGroupsUseCase: locator(),
       saveUnitGroupUseCase: locator(),
       removeUnitGroupsUseCase: locator(),
-      navigationBloc: locator(),
     ),
   );
 
@@ -482,7 +491,6 @@ Future<void> _initBloc() async {
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
-      navigationBloc: locator(),
     ),
   );
 
@@ -491,7 +499,6 @@ Future<void> _initBloc() async {
       saveUnitUseCase: locator(),
       fetchUnitsUseCase: locator(),
       removeUnitsUseCase: locator(),
-      navigationBloc: locator(),
     ),
   );
 
@@ -499,14 +506,11 @@ Future<void> _initBloc() async {
     () => UnitDetailsBloc(
       buildUnitDetailsUseCase: locator(),
       modifyUnitDetailsUseCase: locator(),
-      navigationBloc: locator(),
     ),
   );
 
   locator.registerLazySingleton<UnitGroupDetailsBloc>(
-    () => UnitGroupDetailsBloc(
-      navigationBloc: locator(),
-    ),
+    () => UnitGroupDetailsBloc(),
   );
 
   locator.registerLazySingleton<ConversionBloc>(
@@ -529,8 +533,6 @@ Future<void> _initBloc() async {
       enrichItemsWithListValuesUseCase: locator(),
       fetchMoreListValuesOfParamUseCase: locator(),
       fetchMoreListValuesOfConvItemUseCase: locator(),
-      inputValidationBloc: locator(),
-      navigationBloc: locator(),
     ),
   );
 
@@ -549,8 +551,48 @@ Future<void> _initBloc() async {
       startRefreshingJobUseCase: locator(),
       stopJobUseCase: locator(),
       getDataSourceUseCase: locator(),
-      conversionBloc: locator(),
-      navigationBloc: locator(),
     ),
+  );
+}
+
+Future<void> _initControllers() async {
+  locator.registerLazySingleton<NavigationController>(
+    () => const NavigationController(),
+  );
+
+  locator.registerLazySingleton<ConversionGroupsController>(
+    () => const ConversionGroupsController(),
+  );
+
+  locator.registerLazySingleton<ConversionController>(
+    () => const ConversionController(),
+  );
+
+  locator.registerLazySingleton<ConversionParamSetsController>(
+    () => const ConversionParamSetsController(),
+  );
+
+  locator.registerLazySingleton<SettingsController>(
+    () => const SettingsController(),
+  );
+
+  locator.registerLazySingleton<UnitDetailsController>(
+    () => const UnitDetailsController(),
+  );
+
+  locator.registerLazySingleton<UnitGroupDetailsController>(
+    () => const UnitGroupDetailsController(),
+  );
+
+  locator.registerLazySingleton<UnitsController>(
+    () => const UnitsController(),
+  );
+
+  locator.registerLazySingleton<RefreshingJobController>(
+    () => const RefreshingJobController(),
+  );
+
+  locator.registerLazySingleton<ValidationController>(
+    () => const ValidationController(),
   );
 }

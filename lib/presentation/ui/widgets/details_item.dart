@@ -52,9 +52,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
                 textLengthCounterVisible: editableValueLengthVisible,
               ),
               controller: valueChangeController,
-              onValueChanged: (value) {
-                onValueChanged?.call(value);
-              },
+              onValueChanged: onValueChanged,
               colors: inputBoxColor,
             )
           : SizedBox(

@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -6,22 +6,19 @@ import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
+import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UnitDetailsBloc
     extends ConvertouchBloc<ConvertouchEvent, UnitDetailsState> {
   final BuildUnitDetailsUseCase buildUnitDetailsUseCase;
   final ModifyUnitDetailsUseCase modifyUnitDetailsUseCase;
-  final NavigationBloc navigationBloc;
 
   UnitDetailsBloc({
     required this.buildUnitDetailsUseCase,
     required this.modifyUnitDetailsUseCase,
-    required this.navigationBloc,
   }) : super(const UnitDetailsInitialState()) {
     on<GetNewUnitDetails>(_onNewUnitDetailsGet);
     on<GetExistingUnitDetails>(_onExistingUnitDetailsGet);
@@ -43,11 +40,12 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, navigationFunc: () {
-      navigationBloc.add(
-        const NavigateToPage(pageName: PageName.unitDetailsPage),
-      );
-    });
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onExistingUnitDetailsGet(
@@ -61,11 +59,12 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, navigationFunc: () {
-      navigationBloc.add(
-        const NavigateToPage(pageName: PageName.unitDetailsPage),
-      );
-    });
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onUnitGroupChange(
@@ -77,9 +76,12 @@ class UnitDetailsBloc
       unitGroup: event.unitGroup,
     );
 
-    await _handleInputParamAndEmit(inputParam, emit, navigationFunc: () {
-      navigationBloc.add(const NavigateBack());
-    });
+    await _handleInputParamAndEmit(
+      inputParam,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onArgumentUnitChange(
@@ -93,9 +95,12 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleInputParamAndEmit(inputParam, emit, navigationFunc: () {
-      navigationBloc.add(const NavigateBack());
-    });
+    await _handleInputParamAndEmit(
+      inputParam,
+      emit,
+      onSuccess: event.onSuccess,
+      onError: event.onError,
+    );
   }
 
   _onUnitNameUpdate(
@@ -109,7 +114,7 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleInputParamAndEmit(inputParam, emit);
+    await _handleInputParamAndEmit(inputParam, emit, onError: event.onError);
   }
 
   _onUnitCodeUpdate(
@@ -123,7 +128,7 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleInputParamAndEmit(inputParam, emit);
+    await _handleInputParamAndEmit(inputParam, emit, onError: event.onError);
   }
 
   _onUnitValueUpdate(
@@ -136,7 +141,7 @@ class UnitDetailsBloc
         unitValue: ValueModel.str(event.newValue),
       ),
     );
-    await _handleInputParamAndEmit(inputParam, emit);
+    await _handleInputParamAndEmit(inputParam, emit, onError: event.onError);
   }
 
   _onArgumentUnitValueUpdate(
@@ -150,7 +155,7 @@ class UnitDetailsBloc
       ),
     );
 
-    await _handleInputParamAndEmit(inputParam, emit);
+    await _handleInputParamAndEmit(inputParam, emit, onError: event.onError);
   }
 
   UnitDetailsModel _buildInputParams() {
@@ -161,27 +166,30 @@ class UnitDetailsBloc
   Future<void> _handleInputParamAndEmit(
     final UnitDetailsModel inputParam,
     Emitter<UnitDetailsState> emit, {
-    void Function()? navigationFunc,
+    void Function()? onSuccess,
+    void Function(ConvertouchException)? onError,
   }) async {
     final result = await modifyUnitDetailsUseCase.execute(inputParam);
-    await _handleAndEmit(result, emit, navigationFunc: navigationFunc);
+    await _handleAndEmit(
+      result,
+      emit,
+      onSuccess: onSuccess,
+      onError: onError,
+    );
   }
 
   Future<void> _handleAndEmit(
-    final result,
+    Either<ConvertouchException, UnitDetailsModel> result,
     Emitter<UnitDetailsState> emit, {
-    void Function()? navigationFunc,
+    void Function()? onSuccess,
+    void Function(ConvertouchException)? onError,
   }) async {
     if (result.isLeft) {
-      navigationBloc.add(
-        ShowException(exception: result.left),
-      );
+      onError?.call(result.left);
     } else {
-      emit(
-        UnitDetailsReady(details: result.right),
-      );
+      emit(UnitDetailsReady(details: result.right));
 
-      navigationFunc?.call();
+      onSuccess?.call();
     }
   }
 }

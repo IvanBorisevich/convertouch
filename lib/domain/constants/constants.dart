@@ -75,7 +75,6 @@ enum PageName {
   unitDetailsPage,
   paramSetsPage,
   settingsPage,
-  refreshingJobDetailsPage,
   errorPage;
 
   static PageName? valueOf(String? name) {

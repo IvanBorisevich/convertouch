@@ -1,22 +1,15 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_events.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
+import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/groups_controller.dart';
+import 'package:convertouch/presentation/controller/navigation_controller.dart';
+import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
+import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
+import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/cancel_items_selection_icon.dart';
@@ -31,14 +24,7 @@ class ConversionGroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unitGroupsBloc = BlocProvider.of<UnitGroupsBloc>(context);
-    final unitGroupDetailsBloc = BlocProvider.of<UnitGroupDetailsBloc>(context);
-    final unitsBloc = BlocProvider.of<UnitsBloc>(context);
-    final unitsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
-    final conversionBloc = BlocProvider.of<ConversionBloc>(context);
-    final singleGroupBloc = BlocProvider.of<SingleGroupBloc>(context);
-    final refreshingJobsBloc = BlocProvider.of<RefreshingJobsBloc>(context);
     final itemsSelectionBloc = BlocProvider.of<ItemsSelectionBloc>(context);
-    final navigationBloc = BlocProvider.of<NavigationBloc>(context);
 
     return itemsSelectionBlocBuilder(
       bloc: itemsSelectionBloc,
@@ -67,70 +53,46 @@ class ConversionGroupsPage extends StatelessWidget {
                 checkableItemsVisible: itemsSelectionState.showCancelIcon,
                 removalModeEnabled: itemsSelectionState.showCancelIcon,
                 onItemTap: (unitGroup) {
-                  singleGroupBloc.add(
-                    ShowGroup(unitGroup: unitGroup),
-                  );
-                  conversionBloc.add(
-                    GetConversion(
-                      unitGroup: unitGroup,
-                      processPrevConversion: (prevConversion) {
-                        conversionBloc.add(
-                          SaveConversion(conversion: prevConversion),
+                  groupsController.showGroup(context, unitGroup: unitGroup);
+
+                  conversionController.getConversion(
+                    context,
+                    unitGroup: unitGroup,
+                    processCurrentConversion: (conversion) {
+                      if (conversion != null && conversion.hasItems) {
+                        refreshingJobController.getJobs(
+                          context,
+                          unitGroup: unitGroup,
                         );
-                      },
-                      processCurrentConversion: (conversion) {
-                        if (conversion != null && conversion.hasItems) {
-                          if (unitGroup.refreshable) {
-                            refreshingJobsBloc.add(
-                              FetchRefreshingJob(
-                                unitGroupName: unitGroup.name,
-                              ),
-                            );
-                          }
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.conversionPage,
-                            ),
-                          );
-                        } else {
-                          unitsBloc.add(
-                            FetchItems(
-                              params: UnitsFetchParams(
-                                parentItemId: unitGroup.id,
-                                parentItemType: ItemType.unitGroup,
-                              ),
-                            ),
-                          );
-                          unitsSelectionBloc.add(
-                            const StartItemsMarking(
-                              markedItemsSelectionMinNum: unitValuesMinNum,
-                            ),
-                          );
-                          navigationBloc.add(
-                            const NavigateToPage(
-                              pageName: PageName.unitsPageForConversion,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+
+                        navigationController.navigateTo(
+                          context,
+                          pageName: PageName.conversionPage,
+                        );
+                      } else {
+                        unitsController.showUnitsForAdding(
+                          context,
+                          groupId: unitGroup.id,
+                          markedItemsSelectionMinNum:
+                              minimumNumberOfConversionItems,
+                        );
+                      }
+                    },
                   );
                 },
                 onItemTapForRemoval: (unitGroup) {
-                  itemsSelectionBloc.add(
-                    SelectSingleItem(id: unitGroup.id),
+                  groupsController.markForRemoval(
+                    context,
+                    groupId: unitGroup.id,
                   );
                 },
                 onItemLongPress: (unitGroup) {
-                  if (!itemsSelectionState.showCancelIcon) {
-                    itemsSelectionBloc.add(
-                      StartItemsMarking(
-                        showCancelIcon: true,
-                        previouslyMarkedIds: [unitGroup.id],
-                        excludedIds: unitGroupsBloc.state.oobIds,
-                      ),
-                    );
-                  }
+                  groupsController.startRemoval(
+                    context,
+                    showCancelIcon: itemsSelectionState.showCancelIcon,
+                    groupId: unitGroup.id,
+                    oobIds: unitGroupsBloc.state.oobIds,
+                  );
                 },
               ),
               floatingActionButton: itemsSelectionState.showCancelIcon
@@ -141,21 +103,15 @@ class ConversionGroupsPage extends StatelessWidget {
                       colorScheme:
                           appColors[appState.theme].removalFloatingButton,
                       onClick: () {
-                        unitGroupsBloc.add(
-                          RemoveItems(
-                            ids: itemsSelectionState.markedIds,
-                          ),
-                        );
-                        itemsSelectionBloc.add(
-                          const CancelItemsMarking(),
+                        groupsController.remove(
+                          context,
+                          groupIds: itemsSelectionState.markedIds,
                         );
                       },
                     )
                   : ConvertouchFloatingActionButton.adding(
                       onClick: () {
-                        unitGroupDetailsBloc.add(
-                          const GetNewUnitGroupDetails(),
-                        );
+                        unitGroupDetailsController.startGroupCreation(context);
                       },
                       visible: true,
                       colorScheme: appColors[appState.theme]

@@ -3,6 +3,8 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
 class ConversionParamModel extends IdNameItemModel {
+  static const ConversionParamModel none = ConversionParamModel._();
+
   final int? unitGroupId;
   final bool calculable;
   final ConvertouchValueType valueType;
@@ -20,6 +22,13 @@ class ConversionParamModel extends IdNameItemModel {
     this.defaultUnit,
     required this.paramSetId,
   }) : super(itemType: ItemType.conversionParam);
+
+  const ConversionParamModel._()
+      : this(
+          name: "",
+          valueType: ConvertouchValueType.decimalNonNegative,
+          paramSetId: -1,
+        );
 
   @override
   List<Object?> get props => [

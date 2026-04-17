@@ -144,7 +144,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
 
     add(FetchItems<P>());
 
-    event.onComplete?.call();
+    event.onSuccess?.call();
   }
 
   Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> fetchBatch(

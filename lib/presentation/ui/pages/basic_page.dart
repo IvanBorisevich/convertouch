@@ -1,8 +1,6 @@
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
+import 'package:convertouch/presentation/controller/navigation_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchPage extends StatelessWidget {
   final Widget body;
@@ -43,9 +41,7 @@ class ConvertouchPage extends StatelessWidget {
                     color: colors.appBar.foreground.regular,
                   ),
                   onPressed: () {
-                    BlocProvider.of<NavigationBloc>(context).add(
-                      const NavigateBack(),
-                    );
+                    navigationController.navigateBack(context);
                   },
                 );
               } else {

@@ -4,7 +4,7 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ItemsListEvent extends ConvertouchEvent {
   const ItemsListEvent({
-    super.onComplete,
+    super.onSuccess,
   });
 }
 
@@ -67,7 +67,7 @@ class RemoveItems extends ItemsListEvent {
 
   const RemoveItems({
     required this.ids,
-    super.onComplete,
+    super.onSuccess,
   });
 
   @override

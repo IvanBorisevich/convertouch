@@ -13,8 +13,7 @@ import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_param_sets_page.dart';
 import 'package:convertouch/presentation/ui/pages/error_page.dart';
-import 'package:convertouch/presentation/ui/pages/refreshing_job_details_page.dart';
-import 'package:convertouch/presentation/ui/pages/settings_groups_page.dart';
+import 'package:convertouch/presentation/ui/pages/settings_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_group_details_page.dart';
 import 'package:convertouch/presentation/ui/pages/unit_groups_page_for_unit_details.dart';
@@ -182,8 +181,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                           routesMap: {
                             PageName.settingsPage.name:
                                 const ConvertouchSettingsPage(),
-                            PageName.refreshingJobDetailsPage.name:
-                                const ConvertouchRefreshingJobDetailsPage(),
                           },
                           onInit: () {
                             BlocProvider.of<RefreshingJobsBloc>(context).add(

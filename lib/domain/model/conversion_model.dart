@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
-const int unitValuesMinNum = 2;
+const int minimumNumberOfConversionItems = 2;
 
 class ConversionModel extends IdNameItemModel {
   static const none = ConversionModel.noItems(
