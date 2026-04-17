@@ -35,20 +35,22 @@ mixin TextControllerMixin {
     TextEditingController controller, {
     String? value,
   }) {
-    String newValue = value ?? '';
+    if (value == null) {
+      return;
+    }
 
-    if (controller.text == newValue) {
+    if (controller.text == value) {
       return;
     }
 
     int offset = controller.selection.baseOffset;
 
-    if (offset > newValue.length) {
-      offset = newValue.length;
+    if (offset > value.length) {
+      offset = value.length;
     }
 
     controller.value = controller.value.copyWith(
-      text: newValue,
+      text: value,
       selection: TextSelection.collapsed(offset: offset),
     );
   }

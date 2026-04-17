@@ -113,8 +113,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   Key? _validationKey;
   late final FocusNode _focusNode;
   void Function()? _focusListener;
+  void Function(String)? _onValueChanged;
   late final TextEditingController _controller;
-  late final void Function() _controllerListener;
   late final ValueNotifier<bool> _closeIconNotifier;
 
   late Color _backgroundColor;
@@ -135,6 +135,11 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
     _closeIconNotifier = ValueNotifier(false);
+
+    _onValueChanged = (value) {
+      _closeIconNotifier.value = value.isNotEmpty;
+      widget.onValueChanged?.call(value);
+    };
 
     _setColors();
 
@@ -160,17 +165,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         });
       },
     );
-
-    _controllerListener = addTextListener(
-      controller: _controller,
-      onValueChanged: () {
-        if (!mounted) return;
-
-        _closeIconNotifier.value = widget.model is! ListBoxModel &&
-            _focusNode.hasFocus &&
-            _controller.text.isNotEmpty;
-      },
-    );
   }
 
   @override
@@ -178,7 +172,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     if (widget.controller == null) {
       disposeTextController(
         controller: _controller,
-        listener: _controllerListener,
       );
     }
 
@@ -317,7 +310,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         changeValueOnFocusChanged: widget.changeValueOnFocusChanged,
         onValueChanged: _wrapWithValidation(
           context: context,
-          func: widget.onValueChanged,
+          func: _onValueChanged,
         ),
         onValueFocused: _wrapWithValidation(
           context: context,
@@ -340,7 +333,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
       return _ListField(
         model: model,
         controller: widget.controller,
-        onValueChanged: widget.onValueChanged,
+        onValueChanged: _onValueChanged,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
         labelColor: _labelColor,
@@ -369,7 +362,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             _controller.clear();
             _wrapWithValidationReset(
               context: context,
-              func: widget.onValueChanged,
+              func: _onValueChanged,
             )?.call("");
           },
           child: Container(
