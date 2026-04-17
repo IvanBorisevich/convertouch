@@ -135,7 +135,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     _closeIconNotifier = ValueNotifier(false);
 
     _onValueChanged = (value) {
-      _closeIconNotifier.value = value.isNotEmpty;
+      _closeIconNotifier.value =
+          widget.model is! ListBoxModel && value.isNotEmpty;
       widget.onValueChanged?.call(value);
     };
 
