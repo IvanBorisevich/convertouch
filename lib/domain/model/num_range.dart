@@ -103,7 +103,7 @@ class NumRange extends Equatable {
     }
 
     if (left.isFinite && right.isFinite) {
-      return _ValidationMessage.inside.withParam(rangeName);
+      return _ValidationMessage.inside.withParam(rangeScientificName);
     }
 
     if (left.isInfinite && right.isFinite) {
@@ -121,7 +121,14 @@ class NumRange extends Equatable {
     return null;
   }
 
-  String get rangeName => "${(includeLeft && left.isFinite) ? '[' : '('}"
+  String get rangeName {
+    String leftStr = left.isFinite ? "$left" : '..';
+    String rightStr = right.isFinite ? "$right" : '..';
+    return "$leftStr-$rightStr";
+  }
+
+  String get rangeScientificName =>
+      "${(includeLeft && left.isFinite) ? '[' : '('}"
       "${left.isFinite ? left : '-∞'} .. ${right.isFinite ? right : '+∞'}"
       "${(includeRight && right.isFinite) ? ']' : ')'}";
 

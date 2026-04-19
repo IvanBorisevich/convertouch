@@ -796,4 +796,11 @@ void main() {
           const NumRange.withLeft(null, null));
     });
   });
+
+  test('Test range name representation', () {
+    expect(
+        const NumRange.withBoth(double.negativeInfinity, 0).rangeName, '..-0');
+    expect(const NumRange.withBoth(0, 2).rangeName, '0-2');
+    expect(const NumRange.withBoth(2, double.infinity).rangeName, '2-..');
+  });
 }
