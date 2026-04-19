@@ -341,21 +341,21 @@ void main() {
       expect(
         const NumRange.withoutBoth(double.negativeInfinity, double.infinity)
             .includesRange(
-            const NumRange.withoutBoth(double.negativeInfinity, 2)),
+                const NumRange.withoutBoth(double.negativeInfinity, 2)),
         true,
       );
 
       expect(
         const NumRange.withoutBoth(double.negativeInfinity, double.infinity)
             .includesRange(const NumRange.withoutBoth(
-            double.negativeInfinity, double.infinity)),
+                double.negativeInfinity, double.infinity)),
         true,
       );
     });
   });
 
   group('Test validation messages', () {
-    test('Test closed ranges', () {
+    test('Left included, right included', () {
       expect(
         const NumRange.withBoth(null, null).validationMessage,
         null,
@@ -404,7 +404,7 @@ void main() {
       );
     });
 
-    test('Test open ranges', () {
+    test('Left excluded, right excluded', () {
       expect(
         const NumRange.withoutBoth(null, null).validationMessage,
         null,
@@ -453,7 +453,7 @@ void main() {
       );
     });
 
-    test('Test left open ranges', () {
+    test('Left excluded, right included', () {
       expect(
         const NumRange.withRight(null, null).validationMessage,
         null,
@@ -502,7 +502,7 @@ void main() {
       );
     });
 
-    test('Test right open ranges', () {
+    test('Left included, right excluded', () {
       expect(
         const NumRange.withLeft(null, null).validationMessage,
         null,
@@ -549,6 +549,251 @@ void main() {
         const NumRange.withLeft(10, 20).validationMessage,
         'Value should be in range [10 .. 20)',
       );
+    });
+  });
+
+  group('Test serialization', () {
+    test('Left included, right included', () {
+      expect(const NumRange.withBoth(-1, 4).toJson(removeNulls: false), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': null,
+        'includeRight': null,
+      });
+
+      expect(const NumRange.withBoth(null, null).toJson(removeNulls: false), {
+        'left': null,
+        'right': null,
+        'includeLeft': null,
+        'includeRight': null,
+      });
+
+      expect(const NumRange.withBoth(-1, 4).toJson(), {
+        'left': -1,
+        'right': 4,
+      });
+
+      expect(const NumRange.withBoth(null, null).toJson(), {});
+    });
+
+    test('Left excluded, right excluded', () {
+      expect(const NumRange.withoutBoth(-1, 4).toJson(removeNulls: false), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': false,
+        'includeRight': false,
+      });
+
+      expect(
+          const NumRange.withoutBoth(null, null).toJson(removeNulls: false), {
+        'left': null,
+        'right': null,
+        'includeLeft': false,
+        'includeRight': false,
+      });
+
+      expect(const NumRange.withoutBoth(-1, 4).toJson(), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': false,
+        'includeRight': false,
+      });
+
+      expect(const NumRange.withoutBoth(null, null).toJson(), {
+        'includeLeft': false,
+        'includeRight': false,
+      });
+    });
+
+    test('Left excluded, right included', () {
+      expect(const NumRange.withRight(-1, 4).toJson(removeNulls: false), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': false,
+        'includeRight': null,
+      });
+
+      expect(const NumRange.withRight(null, null).toJson(removeNulls: false), {
+        'left': null,
+        'right': null,
+        'includeLeft': false,
+        'includeRight': null,
+      });
+
+      expect(const NumRange.withRight(-1, 4).toJson(), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': false,
+      });
+
+      expect(const NumRange.withRight(null, null).toJson(), {
+        'includeLeft': false,
+      });
+    });
+
+    test('Left included, right excluded', () {
+      expect(const NumRange.withLeft(-1, 4).toJson(removeNulls: false), {
+        'left': -1,
+        'right': 4,
+        'includeLeft': null,
+        'includeRight': false,
+      });
+
+      expect(const NumRange.withLeft(null, null).toJson(removeNulls: false), {
+        'left': null,
+        'right': null,
+        'includeLeft': null,
+        'includeRight': false,
+      });
+
+      expect(const NumRange.withLeft(-1, 4).toJson(), {
+        'left': -1,
+        'right': 4,
+        'includeRight': false,
+      });
+
+      expect(const NumRange.withLeft(null, null).toJson(), {
+        'includeRight': false,
+      });
+    });
+  });
+
+  group('Test deserialization', () {
+    test('Left included, right included', () {
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': true,
+            'includeRight': true,
+          }),
+          const NumRange.withBoth(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+          }),
+          const NumRange.withBoth(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'left': null,
+            'right': null,
+            'includeLeft': true,
+            'includeRight': true,
+          }),
+          const NumRange.withBoth(null, null));
+
+      expect(NumRange.fromJson({}), const NumRange.withBoth(null, null));
+    });
+
+    test('Left excluded, right excluded', () {
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': false,
+            'includeRight': false,
+          }),
+          const NumRange.withoutBoth(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'left': null,
+            'right': null,
+            'includeLeft': false,
+            'includeRight': false,
+          }),
+          const NumRange.withoutBoth(null, null));
+
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': false,
+            'includeRight': false,
+          }),
+          const NumRange.withoutBoth(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'includeLeft': false,
+            'includeRight': false,
+          }),
+          const NumRange.withoutBoth(null, null));
+    });
+
+    test('Left excluded, right included', () {
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': false,
+            'includeRight': true,
+          }),
+          const NumRange.withRight(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'left': null,
+            'right': null,
+            'includeLeft': false,
+            'includeRight': true,
+          }),
+          const NumRange.withRight(null, null));
+
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': false,
+            'includeRight': true,
+          }),
+          const NumRange.withRight(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'includeLeft': false,
+            'includeRight': true,
+          }),
+          const NumRange.withRight(null, null));
+    });
+
+    test('Left included, right excluded', () {
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': true,
+            'includeRight': false,
+          }),
+          const NumRange.withLeft(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'left': null,
+            'right': null,
+            'includeLeft': true,
+            'includeRight': false,
+          }),
+          const NumRange.withLeft(null, null));
+
+      expect(
+          NumRange.fromJson({
+            'left': -1,
+            'right': 4,
+            'includeLeft': true,
+            'includeRight': false,
+          }),
+          const NumRange.withLeft(-1, 4));
+
+      expect(
+          NumRange.fromJson({
+            'includeLeft': true,
+            'includeRight': false,
+          }),
+          const NumRange.withLeft(null, null));
     });
   });
 }

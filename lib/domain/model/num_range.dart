@@ -1,4 +1,6 @@
-class NumRange {
+import 'package:equatable/equatable.dart';
+
+class NumRange extends Equatable {
   final num left;
   final num right;
   final bool includeLeft;
@@ -45,6 +47,14 @@ class NumRange {
           includeLeft: true,
           includeRight: true,
         );
+
+  @override
+  List<Object?> get props => [
+        left,
+        right,
+        includeLeft,
+        includeRight,
+      ];
 
   bool includesValue(num? value) {
     if (value == null) {
@@ -114,6 +124,41 @@ class NumRange {
   String get rangeName => "${(includeLeft && left.isFinite) ? '[' : '('}"
       "${left.isFinite ? left : '-∞'} .. ${right.isFinite ? right : '+∞'}"
       "${(includeRight && right.isFinite) ? ']' : ')'}";
+
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
+      "left": left == double.negativeInfinity ? null : left,
+      "right": right == double.infinity ? null : right,
+      "includeLeft": includeLeft ? null : false,
+      "includeRight": includeRight ? null : false,
+    };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
+  }
+
+  static NumRange? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    double left = double.tryParse(json['left']?.toString() ?? '') ??
+        double.negativeInfinity;
+    double right =
+        double.tryParse(json['right']?.toString() ?? '') ?? double.infinity;
+    bool includeLeft = json['includeLeft'] ?? true;
+    bool includeRight = json['includeRight'] ?? true;
+
+    return NumRange._(
+      left,
+      right,
+      includeLeft: includeLeft,
+      includeRight: includeRight,
+    );
+  }
 }
 
 enum _ValidationMessage {
