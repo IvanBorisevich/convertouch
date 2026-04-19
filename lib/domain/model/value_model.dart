@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';

@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_list_value_selection_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';

@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/common/fetch_items_batch_use_case.dart';

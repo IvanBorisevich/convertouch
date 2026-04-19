@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
@@ -217,8 +217,7 @@ List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
       75
     ]));
 
-List<ListValueModel> _ringSizesRu({UnitModel? unit}) =>
-    _ringSizesFr();
+List<ListValueModel> _ringSizesRu({UnitModel? unit}) => _ringSizesFr();
 
 List<ListValueModel> _ringSizesUs({UnitModel? unit}) => _wrapList([
       ...ObjectUtils.generateNumList(3, 15, step: 0.5, fractionDigits: 1),
@@ -253,9 +252,9 @@ List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
     ]));
 
 List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
-  ...ObjectUtils.generateNumList(10, 20,
-      step: 10, fractionDigits: 0, divisor: unit?.coefficient),
-]);
+      ...ObjectUtils.generateNumList(10, 20,
+          step: 10, fractionDigits: 0, divisor: unit?.coefficient),
+    ]);
 
 List<ListValueModel> _ringSizesUk({UnitModel? unit}) => _wrapList([
       'F',

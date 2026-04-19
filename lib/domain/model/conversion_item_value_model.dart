@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
@@ -114,9 +115,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
 
   @override
   List<Object?> get props => [
-    unit,
-    super.props,
-  ];
+        unit,
+        super.props,
+      ];
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
