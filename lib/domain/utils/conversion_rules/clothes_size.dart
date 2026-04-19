@@ -55,12 +55,12 @@ class ClothesSizeCriterion extends Criterion {
 
     double normalizedHeight =
         heightParam.eitherNum! * heightParam.unit!.coefficient! * _cmInMeter;
-    bool heightMatches = heightCmRange.contains(normalizedHeight);
+    bool heightMatches = heightCmRange.includesValue(normalizedHeight);
 
     var waistParam = params.getParamValue(ParamNames.waist);
     bool waistMatches = waistCmRange == null ||
         waistParam?.eitherNum == null ||
-        waistCmRange!.contains(waistParam!.eitherNum);
+        waistCmRange!.includesValue(waistParam!.eitherNum);
 
     return heightMatches && waistMatches;
   }
@@ -99,8 +99,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
       rows: [
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(0, 164),
-            waistCmRange: NumRange.rightIncluded(0, 74),
+            heightCmRange: NumRange.withRight(0, 164),
+            waistCmRange: NumRange.withRight(0, 74),
           ),
           row: {
             CountryCode.inter: "XXS",
@@ -117,8 +117,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(164, 170),
-            waistCmRange: NumRange.rightIncluded(74, 78),
+            heightCmRange: NumRange.withRight(164, 170),
+            waistCmRange: NumRange.withRight(74, 78),
           ),
           row: {
             CountryCode.inter: "XS",
@@ -135,8 +135,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(170, 176),
-            waistCmRange: NumRange.rightIncluded(78, 82),
+            heightCmRange: NumRange.withRight(170, 176),
+            waistCmRange: NumRange.withRight(78, 82),
           ),
           row: {
             CountryCode.inter: "S",
@@ -153,8 +153,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(174, 180),
-            waistCmRange: NumRange.rightIncluded(82, 86),
+            heightCmRange: NumRange.withRight(174, 180),
+            waistCmRange: NumRange.withRight(82, 86),
           ),
           row: {
             CountryCode.inter: "M",
@@ -171,8 +171,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(178, 184),
-            waistCmRange: NumRange.rightIncluded(86, 90),
+            heightCmRange: NumRange.withRight(178, 184),
+            waistCmRange: NumRange.withRight(86, 90),
           ),
           row: {
             CountryCode.inter: "L",
@@ -189,8 +189,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(182, 188),
-            waistCmRange: NumRange.rightIncluded(90, 94),
+            heightCmRange: NumRange.withRight(182, 188),
+            waistCmRange: NumRange.withRight(90, 94),
           ),
           row: {
             CountryCode.inter: "XL",
@@ -207,8 +207,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(186, 192),
-            waistCmRange: NumRange.rightIncluded(94, 98),
+            heightCmRange: NumRange.withRight(186, 192),
+            waistCmRange: NumRange.withRight(94, 98),
           ),
           row: {
             CountryCode.inter: "XXL",
@@ -225,8 +225,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftRightExcluded(190, double.infinity),
-            waistCmRange: NumRange.leftRightExcluded(98, double.infinity),
+            heightCmRange: NumRange.withoutBoth(190, double.infinity),
+            waistCmRange: NumRange.withoutBoth(98, double.infinity),
           ),
           row: {
             CountryCode.inter: "3XL",
@@ -249,8 +249,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
       rows: [
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(0, 164),
-            waistCmRange: NumRange.rightIncluded(0, 74),
+            heightCmRange: NumRange.withRight(0, 164),
+            waistCmRange: NumRange.withRight(0, 74),
           ),
           row: {
             CountryCode.inter: "XS",
@@ -267,8 +267,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(164, 170),
-            waistCmRange: NumRange.rightIncluded(74, 78),
+            heightCmRange: NumRange.withRight(164, 170),
+            waistCmRange: NumRange.withRight(74, 78),
           ),
           row: {
             CountryCode.inter: "S",
@@ -285,8 +285,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(170, 176),
-            waistCmRange: NumRange.rightIncluded(78, 82),
+            heightCmRange: NumRange.withRight(170, 176),
+            waistCmRange: NumRange.withRight(78, 82),
           ),
           row: {
             CountryCode.inter: "M",
@@ -303,8 +303,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(176, 182),
-            waistCmRange: NumRange.rightIncluded(82, 86),
+            heightCmRange: NumRange.withRight(176, 182),
+            waistCmRange: NumRange.withRight(82, 86),
           ),
           row: {
             CountryCode.inter: "L",
@@ -321,8 +321,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(180, 186),
-            waistCmRange: NumRange.rightIncluded(86, 90),
+            heightCmRange: NumRange.withRight(180, 186),
+            waistCmRange: NumRange.withRight(86, 90),
           ),
           row: {
             CountryCode.inter: "XL",
@@ -339,8 +339,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(184, 190),
-            waistCmRange: NumRange.rightIncluded(90, 94),
+            heightCmRange: NumRange.withRight(184, 190),
+            waistCmRange: NumRange.withRight(90, 94),
           ),
           row: {
             CountryCode.inter: "XXL",
@@ -357,8 +357,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftRightExcluded(188, double.infinity),
-            waistCmRange: NumRange.leftRightExcluded(94, double.infinity),
+            heightCmRange: NumRange.withoutBoth(188, double.infinity),
+            waistCmRange: NumRange.withoutBoth(94, double.infinity),
           ),
           row: {
             CountryCode.inter: "3XL",
@@ -383,8 +383,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
       rows: [
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(0, 156),
-            waistCmRange: NumRange.rightIncluded(58, 62),
+            heightCmRange: NumRange.withRight(0, 156),
+            waistCmRange: NumRange.withRight(58, 62),
           ),
           row: {
             CountryCode.inter: "XXS",
@@ -401,8 +401,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(156, 162),
-            waistCmRange: NumRange.rightIncluded(62, 66),
+            heightCmRange: NumRange.withRight(156, 162),
+            waistCmRange: NumRange.withRight(62, 66),
           ),
           row: {
             CountryCode.inter: "XS",
@@ -419,8 +419,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(162, 168),
-            waistCmRange: NumRange.rightIncluded(66, 70),
+            heightCmRange: NumRange.withRight(162, 168),
+            waistCmRange: NumRange.withRight(66, 70),
           ),
           row: {
             CountryCode.inter: "S",
@@ -437,8 +437,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(168, 174),
-            waistCmRange: NumRange.rightIncluded(70, 74),
+            heightCmRange: NumRange.withRight(168, 174),
+            waistCmRange: NumRange.withRight(70, 74),
           ),
           row: {
             CountryCode.inter: "M",
@@ -455,8 +455,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(174, 180),
-            waistCmRange: NumRange.rightIncluded(74, 78),
+            heightCmRange: NumRange.withRight(174, 180),
+            waistCmRange: NumRange.withRight(74, 78),
           ),
           row: {
             CountryCode.inter: "L",
@@ -473,8 +473,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(180, 186),
-            waistCmRange: NumRange.rightIncluded(78, 82),
+            heightCmRange: NumRange.withRight(180, 186),
+            waistCmRange: NumRange.withRight(78, 82),
           ),
           row: {
             CountryCode.inter: "XL",
@@ -491,8 +491,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftRightExcluded(186, double.infinity),
-            waistCmRange: NumRange.leftRightExcluded(82, double.infinity),
+            heightCmRange: NumRange.withoutBoth(186, double.infinity),
+            waistCmRange: NumRange.withoutBoth(82, double.infinity),
           ),
           row: {
             CountryCode.inter: "XXL",
@@ -515,8 +515,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
       rows: [
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(0, 156),
-            waistCmRange: NumRange.rightIncluded(0, 62),
+            heightCmRange: NumRange.withRight(0, 156),
+            waistCmRange: NumRange.withRight(0, 62),
           ),
           row: {
             CountryCode.inter: "XXS",
@@ -533,8 +533,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(156, 162),
-            waistCmRange: NumRange.rightIncluded(62, 66),
+            heightCmRange: NumRange.withRight(156, 162),
+            waistCmRange: NumRange.withRight(62, 66),
           ),
           row: {
             CountryCode.inter: "XS",
@@ -551,8 +551,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(162, 168),
-            waistCmRange: NumRange.rightIncluded(66, 70),
+            heightCmRange: NumRange.withRight(162, 168),
+            waistCmRange: NumRange.withRight(66, 70),
           ),
           row: {
             CountryCode.inter: "S",
@@ -569,8 +569,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(168, 174),
-            waistCmRange: NumRange.rightIncluded(70, 74),
+            heightCmRange: NumRange.withRight(168, 174),
+            waistCmRange: NumRange.withRight(70, 74),
           ),
           row: {
             CountryCode.inter: "M",
@@ -587,8 +587,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(174, 180),
-            waistCmRange: NumRange.rightIncluded(74, 78),
+            heightCmRange: NumRange.withRight(174, 180),
+            waistCmRange: NumRange.withRight(74, 78),
           ),
           row: {
             CountryCode.inter: "L",
@@ -605,8 +605,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.rightIncluded(180, 186),
-            waistCmRange: NumRange.rightIncluded(78, 82),
+            heightCmRange: NumRange.withRight(180, 186),
+            waistCmRange: NumRange.withRight(78, 82),
           ),
           row: {
             CountryCode.inter: "XL",
@@ -623,8 +623,8 @@ const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>
         ),
         MappingRow(
           criterion: ClothesSizeCriterion(
-            heightCmRange: NumRange.leftRightExcluded(186, double.infinity),
-            waistCmRange: NumRange.leftRightExcluded(82, double.infinity),
+            heightCmRange: NumRange.withoutBoth(186, double.infinity),
+            waistCmRange: NumRange.withoutBoth(82, double.infinity),
           ),
           row: {
             CountryCode.inter: "XXL",

@@ -83,10 +83,10 @@ class ValueModel extends Equatable {
   }
 
   ValueModel? betweenOrNull(ValueModel? min, ValueModel? max) {
-    return NumRange.leftRightIncluded(
+    return NumRange.withBoth(
       min?.numVal,
       max?.numVal,
-    ).contains(numVal)
+    ).includesValue(numVal)
         ? this
         : null;
   }

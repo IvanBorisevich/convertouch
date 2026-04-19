@@ -14,7 +14,7 @@ class NumRange {
             'Negative infinity cannot be at right'),
         assert(left != double.infinity, 'Positive infinity cannot be at left');
 
-  const NumRange.rightIncluded(num? left, num? right)
+  const NumRange.withRight(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -22,7 +22,7 @@ class NumRange {
           includeRight: true,
         );
 
-  const NumRange.leftIncluded(num? left, num? right)
+  const NumRange.withLeft(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -30,7 +30,7 @@ class NumRange {
           includeRight: false,
         );
 
-  const NumRange.leftRightExcluded(num? left, num? right)
+  const NumRange.withoutBoth(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -38,7 +38,7 @@ class NumRange {
           includeRight: false,
         );
 
-  const NumRange.leftRightIncluded(num? left, num? right)
+  const NumRange.withBoth(num? left, num? right)
       : this._(
           left ?? double.negativeInfinity,
           right ?? double.infinity,
@@ -46,7 +46,7 @@ class NumRange {
           includeRight: true,
         );
 
-  bool contains(num? value) {
+  bool includesValue(num? value) {
     if (value == null) {
       return true;
     }
@@ -56,12 +56,23 @@ class NumRange {
     return isMoreThanLeft && isLessThanRight;
   }
 
+  bool includesRange(NumRange another) {
+    return (left == double.negativeInfinity ||
+            left < another.left ||
+            left == another.left &&
+                (includeLeft || !includeLeft && !another.includeLeft)) &&
+        (right == double.infinity ||
+            right > another.right ||
+            right == another.right &&
+                (includeRight || !includeRight && !another.includeRight));
+  }
+
   num? valOrLeft(num? val) {
-    return val != null && contains(val) ? val : left;
+    return val != null && includesValue(val) ? val : left;
   }
 
   num? valOrRight(num? val) {
-    return val != null && contains(val) ? val : right;
+    return val != null && includesValue(val) ? val : right;
   }
 
   String? get validationMessage {

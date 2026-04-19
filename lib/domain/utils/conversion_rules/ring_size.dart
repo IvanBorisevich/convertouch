@@ -24,11 +24,11 @@ class RingSizeCriterion extends Criterion {
 
     if (paramSetName == ParamSetNames.byDiameter) {
       return diameterMmRange
-          .contains(_getDiameterCm(params.getParamValue(ParamNames.diameter)));
+          .includesValue(_getDiameterCm(params.getParamValue(ParamNames.diameter)));
     }
 
     if (paramSetName == ParamSetNames.byCircumference) {
-      return diameterMmRange.contains(
+      return diameterMmRange.includesValue(
           _getDiameterCm(params.getParamValue(ParamNames.circumference)));
     }
 
@@ -89,7 +89,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
   rows: [
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(0, 14.5),
+        diameterMmRange: NumRange.withRight(0, 14.5),
       ),
       row: {
         CountryCode.us: 3,
@@ -104,7 +104,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(14.5, 15),
+        diameterMmRange: NumRange.withRight(14.5, 15),
       ),
       row: {
         CountryCode.us: 3.5,
@@ -119,7 +119,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(15, 15.3),
+        diameterMmRange: NumRange.withRight(15, 15.3),
       ),
       row: {
         CountryCode.us: 4,
@@ -134,7 +134,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(15.3, 15.6),
+        diameterMmRange: NumRange.withRight(15.3, 15.6),
       ),
       row: {
         CountryCode.us: 4.5,
@@ -149,7 +149,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(15.6, 16.2),
+        diameterMmRange: NumRange.withRight(15.6, 16.2),
       ),
       row: {
         CountryCode.us: 5,
@@ -164,7 +164,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(16.2, 16.6),
+        diameterMmRange: NumRange.withRight(16.2, 16.6),
       ),
       row: {
         CountryCode.us: 5.5,
@@ -179,7 +179,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(16.6, 16.9),
+        diameterMmRange: NumRange.withRight(16.6, 16.9),
       ),
       row: {
         CountryCode.us: 6,
@@ -194,7 +194,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(16.9, 17.2),
+        diameterMmRange: NumRange.withRight(16.9, 17.2),
       ),
       row: {
         CountryCode.us: 6.5,
@@ -209,7 +209,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(17.2, 17.8),
+        diameterMmRange: NumRange.withRight(17.2, 17.8),
       ),
       row: {
         CountryCode.us: 7,
@@ -224,7 +224,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(17.8, 18.1),
+        diameterMmRange: NumRange.withRight(17.8, 18.1),
       ),
       row: {
         CountryCode.us: 7.5,
@@ -239,7 +239,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(18.1, 18.5),
+        diameterMmRange: NumRange.withRight(18.1, 18.5),
       ),
       row: {
         CountryCode.us: 8,
@@ -254,7 +254,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(18.5, 19.1),
+        diameterMmRange: NumRange.withRight(18.5, 19.1),
       ),
       row: {
         CountryCode.us: 8.5,
@@ -269,7 +269,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(19.1, 19.4),
+        diameterMmRange: NumRange.withRight(19.1, 19.4),
       ),
       row: {
         CountryCode.us: 9,
@@ -284,7 +284,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(19.4, 19.7),
+        diameterMmRange: NumRange.withRight(19.4, 19.7),
       ),
       row: {
         CountryCode.us: 9.5,
@@ -299,7 +299,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(19.7, 20.4),
+        diameterMmRange: NumRange.withRight(19.7, 20.4),
       ),
       row: {
         CountryCode.us: 10,
@@ -314,7 +314,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(20.4, 20.7),
+        diameterMmRange: NumRange.withRight(20.4, 20.7),
       ),
       row: {
         CountryCode.us: 10.5,
@@ -329,7 +329,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(20.7, 21),
+        diameterMmRange: NumRange.withRight(20.7, 21),
       ),
       row: {
         CountryCode.us: 11,
@@ -344,7 +344,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(21, 21.6),
+        diameterMmRange: NumRange.withRight(21, 21.6),
       ),
       row: {
         CountryCode.us: 11.5,
@@ -359,7 +359,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(21.6, 22),
+        diameterMmRange: NumRange.withRight(21.6, 22),
       ),
       row: {
         CountryCode.us: 12,
@@ -374,7 +374,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(22, 22.3),
+        diameterMmRange: NumRange.withRight(22, 22.3),
       ),
       row: {
         CountryCode.us: 12.5,
@@ -389,7 +389,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(22.3, 22.9),
+        diameterMmRange: NumRange.withRight(22.3, 22.9),
       ),
       row: {
         CountryCode.us: 13,
@@ -404,7 +404,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(22.9, 23.2),
+        diameterMmRange: NumRange.withRight(22.9, 23.2),
       ),
       row: {
         CountryCode.us: 13.5,
@@ -419,7 +419,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(23.2, 23.6),
+        diameterMmRange: NumRange.withRight(23.2, 23.6),
       ),
       row: {
         CountryCode.us: 14,
@@ -434,7 +434,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.rightIncluded(23.6, 23.9),
+        diameterMmRange: NumRange.withRight(23.6, 23.9),
       ),
       row: {
         CountryCode.us: 14.5,
@@ -449,7 +449,7 @@ const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(
     ),
     MappingRow(
       criterion: RingSizeCriterion(
-        diameterMmRange: NumRange.leftRightExcluded(23.9, double.infinity),
+        diameterMmRange: NumRange.withoutBoth(23.9, double.infinity),
       ),
       row: {
         CountryCode.us: 15,

@@ -10,9 +10,9 @@ class NumInRangeValidator extends InputValidator {
 
   @override
   InputValidatorResult validate(String? input) {
-    NumRange numRange = NumRange.leftRightIncluded(min, max);
+    NumRange numRange = NumRange.withBoth(min, max);
 
-    if (input == null || numRange.contains(double.tryParse(input))) {
+    if (input == null || numRange.includesValue(double.tryParse(input))) {
       return const InputValidatorResult.successful();
     }
 
