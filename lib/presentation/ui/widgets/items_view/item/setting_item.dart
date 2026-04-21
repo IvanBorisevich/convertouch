@@ -305,7 +305,7 @@ class AboutSettingItem extends StatelessWidget {
           theme: theme,
           applicationName: appName,
           applicationVersion: value,
-          applicationLegalese: appLegalese,
+          applicationLegalese: "© ${DateTime.now().year} johnbor7",
         );
       },
     );

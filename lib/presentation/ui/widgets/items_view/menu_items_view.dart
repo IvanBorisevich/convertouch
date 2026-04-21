@@ -19,7 +19,7 @@ import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
-const int _gridItemsNumInRow = 3;
+const double _minGridItemWidth = 90;
 const double _spacing = 8;
 const double _bottomSpacing = 85;
 const String _defaultSearchPlaceholder = "Search...";
@@ -78,6 +78,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
 
   late double _gridItemWidth;
   late double _gridItemHeight;
+  late int _gridItemsNumInRow;
 
   bool _isInitialized = false;
 
@@ -94,9 +95,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
   void _initStateByContext() {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    _gridItemWidth = ((screenWidth - (_gridItemsNumInRow + 1) * _spacing) /
-            _gridItemsNumInRow)
-        .roundToDouble();
+    _gridItemsNumInRow =
+        (screenWidth - _spacing) ~/ (_minGridItemWidth + _spacing);
+
+    _gridItemWidth = (screenWidth - _gridItemsNumInRow * _spacing - _spacing) /
+        _gridItemsNumInRow;
     _gridItemHeight = _gridItemWidth;
 
     onLoadMore() {
@@ -217,7 +220,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                             bottom: _bottomSpacing,
                           ),
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: _gridItemsNumInRow,
                             crossAxisSpacing: _spacing,
                             mainAxisSpacing: _spacing,
