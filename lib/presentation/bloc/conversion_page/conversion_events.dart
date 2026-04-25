@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -157,21 +158,21 @@ class EditConversionItemValue extends ModifyConversion {
 }
 
 class UpdateConversionCoefficients extends ModifyConversion {
-  final Map<String, double?> updatedUnitCoefs;
+  final DynamicCoefficientsModel newCoefficients;
 
   const UpdateConversionCoefficients({
-    required this.updatedUnitCoefs,
+    required this.newCoefficients,
     super.onError,
   });
 
   @override
   List<Object?> get props => [
-        updatedUnitCoefs.entries,
+        newCoefficients,
       ];
 
   @override
   String toString() {
-    return 'UpdateConversionCoefficients{updatedUnits: $updatedUnitCoefs}';
+    return 'UpdateConversionCoefficients{newCoefficients: $newCoefficients}';
   }
 }
 

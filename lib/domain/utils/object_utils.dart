@@ -20,7 +20,7 @@ class ObjectUtils {
 
   static Map<String, T> convertToMap<T>(
     Map<String, dynamic>? map, {
-    T Function(dynamic)? valueMapFunc,
+    T Function(String key, dynamic value)? valueMapFunc,
   }) {
     if (map == null) {
       return {};
@@ -30,10 +30,14 @@ class ObjectUtils {
       (key, value) => MapEntry(
         key,
         valueMapFunc != null
-            ? valueMapFunc.call(value)
+            ? valueMapFunc.call(key, value)
             : value?.toString() as T,
       ),
     );
+  }
+
+  static Map<K, V> copyMap<K, V>(Map<K, V> map) {
+    return Map.of(map);
   }
 
   static T? coalesceOrNull<T>({
@@ -157,7 +161,8 @@ class ObjectUtils {
     int startCode = from.codeUnitAt(0);
     int endCode = to.codeUnitAt(0);
 
-    if (!_alphaCodes.includesValue(startCode) || !_alphaCodes.includesValue(endCode)) {
+    if (!_alphaCodes.includesValue(startCode) ||
+        !_alphaCodes.includesValue(endCode)) {
       return [];
     }
 
@@ -171,8 +176,7 @@ class ObjectUtils {
 
     return List.generate(
       listSize,
-      (index) =>
-          String.fromCharCode(index + _alphaCodes.left.toInt() + offset),
+      (index) => String.fromCharCode(index + _alphaCodes.left.toInt() + offset),
     );
   }
 }

@@ -228,8 +228,25 @@ const UnitModel degreeKelvin = UnitModel(
 );
 
 const UnitModel ruClothesSize = UnitModel(
+  id: 22,
   name: "Clothes Size RU",
   code: 'RU',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.clothesSizeRu,
+);
+
+const UnitModel usd = UnitModel(
+  id: 23,
+  name: "Dollar US",
+  code: 'USD',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  unitGroupId: 10,
+);
+
+const UnitModel eur = UnitModel(
+  id: 24,
+  name: "Euro",
+  code: 'EUR',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  unitGroupId: 10,
 );

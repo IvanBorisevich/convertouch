@@ -1,7 +1,7 @@
 import 'package:convertouch/data/entities/dynamic_value_entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/model/dynamic_value_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 
 class DynamicValueTranslator
     extends Translator<DynamicValueModel, DynamicValueEntity> {

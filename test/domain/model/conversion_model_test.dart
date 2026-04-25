@@ -36,7 +36,7 @@ void main() {
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
-            paramSet: bankCurrencyRateParamSet,
+            paramSet: exchangeRateParamSet,
             paramValues: [
               ConversionParamValueModel(
                 param: bankParam,
@@ -87,14 +87,14 @@ void main() {
           {
             'paramSet': {
               'id': 5,
-              'name': 'Bank Currency Rate',
+              'name': ParamSetNames.exchangeRate,
               'mandatory': true,
               'groupId': -1,
             },
             'paramValues': [
               {
                 'param': {
-                  'id': 8,
+                  'id': 9,
                   'name': 'Bank',
                   'valueType': 1,
                   'paramSetId': 5,

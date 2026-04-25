@@ -137,7 +137,8 @@ class ConversionBloc
       ConversionBuilt(
         conversion: conversion,
         showRefreshButton: event.unitGroup.refreshable &&
-            conversion.convertedUnitValues.isNotEmpty,
+            conversion.convertedUnitValues.isNotEmpty &&
+            conversion.params?.active != null,
       ),
     );
 
@@ -261,7 +262,7 @@ class ConversionBloc
     final result = await updateConversionCoefficientsUseCase.execute(
       InputConversionModifyModel<UpdateConversionCoefficientsDelta>(
         delta: UpdateConversionCoefficientsDelta(
-          updatedUnitCoefs: event.updatedUnitCoefs,
+          newCoefficients: event.newCoefficients,
         ),
         conversion: state.conversion,
       ),
@@ -484,7 +485,8 @@ class ConversionBloc
         ConversionBuilt(
           conversion: enrichedConversion,
           showRefreshButton: enrichedConversion.unitGroup.refreshable &&
-              enrichedConversion.convertedUnitValues.isNotEmpty,
+              enrichedConversion.convertedUnitValues.isNotEmpty &&
+              enrichedConversion.params?.active != null,
         ),
       );
       onSuccess?.call();

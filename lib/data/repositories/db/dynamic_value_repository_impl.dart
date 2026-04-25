@@ -1,7 +1,7 @@
 import 'package:convertouch/data/dao/dynamic_value_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
-import 'package:convertouch/domain/model/dynamic_value_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:either_dart/either.dart';

@@ -1,6 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
+import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/repositories/db/conversion_param_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/conversion_param_set_repository_impl.dart';
@@ -8,20 +10,19 @@ import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart
 import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
 import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
-import 'package:convertouch/data/repositories/local/data_source_repository_impl.dart';
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_param_set_translator.dart';
 import 'package:convertouch/data/translators/conversion_param_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
+import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
 import 'package:convertouch/data/translators/unit_group_translator.dart';
 import 'package:convertouch/data/translators/unit_translator.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_repository.dart';
-import 'package:convertouch/domain/repositories/data_source_repository.dart';
 import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
@@ -51,7 +52,6 @@ import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
@@ -79,9 +79,9 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
 import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
-import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
+import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
@@ -105,11 +105,19 @@ Future<void> init() async {
     () => ConvertouchDatabaseHelper(),
   );
 
+  locator.registerLazySingleton<NetworkHelper>(
+    () => NetworkHelper(Connectivity()),
+  );
+
   ConvertouchDatabase database =
       await ConvertouchDatabaseHelper.I.initDatabase();
 
   locator.registerLazySingleton<ConvertouchDatabase>(
     () => database,
+  );
+
+  locator.registerLazySingleton<Connectivity>(
+    () => Connectivity(),
   );
 
   await _initDao();
@@ -153,15 +161,12 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
 
   locator.registerLazySingleton<NetworkRepository>(
     () => NetworkRepositoryImpl(
+      networkHelper: locator(),
       networkDao: locator(),
       unitDao: database.unitDao,
       dynamicValueDao: database.dynamicValueDao,
       database: database.database.database,
     ),
-  );
-
-  locator.registerLazySingleton<DataSourceRepository>(
-    () => const DataSourceRepositoryImpl(),
   );
 
   locator.registerLazySingleton<DynamicValueRepository>(
@@ -221,6 +226,10 @@ Future<void> _initTranslators() async {
 
   locator.registerLazySingleton<ConversionParamTranslator>(
     () => ConversionParamTranslator(),
+  );
+
+  locator.registerLazySingleton<DynamicCoefficientsTranslator>(
+    () => DynamicCoefficientsTranslator(),
   );
 }
 
@@ -398,18 +407,11 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
-      dataSourceRepository: locator(),
     ),
   );
 
   locator.registerLazySingleton<StopJobUseCase>(
     () => const StopJobUseCase(),
-  );
-
-  locator.registerLazySingleton<GetDataSourceUseCase>(
-    () => GetDataSourceUseCase(
-      dataSourceRepository: locator(),
-    ),
   );
 
   locator.registerLazySingleton<MarkItemsUseCase>(
@@ -550,7 +552,6 @@ Future<void> _initBloc() async {
     () => RefreshingJobsBloc(
       startRefreshingJobUseCase: locator(),
       stopJobUseCase: locator(),
-      getDataSourceUseCase: locator(),
     ),
   );
 }

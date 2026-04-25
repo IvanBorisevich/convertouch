@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 
@@ -79,10 +80,10 @@ class EditConversionItemValueDelta extends ConversionUnitValuesModifyDelta {
 
 class UpdateConversionCoefficientsDelta
     extends ConversionUnitValuesModifyDelta {
-  final Map<String, double?> updatedUnitCoefs;
+  final DynamicCoefficientsModel newCoefficients;
 
   const UpdateConversionCoefficientsDelta({
-    required this.updatedUnitCoefs,
+    required this.newCoefficients,
   });
 }
 

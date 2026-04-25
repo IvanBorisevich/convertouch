@@ -111,13 +111,6 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                                   color: inputBoxColor.textBox.border.regular,
                                 ),
                               ),
-                              ConvertouchDetailsItem(
-                                name: "Last Refreshed",
-                                savedValue:
-                                    jobState.currentLastRefreshedStr ?? 'Never',
-                                inputBoxColor: inputBoxColor,
-                                topMargin: _verticalSpacing,
-                              ),
                             ],
                           );
                         },

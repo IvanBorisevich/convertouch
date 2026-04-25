@@ -1,5 +1,6 @@
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/model/network_data_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
@@ -15,7 +16,7 @@ class RefreshingJobController {
   void getJobs(BuildContext context, {required UnitGroupModel unitGroup}) {
     if (unitGroup.refreshable) {
       BlocProvider.of<RefreshingJobsBloc>(context).add(
-        FetchRefreshingJob(unitGroupName: unitGroup.name),
+        const FetchRefreshingJobs(),
       );
     }
   }
@@ -23,11 +24,13 @@ class RefreshingJobController {
   void startRefresh(
     BuildContext context, {
     required String groupName,
-    void Function(NetworkDataModel)? onFetchSuccess,
+    required ConversionParamSetValueModel params,
+    void Function(DynamicDataModel)? onFetchSuccess,
   }) {
     BlocProvider.of<RefreshingJobsBloc>(context).add(
       StartRefreshingJobForConversion(
         unitGroupName: groupName,
+        params: params,
         onFetchSuccess: onFetchSuccess,
         onSuccess: ({info}) {
           if (info != null) {
@@ -41,9 +44,16 @@ class RefreshingJobController {
     );
   }
 
-  void stopRefresh(BuildContext context, {required String groupName}) {
+  void stopRefresh(
+    BuildContext context, {
+    required String groupName,
+    required String paramSetName,
+  }) {
     BlocProvider.of<RefreshingJobsBloc>(context).add(
-      StopRefreshingJobForConversion(unitGroupName: groupName),
+      StopRefreshingJobForConversion(
+        unitGroupName: groupName,
+        paramSetName: paramSetName,
+      ),
     );
   }
 }

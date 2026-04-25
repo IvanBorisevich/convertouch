@@ -4,8 +4,7 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
-import 'package:convertouch/domain/model/dynamic_value_model.dart';
-import 'package:convertouch/domain/model/network_data_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -261,10 +260,10 @@ class ConversionController {
 
   void updateCoefficients(
     BuildContext context, {
-    required Map<String, double?> coefficients,
+    required DynamicCoefficientsModel coefficients,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
-      UpdateConversionCoefficients(updatedUnitCoefs: coefficients),
+      UpdateConversionCoefficients(newCoefficients: coefficients),
     );
   }
 
@@ -283,19 +282,19 @@ class ConversionController {
 
   void updateFromNetwork(
     BuildContext context, {
-    required NetworkDataModel data,
+    required DynamicDataModel data,
   }) {
-    if (data.dynamicCoefficients != null) {
+    if (data is DynamicCoefficientsModel) {
       conversionController.updateCoefficients(
         context,
-        coefficients: data.dynamicCoefficients!,
+        coefficients: data,
       );
     }
 
-    if (data.dynamicValue != null) {
+    if (data is DynamicValueModel) {
       conversionController.updateDynamicSrcValue(
         context,
-        dynamicSrcValue: data.dynamicValue!,
+        dynamicSrcValue: data,
       );
     }
   }

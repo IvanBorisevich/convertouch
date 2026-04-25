@@ -18,7 +18,7 @@ class UpdateConversionCoefficientsUseCase
     oldConvertedUnitValues.updateAll(
       (key, item) => item.copyWith(
         unit: item.unit.copyWith(
-          coefficient: delta.updatedUnitCoefs[item.unit.code],
+          coefficient: delta.newCoefficients.unitIdToCoefficient[item.unit.id],
         ),
       ),
     );

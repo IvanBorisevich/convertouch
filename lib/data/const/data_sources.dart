@@ -1,23 +1,13 @@
-import 'package:convertouch/data/translators/response_translators/response_translator.dart';
+import 'package:convertouch/data/entities/data_source_entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/data_source_model.dart';
 
-const defaultDataSourceName = "default";
+const apiHost = "convertouch-dynamic-data-gatherer.onrender.com";
 
-const convertouchDataSources = {
+const Map<String, Map<String, DataSourceEntity>> convertouchDataSources = {
   GroupNames.currency: {
-    "floatRates": DataSourceModel(
-      name: "floatrates.com",
-      url: "https://www.floatrates.com/daily/usd.json",
-      responseTransformerClassName: floatRatesTranslator,
-      refreshablePart: RefreshableDataPart.coefficient,
-    ),
-    defaultDataSourceName: DataSourceModel(
-      name: "convertouch-dynamic-data-gatherer.onrender.com",
-      url:
-          "https://convertouch-dynamic-data-gatherer.onrender.com/currency-rates/",
-      responseTransformerClassName: defaultCurrencyRatesTranslator,
-      refreshablePart: RefreshableDataPart.coefficient,
+    ParamSetNames.exchangeRate: DataSourceEntity(
+      path: "/currency-rates",
+      dynamicDataType: DynamicDataType.exchangeRate,
     ),
   },
 };

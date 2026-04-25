@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/data_source_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
-import 'package:convertouch/domain/model/network_data_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_data_source_model.dart';
-import 'package:convertouch/domain/use_cases/data_sources/get_data_source_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_data_refresh_model.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -14,28 +12,18 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class RefreshingJobsBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsFetched> {
   final StartRefreshingJobUseCase startRefreshingJobUseCase;
   final StopJobUseCase stopJobUseCase;
-  final GetDataSourceUseCase getDataSourceUseCase;
 
   RefreshingJobsBloc({
     required this.startRefreshingJobUseCase,
     required this.stopJobUseCase,
-    required this.getDataSourceUseCase,
-  }) : super(
-          const RefreshingJobsFetched(
-            jobs: {},
-            currentDataSourceKeys: {},
-            currentDataSourceUrl: null,
-          ),
-        ) {
+  }) : super(const RefreshingJobsFetched(jobs: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
     on<ChangeJobInfo>(_onChangeJobInfo);
-    on<FetchRefreshingJob>(_onJobFetch);
     on<StartRefreshingJobForConversion>(_onStartRefreshingJobForConversion);
     on<StopRefreshingJobForConversion>(_onStopRefreshingJobForConversion);
   }
@@ -52,35 +40,11 @@ class RefreshingJobsBloc
     Emitter<RefreshingJobsState> emit,
   ) async {
     await _patchJobAndEmit(
-      activeJobs: Map.of(state.jobs),
+      activeJobs: ObjectUtils.copyMap(state.jobs),
       unitGroupName: event.unitGroupName,
+      paramSetName: event.paramSetName,
       jobPatch: event.jobPatch,
       emit: emit,
-    );
-  }
-
-  _onJobFetch(
-    FetchRefreshingJob event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    DataSourceModel currentDataSource = ObjectUtils.tryGet(
-      await getDataSourceUseCase.execute(
-        InputDataSourceModel(
-          unitGroupName: event.unitGroupName,
-          dataSourceKey: state.currentDataSourceKeys[event.unitGroupName],
-        ),
-      ),
-    );
-
-    var completedAt = state.jobs[event.unitGroupName]?.completedAt;
-
-    emit(
-      state.copyWith(
-        currentDataSourceUrl: currentDataSource.url,
-        currentLastRefreshed: completedAt,
-        currentLastRefreshedStr:
-            completedAt != null ? timeago.format(completedAt) : null,
-      ),
     );
   }
 
@@ -88,12 +52,12 @@ class RefreshingJobsBloc
     StartRefreshingJobForConversion event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    Map<String, JobModel> activeJobs = Map.of(state.jobs);
+    JobsMap activeJobs = ObjectUtils.copyMap(state.jobs);
 
-    JobModel<InputDataSourceModel, NetworkDataModel> job = JobModel(
-      params: InputDataSourceModel(
+    JobModel<InputDataRefreshModel, DynamicDataModel> job = JobModel(
+      params: InputDataRefreshModel(
         unitGroupName: event.unitGroupName,
-        dataSourceKey: state.currentDataSourceKeys[event.unitGroupName],
+        params: event.params,
       ),
       onSuccess: (networkData) {
         log("onComplete start");
@@ -107,6 +71,7 @@ class RefreshingJobsBloc
               completedAt: DateTime.now(),
             ),
             unitGroupName: event.unitGroupName,
+            paramSetName: event.params.paramSet.name,
           ),
         );
 
@@ -128,6 +93,7 @@ class RefreshingJobsBloc
               progressController: null,
             ),
             unitGroupName: event.unitGroupName,
+            paramSetName: event.params.paramSet.name,
           ),
         );
 
@@ -150,10 +116,12 @@ class RefreshingJobsBloc
       );
     } else {
       log("Update active jobs info");
-      activeJobs.update(
-        event.unitGroupName,
-        (value) => startedJobResult.right,
-        ifAbsent: () => startedJobResult.right,
+
+      _updateJobMap(
+        activeJobs,
+        unitGroupName: event.unitGroupName,
+        paramSetName: event.params.paramSet.name,
+        modifiedJob: startedJobResult.right,
       );
     }
 
@@ -164,49 +132,77 @@ class RefreshingJobsBloc
     StopRefreshingJobForConversion event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    Map<String, JobModel> activeJobs = Map.of(state.jobs);
+    JobsMap activeJobs = ObjectUtils.copyMap(state.jobs);
 
-    final stoppedJobResult = await stopJobUseCase.execute(
-      activeJobs[event.unitGroupName]!,
-    );
+    JobModel? jobToStop = activeJobs[event.unitGroupName]?[event.paramSetName];
+
+    if (jobToStop == null) {
+      return;
+    }
+
+    final stoppedJobResult = await stopJobUseCase.execute(jobToStop);
 
     if (stoppedJobResult.isLeft) {
       event.onError?.call(stoppedJobResult.left);
     } else {
-      activeJobs.update(event.unitGroupName, (value) => stoppedJobResult.right);
+      _updateJobMap(
+        activeJobs,
+        unitGroupName: event.unitGroupName,
+        paramSetName: event.paramSetName,
+        modifiedJob: stoppedJobResult.right,
+      );
     }
 
     emit(state.copyWith(jobs: activeJobs));
   }
 
   _patchJobAndEmit({
-    required Map<String, JobModel> activeJobs,
+    required JobsMap activeJobs,
     required String unitGroupName,
+    required String paramSetName,
     required JobModel jobPatch,
     required Emitter<RefreshingJobsState> emit,
   }) async {
+    var jobToPatch = activeJobs[unitGroupName]?[paramSetName];
+
+    if (jobToPatch != null) {
+      _updateJobMap(
+        activeJobs,
+        unitGroupName: unitGroupName,
+        paramSetName: paramSetName,
+        modifiedJob: jobToPatch.copyWith(
+          params: Patchable(jobPatch.params),
+          completedAt: Patchable(jobPatch.completedAt),
+          selectedCron: Patchable(jobPatch.selectedCron),
+          progressController: Patchable(
+            jobPatch.progressController,
+            patchNull: true,
+          ),
+          alreadyRunning: Patchable(jobPatch.alreadyRunning),
+        ),
+      );
+    }
+
+    emit(state.copyWith(jobs: activeJobs));
+  }
+
+  void _updateJobMap(
+    JobsMap activeJobs, {
+    required String unitGroupName,
+    required String paramSetName,
+    required JobModel modifiedJob,
+  }) {
     activeJobs.update(
       unitGroupName,
-      (value) => value.copyWith(
-        params: Patchable(jobPatch.params),
-        completedAt: Patchable(jobPatch.completedAt),
-        selectedCron: Patchable(jobPatch.selectedCron),
-        progressController: Patchable(
-          jobPatch.progressController,
-          patchNull: true,
+      (groupJobs) => groupJobs
+        ..update(
+          paramSetName,
+          (job) => modifiedJob,
+          ifAbsent: () => modifiedJob,
         ),
-        alreadyRunning: Patchable(jobPatch.alreadyRunning),
-      ),
-    );
-
-    emit(
-      state.copyWith(
-        jobs: activeJobs,
-        currentLastRefreshed: jobPatch.completedAt,
-        currentLastRefreshedStr: jobPatch.completedAt != null
-            ? timeago.format(jobPatch.completedAt!)
-            : null,
-      ),
+      ifAbsent: () => {
+        paramSetName: modifiedJob,
+      },
     );
   }
 

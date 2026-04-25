@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
-import 'package:convertouch/domain/model/network_data_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class RefreshingJobsEvent extends ConvertouchEvent {
@@ -12,9 +13,11 @@ abstract class RefreshingJobsEvent extends ConvertouchEvent {
 
 abstract class SingleJobEvent extends RefreshingJobsEvent {
   final String unitGroupName;
+  final String paramSetName;
 
   const SingleJobEvent({
     required this.unitGroupName,
+    required this.paramSetName,
     super.onSuccess,
     super.onError,
   });
@@ -22,6 +25,7 @@ abstract class SingleJobEvent extends RefreshingJobsEvent {
   @override
   List<Object?> get props => [
         unitGroupName,
+        paramSetName,
       ];
 }
 
@@ -34,17 +38,6 @@ class FetchRefreshingJobs extends RefreshingJobsEvent {
   }
 }
 
-class FetchRefreshingJob extends SingleJobEvent {
-  const FetchRefreshingJob({
-    required super.unitGroupName,
-  });
-
-  @override
-  String toString() {
-    return 'FetchRefreshingJob{unitGroupName: $unitGroupName}';
-  }
-}
-
 class ChangeJobInfo extends SingleJobEvent {
   final JobModel jobPatch;
   final bool forceReplaceWithNulls;
@@ -53,6 +46,7 @@ class ChangeJobInfo extends SingleJobEvent {
     required this.jobPatch,
     this.forceReplaceWithNulls = false,
     required super.unitGroupName,
+    required super.paramSetName,
   });
 
   @override
@@ -66,7 +60,8 @@ class ChangeJobInfo extends SingleJobEvent {
   String toString() {
     return 'ChangeJobInfo{'
         'jobPatch: $jobPatch, '
-        'unitGroupName: $unitGroupName}';
+        'unitGroupName: $unitGroupName, '
+        'paramSetName: $paramSetName}';
   }
 }
 
@@ -76,6 +71,7 @@ class ChangeRefreshingJobCron extends SingleJobEvent {
   const ChangeRefreshingJobCron({
     required this.newCron,
     required super.unitGroupName,
+    required super.paramSetName,
   });
 
   @override
@@ -88,15 +84,19 @@ class ChangeRefreshingJobCron extends SingleJobEvent {
   String toString() {
     return 'ChangeRefreshingJobCron{'
         'unitGroupName: $unitGroupName, '
+        'paramsSetName: $paramSetName, '
         'newCron: $newCron}';
   }
 }
 
-class StartRefreshingJobForConversion extends SingleJobEvent {
-  final void Function(NetworkDataModel)? onFetchSuccess;
+class StartRefreshingJobForConversion extends RefreshingJobsEvent {
+  final String unitGroupName;
+  final ConversionParamSetValueModel params;
+  final void Function(DynamicDataModel)? onFetchSuccess;
 
   const StartRefreshingJobForConversion({
-    required super.unitGroupName,
+    required this.unitGroupName,
+    required this.params,
     this.onFetchSuccess,
     super.onSuccess,
     super.onError,
@@ -105,27 +105,28 @@ class StartRefreshingJobForConversion extends SingleJobEvent {
   @override
   List<Object?> get props => [
         unitGroupName,
+        params,
       ];
 
   @override
   String toString() {
-    return 'StartRefreshingJobForConversion{unitGroupName: $unitGroupName}';
+    return 'StartRefreshingJobForConversion{'
+        'unitGroupName: $unitGroupName, '
+        'params: $params}';
   }
 }
 
 class StopRefreshingJobForConversion extends SingleJobEvent {
   const StopRefreshingJobForConversion({
     required super.unitGroupName,
+    required super.paramSetName,
     super.onError,
   });
 
   @override
-  List<Object?> get props => [
-        unitGroupName,
-      ];
-
-  @override
   String toString() {
-    return 'StopRefreshingJobForConversion{unitGroupName: $unitGroupName}';
+    return 'StopRefreshingJobForConversion{'
+        'unitGroupName: $unitGroupName, '
+        'paramSetName: $paramSetName}';
   }
 }

@@ -63,3 +63,9 @@ const UnitGroupModel massGroup = UnitGroupModel(
   name: GroupNames.mass,
   valueType: ConvertouchValueType.decimal,
 );
+
+const UnitGroupModel currencyGroup = UnitGroupModel(
+  id: 10,
+  name: GroupNames.currency,
+  valueType: ConvertouchValueType.decimalNonNegative,
+);

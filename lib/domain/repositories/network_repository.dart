@@ -1,13 +1,13 @@
-import 'package:convertouch/domain/model/data_source_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/network_data_model.dart';
 import 'package:either_dart/either.dart';
 
 abstract class NetworkRepository {
   const NetworkRepository();
 
-  Future<Either<ConvertouchException, NetworkDataModel>> getRefreshedData({
+  Future<Either<ConvertouchException, DynamicDataModel?>> getRefreshedData({
     required String unitGroupName,
-    required DataSourceModel dataSource,
+    required ConversionParamSetValueModel params,
   });
 }

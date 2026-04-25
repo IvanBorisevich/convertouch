@@ -32,9 +32,9 @@ const barbellWeightParamSet = ConversionParamSetModel(
   groupId: -1,
 );
 
-const bankCurrencyRateParamSet = ConversionParamSetModel(
+const exchangeRateParamSet = ConversionParamSetModel(
   id: 5,
-  name: "Bank Currency Rate",
+  name: ParamSetNames.exchangeRate,
   mandatory: true,
   groupId: -1,
 );
@@ -114,9 +114,16 @@ const someCalculableParam = ConversionParamModel(
   paramSetId: 4,
 );
 
-const bankParam = ConversionParamModel(
+const exchangeRateSource = ConversionParamModel(
   id: 8,
-  name: 'Bank',
+  name: ParamNames.source,
+  valueType: ConvertouchValueType.text,
+  paramSetId: 5,
+);
+
+const bankParam = ConversionParamModel(
+  id: 9,
+  name: ParamNames.bank,
   valueType: ConvertouchValueType.text,
   paramSetId: 5,
 );

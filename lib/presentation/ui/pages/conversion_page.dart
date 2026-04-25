@@ -287,10 +287,12 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       crossAxisAlignment: WrapCrossAlignment.end,
                       alignment: WrapAlignment.end,
                       children: [
-                        ConvertouchRefreshFloatingButton(
-                          unitGroupName: unitGroup.name,
-                          visible: pageState.showRefreshButton,
-                        ),
+                        pageState.showRefreshButton
+                            ? ConvertouchRefreshFloatingButton(
+                                unitGroupName: unitGroup.name,
+                                params: conversion.params!.active!,
+                              )
+                            : const SizedBox.shrink(),
                         ConvertouchFloatingActionButton.adding(
                           onClick: () {
                             unitsController.showUnitsForAdding(

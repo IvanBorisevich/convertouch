@@ -27,6 +27,7 @@ abstract class ParamSetNames {
   static const byDiameter = "By Diameter";
   static const byCircumference = "By Circumference";
   static const barbellWeight = "Barbell Weight";
+  static const exchangeRate = "Exchange Rate";
 }
 
 abstract class ParamNames {
@@ -40,6 +41,8 @@ abstract class ParamNames {
   static const circumference = "Circumference";
   static const barWeight = "Bar Weight";
   static const oneSideWeight = "One Side Weight";
+  static const source = "Source";
+  static const bank = "Bank";
 }
 
 abstract class UnitCodes {
@@ -114,24 +117,6 @@ enum ConversionType {
   static ConversionType valueOf(int? value) {
     return values.firstWhereOrNull((element) => value == element.value) ??
         ConversionType.static;
-  }
-}
-
-enum RefreshableDataPart {
-  value(0),
-  coefficient(1);
-
-  final int val;
-
-  const RefreshableDataPart(this.val);
-
-  static RefreshableDataPart valueOf(int value) {
-    return values.firstWhere((element) => value == element.val);
-  }
-
-  @override
-  String toString() {
-    return name;
   }
 }
 
