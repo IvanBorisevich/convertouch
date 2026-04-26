@@ -102,3 +102,25 @@ const conversionParamsV1 = [
     ]
   },
 ];
+
+const conversionParamsV2 = [
+  {
+    "name": ParamSetNames.exchangeRate,
+    "unitGroupName": GroupNames.currency,
+    "mandatory": true,
+    "params": [
+      {
+        "name": ParamNames.source,
+        "calculable": false,
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.exchangeRateSource,
+      },
+      {
+        "name": ParamNames.bank,
+        "calculable": false,
+        "valueType": ConvertouchValueType.text,
+        "listType": ConvertouchListType.exchangeRateBank,
+      }
+    ]
+  },
+];

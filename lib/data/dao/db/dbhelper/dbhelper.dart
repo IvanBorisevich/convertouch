@@ -9,6 +9,7 @@ import 'package:convertouch/data/dao/db/dbhelper/migrations/migration2to3.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration3to4.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration4to5.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration5to6.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration6to7.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
@@ -24,7 +25,7 @@ import 'package:floor/floor.dart';
 
 class ConvertouchDatabaseHelper {
   static const dbName = "convertouch_database.db";
-  static const dbVersion = 6;
+  static const dbVersion = 7;
 
   static final ConvertouchDatabaseHelper I =
       di.locator.get<ConvertouchDatabaseHelper>();
@@ -67,4 +68,5 @@ final List<ConvertouchDbMigration> _rawMigrations = [
   Migration3to4(),
   Migration4to5(),
   Migration5to6(),
+  Migration6to7(),
 ];
