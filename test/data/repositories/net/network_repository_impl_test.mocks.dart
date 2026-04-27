@@ -242,14 +242,14 @@ class MockUnitDao extends _i1.Mock implements _i7.UnitDao {
 
   @override
   _i4.Future<List<_i8.UnitEntity>> getUnitsByCodes(
-    String? unitGroupName,
+    int? groupId,
     List<String>? codes,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUnitsByCodes,
           [
-            unitGroupName,
+            groupId,
             codes,
           ],
         ),
@@ -259,7 +259,7 @@ class MockUnitDao extends _i1.Mock implements _i7.UnitDao {
   @override
   _i4.Future<List<_i8.UnitEntity>> updateUnitsCoefficients(
     _i9.Database? db,
-    String? unitGroupName,
+    int? groupId,
     Map<String, double?>? codeToCoefficient,
   ) =>
       (super.noSuchMethod(
@@ -267,7 +267,7 @@ class MockUnitDao extends _i1.Mock implements _i7.UnitDao {
           #updateUnitsCoefficients,
           [
             db,
-            unitGroupName,
+            groupId,
             codeToCoefficient,
           ],
         ),

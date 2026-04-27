@@ -9,26 +9,31 @@ import 'package:test/test.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../../repositories/mock/mock_network_repository.dart';
 
 void main() {
   late ReplaceUnitInConversionItemUseCase replaceUnitInConversionItemUseCase;
   late ReplaceUnitInParamUseCase replaceUnitInParamUseCase;
 
   setUp(() {
+    const ListValueRepositoryImpl listValueRepository = ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
+
     replaceUnitInConversionItemUseCase =
         const ReplaceUnitInConversionItemUseCase(
-      listValueRepository: ListValueRepositoryImpl(),
+      listValueRepository: listValueRepository,
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+        listValueRepository: listValueRepository,
       ),
     );
 
     replaceUnitInParamUseCase = const ReplaceUnitInParamUseCase(
-      listValueRepository: ListValueRepositoryImpl(),
+      listValueRepository: listValueRepository,
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+        listValueRepository: listValueRepository,
       ),
     );
   });

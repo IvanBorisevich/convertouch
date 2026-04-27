@@ -56,7 +56,6 @@ class RefreshingJobsBloc
 
     JobModel<InputDataRefreshModel, DynamicDataModel> job = JobModel(
       params: InputDataRefreshModel(
-        unitGroupName: event.unitGroupName,
         params: event.params,
       ),
       onSuccess: (networkData) {

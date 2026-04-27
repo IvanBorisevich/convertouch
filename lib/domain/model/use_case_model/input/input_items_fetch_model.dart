@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -91,17 +92,23 @@ class ParamSetsFetchParams extends ItemsFetchParams {
 
 class ListValuesFetchParams extends ItemsFetchParams {
   final ConvertouchListType listType;
+  final String? unitGroupName;
   final UnitModel? unit;
+  final ConversionParamSetValueModel? params;
 
   const ListValuesFetchParams({
     required this.listType,
     this.unit,
+    this.unitGroupName,
+    this.params,
   });
 
   @override
   List<Object?> get props => [
         listType,
         unit,
+        unitGroupName,
+        params,
       ];
 
   @override
@@ -112,6 +119,8 @@ class ListValuesFetchParams extends ItemsFetchParams {
     return {
       'listType': listType.id,
       'unit': unit?.toJson(),
+      'groupName': unitGroupName,
+      'params': params?.toJson(),
     };
   }
 
@@ -123,6 +132,8 @@ class ListValuesFetchParams extends ItemsFetchParams {
     return ListValuesFetchParams(
       listType: ConvertouchListType.valueOf(json['listType'])!,
       unit: UnitModel.fromJson(json['unit']),
+      unitGroupName: json['groupName'],
+      params: ConversionParamSetValueModel.fromJson(json['params']),
     );
   }
 }

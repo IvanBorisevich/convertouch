@@ -11,16 +11,19 @@ import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../repositories/mock/mock_network_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
   late EditConversionItemValueUseCase useCase;
 
-  setUp(() {
+  setUpAll(() {
     useCase = const EditConversionItemValueUseCase(
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+        listValueRepository: ListValueRepositoryImpl(
+          networkRepository: MockNetworkRepository(),
+        ),
       ),
     );
   });

@@ -15,18 +15,21 @@ import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_conversion_param_repository.dart';
 import '../../repositories/mock/mock_conversion_param_set_repository.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../repositories/mock/mock_network_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
   late AddParamSetsToConversionUseCase useCase;
 
-  setUp(() {
+  setUpAll(() {
     useCase = const AddParamSetsToConversionUseCase(
       conversionParamRepository: MockConversionParamRepository(),
       conversionParamSetRepository: MockConversionParamSetRepository(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(),
+        listValueRepository: ListValueRepositoryImpl(
+          networkRepository: MockNetworkRepository(),
+        ),
       ),
     );
   });

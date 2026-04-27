@@ -166,6 +166,7 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
       unitDao: database.unitDao,
       dynamicValueDao: database.dynamicValueDao,
       database: database.database.database,
+      unitGroupRepository: locator(),
     ),
   );
 
@@ -191,7 +192,9 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
   );
 
   locator.registerLazySingleton<ListValueRepository>(
-    () => const ListValueRepositoryImpl(),
+    () => ListValueRepositoryImpl(
+      networkRepository: locator(),
+    ),
   );
 }
 

@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
-import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
@@ -11,13 +10,11 @@ import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_unit_repository.dart';
 
 void main() {
-  late UnitRepository unitRepository;
   late BuildUnitDetailsUseCase useCase;
 
   setUpAll(() {
-    unitRepository = const MockUnitRepository();
-    useCase = BuildUnitDetailsUseCase(
-      unitRepository: unitRepository,
+    useCase = const BuildUnitDetailsUseCase(
+      unitRepository: MockUnitRepository(),
     );
   });
 

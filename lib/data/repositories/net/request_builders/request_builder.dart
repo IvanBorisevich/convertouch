@@ -8,15 +8,24 @@ enum HttpMethod {
   patch('PATCH');
 
   final String value;
+
   const HttpMethod(this.value);
 }
 
 abstract class RequestBuilder {
   const RequestBuilder();
 
-  Map<String, dynamic>? buildQueryParams(ConversionParamSetValueModel params);
+  Map<String, dynamic>? buildQueryParams({
+    required ConversionParamSetValueModel params,
+    int? pageSize,
+    int? pageNum,
+  });
 
-  Map<String, String>? buildHeaders(ConversionParamSetValueModel params);
+  Map<String, String>? buildHeaders({
+    required ConversionParamSetValueModel params,
+    int? pageSize,
+    int? pageNum,
+  });
 
   HttpMethod get method;
 }

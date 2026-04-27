@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../../repositories/mock/mock_network_repository.dart';
 
 void main() {
   late CalculateDefaultValueUseCase useCase;
@@ -15,7 +16,9 @@ void main() {
   setUp(() {
     useCase = const CalculateDefaultValueUseCase(
       dynamicValueRepository: MockDynamicValueRepository(),
-      listValueRepository: ListValueRepositoryImpl(),
+      listValueRepository: ListValueRepositoryImpl(
+        networkRepository: MockNetworkRepository(),
+      ),
     );
   });
 

@@ -89,7 +89,7 @@ void main() {
               'id': 5,
               'name': ParamSetNames.exchangeRate,
               'mandatory': true,
-              'groupId': -1,
+              'groupId': 10,
             },
             'paramValues': [
               {

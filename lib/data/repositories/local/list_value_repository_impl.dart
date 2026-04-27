@@ -2,33 +2,47 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
+import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ListValueRepositoryImpl implements ListValueRepository {
-  const ListValueRepositoryImpl();
+  final NetworkRepository networkRepository;
+
+  const ListValueRepositoryImpl({
+    required this.networkRepository,
+  });
 
   @override
-  Future<Either<ConvertouchException, List<ListValueModel>>> search({
+  Future<Either<ConvertouchException, List<ListValueModel>>> fetch({
     required ConvertouchListType listType,
     String? searchString,
     required int pageNum,
     required int pageSize,
     UnitModel? unit,
+    ConversionParamSetValueModel? params,
   }) async {
-    List<ListValueModel>? fullList = _listValues[listType]?.call(unit: unit);
+    List<ListValueModel> result = _fetchLocal(
+      listType: listType,
+      pageNum: pageNum,
+      pageSize: pageSize,
+      unit: unit,
+    );
 
-    if (fullList == null) {
-      return const Right([]);
+    if (result.isEmpty && params != null) {
+      return await _fetchFromNetwork(
+        listType: listType,
+        pageNum: pageNum,
+        pageSize: pageSize,
+        params: params,
+      );
     }
-
-    int end = min((pageNum + 1) * pageSize, fullList.length);
-    List<ListValueModel> result = fullList.sublist(pageNum * pageSize, end);
 
     return Right(result);
   }
@@ -77,6 +91,36 @@ class ListValueRepositoryImpl implements ListValueRepository {
         .firstWhereOrNull((v) => v.value == value);
 
     return Right(result);
+  }
+
+  List<ListValueModel> _fetchLocal({
+    required ConvertouchListType listType,
+    required int pageNum,
+    required int pageSize,
+    UnitModel? unit,
+  }) {
+    List<ListValueModel>? fullList = _listValues[listType]?.call(unit: unit);
+
+    if (fullList == null) {
+      return const [];
+    }
+
+    int end = min((pageNum + 1) * pageSize, fullList.length);
+    return fullList.sublist(pageNum * pageSize, end);
+  }
+
+  Future<Either<ConvertouchException, List<ListValueModel>>> _fetchFromNetwork({
+    required ConvertouchListType listType,
+    required int pageNum,
+    required int pageSize,
+    required ConversionParamSetValueModel params,
+  }) async {
+    return await networkRepository.fetchList(
+      listType: listType,
+      params: params,
+      pageSize: pageSize,
+      pageNum: pageNum,
+    );
   }
 }
 

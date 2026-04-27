@@ -22,7 +22,7 @@ abstract class UnitRepository {
   Future<Either<ConvertouchException, List<UnitModel>>> getByIds(List<int> ids);
 
   Future<Either<ConvertouchException, Map<int, UnitModel>>> getByCodesAsMap(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   );
 

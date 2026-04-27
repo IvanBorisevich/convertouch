@@ -36,7 +36,7 @@ const exchangeRateParamSet = ConversionParamSetModel(
   id: 5,
   name: ParamSetNames.exchangeRate,
   mandatory: true,
-  groupId: -1,
+  groupId: 10,
 );
 
 const personParam = ConversionParamModel(

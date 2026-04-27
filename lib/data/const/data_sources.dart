@@ -3,11 +3,22 @@ import 'package:convertouch/domain/constants/constants.dart';
 
 const apiHost = "convertouch-dynamic-data-gatherer.onrender.com";
 
-const Map<String, Map<String, DataSourceEntity>> convertouchDataSources = {
+const Map<String, Map<String, MainDataSourceEntity>> mainDataSources = {
   GroupNames.currency: {
-    ParamSetNames.exchangeRate: DataSourceEntity(
+    ParamSetNames.exchangeRate: MainDataSourceEntity(
       path: "/currency-rates",
       dynamicDataType: DynamicDataType.exchangeRate,
     ),
   },
+};
+
+const Map<ConvertouchListType, ListValuesDataSourceEntity> listValuesSources = {
+  ConvertouchListType.exchangeRateSource: ListValuesDataSourceEntity(
+    path: "/currency-rates/sources",
+    listType: ConvertouchListType.exchangeRateSource,
+  ),
+  ConvertouchListType.exchangeRateBank: ListValuesDataSourceEntity(
+    path: "/currency-rates/banks",
+    listType: ConvertouchListType.exchangeRateBank,
+  ),
 };

@@ -23,8 +23,7 @@ class StartRefreshingJobUseCase
     }
 
     DynamicDataModel? dynamicDataModel = ObjectUtils.tryGet(
-      await networkRepository.getRefreshedData(
-        unitGroupName: input.unitGroupName,
+      await networkRepository.fetchData(
         params: input.params,
       ),
     );

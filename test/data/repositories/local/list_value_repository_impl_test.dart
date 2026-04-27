@@ -5,18 +5,21 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
 import '../../../domain/model/mock/mock_unit.dart';
+import '../../../domain/repositories/mock/mock_network_repository.dart';
 
 void main() {
   late ListValueRepositoryImpl listValueRepository;
 
   setUp(() {
-    listValueRepository = const ListValueRepositoryImpl();
+    listValueRepository = const ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
   });
 
   group('Enum items batch fetch', () {
     test('Should be fetched', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.person,
           pageNum: 0,
           pageSize: 10,
@@ -33,7 +36,7 @@ void main() {
   group('Num items batch fetch', () {
     test('All items batch should be fetched without coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.barbellBarWeight,
           pageNum: 0,
           pageSize: 10,
@@ -48,7 +51,7 @@ void main() {
 
     test('All items batch should be fetched with coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.barbellBarWeight,
           pageNum: 0,
           pageSize: 10,
@@ -64,7 +67,7 @@ void main() {
 
     test('First 5 items should be fetched without coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.clothesSizeDe,
           pageNum: 0,
           pageSize: 5,
@@ -82,7 +85,7 @@ void main() {
 
     test('Next 5 items should be fetched without coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.clothesSizeDe,
           pageNum: 1,
           pageSize: 5,
@@ -100,7 +103,7 @@ void main() {
 
     test('The rest of items should be fetched without coefficient', () async {
       List<ListValueModel> listValues = ObjectUtils.tryGet(
-        await listValueRepository.search(
+        await listValueRepository.fetch(
           listType: ConvertouchListType.clothesSizeDe,
           pageNum: 2,
           pageSize: 5,

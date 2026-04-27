@@ -20,6 +20,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../../domain/model/mock/mock_param.dart';
 import '../../../domain/model/mock/mock_unit.dart';
+import '../../../domain/repositories/mock/mock_unit_group_repository.dart';
 import 'network_repository_impl_test.mocks.dart';
 
 final _locator = GetIt.I;
@@ -44,6 +45,7 @@ Future<void> main() async {
   late MockNetworkDao mockNetworkDao;
   late MockUnitDao mockUnitDao;
   late MockDynamicValueDao mockDynamicValueDao;
+  late MockUnitGroupRepository mockUnitGroupRepository;
 
   setUpAll(() async {
     sqfliteFfiInit();
@@ -58,6 +60,7 @@ Future<void> main() async {
     mockNetworkDao = MockNetworkDao();
     mockUnitDao = MockUnitDao();
     mockDynamicValueDao = MockDynamicValueDao();
+    mockUnitGroupRepository = const MockUnitGroupRepository();
 
     networkRepository = NetworkRepositoryImpl(
       networkHelper: mockNetworkHelper,
@@ -65,6 +68,7 @@ Future<void> main() async {
       unitDao: mockUnitDao,
       dynamicValueDao: mockDynamicValueDao,
       database: database,
+      unitGroupRepository: mockUnitGroupRepository,
     );
 
     exchangeRateParams = ConversionParamSetValueModel(
@@ -78,12 +82,13 @@ Future<void> main() async {
 
   group("Should check connectivity", () {
     test("Should detect the lack of connectivity", () async {
+
+
       when(
         mockNetworkHelper.isConnected(),
       ).thenAnswer((_) async => false);
 
-      final result = await networkRepository.getRefreshedData(
-        unitGroupName: "",
+      final result = await networkRepository.fetchData(
         params: exchangeRateParams,
       );
 
@@ -94,9 +99,9 @@ Future<void> main() async {
 
   group("Should fetch dynamic coefficients", () {
     test('Should fetch exchange rate', () async {
-      String urlPath = convertouchDataSources[GroupNames.currency]![
-              ParamSetNames.exchangeRate]!
-          .path;
+      String urlPath =
+          mainDataSources[GroupNames.currency]![ParamSetNames.exchangeRate]!
+              .path;
 
       Map<String, dynamic> ratesResponseMap = {
         "USD": 1,
@@ -117,7 +122,7 @@ Future<void> main() async {
       ).thenAnswer((_) async => jsonEncode(ratesResponseMap));
 
       when(
-        mockUnitDao.updateUnitsCoefficients(database, GroupNames.currency, any),
+        mockUnitDao.updateUnitsCoefficients(database, any, any),
       ).thenAnswer((invocation) async {
         final unitIdToCoefficient = invocation.positionalArguments[2];
 
@@ -134,8 +139,7 @@ Future<void> main() async {
             .toList();
       });
 
-      var result = await networkRepository.getRefreshedData(
-        unitGroupName: GroupNames.currency,
+      var result = await networkRepository.fetchData(
         params: exchangeRateParams,
       );
 

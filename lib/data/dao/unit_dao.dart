@@ -40,13 +40,13 @@ abstract class UnitDao {
   Future<List<UnitEntity>> getUnitsByIds(List<int> ids);
 
   Future<List<UnitEntity>> getUnitsByCodes(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   );
 
   Future<List<UnitEntity>> updateUnitsCoefficients(
     sqlite.Database db,
-    String unitGroupName,
+    int groupId,
     Map<String, double?> codeToCoefficient,
   );
 

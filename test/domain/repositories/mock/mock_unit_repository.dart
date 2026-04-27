@@ -58,7 +58,7 @@ class MockUnitRepository extends UnitRepository {
 
   @override
   Future<Either<ConvertouchException, Map<int, UnitModel>>> getByCodesAsMap(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   ) async {
     return Right(

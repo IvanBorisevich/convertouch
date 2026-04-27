@@ -14,6 +14,7 @@ import 'package:test/test.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../model/mock/mock_unit_group.dart';
+import '../../../repositories/mock/mock_network_repository.dart';
 
 void main() {
   late EnrichItemsWithListValuesUseCase useCase;
@@ -22,7 +23,9 @@ void main() {
   setUp(() {
     useCase = const EnrichItemsWithListValuesUseCase(
       fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: ListValueRepositoryImpl(),
+        listValueRepository: ListValueRepositoryImpl(
+          networkRepository: MockNetworkRepository(),
+        ),
       ),
     );
 

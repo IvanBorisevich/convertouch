@@ -138,20 +138,18 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<Either<ConvertouchException, Map<int, UnitModel>>> getByCodesAsMap(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   ) async {
     try {
-      final result = await unitDao.getUnitsByCodes(unitGroupName, codes);
+      final result = await unitDao.getUnitsByCodes(groupId, codes);
       return Right(
         {for (var v in result) v.id!: UnitTranslator.I.toModel(v)},
       );
     } catch (e, stackTrace) {
       return Left(
         DatabaseException(
-          message: "Error when fetching units "
-              "of the group = $unitGroupName "
-              "by codes = $codes",
+          message: "Error when fetching units by codes: $codes",
           stackTrace: stackTrace,
           dateTime: DateTime.now(),
         ),

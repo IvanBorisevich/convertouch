@@ -25,7 +25,7 @@ class FetchListValuesUseCase
     }
 
     return ObjectUtils.tryGet(
-      await listValueRepository.search(
+      await listValueRepository.fetch(
         listType: params.listType,
         searchString: input.searchString,
         pageNum: input.pageNum,

@@ -3,7 +3,6 @@ import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
@@ -13,13 +12,11 @@ import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_unit_repository.dart';
 
 void main() {
-  late UnitRepository unitRepository;
   late ModifyUnitDetailsUseCase useCase;
 
   setUpAll(() {
-    unitRepository = const MockUnitRepository();
-    useCase = ModifyUnitDetailsUseCase(
-      unitRepository: unitRepository,
+    useCase = const ModifyUnitDetailsUseCase(
+      unitRepository: MockUnitRepository(),
     );
   });
 

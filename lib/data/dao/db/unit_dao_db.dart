@@ -163,22 +163,21 @@ abstract class UnitDaoDb extends UnitDao {
       'from $unitsTableName u '
       'inner join $unitGroupsTableName g on g.id = u.unit_group_id '
       'where 1=1 '
-      'and g.name = :unitGroupName '
-      'and u.unit_group_id = g.id '
+      'and g.id = :groupId '
       'and u.code in (:codes)')
   Future<List<UnitEntity>> getUnitsByCodes(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   );
 
   @override
   Future<List<UnitEntity>> updateUnitsCoefficients(
     sqlite.Database db,
-    String unitGroupName,
+    int groupId,
     Map<String, double?> codeToCoefficient,
   ) async {
     List<UnitEntity> savedEntities = await getUnitsByCodes(
-      unitGroupName,
+      groupId,
       codeToCoefficient.keys.toList(),
     );
 

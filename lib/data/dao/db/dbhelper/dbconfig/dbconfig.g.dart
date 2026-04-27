@@ -485,7 +485,7 @@ class _$UnitDaoDb extends UnitDaoDb {
 
   @override
   Future<List<UnitEntity>> getUnitsByCodes(
-    String unitGroupName,
+    int groupId,
     List<String> codes,
   ) async {
     const offset = 2;
@@ -493,11 +493,11 @@ class _$UnitDaoDb extends UnitDaoDb {
         Iterable<String>.generate(codes.length, (i) => '?${i + offset}')
             .join(',');
     return _queryAdapter.queryList(
-        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where 1=1 and g.name = ?1 and u.unit_group_id = g.id and u.code in (' +
+        'select u.id, u.name, u.code, u.symbol, u.coefficient, u.unit_group_id, u.invertible, u.oob, u.list_type, coalesce(u.value_type, g.value_type) value_type, coalesce(u.min_value, g.min_value) min_value, coalesce(u.max_value, g.max_value) max_value from units u inner join unit_groups g on g.id = u.unit_group_id where 1=1 and g.id = ?1 and u.code in (' +
             _sqliteVariablesForCodes +
             ')',
         mapper: (Map<String, Object?> row) => UnitEntity(id: row['id'] as int?, name: row['name'] as String, code: row['code'] as String, symbol: row['symbol'] as String?, coefficient: row['coefficient'] as double?, unitGroupId: row['unit_group_id'] as int, valueType: row['value_type'] as int?, listType: row['list_type'] as int?, minValue: row['min_value'] as double?, maxValue: row['max_value'] as double?, invertible: row['invertible'] as int?, oob: row['oob'] as int?),
-        arguments: [unitGroupName, ...codes]);
+        arguments: [groupId, ...codes]);
   }
 
   @override

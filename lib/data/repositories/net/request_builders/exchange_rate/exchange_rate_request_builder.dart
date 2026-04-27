@@ -6,16 +6,24 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
   const ExchangeRateRequestBuilder();
 
   @override
-  Map<String, dynamic>? buildQueryParams(ConversionParamSetValueModel params) {
+  Map<String, String>? buildHeaders({
+    required ConversionParamSetValueModel params,
+    int? pageSize,
+    int? pageNum,
+  }) {
+    return null;
+  }
+
+  @override
+  Map<String, dynamic>? buildQueryParams({
+    required ConversionParamSetValueModel params,
+    int? pageSize,
+    int? pageNum,
+  }) {
     return {
       'source': params.getParamValue(ParamNames.source)!.raw,
       'bank': params.getParamValue(ParamNames.bank)!.raw,
     };
-  }
-
-  @override
-  Map<String, String>? buildHeaders(ConversionParamSetValueModel params) {
-    return null;
   }
 
   @override
