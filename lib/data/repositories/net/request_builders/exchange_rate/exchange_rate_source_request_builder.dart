@@ -24,4 +24,9 @@ class ExchangeRateSourceRequestBuilder extends RequestBuilder {
 
   @override
   HttpMethod get method => HttpMethod.get;
+
+  @override
+  bool readyForFetch(ConversionParamSetValueModel params) {
+    return true;
+  }
 }

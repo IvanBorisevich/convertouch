@@ -40,6 +40,10 @@ class ConversionParamSetValueModel extends ItemModel {
     return paramValues.firstWhereOrNull((e) => e.param.name == paramName);
   }
 
+  bool hasParamValue(String paramName) {
+    return paramValues.any((e) => e.param.name == paramName && e.hasValue);
+  }
+
   bool get hasMultipleCalculableParams {
     return paramValues.where((p) => p.param.calculable).length > 1;
   }

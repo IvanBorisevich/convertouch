@@ -27,5 +27,7 @@ abstract class RequestBuilder {
     int? pageNum,
   });
 
+  bool readyForFetch(ConversionParamSetValueModel params);
+
   HttpMethod get method;
 }

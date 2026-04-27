@@ -64,12 +64,14 @@ class NetworkRepositoryImpl extends NetworkRepository {
       params: params,
     );
 
-    ResponseEntity response;
-
     if (result.isLeft) {
       return Left(result.left);
-    } else {
-      response = result.right;
+    }
+
+    ResponseEntity? response = result.right;
+
+    if (response == null) {
+      return const Right(null);
     }
 
     if (response is DynamicCoefficientsResponseEntity) {
@@ -136,7 +138,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
     return const Right([]);
   }
 
-  Future<Either<ConvertouchException, ResponseEntity>> _fetch({
+  Future<Either<ConvertouchException, ResponseEntity?>> _fetch({
     required DataSourceEntity dataSource,
     required ConversionParamSetValueModel params,
     int? pageSize,
@@ -160,6 +162,10 @@ class NetworkRepositoryImpl extends NetworkRepository {
       RequestBuilder requestBuilder = RequestBuilderFactory.getInstance(
         dataSource,
       );
+
+      if (!requestBuilder.readyForFetch(params)) {
+        return const Right(null);
+      }
 
       String responseStr;
 
