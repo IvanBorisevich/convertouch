@@ -21,12 +21,13 @@ abstract class InputBoxModel implements ElementModel {
     M model, {
     bool readonly = false,
   }) {
-    if (model.listValues?.items != null && model.listValues!.items.isNotEmpty) {
+    if (model.listType != null) {
       return ListBoxModel(
         listValue: model.value?.toListValueModel(),
         listValues: model.listValues!.items,
         listType: model.listType!,
-        readonly: readonly,
+        readonly:
+            model.listValues?.items == null || model.listValues!.items.isEmpty,
         labelText: _getLabelText(model),
         searchEnabled:
             model.listValues!.items.length > _nonSearchableListItemsMinLimit,

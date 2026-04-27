@@ -190,7 +190,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.colors != oldWidget.colors) {
+    if (widget.colors != oldWidget.colors || widget.model != oldWidget.model) {
       _setColors();
     }
   }
