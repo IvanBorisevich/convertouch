@@ -59,7 +59,7 @@ void main() {
 
     expect(
       ValueModel.any(const ListValueModel(value: "23"))!.toListValueModel(),
-      const ListValueModel(value: "23"),
+      const ListValueModel(value: "23", alt: '23'),
     );
 
     expect(

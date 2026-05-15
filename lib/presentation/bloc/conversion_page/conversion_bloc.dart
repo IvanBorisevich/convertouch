@@ -6,13 +6,13 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -35,8 +35,8 @@ class ConversionBloc
   final SaveConversionUseCase saveConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
   final EditConversionGroupUseCase editConversionGroupUseCase;
-  final EditConversionItemUnitUseCase editConversionItemUnitUseCase;
-  final EditConversionItemValueUseCase editConversionItemValueUseCase;
+  final EditConversionUnitUseCase editConversionItemUnitUseCase;
+  final EditConversionUnitValueUseCase editConversionItemValueUseCase;
   final UpdateConversionCoefficientsUseCase updateConversionCoefficientsUseCase;
   final RemoveConversionItemsUseCase removeConversionItemsUseCase;
   final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
@@ -47,7 +47,7 @@ class ConversionBloc
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
-  final EnrichItemsWithListValuesUseCase enrichItemsWithListValuesUseCase;
+  final InitItemsListValuesUseCase initItemsListValuesUseCase;
   final FetchMoreListValuesOfParamUseCase fetchMoreListValuesOfParamUseCase;
   final FetchMoreListValuesOfConvItemUseCase
       fetchMoreListValuesOfConvItemUseCase;
@@ -68,7 +68,7 @@ class ConversionBloc
     required this.editConversionParamValueUseCase,
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
-    required this.enrichItemsWithListValuesUseCase,
+    required this.initItemsListValuesUseCase,
     required this.fetchMoreListValuesOfParamUseCase,
     required this.fetchMoreListValuesOfConvItemUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
@@ -77,8 +77,8 @@ class ConversionBloc
     on<CleanupConversion>(_onCleanupConversion);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<AddUnitsToConversion>(_onAddUnitsToConversion);
-    on<EditConversionItemUnit>(_onEditConversionItemUnit);
-    on<EditConversionItemValue>(_onEditConversionItemValue);
+    on<EditConversionUnit>(_onEditConversionItemUnit);
+    on<EditConversionUnitValue>(_onEditConversionItemValue);
     on<UpdateConversionCoefficients>(_onUpdateConversionCoefficients);
     on<RemoveConversionItems>(_onRemoveConversionItems);
     on<ReplaceConversionItemUnit>(_onReplaceConversionItemUnit);
@@ -129,8 +129,10 @@ class ConversionBloc
       ),
     );
 
+    // TODO 3: trigger 2 separate use cases
+
     conversion = ObjectUtils.tryGet(
-      await enrichItemsWithListValuesUseCase.execute(conversion),
+      await initItemsListValuesUseCase.execute(conversion),
     );
 
     emit(
@@ -218,16 +220,18 @@ class ConversionBloc
       ),
     );
 
+    // TODO 4: call the use case enrich unit values list items
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
   _onEditConversionItemUnit(
-    EditConversionItemUnit event,
+    EditConversionUnit event,
     Emitter<ConversionState> emit,
   ) async {
     final result = await editConversionItemUnitUseCase.execute(
-      InputConversionModifyModel<EditConversionItemUnitDelta>(
-        delta: EditConversionItemUnitDelta(
+      InputConversionModifyModel<EditConversionUnitDelta>(
+        delta: EditConversionUnitDelta(
           editedUnit: event.editedUnit,
         ),
         conversion: state.conversion,
@@ -238,12 +242,12 @@ class ConversionBloc
   }
 
   _onEditConversionItemValue(
-    EditConversionItemValue event,
+    EditConversionUnitValue event,
     Emitter<ConversionState> emit,
   ) async {
     final result = await editConversionItemValueUseCase.execute(
-      InputConversionModifyModel<EditConversionItemValueDelta>(
-        delta: EditConversionItemValueDelta(
+      InputConversionModifyModel<EditConversionUnitValueDelta>(
+        delta: EditConversionUnitValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
           unitId: event.unitId,
@@ -300,6 +304,9 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
+    // TODO 5: call the use case enrich unit values list items
+
     await _handleAndEmit(
       result,
       emit,
@@ -320,6 +327,9 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
+    // TODO 6: call the use case enrich param values list items
+
     await _handleAndEmit(
       result,
       emit,
@@ -401,6 +411,9 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
+    // TODO 7: call the use case enrich param values list items
+
     await _handleAndEmit(
       result,
       emit,
@@ -475,9 +488,11 @@ class ConversionBloc
     if (result.isLeft) {
       onError?.call(result.left);
     } else {
+
+      // TODO 8: remove the call of this use case
       ConversionModel enrichedConversion = enrichWithListValues
           ? ObjectUtils.tryGet(
-              await enrichItemsWithListValuesUseCase.execute(result.right),
+              await initItemsListValuesUseCase.execute(result.right),
             )
           : result.right;
 

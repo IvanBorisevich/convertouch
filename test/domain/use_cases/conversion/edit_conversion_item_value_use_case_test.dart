@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:test/test.dart';
 
@@ -15,10 +15,10 @@ import '../../repositories/mock/mock_network_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
-  late EditConversionItemValueUseCase useCase;
+  late EditConversionUnitValueUseCase useCase;
 
   setUpAll(() {
-    useCase = const EditConversionItemValueUseCase(
+    useCase = const EditConversionUnitValueUseCase(
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
         listValueRepository: ListValueRepositoryImpl(
@@ -39,7 +39,7 @@ void main() {
         test('New value and new default value should be applied', () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: '2',
               newDefaultValue: '2',
               unitId: decimeter.id,
@@ -63,7 +63,7 @@ void main() {
             () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: '2',
               newDefaultValue: null,
               unitId: decimeter.id,
@@ -86,7 +86,7 @@ void main() {
             () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: null,
               newDefaultValue: '2',
               unitId: decimeter.id,
@@ -107,7 +107,7 @@ void main() {
             () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: '',
               newDefaultValue: '2',
               unitId: decimeter.id,
@@ -133,7 +133,7 @@ void main() {
             () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: null,
               newDefaultValue: null,
               unitId: decimeter.id,
@@ -155,7 +155,7 @@ void main() {
             'a default value of the unit type', () async {
           await testCase(
             useCase: useCase,
-            delta: EditConversionItemValueDelta(
+            delta: EditConversionUnitValueDelta(
               newValue: '',
               newDefaultValue: null,
               unitId: decimeter.id,
@@ -183,7 +183,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "100",
                 newDefaultValue: "1",
                 unitId: kilogram.id,
@@ -246,7 +246,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "100",
                 newDefaultValue: "1",
                 unitId: kilogram.id,
@@ -313,7 +313,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "80",
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -375,7 +375,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "80",
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -442,7 +442,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: "100",
                 unitId: kilogram.id,
@@ -505,7 +505,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: "100",
                 unitId: kilogram.id,
@@ -573,7 +573,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -636,7 +636,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -703,7 +703,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "100",
                 newDefaultValue: "1",
                 unitId: kilogram.id,
@@ -764,7 +764,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "100",
                 newDefaultValue: "1",
                 unitId: kilogram.id,
@@ -830,7 +830,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "80",
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -891,7 +891,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: "80",
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -957,7 +957,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: "100",
                 unitId: kilogram.id,
@@ -1018,7 +1018,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: "100",
                 unitId: kilogram.id,
@@ -1085,7 +1085,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -1146,7 +1146,7 @@ void main() {
             await testCase(
               unitGroup: massGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: null,
                 unitId: kilogram.id,
@@ -1223,7 +1223,7 @@ void main() {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: '44',
                 newDefaultValue: '32',
                 unitId: europeanClothSize.id,
@@ -1276,7 +1276,7 @@ void main() {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: '50',
                 newDefaultValue: null,
                 unitId: europeanClothSize.id,
@@ -1329,7 +1329,7 @@ void main() {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: '34',
                 unitId: europeanClothSize.id,
@@ -1381,7 +1381,7 @@ void main() {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
-              delta: EditConversionItemValueDelta(
+              delta: EditConversionUnitValueDelta(
                 newValue: null,
                 newDefaultValue: null,
                 unitId: europeanClothSize.id,

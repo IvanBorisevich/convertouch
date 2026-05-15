@@ -31,6 +31,7 @@ class FetchListValuesUseCase
         pageNum: input.pageNum,
         pageSize: input.pageSize,
         unit: params.unit,
+        params: params.params,
       ),
     );
   }

@@ -34,3 +34,39 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
     return params.hasParamValue(ParamNames.source);
   }
 }
+
+/*
+
+GET /currency-rate/sources
+
+[
+  {
+    "value": "",
+    "alt": "",
+    "icon": ""
+  },
+  ...
+]
+
+
+GET /currency-rate/banks?source=...
+
+[
+  {
+    "value": "",
+    "alt": "",
+    "icon": ""
+  },
+  ...
+]
+
+
+GET /currency-rate?source=...&bank=...
+
+{
+  "USD": 1,
+  "EUR": 1.123,
+  ...
+}
+
+*/

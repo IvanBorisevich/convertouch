@@ -110,10 +110,10 @@ class AddUnitsToConversion extends ModifyConversion {
   }
 }
 
-class EditConversionItemUnit extends ModifyConversion {
+class EditConversionUnit extends ModifyConversion {
   final UnitModel editedUnit;
 
-  const EditConversionItemUnit({
+  const EditConversionUnit({
     required this.editedUnit,
     super.onError,
   });
@@ -125,16 +125,16 @@ class EditConversionItemUnit extends ModifyConversion {
 
   @override
   String toString() {
-    return 'EditConversionItemUnit{editedUnit: $editedUnit}';
+    return 'EditConversionUnit{editedUnit: $editedUnit}';
   }
 }
 
-class EditConversionItemValue extends ModifyConversion {
+class EditConversionUnitValue extends ModifyConversion {
   final String? newValue;
   final String? newDefaultValue;
   final int unitId;
 
-  const EditConversionItemValue({
+  const EditConversionUnitValue({
     required this.newValue,
     this.newDefaultValue,
     required this.unitId,
@@ -150,7 +150,7 @@ class EditConversionItemValue extends ModifyConversion {
 
   @override
   String toString() {
-    return 'EditConversionItemValue{'
+    return 'EditConversionUnitValue{'
         'newValue: $newValue, '
         'newDefaultValue: $newDefaultValue, '
         'unitId: $unitId}';

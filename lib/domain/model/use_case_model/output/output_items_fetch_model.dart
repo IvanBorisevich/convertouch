@@ -16,7 +16,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       : this(
           items: const [],
           status: FetchingStatus.success,
-          hasReachedMax: false,
+          hasReachedMax: true,
           pageNum: 0,
         );
 
@@ -63,9 +63,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     bool saveParams = true,
   }) {
     var result = {
-      'items': params?.fetchRemotely == true
-          ? items.map((e) => e.toJson()).toList()
-          : [],
+      'items': items.map((e) => e.toJson()).toList(),
       'searchString': searchString,
       'hasReachedMax': hasReachedMax,
       'pageNum': pageNum,

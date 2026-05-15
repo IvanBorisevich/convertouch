@@ -34,15 +34,15 @@ import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_unit_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/enrich_items_with_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
@@ -327,12 +327,12 @@ Future<void> _initUseCases() async {
     () => const EditConversionGroupUseCase(),
   );
 
-  locator.registerLazySingleton<EditConversionItemUnitUseCase>(
-    () => const EditConversionItemUnitUseCase(),
+  locator.registerLazySingleton<EditConversionUnitUseCase>(
+    () => const EditConversionUnitUseCase(),
   );
 
-  locator.registerLazySingleton<EditConversionItemValueUseCase>(
-    () => EditConversionItemValueUseCase(
+  locator.registerLazySingleton<EditConversionUnitValueUseCase>(
+    () => EditConversionUnitValueUseCase(
       calculateDefaultValueUseCase: locator(),
     ),
   );
@@ -389,8 +389,8 @@ Future<void> _initUseCases() async {
     () => const ToggleCalculableParamUseCase(),
   );
 
-  locator.registerLazySingleton<EnrichItemsWithListValuesUseCase>(
-    () => EnrichItemsWithListValuesUseCase(
+  locator.registerLazySingleton<InitItemsListValuesUseCase>(
+    () => InitItemsListValuesUseCase(
       fetchListValuesUseCase: locator(),
     ),
   );
@@ -535,7 +535,7 @@ Future<void> _initBloc() async {
       editConversionParamValueUseCase: locator(),
       replaceConversionParamUnitUseCase: locator(),
       toggleCalculableParamUseCase: locator(),
-      enrichItemsWithListValuesUseCase: locator(),
+      initItemsListValuesUseCase: locator(),
       fetchMoreListValuesOfParamUseCase: locator(),
       fetchMoreListValuesOfConvItemUseCase: locator(),
     ),

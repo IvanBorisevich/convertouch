@@ -11,11 +11,11 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_defau
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 
-class EditConversionItemValueUseCase
-    extends AbstractModifyConversionUseCase<EditConversionItemValueDelta> {
+class EditConversionUnitValueUseCase
+    extends AbstractModifyConversionUseCase<EditConversionUnitValueDelta> {
   final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
 
-  const EditConversionItemValueUseCase({
+  const EditConversionUnitValueUseCase({
     required this.calculateDefaultValueUseCase,
   });
 
@@ -25,7 +25,7 @@ class EditConversionItemValueUseCase
     required ConversionParamSetValueModel? activeParams,
     required UnitGroupModel unitGroup,
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
-    required EditConversionItemValueDelta delta,
+    required EditConversionUnitValueDelta delta,
   }) async {
     UnitModel newUnit = newConvertedUnitValues[delta.unitId]!.unit;
     ValueModel? newDefaultValue;
@@ -51,7 +51,7 @@ class EditConversionItemValueUseCase
     required ConversionParamSetValueBulkModel? oldConversionParams,
     required ConversionUnitValueModel srcUnitValue,
     required UnitGroupModel unitGroup,
-    required EditConversionItemValueDelta delta,
+    required EditConversionUnitValueDelta delta,
   }) async {
     return oldConversionParams?.copyWithChangedParams(
       paramFilter: (p) => p.calculated,

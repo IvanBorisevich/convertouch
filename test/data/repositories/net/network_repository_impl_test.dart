@@ -74,8 +74,8 @@ Future<void> main() async {
     exchangeRateParams = ConversionParamSetValueModel(
       paramSet: exchangeRateParamSet,
       paramValues: [
-        ConversionParamValueModel.tuple(exchangeRateSource, "FloatRates", null),
-        ConversionParamValueModel.tuple(bankParam, null, null),
+        ConversionParamValueModel.tuple(exchangeRateSourceParam, "FloatRates", null),
+        ConversionParamValueModel.tuple(exchangeRateBankParam, null, null),
       ],
     );
   });

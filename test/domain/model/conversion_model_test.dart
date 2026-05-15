@@ -39,7 +39,7 @@ void main() {
             paramSet: exchangeRateParamSet,
             paramValues: [
               ConversionParamValueModel(
-                param: bankParam,
+                param: exchangeRateBankParam,
               ),
             ],
           ),
@@ -98,6 +98,7 @@ void main() {
                   'name': 'Bank',
                   'valueType': 1,
                   'paramSetId': 5,
+                  'listType': 23,
                   'calculable': false,
                 },
                 'calculated': false,

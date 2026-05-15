@@ -60,7 +60,7 @@ class ConversionController {
     required UnitModel modifiedUnit,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
-      EditConversionItemUnit(
+      EditConversionUnit(
         editedUnit: modifiedUnit,
         onError: (error) {
           navigationController.showException(context, exception: error);
@@ -96,7 +96,7 @@ class ConversionController {
     required String? newValue,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
-      EditConversionItemValue(
+      EditConversionUnitValue(
         newValue: newValue,
         unitId: unitId,
         onError: (error) {
@@ -272,7 +272,7 @@ class ConversionController {
     required DynamicValueModel dynamicSrcValue,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
-      EditConversionItemValue(
+      EditConversionUnitValue(
         newValue: null,
         newDefaultValue: dynamicSrcValue.value,
         unitId: dynamicSrcValue.unitId,

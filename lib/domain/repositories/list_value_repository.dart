@@ -10,27 +10,27 @@ abstract interface class ListValueRepository {
 
   Future<Either<ConvertouchException, List<ListValueModel>>> fetch({
     required ConvertouchListType listType,
-    String? searchString,
+    required String? searchString,
     required int pageNum,
     required int pageSize,
-    UnitModel? unit,
-    ConversionParamSetValueModel? params,
+    required UnitModel? unit,
+    required ConversionParamSetValueModel? params,
   });
 
   Future<Either<ConvertouchException, ListValueModel?>> getByStrValue({
     required ConvertouchListType listType,
     required String? value,
-    UnitModel? unit,
+    required UnitModel? unit,
   });
 
   Future<Either<ConvertouchException, ListValueModel?>> getDefault({
     required ConvertouchListType listType,
-    UnitModel? unit,
+    required UnitModel? unit,
   });
 
   Future<Either<ConvertouchException, bool>> belongsToList({
     required String? value,
     required ConvertouchListType listType,
-    UnitModel? unit,
+    required UnitModel? unit,
   });
 }

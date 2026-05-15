@@ -25,6 +25,7 @@ class ListValueModel extends IdNameSearchableItemModel {
   @override
   List<Object?> get props => [
     value,
+    alt,
   ];
 
   @override

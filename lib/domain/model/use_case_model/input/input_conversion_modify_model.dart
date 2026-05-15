@@ -58,20 +58,20 @@ class EditConversionGroupDelta extends ConversionModifyDelta {
   bool get recalculateUnitValues => false;
 }
 
-class EditConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
+class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
   final UnitModel editedUnit;
 
-  const EditConversionItemUnitDelta({
+  const EditConversionUnitDelta({
     required this.editedUnit,
   });
 }
 
-class EditConversionItemValueDelta extends ConversionUnitValuesModifyDelta {
+class EditConversionUnitValueDelta extends ConversionUnitValuesModifyDelta {
   final String? newValue;
   final String? newDefaultValue;
   final int unitId;
 
-  const EditConversionItemValueDelta({
+  const EditConversionUnitValueDelta({
     required this.newValue,
     required this.newDefaultValue,
     required this.unitId,

@@ -4,16 +4,16 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 
-class EditConversionItemUnitUseCase
-    extends AbstractModifyConversionUseCase<EditConversionItemUnitDelta> {
-  const EditConversionItemUnitUseCase();
+class EditConversionUnitUseCase
+    extends AbstractModifyConversionUseCase<EditConversionUnitDelta> {
+  const EditConversionUnitUseCase();
 
   @override
   Future<Map<int, ConversionUnitValueModel>> newConvertedUnitValues({
     required Map<int, ConversionUnitValueModel> oldConvertedUnitValues,
     required UnitGroupModel unitGroup,
     required ConversionParamSetValueModel? params,
-    required EditConversionItemUnitDelta delta,
+    required EditConversionUnitDelta delta,
   }) async {
     if (oldConvertedUnitValues.containsKey(delta.editedUnit.id)) {
       oldConvertedUnitValues.update(
