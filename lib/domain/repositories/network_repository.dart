@@ -8,7 +8,7 @@ import 'package:either_dart/either.dart';
 abstract class NetworkRepository {
   const NetworkRepository();
 
-  Future<Either<ConvertouchException, DynamicDataModel?>> fetchData({
+  Future<Either<ConvertouchException, DynamicDataModel?>> fetchByParams({
     required ConversionParamSetValueModel params,
   });
 

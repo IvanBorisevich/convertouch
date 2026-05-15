@@ -1,9 +1,7 @@
-import 'package:convertouch/data/const/data_sources.dart';
 import 'package:convertouch/data/dao/dynamic_value_dao.dart';
 import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
-import 'package:convertouch/data/entities/data_source_entity.dart';
 import 'package:convertouch/data/entities/dynamic_value_entity.dart';
 import 'package:convertouch/data/entities/response_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
@@ -43,24 +41,24 @@ class NetworkRepositoryImpl extends NetworkRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, DynamicDataModel?>> fetchData({
+  Future<Either<ConvertouchException, DynamicDataModel?>> fetchByParams({
     required ConversionParamSetValueModel params,
   }) async {
-    String? unitGroupName = await _getGroupName(params.paramSet.groupId);
+    String? groupName = await _getGroupName(params.paramSet.groupId);
 
-    if (unitGroupName == null) {
-      return const Right(null);
-    }
-
-    MainDataSourceEntity? dataSource =
-        mainDataSources[unitGroupName]?[params.paramSet.name];
-
-    if (dataSource == null) {
+    if (groupName == null) {
       return const Right(null);
     }
 
     final result = await _fetch(
-      dataSource: dataSource,
+      requestBuilder: requestBuilders.getByGroupAndParamSet(
+        groupName,
+        params.paramSet.name,
+      ),
+      responseParser: responseParsers.getByGroupAndParamSet(
+        groupName,
+        params.paramSet.name,
+      ),
       params: params,
     );
 
@@ -115,16 +113,10 @@ class NetworkRepositoryImpl extends NetworkRepository {
     required int pageSize,
     required int pageNum,
   }) async {
-    ListValuesDataSourceEntity? listValuesDataSource =
-        listValuesSources[listType];
-
-    if (listValuesDataSource == null) {
-      return const Right([]);
-    }
-
     final response = ObjectUtils.tryGet(
       await _fetch(
-        dataSource: listValuesDataSource,
+        requestBuilder: requestBuilders.getByListType(listType),
+        responseParser: responseParsers.getByListType(listType),
         params: params,
         pageSize: pageSize,
         pageNum: pageNum,
@@ -139,7 +131,8 @@ class NetworkRepositoryImpl extends NetworkRepository {
   }
 
   Future<Either<ConvertouchException, ResponseEntity?>> _fetch({
-    required DataSourceEntity dataSource,
+    required RequestBuilder requestBuilder,
+    required ResponseParser responseParser,
     required ConversionParamSetValueModel params,
     int? pageSize,
     int? pageNum,
@@ -159,10 +152,6 @@ class NetworkRepositoryImpl extends NetworkRepository {
         );
       }
 
-      RequestBuilder requestBuilder = RequestBuilderFactory.getInstance(
-        dataSource,
-      );
-
       if (!requestBuilder.readyForFetch(params)) {
         return const Right(null);
       }
@@ -173,7 +162,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
         case HttpMethod.get:
         default:
           responseStr = await networkDao.fetch(
-            dataSource.path,
+            requestBuilder.path,
             queryParams: requestBuilder.buildQueryParams(
               params: params,
               pageSize: pageSize,
@@ -188,8 +177,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
           break;
       }
 
-      ResponseParser parser = ResponseParserFactory.getInstance(dataSource);
-      return Right(parser.parse(responseStr));
+      return Right(responseParser.parse(responseStr));
     } on NetworkException catch (e) {
       return Left(e);
     } on Exception catch (e, stackTrace) {

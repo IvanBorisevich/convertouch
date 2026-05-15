@@ -10,7 +10,7 @@ class MockNetworkRepository extends NetworkRepository {
   const MockNetworkRepository();
 
   @override
-  Future<Either<ConvertouchException, DynamicDataModel?>> fetchData({
+  Future<Either<ConvertouchException, DynamicDataModel?>> fetchByParams({
     required ConversionParamSetValueModel params,
   }) async {
     return const Right(null);

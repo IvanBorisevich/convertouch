@@ -1,3 +1,4 @@
+import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -27,6 +28,9 @@ class ExchangeRateBankRequestBuilder extends RequestBuilder {
 
   @override
   HttpMethod get method => HttpMethod.get;
+
+  @override
+  String get path => exchangeRateBanksPath;
 
   @override
   bool readyForFetch(ConversionParamSetValueModel params) {

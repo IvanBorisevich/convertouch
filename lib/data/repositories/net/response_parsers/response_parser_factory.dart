@@ -1,32 +1,38 @@
-import 'package:convertouch/data/entities/data_source_entity.dart';
 import 'package:convertouch/data/repositories/net/response_parsers/exchange_rate_response_parser.dart';
 import 'package:convertouch/data/repositories/net/response_parsers/list_values_response_parser.dart';
 import 'package:convertouch/data/repositories/net/response_parsers/response_parser.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 
-class ResponseParserFactory {
-  static ResponseParser getInstance(DataSourceEntity dataSource) {
-    if (dataSource is MainDataSourceEntity) {
-      return _getForDynamicDataType(dataSource.dynamicDataType);
-    }
+class _ResponseParserFactory {
+  static const instance = _ResponseParserFactory._();
 
-    if (dataSource is ListValuesDataSourceEntity) {
-      return _getForListType(dataSource.listType);
-    }
+  const _ResponseParserFactory._();
 
-    throw Exception("No response parser found for data source: $dataSource");
-  }
-
-  static ResponseParser _getForDynamicDataType(
-    DynamicDataType dynamicDataType,
+  ResponseParser getByGroupAndParamSet(
+    String groupName,
+    String paramSetName,
   ) {
-    switch (dynamicDataType) {
-      case DynamicDataType.exchangeRate:
-        return const ExchangeRateResponseParser();
+    final parser = _commonParsers[groupName]?[paramSetName];
+
+    if (parser == null) {
+      throw Exception("No response parser found for group: $groupName, "
+          "param set: $paramSetName");
     }
+
+    return parser;
   }
 
-  static ResponseParser _getForListType(ConvertouchListType listType) {
-    return const ListValuesResponseParser();
+  ResponseParser getByListType(ConvertouchListType listType) {
+    return _listValuesParser;
   }
 }
+
+const Map<String, Map<String, ResponseParser>> _commonParsers = {
+  GroupNames.currency: {
+    ParamSetNames.exchangeRate: ExchangeRateResponseParser(),
+  },
+};
+
+const _listValuesParser = ListValuesResponseParser();
+
+const responseParsers = _ResponseParserFactory.instance;

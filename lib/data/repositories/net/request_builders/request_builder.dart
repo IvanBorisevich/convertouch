@@ -30,4 +30,6 @@ abstract class RequestBuilder {
   bool readyForFetch(ConversionParamSetValueModel params);
 
   HttpMethod get method;
+
+  String get path;
 }

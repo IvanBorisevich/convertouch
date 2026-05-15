@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:convertouch/data/const/data_sources.dart';
+import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/dao/dynamic_value_dao.dart';
 import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
@@ -8,7 +8,6 @@ import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
@@ -74,7 +73,8 @@ Future<void> main() async {
     exchangeRateParams = ConversionParamSetValueModel(
       paramSet: exchangeRateParamSet,
       paramValues: [
-        ConversionParamValueModel.tuple(exchangeRateSourceParam, "FloatRates", null),
+        ConversionParamValueModel.tuple(
+            exchangeRateSourceParam, "FloatRates", null),
         ConversionParamValueModel.tuple(exchangeRateBankParam, null, null),
       ],
     );
@@ -82,13 +82,11 @@ Future<void> main() async {
 
   group("Should check connectivity", () {
     test("Should detect the lack of connectivity", () async {
-
-
       when(
         mockNetworkHelper.isConnected(),
       ).thenAnswer((_) async => false);
 
-      final result = await networkRepository.fetchData(
+      final result = await networkRepository.fetchByParams(
         params: exchangeRateParams,
       );
 
@@ -99,10 +97,6 @@ Future<void> main() async {
 
   group("Should fetch dynamic coefficients", () {
     test('Should fetch exchange rate', () async {
-      String urlPath =
-          mainDataSources[GroupNames.currency]![ParamSetNames.exchangeRate]!
-              .path;
-
       Map<String, dynamic> ratesResponseMap = {
         "USD": 1,
         "EUR": 1.123,
@@ -118,7 +112,8 @@ Future<void> main() async {
       ).thenAnswer((_) async => true);
 
       when(
-        mockNetworkDao.fetch(urlPath, queryParams: anyNamed('queryParams')),
+        mockNetworkDao.fetch(exchangeRatePath,
+            queryParams: anyNamed('queryParams')),
       ).thenAnswer((_) async => jsonEncode(ratesResponseMap));
 
       when(
@@ -139,7 +134,7 @@ Future<void> main() async {
             .toList();
       });
 
-      var result = await networkRepository.fetchData(
+      var result = await networkRepository.fetchByParams(
         params: exchangeRateParams,
       );
 
@@ -150,7 +145,7 @@ Future<void> main() async {
 
       verify(
         mockNetworkDao.fetch(
-          urlPath,
+          exchangeRatePath,
           queryParams: {'source': 'FloatRates', 'bank': null},
         ),
       ).called(1);
