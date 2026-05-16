@@ -20,6 +20,7 @@ class ListValueModel extends IdNameSearchableItemModel {
   const ListValueModel.value(String value)
       : this(
     value: value,
+    alt: value,
   );
 
   @override
@@ -52,7 +53,12 @@ class ListValueModel extends IdNameSearchableItemModel {
 
     return ListValueModel(
       value: json['value'],
-      alt: json['alt'],
+      alt: json['alt'] ?? json['value'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'ListValue{value: $value, alt: $alt}';
   }
 }

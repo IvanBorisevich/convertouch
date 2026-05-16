@@ -158,7 +158,7 @@ List<ListValueModel> _wrapList<T>(
 }) {
   return src.map((v) {
     String value = (valueMap ?? _defaultMap).call(v);
-    String? alt = altValueMap?.call(v);
+    String? alt = altValueMap?.call(v) ?? value;
 
     return ListValueModel(
       value: value,

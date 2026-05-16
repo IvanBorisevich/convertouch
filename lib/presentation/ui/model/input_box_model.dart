@@ -1,7 +1,7 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
-import 'package:convertouch/presentation/ui/model/list_box_model.dart';
-import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
 const String noValueHint = '-';
@@ -56,5 +56,72 @@ abstract class InputBoxModel implements ElementModel {
     }
 
     return null;
+  }
+}
+
+class TextBoxModel extends InputBoxModel {
+  static const TextBoxModel empty = TextBoxModel();
+
+  final String? value;
+  final String? valueUnfocused;
+  final String? hintUnfocused;
+  final ConvertouchValueType valueType;
+  final int? maxTextLength;
+  final bool textLengthCounterVisible;
+
+  const TextBoxModel({
+    this.value,
+    this.valueUnfocused,
+    super.hint,
+    this.hintUnfocused,
+    super.readonly,
+    super.labelText,
+    this.valueType = ConvertouchValueType.text,
+    this.maxTextLength,
+    this.textLengthCounterVisible = false,
+  });
+
+  @override
+  String toString() {
+    return 'TextBoxModel{'
+        'value: $value, '
+        'valueUnfocused: $valueUnfocused, '
+        'hint: $hint, '
+        'hintUnfocused: $hintUnfocused, '
+        'readonly: $readonly, '
+        'labelText: $labelText, '
+        'valueType: $valueType, '
+        'maxTextLength: $maxTextLength, '
+        'textLengthCounterVisible: $textLengthCounterVisible}';
+  }
+}
+
+class ListBoxModel extends InputBoxModel {
+  final ListValueModel? listValue;
+  final List<ListValueModel> listValues;
+  final ConvertouchListType listType;
+  final String? searchHint;
+  final bool searchEnabled;
+
+  const ListBoxModel({
+    this.listValue,
+    required this.listType,
+    super.readonly,
+    super.labelText,
+    this.listValues = const [],
+    this.searchHint,
+    this.searchEnabled = true,
+  });
+
+  @override
+  String toString() {
+    return 'ListBoxModel{'
+        'labelText: $labelText, '
+        'readonly: $readonly, '
+        'listValue: $listValue, '
+        'listValues: $listValues, '
+        'listType: $listType, '
+        'searchHint: $searchHint, '
+        'searchEnabled: $searchEnabled}';
   }
 }

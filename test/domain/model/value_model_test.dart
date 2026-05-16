@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
@@ -39,40 +38,6 @@ void main() {
     expect(numVal.numVal, 4000000000);
     expect(numVal.raw, "4000000000");
     expect(numVal.alt, "4 · 10⁹");
-  });
-
-  test('Build value model from list value', () {
-    expect(
-      ValueModel.any(const ListValueModel.value("23")),
-      ValueModel.str("23"),
-    );
-
-    expect(
-      ValueModel.any(const ListValueModel(value: "23", alt: "alt23")),
-      ValueModel.str("23", alt: "alt23"),
-    );
-
-    expect(
-      ValueModel.any(const ListValueModel(value: "23", alt: "alt23")),
-      ValueModel.listValue(const ListValueModel(value: "23", alt: "alt23")),
-    );
-
-    expect(
-      ValueModel.any(const ListValueModel(value: "23"))!.toListValueModel(),
-      const ListValueModel(value: "23", alt: '23'),
-    );
-
-    expect(
-      ValueModel.any(const ListValueModel(value: "23", alt: "alt23"))!
-          .toListValueModel(),
-      const ListValueModel(value: "23", alt: "alt23"),
-    );
-
-    expect(
-      ValueModel.any(const ListValueModel(value: "23", alt: "alt23"))!
-          .toListValueModel(),
-      const ListValueModel(value: "23", alt: "alt23"),
-    );
   });
 
   test('Serialize value model', () {

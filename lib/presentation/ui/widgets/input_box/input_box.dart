@@ -6,8 +6,6 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
-import 'package:convertouch/presentation/ui/model/list_box_model.dart';
-import 'package:convertouch/presentation/ui/model/text_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
@@ -665,6 +663,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("list box model: ${widget.model}");
+
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (_, navigationState) {
         if (_isDropdownOpen) {

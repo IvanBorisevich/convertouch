@@ -50,14 +50,6 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.listValue(ListValueModel listValue) {
-    return ValueModel._(
-      raw: listValue.value,
-      alt: listValue.itemName,
-      numVal: double.tryParse(listValue.value),
-    );
-  }
-
   static ValueModel? any(dynamic value) {
     if (value == null) {
       return null;
@@ -69,10 +61,6 @@ class ValueModel extends Equatable {
 
     if (value is String) {
       return value.isNotEmpty ? ValueModel.str(value) : null;
-    }
-
-    if (value is ListValueModel) {
-      return ValueModel.listValue(value);
     }
 
     throw ConvertouchException(
@@ -94,7 +82,7 @@ class ValueModel extends Equatable {
   ListValueModel toListValueModel() {
     return ListValueModel(
       value: raw,
-      alt: alt,
+      alt: alt ?? raw,
     );
   }
 
