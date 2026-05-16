@@ -264,7 +264,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
       };
 
       List<ConversionParamModel> conversionParams = ObjectUtils.tryGet(
-        await conversionParamRepository.get(paramSetId),
+        await conversionParamRepository.getBySetId(paramSetId),
       );
 
       Map<int, ConversionParamModel> conversionParamsMap = {

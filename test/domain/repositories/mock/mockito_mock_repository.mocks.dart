@@ -44,7 +44,7 @@ class MockitoNetworkRepository extends _i1.Mock
       fetchByParams({required _i7.ConversionParamSetValueModel? params}) =>
           (super.noSuchMethod(
             Invocation.method(
-              #fetchData,
+              #fetchByParams,
               [],
               {#params: params},
             ),
@@ -54,7 +54,7 @@ class MockitoNetworkRepository extends _i1.Mock
                 _i4.Either<_i5.ConvertouchException, _i6.DynamicDataModel?>>(
               this,
               Invocation.method(
-                #fetchData,
+                #fetchByParams,
                 [],
                 {#params: params},
               ),

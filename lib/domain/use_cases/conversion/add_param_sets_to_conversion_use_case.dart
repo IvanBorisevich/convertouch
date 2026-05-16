@@ -75,7 +75,7 @@ class AddParamSetsToConversionUseCase
 
     if (newParamSets.isEmpty) {
       if (oldConversionParams != null) {
-        return oldConversionParams;
+        return await _alignParams(oldConversionParams);
       } else if (paramSetsTotalCount == 0) {
         return null;
       } else {
@@ -89,7 +89,7 @@ class AddParamSetsToConversionUseCase
 
     for (ConversionParamSetModel paramSet in newParamSets) {
       List<ConversionParamModel> params = ObjectUtils.tryGet(
-        await conversionParamRepository.get(paramSet.id),
+        await conversionParamRepository.getBySetId(paramSet.id),
       );
 
       List<ConversionParamValueModel> paramValues = [];
@@ -152,6 +152,29 @@ class AddParamSetsToConversionUseCase
       paramSetValues: resultParamSetValues,
       selectedIndex: resultParamSetValues.length - 1,
       totalCount: paramSetsTotalCount,
+    );
+  }
+
+  Future<ConversionParamSetValueBulkModel> _alignParams(
+    ConversionParamSetValueBulkModel oldConversionParams,
+  ) async {
+    return await oldConversionParams.copyWithChangedParams(
+      paramFilter: (p) => true,
+      changeFirstMatchedParamOnly: false,
+      map: (paramValue, paramSetValue) async {
+        final param = ObjectUtils.tryGet(
+          await conversionParamRepository.get(paramValue.param.id),
+        );
+
+        if (param == null) {
+          return paramValue;
+        }
+
+        return paramValue.copyWith(
+          param: param,
+          calculated: param.calculable && paramValue.calculated,
+        );
+      },
     );
   }
 }

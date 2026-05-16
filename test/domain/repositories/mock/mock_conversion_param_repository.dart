@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
@@ -27,9 +28,19 @@ class MockConversionParamRepository extends ConversionParamRepository {
   const MockConversionParamRepository();
 
   @override
-  Future<Either<ConvertouchException, List<ConversionParamModel>>> get(
+  Future<Either<ConvertouchException, List<ConversionParamModel>>> getBySetId(
     int setId,
   ) async {
     return Right(_paramsOfSet[setId] ?? []);
+  }
+
+  @override
+  Future<Either<ConvertouchException, ConversionParamModel?>> get(
+      int paramId) async {
+    return Right(
+      _paramsOfSet.values
+          .expand((e) => e)
+          .firstWhereOrNull((p) => p.id == paramId),
+    );
   }
 }

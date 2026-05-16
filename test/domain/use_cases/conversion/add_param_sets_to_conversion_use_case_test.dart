@@ -291,8 +291,8 @@ void main() {
       group('New mandatory param set', () {
         group('With mapping table (clothes size)', () {
           test(
-              'Height param should not be set by default, '
-              'other params should not be auto-calculated', () async {
+              'Height param should be set by default, '
+              'none of params are auto-calculated', () async {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
@@ -314,8 +314,8 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
-                      ConversionParamValueModel.tuple(heightParam, null, null,
-                          unit: centimeter, calculated: true),
+                      ConversionParamValueModel.tuple(heightParam, null, 1,
+                          unit: centimeter),
                     ],
                   ),
                 ],
@@ -489,7 +489,7 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, null, null),
                       ConversionParamValueModel.tuple(garmentParam, null, null),
                       ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter, calculated: true),
+                          unit: centimeter),
                     ],
                   ),
                 ],
@@ -582,6 +582,62 @@ void main() {
 
         group('With formula', () {});
       });
+
+      group('Existing mandatory param set', () {
+        test('Should align params info from DB (calculable flag)', () async {
+          await testCase(
+            unitGroup: clothesSizeGroup,
+            useCase: useCase,
+            delta: const AddParamSetsDelta(),
+            currentParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: clothesSizeParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(personParam, null, null),
+                    ConversionParamValueModel.tuple(garmentParam, null, null),
+                    ConversionParamValueModel.tuple(
+                      heightParam.copyWith(calculable: true),
+                      null,
+                      1,
+                      unit: centimeter,
+                      calculated: true,
+                    ),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+              mandatoryParamSetExists: true,
+              totalCount: 1,
+            ),
+            currentSrc: ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+            currentUnitValues: [
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+            ],
+            expectedParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: clothesSizeParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(personParam, null, null),
+                    ConversionParamValueModel.tuple(garmentParam, null, null),
+                    ConversionParamValueModel.tuple(heightParam, null, 1,
+                        unit: centimeter),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+              mandatoryParamSetExists: true,
+              totalCount: 1,
+            ),
+            expectedSrc:
+                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+            expectedUnitValues: [
+              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+            ],
+          );
+        });
+      });
     });
 
     group('Conversion has no items', () {
@@ -648,6 +704,55 @@ void main() {
         });
 
         group('With formula', () {});
+      });
+
+      group('Existing mandatory param set', () {
+        test('Should align params info from DB (calculable flag)', () async {
+          await testCase(
+            unitGroup: clothesSizeGroup,
+            useCase: useCase,
+            delta: const AddParamSetsDelta(),
+            currentParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: clothesSizeParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(personParam, null, null),
+                    ConversionParamValueModel.tuple(garmentParam, null, null),
+                    ConversionParamValueModel.tuple(
+                      heightParam.copyWith(calculable: true),
+                      null,
+                      1,
+                      unit: centimeter,
+                      calculated: true,
+                    ),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+              mandatoryParamSetExists: true,
+              totalCount: 1,
+            ),
+            currentUnitValues: [],
+            expectedParams: ConversionParamSetValueBulkModel(
+              paramSetValues: [
+                ConversionParamSetValueModel(
+                  paramSet: clothesSizeParamSet,
+                  paramValues: [
+                    ConversionParamValueModel.tuple(personParam, null, null),
+                    ConversionParamValueModel.tuple(garmentParam, null, null),
+                    ConversionParamValueModel.tuple(heightParam, null, 1,
+                        unit: centimeter),
+                  ],
+                ),
+              ],
+              selectedIndex: 0,
+              mandatoryParamSetExists: true,
+              totalCount: 1,
+            ),
+            expectedUnitValues: [],
+          );
+        });
       });
     });
   });

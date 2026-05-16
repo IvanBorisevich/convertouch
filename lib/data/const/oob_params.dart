@@ -1,3 +1,4 @@
+import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 
 const conversionParamsV1 = [
@@ -104,6 +105,18 @@ const conversionParamsV1 = [
 ];
 
 const conversionParamsV2 = [
+  {
+    "name": ParamSetNames.byHeight,
+    "unitGroupName": GroupNames.clothesSize,
+    "params": [
+      {
+        "name": ParamNames.height,
+        forUpdate: {
+          "calculable": false,
+        },
+      },
+    ],
+  },
   {
     "name": ParamSetNames.exchangeRate,
     "unitGroupName": GroupNames.currency,

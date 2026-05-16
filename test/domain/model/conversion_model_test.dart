@@ -324,7 +324,7 @@ void main() {
                   'id': 3,
                   'name': 'Height',
                   'unitGroupId': 1,
-                  'calculable': true,
+                  'calculable': false,
                   'valueType': 5,
                   'defaultUnit': {
                     'id': 1,

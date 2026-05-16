@@ -5,7 +5,9 @@ import 'package:either_dart/either.dart';
 abstract class ConversionParamRepository {
   const ConversionParamRepository();
 
-  Future<Either<ConvertouchException, List<ConversionParamModel>>> get(
+  Future<Either<ConvertouchException, ConversionParamModel?>> get(int paramId);
+
+  Future<Either<ConvertouchException, List<ConversionParamModel>>> getBySetId(
     int setId,
   );
 }

@@ -21,11 +21,6 @@ final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
 
 const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
     _nonListParamBySrcValueRules = {
-  GroupNames.clothesSize: {
-    ParamSetNames.byHeight: {
-      ParamNames.height: getHeightByClothesSize,
-    },
-  },
   GroupNames.ringSize: {
     ParamSetNames.byDiameter: {
       ParamNames.diameter: getDiameterByRingSize,

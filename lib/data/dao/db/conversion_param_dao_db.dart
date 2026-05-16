@@ -7,6 +7,11 @@ abstract class ConversionParamDaoDb extends ConversionParamDao {
 
   @override
   @Query('SELECT p.* FROM $conversionParamsTableName p '
+      'WHERE p.id = :paramId')
+  Future<ConversionParamEntity?> get(int paramId);
+
+  @override
+  @Query('SELECT p.* FROM $conversionParamsTableName p '
       'WHERE p.param_set_id = :setId')
-  Future<List<ConversionParamEntity>> get(int setId);
+  Future<List<ConversionParamEntity>> getBySetId(int setId);
 }

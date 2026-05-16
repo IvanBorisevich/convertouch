@@ -707,7 +707,23 @@ class _$ConversionParamDaoDb extends ConversionParamDaoDb {
   final QueryAdapter _queryAdapter;
 
   @override
-  Future<List<ConversionParamEntity>> get(int setId) async {
+  Future<ConversionParamEntity?> get(int paramId) async {
+    return _queryAdapter.query(
+        'SELECT p.* FROM conversion_params p WHERE p.id = ?1',
+        mapper: (Map<String, Object?> row) => ConversionParamEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            calculable: row['calculable'] as int?,
+            unitGroupId: row['unit_group_id'] as int?,
+            valueType: row['value_type'] as int,
+            listType: row['list_type'] as int?,
+            defaultUnitId: row['default_unit_id'] as int?,
+            paramSetId: row['param_set_id'] as int),
+        arguments: [paramId]);
+  }
+
+  @override
+  Future<List<ConversionParamEntity>> getBySetId(int setId) async {
     return _queryAdapter.queryList(
         'SELECT p.* FROM conversion_params p WHERE p.param_set_id = ?1',
         mapper: (Map<String, Object?> row) => ConversionParamEntity(

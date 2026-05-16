@@ -214,6 +214,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   ConversionParamValueModel copyWith({
+    ConversionParamModel? param,
     UnitModel? unit,
     bool? calculated,
     ValueModel? value,
@@ -221,7 +222,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     OutputListValuesBatch? listValues,
   }) {
     return ConversionParamValueModel(
-      param: param,
+      param: param ?? this.param,
       unit: unit ?? this.unit,
       calculated: calculated ?? this.calculated,
       value: value ?? this.value,

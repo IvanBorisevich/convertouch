@@ -1219,7 +1219,7 @@ void main() {
     group('Conversion has params', () {
       group('Calculable param is switched on', () {
         group('New src value exists | new src default value exists', () {
-          test('New list value only should be applied', () async {
+          test('New list value should be applied', () async {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
@@ -1239,7 +1239,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 160, null,
-                          unit: centimeter, calculated: true),
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1250,7 +1250,7 @@ void main() {
                   ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
-                ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
+                ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1260,8 +1260,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 170, 170,
-                          unit: centimeter, calculated: true),
+                      ConversionParamValueModel.tuple(heightParam, 160, null,
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1272,7 +1272,7 @@ void main() {
         });
 
         group('New src value exists | new src default value do not exist', () {
-          test('New list value only should be applied', () async {
+          test('New list value should be applied', () async {
             await testCase(
               unitGroup: clothesSizeGroup,
               useCase: useCase,
@@ -1292,7 +1292,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter, calculated: true),
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1303,7 +1303,7 @@ void main() {
                   ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(europeanClothSize, 50, null),
-                ConversionUnitValueModel.tuple(japanClothSize, '3L', null),
+                ConversionUnitValueModel.tuple(japanClothSize, null, null),
               ],
               expectedParams: ConversionParamSetValueBulkModel(
                 paramSetValues: [
@@ -1313,8 +1313,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 184, 184,
-                          unit: centimeter, calculated: true),
+                      ConversionParamValueModel.tuple(heightParam, null, 1,
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1345,7 +1345,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 165, 1,
-                          unit: centimeter, calculated: true),
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1365,8 +1365,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 165, 165,
-                          unit: centimeter, calculated: true),
+                      ConversionParamValueModel.tuple(heightParam, 165, 1,
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1397,7 +1397,7 @@ void main() {
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
                       ConversionParamValueModel.tuple(heightParam, 150, 1,
-                          unit: centimeter, calculated: true),
+                          unit: centimeter),
                     ],
                   )
                 ],
@@ -1417,8 +1417,8 @@ void main() {
                       ConversionParamValueModel.tuple(personParam, "Man", null),
                       ConversionParamValueModel.tuple(
                           garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(heightParam, 150, 150,
-                          unit: centimeter, calculated: true),
+                      ConversionParamValueModel.tuple(heightParam, 150, 1,
+                          unit: centimeter),
                     ],
                   )
                 ],

@@ -18,11 +18,47 @@ class ConversionParamRepositoryImpl extends ConversionParamRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, List<ConversionParamModel>>> get(
+  Future<Either<ConvertouchException, ConversionParamModel?>> get(
+    int paramId,
+  ) async {
+    try {
+      final param = await conversionParamDao.get(paramId);
+
+      if (param == null) {
+        return const Right(null);
+      }
+
+      final paramDefaultUnitId = param.defaultUnitId;
+      final paramDefaultUnit = paramDefaultUnitId != null
+          ? await unitDao.getUnit(paramDefaultUnitId)
+          : null;
+
+      var paramModel = ConversionParamTranslator.I.toModel(param);
+
+      return Right(
+        paramModel.copyWith(
+          defaultUnit: paramDefaultUnit != null
+              ? UnitTranslator.I.toModel(paramDefaultUnit)
+              : null,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Left(
+        DatabaseException(
+          message: "Error when fetching conversion param by id = $paramId",
+          stackTrace: stackTrace,
+          dateTime: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ConvertouchException, List<ConversionParamModel>>> getBySetId(
     int setId,
   ) async {
     try {
-      final params = await conversionParamDao.get(setId);
+      final params = await conversionParamDao.getBySetId(setId);
       final paramDefaultUnitIds =
           params.map((p) => p.defaultUnitId).nonNulls.toList();
       final defaultUnits = await unitDao.getUnitsByIds(paramDefaultUnitIds);
