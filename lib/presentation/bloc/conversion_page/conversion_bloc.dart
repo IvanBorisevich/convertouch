@@ -6,9 +6,9 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
@@ -129,8 +129,6 @@ class ConversionBloc
       ),
     );
 
-    // TODO 3: trigger 2 separate use cases
-
     conversion = ObjectUtils.tryGet(
       await initItemsListValuesUseCase.execute(conversion),
     );
@@ -220,8 +218,6 @@ class ConversionBloc
       ),
     );
 
-    // TODO 4: call the use case enrich unit values list items
-
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -305,8 +301,6 @@ class ConversionBloc
       ),
     );
 
-    // TODO 5: call the use case enrich unit values list items
-
     await _handleAndEmit(
       result,
       emit,
@@ -327,8 +321,6 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
-
-    // TODO 6: call the use case enrich param values list items
 
     await _handleAndEmit(
       result,
@@ -412,8 +404,6 @@ class ConversionBloc
       ),
     );
 
-    // TODO 7: call the use case enrich param values list items
-
     await _handleAndEmit(
       result,
       emit,
@@ -488,8 +478,6 @@ class ConversionBloc
     if (result.isLeft) {
       onError?.call(result.left);
     } else {
-
-      // TODO 8: remove the call of this use case
       ConversionModel enrichedConversion = enrichWithListValues
           ? ObjectUtils.tryGet(
               await initItemsListValuesUseCase.execute(result.right),

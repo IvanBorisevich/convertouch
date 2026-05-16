@@ -8,8 +8,6 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-// TODO 1: split into 2 use cases - for unit values and for params values
-
 class InitItemsListValuesUseCase
     extends UseCase<ConversionModel, ConversionModel> {
   final FetchListValuesUseCase fetchListValuesUseCase;
