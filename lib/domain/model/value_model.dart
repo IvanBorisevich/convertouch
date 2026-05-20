@@ -5,17 +5,19 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0");
-  static const one = ValueModel._(raw: "1", numVal: 1, alt: "1");
+  static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0", range: null);
+  static const one = ValueModel._(raw: "1", numVal: 1, alt: "1", range: null);
 
   final String raw;
   final String? alt;
   final double? numVal;
+  final NumRange? range;
 
   const ValueModel._({
     required this.raw,
     required this.alt,
     required this.numVal,
+    required this.range,
   });
 
   factory ValueModel.str(
@@ -32,6 +34,7 @@ class ValueModel extends Equatable {
       raw: value,
       alt: alt ?? value,
       numVal: num,
+      range: null,
     );
   }
 
@@ -47,6 +50,16 @@ class ValueModel extends Equatable {
       raw: raw,
       alt: alt ?? DoubleValueUtils.format(numVal, scientific: true),
       numVal: double.tryParse(raw),
+      range: null,
+    );
+  }
+
+  factory ValueModel.range(NumRange range) {
+    return ValueModel._(
+      raw: range.rangeName,
+      alt: range.rangeScientificName,
+      numVal: null,
+      range: range,
     );
   }
 
@@ -94,12 +107,19 @@ class ValueModel extends Equatable {
 
   String get altOrRaw => alt ?? raw;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
       "raw": raw,
       "alt": alt,
       "num": numVal,
+      "range": range?.toJson(removeNulls: removeNulls),
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static ValueModel? fromJson(Map<String, dynamic>? json) {
@@ -117,11 +137,16 @@ class ValueModel extends Equatable {
       numVal: double.tryParse(json["num"]?.toString() ?? "") ??
           double.tryParse(raw),
       alt: json["alt"] ?? json["scientific"],
+      range: NumRange.fromJson(json["range"]),
     );
   }
 
   @override
   String toString() {
-    return 'ValueModel{raw: $raw, alt: $alt, num: $numVal}';
+    return 'ValueModel{'
+        'raw: $raw, '
+        'alt: $alt, '
+        'num: $numVal, '
+        'range: ${range?.rangeName}}';
   }
 }

@@ -265,7 +265,7 @@ void main() {
           'invertible': true,
           'oob': false
         },
-        'value': {'raw': 'S', 'alt': 'S', 'num': null}
+        'value': {'raw': 'S', 'alt': 'S'}
       },
       'params': {
         'paramSetValues': [
@@ -290,7 +290,6 @@ void main() {
                 'value': {
                   'raw': 'Man',
                   'alt': 'Man',
-                  'num': null,
                 },
                 'listValues': {
                   'items': [],
@@ -311,7 +310,6 @@ void main() {
                 'value': {
                   'raw': 'Shirt',
                   'alt': 'Shirt',
-                  'num': null,
                 },
                 'listValues': {
                   'items': [],
@@ -373,7 +371,7 @@ void main() {
             'invertible': true,
             'oob': false
           },
-          'value': {'raw': 'S', 'alt': 'S', 'num': null},
+          'value': {'raw': 'S', 'alt': 'S'},
           'listValues': {
             'items': [],
             'hasReachedMax': false,

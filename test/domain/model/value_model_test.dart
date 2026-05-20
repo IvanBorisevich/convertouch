@@ -49,7 +49,6 @@ void main() {
 
     expect(ValueModel.str('test').toJson(), {
       'raw': 'test',
-      'num': null,
       'alt': 'test',
     });
 
@@ -74,7 +73,6 @@ void main() {
     expect(_emptyStr.toJson(), {
       'raw': '',
       'alt': '',
-      'num': null,
     });
   });
 
