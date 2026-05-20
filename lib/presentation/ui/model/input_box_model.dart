@@ -23,7 +23,8 @@ abstract class InputBoxModel implements ElementModel {
   }) {
     if (model.listType != null) {
       return ListBoxModel(
-        listValue: model.value?.toListValueModel(),
+        listValue:
+            model.value != null ? ListValueModel.value(model.value!) : null,
         listValues: model.listValues!.items,
         listType: model.listType!,
         readonly:

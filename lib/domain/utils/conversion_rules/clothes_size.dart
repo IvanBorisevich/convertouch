@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/utils/mapping_table.dart';
 
 const int _cmInMeter = 100;
@@ -71,6 +72,30 @@ Map<String, String>? getClothesSizesMapByParams(
   Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
 
   return _clothesSizes[person]?[garment]?.getRowByParams(params);
+}
+
+List<Garment> getGarmentList({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) {
+  Person? person = params?.getValueOfType(ParamNames.person, Person.valueOf);
+
+  return _clothesSizes[person]?.keys.toList() ?? [];
+}
+
+List<NumRange> getHeightList({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) {
+  Person? person = params?.getValueOfType(ParamNames.person, Person.valueOf);
+  Garment? garment =
+      params?.getValueOfType(ParamNames.garment, Garment.valueOf);
+
+  return _clothesSizes[person]?[garment]
+          ?.rows
+          .map((row) => row.criterion.heightCmRange)
+          .toList() ??
+      [];
 }
 
 const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>

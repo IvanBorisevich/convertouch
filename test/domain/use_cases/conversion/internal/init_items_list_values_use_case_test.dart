@@ -39,8 +39,8 @@ void main() {
   });
 
   test(
-      '[Clothes size] Should enrich conversion items and params with local list values'
-      'and preselect them if possible', () async {
+      "[Clothes size] Should not enrich 'Garment' param, as 'Person' is not "
+      "selected, should not preselect default values of params", () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -86,8 +86,137 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.value("Man"),
-                      ListValueModel.value("Woman"),
+                      ListValueModel.raw("Man"),
+                      ListValueModel.raw("Woman"),
+                    ],
+                    params: ListValuesFetchParams(
+                      listType: ConvertouchListType.person,
+                    ),
+                    hasReachedMax: true,
+                    pageNum: 1,
+                  ),
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  null,
+                  null,
+                  listValues: const OutputListValuesBatch(
+                    items: [],
+                    params: ListValuesFetchParams(
+                      listType: ConvertouchListType.garment,
+                    ),
+                    hasReachedMax: true,
+                    pageNum: 0,
+                  ),
+                ),
+                ConversionParamValueModel.tuple(heightParam, 180, 1,
+                    unit: meter),
+              ],
+            )
+          ],
+          selectedIndex: 0,
+        ),
+        srcUnitValue:
+            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+        convertedUnitValues: [
+          ConversionUnitValueModel.tuple(
+            japanClothSize,
+            null,
+            null,
+            listValues: const OutputListValuesBatch(
+              items: [
+                ListValueModel.raw('S'),
+                ListValueModel.raw('M'),
+                ListValueModel.raw('L'),
+                ListValueModel.raw('LL'),
+                ListValueModel.raw('3L'),
+                ListValueModel.raw('4L'),
+                ListValueModel.raw('5L'),
+                ListValueModel.raw('6L'),
+              ],
+              hasReachedMax: true,
+              pageNum: 1,
+            ),
+          ),
+          ConversionUnitValueModel.tuple(
+            germanyClothSize,
+            null,
+            null,
+            listValues: const OutputListValuesBatch(
+              items: [
+                ListValueModel.raw('32'),
+                ListValueModel.raw('34'),
+                ListValueModel.raw('36'),
+                ListValueModel.raw('38'),
+                ListValueModel.raw('40'),
+                ListValueModel.raw('42'),
+                ListValueModel.raw('44'),
+                ListValueModel.raw('46'),
+                ListValueModel.raw('48'),
+                ListValueModel.raw('50'),
+                ListValueModel.raw('52'),
+                ListValueModel.raw('54'),
+                ListValueModel.raw('56'),
+              ],
+              hasReachedMax: true,
+              pageNum: 1,
+            ),
+          ),
+        ],
+      ).toJson(),
+    );
+  });
+
+  test(
+      "[Clothes size] Should enrich 'Garment' param, as 'Person' is selected, "
+      "should not preselect default value of 'Garment'", () async {
+    var conversion = ConversionModel(
+      unitGroup: clothesSizeGroup,
+      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
+      params: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                personParam,
+                'Man',
+                null,
+              ),
+              ConversionParamValueModel.tuple(garmentParam, null, null),
+              ConversionParamValueModel.tuple(heightParam, 180, 1, unit: meter),
+            ],
+          )
+        ],
+        selectedIndex: 0,
+      ),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(japanClothSize, null, null),
+        ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+      ],
+    );
+
+    var enrichedConversion = ObjectUtils.tryGet(
+      await useCase.execute(conversion),
+    );
+
+    expect(
+      enrichedConversion.toJson(),
+      ConversionModel(
+        unitGroup: clothesSizeGroup,
+        params: ConversionParamSetValueBulkModel(
+          paramSetValues: [
+            ConversionParamSetValueModel(
+              paramSet: clothesSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(
+                  personParam,
+                  'Man',
+                  null,
+                  listValues: const OutputListValuesBatch(
+                    items: [
+                      ListValueModel.raw("Man"),
+                      ListValueModel.raw("Woman"),
                     ],
                     params: ListValuesFetchParams(
                       listType: ConvertouchListType.person,
@@ -102,8 +231,8 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.value("Shirt"),
-                      ListValueModel.value("Trousers"),
+                      ListValueModel.raw("Shirt"),
+                      ListValueModel.raw("Trousers"),
                     ],
                     params: ListValuesFetchParams(
                       listType: ConvertouchListType.garment,
@@ -128,14 +257,14 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.value('S'),
-                ListValueModel.value('M'),
-                ListValueModel.value('L'),
-                ListValueModel.value('LL'),
-                ListValueModel.value('3L'),
-                ListValueModel.value('4L'),
-                ListValueModel.value('5L'),
-                ListValueModel.value('6L'),
+                ListValueModel.raw('S'),
+                ListValueModel.raw('M'),
+                ListValueModel.raw('L'),
+                ListValueModel.raw('LL'),
+                ListValueModel.raw('3L'),
+                ListValueModel.raw('4L'),
+                ListValueModel.raw('5L'),
+                ListValueModel.raw('6L'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -147,19 +276,19 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.value('32'),
-                ListValueModel.value('34'),
-                ListValueModel.value('36'),
-                ListValueModel.value('38'),
-                ListValueModel.value('40'),
-                ListValueModel.value('42'),
-                ListValueModel.value('44'),
-                ListValueModel.value('46'),
-                ListValueModel.value('48'),
-                ListValueModel.value('50'),
-                ListValueModel.value('52'),
-                ListValueModel.value('54'),
-                ListValueModel.value('56'),
+                ListValueModel.raw('32'),
+                ListValueModel.raw('34'),
+                ListValueModel.raw('36'),
+                ListValueModel.raw('38'),
+                ListValueModel.raw('40'),
+                ListValueModel.raw('42'),
+                ListValueModel.raw('44'),
+                ListValueModel.raw('46'),
+                ListValueModel.raw('48'),
+                ListValueModel.raw('50'),
+                ListValueModel.raw('52'),
+                ListValueModel.raw('54'),
+                ListValueModel.raw('56'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -211,7 +340,7 @@ void main() {
       ),
     ).thenAnswer(
       (_) async => const Right([
-        ListValueModel.value('FloatRates'),
+        ListValueModel.raw('FloatRates'),
       ]),
     );
 
@@ -246,7 +375,7 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.value('FloatRates'),
+                      ListValueModel.raw('FloatRates'),
                     ],
                     hasReachedMax: true,
                     pageNum: 1,

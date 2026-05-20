@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
@@ -57,7 +56,7 @@ class ValueModel extends Equatable {
   factory ValueModel.range(NumRange range) {
     return ValueModel._(
       raw: range.rangeName,
-      alt: range.rangeScientificName,
+      alt: range.rangeName,
       numVal: null,
       range: range,
     );
@@ -76,6 +75,10 @@ class ValueModel extends Equatable {
       return value.isNotEmpty ? ValueModel.str(value) : null;
     }
 
+    if (value is NumRange) {
+      return ValueModel.range(value);
+    }
+
     throw ConvertouchException(
       message: "Value $value has unsupported type",
       stackTrace: null,
@@ -90,13 +93,6 @@ class ValueModel extends Equatable {
     ).includesValue(numVal)
         ? this
         : null;
-  }
-
-  ListValueModel toListValueModel() {
-    return ListValueModel(
-      value: raw,
-      alt: alt ?? raw,
-    );
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
@@ -28,15 +29,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) async {
-    List<ListValueModel> result = _fetchLocal(
-      listType: listType,
-      pageNum: pageNum,
-      pageSize: pageSize,
-      unit: unit,
-      params: params,
-    );
-
-    if (result.isEmpty && params != null) {
+    if (listType.fetchedViaApi && params != null) {
       return await _fetchFromNetwork(
         listType: listType,
         pageNum: pageNum,
@@ -45,7 +38,15 @@ class ListValueRepositoryImpl implements ListValueRepository {
       );
     }
 
-    return Right(result);
+    return Right(
+      _fetchLocal(
+        listType: listType,
+        pageNum: pageNum,
+        pageSize: pageSize,
+        unit: unit,
+        params: params,
+      ),
+    );
   }
 
   @override
@@ -129,14 +130,17 @@ class ListValueRepositoryImpl implements ListValueRepository {
   }
 }
 
-typedef ListBuilderFunc = List<ListValueModel> Function({
+typedef ListBuilderFunc<T> = List<T> Function({
   UnitModel? unit,
   ConversionParamSetValueModel? params,
 });
 
-const Map<ConvertouchListType, ListBuilderFunc> _listValues = {
+typedef ListValueModelBuilderFunc = ListBuilderFunc<ListValueModel>;
+
+const Map<ConvertouchListType, ListValueModelBuilderFunc> _listValues = {
   ConvertouchListType.person: _persons,
   ConvertouchListType.garment: _garments,
+  ConvertouchListType.clothesHeightRange: _clothesHeightRanges,
   ConvertouchListType.clothesSizeInter: _clothesSizesInter,
   ConvertouchListType.clothesSizeUs: _clothesSizesUs,
   ConvertouchListType.clothesSizeJp: _clothesSizesJp,
@@ -161,19 +165,22 @@ const Map<ConvertouchListType, ListBuilderFunc> _listValues = {
 String _defaultMap<T>(T value) => value.toString();
 
 List<ListValueModel> _wrapList<T>(
-  List<T> src, {
+  List<T>? src, {
   String Function(T)? valueMap,
   String Function(T)? altValueMap,
 }) {
-  return src.map((v) {
-    String value = (valueMap ?? _defaultMap).call(v);
-    String? alt = altValueMap?.call(v) ?? value;
+  return src != null
+      ? src.map((v) {
+          String value = (valueMap ?? _defaultMap).call(v);
+          String? alt = altValueMap?.call(v) ?? value;
 
-    return ListValueModel(
-      value: value,
-      alt: alt,
-    );
-  }).toList();
+          return ListValueModel(
+            value: value,
+            alt: alt,
+            range: v is NumRange ? v : null,
+          );
+        }).toList()
+      : [];
 }
 
 List<ListValueModel> _persons({
@@ -190,8 +197,17 @@ List<ListValueModel> _garments({
   ConversionParamSetValueModel? params,
 }) =>
     _wrapList(
-      Garment.values,
+      getGarmentList(unit: unit, params: params),
       valueMap: (v) => v.name,
+    );
+
+List<ListValueModel> _clothesHeightRanges({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList(
+      getHeightList(unit: unit, params: params),
+      valueMap: (v) => v.rangeName,
     );
 
 List<ListValueModel> _clothesSizesInter({

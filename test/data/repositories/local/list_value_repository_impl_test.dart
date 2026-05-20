@@ -27,8 +27,8 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("Man"),
-        ListValueModel.value("Woman"),
+        ListValueModel.raw("Man"),
+        ListValueModel.raw("Woman"),
       ]);
     });
   });
@@ -44,8 +44,8 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("10"),
-        ListValueModel.value("20"),
+        ListValueModel.raw("10"),
+        ListValueModel.raw("20"),
       ]);
     });
 
@@ -60,8 +60,8 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("22"),
-        ListValueModel.value("44"),
+        ListValueModel.raw("22"),
+        ListValueModel.raw("44"),
       ]);
     });
 
@@ -75,11 +75,11 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("32"),
-        ListValueModel.value("34"),
-        ListValueModel.value("36"),
-        ListValueModel.value("38"),
-        ListValueModel.value("40"),
+        ListValueModel.raw("32"),
+        ListValueModel.raw("34"),
+        ListValueModel.raw("36"),
+        ListValueModel.raw("38"),
+        ListValueModel.raw("40"),
       ]);
     });
 
@@ -93,11 +93,11 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("42"),
-        ListValueModel.value("44"),
-        ListValueModel.value("46"),
-        ListValueModel.value("48"),
-        ListValueModel.value("50"),
+        ListValueModel.raw("42"),
+        ListValueModel.raw("44"),
+        ListValueModel.raw("46"),
+        ListValueModel.raw("48"),
+        ListValueModel.raw("50"),
       ]);
     });
 
@@ -111,9 +111,9 @@ void main() {
       );
 
       expect(listValues, const [
-        ListValueModel.value("52"),
-        ListValueModel.value("54"),
-        ListValueModel.value("56"),
+        ListValueModel.raw("52"),
+        ListValueModel.raw("54"),
+        ListValueModel.raw("56"),
       ]);
     });
   });
