@@ -33,6 +33,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
       pageNum: pageNum,
       pageSize: pageSize,
       unit: unit,
+      params: params,
     );
 
     if (result.isEmpty && params != null) {
@@ -98,8 +99,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required int pageNum,
     required int pageSize,
     UnitModel? unit,
+    ConversionParamSetValueModel? params,
   }) {
-    List<ListValueModel>? fullList = _listValues[listType]?.call(unit: unit);
+    List<ListValueModel>? fullList = _listValues[listType]?.call(
+      unit: unit,
+      params: params,
+    );
 
     if (fullList == null) {
       return const [];
@@ -124,8 +129,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
   }
 }
 
-const Map<ConvertouchListType, List<ListValueModel> Function({UnitModel? unit})>
-    _listValues = {
+typedef ListBuilderFunc = List<ListValueModel> Function({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+});
+
+const Map<ConvertouchListType, ListBuilderFunc> _listValues = {
   ConvertouchListType.person: _persons,
   ConvertouchListType.garment: _garments,
   ConvertouchListType.clothesSizeInter: _clothesSizesInter,
@@ -167,17 +176,29 @@ List<ListValueModel> _wrapList<T>(
   }).toList();
 }
 
-List<ListValueModel> _persons({UnitModel? unit}) => _wrapList(
+List<ListValueModel> _persons({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList(
       Person.values,
       valueMap: (v) => v.name,
     );
 
-List<ListValueModel> _garments({UnitModel? unit}) => _wrapList(
+List<ListValueModel> _garments({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList(
       Garment.values,
       valueMap: (v) => v.name,
     );
 
-List<ListValueModel> _clothesSizesInter({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesInter({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       "XXS",
       "XS",
       "S",
@@ -188,12 +209,20 @@ List<ListValueModel> _clothesSizesInter({UnitModel? unit}) => _wrapList([
       "3XL",
     ]);
 
-List<ListValueModel> _clothesSizesUs({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesUs({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(2, 14, step: 2),
       ...ObjectUtils.generateNumList(28, 42, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesJp({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesJp({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       'S',
       'M',
       'L',
@@ -204,36 +233,67 @@ List<ListValueModel> _clothesSizesJp({UnitModel? unit}) => _wrapList([
       '6L',
     ]);
 
-List<ListValueModel> _clothesSizesFr({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesFr({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(34, 48, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesEu({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesEu({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(34, 56, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesRu({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesRu({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(40, 56, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesIt({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesIt({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(38, 56, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesUk({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesUk({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(6, 18, step: 2),
       ...ObjectUtils.generateNumList(26, 40, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesDe({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesDe({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(32, 56, step: 2),
     ]);
 
-List<ListValueModel> _clothesSizesEs({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _clothesSizesEs({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(34, 48, step: 2),
     ]);
 
-List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
+List<ListValueModel> _ringSizesFr({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
     _wrapList(ObjectUtils.fromNumList([
       44,
       46.5,
@@ -261,13 +321,24 @@ List<ListValueModel> _ringSizesFr({UnitModel? unit}) =>
       75
     ]));
 
-List<ListValueModel> _ringSizesRu({UnitModel? unit}) => _ringSizesFr();
+List<ListValueModel> _ringSizesRu({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _ringSizesFr();
 
-List<ListValueModel> _ringSizesUs({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _ringSizesUs({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(3, 15, step: 0.5, fractionDigits: 1),
     ]);
 
-List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
+List<ListValueModel> _ringSizesIt({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
     _wrapList(ObjectUtils.fromNumList([
       4,
       5.5,
@@ -295,12 +366,20 @@ List<ListValueModel> _ringSizesIt({UnitModel? unit}) =>
       35
     ]));
 
-List<ListValueModel> _barbellBarWeights({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _barbellBarWeights({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.generateNumList(10, 20,
           step: 10, fractionDigits: 0, divisor: unit?.coefficient),
     ]);
 
-List<ListValueModel> _ringSizesUk({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _ringSizesUk({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       'F',
       'G',
       'H',
@@ -328,7 +407,10 @@ List<ListValueModel> _ringSizesUk({UnitModel? unit}) => _wrapList([
       'Z+5',
     ]);
 
-List<ListValueModel> _ringSizesDe({UnitModel? unit}) =>
+List<ListValueModel> _ringSizesDe({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
     _wrapList(ObjectUtils.fromNumList([
       44,
       47,
@@ -355,7 +437,10 @@ List<ListValueModel> _ringSizesDe({UnitModel? unit}) =>
       74,
     ]));
 
-List<ListValueModel> _ringSizesEs({UnitModel? unit}) =>
+List<ListValueModel> _ringSizesEs({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
     _wrapList(ObjectUtils.fromNumList([
       4,
       6.5,
@@ -383,7 +468,11 @@ List<ListValueModel> _ringSizesEs({UnitModel? unit}) =>
       35,
     ]));
 
-List<ListValueModel> _ringSizesJp({UnitModel? unit}) => _wrapList([
+List<ListValueModel> _ringSizesJp({
+  UnitModel? unit,
+  ConversionParamSetValueModel? params,
+}) =>
+    _wrapList([
       ...ObjectUtils.fromNumList([4, 5, 7, 8, 9, 10, 11]),
       ...ObjectUtils.generateNumList(13, 20),
       ...ObjectUtils.generateNumList(22, 23),
