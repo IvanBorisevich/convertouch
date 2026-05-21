@@ -799,8 +799,17 @@ void main() {
 
   test('Test range name representation', () {
     expect(
-        const NumRange.withBoth(double.negativeInfinity, 0).rangeName, '..-0');
-    expect(const NumRange.withBoth(0, 2).rangeName, '0-2');
-    expect(const NumRange.withBoth(2, double.infinity).rangeName, '2-..');
+      const NumRange.withBoth(double.negativeInfinity, 0).rangeName,
+      '.. - 0',
+    );
+    expect(
+      const NumRange.withoutBoth(double.negativeInfinity, 0).rangeName,
+      '.. - 0',
+    );
+    expect(const NumRange.withRight(0, 130).rangeName, '.. - 130');
+    expect(const NumRange.withRight(0.0, 130).rangeName, '.. - 130');
+    expect(const NumRange.withBoth(0, 2).rangeName, '0 - 2');
+    expect(const NumRange.withoutBoth(0, 2).rangeName, '.. - 2');
+    expect(const NumRange.withBoth(2, double.infinity).rangeName, '2 - ..');
   });
 }

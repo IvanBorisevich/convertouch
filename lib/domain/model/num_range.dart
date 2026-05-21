@@ -122,9 +122,11 @@ class NumRange extends Equatable {
   }
 
   String get rangeName {
-    String leftStr = left.isFinite ? "$left" : '..';
+    String leftStr = (left.isFinite && left != 0 || includeLeft && left == 0)
+        ? "$left"
+        : '..';
     String rightStr = right.isFinite ? "$right" : '..';
-    return "$leftStr-$rightStr";
+    return "$leftStr - $rightStr";
   }
 
   String get rangeScientificName =>

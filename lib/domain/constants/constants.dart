@@ -23,6 +23,7 @@ abstract class GroupNames {
 abstract class ParamSetNames {
   const ParamSetNames._();
 
+  static const clothesSize = "Clothes Size";
   static const byHeight = "By Height";
   static const byDiameter = "By Diameter";
   static const byCircumference = "By Circumference";
