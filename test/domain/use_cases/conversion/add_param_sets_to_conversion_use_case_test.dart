@@ -288,48 +288,6 @@ void main() {
         });
       });
 
-      group('New mandatory param set', () {
-        group('With mapping table (clothes size)', () {
-          test(
-              'Height param should be set by default, '
-              'none of params are auto-calculated', () async {
-            await testCase(
-              unitGroup: clothesSizeGroup,
-              useCase: useCase,
-              delta: const AddParamSetsDelta(),
-              currentSrc:
-                  ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ],
-              expectedSrc:
-                  ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: clothesSizeParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(personParam, null, null),
-                      ConversionParamValueModel.tuple(garmentParam, null, null),
-                      ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter),
-                    ],
-                  ),
-                ],
-                selectedIndex: 0,
-                mandatoryParamSetExists: true,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('With formula', () {});
-      });
-
       group('No new param set', () {
         test('Conversion should not be recalculated', () async {
           await testCase(
@@ -468,40 +426,6 @@ void main() {
             );
           });
         });
-      });
-
-      group('New mandatory param set', () {
-        group('With mapping table (clothes size)', () {
-          test(
-              'Height param should be set by default, '
-              'other params should not be auto-calculated', () async {
-            await testCase(
-              unitGroup: clothesSizeGroup,
-              useCase: useCase,
-              delta: const AddParamSetsDelta(),
-              currentUnitValues: [],
-              expectedUnitValues: [],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: clothesSizeParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(personParam, null, null),
-                      ConversionParamValueModel.tuple(garmentParam, null, null),
-                      ConversionParamValueModel.tuple(heightParam, null, 1,
-                          unit: centimeter),
-                    ],
-                  ),
-                ],
-                mandatoryParamSetExists: true,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('With formula', () {});
       });
     });
   });

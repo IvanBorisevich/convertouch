@@ -72,31 +72,6 @@ void main() {
     expect(result, ValueModel.any(38));
   });
 
-  test('Calculate for non-list param by its default unit', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: heightParam,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.one);
-  });
-
-  test('Calculate for non-list param by explicit param unit', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: heightParam,
-          currentParamUnit: centimeter,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.one);
-  });
-
   test('Calculate for list param without unit without preselection', () async {
     ValueModel? result = ObjectUtils.tryGet(
       await useCase.execute(
@@ -123,20 +98,6 @@ void main() {
     );
 
     expect(result, ValueModel.any(10));
-  });
-
-  test('Calculate for replacing unit in non-list param', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: heightParam,
-          currentParamUnit: meter,
-          replacingUnit: centimeter,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.one);
   });
 
   test('Calculate for replacing unit in list param', () async {

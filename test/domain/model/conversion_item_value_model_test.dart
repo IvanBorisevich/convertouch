@@ -6,68 +6,6 @@ import 'mock/mock_param.dart';
 import 'mock/mock_unit.dart';
 
 void main() {
-  group('For conversion param value', () {
-    const ConversionParamValueModel heightParamVal = ConversionParamValueModel(
-      param: heightParam,
-      unit: meter,
-      value: ValueModel.one,
-      defaultValue: ValueModel.one,
-    );
-
-    const Map<String, dynamic> paramValueJson = {
-      'param': {
-        'id': 3,
-        'name': 'Height',
-        'unitGroupId': 1,
-        'valueType': 5,
-        'paramSetId': 1,
-        'calculable': false,
-        'defaultUnit': {
-          'id': 1,
-          'name': 'Centimeter',
-          'code': 'cm',
-          'coefficient': 0.01,
-          'valueType': 5,
-          'minValue': 0,
-          'invertible': true,
-          'oob': false
-        },
-      },
-      'unit': {
-        "id": 4,
-        "name": 'Meter',
-        "code": 'm',
-        "coefficient": 1.0,
-        "valueType": 5,
-        "minValue": 0,
-        "invertible": true,
-        "oob": false,
-      },
-      'value': {
-        'raw': '1',
-        'num': 1,
-        'alt': '1',
-      },
-      'defaultValue': {
-        'raw': '1',
-        'num': 1,
-        'alt': '1',
-      },
-      'calculated': false,
-    };
-
-    test('Serialize param value', () {
-      expect(heightParamVal.toJson(), paramValueJson);
-    });
-
-    test('Deserialize param value', () {
-      expect(
-        ConversionParamValueModel.fromJson(paramValueJson),
-        heightParamVal,
-      );
-    });
-  });
-
   group(
       'For conversion param value with list values '
       '(local list values should not be serialized)', () {

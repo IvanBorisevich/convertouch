@@ -46,15 +46,14 @@ class ClothesSizeCriterion extends Criterion {
   bool matches(ConversionParamSetValueModel params) {
     var heightParam = params.getParamValue(ParamNames.height);
 
-    if (heightParam == null ||
-        heightParam.unit?.coefficient == null ||
-        heightParam.eitherNum == null) {
+    if (heightParam == null) {
       return false;
     }
 
-    double normalizedHeight =
-        heightParam.eitherNum! * heightParam.unit!.coefficient! * _cmInMeter;
-    bool heightMatches = heightCmRange.includesValue(normalizedHeight);
+    NumRange? actualHeightRangeCm = heightParam.eitherValue?.range
+        ?.copyWithFactor(heightParam.unit!.coefficient! * _cmInMeter);
+
+    bool heightMatches = heightCmRange.includesRange(actualHeightRangeCm);
 
     var waistParam = params.getParamValue(ParamNames.waist);
     bool waistMatches = waistCmRange == null ||

@@ -812,4 +812,66 @@ void main() {
     expect(const NumRange.withoutBoth(0, 2).rangeName, '.. - 2');
     expect(const NumRange.withBoth(2, double.infinity).rangeName, '2 - ..');
   });
+
+  test('Test range copy with factor', () {
+    expect(
+      const NumRange.withBoth(10, 20).copyWithFactor(2),
+      const NumRange.withBoth(20, 40),
+    );
+
+    expect(
+      const NumRange.withRight(10, 20).copyWithFactor(2),
+      const NumRange.withRight(20, 40),
+    );
+
+    expect(
+      const NumRange.withLeft(10, 20).copyWithFactor(2),
+      const NumRange.withLeft(20, 40),
+    );
+
+    expect(
+      const NumRange.withoutBoth(10, 20).copyWithFactor(2),
+      const NumRange.withoutBoth(20, 40),
+    );
+
+    expect(
+      const NumRange.withBoth(double.negativeInfinity, 20).copyWithFactor(2),
+      const NumRange.withBoth(double.negativeInfinity, 40),
+    );
+
+    expect(
+      const NumRange.withRight(double.negativeInfinity, 20).copyWithFactor(2),
+      const NumRange.withRight(double.negativeInfinity, 40),
+    );
+
+    expect(
+      const NumRange.withLeft(double.negativeInfinity, 20).copyWithFactor(2),
+      const NumRange.withLeft(double.negativeInfinity, 40),
+    );
+
+    expect(
+      const NumRange.withoutBoth(double.negativeInfinity, 20).copyWithFactor(2),
+      const NumRange.withoutBoth(double.negativeInfinity, 40),
+    );
+
+    expect(
+      const NumRange.withBoth(10, double.infinity).copyWithFactor(2),
+      const NumRange.withBoth(20, double.infinity),
+    );
+
+    expect(
+      const NumRange.withRight(10, double.infinity).copyWithFactor(2),
+      const NumRange.withRight(20, double.infinity),
+    );
+
+    expect(
+      const NumRange.withLeft(10, double.infinity).copyWithFactor(2),
+      const NumRange.withLeft(20, double.infinity),
+    );
+
+    expect(
+      const NumRange.withoutBoth(10, double.infinity).copyWithFactor(2),
+      const NumRange.withoutBoth(20, double.infinity),
+    );
+  });
 }

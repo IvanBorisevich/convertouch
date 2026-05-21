@@ -4,6 +4,7 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
@@ -561,7 +562,7 @@ void main() {
       });
     });
 
-    group("Remove mandatory (should not be removed)", () {
+    group("Remove mandatory param set (should not be removed)", () {
       test('Conversion has unit values (should not be changed)', () async {
         await testCase(
           unitGroup: clothesSizeGroup,
@@ -574,7 +575,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -599,7 +601,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -621,7 +624,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -637,7 +641,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -663,7 +668,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -688,7 +694,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -710,7 +717,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )
@@ -726,7 +734,8 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(personParam, "Man", null),
                   ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-                  ConversionParamValueModel.tuple(heightParam, 150, 1,
+                  ConversionParamValueModel.tuple(
+                      heightParam, const NumRange.withRight(0, 164), null,
                       unit: centimeter),
                 ],
               )

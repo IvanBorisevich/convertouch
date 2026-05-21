@@ -2,6 +2,7 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -149,7 +150,8 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(
+                        heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -171,7 +173,8 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(
+                        heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -201,7 +204,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -228,7 +231,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -258,7 +261,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -285,7 +288,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -315,7 +318,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -340,7 +343,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, 150, 1,
+                    ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                         unit: centimeter),
                   ],
                 )
@@ -370,7 +373,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
+                    ConversionParamValueModel.tuple(heightParam, null, null,
                         unit: centimeter),
                   ],
                 )
@@ -379,10 +382,10 @@ void main() {
             ),
             currentUnitValues: [],
             expectedSrc:
-                ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+                ConversionUnitValueModel.tuple(japanClothSize, null, null),
             expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
-              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
+              ConversionUnitValueModel.tuple(japanClothSize, null, null),
+              ConversionUnitValueModel.tuple(italianClothSize, null, null),
             ],
             expectedParams: ConversionParamSetValueBulkModel(
               paramSetValues: [
@@ -392,176 +395,7 @@ void main() {
                     ConversionParamValueModel.tuple(personParam, "Man", null),
                     ConversionParamValueModel.tuple(
                         garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-          );
-        });
-
-        test(
-            'Source item value and default value exist '
-            '(default list value will be ignored)', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: AddUnitsToConversionDelta(
-              unitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
-            ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 42, 32),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 42, 32),
-            ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
-              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-          );
-        });
-
-        test(
-            'Source item default value exists only '
-            '(default list value will be ignored)', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: AddUnitsToConversionDelta(
-              unitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
-            ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, null, 32),
-            ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
-              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-          );
-        });
-
-        test('Source item value exists only', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: AddUnitsToConversionDelta(
-              unitIds: [
-                japanClothSize.id,
-                italianClothSize.id,
-              ],
-            ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-            ],
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, 42, null),
-              ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
-              ConversionUnitValueModel.tuple(italianClothSize, 42, null),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
+                    ConversionParamValueModel.tuple(heightParam, null, null,
                         unit: centimeter),
                   ],
                 )

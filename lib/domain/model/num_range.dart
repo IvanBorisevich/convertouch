@@ -66,7 +66,11 @@ class NumRange extends Equatable {
     return isMoreThanLeft && isLessThanRight;
   }
 
-  bool includesRange(NumRange another) {
+  bool includesRange(NumRange? another) {
+    if (another == null) {
+      return false;
+    }
+
     return (left == double.negativeInfinity ||
             left < another.left ||
             left == another.left &&
@@ -75,6 +79,17 @@ class NumRange extends Equatable {
             right > another.right ||
             right == another.right &&
                 (includeRight || !includeRight && !another.includeRight));
+  }
+
+  NumRange copyWithFactor(num factor) {
+    assert(factor > 0, 'Factor must be positive');
+
+    return NumRange._(
+      left * factor,
+      right * factor,
+      includeLeft: includeLeft,
+      includeRight: includeRight,
+    );
   }
 
   num? valOrLeft(num? val) {

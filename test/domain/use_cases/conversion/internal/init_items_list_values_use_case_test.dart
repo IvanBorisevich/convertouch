@@ -6,6 +6,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
@@ -55,7 +56,9 @@ void main() {
                 null,
               ),
               ConversionParamValueModel.tuple(garmentParam, null, null),
-              ConversionParamValueModel.tuple(heightParam, 180, 1, unit: meter),
+              ConversionParamValueModel.tuple(
+                  heightParam, const NumRange.withRight(174, 180), null,
+                  unit: meter),
             ],
           )
         ],
@@ -109,7 +112,8 @@ void main() {
                     pageNum: 0,
                   ),
                 ),
-                ConversionParamValueModel.tuple(heightParam, 180, 1,
+                ConversionParamValueModel.tuple(
+                    heightParam, const NumRange.withRight(174, 180), null,
                     unit: meter),
               ],
             )
@@ -184,7 +188,9 @@ void main() {
                 null,
               ),
               ConversionParamValueModel.tuple(garmentParam, null, null),
-              ConversionParamValueModel.tuple(heightParam, 180, 1, unit: meter),
+              ConversionParamValueModel.tuple(
+                  heightParam, const NumRange.withRight(174, 180), null,
+                  unit: meter),
             ],
           )
         ],
@@ -241,7 +247,8 @@ void main() {
                     pageNum: 1,
                   ),
                 ),
-                ConversionParamValueModel.tuple(heightParam, 180, 1,
+                ConversionParamValueModel.tuple(
+                    heightParam, const NumRange.withRight(174, 180), null,
                     unit: meter),
               ],
             )

@@ -323,7 +323,8 @@ void main() {
                   'name': 'Height',
                   'unitGroupId': 1,
                   'calculable': false,
-                  'valueType': 5,
+                  'valueType': 1,
+                  'listType': 24,
                   'defaultUnit': {
                     'id': 1,
                     'name': 'Centimeter',
