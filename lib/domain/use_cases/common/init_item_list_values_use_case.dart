@@ -48,6 +48,10 @@ class InitUnitListValuesUseCase extends InitItemListValuesUseCase<
   Future<Either<ConvertouchException, ConversionUnitValueModel>> execute(
     ConversionUnitValueModel input,
   ) async {
+    if (input.listType == null) {
+      return Right(input);
+    }
+
     var listValuesBatch = await _fetchFirstBatch(
       fetchParams: ListValuesFetchParams(
         listType: input.listType!,
@@ -57,11 +61,12 @@ class InitUnitListValuesUseCase extends InitItemListValuesUseCase<
 
     return Right(
       input.copyWith(
-        value: input.value ??
-            _getDefaultListValue(
-              listValuesBatch: listValuesBatch,
-              preselected: input.listType!.preselected,
-            ),
+        value: listValuesBatch.containsSelectedValue == true
+            ? input.value
+            : _getDefaultListValue(
+                listValuesBatch: listValuesBatch,
+                preselected: input.listType!.preselected,
+              ),
         listValues: listValuesBatch,
       ),
     );
@@ -78,21 +83,26 @@ class InitParamListValuesUseCase extends InitItemListValuesUseCase<
   Future<Either<ConvertouchException, ConversionParamValueModel>> execute(
     InputParamListValuesInitModel input,
   ) async {
+    if (input.paramValue.listType == null) {
+      return Right(input.paramValue);
+    }
+
     var listValuesBatch = await _fetchFirstBatch(
       fetchParams: ListValuesFetchParams(
-        listType: input.paramValue.listType!,
-        unit: input.paramValue.unit,
-        params: input.paramSetValue,
-      ),
+          listType: input.paramValue.listType!,
+          unit: input.paramValue.unit,
+          params: input.paramSetValue,
+          selectedValue: input.paramValue.value),
     );
 
     return Right(
       input.paramValue.copyWith(
-        value: input.paramValue.value ??
-            _getDefaultListValue(
-              listValuesBatch: listValuesBatch,
-              preselected: input.paramValue.listType!.preselected,
-            ),
+        value: listValuesBatch.containsSelectedValue == true
+            ? input.paramValue.value
+            : _getDefaultListValue(
+                listValuesBatch: listValuesBatch,
+                preselected: input.paramValue.listType!.preselected,
+              ),
         listValues: listValuesBatch,
       ),
     );

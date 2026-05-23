@@ -256,15 +256,15 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<ReplaceUnitInConversionItemUseCase>(
     () => ReplaceUnitInConversionItemUseCase(
-      listValueRepository: locator(),
       calculateDefaultValueUseCase: locator(),
+      initUnitListValuesUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<ReplaceUnitInParamUseCase>(
     () => ReplaceUnitInParamUseCase(
-      listValueRepository: locator(),
       calculateDefaultValueUseCase: locator(),
+      initParamListValuesUseCase: locator(),
     ),
   );
 

@@ -461,8 +461,8 @@ void main() {
     test(
         "Should calculate by param 'Garment' list value [Shirt -> Trousers], "
         "should not change param 'Person' list value"
-        "should not change param 'Height' (cm) list value event if it does not"
-        " exists in the updated list", () async {
+        "should change param 'Height' (cm) list value to default"
+        " since it does not exist in the updated list", () async {
       await testCase(
         unitGroup: clothesSizeGroup,
         useCase: useCase,
@@ -502,7 +502,7 @@ void main() {
             ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
             ConversionParamValueModel.tuple(
               heightParam,
-              const NumRange.withRight(174, 180),
+              const NumRange.withRight(0, 164),
               null,
               unit: centimeter,
               listValues: OutputItemsFetchModel(items: [
@@ -518,11 +518,11 @@ void main() {
             ),
           ],
         ),
-        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 36, null),
         expectedUnitValues: [
-          ConversionUnitValueModel.tuple(italianClothSize, null, null),
-          ConversionUnitValueModel.tuple(spainClothSize, null, null),
-          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+          ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 44, null),
         ],
       );
     });
@@ -530,8 +530,8 @@ void main() {
     test(
         "Should calculate by param 'Garment' list value [Shirt -> Trousers], "
         "should not change param 'Person' list value"
-        "should not change param 'Height' (m) list value event if it does not"
-        " exists in the updated list", () async {
+        "should change param 'Height' (m) list value to default"
+        " since it does not exist in the updated list", () async {
       await testCase(
         unitGroup: clothesSizeGroup,
         useCase: useCase,
@@ -571,7 +571,7 @@ void main() {
             ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
             ConversionParamValueModel.tuple(
               heightParam,
-              const NumRange.withRight(1.74, 1.8),
+              const NumRange.withRight(0, 1.64),
               null,
               unit: meter,
               listValues: OutputItemsFetchModel(items: [
@@ -587,11 +587,11 @@ void main() {
             ),
           ],
         ),
-        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 36, null),
         expectedUnitValues: [
-          ConversionUnitValueModel.tuple(italianClothSize, null, null),
-          ConversionUnitValueModel.tuple(spainClothSize, null, null),
-          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+          ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 44, null),
         ],
       );
     });

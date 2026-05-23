@@ -18,20 +18,36 @@ class FetchListValuesUseCase
   Future<List<ListValueModel>> fetchItemsPage(
     InputItemsFetchModel<ListValuesFetchParams> input,
   ) async {
-    ListValuesFetchParams? params = input.fetchParams;
-
-    if (params == null) {
+    if (input.fetchParams == null) {
       return [];
     }
 
     return ObjectUtils.tryGet(
       await listValueRepository.fetch(
-        listType: params.listType,
+        listType: input.fetchParams!.listType,
         searchString: input.searchString,
         pageNum: input.pageNum,
         pageSize: input.pageSize,
-        unit: params.unit,
-        params: params.params,
+        unit: input.fetchParams!.unit,
+        params: input.fetchParams!.params,
+      ),
+    );
+  }
+
+  @override
+  Future<bool> containsSelectedValue(
+    InputItemsFetchModel<ListValuesFetchParams> input,
+  ) async {
+    if (input.fetchParams == null) {
+      return false;
+    }
+
+    return ObjectUtils.tryGet(
+      await listValueRepository.belongsToList(
+        value: input.fetchParams!.selectedValue,
+        listType: input.fetchParams!.listType,
+        unit: input.fetchParams!.unit,
+        params: input.fetchParams!.params,
       ),
     );
   }

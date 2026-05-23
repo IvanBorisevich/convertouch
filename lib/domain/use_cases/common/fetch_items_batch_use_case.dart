@@ -18,6 +18,8 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     int pageSize = input.pageSize;
     int pageNum = input.pageNum;
     P? params = input.fetchParams;
+    bool hasSelectedValue =
+        pageNum == 0 && await containsSelectedValue(input);
 
     final newPageItems = await fetchItemsPage(input);
 
@@ -41,11 +43,15 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
         pageNum: pageNum,
         hasReachedMax: hasReachedMax,
         fetchParams: params,
+        containsSelectedValue: hasSelectedValue,
       ),
     );
   }
 
   Future<List<T>> fetchItemsPage(InputItemsFetchModel<P> input);
+
+  Future<bool> containsSelectedValue(InputItemsFetchModel<P> input) async =>
+      false;
 
   T addSearchMatch(T item, String searchString);
 }

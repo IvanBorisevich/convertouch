@@ -73,17 +73,6 @@ class CalculateDefaultValueUseCase<T extends IdNameItemModel>
     required ConvertouchListType? listType,
     required UnitModel? unit,
   }) async {
-    if (listType != null) {
-      String? newValue = ObjectUtils.tryGet(
-        await listValueRepository.getDefault(
-          listType: listType,
-          unit: unit,
-        ),
-      )?.value;
-
-      return ValueModel.any(newValue);
-    }
-
     if (unit != null) {
       var dynamicValue = ObjectUtils.tryGet(
         await dynamicValueRepository.get(unit.id),

@@ -18,13 +18,11 @@ void main() {
   late InitParamListValuesUseCase useCase;
 
   setUpAll(() {
-    const listValueRepository = ListValueRepositoryImpl(
-      networkRepository: MockNetworkRepository(),
-    );
-
     useCase = const InitParamListValuesUseCase(
       fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: listValueRepository,
+        listValueRepository: ListValueRepositoryImpl(
+          networkRepository: MockNetworkRepository(),
+        ),
       ),
     );
   });
@@ -47,7 +45,7 @@ void main() {
   }
 
   test(
-      "Should init list values of param 'Bar Weight', "
+      "Should init list values of param 'Bar Weight' kg, "
       "should preselect default value 10 since no value selected", () async {
     final currentParamValue = ConversionParamValueModel.tuple(
       barWeightParam,
@@ -82,7 +80,7 @@ void main() {
   });
 
   test(
-      "Should init list values of param 'Bar Weight', "
+      "Should init list values of param 'Bar Weight' kg, "
       "should leave value 20 as is since it exists in the list", () async {
     final currentParamValue = ConversionParamValueModel.tuple(
       barWeightParam,
@@ -117,9 +115,8 @@ void main() {
   });
 
   test(
-      "Should init list values of param 'Bar Weight', "
-      "should leave unknown value 15 even if it does not belongs to the list",
-      () async {
+      "Should init list values of param 'Bar Weight' kg, "
+      "should replace unknown value 15 with default value 10", () async {
     final currentParamValue = ConversionParamValueModel.tuple(
       barWeightParam,
       15,
@@ -129,12 +126,117 @@ void main() {
 
     final expectedParamValue = ConversionParamValueModel.tuple(
       barWeightParam,
-      15,
+      10,
       null,
       unit: kilogram,
       listValues: const OutputItemsFetchModel(items: [
         ListValueModel.str('10'),
         ListValueModel.str('20'),
+      ], pageNum: 1, hasReachedMax: true),
+    );
+
+    await testCase(
+      paramSetValue: ConversionParamSetValueModel(
+        paramSet: barbellWeightParamSet,
+        paramValues: [
+          currentParamValue,
+          ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+              unit: kilogram),
+        ],
+      ),
+      currentParamValue: currentParamValue,
+      expectedParamValue: expectedParamValue,
+    );
+  });
+
+  test(
+      "Should init list values of param 'Bar Weight' lb, "
+      "should preselect default value 22 since no value selected", () async {
+    final currentParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      null,
+      null,
+      unit: pound,
+    );
+
+    final expectedParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      22,
+      null,
+      unit: pound,
+      listValues: const OutputItemsFetchModel(items: [
+        ListValueModel.str('22'),
+        ListValueModel.str('44'),
+      ], pageNum: 1, hasReachedMax: true),
+    );
+
+    await testCase(
+      paramSetValue: ConversionParamSetValueModel(
+        paramSet: barbellWeightParamSet,
+        paramValues: [
+          currentParamValue,
+          ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+              unit: kilogram),
+        ],
+      ),
+      currentParamValue: currentParamValue,
+      expectedParamValue: expectedParamValue,
+    );
+  });
+
+  test(
+      "Should init list values of param 'Bar Weight' lb, "
+      "should leave value 44 as is since it exists in the list", () async {
+    final currentParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      44,
+      null,
+      unit: pound,
+    );
+
+    final expectedParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      44,
+      null,
+      unit: pound,
+      listValues: const OutputItemsFetchModel(items: [
+        ListValueModel.str('22'),
+        ListValueModel.str('44'),
+      ], pageNum: 1, hasReachedMax: true),
+    );
+
+    await testCase(
+      paramSetValue: ConversionParamSetValueModel(
+        paramSet: barbellWeightParamSet,
+        paramValues: [
+          currentParamValue,
+          ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+              unit: kilogram),
+        ],
+      ),
+      currentParamValue: currentParamValue,
+      expectedParamValue: expectedParamValue,
+    );
+  });
+
+  test(
+      "Should init list values of param 'Bar Weight' lb, "
+      "should replace unknown value 15 with default value 22", () async {
+    final currentParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      15,
+      null,
+      unit: pound,
+    );
+
+    final expectedParamValue = ConversionParamValueModel.tuple(
+      barWeightParam,
+      22,
+      null,
+      unit: pound,
+      listValues: const OutputItemsFetchModel(items: [
+        ListValueModel.str('22'),
+        ListValueModel.str('44'),
       ], pageNum: 1, hasReachedMax: true),
     );
 

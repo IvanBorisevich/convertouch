@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
@@ -50,49 +50,28 @@ class ListValueRepositoryImpl implements ListValueRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, ListValueModel?>> getDefault({
-    required ConvertouchListType listType,
-    UnitModel? unit,
-  }) async {
-    return Right(
-      listType.preselected
-          ? _listValues[listType]?.call(unit: unit).firstOrNull
-          : null,
-    );
-  }
-
-  @override
   Future<Either<ConvertouchException, bool>> belongsToList({
-    required String? value,
+    required ValueModel? value,
     required ConvertouchListType listType,
     UnitModel? unit,
+    ConversionParamSetValueModel? params,
   }) async {
     if (value == null) {
-      return const Right(true);
+      return Right(!listType.preselected);
     }
 
-    bool belongs =
-        _listValues[listType]?.call(unit: unit).any((v) => v.value == value) ??
-            false;
+    bool belongs;
+
+    if (listType.fetchedViaApi) {
+      belongs = false;
+    } else {
+      belongs = _listValues[listType]
+              ?.call(unit: unit, params: params)
+              .any((v) => v.value == value.raw) ??
+          false;
+    }
 
     return Right(belongs);
-  }
-
-  @override
-  Future<Either<ConvertouchException, ListValueModel?>> getByStrValue({
-    required ConvertouchListType listType,
-    required String? value,
-    UnitModel? unit,
-  }) async {
-    if (value == null) {
-      return const Right(null);
-    }
-
-    ListValueModel? result = _listValues[listType]
-        ?.call(unit: unit)
-        .firstWhereOrNull((v) => v.value == value);
-
-    return Right(result);
   }
 
   List<ListValueModel> _fetchLocal({

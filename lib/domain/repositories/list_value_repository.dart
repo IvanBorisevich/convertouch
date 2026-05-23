@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:either_dart/either.dart';
 
 abstract interface class ListValueRepository {
@@ -17,20 +18,10 @@ abstract interface class ListValueRepository {
     required ConversionParamSetValueModel? params,
   });
 
-  Future<Either<ConvertouchException, ListValueModel?>> getByStrValue({
-    required ConvertouchListType listType,
-    required String? value,
-    required UnitModel? unit,
-  });
-
-  Future<Either<ConvertouchException, ListValueModel?>> getDefault({
-    required ConvertouchListType listType,
-    required UnitModel? unit,
-  });
-
   Future<Either<ConvertouchException, bool>> belongsToList({
-    required String? value,
+    required ValueModel? value,
     required ConvertouchListType listType,
     required UnitModel? unit,
+    required ConversionParamSetValueModel? params,
   });
 }

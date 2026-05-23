@@ -2,11 +2,15 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -34,69 +38,76 @@ void main() {
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
       ),
       replaceUnitInParamUseCase: ReplaceUnitInParamUseCase(
-        listValueRepository: listValueRepository,
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+        initParamListValuesUseCase: InitParamListValuesUseCase(
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: listValueRepository,
+          ),
+        ),
       ),
     );
   });
 
-  group('Change param unit in the conversion by coefficients', () {
-    group('Change list parameter unit (bar weight)', () {
-      test(
-          'Param list value should change as well, '
-          'conversion values should remain as is', () async {
-        double expectedSrcValueNum = 22 * pound.coefficient! + 45 * 2;
-        double expectedSrcDefaultValueNum = 22 * pound.coefficient! + 2;
-
-        await testCase(
-          unitGroup: massGroup,
-          useCase: useCase,
-          delta: ReplaceConversionParamUnitDelta(
-            paramId: barWeightParam.id,
-            paramSetId: barWeightParam.paramSetId,
-            newUnit: pound,
-          ),
-          currentParams: ConversionParamSetValueBulkModel(
-            paramSetValues: [
-              ConversionParamSetValueModel(
-                paramSet: barbellWeightParamSet,
-                paramValues: [
-                  ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                      unit: kilogram),
-                  ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
-                      unit: kilogram),
-                ],
-              )
-            ],
-            selectedIndex: 0,
-          ),
-          currentSrc:
-              ConversionUnitValueModel.tuple(kilogram, expectedSrcValueNum, 12),
-          currentUnitValues: [
-            ConversionUnitValueModel.tuple(kilogram, expectedSrcValueNum, 12),
+  group('By coefficients', () {
+    test("Should recalculate 'Bar Weight' current list value by [kg -> lb]",
+        () async {
+      await testCase(
+        unitGroup: massGroup,
+        useCase: useCase,
+        delta: ReplaceConversionParamUnitDelta(
+          paramId: barWeightParam.id,
+          paramSetId: barWeightParam.paramSetId,
+          newUnit: pound,
+        ),
+        currentParams: ConversionParamSetValueBulkModel(
+          paramSetValues: [
+            ConversionParamSetValueModel(
+              paramSet: barbellWeightParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(barWeightParam, 10, null,
+                    unit: kilogram),
+                ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
+                    unit: kilogram),
+              ],
+            )
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(
-              kilogram, expectedSrcValueNum, expectedSrcDefaultValueNum),
-          expectedUnitValues: [
-            ConversionUnitValueModel.tuple(
-                kilogram, expectedSrcValueNum, expectedSrcDefaultValueNum),
+          selectedIndex: 0,
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(
+            kilogram, 22 * pound.coefficient! + 45 * 2, 12),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(
+              kilogram, 22 * pound.coefficient! + 45 * 2, 12),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel(
+          paramSetValues: [
+            ConversionParamSetValueModel(
+              paramSet: barbellWeightParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(
+                  barWeightParam,
+                  22,
+                  null,
+                  unit: pound,
+                  listValues: const OutputItemsFetchModel(items: [
+                    ListValueModel.str('22'),
+                    ListValueModel.str('44'),
+                  ], pageNum: 1, hasReachedMax: true),
+                ),
+                ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
+                    unit: kilogram),
+              ],
+            ),
           ],
-          expectedParams: ConversionParamSetValueBulkModel(
-            paramSetValues: [
-              ConversionParamSetValueModel(
-                paramSet: barbellWeightParamSet,
-                paramValues: [
-                  ConversionParamValueModel.tuple(barWeightParam, 22, null,
-                      unit: pound),
-                  ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
-                      unit: kilogram),
-                ],
-              ),
-            ],
-            selectedIndex: 0,
-          ),
-        );
-      });
+          selectedIndex: 0,
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(kilogram,
+            22 * pound.coefficient! + 45 * 2, 22 * pound.coefficient! + 2),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(kilogram,
+              22 * pound.coefficient! + 45 * 2, 22 * pound.coefficient! + 2),
+        ],
+      );
     });
   });
 }

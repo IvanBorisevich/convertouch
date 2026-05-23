@@ -11,6 +11,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final bool hasReachedMax;
   final int pageNum;
   final P? fetchParams;
+  final bool containsSelectedValue;
 
   const OutputItemsFetchModel.empty()
       : this(
@@ -27,6 +28,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
+    this.containsSelectedValue = false,
   });
 
   OutputItemsFetchModel<T, P> copyWith({
@@ -46,6 +48,8 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
       fetchParams: params ?? this.fetchParams,
+      containsSelectedValue:
+          containsSelectedValue ?? this.containsSelectedValue,
     );
   }
 
@@ -57,6 +61,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         hasReachedMax,
         pageNum,
         fetchParams,
+        containsSelectedValue,
       ];
 
   Map<String, dynamic> toJson({
