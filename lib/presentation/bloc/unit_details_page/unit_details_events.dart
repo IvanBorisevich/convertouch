@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class UnitDetailsEvent extends ConvertouchEvent {
@@ -97,7 +98,7 @@ class ChangeArgumentUnitInUnitDetails extends UnitDetailsEvent {
 }
 
 abstract class UpdateUnitTextValues extends UnitDetailsEvent {
-  final String newValue;
+  final ValueModel newValue;
 
   const UpdateUnitTextValues({
     required this.newValue,

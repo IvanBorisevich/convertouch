@@ -106,19 +106,19 @@ class DoubleValueUtils {
   }
 
   static bool areEqual(
-      double? num1,
-      double? num2, {
-        int fractionDigits = defaultFractionDigits,
-      }) {
+    double? num1,
+    double? num2, {
+    int fractionDigits = defaultFractionDigits,
+  }) {
     return format(num1, fractionDigits: fractionDigits) ==
         format(num2, fractionDigits: fractionDigits);
   }
 
   static bool areNotEqual(
-      double? num1,
-      double? num2, {
-        int fractionDigits = defaultFractionDigits,
-      }) {
+    double? num1,
+    double? num2, {
+    int fractionDigits = defaultFractionDigits,
+  }) {
     return !areEqual(
       num1,
       num2,
@@ -131,13 +131,19 @@ class DoubleValueUtils {
     return (v * p).roundToDouble() / p;
   }
 
+  static num trimTrailingZeros(num n, {int fractionDigitsMaxNum = 2}) {
+    return n % 1 == 0
+        ? n.toInt()
+        : roundToPrecision(n.toDouble(), fractionDigitsMaxNum);
+  }
+
   static String _trimToFractionDigits(double value, int fractionDigits) {
-    return _trimTrailingZerosInDouble(value.toStringAsFixed(
+    return _trimTrailingZerosInDoubleStr(value.toStringAsFixed(
       value.truncateToDouble() == value ? 0 : fractionDigits,
     ));
   }
 
-  static String _trimTrailingZerosInDouble(String doubleStr) {
+  static String _trimTrailingZerosInDoubleStr(String doubleStr) {
     if (!doubleStr.contains('.')) {
       return doubleStr;
     }

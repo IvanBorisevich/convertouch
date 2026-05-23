@@ -5,6 +5,10 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/utils/mapping_table.dart';
 
+/*
+  used to normalize range values to cm
+  since the mapping table criteria ranges are in cm
+*/
 const int _cmInMeter = 100;
 
 enum Person {
@@ -86,13 +90,18 @@ List<NumRange> getHeightList({
   UnitModel? unit,
   ConversionParamSetValueModel? params,
 }) {
+  if (unit == null) {
+    return [];
+  }
+
   Person? person = params?.getValueOfType(ParamNames.person, Person.valueOf);
   Garment? garment =
       params?.getValueOfType(ParamNames.garment, Garment.valueOf);
 
   return _clothesSizes[person]?[garment]
           ?.rows
-          .map((row) => row.criterion.heightCmRange)
+          .map((row) => row.criterion.heightCmRange
+              .copyWithFactor(1 / _cmInMeter / unit.coefficient!))
           .toList() ??
       [];
 }

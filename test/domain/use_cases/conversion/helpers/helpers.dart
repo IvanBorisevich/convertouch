@@ -43,8 +43,8 @@ Future<void> testCase<T extends ConversionModifyDelta>({
   expect(actual.id, expected.id);
   expect(actual.name, expected.name);
   expect(actual.unitGroup, expected.unitGroup);
-  expect(actual.srcUnitValue, expected.srcUnitValue);
   expect(actual.params?.toJson(), expected.params?.toJson());
+  expect(actual.srcUnitValue, expected.srcUnitValue);
   expect(
     actual.convertedUnitValues.sortedBy((e) => e.name),
     expected.convertedUnitValues.sortedBy((e) => e.name),

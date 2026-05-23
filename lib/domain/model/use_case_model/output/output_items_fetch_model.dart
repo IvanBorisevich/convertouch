@@ -10,7 +10,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final FetchingStatus status;
   final bool hasReachedMax;
   final int pageNum;
-  final P? params;
+  final P? fetchParams;
 
   const OutputItemsFetchModel.empty()
       : this(
@@ -26,7 +26,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.status = FetchingStatus.success,
     this.hasReachedMax = false,
     this.pageNum = 0,
-    this.params,
+    this.fetchParams,
   });
 
   OutputItemsFetchModel<T, P> copyWith({
@@ -37,6 +37,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     int? pageNum,
     P? params,
     bool? fetchedRemotely,
+    bool? containsSelectedValue,
   }) {
     return OutputItemsFetchModel(
       items: items ?? this.items,
@@ -44,7 +45,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       status: status ?? this.status,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
-      params: params ?? this.params,
+      fetchParams: params ?? this.fetchParams,
     );
   }
 
@@ -55,7 +56,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         status,
         hasReachedMax,
         pageNum,
-        params,
+        fetchParams,
       ];
 
   Map<String, dynamic> toJson({
@@ -67,7 +68,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       'searchString': searchString,
       'hasReachedMax': hasReachedMax,
       'pageNum': pageNum,
-      'params': saveParams ? params?.toJson() : null,
+      'params': saveParams ? fetchParams?.toJson() : null,
     };
 
     if (removeNulls) {
@@ -94,7 +95,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       searchString: json['searchString'],
       hasReachedMax: json['hasReachedMax'],
       pageNum: json['pageNum'],
-      params: fromParamsJson.call(json['params']),
+      fetchParams: fromParamsJson.call(json['params']),
     );
   }
 
@@ -106,6 +107,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         'status: $status, '
         'hasReachedMax: $hasReachedMax, '
         'pageNum: $pageNum, '
-        'params: $params}';
+        'fetchParams: $fetchParams}';
   }
 }

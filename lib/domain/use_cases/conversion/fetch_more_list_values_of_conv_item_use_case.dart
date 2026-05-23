@@ -34,7 +34,7 @@ class FetchMoreListValuesOfConvItemUseCase
             searchString: currentBatch.searchString,
             pageSize: listValuesPageSize,
             pageNum: currentBatch.pageNum,
-            params: currentBatch.params,
+            fetchParams: currentBatch.fetchParams,
           ),
         ),
       );
@@ -77,7 +77,7 @@ class FetchMoreListValuesOfConvItemUseCase
             searchString: currentBatch.searchString,
             pageSize: listValuesPageSize,
             pageNum: currentBatch.pageNum,
-            params: currentBatch.params,
+            fetchParams: currentBatch.fetchParams,
           ),
         ),
       );

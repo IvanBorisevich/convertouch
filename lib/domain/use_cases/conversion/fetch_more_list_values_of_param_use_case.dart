@@ -36,7 +36,7 @@ class FetchMoreListValuesOfParamUseCase
               searchString: currentBatch.searchString,
               pageSize: listValuesPageSize,
               pageNum: currentBatch.pageNum,
-              params: currentBatch.params,
+              fetchParams: currentBatch.fetchParams,
             ),
           ),
         );

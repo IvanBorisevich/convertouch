@@ -15,7 +15,7 @@ class ToggleCalculableParamUseCase
     required ConversionUnitValueModel? srcUnitValue,
     required ToggleCalculableParamDelta delta,
   }) async {
-    return oldConversionParams?.copyWithChangedParamSetByIds(
+    return oldConversionParams?.copyWithChangedParamSetById(
       map: (paramSetValue) async => paramSetValue.copyWithNewCalculatedParam(
         newCalculatedParamId: delta.paramId,
       ),

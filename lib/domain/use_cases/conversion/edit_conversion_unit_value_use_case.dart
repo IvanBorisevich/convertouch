@@ -31,7 +31,7 @@ class EditConversionUnitValueUseCase
     ValueModel? newDefaultValue;
 
     if (newUnit.listType == null) {
-      newDefaultValue = ValueModel.any(delta.newDefaultValue) ??
+      newDefaultValue = delta.newDefaultValue ??
           ObjectUtils.tryGet(
             await calculateDefaultValueUseCase.execute(
               InputDefaultValueCalculationModel(item: newUnit),

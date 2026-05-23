@@ -60,7 +60,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     } else {
       allItems = state.itemsFetch.items;
       pageNum = state.itemsFetch.pageNum;
-      params = state.itemsFetch.params;
+      params = state.itemsFetch.fetchParams;
       searchString = state.itemsFetch.searchString;
       hasReachedMax = state.itemsFetch.hasReachedMax;
       oobIds = state.oobIds;
@@ -77,7 +77,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             searchString: searchString,
             pageSize: event.pageSize,
             pageNum: pageNum,
-            params: params,
+            fetchParams: params,
           ),
         ),
       );
@@ -100,7 +100,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             hasReachedMax: newBatch.hasReachedMax,
             searchString: searchString,
             pageNum: newBatch.pageNum,
-            params: params,
+            fetchParams: params,
           ),
           oobIds: oobIds,
         ),
@@ -119,7 +119,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             hasReachedMax: hasReachedMax,
             searchString: searchString,
             pageNum: pageNum,
-            params: params,
+            fetchParams: params,
           ),
           oobIds: oobIds,
         ),

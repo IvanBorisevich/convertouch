@@ -7,6 +7,7 @@ import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
@@ -93,7 +94,7 @@ class ConversionController {
   void changeConversionItemValue(
     BuildContext context, {
     required int unitId,
-    required String? newValue,
+    required ValueModel? newValue,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionUnitValue(
@@ -147,7 +148,7 @@ class ConversionController {
   void changeParamValue(
     BuildContext context, {
     required ConversionParamValueModel paramValue,
-    required String? newValue,
+    required ValueModel? newValue,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionParamValue(
@@ -274,7 +275,7 @@ class ConversionController {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionUnitValue(
         newValue: null,
-        newDefaultValue: dynamicSrcValue.value,
+        newDefaultValue: ValueModel.any(dynamicSrcValue.value),
         unitId: dynamicSrcValue.unitId,
       ),
     );

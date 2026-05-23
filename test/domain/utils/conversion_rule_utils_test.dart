@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rule.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
@@ -145,7 +146,7 @@ void main() {
           paramValues: [
             ConversionParamValueModel.tuple(personParam, "Man", null),
             ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-            ConversionParamValueModel.tuple(heightParam, 150, 1,
+            ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
                 unit: centimeter),
           ],
         );

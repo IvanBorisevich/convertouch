@@ -173,7 +173,7 @@ enum ConvertouchValueType {
 
 enum ConvertouchListType {
   person(1, preselected: false),
-  garment(2, preselected: false),
+  garment(2),
   clothesSizeInter(3),
   clothesSizeUs(4, listValuesType: ConvertouchValueType.integerNonNegative),
   clothesSizeJp(5),

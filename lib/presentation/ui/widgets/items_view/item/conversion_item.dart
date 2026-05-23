@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
@@ -15,8 +16,8 @@ class ConvertouchConversionItem<M extends InputBoxModel>
     extends StatefulWidget {
   final ConversionItemModel<M> model;
   final void Function()? onUnitItemTap;
-  final void Function(String)? onValueChanged;
-  final void Function(String)? onValueFocused;
+  final void Function(ValueModel)? onValueChanged;
+  final void Function(ValueModel)? onValueFocused;
   final void Function()? onItemRemoved;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;

@@ -156,11 +156,11 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
               placeholder: widget.searchBarPlaceholder,
               pageName: widget.pageName,
               viewModeSettingKey: widget.viewModeSettingKey,
-              onValueChanged: (text) {
+              onValueChanged: (value) {
                 widget.itemsListBloc.add(
                   FetchItems<P>(
-                    searchString: text,
-                    params: state.itemsFetch.params,
+                    searchString: value.raw,
+                    params: state.itemsFetch.fetchParams,
                   ),
                 );
               },

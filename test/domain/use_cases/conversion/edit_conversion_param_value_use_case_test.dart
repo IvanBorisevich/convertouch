@@ -1,14 +1,15 @@
-import 'dart:math';
-
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -22,14 +23,21 @@ void main() {
   late EditConversionParamValueUseCase useCase;
 
   setUpAll(() {
+    const listValueRepository = ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
+
     const calculateDefaultValueUseCase = CalculateDefaultValueUseCase(
       dynamicValueRepository: MockDynamicValueRepository(),
-      listValueRepository: ListValueRepositoryImpl(
-        networkRepository: MockNetworkRepository(),
-      ),
+      listValueRepository: listValueRepository,
     );
 
     useCase = const EditConversionParamValueUseCase(
+      initParamListValuesUseCase: InitParamListValuesUseCase(
+        fetchListValuesUseCase: FetchListValuesUseCase(
+          listValueRepository: listValueRepository,
+        ),
+      ),
       calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
       ),
@@ -37,1525 +45,735 @@ void main() {
     );
   });
 
-  group('Conversion by coefficients', () {
-    group('New list parameter value (barbell bar weight)', () {
-      group('Src value exists | src default value exists', () {
-        test('Source unit value and default value should be recalculated',
-            () async {
-          await testCase(
-            unitGroup: massGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              newValue: "20",
-              newDefaultValue: null,
-              paramId: barWeightParam.id,
-              paramSetId: barbellWeightParamSet.id,
-            ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-            currentSrc: ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
-              ConversionUnitValueModel.tuple(
-                  pound, 1010 / pound.coefficient!, 12 / pound.coefficient!),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
-              ConversionUnitValueModel.tuple(
-                  pound, 1020 / pound.coefficient!, 22 / pound.coefficient!),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 20, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-          );
-        });
-      });
-
-      group('Src value exists | src default value does not exist', () {
-        test('Source unit value and default value should be recalculated',
-            () async {
-          await testCase(
-            unitGroup: massGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              newValue: "20",
-              newDefaultValue: null,
-              paramId: barWeightParam.id,
-              paramSetId: barbellWeightParamSet.id,
-            ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, null),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 70, null),
-              ConversionUnitValueModel.tuple(
-                  pound, 1 / pound.coefficient!, null),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 22),
-              ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 20, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-          );
-        });
-      });
-
-      group('Src value does not exists | src default value exists', () {
-        test('Source unit value and default value should be recalculated',
-            () async {
-          await testCase(
-            unitGroup: massGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              newValue: "20",
-              newDefaultValue: null,
-              paramId: barWeightParam.id,
-              paramSetId: barbellWeightParamSet.id,
-            ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 70, 12),
-              ConversionUnitValueModel.tuple(
-                  pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 22),
-              ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 20, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-          );
-        });
-      });
-
-      group('Src value does not exists | src default value does not exist', () {
-        test('Source unit value and default value should be recalculated',
-            () async {
-          await testCase(
-            unitGroup: massGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              newValue: "20",
-              newDefaultValue: null,
-              paramId: barWeightParam.id,
-              paramSetId: barbellWeightParamSet.id,
-            ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-            currentSrc: ConversionUnitValueModel.tuple(kilogram, null, null),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, null, null),
-              ConversionUnitValueModel.tuple(pound, null, null),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(kilogram, 80, 22),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(kilogram, 80, 22),
-              ConversionUnitValueModel.tuple(
-                  pound, 80 / pound.coefficient!, 22 / pound.coefficient!),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: barbellWeightParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(barWeightParam, 20, null,
-                        unit: kilogram),
-                    ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                        unit: kilogram),
-                  ],
-                ),
-              ],
-              selectedParamSetCanBeRemoved: true,
-              optionalParamSetsExist: true,
-              paramSetsCanBeAdded: false,
-              selectedIndex: 0,
-              totalCount: 1,
-            ),
-          );
-        });
-      });
+  group('By coefficients - mass', () {
+    test("Should calculate by param 'Bar Weight' list value [kg: 10 -> 20]",
+        () async {
+      await testCase(
+        unitGroup: massGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: '20',
+          paramId: barWeightParam.id,
+          paramSetId: barbellWeightParamSet.id,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(barWeightParam, 10, null,
+                unit: kilogram),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
+                unit: kilogram),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
+          ConversionUnitValueModel.tuple(
+              pound, 1010 / pound.coefficient!, 12 / pound.coefficient!),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(barWeightParam, 20, null,
+                unit: kilogram),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
+                unit: kilogram),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+          ConversionUnitValueModel.tuple(
+              pound, 1020 / pound.coefficient!, 22 / pound.coefficient!),
+        ],
+      );
     });
 
-    group('New non-list parameter value (barbell one side weight)', () {
-      group('New param value exists | default value exists', () {
-        group('Src value exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: "1",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
+    test("Should calculate by param 'Bar Weight' list value [lb: 22 -> 44]",
+        () async {
+      await testCase(
+        unitGroup: massGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: 20 / pound.coefficient!,
+          paramId: barWeightParam.id,
+          paramSetId: barbellWeightParamSet.id,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+                barWeightParam, 10 / pound.coefficient!, null,
+                unit: pound),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
+                unit: kilogram),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(ton, 1.01, 0.012),
+          ConversionUnitValueModel.tuple(
+              pound, 1010 / pound.coefficient!, 12 / pound.coefficient!),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+                barWeightParam, 20 / pound.coefficient!, null,
+                unit: pound),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 500, 1,
+                unit: kilogram),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(ton, 1.02, 0.022),
+          ConversionUnitValueModel.tuple(
+              pound, 1020 / pound.coefficient!, 22 / pound.coefficient!),
+        ],
+      );
+    });
 
-        group('Src value exists | src default value does not exist', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: "1",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, null),
-                ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
+    test(
+        "Should calculate by param 'One Size Weight' value "
+        "[bar: 10 kg | kg: 30 -> 40]", () async {
+      await testCase(
+        unitGroup: massGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: '40',
+          newDefaultValue: '1',
+          paramId: oneSideWeightParam.id,
+          paramSetId: barbellWeightParamSet.id,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              barWeightParam,
+              10,
+              null,
+              unit: kilogram,
+            ),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                unit: kilogram),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(kilogram, 70, 12),
+          ConversionUnitValueModel.tuple(
+              pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              barWeightParam,
+              10,
+              null,
+              unit: kilogram,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('10'),
+                ListValueModel.str('20'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                unit: kilogram),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(kilogram, 90, 12),
+          ConversionUnitValueModel.tuple(
+              pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
+        ],
+      );
+    });
 
-        group('Src value does not exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: "2",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 12 / pound.coefficient!),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 14),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 14),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 14 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 2,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value does not exist',
-            () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: "1",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, null),
-                ConversionUnitValueModel.tuple(pound, null, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-      });
-
-      group('New param value exists | default value does not exist', () {
-        group('Src value exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, 1),
-                ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, 1),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value exists | src default value does not exist', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 1, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 1, null),
-                ConversionUnitValueModel.tuple(
-                    pound, 1 / pound.coefficient!, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 1),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 1),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 1 / pound.coefficient!),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value does not exist',
-            () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: "40",
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, null),
-                ConversionUnitValueModel.tuple(pound, null, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, 90, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 90, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, 90 / pound.coefficient!, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-      });
-
-      group('New param value is empty | default value is not empty', () {
-        group('Src value is not empty | default value is not empty', () {
-          test(
-              'Src value should be empty | default value should be '
-              'recalculated', () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: "1",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(
-                        barWeightParam,
-                        20,
-                        null,
-                        unit: kilogram,
-                      ),
-                      ConversionParamValueModel.tuple(
-                        oneSideWeightParam,
-                        30,
-                        1,
-                        unit: kilogram,
-                      ),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(ton, 0.08, 0.022),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(ton, 0.08, 0.022),
-                ConversionUnitValueModel.tuple(
-                  pound,
-                  80 / pound.coefficient!,
-                  22 / pound.coefficient!,
-                ),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(ton, null, 0.022),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(ton, null, 0.022),
-                ConversionUnitValueModel.tuple(
-                  pound,
-                  null,
-                  22 / pound.coefficient!,
-                ),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(
-                        barWeightParam,
-                        20,
-                        null,
-                        unit: kilogram,
-                      ),
-                      ConversionParamValueModel.tuple(
-                        oneSideWeightParam,
-                        null,
-                        1,
-                        unit: kilogram,
-                      ),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value exists | src default value does not exist', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: "40",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 1, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 1, null),
-                ConversionUnitValueModel.tuple(
-                    pound, 1 / pound.coefficient!, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 90),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 90 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 40,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value exists', () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: "40",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 1),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 1),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 1 / pound.coefficient!),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 90),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 90 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 40,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value does not exist',
-            () {
-          test('Source unit value and default value should be recalculated',
-              () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: "40",
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, null),
-                ConversionUnitValueModel.tuple(pound, null, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 90),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 90),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 90 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 40,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-      });
-
-      group('New param value does not exist | default value does not exist',
-          () {
-        group('Src value exists | src default value exists', () {
-          test(
-              'Source unit value and default value should be recalculated '
-              'by param default value of the unit type', () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 70, 1),
-                ConversionUnitValueModel.tuple(
-                    pound, 70 / pound.coefficient!, 1),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value exists | src default value does not exist', () {
-          test(
-              'Source unit value and default value should be recalculated '
-              'by param default value of the unit type', () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, 1, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, 1, null),
-                ConversionUnitValueModel.tuple(
-                    pound, 1 / pound.coefficient!, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value exists', () {
-          test(
-              'Source unit value and default value should be recalculated '
-              'by param default value of the unit type', () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, 1),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 1),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 1 / pound.coefficient!),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-
-        group('Src value does not exists | src default value does not exist',
-            () {
-          test(
-              'Source unit value and default value should be recalculated '
-              'by param default value of the unit type', () async {
-            await testCase(
-              unitGroup: massGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                newValue: null,
-                newDefaultValue: null,
-                paramId: oneSideWeightParam.id,
-                paramSetId: barbellWeightParamSet.id,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(kilogram, null, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, null),
-                ConversionUnitValueModel.tuple(pound, null, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(kilogram, null, 12),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(kilogram, null, 12),
-                ConversionUnitValueModel.tuple(
-                    pound, null, 12 / pound.coefficient!),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: barbellWeightParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(barWeightParam, 10, null,
-                          unit: kilogram),
-                      ConversionParamValueModel.tuple(
-                          oneSideWeightParam, null, 1,
-                          unit: kilogram),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 0,
-                totalCount: 1,
-              ),
-            );
-          });
-        });
-      });
+    test(
+        "Should calculate by param 'One Size Weight' value "
+        "[bar: 22 lb. | kg: 30 -> 40]", () async {
+      await testCase(
+        unitGroup: massGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: '40',
+          newDefaultValue: '1',
+          paramId: oneSideWeightParam.id,
+          paramSetId: barbellWeightParamSet.id,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(barWeightParam, 22, null,
+                unit: pound),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 30, 1,
+                unit: kilogram),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(kilogram, 70, 12),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(kilogram, 70, 12),
+          ConversionUnitValueModel.tuple(
+              pound, 70 / pound.coefficient!, 12 / pound.coefficient!),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: barbellWeightParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              barWeightParam,
+              22,
+              null,
+              unit: pound,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('22'),
+                ListValueModel.str('44'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(oneSideWeightParam, 40, 1,
+                unit: kilogram),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(
+          kilogram,
+          22 * pound.coefficient! + 40 * 2,
+          22 * pound.coefficient! + 1 * 2,
+        ),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(
+            kilogram,
+            22 * pound.coefficient! + 40 * 2,
+            22 * pound.coefficient! + 1 * 2,
+          ),
+          ConversionUnitValueModel.tuple(
+              pound, 22 + 80 / pound.coefficient!, 22 + 2 / pound.coefficient!),
+        ],
+      );
     });
   });
 
-  group('Conversion by formula (mapping table)', () {
-    var currentUnitValues = [
-      ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-      ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-    ];
-
-    group('Change non-list parameter value (circumference of ring)', () {
-      group(
-          'New param value is not empty, '
-          'new src value will be recalculated as null by mapping table', () {
-        test('Source unit value and other values should be recalculated',
-            () async {
-          await testCase(
-            unitGroup: ringSizeGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              paramId: circumferenceParam.id,
-              paramSetId: circumferenceParam.paramSetId,
-              newValue: "450",
-              newDefaultValue: null,
+  group('By formula - clothes size', () {
+    test(
+        "Should calculate by param 'Person' list value [Man -> Woman], "
+        "should change param 'Garment' list value [empty -> default Shirt], "
+        "should change param 'Height' list value [cm: empty -> default ..-156]",
+        () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: "Woman",
+          paramId: personParam.id,
+          paramSetId: personParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, null, null),
+            ConversionParamValueModel.tuple(heightParam, null, null,
+                unit: centimeter),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, null, null),
+          ConversionUnitValueModel.tuple(spainClothSize, null, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Woman", null),
+            ConversionParamValueModel.tuple(
+              garmentParam,
+              "Shirt",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Shirt'),
+                ListValueModel.str('Trousers'),
+              ], pageNum: 1, hasReachedMax: true),
             ),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: ringSizeByCircumferenceParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(
-                      circumferenceParam,
-                      14.5 * pi,
-                      1,
-                      unit: millimeter,
-                      calculated: true,
-                    ),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(0, 156),
+              null,
+              unit: centimeter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 156)),
+                ListValueModel.range(const NumRange.withRight(156, 162)),
+                ListValueModel.range(const NumRange.withRight(162, 168)),
+                ListValueModel.range(const NumRange.withRight(168, 174)),
+                ListValueModel.range(const NumRange.withRight(174, 180)),
+                ListValueModel.range(const NumRange.withRight(180, 186)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(186, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
             ),
-            currentSrc: ConversionUnitValueModel.tuple(deRingSize, 44, null),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(esRingSize, 4, null),
-              ConversionUnitValueModel.tuple(deRingSize, 44, null),
-            ],
-            expectedSrc: ConversionUnitValueModel.tuple(deRingSize, null, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(esRingSize, 35, null),
-              ConversionUnitValueModel.tuple(deRingSize, null, null),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: ringSizeByCircumferenceParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(
-                      circumferenceParam,
-                      450,
-                      1,
-                      unit: millimeter,
-                      calculated: true,
-                    ),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
-            ),
-          );
-        });
-      });
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 34, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 38, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 34, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 32, null),
+        ],
+      );
     });
 
-    group('Change list parameter value (garment)', () {
-      group('New param value is empty', () {
-        test(
-            'Source unit value should stay as is, '
-            'other unit values should be recalculated to empty', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: EditConversionParamValueDelta(
-              paramId: garmentParam.id,
-              paramSetId: garmentParam.paramSetId,
-              newValue: null,
-              newDefaultValue: null,
+    test(
+        "Should calculate by param 'Person' list value [Man -> Woman], "
+        "should change param 'Garment' list value [empty -> default Shirt], "
+        "should change param 'Height' list value [m: empty -> default ..-1.56]",
+        () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: "Woman",
+          paramId: personParam.id,
+          paramSetId: personParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, null, null),
+            ConversionParamValueModel.tuple(heightParam, null, null,
+                unit: meter),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, null, null),
+          ConversionUnitValueModel.tuple(spainClothSize, null, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Woman", null),
+            ConversionParamValueModel.tuple(
+              garmentParam,
+              "Shirt",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Shirt'),
+                ListValueModel.str('Trousers'),
+              ], pageNum: 1, hasReachedMax: true),
             ),
-            currentSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, 32, null),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(
-                        garmentParam, "Shirt", null),
-                    ConversionParamValueModel.tuple(
-                        heightParam, const NumRange.withRight(0, 164), null,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(0, 1.56),
+              null,
+              unit: meter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 1.56)),
+                ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
+                ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
+                ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
+                ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
+                ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(1.86, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
             ),
-            currentUnitValues: currentUnitValues,
-            expectedSrc:
-                ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(europeanClothSize, null, null),
-              ConversionUnitValueModel.tuple(japanClothSize, null, null),
-            ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, "Man", null),
-                    ConversionParamValueModel.tuple(garmentParam, null, null),
-                    ConversionParamValueModel.tuple(
-                        heightParam, const NumRange.withRight(0, 164), null,
-                        unit: centimeter),
-                  ],
-                )
-              ],
-              selectedIndex: 0,
-            ),
-          );
-        });
-      });
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 34, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 38, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 34, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 32, null),
+        ],
+      );
+    });
 
-      group('New param value is not empty', () {
-        test(
-          'Source unit value and other unit values should be recalculated',
-          () async {
-            await testCase(
-              unitGroup: clothesSizeGroup,
-              useCase: useCase,
-              delta: EditConversionParamValueDelta(
-                paramId: garmentParam.id,
-                paramSetId: garmentParam.paramSetId,
-                newValue: "Trousers",
-                newDefaultValue: null,
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: clothesSizeParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(personParam, "Man", null),
-                      ConversionParamValueModel.tuple(
-                          garmentParam, "Shirt", null),
-                      ConversionParamValueModel.tuple(
-                          heightParam, const NumRange.withRight(174, 180), null,
-                          unit: centimeter),
-                    ],
-                  )
-                ],
-                selectedIndex: 0,
-              ),
-              currentSrc:
-                  ConversionUnitValueModel.tuple(spainClothSize, 40, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(italianClothSize, 48, null),
-                ConversionUnitValueModel.tuple(spainClothSize, 40, null),
-                ConversionUnitValueModel.tuple(germanyClothSize, 46, null),
-              ],
-              expectedSrc:
-                  ConversionUnitValueModel.tuple(spainClothSize, 42, null),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(italianClothSize, 50, null),
-                ConversionUnitValueModel.tuple(spainClothSize, 42, null),
-                ConversionUnitValueModel.tuple(germanyClothSize, 50, null),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: clothesSizeParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(personParam, "Man", null),
-                      ConversionParamValueModel.tuple(
-                          garmentParam, "Trousers", null),
-                      ConversionParamValueModel.tuple(
-                          heightParam, const NumRange.withRight(174, 180), null,
-                          unit: centimeter),
-                    ],
-                  )
-                ],
-                selectedIndex: 0,
-              ),
-            );
-          },
-        );
-      });
+    test(
+        "Should calculate by param 'Person' list value [Man -> Woman]"
+        "should not change param 'Garment' list value, "
+        "should not change param 'Height' list value", () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: "Woman",
+          paramId: personParam.id,
+          paramSetId: personParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+                heightParam, const NumRange.withRight(174, 180), null,
+                unit: centimeter),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 48, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 46, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Woman", null),
+            ConversionParamValueModel.tuple(
+              garmentParam,
+              "Shirt",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Shirt'),
+                ListValueModel.str('Trousers'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(174, 180),
+              null,
+              unit: centimeter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 156)),
+                ListValueModel.range(const NumRange.withRight(156, 162)),
+                ListValueModel.range(const NumRange.withRight(162, 168)),
+                ListValueModel.range(const NumRange.withRight(168, 174)),
+                ListValueModel.range(const NumRange.withRight(174, 180)),
+                ListValueModel.range(const NumRange.withRight(180, 186)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(186, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 46, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 40, null),
+        ],
+      );
+    });
+
+    test(
+        "Should calculate by param 'Garment' list value [Shirt -> Trousers], "
+        "should not change param 'Person' list value"
+        "should not change param 'Height' (cm) list value event if it does not"
+        " exists in the updated list", () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: "Trousers",
+          paramId: garmentParam.id,
+          paramSetId: garmentParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+                heightParam, const NumRange.withRight(174, 180), null,
+                unit: centimeter),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 48, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 46, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              personParam,
+              "Man",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Man'),
+                ListValueModel.str('Woman'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(174, 180),
+              null,
+              unit: centimeter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 164)),
+                ListValueModel.range(const NumRange.withRight(164, 170)),
+                ListValueModel.range(const NumRange.withRight(170, 176)),
+                ListValueModel.range(const NumRange.withRight(176, 182)),
+                ListValueModel.range(const NumRange.withRight(180, 186)),
+                ListValueModel.range(const NumRange.withRight(184, 190)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(188, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, null, null),
+          ConversionUnitValueModel.tuple(spainClothSize, null, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ],
+      );
+    });
+
+    test(
+        "Should calculate by param 'Garment' list value [Shirt -> Trousers], "
+        "should not change param 'Person' list value"
+        "should not change param 'Height' (m) list value event if it does not"
+        " exists in the updated list", () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: "Trousers",
+          paramId: garmentParam.id,
+          paramSetId: garmentParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+                heightParam, const NumRange.withRight(1.74, 1.8), null,
+                unit: meter),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 48, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 40, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 46, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              personParam,
+              "Man",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Man'),
+                ListValueModel.str('Woman'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(1.74, 1.8),
+              null,
+              unit: meter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 1.64)),
+                ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
+                ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
+                ListValueModel.range(const NumRange.withRight(1.76, 1.82)),
+                ListValueModel.range(const NumRange.withRight(1.8, 1.86)),
+                ListValueModel.range(const NumRange.withRight(1.84, 1.9)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(1.88, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, null, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, null, null),
+          ConversionUnitValueModel.tuple(spainClothSize, null, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ],
+      );
+    });
+
+    test(
+        "Should calculate by param 'Height' list value [cm: 164-170 -> 178-184]",
+        () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: const NumRange.withRight(178, 184),
+          paramId: heightParam.id,
+          paramSetId: heightParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(164, 170),
+              null,
+              unit: centimeter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 164)),
+                ListValueModel.range(const NumRange.withRight(164, 170)),
+                ListValueModel.range(const NumRange.withRight(170, 176)),
+                ListValueModel.range(const NumRange.withRight(174, 180)),
+                ListValueModel.range(const NumRange.withRight(178, 184)),
+                ListValueModel.range(const NumRange.withRight(182, 188)),
+                ListValueModel.range(const NumRange.withRight(186, 192)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(190, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 42, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              personParam,
+              "Man",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Man'),
+                ListValueModel.str('Woman'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(
+              garmentParam,
+              "Shirt",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Shirt'),
+                ListValueModel.str('Trousers'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(178, 184),
+              null,
+              unit: centimeter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 164)),
+                ListValueModel.range(const NumRange.withRight(164, 170)),
+                ListValueModel.range(const NumRange.withRight(170, 176)),
+                ListValueModel.range(const NumRange.withRight(174, 180)),
+                ListValueModel.range(const NumRange.withRight(178, 184)),
+                ListValueModel.range(const NumRange.withRight(182, 188)),
+                ListValueModel.range(const NumRange.withRight(186, 192)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(190, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 50, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 48, null),
+        ],
+      );
+    });
+
+    test(
+        "Should calculate by param 'Height' list value [m: 1.64-1.7 -> 1.78-1.84]",
+        () async {
+      await testCase(
+        unitGroup: clothesSizeGroup,
+        useCase: useCase,
+        delta: EditConversionParamValueDelta.raw(
+          newValue: const NumRange.withRight(1.78, 1.84),
+          paramId: heightParam.id,
+          paramSetId: heightParam.paramSetId,
+        ),
+        currentParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(1.64, 1.7),
+              null,
+              unit: meter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 1.64)),
+                ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
+                ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
+                ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
+                ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
+                ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
+                ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(1.9, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        currentSrc: ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+        currentUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 36, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 42, null),
+        ],
+        expectedParams: ConversionParamSetValueBulkModel.single(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(
+              personParam,
+              "Man",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Man'),
+                ListValueModel.str('Woman'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(
+              garmentParam,
+              "Shirt",
+              null,
+              listValues: const OutputItemsFetchModel(items: [
+                ListValueModel.str('Shirt'),
+                ListValueModel.str('Trousers'),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(1.78, 1.84),
+              null,
+              unit: meter,
+              listValues: OutputItemsFetchModel(items: [
+                ListValueModel.range(const NumRange.withRight(0, 1.64)),
+                ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
+                ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
+                ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
+                ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
+                ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
+                ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
+                ListValueModel.range(
+                    const NumRange.withoutBoth(1.9, double.infinity)),
+              ], pageNum: 1, hasReachedMax: true),
+            ),
+          ],
+        ),
+        expectedSrc: ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+        expectedUnitValues: [
+          ConversionUnitValueModel.tuple(italianClothSize, 50, null),
+          ConversionUnitValueModel.tuple(spainClothSize, 42, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, 48, null),
+        ],
+      );
     });
   });
 }

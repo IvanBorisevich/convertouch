@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
@@ -29,7 +30,7 @@ class ConversionParamsView extends StatelessWidget {
   final void Function(int)? onParamSetSelect;
   final void Function()? onSelectedParamSetRemove;
   final void Function(ConversionParamValueModel)? onParamUnitTap;
-  final void Function(ConversionParamValueModel, String?)? onValueChanged;
+  final void Function(ConversionParamValueModel, ValueModel?)? onValueChanged;
   final ParamSetPanelColorScheme colors;
 
   const ConversionParamsView({

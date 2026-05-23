@@ -2,6 +2,7 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
@@ -72,7 +73,10 @@ class UnitDetailsController {
     );
   }
 
-  void updateUnitName(BuildContext context, {required String newValue}) {
+  void updateUnitName(
+    BuildContext context, {
+    required ValueModel newValue,
+  }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitNameInUnitDetails(
         newValue: newValue,
@@ -83,7 +87,10 @@ class UnitDetailsController {
     );
   }
 
-  void updateUnitCode(BuildContext context, {required String newValue}) {
+  void updateUnitCode(
+    BuildContext context, {
+    required ValueModel newValue,
+  }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitCodeInUnitDetails(
         newValue: newValue,
@@ -94,7 +101,10 @@ class UnitDetailsController {
     );
   }
 
-  void updateUnitValue(BuildContext context, {required String newValue}) {
+  void updateUnitValue(
+    BuildContext context, {
+    required ValueModel newValue,
+  }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitValueInUnitDetails(
         newValue: newValue,
@@ -105,7 +115,10 @@ class UnitDetailsController {
     );
   }
 
-  void updateArgUnitValue(BuildContext context, {required String newValue}) {
+  void updateArgUnitValue(
+    BuildContext context, {
+    required ValueModel newValue,
+  }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateArgumentUnitValueInUnitDetails(
         newValue: newValue,

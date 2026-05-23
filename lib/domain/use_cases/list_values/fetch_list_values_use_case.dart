@@ -18,7 +18,7 @@ class FetchListValuesUseCase
   Future<List<ListValueModel>> fetchItemsPage(
     InputItemsFetchModel<ListValuesFetchParams> input,
   ) async {
-    ListValuesFetchParams? params = input.params;
+    ListValuesFetchParams? params = input.fetchParams;
 
     if (params == null) {
       return [];

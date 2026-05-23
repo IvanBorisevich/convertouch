@@ -15,7 +15,7 @@ class FetchUnitsUseCase
   Future<List<UnitModel>> fetchItemsPage(
     InputItemsFetchModel<UnitsFetchParams> input,
   ) async {
-    UnitsFetchParams? params = input.params;
+    UnitsFetchParams? params = input.fetchParams;
 
     if (params == null) {
       return [];

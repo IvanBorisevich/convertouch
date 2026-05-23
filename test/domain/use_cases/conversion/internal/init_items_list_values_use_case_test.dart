@@ -8,6 +8,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -30,11 +31,18 @@ void main() {
       const Right([]),
     );
 
+    final fetchListValuesUseCase = FetchListValuesUseCase(
+      listValueRepository: ListValueRepositoryImpl(
+        networkRepository: mockitoNetworkRepository,
+      ),
+    );
+
     useCase = InitItemsListValuesUseCase(
-      fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: ListValueRepositoryImpl(
-          networkRepository: mockitoNetworkRepository,
-        ),
+      initUnitListValuesUseCase: InitUnitListValuesUseCase(
+        fetchListValuesUseCase: fetchListValuesUseCase,
+      ),
+      initParamListValuesUseCase: InitParamListValuesUseCase(
+        fetchListValuesUseCase: fetchListValuesUseCase,
       ),
     );
   });
@@ -89,10 +97,10 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.raw("Man"),
-                      ListValueModel.raw("Woman"),
+                      ListValueModel.str("Man"),
+                      ListValueModel.str("Woman"),
                     ],
-                    params: ListValuesFetchParams(
+                    fetchParams: ListValuesFetchParams(
                       listType: ConvertouchListType.person,
                     ),
                     hasReachedMax: true,
@@ -105,7 +113,7 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [],
-                    params: ListValuesFetchParams(
+                    fetchParams: ListValuesFetchParams(
                       listType: ConvertouchListType.garment,
                     ),
                     hasReachedMax: true,
@@ -113,8 +121,19 @@ void main() {
                   ),
                 ),
                 ConversionParamValueModel.tuple(
-                    heightParam, const NumRange.withRight(174, 180), null,
-                    unit: meter),
+                  heightParam,
+                  const NumRange.withRight(174, 180),
+                  null,
+                  unit: meter,
+                  listValues: const OutputListValuesBatch(
+                    items: [],
+                    fetchParams: ListValuesFetchParams(
+                      listType: ConvertouchListType.clothesHeightRange,
+                    ),
+                    hasReachedMax: true,
+                    pageNum: 0,
+                  ),
+                ),
               ],
             )
           ],
@@ -129,14 +148,14 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.raw('S'),
-                ListValueModel.raw('M'),
-                ListValueModel.raw('L'),
-                ListValueModel.raw('LL'),
-                ListValueModel.raw('3L'),
-                ListValueModel.raw('4L'),
-                ListValueModel.raw('5L'),
-                ListValueModel.raw('6L'),
+                ListValueModel.str('S'),
+                ListValueModel.str('M'),
+                ListValueModel.str('L'),
+                ListValueModel.str('LL'),
+                ListValueModel.str('3L'),
+                ListValueModel.str('4L'),
+                ListValueModel.str('5L'),
+                ListValueModel.str('6L'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -148,19 +167,19 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.raw('32'),
-                ListValueModel.raw('34'),
-                ListValueModel.raw('36'),
-                ListValueModel.raw('38'),
-                ListValueModel.raw('40'),
-                ListValueModel.raw('42'),
-                ListValueModel.raw('44'),
-                ListValueModel.raw('46'),
-                ListValueModel.raw('48'),
-                ListValueModel.raw('50'),
-                ListValueModel.raw('52'),
-                ListValueModel.raw('54'),
-                ListValueModel.raw('56'),
+                ListValueModel.str('32'),
+                ListValueModel.str('34'),
+                ListValueModel.str('36'),
+                ListValueModel.str('38'),
+                ListValueModel.str('40'),
+                ListValueModel.str('42'),
+                ListValueModel.str('44'),
+                ListValueModel.str('46'),
+                ListValueModel.str('48'),
+                ListValueModel.str('50'),
+                ListValueModel.str('52'),
+                ListValueModel.str('54'),
+                ListValueModel.str('56'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -221,10 +240,10 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.raw("Man"),
-                      ListValueModel.raw("Woman"),
+                      ListValueModel.str("Man"),
+                      ListValueModel.str("Woman"),
                     ],
-                    params: ListValuesFetchParams(
+                    fetchParams: ListValuesFetchParams(
                       listType: ConvertouchListType.person,
                     ),
                     hasReachedMax: true,
@@ -237,10 +256,10 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.raw("Shirt"),
-                      ListValueModel.raw("Trousers"),
+                      ListValueModel.str("Shirt"),
+                      ListValueModel.str("Trousers"),
                     ],
-                    params: ListValuesFetchParams(
+                    fetchParams: ListValuesFetchParams(
                       listType: ConvertouchListType.garment,
                     ),
                     hasReachedMax: true,
@@ -248,8 +267,19 @@ void main() {
                   ),
                 ),
                 ConversionParamValueModel.tuple(
-                    heightParam, const NumRange.withRight(174, 180), null,
-                    unit: meter),
+                  heightParam,
+                  const NumRange.withRight(174, 180),
+                  null,
+                  unit: meter,
+                  listValues: const OutputListValuesBatch(
+                    items: [],
+                    fetchParams: ListValuesFetchParams(
+                      listType: ConvertouchListType.clothesHeightRange,
+                    ),
+                    hasReachedMax: true,
+                    pageNum: 0,
+                  ),
+                ),
               ],
             )
           ],
@@ -264,14 +294,14 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.raw('S'),
-                ListValueModel.raw('M'),
-                ListValueModel.raw('L'),
-                ListValueModel.raw('LL'),
-                ListValueModel.raw('3L'),
-                ListValueModel.raw('4L'),
-                ListValueModel.raw('5L'),
-                ListValueModel.raw('6L'),
+                ListValueModel.str('S'),
+                ListValueModel.str('M'),
+                ListValueModel.str('L'),
+                ListValueModel.str('LL'),
+                ListValueModel.str('3L'),
+                ListValueModel.str('4L'),
+                ListValueModel.str('5L'),
+                ListValueModel.str('6L'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -283,19 +313,19 @@ void main() {
             null,
             listValues: const OutputListValuesBatch(
               items: [
-                ListValueModel.raw('32'),
-                ListValueModel.raw('34'),
-                ListValueModel.raw('36'),
-                ListValueModel.raw('38'),
-                ListValueModel.raw('40'),
-                ListValueModel.raw('42'),
-                ListValueModel.raw('44'),
-                ListValueModel.raw('46'),
-                ListValueModel.raw('48'),
-                ListValueModel.raw('50'),
-                ListValueModel.raw('52'),
-                ListValueModel.raw('54'),
-                ListValueModel.raw('56'),
+                ListValueModel.str('32'),
+                ListValueModel.str('34'),
+                ListValueModel.str('36'),
+                ListValueModel.str('38'),
+                ListValueModel.str('40'),
+                ListValueModel.str('42'),
+                ListValueModel.str('44'),
+                ListValueModel.str('46'),
+                ListValueModel.str('48'),
+                ListValueModel.str('50'),
+                ListValueModel.str('52'),
+                ListValueModel.str('54'),
+                ListValueModel.str('56'),
               ],
               hasReachedMax: true,
               pageNum: 1,
@@ -347,7 +377,7 @@ void main() {
       ),
     ).thenAnswer(
       (_) async => const Right([
-        ListValueModel.raw('FloatRates'),
+        ListValueModel.str('FloatRates'),
       ]),
     );
 
@@ -382,7 +412,7 @@ void main() {
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [
-                      ListValueModel.raw('FloatRates'),
+                      ListValueModel.str('FloatRates'),
                     ],
                     hasReachedMax: true,
                     pageNum: 1,

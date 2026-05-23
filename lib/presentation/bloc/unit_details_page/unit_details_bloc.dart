@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_unit_details_build_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
@@ -110,7 +109,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       draftUnit: inputParam.draftUnitData.copyWith(
-        name: event.newValue,
+        name: event.newValue.raw,
       ),
     );
 
@@ -124,7 +123,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       draftUnit: inputParam.draftUnitData.copyWith(
-        code: event.newValue,
+        code: event.newValue.raw,
       ),
     );
 
@@ -138,7 +137,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       conversionRule: inputParam.conversionRule.copyWith(
-        unitValue: ValueModel.str(event.newValue),
+        unitValue: event.newValue,
       ),
     );
     await _handleInputParamAndEmit(inputParam, emit, onError: event.onError);
@@ -151,7 +150,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       conversionRule: inputParam.conversionRule.copyWith(
-        draftArgValue: ValueModel.str(event.newValue),
+        draftArgValue: event.newValue,
       ),
     );
 

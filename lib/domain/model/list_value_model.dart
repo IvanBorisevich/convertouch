@@ -21,7 +21,7 @@ class ListValueModel extends IdNameSearchableItemModel {
           oob: true,
         );
 
-  const ListValueModel.raw(String value)
+  const ListValueModel.str(String value)
       : this(
           value: value,
           alt: value,
@@ -39,6 +39,15 @@ class ListValueModel extends IdNameSearchableItemModel {
     return ListValueModel(
       value: range.rangeName,
       alt: range.rangeName,
+      range: range,
+    );
+  }
+
+  ValueModel get valueModel {
+    return ValueModel(
+      raw: value,
+      alt: alt,
+      numVal: double.tryParse(value),
       range: range,
     );
   }

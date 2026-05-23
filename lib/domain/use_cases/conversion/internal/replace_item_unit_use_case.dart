@@ -167,6 +167,7 @@ class ReplaceUnitInParamUseCase extends ReplaceItemUnitUseCase<
       value: newValue ?? (newListType != null ? newDefaultValue : null),
       defaultValue: newListType != null ? null : newDefaultValue,
       calculated: item.calculated,
+      listValues: item.listValues,
     );
   }
 

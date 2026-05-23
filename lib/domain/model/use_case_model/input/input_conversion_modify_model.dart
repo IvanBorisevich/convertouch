@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
@@ -67,8 +68,8 @@ class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
 }
 
 class EditConversionUnitValueDelta extends ConversionUnitValuesModifyDelta {
-  final String? newValue;
-  final String? newDefaultValue;
+  final ValueModel? newValue;
+  final ValueModel? newDefaultValue;
   final int unitId;
 
   const EditConversionUnitValueDelta({
@@ -76,6 +77,18 @@ class EditConversionUnitValueDelta extends ConversionUnitValuesModifyDelta {
     required this.newDefaultValue,
     required this.unitId,
   });
+
+  factory EditConversionUnitValueDelta.raw({
+    dynamic newValue,
+    dynamic newDefaultValue,
+    required int unitId,
+  }) {
+    return EditConversionUnitValueDelta(
+      newValue: ValueModel.any(newValue),
+      newDefaultValue: ValueModel.any(newDefaultValue),
+      unitId: unitId,
+    );
+  }
 }
 
 class UpdateConversionCoefficientsDelta
@@ -131,8 +144,8 @@ class SelectParamSetDelta extends ConversionParamsModifyDelta {
 }
 
 class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
-  final String? newValue;
-  final String? newDefaultValue;
+  final ValueModel? newValue;
+  final ValueModel? newDefaultValue;
 
   const EditConversionParamValueDelta({
     required this.newValue,
@@ -140,6 +153,20 @@ class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
     required super.paramId,
     required super.paramSetId,
   });
+
+  factory EditConversionParamValueDelta.raw({
+    dynamic newValue,
+    dynamic newDefaultValue,
+    required int paramId,
+    required int paramSetId,
+  }) {
+    return EditConversionParamValueDelta(
+      newValue: ValueModel.any(newValue),
+      newDefaultValue: ValueModel.any(newDefaultValue),
+      paramId: paramId,
+      paramSetId: paramSetId,
+    );
+  }
 }
 
 class ReplaceConversionParamUnitDelta extends ConversionSingleParamModifyDelta {

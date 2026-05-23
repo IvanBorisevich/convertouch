@@ -180,6 +180,7 @@ class ConversionBloc
           conversion: emptyConversion,
         ),
       );
+
       await _handleAndEmit(result, emit, onError: event.onError);
     }
   }
@@ -283,6 +284,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -340,6 +342,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -353,6 +356,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -368,6 +372,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -386,6 +391,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -425,6 +431,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
@@ -440,6 +447,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(
       result,
       emit,
@@ -460,6 +468,7 @@ class ConversionBloc
         conversion: state.conversion,
       ),
     );
+
     await _handleAndEmit(
       result,
       emit,

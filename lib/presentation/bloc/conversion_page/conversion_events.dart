@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
@@ -130,8 +131,8 @@ class EditConversionUnit extends ModifyConversion {
 }
 
 class EditConversionUnitValue extends ModifyConversion {
-  final String? newValue;
-  final String? newDefaultValue;
+  final ValueModel? newValue;
+  final ValueModel? newDefaultValue;
   final int unitId;
 
   const EditConversionUnitValue({
@@ -288,8 +289,8 @@ class SelectParamSetInConversion extends ModifyConversion {
 }
 
 class EditConversionParamValue extends ModifyConversion {
-  final String? newValue;
-  final String? newDefaultValue;
+  final ValueModel? newValue;
+  final ValueModel? newDefaultValue;
   final int paramId;
   final int paramSetId;
 

@@ -28,15 +28,15 @@ import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
-import 'package:convertouch/domain/use_cases/common/select_list_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
@@ -373,6 +373,7 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<EditConversionParamValueUseCase>(
     () => EditConversionParamValueUseCase(
+      initParamListValuesUseCase: locator(),
       calculateDefaultValueUseCase: locator(),
       calculateSourceItemByParamsUseCase: locator(),
     ),
@@ -389,9 +390,22 @@ Future<void> _initUseCases() async {
     () => const ToggleCalculableParamUseCase(),
   );
 
+  locator.registerLazySingleton<InitUnitListValuesUseCase>(
+    () => InitUnitListValuesUseCase(
+      fetchListValuesUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<InitParamListValuesUseCase>(
+    () => InitParamListValuesUseCase(
+      fetchListValuesUseCase: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<InitItemsListValuesUseCase>(
     () => InitItemsListValuesUseCase(
-      fetchListValuesUseCase: locator(),
+      initUnitListValuesUseCase: locator(),
+      initParamListValuesUseCase: locator(),
     ),
   );
 
@@ -429,12 +443,6 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<FetchListValuesUseCase>(
     () => FetchListValuesUseCase(
-      listValueRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<SelectListValueUseCase>(
-    () => SelectListValueUseCase(
       listValueRepository: locator(),
     ),
   );

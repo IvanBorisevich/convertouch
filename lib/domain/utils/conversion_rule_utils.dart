@@ -179,6 +179,7 @@ ConversionParamValueModel calculateParamValueBySrcValue({
     calculated: paramValue.calculated,
     value: value,
     defaultValue: defaultValue,
+    listValues: paramValue.listValues,
   );
 }
 

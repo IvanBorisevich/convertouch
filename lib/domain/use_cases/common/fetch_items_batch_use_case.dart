@@ -17,7 +17,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     String? searchString = input.searchString;
     int pageSize = input.pageSize;
     int pageNum = input.pageNum;
-    P? params = input.params;
+    P? params = input.fetchParams;
 
     final newPageItems = await fetchItemsPage(input);
 
@@ -40,7 +40,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
         searchString: searchString,
         pageNum: pageNum,
         hasReachedMax: hasReachedMax,
-        params: params,
+        fetchParams: params,
       ),
     );
   }

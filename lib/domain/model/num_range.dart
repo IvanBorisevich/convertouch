@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class NumRange extends Equatable {
@@ -81,12 +82,18 @@ class NumRange extends Equatable {
                 (includeRight || !includeRight && !another.includeRight));
   }
 
-  NumRange copyWithFactor(num factor) {
+  NumRange copyWithFactor(num factor, {int fractionDigitsMaxNum = 2}) {
     assert(factor > 0, 'Factor must be positive');
 
     return NumRange._(
-      left * factor,
-      right * factor,
+      DoubleValueUtils.trimTrailingZeros(
+        left * factor,
+        fractionDigitsMaxNum: fractionDigitsMaxNum,
+      ),
+      DoubleValueUtils.trimTrailingZeros(
+        right * factor,
+        fractionDigitsMaxNum: fractionDigitsMaxNum,
+      ),
       includeLeft: includeLeft,
       includeRight: includeRight,
     );

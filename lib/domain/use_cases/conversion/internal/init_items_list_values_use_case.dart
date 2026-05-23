@@ -1,19 +1,20 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
-import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_param_list_values_init_model.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class InitItemsListValuesUseCase
     extends UseCase<ConversionModel, ConversionModel> {
-  final FetchListValuesUseCase fetchListValuesUseCase;
+  final InitUnitListValuesUseCase initUnitListValuesUseCase;
+  final InitParamListValuesUseCase initParamListValuesUseCase;
 
   const InitItemsListValuesUseCase({
-    required this.fetchListValuesUseCase,
+    required this.initUnitListValuesUseCase,
+    required this.initParamListValuesUseCase,
   });
 
   @override
@@ -24,8 +25,24 @@ class InitItemsListValuesUseCase
       List<ConversionUnitValueModel> enrichedUnitValues =
           await _enrichUnitValues(input.convertedUnitValues);
 
-      ConversionParamSetValueBulkModel? enrichedParamValues =
-          await _enrichParamValues(input.params);
+      final enrichedParamValues = await input.params?.copyWithChangedParams(
+        paramFilter: (p) {
+          return p.listType != null &&
+              (p.listValues == null || p.listValues!.items.isEmpty);
+        },
+        map: (paramValue, paramSetValue) async {
+          return ObjectUtils.tryGet(
+            await initParamListValuesUseCase.execute(
+              InputParamListValuesInitModel(
+                paramValue: paramValue,
+                paramSetValue: paramSetValue,
+              ),
+            ),
+          );
+        },
+        changeFirstMatchedParamSetOnly: false,
+        changeFirstMatchedParamOnly: false,
+      );
 
       return Right(
         input.copyWith(
@@ -57,60 +74,11 @@ class InitItemsListValuesUseCase
         continue;
       }
 
-      var listValues = await _fetchFirstBatch(
-        fetchParams: ListValuesFetchParams(
-          listType: unitValue.listType!,
-          unit: unitValue.unit,
-        ),
-      );
-
       enrichedUnitValues.add(
-        unitValue.copyWith(
-          listValues: listValues,
-        ),
+        ObjectUtils.tryGet(await initUnitListValuesUseCase.execute(unitValue)),
       );
     }
 
     return enrichedUnitValues;
-  }
-
-  Future<ConversionParamSetValueBulkModel?> _enrichParamValues(
-    ConversionParamSetValueBulkModel? params,
-  ) async {
-    return await params?.copyWithChangedParams(
-      paramFilter: (p) {
-        return p.listType != null &&
-            (p.listValues == null || p.listValues!.items.isEmpty);
-      },
-      map: (paramValue, paramSetValue) async {
-        var listValues = await _fetchFirstBatch(
-          fetchParams: ListValuesFetchParams(
-            listType: paramValue.listType!,
-            unit: paramValue.unit,
-            params: paramSetValue,
-          ),
-        );
-
-        return paramValue.copyWith(
-          listValues: listValues,
-        );
-      },
-      changeFirstMatchedParamSetOnly: false,
-      changeFirstMatchedParamOnly: false,
-    );
-  }
-
-  Future<OutputListValuesBatch> _fetchFirstBatch({
-    required ListValuesFetchParams fetchParams,
-  }) async {
-    return ObjectUtils.tryGet(
-      await fetchListValuesUseCase.execute(
-        InputItemsFetchModel(
-          pageSize: listValuesPageSize,
-          pageNum: 0,
-          params: fetchParams,
-        ),
-      ),
-    );
   }
 }

@@ -7,13 +7,13 @@ class InputItemsFetchModel<P extends ItemsFetchParams> {
   final String? searchString;
   final int pageSize;
   final int pageNum;
-  final P? params;
+  final P? fetchParams;
 
   const InputItemsFetchModel({
     this.searchString,
     required this.pageSize,
     required this.pageNum,
-    this.params,
+    this.fetchParams,
   });
 }
 

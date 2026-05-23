@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -11,7 +12,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final Widget? content;
   final bool visible;
   final bool editable;
-  final void Function(String)? onValueChanged;
+  final void Function(ValueModel)? onValueChanged;
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double topMargin;

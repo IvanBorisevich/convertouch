@@ -4,15 +4,17 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class ValueModel extends Equatable {
-  static const zero = ValueModel._(raw: "0", numVal: 0, alt: "0", range: null);
-  static const one = ValueModel._(raw: "1", numVal: 1, alt: "1", range: null);
+  static const zero = ValueModel(raw: "0", numVal: 0, alt: "0", range: null);
+  static const one = ValueModel(raw: "1", numVal: 1, alt: "1", range: null);
+  static const empty =
+      ValueModel(raw: "", numVal: null, alt: null, range: null);
 
   final String raw;
   final String? alt;
   final double? numVal;
   final NumRange? range;
 
-  const ValueModel._({
+  const ValueModel({
     required this.raw,
     required this.alt,
     required this.numVal,
@@ -29,7 +31,7 @@ class ValueModel extends Equatable {
       return ValueModel.numeric(num, alt: alt);
     }
 
-    return ValueModel._(
+    return ValueModel(
       raw: value,
       alt: alt ?? value,
       numVal: num,
@@ -45,7 +47,7 @@ class ValueModel extends Equatable {
 
     String raw = DoubleValueUtils.format(numVal);
 
-    return ValueModel._(
+    return ValueModel(
       raw: raw,
       alt: alt ?? DoubleValueUtils.format(numVal, scientific: true),
       numVal: double.tryParse(raw),
@@ -54,7 +56,7 @@ class ValueModel extends Equatable {
   }
 
   factory ValueModel.range(NumRange range) {
-    return ValueModel._(
+    return ValueModel(
       raw: range.rangeName,
       alt: range.rangeName,
       numVal: null,
@@ -95,13 +97,17 @@ class ValueModel extends Equatable {
         : null;
   }
 
+  String get altOrRaw => alt ?? raw;
+
+  bool get isNotEmpty => raw.isNotEmpty;
+
+  bool get isEmpty => !isNotEmpty;
+
   @override
   List<Object?> get props => [
         raw,
         alt,
       ];
-
-  String get altOrRaw => alt ?? raw;
 
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
@@ -128,7 +134,7 @@ class ValueModel extends Equatable {
       return null;
     }
 
-    return ValueModel._(
+    return ValueModel(
       raw: raw,
       numVal: double.tryParse(json["num"]?.toString() ?? "") ??
           double.tryParse(raw),

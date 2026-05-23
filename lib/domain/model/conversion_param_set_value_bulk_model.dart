@@ -2,6 +2,8 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:equatable/equatable.dart';
 
+import 'conversion_param_set_model.dart';
+
 class ConversionParamSetValueBulkModel extends Equatable {
   final List<ConversionParamSetValueModel> paramSetValues;
   final int selectedIndex;
@@ -20,6 +22,21 @@ class ConversionParamSetValueBulkModel extends Equatable {
     this.mandatoryParamSetExists = false,
     this.totalCount = 1,
   });
+
+  factory ConversionParamSetValueBulkModel.single({
+    required ConversionParamSetModel paramSet,
+    required List<ConversionParamValueModel> paramValues,
+  }) {
+    return ConversionParamSetValueBulkModel(
+      paramSetValues: [
+        ConversionParamSetValueModel(
+          paramSet: paramSet,
+          paramValues: paramValues,
+        ),
+      ],
+      selectedIndex: 0,
+    );
+  }
 
   factory ConversionParamSetValueBulkModel.basic({
     List<ConversionParamSetValueModel> paramSetValues = const [],
@@ -153,17 +170,22 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  Future<ConversionParamSetValueBulkModel> copyWithChangedParamSetByIds({
+  Future<ConversionParamSetValueBulkModel> copyWithChangedParamSetById({
+    int? paramSetId,
     required Future<ConversionParamSetValueModel> Function(
       ConversionParamSetValueModel,
     ) map,
-    int? paramSetId,
   }) async {
-    return copyWithChangedParamSet(
-      map: map,
+    return await copyWithChangedParamSet(
       paramSetFilter:
           paramSetId != null ? (p) => p.paramSet.id == paramSetId : null,
+      map: map,
     );
+  }
+
+  ConversionParamSetValueModel getParamSetValueById(int id) {
+    return paramSetValues
+        .firstWhere((paramSetValue) => paramSetValue.paramSet.id == id);
   }
 
   ConversionParamSetValueModel? get active {

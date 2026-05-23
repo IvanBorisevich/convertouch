@@ -1,6 +1,7 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
@@ -42,9 +43,9 @@ class UnitGroupDetailsController {
     );
   }
 
-  void updateGroupName(BuildContext context, {required String newValue}) {
+  void updateGroupName(BuildContext context, {required ValueModel newValue}) {
     BlocProvider.of<UnitGroupDetailsBloc>(context).add(
-      UpdateUnitGroupName(newValue: newValue),
+      UpdateUnitGroupName(newValue: newValue.raw),
     );
   }
 }

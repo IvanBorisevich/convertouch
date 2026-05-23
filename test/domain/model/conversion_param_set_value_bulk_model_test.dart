@@ -164,7 +164,7 @@ void main() {
   group('Copy with changed calculated param', () {
     test('Switch on another calculable param', () async {
       expect(
-        await _paramSetValueWithCalculableParams.copyWithChangedParamSetByIds(
+        await _paramSetValueWithCalculableParams.copyWithChangedParamSetById(
           map: (paramSetValue) async =>
               paramSetValue.copyWithNewCalculatedParam(
             newCalculatedParamId: someCalculableParam.id,
@@ -196,7 +196,7 @@ void main() {
 
     test('Switch off the calculable param', () async {
       expect(
-        await _paramSetValueWithCalculableParams.copyWithChangedParamSetByIds(
+        await _paramSetValueWithCalculableParams.copyWithChangedParamSetById(
           map: (paramSetValue) async =>
               paramSetValue.copyWithNewCalculatedParam(
             newCalculatedParamId: oneSideWeightParam.id,

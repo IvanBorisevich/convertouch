@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
@@ -85,9 +86,9 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final bool autofocus;
   final TooltipDirection tooltipDirection;
   final TextEditingController? controller;
-  final void Function(String)? onValueChanged;
-  final void Function(String)? onValueFocused;
-  final void Function(String)? onValueUnfocused;
+  final void Function(ValueModel)? onValueChanged;
+  final void Function(ValueModel)? onValueFocused;
+  final void Function(ValueModel)? onValueUnfocused;
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -109,7 +110,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   Key? _validationKey;
   late final FocusNode _focusNode;
   void Function()? _focusListener;
-  void Function(String)? _onValueChanged;
+  void Function(ValueModel)? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconNotifier;
 
@@ -358,7 +359,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
             _wrapWithValidationReset(
               context: context,
               func: _onValueChanged,
-            )?.call("");
+            )?.call(ValueModel.empty);
           },
           child: Container(
             padding: const EdgeInsets.only(right: 14),
@@ -397,9 +398,9 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  void Function(String)? _wrapWithValidation({
+  void Function(ValueModel)? _wrapWithValidation({
     required BuildContext context,
-    required void Function(String)? func,
+    required void Function(ValueModel)? func,
     bool validateEmptyValue = false,
   }) {
     if (_validationKey == null) {
@@ -416,7 +417,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
       validationController.validateInput(
         context,
-        value: value,
+        value: value.raw,
         key: _validationKey!,
         validators: widget.validators,
         onSuccess: ({info}) {
@@ -426,9 +427,9 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     };
   }
 
-  void Function(String)? _wrapWithValidationReset({
+  void Function(ValueModel)? _wrapWithValidationReset({
     required BuildContext context,
-    required void Function(String)? func,
+    required void Function(ValueModel)? func,
   }) {
     return (value) {
       if (_validationKey != null) {
@@ -466,9 +467,9 @@ class _TextField extends StatefulWidget {
   final FocusNode focusNode;
   final List<InputValidator> validators;
   final bool changeValueOnFocusChanged;
-  final void Function(String)? onValueChanged;
-  final void Function(String)? onValueFocused;
-  final void Function(String)? onValueUnfocused;
+  final void Function(ValueModel)? onValueChanged;
+  final void Function(ValueModel)? onValueFocused;
+  final void Function(ValueModel)? onValueUnfocused;
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
@@ -499,7 +500,7 @@ class _TextFieldState extends State<_TextField>
     _focusListener = addFocusListener(
       focusNode: widget.focusNode,
       onFocusSelected: () {
-        widget.onValueFocused?.call(widget.controller.text);
+        widget.onValueFocused?.call(ValueModel.str(widget.controller.text));
 
         if (widget.changeValueOnFocusChanged) {
           updateTextControllerValue(
@@ -513,7 +514,7 @@ class _TextFieldState extends State<_TextField>
         });
       },
       onFocusLeft: () {
-        widget.onValueUnfocused?.call(widget.controller.text);
+        widget.onValueUnfocused?.call(ValueModel.str(widget.controller.text));
 
         if (widget.changeValueOnFocusChanged) {
           updateTextControllerValue(
@@ -568,7 +569,9 @@ class _TextFieldState extends State<_TextField>
           ? [FilteringTextInputFormatter.allow(inputRegExp)]
           : null,
       keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
-      onChanged: widget.onValueChanged,
+      onChanged: (value) {
+        widget.onValueChanged?.call(ValueModel.str(value));
+      },
       decoration: _inputFieldDecoration(
         context,
         margin: widget.margin,
@@ -614,7 +617,7 @@ class _ListField extends StatefulWidget {
 
   final ListBoxModel model;
   final TextEditingController? controller;
-  final void Function(String)? onValueChanged;
+  final void Function(ValueModel)? onValueChanged;
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
@@ -663,8 +666,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("list box model: ${widget.model}");
-
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (_, navigationState) {
         if (_isDropdownOpen) {
@@ -710,10 +711,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 ),
               )
               .toList(),
-          onChanged: (value) {
-            if (value != null) {
-              _selectedValueNotifier.value = value;
-              widget.onValueChanged?.call(value.value);
+          onChanged: (listValue) {
+            if (listValue != null) {
+              _selectedValueNotifier.value = listValue;
+              widget.onValueChanged?.call(listValue.valueModel);
             }
           },
           /*
