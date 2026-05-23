@@ -356,6 +356,7 @@ Future<void> _initUseCases() async {
       conversionParamSetRepository: locator(),
       conversionParamRepository: locator(),
       calculateDefaultValueUseCase: locator(),
+      initParamListValuesUseCase: locator(),
     ),
   );
 

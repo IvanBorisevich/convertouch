@@ -4,9 +4,13 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -22,661 +26,303 @@ void main() {
   late AddParamSetsToConversionUseCase useCase;
 
   setUpAll(() {
+    const listValueRepository = ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
+
     useCase = const AddParamSetsToConversionUseCase(
       conversionParamRepository: MockConversionParamRepository(),
       conversionParamSetRepository: MockConversionParamSetRepository(),
       calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
-        listValueRepository: ListValueRepositoryImpl(
-          networkRepository: MockNetworkRepository(),
+        listValueRepository: listValueRepository,
+      ),
+      initParamListValuesUseCase: InitParamListValuesUseCase(
+        fetchListValuesUseCase: FetchListValuesUseCase(
+          listValueRepository: listValueRepository,
         ),
       ),
     );
   });
 
-  group('Conversion has no params', () {
-    group('Conversion has items', () {
-      group('New optional param set', () {
-        group('With explicit param set id', () {
-          group('With mapping table (circumference)', () {
-            test('Circumference param should be auto-calculated', () async {
-              await testCase(
-                unitGroup: ringSizeGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    ringSizeByCircumferenceParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentSrc:
-                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                currentUnitValues: [
-                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
-                ],
-                expectedSrc:
-                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                expectedUnitValues: [
-                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
-                ],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: ringSizeByCircumferenceParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          circumferenceParam,
-                          14.5 * pi,
-                          14.5 * pi,
-                          unit: millimeter,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: true,
-                  selectedIndex: 0,
-                  totalCount: 2,
-                ),
-              );
-            });
-          });
+  group('By coefficients', () {});
 
-          group('With mapping table (diameter + circumference)', () {
-            test('All params should be auto-calculated where possible',
-                () async {
-              await testCase(
-                unitGroup: ringSizeGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    ringSizeByDiameterParamSet.id,
-                    ringSizeByCircumferenceParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentSrc:
-                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                currentUnitValues: [
-                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
+  group('By formula', () {
+    group("[Ring size] Add param set 'By Circumference'", () {
+      test("Should auto-calculate the param 'Circumference'", () async {
+        await testCase(
+          unitGroup: ringSizeGroup,
+          useCase: useCase,
+          delta: AddParamSetsDelta(
+            paramSetIds: [
+              ringSizeByCircumferenceParamSet.id,
+            ],
+          ),
+          currentParams: null,
+          currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(frRingSize, 44, null),
+          ],
+          expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(frRingSize, 44, null),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: ringSizeByCircumferenceParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    circumferenceParam,
+                    14.5 * pi,
+                    14.5 * pi,
+                    unit: millimeter,
+                    calculated: true,
+                  ),
                 ],
-                expectedSrc:
-                    ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                expectedUnitValues: [
-                  ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                  ConversionUnitValueModel.tuple(frRingSize, 44, null),
-                ],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: ringSizeByDiameterParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          diameterParam,
-                          14.5,
-                          14.5,
-                          unit: millimeter,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                    ConversionParamSetValueModel(
-                      paramSet: ringSizeByCircumferenceParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          circumferenceParam,
-                          14.5 * pi,
-                          14.5 * pi,
-                          unit: millimeter,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: false,
-                  selectedIndex: 1,
-                  totalCount: 2,
-                ),
-              );
-            });
-          });
-
-          group('With formula (barbell weight)', () {
-            test(
-                'Bar weight param should be set by default,'
-                'one side weight param should be auto-calculated', () async {
-              await testCase(
-                unitGroup: massGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    barbellWeightParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
-                currentUnitValues: [
-                  ConversionUnitValueModel.tuple(kilogram, 40, 1),
-                  ConversionUnitValueModel.tuple(
-                      pound, 40 / pound.coefficient!, 1),
-                ],
-                expectedSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
-                expectedUnitValues: [
-                  ConversionUnitValueModel.tuple(kilogram, 40, 1),
-                  ConversionUnitValueModel.tuple(
-                      pound, 40 / pound.coefficient!, 1 / pound.coefficient!),
-                ],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: barbellWeightParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          barWeightParam,
-                          10,
-                          null,
-                          unit: kilogram,
-                        ),
-                        ConversionParamValueModel.tuple(
-                          oneSideWeightParam,
-                          15,
-                          null,
-                          unit: kilogram,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: false,
-                  selectedIndex: 0,
-                  totalCount: 1,
-                ),
-              );
-            });
-
-            test(
-                'Bar weight param should be set by default,'
-                'one side weight param should be auto-calculated '
-                '(default values only)', () async {
-              await testCase(
-                unitGroup: massGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    barbellWeightParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentSrc: ConversionUnitValueModel.tuple(ton, null, 1),
-                currentUnitValues: [
-                  ConversionUnitValueModel.tuple(kilogram, null, 1000),
-                  ConversionUnitValueModel.tuple(ton, null, 1),
-                ],
-                expectedSrc: ConversionUnitValueModel.tuple(ton, null, 1),
-                expectedUnitValues: [
-                  ConversionUnitValueModel.tuple(kilogram, null, 1000),
-                  ConversionUnitValueModel.tuple(ton, null, 1),
-                ],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: barbellWeightParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          barWeightParam,
-                          10,
-                          null,
-                          unit: kilogram,
-                        ),
-                        ConversionParamValueModel.tuple(
-                          oneSideWeightParam,
-                          null,
-                          (1000 - 10) / 2,
-                          unit: kilogram,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: false,
-                  selectedIndex: 0,
-                  totalCount: 1,
-                ),
-              );
-            });
-          });
-        });
-
-        group('Without explicit param set id', () {
-          test('Empty param sets list should be added initially', () async {
-            await testCase(
-              unitGroup: ringSizeGroup,
-              useCase: useCase,
-              delta: const AddParamSetsDelta(),
-              currentParams: null,
-              currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                ConversionUnitValueModel.tuple(frRingSize, 44, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                ConversionUnitValueModel.tuple(frRingSize, 44, null),
-              ],
-              expectedParams: const ConversionParamSetValueBulkModel(
-                paramSetValues: [],
-                selectedParamSetCanBeRemoved: false,
-                optionalParamSetsExist: false,
-                paramSetsCanBeAdded: true,
-                selectedIndex: -1,
-                totalCount: 2,
               ),
-            );
-          });
-        });
-      });
-
-      group('No new param set', () {
-        test('Conversion should not be recalculated', () async {
-          await testCase(
-            unitGroup: lengthGroup,
-            useCase: useCase,
-            delta: const AddParamSetsDelta(),
-            currentParams: null,
-            currentSrc: ConversionUnitValueModel.tuple(meter, null, null),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(meter, null, 1),
-              ConversionUnitValueModel.tuple(kilometer, null, 0.001),
             ],
-            expectedSrc: ConversionUnitValueModel.tuple(meter, null, 1),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(meter, null, 1),
-              ConversionUnitValueModel.tuple(kilometer, null, 0.001),
-            ],
-            expectedParams: null,
-          );
-        });
+            selectedParamSetCanBeRemoved: true,
+            optionalParamSetsExist: true,
+            paramSetsCanBeAdded: true,
+            selectedIndex: 0,
+            totalCount: 2,
+          ),
+        );
       });
     });
 
-    group('Conversion has no items', () {
-      group('New optional param set', () {
-        group('With explicit param set id', () {
-          group('With mapping table (diameter and circumference)', () {
-            test('All of param sets should be recalculated if possible',
-                () async {
-              await testCase(
-                unitGroup: ringSizeGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    ringSizeByDiameterParamSet.id,
-                    ringSizeByCircumferenceParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentUnitValues: [],
-                expectedUnitValues: [],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: ringSizeByDiameterParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(diameterParam, null, 1,
-                            unit: millimeter, calculated: true),
-                      ],
-                    ),
-                    ConversionParamSetValueModel(
-                      paramSet: ringSizeByCircumferenceParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                          circumferenceParam,
-                          null,
-                          1,
-                          unit: millimeter,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: false,
-                  selectedIndex: 1,
-                  totalCount: 2,
-                ),
-              );
-            });
-          });
-
-          group('With formula (barbell weight)', () {
-            test(
-                'Bar weight list param should be set by default,'
-                'one side weight params should not be auto-calculated',
-                () async {
-              await testCase(
-                unitGroup: massGroup,
-                useCase: useCase,
-                delta: AddParamSetsDelta(
-                  paramSetIds: [
-                    barbellWeightParamSet.id,
-                  ],
-                ),
-                currentParams: null,
-                currentUnitValues: [],
-                expectedUnitValues: [],
-                expectedParams: ConversionParamSetValueBulkModel(
-                  paramSetValues: [
-                    ConversionParamSetValueModel(
-                      paramSet: barbellWeightParamSet,
-                      paramValues: [
-                        ConversionParamValueModel.tuple(
-                            barWeightParam, 10, null,
-                            unit: kilogram),
-                        ConversionParamValueModel.tuple(
-                          oneSideWeightParam,
-                          null,
-                          1,
-                          unit: kilogram,
-                          calculated: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                  selectedParamSetCanBeRemoved: true,
-                  optionalParamSetsExist: true,
-                  paramSetsCanBeAdded: false,
-                  selectedIndex: 0,
-                  totalCount: 1,
-                ),
-              );
-            });
-          });
-        });
-
-        group('Without explicit param set id', () {
-          test('Empty param sets list should be added initially', () async {
-            await testCase(
-              unitGroup: ringSizeGroup,
-              useCase: useCase,
-              delta: const AddParamSetsDelta(),
-              currentParams: null,
-              currentUnitValues: [],
-              expectedUnitValues: [],
-              expectedParams: const ConversionParamSetValueBulkModel(
-                paramSetValues: [],
-                selectedParamSetCanBeRemoved: false,
-                optionalParamSetsExist: false,
-                paramSetsCanBeAdded: true,
-                selectedIndex: -1,
-                totalCount: 2,
-              ),
-            );
-          });
-        });
-      });
-    });
-  });
-
-  group('Conversion has params', () {
-    group('Conversion has items', () {
-      group('New optional param set', () {
-        group('With mapping table (circumference)', () {
-          test(
-              'Circumference param should be recalculated if possible, '
-              'duplicated param set ids should be omitted', () async {
-            await testCase(
-              unitGroup: ringSizeGroup,
-              useCase: useCase,
-              delta: AddParamSetsDelta(
-                paramSetIds: [
-                  ringSizeByCircumferenceParamSet.id,
-                  ringSizeByDiameterParamSet.id,
-                ],
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                          unit: millimeter)
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: true,
-                selectedIndex: 0,
-                totalCount: 2,
-              ),
-              currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-              currentUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                ConversionUnitValueModel.tuple(frRingSize, 44, null),
-              ],
-              expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-              expectedUnitValues: [
-                ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-                ConversionUnitValueModel.tuple(frRingSize, 44, null),
-              ],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14.5, 14.5,
-                          unit: millimeter, calculated: true),
-                    ],
-                  ),
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByCircumferenceParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(
-                        circumferenceParam,
-                        14.5 * pi,
-                        14.5 * pi,
-                        unit: millimeter,
-                        calculated: true,
-                      ),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 1,
-                totalCount: 2,
-              ),
-            );
-          });
-        });
-
-        group('With formula', () {});
-      });
-
-      group('Existing mandatory param set', () {
-        test('Should align params info from DB (calculable flag)', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: const AddParamSetsDelta(),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, null, null),
-                    ConversionParamValueModel.tuple(garmentParam, null, null),
-                    ConversionParamValueModel.tuple(
-                      heightParam.copyWith(calculable: true),
-                      null,
-                      1,
-                      unit: centimeter,
-                      calculated: true,
-                    ),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
-              mandatoryParamSetExists: true,
-              totalCount: 1,
-            ),
-            currentSrc: ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-            currentUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+    group("[Ring size] Add param sets 'By Circumference' and 'By Diameter'",
+        () {
+      test("Should auto-calculate all calculable params in each of param sets",
+          () async {
+        await testCase(
+          unitGroup: ringSizeGroup,
+          useCase: useCase,
+          delta: AddParamSetsDelta(
+            paramSetIds: [
+              ringSizeByDiameterParamSet.id,
+              ringSizeByCircumferenceParamSet.id,
             ],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, null, null),
-                    ConversionParamValueModel.tuple(garmentParam, null, null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
-              mandatoryParamSetExists: true,
-              totalCount: 1,
-            ),
-            expectedSrc:
-                ConversionUnitValueModel.tuple(japanClothSize, 3, null),
-            expectedUnitValues: [
-              ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+          ),
+          currentParams: null,
+          currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(frRingSize, 44, null),
+          ],
+          expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(frRingSize, 44, null),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: ringSizeByDiameterParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    diameterParam,
+                    14.5,
+                    14.5,
+                    unit: millimeter,
+                    calculated: true,
+                  ),
+                ],
+              ),
+              ConversionParamSetValueModel(
+                paramSet: ringSizeByCircumferenceParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    circumferenceParam,
+                    14.5 * pi,
+                    14.5 * pi,
+                    unit: millimeter,
+                    calculated: true,
+                  ),
+                ],
+              ),
             ],
-          );
-        });
+            selectedParamSetCanBeRemoved: true,
+            optionalParamSetsExist: true,
+            paramSetsCanBeAdded: false,
+            selectedIndex: 1,
+            totalCount: 2,
+          ),
+        );
       });
     });
 
-    group('Conversion has no items', () {
-      group('New optional param set', () {
-        group('With mapping table (circumference)', () {
-          test('Circumference param should be recalculated if possible',
-              () async {
-            await testCase(
-              unitGroup: ringSizeGroup,
-              useCase: useCase,
-              delta: AddParamSetsDelta(
-                paramSetIds: [
-                  ringSizeByCircumferenceParamSet.id,
-                ],
-              ),
-              currentParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                          unit: millimeter)
-                    ],
+    group("[Mass] Add param set 'Barbell Weight'", () {
+      test(
+          "Should init list values of the param 'Bar Weight', "
+          "should auto-calculate the param 'One Side Weight' value", () async {
+        await testCase(
+          unitGroup: massGroup,
+          useCase: useCase,
+          delta: AddParamSetsDelta(
+            paramSetIds: [
+              barbellWeightParamSet.id,
+            ],
+          ),
+          currentParams: null,
+          currentSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, 40, 1),
+            ConversionUnitValueModel.tuple(pound, 40 / pound.coefficient!, 1),
+          ],
+          expectedSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, 40, 1),
+            ConversionUnitValueModel.tuple(
+                pound, 40 / pound.coefficient!, 1 / pound.coefficient!),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: barbellWeightParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    barWeightParam,
+                    10,
+                    null,
+                    unit: kilogram,
+                    listValues: const OutputItemsFetchModel(items: [
+                      ListValueModel.str('10'),
+                      ListValueModel.str('20'),
+                    ], pageNum: 1, hasReachedMax: true),
+                  ),
+                  ConversionParamValueModel.tuple(
+                    oneSideWeightParam,
+                    15,
+                    null,
+                    unit: kilogram,
+                    calculated: true,
                   ),
                 ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: true,
-                selectedIndex: 0,
-                totalCount: 2,
               ),
-              currentUnitValues: [],
-              expectedUnitValues: [],
-              expectedParams: ConversionParamSetValueBulkModel(
-                paramSetValues: [
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByDiameterParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                          unit: millimeter, calculated: true),
-                    ],
-                  ),
-                  ConversionParamSetValueModel(
-                    paramSet: ringSizeByCircumferenceParamSet,
-                    paramValues: [
-                      ConversionParamValueModel.tuple(
-                        circumferenceParam,
-                        null,
-                        1,
-                        unit: millimeter,
-                        calculated: true,
-                      ),
-                    ],
-                  ),
-                ],
-                selectedParamSetCanBeRemoved: true,
-                optionalParamSetsExist: true,
-                paramSetsCanBeAdded: false,
-                selectedIndex: 1,
-                totalCount: 2,
-              ),
-            );
-          });
-        });
-
-        group('With formula', () {});
+            ],
+            selectedParamSetCanBeRemoved: true,
+            optionalParamSetsExist: true,
+            paramSetsCanBeAdded: false,
+            selectedIndex: 0,
+            totalCount: 1,
+          ),
+        );
       });
 
-      group('Existing mandatory param set', () {
-        test('Should align params info from DB (calculable flag)', () async {
-          await testCase(
-            unitGroup: clothesSizeGroup,
-            useCase: useCase,
-            delta: const AddParamSetsDelta(),
-            currentParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, null, null),
-                    ConversionParamValueModel.tuple(garmentParam, null, null),
-                    ConversionParamValueModel.tuple(
-                      heightParam.copyWith(calculable: true),
-                      null,
-                      1,
-                      unit: centimeter,
-                      calculated: true,
-                    ),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
-              mandatoryParamSetExists: true,
-              totalCount: 1,
-            ),
-            currentUnitValues: [],
-            expectedParams: ConversionParamSetValueBulkModel(
-              paramSetValues: [
-                ConversionParamSetValueModel(
-                  paramSet: clothesSizeParamSet,
-                  paramValues: [
-                    ConversionParamValueModel.tuple(personParam, null, null),
-                    ConversionParamValueModel.tuple(garmentParam, null, null),
-                    ConversionParamValueModel.tuple(heightParam, null, 1,
-                        unit: centimeter),
-                  ],
-                ),
-              ],
-              selectedIndex: 0,
-              mandatoryParamSetExists: true,
-              totalCount: 1,
-            ),
-            expectedUnitValues: [],
-          );
-        });
+      test(
+          "Should init list values of the param 'Bar Weight', "
+          "should auto-calculate the param 'One Side Weight' default value",
+          () async {
+        await testCase(
+          unitGroup: massGroup,
+          useCase: useCase,
+          delta: AddParamSetsDelta(
+            paramSetIds: [
+              barbellWeightParamSet.id,
+            ],
+          ),
+          currentParams: null,
+          currentSrc: ConversionUnitValueModel.tuple(ton, null, 1),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, null, 1000),
+            ConversionUnitValueModel.tuple(ton, null, 1),
+          ],
+          expectedSrc: ConversionUnitValueModel.tuple(ton, null, 1),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, null, 1000),
+            ConversionUnitValueModel.tuple(ton, null, 1),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: barbellWeightParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    barWeightParam,
+                    10,
+                    null,
+                    unit: kilogram,
+                    listValues: const OutputItemsFetchModel(items: [
+                      ListValueModel.str('10'),
+                      ListValueModel.str('20'),
+                    ], pageNum: 1, hasReachedMax: true),
+                  ),
+                  ConversionParamValueModel.tuple(
+                    oneSideWeightParam,
+                    null,
+                    (1000 - 10) / 2,
+                    unit: kilogram,
+                    calculated: true,
+                  ),
+                ],
+              ),
+            ],
+            selectedParamSetCanBeRemoved: true,
+            optionalParamSetsExist: true,
+            paramSetsCanBeAdded: false,
+            selectedIndex: 0,
+            totalCount: 1,
+          ),
+        );
+      });
+    });
+
+    group("[Clothes Size] Existing param set 'Clothes Size'", () {
+      test('Should align params info from DB (calculable flag)', () async {
+        await testCase(
+          unitGroup: clothesSizeGroup,
+          useCase: useCase,
+          delta: const AddParamSetsDelta(),
+          currentParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: clothesSizeParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(personParam, null, null),
+                  ConversionParamValueModel.tuple(garmentParam, null, null),
+                  ConversionParamValueModel.tuple(
+                    heightParam.copyWith(calculable: true),
+                    null,
+                    1,
+                    unit: centimeter,
+                    calculated: true,
+                  ),
+                ],
+              ),
+            ],
+            selectedIndex: 0,
+            mandatoryParamSetExists: true,
+            totalCount: 1,
+          ),
+          currentSrc: ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+          currentUnitValues: [
+            ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+          ],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: clothesSizeParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(personParam, null, null),
+                  ConversionParamValueModel.tuple(garmentParam, null, null),
+                  ConversionParamValueModel.tuple(heightParam, null, 1,
+                      unit: centimeter),
+                ],
+              ),
+            ],
+            selectedIndex: 0,
+            mandatoryParamSetExists: true,
+            totalCount: 1,
+          ),
+          expectedSrc: ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(japanClothSize, 3, null),
+          ],
+        );
       });
     });
   });

@@ -23,8 +23,6 @@ abstract class ReplaceItemUnitUseCase<T extends ConversionItemValueModel,
   });
 }
 
-///////////////////////////////////////////////////
-
 class ReplaceUnitInConversionItemUseCase
     extends ReplaceItemUnitUseCase<ConversionUnitValueModel, UnitModel> {
   final InitUnitListValuesUseCase initUnitListValuesUseCase;
