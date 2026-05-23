@@ -41,7 +41,7 @@ class EditConversionUnitValueUseCase
 
     return ConversionUnitValueModel(
       unit: newUnit,
-      value: ValueModel.any(delta.newValue),
+      value: delta.newValue,
       defaultValue: newDefaultValue,
     );
   }
