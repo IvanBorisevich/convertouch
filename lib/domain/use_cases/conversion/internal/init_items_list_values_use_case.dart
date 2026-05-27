@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_list_values_init_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -22,32 +25,21 @@ class InitItemsListValuesUseCase
     ConversionModel input,
   ) async {
     try {
-      List<ConversionUnitValueModel> enrichedUnitValues =
-          await _enrichUnitValues(input.convertedUnitValues);
+      final recalculatedParams = await _recalculateParams(input.params);
 
-      final enrichedParamValues = await input.params?.copyWithChangedParams(
-        paramFilter: (p) {
-          return p.listType != null &&
-              (p.listValues == null || p.listValues!.items.isEmpty);
-        },
-        map: (paramValue, paramSetValue) async {
-          return ObjectUtils.tryGet(
-            await initParamListValuesUseCase.execute(
-              InputParamListValuesInitModel(
-                paramValue: paramValue,
-                paramSetValue: paramSetValue,
-              ),
-            ),
-          );
-        },
-        changeFirstMatchedParamSetOnly: false,
-        changeFirstMatchedParamOnly: false,
+      List<ConversionUnitValueModel> enrichedUnitValues =
+          await _enrichUnitValues(
+        unitValues: input.convertedUnitValues,
+        params: recalculatedParams?.active,
       );
 
       return Right(
         input.copyWith(
+          params: recalculatedParams,
+          srcUnitValue: enrichedUnitValues.firstWhereOrNull(
+            (unitValue) => unitValue.unit.id == input.srcUnitValue?.unit.id,
+          ),
           convertedUnitValues: enrichedUnitValues,
-          params: enrichedParamValues,
         ),
       );
     } catch (e, stackTrace) {
@@ -61,21 +53,62 @@ class InitItemsListValuesUseCase
     }
   }
 
-  Future<List<ConversionUnitValueModel>> _enrichUnitValues(
-    List<ConversionUnitValueModel> unitValues,
+  Future<ConversionParamSetValueBulkModel?> _recalculateParams(
+    ConversionParamSetValueBulkModel? params,
   ) async {
-    List<ConversionUnitValueModel> enrichedUnitValues = [];
+    if (params == null) {
+      return null;
+    }
 
-    for (var unitValue in unitValues) {
-      if (unitValue.listType == null ||
-          unitValue.listValues != null &&
-              unitValue.listValues!.items.isNotEmpty) {
-        enrichedUnitValues.add(unitValue);
+    ConversionParamSetValueModel? paramSetValueModel = params.active;
+
+    if (paramSetValueModel == null) {
+      return params;
+    }
+
+    for (var paramValue in paramSetValueModel.paramValues) {
+      if (paramValue.listType == null) {
         continue;
       }
 
+      final modifiedParamValue = ObjectUtils.tryGet(
+        await initParamListValuesUseCase.execute(
+          InputParamListValuesInitModel(
+            itemValue: paramValue,
+            paramSetValue: paramSetValueModel,
+          ),
+        ),
+      );
+
+      paramSetValueModel = await paramSetValueModel!.copyWithChangedParamById(
+        paramId: paramValue.param.id,
+        map: (paramValue, paramSetValue) async => modifiedParamValue,
+      );
+    }
+
+    return await params.copyWithChangedParamSetById(
+      paramSetId: paramSetValueModel!.paramSet.id,
+      map: (paramSetValue) async => paramSetValueModel!,
+    );
+  }
+
+  Future<List<ConversionUnitValueModel>> _enrichUnitValues({
+    required List<ConversionUnitValueModel> unitValues,
+    required ConversionParamSetValueModel? params,
+  }) async {
+    List<ConversionUnitValueModel> enrichedUnitValues = [];
+
+    for (var unitValue in unitValues) {
       enrichedUnitValues.add(
-        ObjectUtils.tryGet(await initUnitListValuesUseCase.execute(unitValue)),
+        ObjectUtils.tryGet(
+          await initUnitListValuesUseCase.execute(
+            InputUnitListValuesInitModel(
+              itemValue: unitValue,
+              paramSetValue: params,
+              alignSelectedValue: false,
+            ),
+          ),
+        ),
       );
     }
 

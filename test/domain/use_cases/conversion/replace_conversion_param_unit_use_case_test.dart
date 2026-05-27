@@ -2,9 +2,7 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
@@ -13,6 +11,7 @@ import 'package:convertouch/domain/use_cases/conversion/replace_conversion_param
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
+import '../../model/mock/mock_list_values_batch.dart';
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
@@ -36,6 +35,13 @@ void main() {
     useCase = const ReplaceConversionParamUnitUseCase(
       calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+        initUnitListValuesUseCase: InitUnitListValuesUseCase(
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: ListValueRepositoryImpl(
+              networkRepository: MockNetworkRepository(),
+            ),
+          ),
+        ),
       ),
       replaceUnitInParamUseCase: ReplaceUnitInParamUseCase(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
@@ -89,10 +95,7 @@ void main() {
                   22,
                   null,
                   unit: pound,
-                  listValues: const OutputItemsFetchModel(items: [
-                    ListValueModel.str('22'),
-                    ListValueModel.str('44'),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: barWeightParamLbListValues,
                 ),
                 ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
                     unit: kilogram),

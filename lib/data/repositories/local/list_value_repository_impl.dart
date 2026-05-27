@@ -57,7 +57,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     ConversionParamSetValueModel? params,
   }) async {
     if (value == null) {
-      return Right(!listType.preselected);
+      return const Right(true);
     }
 
     bool belongs;
@@ -176,7 +176,7 @@ List<ListValueModel> _garments({
   ConversionParamSetValueModel? params,
 }) =>
     _wrapList(
-      getGarmentList(unit: unit, params: params),
+      getGarments(unit: unit, params: params),
       valueMap: (v) => v.name,
     );
 
@@ -185,8 +185,9 @@ List<ListValueModel> _clothesHeightRanges({
   ConversionParamSetValueModel? params,
 }) =>
     _wrapList(
-      getHeightList(unit: unit, params: params),
+      getHeightRangesCm(params: params),
       valueMap: (v) => v.rangeName,
+      altValueMap: (v) => v.copyWithFactor(0.01 * unit!.coefficient!).rangeName,
     );
 
 List<ListValueModel> _clothesSizesInter({

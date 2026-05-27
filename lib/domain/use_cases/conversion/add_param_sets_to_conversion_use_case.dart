@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_list_values_init_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
@@ -107,18 +107,28 @@ class AddParamSetsToConversionUseCase
       var resultParamSetValue =
           await mergedParamSetValues[i].copyWithChangedParams(
         map: (paramValue, paramSetValue) async {
-          var newParamValue = srcUnitValue != null
+          ValueModel? autoCalcValue = srcUnitValue != null
               ? rules.calculateParamValueBySrcValue(
                   srcUnitValue: srcUnitValue,
-                  unitGroup: unitGroup,
+                  unitGroupName: unitGroup.name,
                   params: paramSetValue,
                   param: paramValue.param,
                 )
-              : paramValue;
+              : null;
 
-          return newParamValue.copyWith(
-            calculated: true,
-          );
+          return paramValue.listType != null
+              ? paramValue.copyWith(
+                  value: autoCalcValue,
+                  calculated: true,
+                )
+              : ConversionParamValueModel(
+                  param: paramValue.param,
+                  unit: paramValue.unit,
+                  value: null,
+                  defaultValue: autoCalcValue,
+                  calculated: true,
+                  listValues: paramValue.listValues,
+                );
         },
         paramFilter: (p) => p.param.calculable,
       );
@@ -169,7 +179,7 @@ class AddParamSetsToConversionUseCase
       paramValue = ObjectUtils.tryGet(
         await initParamListValuesUseCase.execute(
           InputParamListValuesInitModel(
-            paramValue: ConversionParamValueModel(
+            itemValue: ConversionParamValueModel(
               param: param,
               unit: param.defaultUnit,
             ),

@@ -28,7 +28,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
-    this.containsSelectedValue = false,
+    this.containsSelectedValue = true,
   });
 
   OutputItemsFetchModel<T, P> copyWith({

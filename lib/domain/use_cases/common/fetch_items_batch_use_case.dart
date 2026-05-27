@@ -18,8 +18,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     int pageSize = input.pageSize;
     int pageNum = input.pageNum;
     P? params = input.fetchParams;
-    bool hasSelectedValue =
-        pageNum == 0 && await containsSelectedValue(input);
+    bool hasSelectedValue = pageNum == 0 && await containsSelectedValue(input);
 
     final newPageItems = await fetchItemsPage(input);
 

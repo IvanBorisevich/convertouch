@@ -49,6 +49,12 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   UnitModel? get unitItem;
 
+  ConversionItemValueModel copyWith({
+    ValueModel? value,
+    ValueModel? defaultValue,
+    OutputListValuesBatch? listValues,
+  });
+
   bool get hasValue {
     return listType != null && value != null ||
         listType == null && (value != null || defaultValue != null);
@@ -87,6 +93,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     );
   }
 
+  @override
   ConversionUnitValueModel copyWith({
     UnitModel? unit,
     ValueModel? value,
@@ -213,6 +220,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     return param.name;
   }
 
+  @override
   ConversionParamValueModel copyWith({
     ConversionParamModel? param,
     UnitModel? unit,

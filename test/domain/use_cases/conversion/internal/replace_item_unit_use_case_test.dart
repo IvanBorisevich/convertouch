@@ -1,8 +1,6 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
@@ -10,6 +8,7 @@ import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_c
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
+import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
@@ -85,20 +84,7 @@ void main() {
         europeanClothSize,
         34,
         null,
-        listValues: const OutputItemsFetchModel(items: [
-          ListValueModel.str('34'),
-          ListValueModel.str('36'),
-          ListValueModel.str('38'),
-          ListValueModel.str('40'),
-          ListValueModel.str('42'),
-          ListValueModel.str('44'),
-          ListValueModel.str('46'),
-          ListValueModel.str('48'),
-          ListValueModel.str('50'),
-          ListValueModel.str('52'),
-          ListValueModel.str('54'),
-          ListValueModel.str('56'),
-        ], pageNum: 1, hasReachedMax: true),
+        listValues: europeanClothSizeListValues,
       ).toJson(),
     );
   });
@@ -142,10 +128,7 @@ void main() {
         22,
         null,
         unit: pound,
-        listValues: const OutputItemsFetchModel(items: [
-          ListValueModel.str('22'),
-          ListValueModel.str('44'),
-        ], pageNum: 1, hasReachedMax: true),
+        listValues: barWeightParamLbListValues,
       ).toJson(),
     );
   });

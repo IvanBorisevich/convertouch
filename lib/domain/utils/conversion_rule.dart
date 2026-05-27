@@ -27,7 +27,7 @@ typedef MappingRuleByParamFunc = Map<String, String>? Function(
   ConversionParamSetValueModel,
 );
 
-typedef MappingRuleByUnitValueFunc = Map<String, String>? Function({
+typedef MappingRuleBySrcUnitValueFunc = Map<String, String>? Function({
   required ValueModel? value,
   required UnitModel unit,
 });

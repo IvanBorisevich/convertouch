@@ -56,12 +56,23 @@ class EditConversionUnitValueUseCase
     return oldConversionParams?.copyWithChangedParams(
       paramFilter: (p) => p.calculated,
       map: (paramValue, paramSetValue) async {
-        return rules.calculateParamValueBySrcValue(
+        ValueModel? autoCalcValue = rules.calculateParamValueBySrcValue(
           srcUnitValue: srcUnitValue,
-          unitGroup: unitGroup,
+          unitGroupName: unitGroup.name,
           params: paramSetValue,
           param: paramValue.param,
         );
+
+        return paramValue.listType != null
+            ? paramValue.copyWith(value: autoCalcValue)
+            : ConversionParamValueModel(
+                param: paramValue.param,
+                unit: paramValue.unit,
+                value: null,
+                defaultValue: autoCalcValue,
+                calculated: paramValue.calculated,
+                listValues: paramValue.listValues,
+              );
       },
     );
   }

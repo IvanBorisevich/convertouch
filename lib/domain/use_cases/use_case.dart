@@ -7,12 +7,6 @@ abstract class UseCase<I, O> {
   Future<Either<ConvertouchException, O>> execute(I input);
 }
 
-abstract class UseCaseGenericInput<I, O> {
-  const UseCaseGenericInput();
-
-  Future<Either<ConvertouchException, O>> execute<T>(I input);
-}
-
 abstract class UseCaseNoInput<O> {
   const UseCaseNoInput();
 

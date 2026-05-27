@@ -96,9 +96,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
             unitGroup: modifiedGroup,
             params: newParams?.active,
             sourceUnitValue: newSrcUnitValue,
-            targetUnits: modifiedConvertedValues.values
-                .map((conversionItem) => conversionItem.unit)
-                .toList(),
+            targetItems: modifiedConvertedValues.values.toList(),
           ),
         );
 

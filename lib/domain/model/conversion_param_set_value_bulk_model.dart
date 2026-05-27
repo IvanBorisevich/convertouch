@@ -1,5 +1,7 @@
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'conversion_param_set_model.dart';
@@ -35,6 +37,36 @@ class ConversionParamSetValueBulkModel extends Equatable {
         ),
       ],
       selectedIndex: 0,
+    );
+  }
+
+  factory ConversionParamSetValueBulkModel.singleCompact({
+    required ConversionParamSetModel paramSet,
+    required List<
+            (
+              ConversionParamModel,
+              dynamic,
+              dynamic, {
+              OutputListValuesBatch? listValues,
+              UnitModel? unit,
+              bool calculated
+            })>
+        paramValues,
+  }) {
+    return ConversionParamSetValueBulkModel.single(
+      paramSet: paramSet,
+      paramValues: paramValues
+          .map(
+            (r) => ConversionParamValueModel.tuple(
+              r.$1,
+              r.$2,
+              r.$3,
+              listValues: r.listValues,
+              unit: r.unit,
+              calculated: r.calculated,
+            ),
+          )
+          .toList(),
     );
   }
 

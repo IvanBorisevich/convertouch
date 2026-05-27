@@ -375,7 +375,7 @@ void main() {
                     unit: kilogram, calculated: true),
               ],
             ),
-            unitGroup: massGroup,
+            unitGroupName: GroupNames.mass,
           ),
           ConversionParamValueModel.tuple(
               oneSideWeightParam, null, (1000 - 10) / 2,

@@ -112,7 +112,6 @@ const conversionParamsV2 = [
       {
         "name": ParamNames.height,
         forUpdate: {
-          "calculable": false,
           "valueType": ConvertouchValueType.text,
           "listType": ConvertouchListType.clothesHeightRange,
         },

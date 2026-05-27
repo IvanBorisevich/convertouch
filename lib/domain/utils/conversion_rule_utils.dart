@@ -20,7 +20,12 @@ final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
 };
 
 const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
-    _nonListParamBySrcValueRules = {
+    _paramBySrcValueRules = {
+  GroupNames.clothesSize: {
+    ParamSetNames.byHeight: {
+      ParamNames.height: getHeightByClothesSize,
+    },
+  },
   GroupNames.ringSize: {
     ParamSetNames.byDiameter: {
       ParamNames.diameter: getDiameterByRingSize,
@@ -50,7 +55,7 @@ const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
   GroupNames.ringSize: getRingSizesMapByParams,
 };
 
-const Map<String, MappingRuleByUnitValueFunc> _mappingRulesByValue = {
+const Map<String, MappingRuleBySrcUnitValueFunc> _mappingRulesBySrcUnitValue = {
   GroupNames.ringSize: getRingSizesMapByValue,
 };
 
@@ -82,7 +87,9 @@ List<ConversionUnitValueModel> calculateUnitValues(
 
   List<ConversionUnitValueModel> result = [];
 
-  for (var tgtUnit in input.targetUnits) {
+  for (var tgtItem in input.targetItems) {
+    var tgtUnit = tgtItem.unit;
+
     if (tgtUnit.name == input.sourceUnitValue.unit.name) {
       result.add(input.sourceUnitValue);
       continue;
@@ -125,6 +132,7 @@ List<ConversionUnitValueModel> calculateUnitValues(
         unit: tgtUnit,
         value: value,
         defaultValue: defaultValue,
+        listValues: tgtItem.listValues,
       ),
     );
   }
@@ -132,55 +140,79 @@ List<ConversionUnitValueModel> calculateUnitValues(
   return result;
 }
 
-ConversionParamValueModel calculateParamValueBySrcValue({
+ValueModel? calculateTargetParamValue({
+  required ConversionParamValueModel paramValue,
+  required UnitModel tgtParamUnit,
+  required ConversionParamSetValueModel params,
+  required UnitGroupModel paramUnitGroup,
+}) {
+  if (paramValue.unit == null) {
+    return null;
+  }
+
+  if (paramValue.listType == null && paramValue.unit!.listType != null) {
+    Map<String, String>? mappingTable = getMappingByParams(
+      unitGroupName: paramUnitGroup.name,
+      params: params,
+    );
+
+    if (mappingTable != null) {
+      return MappingConverter(mappingTable).valueBySrcValue(
+        srcValue: paramValue.value,
+        srcUnitCode: paramValue.unit!.code,
+        tgtUnitCode: tgtParamUnit.code,
+      );
+    }
+  }
+
+  if (paramValue.listType != null && paramValue.unit!.listType == null) {
+    var srcValue = paramValue.value;
+    var srcUnit = paramValue.unit!;
+    var tgtUnit = tgtParamUnit;
+
+    ConversionRule? xToBase = getRule(
+      unitGroup: paramUnitGroup,
+      ruleType: ConversionRuleType.xToBase,
+      unit: srcUnit,
+    );
+
+    ConversionRule? baseToY = getRule(
+      unitGroup: paramUnitGroup,
+      ruleType: ConversionRuleType.baseToY,
+      unit: tgtUnit,
+    );
+
+    return Converter(srcValue)
+        .apply(xToBase)
+        .apply(baseToY)
+        .value
+        ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
+  }
+
+  return null;
+}
+
+ValueModel? calculateParamValueBySrcValue({
   required ConversionParamModel param,
   required ConversionUnitValueModel srcUnitValue,
   required ConversionParamSetValueModel params,
-  required UnitGroupModel unitGroup,
+  required String unitGroupName,
 }) {
   ConversionParamValueModel paramValue = params.getParamValue(param.name)!;
-  ValueModel? value;
-  ValueModel? defaultValue;
 
-  if (param.listType != null) {
-    Map<String, String>? mapping = getMappingBySrcValue(
-      unitGroupName: unitGroup.name,
-      srcUnit: srcUnitValue.unit,
-      srcValue: srcUnitValue.eitherValue,
-    );
-
-    value = MappingConverter(mapping).valueByCode(srcUnitValue.unit.code);
-  } else {
-    ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
-      func: _nonListParamBySrcValueRules[unitGroup.name]?[params.paramSet.name]
-          ?[param.name],
-      srcUnit: srcUnitValue.unit,
-    );
-
-    value = Converter(srcUnitValue.value, params: params)
-        .apply(paramBySrc)
-        .value
-        ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
-
-    defaultValue = Converter(
-      srcUnitValue.listType == null
-          ? srcUnitValue.defaultValue
-          : srcUnitValue.value,
-      params: params,
-    )
-        .apply(paramBySrc)
-        .value
-        ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
-  }
-
-  return ConversionParamValueModel(
-    param: param,
-    unit: paramValue.unit,
-    calculated: paramValue.calculated,
-    value: value,
-    defaultValue: defaultValue,
-    listValues: paramValue.listValues,
+  ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
+    func: _paramBySrcValueRules[unitGroupName]?[params.paramSet.name]
+        ?[param.name],
+    srcUnit: srcUnitValue.unit,
   );
+
+  return Converter(
+    srcUnitValue.value ?? srcUnitValue.defaultValue,
+    params: params,
+  )
+      .apply(paramBySrc)
+      .value
+      ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
 }
 
 ConversionUnitValueModel calculateSrcValueByParams({
@@ -259,7 +291,7 @@ Map<String, String>? getMappingBySrcValue({
   required UnitModel srcUnit,
 }) {
   return srcValue != null
-      ? _mappingRulesByValue[unitGroupName]
+      ? _mappingRulesBySrcUnitValue[unitGroupName]
           ?.call(value: srcValue, unit: srcUnit)
       : null;
 }

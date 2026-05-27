@@ -13,6 +13,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_defau
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
+import '../../model/mock/mock_list_values_batch.dart';
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
@@ -189,10 +190,7 @@ void main() {
                     10,
                     null,
                     unit: kilogram,
-                    listValues: const OutputItemsFetchModel(items: [
-                      ListValueModel.str('10'),
-                      ListValueModel.str('20'),
-                    ], pageNum: 1, hasReachedMax: true),
+                    listValues: barWeightParamKgListValues,
                   ),
                   ConversionParamValueModel.tuple(
                     oneSideWeightParam,
@@ -246,10 +244,7 @@ void main() {
                     10,
                     null,
                     unit: kilogram,
-                    listValues: const OutputItemsFetchModel(items: [
-                      ListValueModel.str('10'),
-                      ListValueModel.str('20'),
-                    ], pageNum: 1, hasReachedMax: true),
+                    listValues: barWeightParamKgListValues,
                   ),
                   ConversionParamValueModel.tuple(
                     oneSideWeightParam,

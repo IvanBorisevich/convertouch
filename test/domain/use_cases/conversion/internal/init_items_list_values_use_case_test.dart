@@ -8,6 +8,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
@@ -16,6 +17,7 @@ import 'package:either_dart/either.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../model/mock/mock_unit_group.dart';
@@ -48,11 +50,12 @@ void main() {
   });
 
   test(
-      "[Clothes size] Should not enrich 'Garment' param, as 'Person' is not "
-      "selected, should not preselect default values of params", () async {
+      "[Clothes size] Should init list values of 'Person' param without preselect, "
+      "should not init list values of 'Garment' param ('Person' is not selected), "
+      "should not init list values of unit values (not all mandatory params filled)",
+      () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
-      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -72,6 +75,7 @@ void main() {
         ],
         selectedIndex: 0,
       ),
+      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
       convertedUnitValues: [
         ConversionUnitValueModel.tuple(japanClothSize, null, null),
         ConversionUnitValueModel.tuple(germanyClothSize, null, null),
@@ -95,17 +99,7 @@ void main() {
                   personParam,
                   null,
                   null,
-                  listValues: const OutputListValuesBatch(
-                    items: [
-                      ListValueModel.str("Man"),
-                      ListValueModel.str("Woman"),
-                    ],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.person,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 1,
-                  ),
+                  listValues: personParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
@@ -142,57 +136,19 @@ void main() {
         srcUnitValue:
             ConversionUnitValueModel.tuple(japanClothSize, null, null),
         convertedUnitValues: [
-          ConversionUnitValueModel.tuple(
-            japanClothSize,
-            null,
-            null,
-            listValues: const OutputListValuesBatch(
-              items: [
-                ListValueModel.str('S'),
-                ListValueModel.str('M'),
-                ListValueModel.str('L'),
-                ListValueModel.str('LL'),
-                ListValueModel.str('3L'),
-                ListValueModel.str('4L'),
-                ListValueModel.str('5L'),
-                ListValueModel.str('6L'),
-              ],
-              hasReachedMax: true,
-              pageNum: 1,
-            ),
-          ),
-          ConversionUnitValueModel.tuple(
-            germanyClothSize,
-            null,
-            null,
-            listValues: const OutputListValuesBatch(
-              items: [
-                ListValueModel.str('32'),
-                ListValueModel.str('34'),
-                ListValueModel.str('36'),
-                ListValueModel.str('38'),
-                ListValueModel.str('40'),
-                ListValueModel.str('42'),
-                ListValueModel.str('44'),
-                ListValueModel.str('46'),
-                ListValueModel.str('48'),
-                ListValueModel.str('50'),
-                ListValueModel.str('52'),
-                ListValueModel.str('54'),
-                ListValueModel.str('56'),
-              ],
-              hasReachedMax: true,
-              pageNum: 1,
-            ),
-          ),
+          ConversionUnitValueModel.tuple(japanClothSize, null, null),
+          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
         ],
       ).toJson(),
     );
   });
 
   test(
-      "[Clothes size] Should enrich 'Garment' param, as 'Person' is selected, "
-      "should not preselect default value of 'Garment'", () async {
+      "[Clothes size] Should init 'Person' param list values with preselect, "
+      "should init 'Garment' param list values with preselect ('Person' is selected), "
+      "should init 'Height' param list values with preselect, "
+      "should init list values of unit values with preselect (all mandatory params filled)",
+      () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -208,7 +164,7 @@ void main() {
               ),
               ConversionParamValueModel.tuple(garmentParam, null, null),
               ConversionParamValueModel.tuple(
-                  heightParam, const NumRange.withRight(174, 180), null,
+                  heightParam, const NumRange.withRight(1.74, 1.8), null,
                   unit: meter),
             ],
           )
@@ -238,98 +194,54 @@ void main() {
                   personParam,
                   'Man',
                   null,
-                  listValues: const OutputListValuesBatch(
-                    items: [
-                      ListValueModel.str("Man"),
-                      ListValueModel.str("Woman"),
-                    ],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.person,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 1,
-                  ),
+                  listValues: personParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
+                  'Shirt',
                   null,
-                  null,
-                  listValues: const OutputListValuesBatch(
-                    items: [
-                      ListValueModel.str("Shirt"),
-                      ListValueModel.str("Trousers"),
-                    ],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.garment,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 1,
-                  ),
+                  listValues: garmentParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  const NumRange.withRight(174, 180),
+                  const NumRange.withRight(1.74, 1.8),
                   null,
                   unit: meter,
-                  listValues: const OutputListValuesBatch(
-                    items: [],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.clothesHeightRange,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 0,
-                  ),
+                  listValues: OutputItemsFetchModel(items: [
+                    ListValueModel.range(const NumRange.withRight(0, 1.64)),
+                    ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
+                    ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
+                    ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
+                    ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
+                    ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
+                    ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
+                    ListValueModel.range(
+                        const NumRange.withoutBoth(1.9, double.infinity)),
+                  ], pageNum: 1, hasReachedMax: true),
                 ),
               ],
             )
           ],
           selectedIndex: 0,
         ),
-        srcUnitValue:
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+        srcUnitValue: ConversionUnitValueModel.tuple(
+          japanClothSize,
+          'LL',
+          null,
+          listValues: japanClothSizeListValues,
+        ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             japanClothSize,
+            'LL',
             null,
-            null,
-            listValues: const OutputListValuesBatch(
-              items: [
-                ListValueModel.str('S'),
-                ListValueModel.str('M'),
-                ListValueModel.str('L'),
-                ListValueModel.str('LL'),
-                ListValueModel.str('3L'),
-                ListValueModel.str('4L'),
-                ListValueModel.str('5L'),
-                ListValueModel.str('6L'),
-              ],
-              hasReachedMax: true,
-              pageNum: 1,
-            ),
+            listValues: japanClothSizeListValues,
           ),
           ConversionUnitValueModel.tuple(
             germanyClothSize,
+            46,
             null,
-            null,
-            listValues: const OutputListValuesBatch(
-              items: [
-                ListValueModel.str('32'),
-                ListValueModel.str('34'),
-                ListValueModel.str('36'),
-                ListValueModel.str('38'),
-                ListValueModel.str('40'),
-                ListValueModel.str('42'),
-                ListValueModel.str('44'),
-                ListValueModel.str('46'),
-                ListValueModel.str('48'),
-                ListValueModel.str('50'),
-                ListValueModel.str('52'),
-                ListValueModel.str('54'),
-                ListValueModel.str('56'),
-              ],
-              hasReachedMax: true,
-              pageNum: 1,
-            ),
+            listValues: germanyClothesSizeListValues,
           ),
         ],
       ).toJson(),
@@ -337,8 +249,8 @@ void main() {
   });
 
   test(
-      '[Currency] Should enrich conversion items and params with list values'
-      'fetched from network and preselect them if possible', () async {
+      "[Currency] Should init 'Source' param list values with preselect, "
+      "should not init 'Bank' param list values", () async {
     final conversion = ConversionModel(
       unitGroup: currencyGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
@@ -408,7 +320,7 @@ void main() {
               paramValues: [
                 ConversionParamValueModel.tuple(
                   exchangeRateSourceParam,
-                  null,
+                  'FloatRates',
                   null,
                   listValues: const OutputListValuesBatch(
                     items: [

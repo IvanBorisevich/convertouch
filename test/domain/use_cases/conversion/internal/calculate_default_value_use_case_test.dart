@@ -34,18 +34,6 @@ void main() {
     expect(result, ValueModel.one);
   });
 
-  test('Calculate for list unit', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: japanClothSize,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.any('S'));
-  });
-
   test('Calculate for replacing non-list unit', () async {
     ValueModel? result = ObjectUtils.tryGet(
       await useCase.execute(
@@ -57,60 +45,5 @@ void main() {
     );
 
     expect(result, ValueModel.one);
-  });
-
-  test('Calculate for replacing list unit', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: japanClothSize,
-          replacingUnit: italianClothSize,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.any(38));
-  });
-
-  test('Calculate for list param without unit without preselection', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: personParam,
-        ),
-      ),
-    );
-
-    expect(result, null);
-  });
-
-  test('Calculate for list param without unit with preselection', () async {});
-
-  test('Calculate for list param with unit without preselection', () async {});
-
-  test('Calculate for list param with unit with preselection', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: barWeightParam,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.any(10));
-  });
-
-  test('Calculate for replacing unit in list param', () async {
-    ValueModel? result = ObjectUtils.tryGet(
-      await useCase.execute(
-        const InputDefaultValueCalculationModel(
-          item: barWeightParam,
-          currentParamUnit: kilogram,
-          replacingUnit: pound,
-        ),
-      ),
-    );
-
-    expect(result, ValueModel.any(22));
   });
 }

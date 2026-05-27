@@ -3,13 +3,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/mapping_table.dart';
-
-/*
-  used to normalize range values to cm
-  since the mapping table criteria ranges are in cm
-*/
-const int _cmInMeter = 100;
 
 enum Person {
   man("Man"),
@@ -54,15 +49,14 @@ class ClothesSizeCriterion extends Criterion {
       return false;
     }
 
-    NumRange? actualHeightRangeCm = heightParam.eitherValue?.range
-        ?.copyWithFactor(heightParam.unit!.coefficient! * _cmInMeter);
+    NumRange? actualHeightRangeCm = heightParam.eitherValue?.range;
 
     bool heightMatches = heightCmRange.includesRange(actualHeightRangeCm);
 
     var waistParam = params.getParamValue(ParamNames.waist);
     bool waistMatches = waistCmRange == null ||
-        waistParam?.eitherNum == null ||
-        waistCmRange!.includesValue(waistParam!.eitherNum);
+        waistParam!.eitherValue?.range == null ||
+        waistCmRange!.includesRange(waistParam.eitherValue!.range);
 
     return heightMatches && waistMatches;
   }
@@ -77,7 +71,7 @@ Map<String, String>? getClothesSizesMapByParams(
   return _clothesSizes[person]?[garment]?.getRowByParams(params);
 }
 
-List<Garment> getGarmentList({
+List<Garment> getGarments({
   UnitModel? unit,
   ConversionParamSetValueModel? params,
 }) {
@@ -86,24 +80,31 @@ List<Garment> getGarmentList({
   return _clothesSizes[person]?.keys.toList() ?? [];
 }
 
-List<NumRange> getHeightList({
-  UnitModel? unit,
+List<NumRange> getHeightRangesCm({
   ConversionParamSetValueModel? params,
 }) {
-  if (unit == null) {
-    return [];
-  }
-
   Person? person = params?.getValueOfType(ParamNames.person, Person.valueOf);
   Garment? garment =
       params?.getValueOfType(ParamNames.garment, Garment.valueOf);
 
   return _clothesSizes[person]?[garment]
           ?.rows
-          .map((row) => row.criterion.heightCmRange
-              .copyWithFactor(1 / _cmInMeter / unit.coefficient!))
+          .map((row) => row.criterion.heightCmRange)
           .toList() ??
       [];
+}
+
+ValueModel? getHeightByClothesSize({
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
+  required ConversionParamSetValueModel params,
+}) {
+  Person? person = params.getValueOfType(ParamNames.person, Person.valueOf);
+  Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
+
+  var criterion =
+      _clothesSizes[person]?[garment]?.getCriterionByValue(srcValue, srcUnit);
+  return ValueModel.any(criterion?.heightCmRange);
 }
 
 const Map<Person, Map<Garment, MappingTable<ClothesSizeCriterion, CountryCode>>>

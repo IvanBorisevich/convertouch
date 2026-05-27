@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 
 class ConversionParamSetValueModel extends ItemModel {
   final ConversionParamSetModel paramSet;
@@ -19,6 +21,36 @@ class ConversionParamSetValueModel extends ItemModel {
       : super(
           itemType: ItemType.conversionParamSetValue,
         );
+
+  factory ConversionParamSetValueModel.compact({
+    required ConversionParamSetModel paramSet,
+    required List<
+            (
+              ConversionParamModel,
+              dynamic,
+              dynamic, {
+              OutputListValuesBatch? listValues,
+              UnitModel? unit,
+              bool calculated
+            })>
+        paramValues,
+  }) {
+    return ConversionParamSetValueModel(
+      paramSet: paramSet,
+      paramValues: paramValues
+          .map(
+            (r) => ConversionParamValueModel.tuple(
+              r.$1,
+              r.$2,
+              r.$3,
+              listValues: r.listValues,
+              unit: r.unit,
+              calculated: r.calculated,
+            ),
+          )
+          .toList(),
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -38,6 +70,10 @@ class ConversionParamSetValueModel extends ItemModel {
 
   ConversionParamValueModel? getParamValue(String paramName) {
     return paramValues.firstWhereOrNull((e) => e.param.name == paramName);
+  }
+
+  ConversionParamValueModel? getParamValueById(int id) {
+    return paramValues.firstWhereOrNull((e) => e.param.id == id);
   }
 
   bool hasParamValue(String paramName) {

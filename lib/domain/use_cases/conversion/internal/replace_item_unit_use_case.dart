@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_list_values_init_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -39,8 +39,10 @@ class ReplaceUnitInConversionItemUseCase
     try {
       if (input.newUnit.listType != null) {
         return await initUnitListValuesUseCase.execute(
-          input.item.copyWith(
-            unit: input.newUnit,
+          InputUnitListValuesInitModel(
+            itemValue: input.item.copyWith(
+              unit: input.newUnit,
+            ),
           ),
         );
       }
@@ -89,7 +91,7 @@ class ReplaceUnitInParamUseCase extends ReplaceItemUnitUseCase<
     if (input.item.listType != null || input.newUnit.listType != null) {
       return await initParamListValuesUseCase.execute(
         InputParamListValuesInitModel(
-          paramValue: input.item.copyWith(
+          itemValue: input.item.copyWith(
             unit: input.newUnit,
           ),
         ),

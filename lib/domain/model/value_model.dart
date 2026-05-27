@@ -69,6 +69,10 @@ class ValueModel extends Equatable {
       return null;
     }
 
+    if (value is ValueModel) {
+      return value;
+    }
+
     if (value is num) {
       return ValueModel.numeric(value);
     }
