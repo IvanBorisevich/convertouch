@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_default_valu
 import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';

@@ -4,19 +4,19 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
-import '../../model/mock/mock_list_values_batch.dart';
-import '../../model/mock/mock_param.dart';
-import '../../model/mock/mock_unit.dart';
-import '../../repositories/mock/mock_dynamic_value_repository.dart';
-import '../../repositories/mock/mock_network_repository.dart';
-import '../../repositories/mock/mock_unit_group_repository.dart';
+import '../../../model/mock/mock_list_values_batch.dart';
+import '../../../model/mock/mock_param.dart';
+import '../../../model/mock/mock_unit.dart';
+import '../../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../../repositories/mock/mock_network_repository.dart';
+import '../../../repositories/mock/mock_unit_group_repository.dart';
 
 void main() {
   late CalculateParamValueUseValue useCase;
