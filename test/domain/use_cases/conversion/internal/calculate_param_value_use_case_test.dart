@@ -4,9 +4,9 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
@@ -160,8 +160,7 @@ void main() {
       });
 
       group("Should NOT align selected value", () {
-        test("Should NOT preselect default value 10 when no value selected",
-            () async {
+        test("Should NOT preselect default value 10", () async {
           final currentParamValue = ConversionParamValueModel.tuple(
             barWeightParam,
             null,
@@ -223,7 +222,7 @@ void main() {
           );
         });
 
-        test("Should NOT replace unknown value 15", () async {
+        test("Should leave unknown value 15", () async {
           final currentParamValue = ConversionParamValueModel.tuple(
             barWeightParam,
             15,
@@ -466,7 +465,7 @@ void main() {
       });
 
       test(
-          "Should recalculate default value of param 'One Side Weight' kg (calculated = false)",
+          "Should leave default value of param 'One Side Weight' kg (calculated = false)",
           () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
@@ -478,7 +477,7 @@ void main() {
         final expectedParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
-          1,
+          20,
           unit: kilogram,
         );
 
@@ -580,8 +579,8 @@ void main() {
       });
 
       test(
-          "Should recalculate default value of param 'One Side Weight' kg"
-          " since it should NOT calculate by empty src value (calculated = true), ",
+          "Should leave default value of param 'One Side Weight' kg"
+          " since it should NOT be recalculated by empty src value (calculated = true), ",
           () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
@@ -594,7 +593,7 @@ void main() {
         final expectedParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
-          1,
+          20,
           unit: kilogram,
           calculated: true,
         );
@@ -713,6 +712,162 @@ void main() {
 
         await testCase(
           alignCurrentValue: false,
+          paramSetValue: ConversionParamSetValueModel(
+            paramSet: barbellWeightParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                null,
+                null,
+                unit: kilogram,
+              ),
+              currentParamValue,
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
+    });
+
+    group("Change non-list param value", () {
+      test("Should change non-list param 'One Side Weight' main value [kg: 30 -> 45], "
+          "should replace empty default value with 1", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          30,
+          null,
+          unit: kilogram,
+        );
+
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          45,
+          1,
+          unit: kilogram,
+        );
+
+        await testCase(
+          delta: EditConversionParamValueDelta.raw(
+            newValue: 45,
+            paramId: oneSideWeightParam.id,
+            paramSetId: oneSideWeightParam.paramSetId,
+          ),
+          paramSetValue: ConversionParamSetValueModel(
+            paramSet: barbellWeightParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                null,
+                null,
+                unit: kilogram,
+              ),
+              currentParamValue,
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
+
+      test("Should change non-list param 'One Side Weight' main value [kg: 30 -> <empty>]", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          30,
+          null,
+          unit: kilogram,
+        );
+
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          null,
+          1,
+          unit: kilogram,
+        );
+
+        await testCase(
+          delta: EditConversionParamValueDelta.raw(
+            newValue: null,
+            paramId: oneSideWeightParam.id,
+            paramSetId: oneSideWeightParam.paramSetId,
+          ),
+          paramSetValue: ConversionParamSetValueModel(
+            paramSet: barbellWeightParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                null,
+                null,
+                unit: kilogram,
+              ),
+              currentParamValue,
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
+
+      test("Should change non-list param 'One Side Weight' default value [kg: 2 -> 4]", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          null,
+          2,
+          unit: kilogram,
+        );
+
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          null,
+          4,
+          unit: kilogram,
+        );
+
+        await testCase(
+          delta: EditConversionParamValueDelta.raw(
+            newDefaultValue: 4,
+            paramId: oneSideWeightParam.id,
+            paramSetId: oneSideWeightParam.paramSetId,
+          ),
+          paramSetValue: ConversionParamSetValueModel(
+            paramSet: barbellWeightParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                null,
+                null,
+                unit: kilogram,
+              ),
+              currentParamValue,
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
+
+      test("Should change non-list param 'One Side Weight' default value [kg: 2 -> <empty>], "
+          "should replace empty default value with 1", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          null,
+          2,
+          unit: kilogram,
+        );
+
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          null,
+          1,
+          unit: kilogram,
+        );
+
+        await testCase(
+          delta: EditConversionParamValueDelta.raw(
+            newDefaultValue: null,
+            paramId: oneSideWeightParam.id,
+            paramSetId: oneSideWeightParam.paramSetId,
+          ),
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [

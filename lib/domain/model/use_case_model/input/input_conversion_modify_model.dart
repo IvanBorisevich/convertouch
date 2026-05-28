@@ -29,6 +29,15 @@ abstract class ConversionParamsModifyDelta extends ConversionModifyDelta {
   const ConversionParamsModifyDelta();
 }
 
+abstract class ConversionSingleUnitModifyDelta
+    extends ConversionUnitValuesModifyDelta {
+  final int unitId;
+
+  const ConversionSingleUnitModifyDelta({
+    required this.unitId,
+  });
+}
+
 abstract class ConversionSingleParamModifyDelta
     extends ConversionParamsModifyDelta {
   final int paramId;
@@ -67,15 +76,14 @@ class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
   });
 }
 
-class EditConversionUnitValueDelta extends ConversionUnitValuesModifyDelta {
+class EditConversionUnitValueDelta extends ConversionSingleUnitModifyDelta {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
-  final int unitId;
 
   const EditConversionUnitValueDelta({
     required this.newValue,
     required this.newDefaultValue,
-    required this.unitId,
+    required super.unitId,
   });
 
   factory EditConversionUnitValueDelta.raw({
@@ -89,6 +97,21 @@ class EditConversionUnitValueDelta extends ConversionUnitValuesModifyDelta {
       unitId: unitId,
     );
   }
+}
+
+class ReplaceConversionItemUnitDelta extends ConversionSingleUnitModifyDelta {
+  final UnitModel newUnit;
+  final RecalculationOnUnitChange recalculationMode;
+
+  const ReplaceConversionItemUnitDelta({
+    required this.newUnit,
+    required super.unitId,
+    required this.recalculationMode,
+  });
+
+  @override
+  bool get recalculateUnitValues =>
+      recalculationMode == RecalculationOnUnitChange.otherValues;
 }
 
 class UpdateConversionCoefficientsDelta
@@ -109,22 +132,6 @@ class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
 
   @override
   bool get recalculateUnitValues => false;
-}
-
-class ReplaceConversionItemUnitDelta extends ConversionUnitValuesModifyDelta {
-  final UnitModel newUnit;
-  final int oldUnitId;
-  final RecalculationOnUnitChange recalculationMode;
-
-  const ReplaceConversionItemUnitDelta({
-    required this.newUnit,
-    required this.oldUnitId,
-    required this.recalculationMode,
-  });
-
-  @override
-  bool get recalculateUnitValues =>
-      recalculationMode == RecalculationOnUnitChange.otherValues;
 }
 
 class AddParamSetsDelta extends ConversionParamsModifyDelta {

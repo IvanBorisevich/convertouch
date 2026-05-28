@@ -53,7 +53,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: meter,
-            oldUnitId: decimeter.id,
+            unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
           ),
           unitGroup: lengthGroup,
@@ -76,7 +76,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: meter,
-            oldUnitId: decimeter.id,
+            unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
           ),
           unitGroup: lengthGroup,
@@ -98,7 +98,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: meter,
-            oldUnitId: decimeter.id,
+            unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
           ),
           unitGroup: lengthGroup,
@@ -121,7 +121,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: meter,
-            oldUnitId: decimeter.id,
+            unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
           ),
           unitGroup: lengthGroup,
@@ -151,7 +151,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: usaClothSize,
-            oldUnitId: europeanClothSize.id,
+            unitId: europeanClothSize.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
           ),
           currentParams: ConversionParamSetValueBulkModel(
@@ -221,7 +221,7 @@ void main() {
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
             newUnit: usaClothSize,
-            oldUnitId: europeanClothSize.id,
+            unitId: europeanClothSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
           ),
           currentParams: ConversionParamSetValueBulkModel(

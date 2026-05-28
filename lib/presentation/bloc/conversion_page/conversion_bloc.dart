@@ -296,7 +296,7 @@ class ConversionBloc
       InputConversionModifyModel<ReplaceConversionItemUnitDelta>(
         delta: ReplaceConversionItemUnitDelta(
           newUnit: event.newUnit,
-          oldUnitId: event.oldUnitId,
+          unitId: event.oldUnitId,
           recalculationMode: event.recalculationMode,
         ),
         conversion: state.conversion,

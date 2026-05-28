@@ -6,11 +6,13 @@ abstract class InputItemListValuesInitModel<
   final T itemValue;
   final ConversionParamSetValueModel? paramSetValue;
   final bool alignSelectedValue;
+  final bool alignForNull;
 
   const InputItemListValuesInitModel({
     required this.itemValue,
     this.paramSetValue,
     this.alignSelectedValue = true,
+    this.alignForNull = false,
   });
 }
 
@@ -20,6 +22,7 @@ class InputUnitListValuesInitModel
     required super.itemValue,
     super.paramSetValue,
     super.alignSelectedValue,
+    super.alignForNull,
   });
 }
 
@@ -29,5 +32,6 @@ class InputParamListValuesInitModel
     required super.itemValue,
     super.paramSetValue,
     super.alignSelectedValue,
+    super.alignForNull,
   });
 }

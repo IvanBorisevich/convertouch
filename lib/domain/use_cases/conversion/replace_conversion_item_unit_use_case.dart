@@ -30,7 +30,7 @@ class ReplaceConversionItemUnitUseCase
     required ReplaceConversionItemUnitDelta delta,
   }) async {
     ConversionUnitValueModel oldUnitValue =
-        oldConvertedUnitValues[delta.oldUnitId]!;
+        oldConvertedUnitValues[delta.unitId]!;
 
     var modifiedConvertedUnitValues = oldConvertedUnitValues;
 
@@ -81,7 +81,7 @@ class ReplaceConversionItemUnitUseCase
 
     if (newUnitValue != null) {
       return modifiedConvertedUnitValues.map(
-        (key, value) => key == delta.oldUnitId
+        (key, value) => key == delta.unitId
             ? MapEntry(delta.newUnit.id, newUnitValue!)
             : MapEntry(key, value),
       );

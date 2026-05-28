@@ -41,7 +41,21 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
     );
   }
 
-  Future<ValueModel?> _alignCurrentValue(I input, OutputListValuesBatch batch);
+  Future<ValueModel?> _alignCurrentValue(
+      I input, OutputListValuesBatch batch) async {
+    if (input.itemValue.value == null && input.alignForNull) {
+      return null;
+    }
+
+    if (input.itemValue.value != null && batch.containsSelectedValue) {
+      return input.itemValue.value;
+    }
+
+    return _getDefaultListValue(
+      listValuesBatch: batch,
+      preselected: input.itemValue.listType!.preselected,
+    );
+  }
 
   Future<OutputListValuesBatch> _fetchFirstBatch({
     required ListValuesFetchParams fetchParams,
@@ -70,31 +84,6 @@ class InitUnitListValuesUseCase extends InitItemListValuesUseCase<
   const InitUnitListValuesUseCase({
     required super.fetchListValuesUseCase,
   });
-
-  @override
-  Future<ValueModel?> _alignCurrentValue(
-    InputUnitListValuesInitModel input,
-    OutputListValuesBatch batch,
-  ) async {
-    if (input.itemValue.value != null && batch.containsSelectedValue) {
-      return input.itemValue.value;
-    }
-
-    bool paramsAreValid = input.paramSetValue == null ||
-        input.paramSetValue != null &&
-            (!input.paramSetValue!.paramSet.mandatory ||
-                input.paramSetValue!.paramSet.mandatory &&
-                    input.paramSetValue!.hasAllValues);
-
-    if (input.itemValue.value == null && paramsAreValid) {
-      return _getDefaultListValue(
-        listValuesBatch: batch,
-        preselected: input.itemValue.listType!.preselected,
-      );
-    } else {
-      return null;
-    }
-  }
 }
 
 class InitParamListValuesUseCase extends InitItemListValuesUseCase<
@@ -102,19 +91,4 @@ class InitParamListValuesUseCase extends InitItemListValuesUseCase<
   const InitParamListValuesUseCase({
     required super.fetchListValuesUseCase,
   });
-
-  @override
-  Future<ValueModel?> _alignCurrentValue(
-    InputParamListValuesInitModel input,
-    OutputListValuesBatch batch,
-  ) async {
-    if (input.itemValue.value != null && batch.containsSelectedValue) {
-      return input.itemValue.value;
-    }
-
-    return _getDefaultListValue(
-      listValuesBatch: batch,
-      preselected: input.itemValue.listType!.preselected,
-    );
-  }
 }

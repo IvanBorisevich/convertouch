@@ -8,8 +8,8 @@ import 'package:convertouch/domain/model/use_case_model/input/input_item_list_va
 import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -82,7 +82,7 @@ class CalculateParamValueUseValue extends UseCase<
       } else if (newDefaultValueForNewUnit != null) {
         newDefaultValue = newDefaultValueForNewUnit;
       } else {
-        newDefaultValue = input.alignCurrentValue
+        newDefaultValue = newDefaultValue == null && input.alignCurrentValue
             ? ObjectUtils.tryGet(
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
@@ -114,9 +114,11 @@ class CalculateParamValueUseValue extends UseCase<
         ObjectUtils.tryGet(
           await initParamListValuesUseCase.execute(
             InputParamListValuesInitModel(
-              itemValue: input.paramValue.copyWith(
+              itemValue: ConversionParamValueModel(
+                param: input.paramValue.param,
                 value: newValue,
                 unit: newUnit,
+                calculated: input.paramValue.calculated,
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,

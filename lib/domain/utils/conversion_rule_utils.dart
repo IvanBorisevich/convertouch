@@ -119,6 +119,22 @@ List<ConversionUnitValueModel> calculateUnitValues(
   return result;
 }
 
+ConversionUnitValueModel calculateUnitValueForNewUnit({
+  required ConversionUnitValueModel unitValue,
+  required UnitModel tgtParamUnit,
+  ConversionParamSetValueModel? params,
+  required UnitGroupModel paramUnitGroup,
+}) {
+  return calculateUnitValues(
+    InputConversionModel(
+      unitGroup: paramUnitGroup,
+      params: params,
+      sourceUnitValue: unitValue,
+      targetItems: [ConversionUnitValueModel(unit: tgtParamUnit)],
+    ),
+  ).first;
+}
+
 ConversionParamValueModel calculateParamValueForNewUnit({
   required ConversionParamValueModel paramValue,
   required UnitModel tgtParamUnit,
