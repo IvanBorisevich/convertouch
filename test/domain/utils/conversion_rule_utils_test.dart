@@ -146,7 +146,8 @@ void main() {
           paramValues: [
             ConversionParamValueModel.tuple(personParam, "Man", null),
             ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-            ConversionParamValueModel.tuple(heightParam, const NumRange.withRight(0, 164), null,
+            ConversionParamValueModel.tuple(
+                heightParam, const NumRange.withRight(0, 164), null,
                 unit: centimeter),
           ],
         );
@@ -160,77 +161,84 @@ void main() {
 
         test('RU -> EU', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(42),
-              srcUnitCode: CountryCode.ru.name,
-              tgtUnitCode: CountryCode.eu.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(42),
+                  srcUnitCode: CountryCode.ru.name,
+                )
+                .valueByCode(CountryCode.eu.name),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> RU', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(42),
-              srcUnitCode: CountryCode.eu.name,
-              tgtUnitCode: CountryCode.ru.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(42),
+                  srcUnitCode: CountryCode.eu.name,
+                )
+                .valueByCode(CountryCode.eu.name),
             ValueModel.numeric(42),
           );
         });
 
         test('INT -> RU', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.str("XXS"),
-              srcUnitCode: CountryCode.inter.name,
-              tgtUnitCode: CountryCode.ru.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.str("XXS"),
+                  srcUnitCode: CountryCode.inter.name,
+                )
+                .valueByCode(CountryCode.ru.name),
             ValueModel.numeric(42),
           );
         });
 
         test('EU -> INT', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(42),
-              srcUnitCode: CountryCode.eu.name,
-              tgtUnitCode: CountryCode.inter.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(42),
+                  srcUnitCode: CountryCode.eu.name,
+                )
+                .valueByCode(CountryCode.inter.name),
             ValueModel.str("XXS"),
           );
         });
 
         test('EU -> RU (unacceptable value)', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(33),
-              srcUnitCode: CountryCode.eu.name,
-              tgtUnitCode: CountryCode.ru.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(33),
+                  srcUnitCode: CountryCode.eu.name,
+                )
+                .valueByCode(CountryCode.ru.name),
             null,
           );
         });
 
         test('RU -> EU (no value)', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: null,
-              srcUnitCode: CountryCode.ru.name,
-              tgtUnitCode: CountryCode.eu.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: null,
+                  srcUnitCode: CountryCode.ru.name,
+                )
+                .valueByCode(CountryCode.eu.name),
             null,
           );
         });
 
         test('RU -> RU', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(42),
-              srcUnitCode: CountryCode.ru.name,
-              tgtUnitCode: CountryCode.ru.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(42),
+                  srcUnitCode: CountryCode.ru.name,
+                )
+                .valueByCode(CountryCode.ru.name),
             ValueModel.numeric(42),
           );
         });
@@ -254,11 +262,12 @@ void main() {
 
         test('FR -> ES | should find match by non-null src value', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(75),
-              srcUnitCode: CountryCode.fr.name,
-              tgtUnitCode: CountryCode.es.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(75),
+                  srcUnitCode: CountryCode.fr.name,
+                )
+                .valueByCode(CountryCode.es.name),
             ValueModel.numeric(35),
           );
         });
@@ -267,22 +276,24 @@ void main() {
             'FR -> ES | should not find match '
             'by src value not from the mapping', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: ValueModel.numeric(400),
-              srcUnitCode: CountryCode.fr.name,
-              tgtUnitCode: CountryCode.es.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: ValueModel.numeric(400),
+                  srcUnitCode: CountryCode.fr.name,
+                )
+                .valueByCode(CountryCode.es.name),
             null,
           );
         });
 
         test('DE -> ES | should find match by null src value', () {
           expect(
-            converter.valueBySrcValue(
-              srcValue: null,
-              srcUnitCode: CountryCode.de.name,
-              tgtUnitCode: CountryCode.es.name,
-            ),
+            converter
+                .bySrcValue(
+                  srcValue: null,
+                  srcUnitCode: CountryCode.de.name,
+                )
+                .valueByCode(CountryCode.es.name),
             ValueModel.numeric(35),
           );
         });
@@ -377,9 +388,69 @@ void main() {
             ),
             unitGroupName: GroupNames.mass,
           ),
-          ConversionParamValueModel.tuple(
-              oneSideWeightParam, null, (1000 - 10) / 2,
-              unit: kilogram, calculated: true),
+          ValueModel.numeric((1000 - 10) / 2),
+        );
+      });
+    });
+  });
+
+  group('Conversion by mapping rule (for list values only)', () {
+    test("Should convert clothes size EU 42 -> JP 'S' by params", () {
+      Map<String, String>? mappingTable = rules.getMappingByParams(
+        unitGroupName: GroupNames.clothesSize,
+        params: ConversionParamSetValueModel(
+          paramSet: clothesSizeParamSet,
+          paramValues: [
+            ConversionParamValueModel.tuple(personParam, "Man", null),
+            ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+            ConversionParamValueModel.tuple(
+              heightParam,
+              const NumRange.withRight(0, 164),
+              null,
+              unit: centimeter,
+            ),
+          ],
+        ),
+      );
+
+      expect(
+        MappingConverter(mappingTable)
+            .bySrcValue(
+              srcValue: ValueModel.str('S'),
+              srcUnitCode: CountryCode.jp.name,
+            )
+            .valueByCode(CountryCode.eu.name),
+        ValueModel.numeric(42),
+      );
+    });
+  });
+
+  group('Recalculate param value by new param unit', () {
+    group('Non-list param value', () {
+      test("Should recalculate param 'One Side Weight' [20 kg -> ~ 44 lb]", () {
+        expect(
+          rules.calculateParamValueForNewUnit(
+            paramValue: ConversionParamValueModel.tuple(
+                oneSideWeightParam, 20, 1,
+                unit: kilogram),
+            tgtParamUnit: pound,
+            paramUnitGroup: massGroup,
+            params: ConversionParamSetValueModel(
+              paramSet: barbellWeightParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(barWeightParam, 20, null,
+                    unit: kilogram),
+                ConversionParamValueModel.tuple(oneSideWeightParam, 20, 1,
+                    unit: kilogram),
+              ],
+            ),
+          ),
+          ConversionParamValueModel(
+            param: oneSideWeightParam,
+            value: ValueModel.numeric(20 / pound.coefficient!),
+            defaultValue: ValueModel.numeric(1 / pound.coefficient!),
+            unit: pound,
+          ),
         );
       });
     });

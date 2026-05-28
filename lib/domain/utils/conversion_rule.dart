@@ -52,24 +52,27 @@ class Converter {
 }
 
 class MappingConverter {
+  static const MappingConverter empty = MappingConverter(null);
+
   final Map<String, String>? mapping;
 
   const MappingConverter(this.mapping);
 
-  ValueModel? valueBySrcValue({
+  MappingConverter bySrcValue({
     required ValueModel? srcValue,
     required String srcUnitCode,
-    required String tgtUnitCode,
   }) {
     if (srcValue?.raw != mapping?[srcUnitCode]) {
-      return null;
+      return empty;
     }
 
-    return valueByCode(tgtUnitCode);
+    return this;
   }
 
-  ValueModel? valueByCode(String code) {
-    return ValueModel.any(mapping?[code]);
+  bool get isNotEmpty => mapping != null;
+
+  ValueModel? valueByCode(String tgtUnitCode) {
+    return ValueModel.any(mapping?[tgtUnitCode]);
   }
 }
 

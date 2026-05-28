@@ -1,10 +1,8 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -251,10 +249,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          22,
+          barWeightParamPoundListValues.items[0].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -274,17 +272,17 @@ void main() {
       test("Should leave value 44 when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          44,
+          barWeightParamPoundListValues.items[1].valueModel,
           null,
           unit: pound,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          44,
+          barWeightParamPoundListValues.items[1].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -311,10 +309,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          22,
+          barWeightParamPoundListValues.items[0].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -347,7 +345,7 @@ void main() {
           null,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -378,7 +376,7 @@ void main() {
           44,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -409,7 +407,7 @@ void main() {
           15,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -619,19 +617,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(0, 156),
+          heightRangesFrom0_156To186InCm.items[0].valueModel,
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -651,26 +640,17 @@ void main() {
       test("Should leave '168-174' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(168, 174),
+          heightRangesFrom0_156To186InCm.items[3].valueModel,
           null,
           unit: centimeter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(168, 174),
+          heightRangesFrom0_156To186InCm.items[3].valueModel,
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -698,19 +678,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(0, 156),
+          heightRangesFrom0_156To186InCm.items[0].valueModel,
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -743,16 +714,7 @@ void main() {
           null,
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -783,16 +745,7 @@ void main() {
           const NumRange.withRight(168, 174),
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -823,16 +776,7 @@ void main() {
           const NumRange.withRight(10, 20),
           null,
           unit: centimeter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 156)),
-            ListValueModel.range(const NumRange.withRight(156, 162)),
-            ListValueModel.range(const NumRange.withRight(162, 168)),
-            ListValueModel.range(const NumRange.withRight(168, 174)),
-            ListValueModel.range(const NumRange.withRight(174, 180)),
-            ListValueModel.range(const NumRange.withRight(180, 186)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(186, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -862,19 +806,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(0, 1.56),
+          heightRangesFrom0_156To186InMeter.items[0].valueModel,
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -894,26 +829,17 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(1.56, 1.62),
+          heightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(1.56, 1.62),
+          heightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -941,19 +867,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(0, 1.56),
+          heightRangesFrom0_156To186InMeter.items[0].valueModel,
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -987,16 +904,7 @@ void main() {
           null,
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -1017,26 +925,17 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(1.56, 1.62),
+          heightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          const NumRange.withRight(1.56, 1.62),
+          heightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -1067,16 +966,7 @@ void main() {
           const NumRange.withRight(1.5, 3),
           null,
           unit: meter,
-          listValues: OutputItemsFetchModel(items: [
-            ListValueModel.range(const NumRange.withRight(0, 1.56)),
-            ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-            ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-            ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-            ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-            ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-            ListValueModel.range(
-                const NumRange.withoutBoth(1.86, double.infinity)),
-          ], pageNum: 1, hasReachedMax: true),
+          listValues: heightRangesFrom0_156To186InMeter,
         );
 
         await testCase(

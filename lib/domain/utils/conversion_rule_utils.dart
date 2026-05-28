@@ -11,6 +11,7 @@ import 'package:convertouch/domain/utils/conversion_rules/barbell_mass.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
+import 'package:convertouch/domain/utils/list_values.dart';
 
 // Function rules
 
@@ -79,12 +80,6 @@ List<ConversionUnitValueModel> calculateUnitValues(
     );
   }
 
-  ConversionRule? xToBase = getRule(
-    unitGroup: input.unitGroup,
-    ruleType: ConversionRuleType.xToBase,
-    unit: input.sourceUnitValue.unit,
-  );
-
   List<ConversionUnitValueModel> result = [];
 
   for (var tgtItem in input.targetItems) {
@@ -95,37 +90,21 @@ List<ConversionUnitValueModel> calculateUnitValues(
       continue;
     }
 
-    ConversionRule? baseToY = getRule(
+    ValueModel? value = calculateTargetValue(
       unitGroup: input.unitGroup,
-      ruleType: ConversionRuleType.baseToY,
-      unit: tgtUnit,
+      srcValue: input.sourceUnitValue.value,
+      srcUnit: input.sourceUnitValue.unit,
+      tgtUnit: tgtUnit,
+      mapping: mappingTable,
     );
 
-    ValueModel? value;
-
-    if (mappingTable != null) {
-      value = MappingConverter(mappingTable).valueBySrcValue(
-        srcValue: input.sourceUnitValue.value,
-        srcUnitCode: input.sourceUnitValue.unit.code,
-        tgtUnitCode: tgtUnit.code,
-      );
-    } else {
-      value = Converter(input.sourceUnitValue.value)
-          .apply(xToBase)
-          .apply(baseToY)
-          .value
-          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
-    }
-
-    ValueModel? defaultValue;
-
-    if (tgtUnit.listType == null) {
-      defaultValue = Converter(input.sourceUnitValue.defaultValue)
-          .apply(xToBase)
-          .apply(baseToY)
-          .value
-          ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
-    }
+    ValueModel? defaultValue = calculateTargetValue(
+      unitGroup: input.unitGroup,
+      srcValue: input.sourceUnitValue.defaultValue,
+      srcUnit: input.sourceUnitValue.unit,
+      tgtUnit: tgtUnit,
+      mapping: mappingTable,
+    );
 
     result.add(
       ConversionUnitValueModel(
@@ -140,44 +119,97 @@ List<ConversionUnitValueModel> calculateUnitValues(
   return result;
 }
 
-ValueModel? calculateTargetParamValue({
+ConversionParamValueModel calculateParamValueForNewUnit({
   required ConversionParamValueModel paramValue,
   required UnitModel tgtParamUnit,
   required ConversionParamSetValueModel params,
   required UnitGroupModel paramUnitGroup,
 }) {
   if (paramValue.unit == null) {
-    return null;
-  }
-
-  if (paramValue.listType == null && paramValue.unit!.listType != null) {
-    Map<String, String>? mappingTable = getMappingByParams(
-      unitGroupName: paramUnitGroup.name,
-      params: params,
-    );
-
-    if (mappingTable != null) {
-      return MappingConverter(mappingTable).valueBySrcValue(
-        srcValue: paramValue.value,
-        srcUnitCode: paramValue.unit!.code,
-        tgtUnitCode: tgtParamUnit.code,
-      );
-    }
+    return paramValue;
   }
 
   if (paramValue.listType != null && paramValue.unit!.listType == null) {
-    var srcValue = paramValue.value;
-    var srcUnit = paramValue.unit!;
-    var tgtUnit = tgtParamUnit;
+    if (paramValue.value == null) {
+      return paramValue;
+    }
 
+    var listValueFuncSet = listValuesFuncSets[paramValue.listType];
+
+    if (listValueFuncSet == null) {
+      return paramValue;
+    }
+
+    String? listPublicValue = listValueFuncSet.publicValueFunc.call(
+      listValueFuncSet.rawValueMapFunc.call(paramValue.value!),
+      unit: tgtParamUnit,
+      params: params,
+    );
+
+    return ConversionParamValueModel(
+      param: paramValue.param,
+      value: paramValue.value!.copyWith(
+        alt: listPublicValue,
+      ),
+      unit: tgtParamUnit,
+    );
+  }
+
+  Map<String, String>? mappingTable;
+  if (paramValue.listType == null && paramValue.unit!.listType != null) {
+    mappingTable = getMappingByParams(
+      unitGroupName: paramUnitGroup.name,
+      params: params,
+    );
+  }
+
+  ValueModel? value = calculateTargetValue(
+    unitGroup: paramUnitGroup,
+    srcValue: paramValue.value,
+    srcUnit: paramValue.unit!,
+    tgtUnit: tgtParamUnit,
+    mapping: mappingTable,
+  );
+
+  ValueModel? defaultValue = calculateTargetValue(
+    unitGroup: paramUnitGroup,
+    srcValue: paramValue.defaultValue,
+    srcUnit: paramValue.unit!,
+    tgtUnit: tgtParamUnit,
+    mapping: mappingTable,
+  );
+
+  return ConversionParamValueModel(
+    param: paramValue.param,
+    value: value,
+    defaultValue: defaultValue,
+    unit: tgtParamUnit,
+  );
+}
+
+ValueModel? calculateTargetValue({
+  required UnitGroupModel unitGroup,
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
+  required UnitModel tgtUnit,
+  Map<String, String>? mapping,
+}) {
+  MappingConverter mappingConverter = MappingConverter(mapping).bySrcValue(
+    srcValue: srcValue,
+    srcUnitCode: srcUnit.code,
+  );
+
+  if (mappingConverter.isNotEmpty) {
+    return mappingConverter.valueByCode(tgtUnit.code);
+  } else {
     ConversionRule? xToBase = getRule(
-      unitGroup: paramUnitGroup,
+      unitGroup: unitGroup,
       ruleType: ConversionRuleType.xToBase,
       unit: srcUnit,
     );
 
     ConversionRule? baseToY = getRule(
-      unitGroup: paramUnitGroup,
+      unitGroup: unitGroup,
       ruleType: ConversionRuleType.baseToY,
       unit: tgtUnit,
     );
@@ -188,8 +220,6 @@ ValueModel? calculateTargetParamValue({
         .value
         ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
   }
-
-  return null;
 }
 
 ValueModel? calculateParamValueBySrcValue({

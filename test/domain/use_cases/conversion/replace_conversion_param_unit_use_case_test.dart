@@ -95,7 +95,7 @@ void main() {
                   22,
                   null,
                   unit: pound,
-                  listValues: barWeightParamLbListValues,
+                  listValues: barWeightParamPoundListValues,
                 ),
                 ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
                     unit: kilogram),

@@ -128,7 +128,7 @@ void main() {
         22,
         null,
         unit: pound,
-        listValues: barWeightParamLbListValues,
+        listValues: barWeightParamPoundListValues,
       ).toJson(),
     );
   });

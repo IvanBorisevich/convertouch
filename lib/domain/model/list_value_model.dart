@@ -7,12 +7,12 @@ class ListValueModel extends IdNameSearchableItemModel {
   static const ListValueModel none = ListValueModel(value: '');
 
   final String value;
-  final String? alt;
+  final String? publicValue;
   final NumRange? range;
 
   const ListValueModel({
     required this.value,
-    this.alt,
+    this.publicValue,
     this.range,
   }) : super(
           id: -1,
@@ -24,13 +24,13 @@ class ListValueModel extends IdNameSearchableItemModel {
   const ListValueModel.str(String value)
       : this(
           value: value,
-          alt: value,
+          publicValue: value,
         );
 
   factory ListValueModel.value(ValueModel value) {
     return ListValueModel(
       value: value.raw,
-      alt: value.altOrRaw,
+      publicValue: value.altOrRaw,
       range: value.range,
     );
   }
@@ -38,7 +38,7 @@ class ListValueModel extends IdNameSearchableItemModel {
   factory ListValueModel.range(NumRange range) {
     return ListValueModel(
       value: range.rangeName,
-      alt: range.rangeName,
+      publicValue: range.rangeName,
       range: range,
     );
   }
@@ -46,7 +46,7 @@ class ListValueModel extends IdNameSearchableItemModel {
   ValueModel get valueModel {
     return ValueModel(
       raw: value,
-      alt: alt,
+      alt: publicValue,
       numVal: double.tryParse(value),
       range: range,
     );
@@ -55,17 +55,17 @@ class ListValueModel extends IdNameSearchableItemModel {
   @override
   List<Object?> get props => [
         value,
-        alt,
+        publicValue,
       ];
 
   @override
-  String get itemName => alt ?? value;
+  String get itemName => publicValue ?? value;
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       'value': value,
-      'alt': alt != value ? alt : null,
+      'alt': publicValue != value ? publicValue : null,
     };
 
     if (removeNulls) {
@@ -82,12 +82,12 @@ class ListValueModel extends IdNameSearchableItemModel {
 
     return ListValueModel(
       value: json['value'],
-      alt: json['alt'] ?? json['value'],
+      publicValue: json['alt'] ?? json['value'],
     );
   }
 
   @override
   String toString() {
-    return 'ListValue{value: $value, alt: $alt}';
+    return 'ListValue{value: $value, alt: $publicValue}';
   }
 }

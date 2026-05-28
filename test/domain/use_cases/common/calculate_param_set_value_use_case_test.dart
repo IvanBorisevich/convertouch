@@ -1,12 +1,10 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
@@ -18,7 +16,6 @@ import 'package:test/test.dart';
 import '../../model/mock/mock_list_values_batch.dart';
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
-import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../repositories/mock/mock_network_repository.dart';
 import '../../repositories/mock/mock_unit_group_repository.dart';
@@ -70,7 +67,6 @@ void main() {
     expect(modifiedParamSetValue.toJson(), expectedParamSetValue.toJson());
   }
 
-  /*
   group("Should initially calculate param set 'Barbell Weight'", () {
     test(
         "Should init 'Bar Weight', "
@@ -176,7 +172,7 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        unitGroup: massGroup,
+        unitGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
       );
@@ -298,10 +294,10 @@ void main() {
     test("Should change 'Bar Weight' list value [lb: 22 -> 44]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
-            22,
+            barWeightParamPoundListValues.items[0].valueModel,
             null,
             unit: pound,
             calculated: false,
@@ -320,14 +316,14 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
-            44,
+            barWeightParamPoundListValues.items[1].valueModel,
             null,
             unit: pound,
             calculated: false,
-            listValues: barWeightParamLbListValues,
+            listValues: barWeightParamPoundListValues,
           ),
           (
             oneSideWeightParam,
@@ -342,7 +338,7 @@ void main() {
 
       await testCase(
         delta: EditConversionParamValueDelta.raw(
-          newValue: 44,
+          newValue: barWeightParamPoundListValues.items[1].valueModel,
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
@@ -435,14 +431,14 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
-            44,
+            barWeightParamPoundListValues.items[1].valueModel,
             null,
             unit: pound,
             calculated: false,
-            listValues: barWeightParamLbListValues,
+            listValues: barWeightParamPoundListValues,
           ),
           (
             oneSideWeightParam,
@@ -461,13 +457,13 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        unitGroup: massGroup,
+        unitGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
       );
     });
 
-    test("Should change 'One Size Weight' non-list value [30 kg -> 30 lb]",
+    test("Should change 'One Size Weight' non-list value [30 kg -> ~66.138 lb]",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
@@ -493,7 +489,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -504,8 +500,8 @@ void main() {
           ),
           (
             oneSideWeightParam,
-            30,
-            1,
+            30 / pound.coefficient!,
+            1 / pound.coefficient!,
             unit: pound,
             calculated: false,
             listValues: null
@@ -582,21 +578,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(0, 164),
+            heightRangesFrom0_164To190InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(178, 184)),
-              ListValueModel.range(const NumRange.withRight(182, 188)),
-              ListValueModel.range(const NumRange.withRight(186, 192)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(190, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -663,21 +649,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(164, 170),
+            heightRangesFrom0_164To190InCm.items[1].valueModel,
             null,
             unit: centimeter,
             calculated: true,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(178, 184)),
-              ListValueModel.range(const NumRange.withRight(182, 188)),
-              ListValueModel.range(const NumRange.withRight(186, 192)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(190, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -685,7 +661,7 @@ void main() {
       await testCase(
         srcUnitValue:
             ConversionUnitValueModel.tuple(italianClothSize, 44, null),
-        unitGroup: clothesSizeGroup,
+        unitGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
       );
@@ -820,20 +796,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(0, 156),
+            heightRangesFrom0_156To186InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 156)),
-              ListValueModel.range(const NumRange.withRight(156, 162)),
-              ListValueModel.range(const NumRange.withRight(162, 168)),
-              ListValueModel.range(const NumRange.withRight(168, 174)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(180, 186)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(186, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -904,20 +871,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(0, 1.56),
+            heightRangesFrom0_156To186InMeter.items[0].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 1.56)),
-              ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-              ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-              ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-              ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-              ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(1.86, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_156To186InMeter,
           ),
         ],
       );
@@ -988,20 +946,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(174, 180),
+            heightRangesFrom0_156To186InCm.items[4].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 156)),
-              ListValueModel.range(const NumRange.withRight(156, 162)),
-              ListValueModel.range(const NumRange.withRight(162, 168)),
-              ListValueModel.range(const NumRange.withRight(168, 174)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(180, 186)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(186, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -1072,20 +1021,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(0, 164),
+            heightRangesFrom0_164To188InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(176, 182)),
-              ListValueModel.range(const NumRange.withRight(180, 186)),
-              ListValueModel.range(const NumRange.withRight(184, 190)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(188, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To188InCm,
           ),
         ],
       );
@@ -1156,20 +1096,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(0, 1.64),
+            heightRangesFrom0_164To188InMeter.items[0].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 1.64)),
-              ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-              ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-              ListValueModel.range(const NumRange.withRight(1.76, 1.82)),
-              ListValueModel.range(const NumRange.withRight(1.8, 1.86)),
-              ListValueModel.range(const NumRange.withRight(1.84, 1.9)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(1.88, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To188InMeter,
           ),
         ],
       );
@@ -1210,21 +1141,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(164, 170),
+            heightRangesFrom0_164To190InCm.items[1].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(178, 184)),
-              ListValueModel.range(const NumRange.withRight(182, 188)),
-              ListValueModel.range(const NumRange.withRight(186, 192)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(190, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1250,21 +1171,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(178, 184),
+            heightRangesFrom0_164To190InCm.items[4].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(178, 184)),
-              ListValueModel.range(const NumRange.withRight(182, 188)),
-              ListValueModel.range(const NumRange.withRight(186, 192)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(190, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1306,21 +1217,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(1.64, 1.7),
+            heightRangesFrom0_164To190InMeter.items[1].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 1.64)),
-              ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-              ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-              ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-              ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-              ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-              ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(1.9, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1346,28 +1247,18 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(1.78, 1.84),
+            heightRangesFrom0_164To190InMeter.items[4].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 1.64)),
-              ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-              ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-              ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-              ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-              ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-              ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(1.9, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InMeter,
           ),
         ],
       );
 
       await testCase(
         delta: EditConversionParamValueDelta.raw(
-          newValue: const NumRange.withRight(1.78, 1.84),
+          newValue: heightRangesFrom0_164To190InMeter.items[4].valueModel,
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
@@ -1376,9 +1267,6 @@ void main() {
       );
     });
   });
-
-
-  */
 
   group("Should change param unit in param set 'Clothes Size'", () {
     test(
@@ -1406,21 +1294,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(164, 170),
+            heightRangesFrom0_164To190InCm.items[1].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 164)),
-              ListValueModel.range(const NumRange.withRight(164, 170)),
-              ListValueModel.range(const NumRange.withRight(170, 176)),
-              ListValueModel.range(const NumRange.withRight(174, 180)),
-              ListValueModel.range(const NumRange.withRight(178, 184)),
-              ListValueModel.range(const NumRange.withRight(182, 188)),
-              ListValueModel.range(const NumRange.withRight(186, 192)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(190, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1446,21 +1324,11 @@ void main() {
           ),
           (
             heightParam,
-            const NumRange.withRight(1.64, 1.7),
+            heightRangesFrom0_164To190InMeter.items[1].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: OutputItemsFetchModel(items: [
-              ListValueModel.range(const NumRange.withRight(0, 1.64)),
-              ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-              ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-              ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-              ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-              ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-              ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-              ListValueModel.range(
-                  const NumRange.withoutBoth(1.9, double.infinity)),
-            ], pageNum: 1, hasReachedMax: true),
+            listValues: heightRangesFrom0_164To190InMeter,
           ),
         ],
       );

@@ -17,8 +17,8 @@ class ValueModel extends Equatable {
   const ValueModel({
     required this.raw,
     required this.alt,
-    required this.numVal,
-    required this.range,
+    this.numVal,
+    this.range,
   });
 
   factory ValueModel.str(
@@ -99,6 +99,20 @@ class ValueModel extends Equatable {
     ).includesValue(numVal)
         ? this
         : null;
+  }
+
+  ValueModel copyWith({
+    String? raw,
+    String? alt,
+    double? numVal,
+    NumRange? range,
+  }) {
+    return ValueModel(
+      raw: raw ?? this.raw,
+      alt: alt ?? this.alt,
+      numVal: numVal ?? this.numVal,
+      range: range ?? this.range,
+    );
   }
 
   String get altOrRaw => alt ?? raw;

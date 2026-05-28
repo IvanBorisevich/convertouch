@@ -108,19 +108,37 @@ class ObjectUtils {
     );
   }
 
-  static List<String> generateNumList(
+  static List<num> generateNumList(
     double min,
     double max, {
     double step = 1,
-    double? divisor,
+    double? factor,
+  }) {
+    int length = ((max - min) / step + 1).floor();
+    num Function(int) func;
+
+    if (factor != null) {
+      func = (index) => (min + index * step) * factor;
+    } else {
+      func = (index) => min + index * step;
+    }
+
+    return List.generate(length, func);
+  }
+
+  static List<String> generateNumStrList(
+    double min,
+    double max, {
+    double step = 1,
+    double? factor,
     int? fractionDigits,
   }) {
     int length = ((max - min) / step + 1).floor();
     String Function(int) func;
 
-    if (divisor != null) {
+    if (factor != null) {
       func = (index) => DoubleValueUtils.numToStr(
-            (min + index * step) / divisor,
+            (min + index * step) * factor,
             fractionDigits: fractionDigits,
           );
     } else {

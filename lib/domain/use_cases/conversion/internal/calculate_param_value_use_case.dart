@@ -36,6 +36,8 @@ class CalculateParamValueUseValue extends UseCase<
     ValueModel? newDefaultValue = input.paramValue.defaultValue;
     UnitModel? newUnit = input.paramValue.unit;
 
+    ValueModel? newDefaultValueForNewUnit;
+
     if (delta is EditConversionParamValueDelta) {
       newValue = delta.newValue;
       newDefaultValue = delta.newDefaultValue;
@@ -47,20 +49,22 @@ class CalculateParamValueUseValue extends UseCase<
       );
 
       if (paramUnitGroup != null) {
-        newValue = rules.calculateTargetParamValue(
-              paramValue: input.paramValue,
-              tgtParamUnit: newUnit,
-              params: input.paramSetValue,
-              paramUnitGroup: paramUnitGroup,
-            ) ??
-            newValue;
+        var paramValueForNewUnit = rules.calculateParamValueForNewUnit(
+          paramValue: input.paramValue,
+          tgtParamUnit: newUnit,
+          params: input.paramSetValue,
+          paramUnitGroup: paramUnitGroup,
+        );
+
+        newValue = paramValueForNewUnit.value;
+        newDefaultValueForNewUnit = paramValueForNewUnit.defaultValue;
       }
     }
 
-    ValueModel? autoCalculatedParamValue;
+    ValueModel? autoCalculatedValue;
 
     if (delta == null && input.paramValue.calculated) {
-      autoCalculatedParamValue =
+      autoCalculatedValue =
           input.srcUnitValue != null && input.unitGroupName != null
               ? rules.calculateParamValueBySrcValue(
                   srcUnitValue: input.srcUnitValue!,
@@ -72,9 +76,11 @@ class CalculateParamValueUseValue extends UseCase<
     }
 
     if (input.paramValue.listType == null) {
-      if (autoCalculatedParamValue != null) {
+      if (autoCalculatedValue != null) {
         newValue = null;
-        newDefaultValue = autoCalculatedParamValue;
+        newDefaultValue = autoCalculatedValue;
+      } else if (newDefaultValueForNewUnit != null) {
+        newDefaultValue = newDefaultValueForNewUnit;
       } else {
         newDefaultValue = input.alignCurrentValue
             ? ObjectUtils.tryGet(
@@ -100,8 +106,8 @@ class CalculateParamValueUseValue extends UseCase<
         ),
       );
     } else {
-      if (autoCalculatedParamValue != null) {
-        newValue = autoCalculatedParamValue;
+      if (autoCalculatedValue != null) {
+        newValue = autoCalculatedValue;
       }
 
       return Right(

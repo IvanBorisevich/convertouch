@@ -1,9 +1,7 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -340,7 +338,7 @@ void main() {
                   null,
                   unit: pound,
                   calculated: false,
-                  listValues: barWeightParamLbListValues,
+                  listValues: barWeightParamPoundListValues,
                 ),
                 (
                   oneSideWeightParam,
@@ -467,20 +465,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  const NumRange.withRight(0, 156),
+                  heightRangesFrom0_156To186InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 156)),
-                    ListValueModel.range(const NumRange.withRight(156, 162)),
-                    ListValueModel.range(const NumRange.withRight(162, 168)),
-                    ListValueModel.range(const NumRange.withRight(168, 174)),
-                    ListValueModel.range(const NumRange.withRight(174, 180)),
-                    ListValueModel.range(const NumRange.withRight(180, 186)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(186, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_156To186InCm,
                 ),
               ],
             ),
@@ -599,20 +588,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  const NumRange.withRight(0, 1.56),
+                  heightRangesFrom0_156To186InMeter.items[0].valueModel,
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 1.56)),
-                    ListValueModel.range(const NumRange.withRight(1.56, 1.62)),
-                    ListValueModel.range(const NumRange.withRight(1.62, 1.68)),
-                    ListValueModel.range(const NumRange.withRight(1.68, 1.74)),
-                    ListValueModel.range(const NumRange.withRight(1.74, 1.80)),
-                    ListValueModel.range(const NumRange.withRight(1.80, 1.86)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(1.86, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_156To186InMeter,
                 ),
               ],
             ),
@@ -732,20 +712,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  const NumRange.withRight(174, 180),
+                  heightRangesFrom0_156To186InCm.items[4].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 156)),
-                    ListValueModel.range(const NumRange.withRight(156, 162)),
-                    ListValueModel.range(const NumRange.withRight(162, 168)),
-                    ListValueModel.range(const NumRange.withRight(168, 174)),
-                    ListValueModel.range(const NumRange.withRight(174, 180)),
-                    ListValueModel.range(const NumRange.withRight(180, 186)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(186, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_156To186InCm,
                 ),
               ],
             ),
@@ -859,20 +830,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  const NumRange.withRight(0, 164),
+                  heightRangesFrom0_164To188InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 164)),
-                    ListValueModel.range(const NumRange.withRight(164, 170)),
-                    ListValueModel.range(const NumRange.withRight(170, 176)),
-                    ListValueModel.range(const NumRange.withRight(176, 182)),
-                    ListValueModel.range(const NumRange.withRight(180, 186)),
-                    ListValueModel.range(const NumRange.withRight(184, 190)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(188, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_164To188InCm,
                 ),
               ],
             ),
@@ -982,20 +944,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  const NumRange.withRight(0, 1.64),
+                  heightRangesFrom0_164To188InMeter.items[0].valueModel,
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 1.64)),
-                    ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-                    ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-                    ListValueModel.range(const NumRange.withRight(1.76, 1.82)),
-                    ListValueModel.range(const NumRange.withRight(1.8, 1.86)),
-                    ListValueModel.range(const NumRange.withRight(1.84, 1.9)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(1.88, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_164To188InMeter,
                 ),
               ],
             ),
@@ -1056,21 +1009,11 @@ void main() {
             ),
             (
               heightParam,
-              const NumRange.withRight(164, 170),
+              heightRangesFrom0_164To190InCm.items[1].valueModel,
               null,
               unit: centimeter,
               calculated: false,
-              listValues: OutputItemsFetchModel(items: [
-                ListValueModel.range(const NumRange.withRight(0, 164)),
-                ListValueModel.range(const NumRange.withRight(164, 170)),
-                ListValueModel.range(const NumRange.withRight(170, 176)),
-                ListValueModel.range(const NumRange.withRight(174, 180)),
-                ListValueModel.range(const NumRange.withRight(178, 184)),
-                ListValueModel.range(const NumRange.withRight(182, 188)),
-                ListValueModel.range(const NumRange.withRight(186, 192)),
-                ListValueModel.range(
-                    const NumRange.withoutBoth(190, double.infinity)),
-              ], pageNum: 1, hasReachedMax: true),
+              listValues: heightRangesFrom0_164To190InCm,
             ),
           ],
         ),
@@ -1116,21 +1059,11 @@ void main() {
             ),
             (
               heightParam,
-              const NumRange.withRight(178, 184),
+              heightRangesFrom0_164To190InCm.items[4].valueModel,
               null,
               unit: centimeter,
               calculated: false,
-              listValues: OutputItemsFetchModel(items: [
-                ListValueModel.range(const NumRange.withRight(0, 164)),
-                ListValueModel.range(const NumRange.withRight(164, 170)),
-                ListValueModel.range(const NumRange.withRight(170, 176)),
-                ListValueModel.range(const NumRange.withRight(174, 180)),
-                ListValueModel.range(const NumRange.withRight(178, 184)),
-                ListValueModel.range(const NumRange.withRight(182, 188)),
-                ListValueModel.range(const NumRange.withRight(186, 192)),
-                ListValueModel.range(
-                    const NumRange.withoutBoth(190, double.infinity)),
-              ], pageNum: 1, hasReachedMax: true),
+              listValues: heightRangesFrom0_164To190InCm,
             ),
           ],
         ),
@@ -1189,21 +1122,11 @@ void main() {
             ),
             (
               heightParam,
-              const NumRange.withRight(1.64, 1.7),
+              heightRangesFrom0_164To190InMeter.items[1].valueModel,
               null,
               unit: meter,
               calculated: false,
-              listValues: OutputItemsFetchModel(items: [
-                ListValueModel.range(const NumRange.withRight(0, 1.64)),
-                ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-                ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-                ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-                ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-                ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-                ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-                ListValueModel.range(
-                    const NumRange.withoutBoth(1.9, double.infinity)),
-              ], pageNum: 1, hasReachedMax: true),
+              listValues: heightRangesFrom0_164To190InMeter,
             ),
           ],
         ),
@@ -1249,21 +1172,11 @@ void main() {
             ),
             (
               heightParam,
-              const NumRange.withRight(1.78, 1.84),
+              heightRangesFrom0_164To190InMeter.items[4].valueModel,
               null,
               unit: meter,
               calculated: false,
-              listValues: OutputItemsFetchModel(items: [
-                ListValueModel.range(const NumRange.withRight(0, 1.64)),
-                ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-                ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-                ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-                ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-                ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-                ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-                ListValueModel.range(
-                    const NumRange.withoutBoth(1.9, double.infinity)),
-              ], pageNum: 1, hasReachedMax: true),
+              listValues: heightRangesFrom0_164To190InMeter,
             ),
           ],
         ),

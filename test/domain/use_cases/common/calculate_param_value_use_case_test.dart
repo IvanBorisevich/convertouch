@@ -296,23 +296,23 @@ void main() {
       test("Should change param 'Bar Weight' [lb: 22 -> 44]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          22,
+          barWeightParamPoundListValues.items[0].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          44,
+          barWeightParamPoundListValues.items[1].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
           delta: EditConversionParamValueDelta.raw(
-            newValue: 44,
+            newValue: barWeightParamPoundListValues.items[1].valueModel,
             paramId: barWeightParam.id,
             paramSetId: barbellWeightParamSet.id,
           ),
@@ -328,13 +328,72 @@ void main() {
           expectedParamValue: expectedParamValue,
         );
       });
+
+      test("Should change param 'Height' [m: 1.64-1.7 -> 1.78-1.84]", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          heightParam,
+          heightRangesFrom0_164To190InMeter.items[0].valueModel,
+          null,
+          unit: meter,
+          calculated: false,
+          listValues: heightRangesFrom0_164To190InMeter,
+        );
+
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          heightParam,
+          heightRangesFrom0_164To190InMeter.items[4].valueModel,
+          null,
+          unit: meter,
+          calculated: false,
+          listValues: heightRangesFrom0_164To190InMeter,
+        );
+
+        await testCase(
+          delta: EditConversionParamValueDelta.raw(
+            newValue: heightRangesFrom0_164To190InMeter.items[4].valueModel,
+            paramId: heightParam.id,
+            paramSetId: heightParam.paramSetId,
+          ),
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Man",
+                null,
+                unit: null,
+                calculated: false,
+                listValues: personParamListValues,
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValues: garmentParamListValues,
+              ),
+              (
+                heightParam,
+                heightRangesFrom0_164To190InMeter.items[1].valueModel,
+                null,
+                unit: meter,
+                calculated: false,
+                listValues: heightRangesFrom0_164To190InMeter,
+              ),
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
     });
 
     group('Replace list param unit', () {
-      test("Should change param 'Bar Weight' unit [kg -> lb: 10]", () async {
+      test("Should change param 'Bar Weight' unit [20 kg -> 44 lb]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          10,
+          20,
           null,
           unit: kilogram,
           listValues: barWeightParamKgListValues,
@@ -342,10 +401,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          22,
+          barWeightParamPoundListValues.items[1].valueModel,
           null,
           unit: pound,
-          listValues: barWeightParamLbListValues,
+          listValues: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -675,7 +734,7 @@ void main() {
     group('Replace non-list param unit', () {
       group("Should change param 'One Side Weight' unit [kg -> lb: 15]", () {
         test(
-            "Should NOT change param 'One Side Weight' default value (alignCurrentValue = false)",
+            "Should change param 'One Side Weight' default value (alignCurrentValue = false)",
             () async {
           final currentParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
@@ -688,7 +747,7 @@ void main() {
           final expectedParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
             null,
-            15,
+            15 / pound.coefficient!,
             unit: pound,
             calculated: true,
           );
@@ -731,7 +790,7 @@ void main() {
           final expectedParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
             null,
-            1,
+            15 / pound.coefficient!,
             unit: pound,
             calculated: true,
           );
@@ -760,7 +819,7 @@ void main() {
         });
 
         test(
-            "Should NOT change param 'One Side Weight' value (alignCurrentValue = false)",
+            "Should NOT change param 'One Side Weight' main value (alignCurrentValue = false)",
             () async {
           final currentParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
@@ -772,7 +831,7 @@ void main() {
 
           final expectedParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
-            12,
+            12 / pound.coefficient!,
             null,
             unit: pound,
             calculated: true,
@@ -803,7 +862,7 @@ void main() {
         });
 
         test(
-            "Should NOT change param 'One Side Weight' value (alignCurrentValue = true)",
+            "Should NOT change param 'One Side Weight' main value (alignCurrentValue = true)",
             () async {
           final currentParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
@@ -815,7 +874,7 @@ void main() {
 
           final expectedParamValue = ConversionParamValueModel.tuple(
             oneSideWeightParam,
-            12,
+            12 / pound.coefficient!,
             1,
             unit: pound,
             calculated: true,

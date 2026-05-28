@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/use_cases/common/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
@@ -204,20 +203,10 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  const NumRange.withRight(1.74, 1.8),
+                  heightRangesFrom0_164To190InMeter.items[3].valueModel,
                   null,
                   unit: meter,
-                  listValues: OutputItemsFetchModel(items: [
-                    ListValueModel.range(const NumRange.withRight(0, 1.64)),
-                    ListValueModel.range(const NumRange.withRight(1.64, 1.7)),
-                    ListValueModel.range(const NumRange.withRight(1.7, 1.76)),
-                    ListValueModel.range(const NumRange.withRight(1.74, 1.8)),
-                    ListValueModel.range(const NumRange.withRight(1.78, 1.84)),
-                    ListValueModel.range(const NumRange.withRight(1.82, 1.88)),
-                    ListValueModel.range(const NumRange.withRight(1.86, 1.92)),
-                    ListValueModel.range(
-                        const NumRange.withoutBoth(1.9, double.infinity)),
-                  ], pageNum: 1, hasReachedMax: true),
+                  listValues: heightRangesFrom0_164To190InMeter,
                 ),
               ],
             )

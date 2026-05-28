@@ -3,22 +3,22 @@ import 'package:test/test.dart';
 
 void main() {
   test('Should generate int list', () {
-    expect(ObjectUtils.generateNumList(34, 48, step: 2),
+    expect(ObjectUtils.generateNumStrList(34, 48, step: 2),
         ['34', '36', '38', '40', '42', '44', '46', '48']);
   });
 
   test('Should generate fraction list', () {
-    expect(ObjectUtils.generateNumList(34, 43, step: 1.5),
+    expect(ObjectUtils.generateNumStrList(34, 43, step: 1.5),
         ['34', '35.5', '37', '38.5', '40', '41.5', '43']);
   });
 
-  test('Should generate int list with divisor', () {
-    expect(ObjectUtils.generateNumList(1, 5, step: 1, divisor: 2),
+  test('Should generate int list with factor 0.5', () {
+    expect(ObjectUtils.generateNumStrList(1, 5, step: 1, factor: 0.5),
         ['0.5', '1', '1.5', '2', '2.5']);
   });
 
-  test('Should generate fraction list with divisor', () {
-    expect(ObjectUtils.generateNumList(3, 12, step: 3, divisor: 2),
+  test('Should generate fraction list with factor 0.5', () {
+    expect(ObjectUtils.generateNumStrList(3, 12, step: 3, factor: 0.5),
         ['1.5', '3', '4.5', '6']);
   });
 
