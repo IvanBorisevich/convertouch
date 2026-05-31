@@ -331,25 +331,25 @@ void main() {
       test("Should change param 'Height' [m: 1.64-1.7 -> 1.78-1.84]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_164To190InMeter.items[0].valueModel,
+          manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
           null,
           unit: meter,
           calculated: false,
-          listValues: heightRangesFrom0_164To190InMeter,
+          listValues: manShirtHeightRangesFrom0_164To190InMeter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_164To190InMeter.items[4].valueModel,
+          manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
           null,
           unit: meter,
           calculated: false,
-          listValues: heightRangesFrom0_164To190InMeter,
+          listValues: manShirtHeightRangesFrom0_164To190InMeter,
         );
 
         await testCase(
           delta: EditConversionParamValueDelta.raw(
-            newValue: heightRangesFrom0_164To190InMeter.items[4].valueModel,
+            newValue: manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
           ),
@@ -374,11 +374,11 @@ void main() {
               ),
               (
                 heightParam,
-                heightRangesFrom0_164To190InMeter.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
                 null,
                 unit: meter,
                 calculated: false,
-                listValues: heightRangesFrom0_164To190InMeter,
+                listValues: manShirtHeightRangesFrom0_164To190InMeter,
               ),
             ],
           ),

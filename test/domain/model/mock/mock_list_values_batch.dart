@@ -1,9 +1,11 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
+import 'package:convertouch/domain/utils/list_values_utils.dart';
 
-const OutputListValuesBatch japanClothSizeListValues = OutputItemsFetchModel(
+const OutputListValuesBatch japanClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('S'),
     ListValueModel.str('M'),
@@ -18,7 +20,7 @@ const OutputListValuesBatch japanClothSizeListValues = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch usaClothSizeListValues = OutputItemsFetchModel(
+const OutputListValuesBatch usaClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('2'),
     ListValueModel.str('4'),
@@ -40,8 +42,7 @@ const OutputListValuesBatch usaClothSizeListValues = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch italianClothesSizeListValues =
-    OutputItemsFetchModel(
+const OutputListValuesBatch italianClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('38'),
     ListValueModel.str('40'),
@@ -58,7 +59,7 @@ const OutputListValuesBatch italianClothesSizeListValues =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch europeanClothSizeListValues = OutputItemsFetchModel(
+const OutputListValuesBatch europeanClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('34'),
     ListValueModel.str('36'),
@@ -77,7 +78,7 @@ const OutputListValuesBatch europeanClothSizeListValues = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch spainClothSizeListValues = OutputItemsFetchModel(
+const OutputListValuesBatch spainClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('34'),
     ListValueModel.str('36'),
@@ -92,8 +93,7 @@ const OutputListValuesBatch spainClothSizeListValues = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch germanyClothesSizeListValues =
-    OutputItemsFetchModel(
+const OutputListValuesBatch germanyClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('32'),
     ListValueModel.str('34'),
@@ -156,7 +156,7 @@ const OutputListValuesBatch barWeightParamPoundListValues =
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch heightRangesFrom0_156To186InCm =
+final OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InCm =
     OutputItemsFetchModel(items: [
   ListValueModel.range(const NumRange.withRight(0, 156)),
   ListValueModel.range(const NumRange.withRight(156, 162)),
@@ -167,7 +167,7 @@ final OutputListValuesBatch heightRangesFrom0_156To186InCm =
   ListValueModel.range(const NumRange.withoutBoth(186, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
 
-const OutputListValuesBatch heightRangesFrom0_156To186InMeter =
+const OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InMeter =
     OutputItemsFetchModel(items: [
   ListValueModel(
       value: '.. - 156',
@@ -199,7 +199,7 @@ const OutputListValuesBatch heightRangesFrom0_156To186InMeter =
       range: NumRange.withRight(186, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
 
-const OutputListValuesBatch heightRangesFrom0_164To190InCm =
+const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InCm =
     OutputItemsFetchModel(items: [
   ListValueModel(
       value: '.. - 164',
@@ -235,7 +235,7 @@ const OutputListValuesBatch heightRangesFrom0_164To190InCm =
       range: NumRange.withoutBoth(190, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
 
-const OutputListValuesBatch heightRangesFrom0_164To190InMeter =
+const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InMeter =
     OutputItemsFetchModel(items: [
   ListValueModel(
       value: '.. - 164',
@@ -271,7 +271,7 @@ const OutputListValuesBatch heightRangesFrom0_164To190InMeter =
       range: NumRange.withoutBoth(190, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
 
-const OutputListValuesBatch heightRangesFrom0_164To188InCm =
+const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InCm =
     OutputItemsFetchModel(items: [
   ListValueModel(
       value: '.. - 164',
@@ -303,7 +303,7 @@ const OutputListValuesBatch heightRangesFrom0_164To188InCm =
       range: NumRange.withRight(188, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
 
-const OutputListValuesBatch heightRangesFrom0_164To188InMeter =
+const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InMeter =
     OutputItemsFetchModel(items: [
   ListValueModel(
       value: '.. - 164',
@@ -334,3 +334,29 @@ const OutputListValuesBatch heightRangesFrom0_164To188InMeter =
       publicValue: '1.88 - ..',
       range: NumRange.withRight(188, double.infinity)),
 ], pageNum: 1, hasReachedMax: true);
+
+final OutputListValuesBatch esRingSizes = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringSizeEs]!.buildListValues(),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+final OutputListValuesBatch usaRingSizes = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringSizeUs]!.buildListValues(),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+final OutputListValuesBatch frRingSizes = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringSizeFr]!.buildListValues(),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+const OutputListValuesBatch exchangeRateSources = OutputListValuesBatch(
+  items: [
+    ListValueModel.str('FloatRates'),
+  ],
+  hasReachedMax: true,
+  pageNum: 1,
+);

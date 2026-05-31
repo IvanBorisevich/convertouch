@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -9,11 +10,11 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-class CalculateParamSetValueUseValue extends UseCase<
+class CalculateParamSetValueUseCase extends UseCase<
     InputParamSetValueCalculationModel, ConversionParamSetValueModel> {
   final CalculateParamValueUseValue calculateParamValueUseValue;
 
-  const CalculateParamSetValueUseValue({
+  const CalculateParamSetValueUseCase({
     required this.calculateParamValueUseValue,
   });
 
@@ -25,21 +26,42 @@ class CalculateParamSetValueUseValue extends UseCase<
       return Right(input.paramSetValue);
     }
 
+    ConversionParamSetValueModel newParamSetValue = input.paramSetValue;
     ConversionSingleParamModifyDelta? delta = input.delta;
 
-    int paramId =
-        delta?.paramId ?? input.paramSetValue.paramValues.first.param.id;
-    var paramValue = input.paramSetValue.getParamValueById(paramId);
+    int startParamId =
+        delta?.paramId ?? newParamSetValue.paramValues.first.param.id;
 
-    if (paramValue == null) {
-      return Right(input.paramSetValue);
+    if (delta == null) {
+      int? calculatedParamId = newParamSetValue.paramValues
+          .firstWhereOrNull((paramValue) => paramValue.calculated)
+          ?.param
+          .id;
+
+      if (calculatedParamId != null) {
+        startParamId = calculatedParamId;
+      } else if (input.enableFirstCalculableParamIfNoCalculatedEnabled) {
+        newParamSetValue = await newParamSetValue.copyWithChangedParams(
+          changeFirstMatchedParamOnly: true,
+          paramFilter: (paramValue) => paramValue.param.calculable,
+          map: (paramValue, paramSetValue) async => paramValue.copyWith(
+            calculated: true,
+          ),
+        );
+      }
     }
 
-    ConversionParamValueModel newParamValue = ObjectUtils.tryGet(
+    var startParamValue = newParamSetValue.getParamValueById(startParamId);
+
+    if (startParamValue == null) {
+      return Right(newParamSetValue);
+    }
+
+    ConversionParamValueModel changedStartParamValue = ObjectUtils.tryGet(
       await calculateParamValueUseValue.execute(
         InputParamValueCalculationModel(
-          paramValue: paramValue,
-          paramSetValue: input.paramSetValue,
+          paramValue: startParamValue,
+          paramSetValue: newParamSetValue,
           delta: delta,
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
@@ -48,16 +70,16 @@ class CalculateParamSetValueUseValue extends UseCase<
       ),
     );
 
-    var newParamSetValue = await input.paramSetValue.copyWithChangedParamById(
-      paramId: paramId,
-      map: (paramValue, paramSetValue) async => newParamValue,
+    newParamSetValue = await newParamSetValue.copyWithChangedParamById(
+      paramId: startParamValue.param.id,
+      map: (paramValue, paramSetValue) async => changedStartParamValue,
     );
 
     if (delta == null || delta is EditConversionParamValueDelta) {
       return Right(
         await _recalculateOtherParams(
           paramSetValue: newParamSetValue,
-          paramId: paramId,
+          paramId: changedStartParamValue.param.id,
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
           alignCurrentValues: input.alignCurrentValues,

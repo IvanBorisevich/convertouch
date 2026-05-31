@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_param.dart';
+import 'mock/mock_unit_group.dart';
 
 const _barbellWeightParamSetValue = ConversionParamSetValueModel(
   paramSet: barbellWeightParamSet,
@@ -56,6 +57,7 @@ const Map<String, dynamic> paramSetValueJson = {
           'coefficient': 1.0,
           'valueType': 5,
           'minValue': 0,
+          'unitGroupId': massGroupId,
           'invertible': true,
           'oob': false
         },
@@ -77,6 +79,7 @@ const Map<String, dynamic> paramSetValueJson = {
           'coefficient': 1.0,
           'valueType': 5,
           'minValue': 0,
+          'unitGroupId': massGroupId,
           'invertible': true,
           'oob': false
         },

@@ -62,7 +62,7 @@ const heightParam = ConversionParamModel(
   valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.clothesHeightRange,
   defaultUnit: centimeter,
-  calculable: false,
+  calculable: true,
   paramSetId: 1,
 );
 

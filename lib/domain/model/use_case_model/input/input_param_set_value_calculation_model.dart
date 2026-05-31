@@ -8,12 +8,14 @@ class InputParamSetValueCalculationModel {
   final ConversionUnitValueModel? srcUnitValue;
   final String? unitGroupName;
   final bool alignCurrentValues;
+  final bool enableFirstCalculableParamIfNoCalculatedEnabled;
 
   const InputParamSetValueCalculationModel({
     required this.paramSetValue,
     this.delta,
     this.srcUnitValue,
     this.unitGroupName,
-    this.alignCurrentValues = true,
+    required this.alignCurrentValues,
+    required this.enableFirstCalculableParamIfNoCalculatedEnabled,
   });
 }

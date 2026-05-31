@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
+import '../../../domain/model/mock/mock_list_values_batch.dart';
 import '../../../domain/model/mock/mock_unit.dart';
 import '../../../domain/repositories/mock/mock_network_repository.dart';
 
@@ -26,10 +27,7 @@ void main() {
         ),
       );
 
-      expect(listValues, const [
-        ListValueModel.str("Man"),
-        ListValueModel.str("Woman"),
-      ]);
+      expect(listValues, personParamListValues.items);
     });
   });
 
@@ -43,10 +41,7 @@ void main() {
         ),
       );
 
-      expect(listValues, const [
-        ListValueModel.str("10"),
-        ListValueModel.str("20"),
-      ]);
+      expect(listValues, barWeightParamKgListValues.items);
     });
 
     test('All items batch should be fetched with coefficient', () async {
@@ -59,10 +54,7 @@ void main() {
         ),
       );
 
-      expect(listValues, const [
-        ListValueModel.str("22"),
-        ListValueModel.str("44"),
-      ]);
+      expect(listValues, barWeightParamPoundListValues.items);
     });
 
     test('First 5 items should be fetched without coefficient', () async {

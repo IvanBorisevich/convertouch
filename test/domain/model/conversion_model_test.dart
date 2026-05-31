@@ -248,7 +248,7 @@ void main() {
     const Map<String, dynamic> conversionByMappingTableJson = {
       'id': 2,
       'unitGroup': {
-        'id': 6,
+        'id': clothesSizeGroupId,
         'name': 'Clothes Size',
         'conversionType': 2,
         'refreshable': false,
@@ -262,6 +262,7 @@ void main() {
           'code': 'JP',
           'valueType': 1,
           'listType': 5,
+          'unitGroupId': clothesSizeGroupId,
           'invertible': true,
           'oob': false
         },
@@ -322,7 +323,7 @@ void main() {
                   'id': 3,
                   'name': 'Height',
                   'unitGroupId': 1,
-                  'calculable': false,
+                  'calculable': true,
                   'valueType': 1,
                   'listType': 24,
                   'defaultUnit': {
@@ -332,6 +333,7 @@ void main() {
                     'coefficient': 0.01,
                     'valueType': 5,
                     'minValue': 0.0,
+                    'unitGroupId': lengthGroupId,
                     'invertible': true,
                     'oob': false
                   },
@@ -344,6 +346,7 @@ void main() {
                   'coefficient': 1.0,
                   'valueType': 5,
                   'minValue': 0.0,
+                  'unitGroupId': lengthGroupId,
                   'invertible': true,
                   'oob': false
                 },
@@ -369,6 +372,7 @@ void main() {
             'code': 'JP',
             'valueType': 1,
             'listType': 5,
+            'unitGroupId': clothesSizeGroupId,
             'invertible': true,
             'oob': false
           },
@@ -386,6 +390,7 @@ void main() {
             'code': 'DE',
             'valueType': 3,
             'listType': 11,
+            'unitGroupId': clothesSizeGroupId,
             'invertible': true,
             'oob': false
           },

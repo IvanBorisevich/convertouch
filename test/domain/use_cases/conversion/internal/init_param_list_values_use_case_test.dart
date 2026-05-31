@@ -617,10 +617,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InCm.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -640,17 +640,17 @@ void main() {
       test("Should leave '168-174' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InCm.items[3].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[3].valueModel,
           null,
           unit: centimeter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InCm.items[3].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[3].valueModel,
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -678,10 +678,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InCm.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -714,7 +714,7 @@ void main() {
           null,
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -745,7 +745,7 @@ void main() {
           const NumRange.withRight(168, 174),
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -776,7 +776,7 @@ void main() {
           const NumRange.withRight(10, 20),
           null,
           unit: centimeter,
-          listValues: heightRangesFrom0_156To186InCm,
+          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -806,10 +806,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -829,17 +829,17 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -867,10 +867,10 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -904,7 +904,7 @@ void main() {
           null,
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -925,17 +925,17 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          heightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -966,7 +966,7 @@ void main() {
           const NumRange.withRight(1.5, 3),
           null,
           unit: meter,
-          listValues: heightRangesFrom0_156To186InMeter,
+          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(

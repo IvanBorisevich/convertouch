@@ -11,7 +11,7 @@ import 'package:convertouch/domain/utils/conversion_rules/barbell_mass.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
-import 'package:convertouch/domain/utils/list_values.dart';
+import 'package:convertouch/domain/utils/list_values_utils.dart';
 
 // Function rules
 
@@ -156,8 +156,8 @@ ConversionParamValueModel calculateParamValueForNewUnit({
       return paramValue;
     }
 
-    String? listPublicValue = listValueFuncSet.publicValueFunc.call(
-      listValueFuncSet.rawValueMapFunc.call(paramValue.value!),
+    String? listPublicValue = listValueFuncSet.publicListValueBuilderFunc.call(
+      listValueFuncSet.listValueToRawMapFunc.call(paramValue.value!),
       unit: tgtParamUnit,
       params: params,
     );
@@ -252,24 +252,43 @@ ValueModel? calculateParamValueBySrcValue({
     srcUnit: srcUnitValue.unit,
   );
 
-  return Converter(
+  ValueModel? result = Converter(
     srcUnitValue.value ?? srcUnitValue.defaultValue,
     params: params,
   )
       .apply(paramBySrc)
       .value
       ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
+
+  if (result == null) {
+    return null;
+  }
+
+  if (param.listType != null) {
+    ListValueFuncSet? listValueFuncSet = listValuesFuncSets[param.listType];
+
+    if (listValueFuncSet == null) {
+      return result;
+    }
+
+    return listValueFuncSet.recalculatePublicValueForUnit(
+      result,
+      unit: paramValue.unit,
+      params: params,
+    );
+  }
+
+  return result;
 }
 
 ConversionUnitValueModel calculateSrcValueByParams({
   required UnitModel srcUnit,
-  required ValueModel? defaultValue,
   required ConversionParamSetValueModel params,
-  required UnitGroupModel unitGroup,
+  required String unitGroupName,
 }) {
   if (srcUnit.listType != null) {
     Map<String, String>? mapping = getMappingByParams(
-      unitGroupName: unitGroup.name,
+      unitGroupName: unitGroupName,
       params: params,
     );
 
@@ -282,7 +301,7 @@ ConversionUnitValueModel calculateSrcValueByParams({
   } else {
     ConversionRule srcByParam = ConversionRule.srcValueByParam(
       paramValueFunc: (paramValue) => paramValue.value,
-      srcValueFunc: _nonListSrcValueByParamsRules[unitGroup.name]
+      srcValueFunc: _nonListSrcValueByParamsRules[unitGroupName]
           ?[params.paramSet.name],
       srcUnit: srcUnit,
     );
@@ -291,7 +310,7 @@ ConversionUnitValueModel calculateSrcValueByParams({
       paramValueFunc: (paramValue) => paramValue.listType == null
           ? paramValue.defaultValue
           : paramValue.value,
-      srcValueFunc: _nonListSrcValueByParamsRules[unitGroup.name]
+      srcValueFunc: _nonListSrcValueByParamsRules[unitGroupName]
           ?[params.paramSet.name],
       srcUnit: srcUnit,
     );
@@ -324,10 +343,12 @@ ConversionRule? getRule({
       return _formulaRules[unitGroup.name]?[ruleType]?[unit.code];
     case ConversionType.static:
     case ConversionType.dynamic:
-      return ConversionRule.coefficient(
-        unit.coefficient!,
-        ruleType: ruleType,
-      );
+      return unit.coefficient != null
+          ? ConversionRule.coefficient(
+              unit.coefficient!,
+              ruleType: ruleType,
+            )
+          : null;
   }
 }
 

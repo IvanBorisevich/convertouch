@@ -2,36 +2,46 @@ import 'package:convertouch/data/repositories/local/list_value_repository_impl.d
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:either_dart/either.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
-import '../../../repositories/mock/mock_network_repository.dart';
 import '../../../repositories/mock/mock_unit_group_repository.dart';
+import '../../../repositories/mock/mockito_mock_repository.mocks.dart';
 
 void main() {
-  late CalculateParamSetValueUseValue useCase;
+  late final CalculateParamSetValueUseCase useCase;
+  late final MockitoNetworkRepository mockitoNetworkRepository =
+      MockitoNetworkRepository();
 
   setUpAll(() {
-    const listValueRepository = ListValueRepositoryImpl(
-      networkRepository: MockNetworkRepository(),
+    provideDummy<Either<ConvertouchException, List<ListValueModel>>>(
+      const Right([]),
     );
 
-    useCase = const CalculateParamSetValueUseValue(
+    final listValueRepository = ListValueRepositoryImpl(
+      networkRepository: mockitoNetworkRepository,
+    );
+
+    useCase = CalculateParamSetValueUseCase(
       calculateParamValueUseValue: CalculateParamValueUseValue(
         calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-          dynamicValueRepository: MockDynamicValueRepository(),
+          dynamicValueRepository: const MockDynamicValueRepository(),
           listValueRepository: listValueRepository,
         ),
         initParamListValuesUseCase: InitParamListValuesUseCase(
@@ -39,7 +49,7 @@ void main() {
             listValueRepository: listValueRepository,
           ),
         ),
-        unitGroupRepository: MockUnitGroupRepository(),
+        unitGroupRepository: const MockUnitGroupRepository(),
       ),
     );
   });
@@ -48,7 +58,8 @@ void main() {
     required ConversionParamSetValueModel currentParamSetValue,
     required ConversionParamSetValueModel expectedParamSetValue,
     ConversionSingleParamModifyDelta? delta,
-    bool alignCurrentValues = true,
+    required bool alignCurrentValues,
+    required bool enableFirstCalculableParamIfNoCalculatedEnabled,
     ConversionUnitValueModel? srcUnitValue,
     String? unitGroupName,
   }) async {
@@ -60,6 +71,8 @@ void main() {
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroupName,
           alignCurrentValues: alignCurrentValues,
+          enableFirstCalculableParamIfNoCalculatedEnabled:
+              enableFirstCalculableParamIfNoCalculatedEnabled,
         ),
       ),
     );
@@ -69,9 +82,136 @@ void main() {
 
   group("Should initially calculate param set 'Barbell Weight'", () {
     test(
+        "Should NOT init 'Bar Weight', "
+        "should NOT recalc 'One Size Weight' by src value ('Bar Weight' is empty) "
+        "(will start calculation with the calculated param 'One Side Weight':"
+        " - alignCurrentValues = true, "
+        " - 'One Size Weight' calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
+        () async {
+      final currentParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: barbellWeightParamSet,
+        paramValues: const [
+          (
+            barWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: false,
+            listValues: null
+          ),
+          (
+            oneSideWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: true,
+            listValues: null
+          ),
+        ],
+      );
+
+      final expectedParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: barbellWeightParamSet,
+        paramValues: const [
+          (
+            barWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: false,
+            listValues: null,
+          ),
+          (
+            oneSideWeightParam,
+            null,
+            1,
+            unit: kilogram,
+            calculated: true,
+            listValues: null
+          ),
+        ],
+      );
+
+      await testCase(
+        srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+        unitGroupName: GroupNames.mass,
+        currentParamSetValue: currentParamSetValue,
+        expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
+      );
+    });
+
+    test(
+        "Should NOT init 'Bar Weight', "
+        "should NOT recalc 'One Size Weight' by src value ('Bar Weight' is empty) "
+        "(will start calculation with the calculated param 'One Side Weight':"
+        " - alignCurrentValues = true, "
+        " - 'One Size Weight' calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
+      final currentParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: barbellWeightParamSet,
+        paramValues: const [
+          (
+            barWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: false,
+            listValues: null
+          ),
+          (
+            oneSideWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: true,
+            listValues: null
+          ),
+        ],
+      );
+
+      final expectedParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: barbellWeightParamSet,
+        paramValues: const [
+          (
+            barWeightParam,
+            null,
+            null,
+            unit: kilogram,
+            calculated: false,
+            listValues: null,
+          ),
+          (
+            oneSideWeightParam,
+            null,
+            1,
+            unit: kilogram,
+            calculated: true,
+            listValues: null
+          ),
+        ],
+      );
+
+      await testCase(
+        srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+        unitGroupName: GroupNames.mass,
+        currentParamSetValue: currentParamSetValue,
+        expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: true,
+      );
+    });
+
+    test(
         "Should init 'Bar Weight', "
-        "should init default 'One Size Weight' "
-        "(alignCurrentValues = true, calculated = false)", () async {
+        "should NOT recalc 'One Size Weight' by src value (calculated = false) "
+        "(will start calculation with the first param 'Bar Weight':"
+        " - alignCurrentValues = true, "
+        " - 'One Size Weight' calculated = false, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
+        () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
         paramValues: const [
@@ -117,15 +257,22 @@ void main() {
       );
 
       await testCase(
+        srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
+        unitGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
     test(
         "Should init 'Bar Weight', "
-        "should recalc 'One Size Weight' by src value"
-        "(alignCurrentValues = true, calculated = true)", () async {
+        "should recalc 'One Size Weight' by src value "
+        "(will start calculation with the first param 'Bar Weight':"
+        " - alignCurrentValues = true, "
+        " - 'One Size Weight' will become calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
         paramValues: const [
@@ -142,7 +289,7 @@ void main() {
             null,
             null,
             unit: kilogram,
-            calculated: true,
+            calculated: false,
             listValues: null
           ),
         ],
@@ -175,61 +322,8 @@ void main() {
         unitGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-      );
-    });
-
-    test(
-        "Should NOT init 'Bar Weight', "
-        "should NOT init 'One Size Weight' "
-        "(alignCurrentValues = false)", () async {
-      final currentParamSetValue = ConversionParamSetValueModel.compact(
-        paramSet: barbellWeightParamSet,
-        paramValues: const [
-          (
-            barWeightParam,
-            null,
-            null,
-            unit: kilogram,
-            calculated: false,
-            listValues: null
-          ),
-          (
-            oneSideWeightParam,
-            null,
-            null,
-            unit: kilogram,
-            calculated: false,
-            listValues: null
-          ),
-        ],
-      );
-
-      final expectedParamSetValue = ConversionParamSetValueModel.compact(
-        paramSet: barbellWeightParamSet,
-        paramValues: const [
-          (
-            barWeightParam,
-            null,
-            null,
-            unit: kilogram,
-            calculated: false,
-            listValues: barWeightParamKgListValues,
-          ),
-          (
-            oneSideWeightParam,
-            null,
-            null,
-            unit: kilogram,
-            calculated: false,
-            listValues: null
-          ),
-        ],
-      );
-
-      await testCase(
-        alignCurrentValues: false,
-        currentParamSetValue: currentParamSetValue,
-        expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
   });
@@ -288,6 +382,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -344,6 +440,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -401,6 +499,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });
@@ -460,6 +560,8 @@ void main() {
         unitGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -517,6 +619,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });
@@ -524,9 +628,13 @@ void main() {
   group("Should initially calculate param set 'Clothes Size'", () {
     test(
         "Should leave 'Person' = Man, "
-        "should recalc 'Garment' list value [empty -> Shirt], "
-        "should recalc 'Height' list value [cm: empty -> ..-164] "
-        "(alignCurrentValues = true, calculated = false)", () async {
+        "should set default 'Garment' list value [empty -> Shirt], "
+        "should set default 'Height' list value [cm: empty -> ..-164] (no src value) "
+        "(will start calculation with the first param 'Person':"
+        " - alignCurrentValues = true, "
+        " - 'Height' calculated = false, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
+        () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
         paramValues: const [
@@ -578,11 +686,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InCm.items[0].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InCm,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -590,14 +698,19 @@ void main() {
       await testCase(
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
     test(
         "Should leave 'Person' = Man, "
-        "should recalc 'Garment' list value [empty -> Shirt], "
-        "should recalc 'Height' list value by src value IT 44 "
-        "(alignCurrentValues = true, calculated = true)", () async {
+        "should set default 'Garment' list value [empty -> Shirt], "
+        "should set default 'Height' list value [cm: empty -> ..-164] (no src value) "
+        "(will start calculation with the first param 'Person':"
+        " - alignCurrentValues = true, "
+        " - 'Height' will become calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
         paramValues: const [
@@ -622,7 +735,7 @@ void main() {
             null,
             null,
             unit: centimeter,
-            calculated: true,
+            calculated: false,
             listValues: null
           ),
         ],
@@ -649,11 +762,87 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: true,
-            listValues: heightRangesFrom0_164To190InCm,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
+          ),
+        ],
+      );
+
+      await testCase(
+        currentParamSetValue: currentParamSetValue,
+        expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: true,
+      );
+    });
+
+    test(
+        "Should leave 'Person' = Man, "
+        "should set default 'Garment' list value [empty -> Shirt], "
+        "should recalc 'Height' list value by src value IT 44 "
+        "(will start calculation with the calculated param 'Height':"
+        " - alignCurrentValues = true, "
+        " - 'Height' will become calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
+      final currentParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: clothesSizeParamSet,
+        paramValues: const [
+          (
+            personParam,
+            "Man",
+            null,
+            unit: null,
+            calculated: false,
+            listValues: personParamListValues,
+          ),
+          (
+            garmentParam,
+            null,
+            null,
+            unit: null,
+            calculated: false,
+            listValues: null
+          ),
+          (
+            heightParam,
+            null,
+            null,
+            unit: centimeter,
+            calculated: false,
+            listValues: null
+          ),
+        ],
+      );
+
+      final expectedParamSetValue = ConversionParamSetValueModel.compact(
+        paramSet: clothesSizeParamSet,
+        paramValues: [
+          (
+            personParam,
+            "Man",
+            null,
+            unit: null,
+            calculated: false,
+            listValues: personParamListValues,
+          ),
+          (
+            garmentParam,
+            "Shirt",
+            null,
+            unit: null,
+            calculated: false,
+            listValues: garmentParamListValues,
+          ),
+          (
+            heightParam,
+            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+            null,
+            unit: centimeter,
+            calculated: true,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -664,14 +853,20 @@ void main() {
         unitGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
 
     test(
         "Should leave 'Person' = Man, "
-        "should NOT recalc 'Garment' list value, "
-        "should NOT recalc 'Height' list value "
-        "(alignCurrentValues = false)", () async {
+        "should NOT recalc 'Garment' list value [empty -> Shirt], "
+        "should NOT recalc 'Height' list value by src value IT 44 ('Garment' is empty) "
+        "(will start calculation with the calculated param 'Height':"
+        " - alignCurrentValues = true, "
+        " - 'Height' calculated = true, "
+        " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
+        () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
         paramValues: const [
@@ -696,7 +891,7 @@ void main() {
             null,
             null,
             unit: centimeter,
-            calculated: false,
+            calculated: true,
             listValues: null
           ),
         ],
@@ -719,23 +914,27 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValues: null,
           ),
           (
             heightParam,
             null,
             null,
             unit: centimeter,
-            calculated: false,
+            calculated: true,
             listValues: OutputListValuesBatch.empty(),
           ),
         ],
       );
 
       await testCase(
-        alignCurrentValues: false,
+        srcUnitValue:
+            ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+        unitGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });
@@ -796,11 +995,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_156To186InCm.items[0].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_156To186InCm,
+            listValues: womanTrousersHeightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -813,6 +1012,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -871,11 +1072,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_156To186InMeter.items[0].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: heightRangesFrom0_156To186InMeter,
+            listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
           ),
         ],
       );
@@ -888,6 +1089,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -946,11 +1149,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_156To186InCm.items[4].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InCm.items[4].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_156To186InCm,
+            listValues: womanTrousersHeightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -963,6 +1166,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -1021,11 +1226,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To188InCm.items[0].valueModel,
+            manTrousersHeightRangesFrom0_164To188InCm.items[0].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_164To188InCm,
+            listValues: manTrousersHeightRangesFrom0_164To188InCm,
           ),
         ],
       );
@@ -1038,6 +1243,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -1096,11 +1303,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To188InMeter.items[0].valueModel,
+            manTrousersHeightRangesFrom0_164To188InMeter.items[0].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: heightRangesFrom0_164To188InMeter,
+            listValues: manTrousersHeightRangesFrom0_164To188InMeter,
           ),
         ],
       );
@@ -1113,6 +1320,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -1141,11 +1350,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InCm,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1171,11 +1380,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InCm.items[4].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[4].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InCm,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1188,6 +1397,8 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
@@ -1217,11 +1428,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InMeter.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InMeter,
+            listValues: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1247,23 +1458,26 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InMeter.items[4].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InMeter,
+            listValues: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
 
       await testCase(
         delta: EditConversionParamValueDelta.raw(
-          newValue: heightRangesFrom0_164To190InMeter.items[4].valueModel,
+          newValue:
+              manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });
@@ -1294,11 +1508,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
             null,
             unit: centimeter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InCm,
+            listValues: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1324,11 +1538,11 @@ void main() {
           ),
           (
             heightParam,
-            heightRangesFrom0_164To190InMeter.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
             null,
             unit: meter,
             calculated: false,
-            listValues: heightRangesFrom0_164To190InMeter,
+            listValues: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1341,6 +1555,80 @@ void main() {
         ),
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
+      );
+    });
+  });
+
+  group("Should initially calculate param set 'Exchange Rate'", () {
+    test(
+        "[Currency] Should init 'Source' param list values with preselect, "
+        "should NOT init 'Bank' param list values (not found by 'Source')",
+        () async {
+      final currentParamSetValue = ConversionParamSetValueModel(
+        paramSet: exchangeRateParamSet,
+        paramValues: [
+          ConversionParamValueModel.tuple(
+            exchangeRateSourceParam,
+            null,
+            null,
+          ),
+          ConversionParamValueModel.tuple(
+            exchangeRateBankParam,
+            null,
+            null,
+          ),
+        ],
+      );
+
+      final expectedParamSetValue = ConversionParamSetValueModel(
+        paramSet: exchangeRateParamSet,
+        paramValues: [
+          ConversionParamValueModel.tuple(
+            exchangeRateSourceParam,
+            'FloatRates',
+            null,
+            listValues: exchangeRateSources,
+          ),
+          ConversionParamValueModel.tuple(
+            exchangeRateBankParam,
+            null,
+            null,
+            listValues: const OutputListValuesBatch.empty(),
+          ),
+        ],
+      );
+
+      when(
+        mockitoNetworkRepository.fetchList(
+          listType: ConvertouchListType.exchangeRateSource,
+          params: anyNamed('params'),
+          pageSize: listValuesPageSize,
+          pageNum: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Right([
+          ListValueModel.str('FloatRates'),
+        ]),
+      );
+
+      when(
+        mockitoNetworkRepository.fetchList(
+          listType: ConvertouchListType.exchangeRateBank,
+          params: anyNamed('params'),
+          pageSize: listValuesPageSize,
+          pageNum: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Right([]),
+      );
+
+      await testCase(
+        currentParamSetValue: currentParamSetValue,
+        expectedParamSetValue: expectedParamSetValue,
+        alignCurrentValues: true,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });

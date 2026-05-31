@@ -1,25 +1,18 @@
-import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_item_unit_replace_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_unit_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
-import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class ReplaceConversionItemUnitUseCase
     extends AbstractModifyConversionUseCase<ReplaceConversionItemUnitDelta> {
-  final ReplaceUnitInConversionItemUseCase replaceUnitInConversionItemUseCase;
-  final InitUnitListValuesUseCase initUnitListValuesUseCase;
+  final CalculateUnitValueUseValue calculateUnitValueUseValue;
 
   const ReplaceConversionItemUnitUseCase({
-    required this.replaceUnitInConversionItemUseCase,
-    required this.initUnitListValuesUseCase,
+    required this.calculateUnitValueUseValue,
   });
 
   @override
@@ -32,62 +25,22 @@ class ReplaceConversionItemUnitUseCase
     ConversionUnitValueModel oldUnitValue =
         oldConvertedUnitValues[delta.unitId]!;
 
-    var modifiedConvertedUnitValues = oldConvertedUnitValues;
-
-    if (delta.recalculationMode == RecalculationOnUnitChange.otherValues) {
-      modifiedConvertedUnitValues = {};
-
-      for (var unitValue in oldConvertedUnitValues.values) {
-        var newUnitValue = ObjectUtils.tryGet(
-          await initUnitListValuesUseCase.execute(
-            InputUnitListValuesInitModel(
-              itemValue: unitValue.unit.id != oldUnitValue.unit.id
-                  ? unitValue
-                  : unitValue.copyWith(unit: delta.newUnit),
-              paramSetValue: params,
-            ),
-          ),
-        );
-
-        modifiedConvertedUnitValues[newUnitValue.unit.id] = newUnitValue;
-      }
-    }
-
-    ConversionUnitValueModel? newUnitValue;
-
-    if (delta.recalculationMode == RecalculationOnUnitChange.currentValue) {
-      newUnitValue = ObjectUtils.tryGet(
-        await replaceUnitInConversionItemUseCase.execute(
-          InputItemUnitReplaceModel(
-            item: oldUnitValue,
-            newUnit: delta.newUnit,
-          ),
+    ConversionUnitValueModel newUnitValue = ObjectUtils.tryGet(
+      await calculateUnitValueUseValue.execute(
+        InputUnitValueCalculationModel(
+          unitValue: oldUnitValue,
+          delta: delta,
+          paramSetValue: params,
+          alignCurrentValue: true,
         ),
-      );
+      ),
+    );
 
-      newUnitValue = newUnitValue != null
-          ? rules
-              .calculateUnitValues(
-                InputConversionModel(
-                  unitGroup: unitGroup,
-                  params: params,
-                  sourceUnitValue: oldUnitValue,
-                  targetItems: [newUnitValue],
-                ),
-              )
-              .first
-          : null;
-    }
-
-    if (newUnitValue != null) {
-      return modifiedConvertedUnitValues.map(
-        (key, value) => key == delta.unitId
-            ? MapEntry(delta.newUnit.id, newUnitValue!)
-            : MapEntry(key, value),
-      );
-    }
-
-    return modifiedConvertedUnitValues;
+    return oldConvertedUnitValues.map(
+      (key, value) => key == delta.unitId
+          ? MapEntry(delta.newUnit.id, newUnitValue)
+          : MapEntry(key, value),
+    );
   }
 
   @override

@@ -5,44 +5,49 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_source_item_by_params_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
+import '../../model/mock/mock_list_values_batch.dart';
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../repositories/mock/mock_network_repository.dart';
+import '../../repositories/mock/mock_unit_group_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
   late SelectParamSetInConversionUseCase useCase;
 
   setUpAll(() {
+    const listValueRepository = ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
+
     useCase = const SelectParamSetInConversionUseCase(
-      calculateSourceItemByParamsUseCase: CalculateSourceItemByParamsUseCase(
+      calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
           dynamicValueRepository: MockDynamicValueRepository(),
-          listValueRepository: ListValueRepositoryImpl(
-            networkRepository: MockNetworkRepository(),
-          ),
+          listValueRepository: listValueRepository,
         ),
         initUnitListValuesUseCase: InitUnitListValuesUseCase(
           fetchListValuesUseCase: FetchListValuesUseCase(
-            listValueRepository: ListValueRepositoryImpl(
-              networkRepository: MockNetworkRepository(),
-            ),
+            listValueRepository: listValueRepository,
           ),
         ),
+        unitGroupRepository: MockUnitGroupRepository(),
       ),
     );
   });
 
-  test('Conversion has unit values (should be changed)', () async {
+  test(
+      "Should select param set 'By Circumference' in conversion with unit values",
+      () async {
     await testCase(
       unitGroup: ringSizeGroup,
       useCase: useCase,
@@ -72,15 +77,45 @@ void main() {
         selectedIndex: 0,
         totalCount: 2,
       ),
-      currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+      currentSrc: ConversionUnitValueModel.tuple(
+        usaRingSize,
+        3,
+        null,
+        listValues: usaRingSizes,
+      ),
       currentUnitValues: [
-        ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-        ConversionUnitValueModel.tuple(frRingSize, 44, null),
+        ConversionUnitValueModel.tuple(
+          usaRingSize,
+          3,
+          null,
+          listValues: usaRingSizes,
+        ),
+        ConversionUnitValueModel.tuple(
+          frRingSize,
+          44,
+          null,
+          listValues: frRingSizes,
+        ),
       ],
-      expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+      expectedSrc: ConversionUnitValueModel.tuple(
+        usaRingSize,
+        3,
+        null,
+        listValues: usaRingSizes,
+      ),
       expectedUnitValues: [
-        ConversionUnitValueModel.tuple(usaRingSize, 3, null),
-        ConversionUnitValueModel.tuple(frRingSize, 44, null),
+        ConversionUnitValueModel.tuple(
+          usaRingSize,
+          3,
+          null,
+          listValues: usaRingSizes,
+        ),
+        ConversionUnitValueModel.tuple(
+          frRingSize,
+          44,
+          null,
+          listValues: frRingSizes,
+        ),
       ],
       expectedParams: ConversionParamSetValueBulkModel(
         paramSetValues: [

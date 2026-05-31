@@ -7,11 +7,18 @@ class InputUnitValueCalculationModel {
   final ConversionSingleUnitModifyDelta? delta;
   final ConversionParamSetValueModel? paramSetValue;
   final bool alignCurrentValue;
+  final bool calculateByParams;
+  final String? unitGroupName;
 
   const InputUnitValueCalculationModel({
     required this.unitValue,
     this.delta,
     this.paramSetValue,
     this.alignCurrentValue = true,
-  });
+    this.calculateByParams = false,
+    this.unitGroupName,
+  }) : assert(
+          !calculateByParams || calculateByParams && unitGroupName != null,
+          'Unit group name should be provided for calculation by params',
+        );
 }

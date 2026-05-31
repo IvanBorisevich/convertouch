@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_set_repository.dart';
@@ -5,13 +6,6 @@ import 'package:either_dart/src/either.dart';
 
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit_group.dart';
-
-const _mockParamSetsList = [
-  clothesSizeParamSet,
-  ringSizeByDiameterParamSet,
-  ringSizeByCircumferenceParamSet,
-  barbellWeightParamSet,
-];
 
 final _groupParamSets = {
   clothesSizeGroup.id: [
@@ -24,10 +18,16 @@ final _groupParamSets = {
   massGroup.id: [
     barbellWeightParamSet,
   ],
+  currencyGroup.id: [
+    exchangeRateParamSet,
+  ]
 };
+
+final _mockParamSetsList = _groupParamSets.values.flattenedToList;
 
 final _groupMandatoryParamSets = {
   clothesSizeGroup.id: clothesSizeParamSet,
+  currencyGroup.id: exchangeRateParamSet,
 };
 
 class MockConversionParamSetRepository extends ConversionParamSetRepository {
@@ -65,6 +65,6 @@ class MockConversionParamSetRepository extends ConversionParamSetRepository {
     required int pageNum,
     required int pageSize,
   }) async {
-    return const Right(_mockParamSetsList);
+    return Right(_mockParamSetsList);
   }
 }

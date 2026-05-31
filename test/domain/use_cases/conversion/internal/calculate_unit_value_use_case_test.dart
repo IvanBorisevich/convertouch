@@ -1,4 +1,5 @@
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -46,6 +47,8 @@ void main() {
     ConversionSingleUnitModifyDelta? delta,
     ConversionParamSetValueModel? paramSetValue,
     bool alignCurrentValue = true,
+    bool calculateByParams = false,
+    String? unitGroupName,
   }) async {
     final modifiedUnitValue = ObjectUtils.tryGet(
       await useCase.execute(
@@ -54,6 +57,8 @@ void main() {
           paramSetValue: paramSetValue,
           delta: delta,
           alignCurrentValue: alignCurrentValue,
+          calculateByParams: calculateByParams,
+          unitGroupName: unitGroupName,
         ),
       ),
     );
@@ -73,9 +78,9 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothSizeListValues.items[0].valueModel,
+            japanClothesSizes.items[0].valueModel,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -100,11 +105,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -122,9 +127,9 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothSizeListValues.items[4].valueModel,
+            japanClothesSizes.items[4].valueModel,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -149,11 +154,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -172,9 +177,9 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothSizeListValues.items[0].valueModel,
+            japanClothesSizes.items[0].valueModel,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -199,11 +204,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -227,7 +232,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -253,11 +258,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -279,7 +284,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -304,11 +309,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -330,7 +335,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -356,11 +361,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -380,7 +385,7 @@ void main() {
             japanClothSize,
             '3L',
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -406,11 +411,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -430,7 +435,7 @@ void main() {
             japanClothSize,
             'W',
             null,
-            listValues: japanClothSizeListValues,
+            listValues: japanClothesSizes,
           );
 
           await testCase(
@@ -456,11 +461,11 @@ void main() {
                 ),
                 (
                   heightParam,
-                  heightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: heightRangesFrom0_164To190InCm
+                  listValues: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -481,9 +486,9 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothSizeListValues.items[1].valueModel,
+          japanClothesSizes.items[1].valueModel,
           null,
-          listValues: japanClothSizeListValues,
+          listValues: japanClothesSizes,
         );
 
         await testCase(
@@ -512,11 +517,11 @@ void main() {
               ),
               (
                 heightParam,
-                heightRangesFrom0_164To190InCm.items[0].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: heightRangesFrom0_164To190InCm
+                listValues: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -530,16 +535,16 @@ void main() {
       test("Should change list value ['M' JP -> 44 EU]", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothSizeListValues.items[1].valueModel,
+          japanClothesSizes.items[1].valueModel,
           null,
-          listValues: japanClothSizeListValues,
+          listValues: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           europeanClothSize,
-          europeanClothSizeListValues.items[5].valueModel,
+          europeanClothesSizes.items[5].valueModel,
           null,
-          listValues: europeanClothSizeListValues,
+          listValues: europeanClothesSizes,
         );
 
         await testCase(
@@ -569,11 +574,11 @@ void main() {
               ),
               (
                 heightParam,
-                heightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: heightRangesFrom0_164To190InCm
+                listValues: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -586,16 +591,16 @@ void main() {
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothSizeListValues.items[1].valueModel,
+          japanClothesSizes.items[1].valueModel,
           null,
-          listValues: japanClothSizeListValues,
+          listValues: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           europeanClothSize,
           null,
           null,
-          listValues: europeanClothSizeListValues,
+          listValues: europeanClothesSizes,
         );
 
         await testCase(
@@ -625,14 +630,257 @@ void main() {
               ),
               (
                 heightParam,
-                heightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: heightRangesFrom0_164To190InCm
+                listValues: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+    });
+
+    group('Should calculate list value by params', () {
+      test(
+          "Should calculate list value 'M' JP (clothes size, mandatory params full)",
+          () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          japanClothSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          japanClothSize,
+          japanClothesSizes.items[1].valueModel,
+          null,
+          listValues: japanClothesSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.clothesSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Man",
+                null,
+                unit: null,
+                calculated: false,
+                listValues: null
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValues: null
+              ),
+              (
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                null,
+                unit: centimeter,
+                calculated: false,
+                listValues: manShirtHeightRangesFrom0_164To190InCm
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+
+      test(
+          "Should calculate list value <empty> JP (clothes size, mandatory params NOT full)",
+          () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          japanClothSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          japanClothSize,
+          null,
+          null,
+          listValues: japanClothesSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.clothesSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                null,
+                null,
+                unit: null,
+                calculated: false,
+                listValues: null
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValues: null
+              ),
+              (
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                null,
+                unit: centimeter,
+                calculated: false,
+                listValues: manShirtHeightRangesFrom0_164To190InCm
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+
+      test(
+          "Should calculate list value 6.5 ES (ring size, optional params full, "
+          "main value provided)", () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          esRingSizes.items[1].valueModel,
+          null,
+          listValues: esRingSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.ringSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: const [
+              (
+                diameterParam,
+                15.1,
+                null,
+                unit: millimeter,
+                calculated: false,
+                listValues: null,
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+
+      test(
+          "Should calculate list value 6.5 ES (ring size, optional params full, "
+          "default value provided)", () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          esRingSizes.items[1].valueModel,
+          null,
+          listValues: esRingSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.ringSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: const [
+              (
+                diameterParam,
+                null,
+                15.1,
+                unit: millimeter,
+                calculated: false,
+                listValues: null,
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+
+      test(
+          "Should calculate default list value 4 ES (ring size, optional params NOT full)",
+          () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          esRingSizes.items[0].valueModel,
+          null,
+          listValues: esRingSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.ringSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: const [
+              (
+                diameterParam,
+                null,
+                null,
+                unit: millimeter,
+                calculated: false,
+                listValues: null,
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
+
+      test(
+          "Should calculate default list value 4 ES (ring size, optional params absent)",
+          () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          null,
+          null,
+        );
+
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          esRingSize,
+          esRingSizes.items[0].valueModel,
+          null,
+          listValues: esRingSizes,
+        );
+
+        await testCase(
+          calculateByParams: true,
+          unitGroupName: GroupNames.ringSize,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -685,7 +933,8 @@ void main() {
     });
 
     group("Edit non-list conversion item value", () {
-      test("Should change non-list main value [kg: 30 -> 45], "
+      test(
+          "Should change non-list main value [kg: 30 -> 45], "
           "should replace empty default value with 1", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           kilogram,

@@ -64,27 +64,45 @@ class CalculateUnitValueUseValue
       }
     }
 
-    bool paramsAreValid = input.paramSetValue == null ||
-        input.paramSetValue != null &&
-            (!input.paramSetValue!.paramSet.mandatory ||
-                input.paramSetValue!.paramSet.mandatory &&
-                    input.paramSetValue!.hasAllValues);
+    bool paramsAreValid = input.paramSetValue != null &&
+        (!input.paramSetValue!.paramSet.mandatory ||
+            input.paramSetValue!.paramSet.mandatory &&
+                input.paramSetValue!.hasAllValues);
+
+    bool paramsAreEmptyOrValid = input.paramSetValue == null || paramsAreValid;
+
+    ConversionUnitValueModel? calculatedValueByParams;
+
+    if (delta == null &&
+        input.calculateByParams &&
+        paramsAreValid &&
+        input.unitGroupName != null) {
+      calculatedValueByParams = rules.calculateSrcValueByParams(
+        srcUnit: input.unitValue.unit,
+        params: input.paramSetValue!,
+        unitGroupName: input.unitGroupName!,
+      );
+    }
 
     if (input.unitValue.listType == null) {
-      if (newDefaultValueForNewUnit != null) {
+      if (calculatedValueByParams != null) {
+        newValue = calculatedValueByParams.value;
+        newDefaultValue = calculatedValueByParams.defaultValue;
+      } else if (newDefaultValueForNewUnit != null) {
         newDefaultValue = newDefaultValueForNewUnit;
       } else {
-        newDefaultValue =
-            newDefaultValue == null && input.alignCurrentValue && paramsAreValid
-                ? ObjectUtils.tryGet(
-                    await calculateDefaultValueUseCase.execute(
-                      InputDefaultValueCalculationModel(
-                        item: input.unitValue.unit,
-                        replacingUnit: newUnit,
-                      ),
-                    ),
-                  )
-                : newDefaultValue;
+        newDefaultValue = newDefaultValue == null &&
+                input.alignCurrentValue &&
+                paramsAreEmptyOrValid
+            ? ObjectUtils.tryGet(
+                await calculateDefaultValueUseCase.execute(
+                  InputDefaultValueCalculationModel(
+                    item: input.unitValue.unit,
+                    replacingUnit: newUnit,
+                  ),
+                ),
+              )
+            : newDefaultValue;
       }
 
       return Right(
@@ -95,6 +113,10 @@ class CalculateUnitValueUseValue
         ),
       );
     } else {
+      if (calculatedValueByParams != null) {
+        newValue = calculatedValueByParams.value;
+      }
+
       return Right(
         ObjectUtils.tryGet(
           await initUnitListValuesUseCase.execute(
@@ -105,7 +127,7 @@ class CalculateUnitValueUseValue
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
-              alignForNull: !paramsAreValid,
+              alignForNull: !paramsAreEmptyOrValid,
             ),
           ),
         ),

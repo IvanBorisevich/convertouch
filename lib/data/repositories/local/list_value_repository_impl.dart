@@ -8,7 +8,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
-import 'package:convertouch/domain/utils/list_values.dart';
+import 'package:convertouch/domain/utils/list_values_utils.dart';
 import 'package:either_dart/either.dart';
 
 class ListValueRepositoryImpl implements ListValueRepository {

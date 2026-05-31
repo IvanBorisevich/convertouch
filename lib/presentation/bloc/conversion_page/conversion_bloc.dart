@@ -12,7 +12,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_val
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -33,6 +33,7 @@ class ConversionBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionBuilt> {
   final GetConversionUseCase getConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
+  final AlignConversionUseCase alignConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
   final EditConversionGroupUseCase editConversionGroupUseCase;
   final EditConversionUnitUseCase editConversionItemUnitUseCase;
@@ -47,7 +48,6 @@ class ConversionBloc
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
-  final InitItemsListValuesUseCase initItemsListValuesUseCase;
   final FetchMoreListValuesOfParamUseCase fetchMoreListValuesOfParamUseCase;
   final FetchMoreListValuesOfConvItemUseCase
       fetchMoreListValuesOfConvItemUseCase;
@@ -55,6 +55,7 @@ class ConversionBloc
   ConversionBloc({
     required this.getConversionUseCase,
     required this.saveConversionUseCase,
+    required this.alignConversionUseCase,
     required this.addUnitsToConversionUseCase,
     required this.editConversionGroupUseCase,
     required this.editConversionItemUnitUseCase,
@@ -68,7 +69,6 @@ class ConversionBloc
     required this.editConversionParamValueUseCase,
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
-    required this.initItemsListValuesUseCase,
     required this.fetchMoreListValuesOfParamUseCase,
     required this.fetchMoreListValuesOfConvItemUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
@@ -121,16 +121,7 @@ class ConversionBloc
     }
 
     conversion = ObjectUtils.tryGet(
-      await addParamSetsToConversionUseCase.execute(
-        InputConversionModifyModel<AddParamSetsDelta>(
-          conversion: conversion,
-          delta: const AddParamSetsDelta(),
-        ),
-      ),
-    );
-
-    conversion = ObjectUtils.tryGet(
-      await initItemsListValuesUseCase.execute(conversion),
+      await alignConversionUseCase.execute(conversion),
     );
 
     emit(
@@ -487,18 +478,12 @@ class ConversionBloc
     if (result.isLeft) {
       onError?.call(result.left);
     } else {
-      ConversionModel enrichedConversion = enrichWithListValues
-          ? ObjectUtils.tryGet(
-              await initItemsListValuesUseCase.execute(result.right),
-            )
-          : result.right;
-
       emit(
         ConversionBuilt(
-          conversion: enrichedConversion,
-          showRefreshButton: enrichedConversion.unitGroup.refreshable &&
-              enrichedConversion.convertedUnitValues.isNotEmpty &&
-              enrichedConversion.params?.active != null,
+          conversion: result.right,
+          showRefreshButton: result.right.unitGroup.refreshable &&
+              result.right.convertedUnitValues.isNotEmpty &&
+              result.right.params?.active != null,
         ),
       );
       onSuccess?.call();

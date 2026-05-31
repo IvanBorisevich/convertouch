@@ -21,7 +21,11 @@ final _paramsOfSet = {
   barbellWeightParamSet.id: [
     barWeightParam,
     oneSideWeightParam,
-  ]
+  ],
+  exchangeRateParamSet.id: [
+    exchangeRateSourceParam,
+    exchangeRateBankParam,
+  ],
 };
 
 class MockConversionParamRepository extends ConversionParamRepository {

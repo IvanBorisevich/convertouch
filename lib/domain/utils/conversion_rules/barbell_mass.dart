@@ -50,9 +50,7 @@ ValueModel? getBarbellFullMass({
   num? oneSideMassNum = oneSideMassVal != null
       ? oneSideMassVal.numVal! * oneSideMass.unit!.coefficient!
       : null;
-  num? barMassNum = barMassVal != null
-      ? barMassVal.numVal! * barMass.unit!.coefficient!
-      : null;
+  num? barMassNum = barMassVal?.numVal!;
 
   if (oneSideMassNum == null || barMassNum == null) {
     return null;

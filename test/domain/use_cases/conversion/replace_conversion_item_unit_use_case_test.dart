@@ -5,9 +5,9 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/replace_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
@@ -18,6 +18,7 @@ import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../repositories/mock/mock_network_repository.dart';
+import '../../repositories/mock/mock_unit_group_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
@@ -35,14 +36,14 @@ void main() {
     );
 
     useCase = const ReplaceConversionItemUnitUseCase(
-      replaceUnitInConversionItemUseCase: ReplaceUnitInConversionItemUseCase(
+      calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
           dynamicValueRepository: MockDynamicValueRepository(),
           listValueRepository: listValueRepository,
         ),
+        unitGroupRepository: MockUnitGroupRepository(),
         initUnitListValuesUseCase: initUnitListValuesUseCase,
       ),
-      initUnitListValuesUseCase: initUnitListValuesUseCase,
     );
   });
 
@@ -169,11 +170,25 @@ void main() {
             ],
             selectedIndex: 0,
           ),
-          currentSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+          currentSrc: ConversionUnitValueModel.tuple(
+            europeanClothSize,
+            44,
+            null,
+            listValues: europeanClothesSizes,
+          ),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
-            ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
+            ConversionUnitValueModel.tuple(
+              europeanClothSize,
+              44,
+              null,
+              listValues: europeanClothesSizes,
+            ),
+            ConversionUnitValueModel.tuple(
+              japanClothSize,
+              'M',
+              null,
+              listValues: japanClothesSizes,
+            ),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -194,20 +209,20 @@ void main() {
             usaClothSize,
             2,
             null,
-            listValues: usaClothSizeListValues,
+            listValues: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               usaClothSize,
               2,
               null,
-              listValues: usaClothSizeListValues,
+              listValues: usaClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               japanClothSize,
               null,
               null,
-              listValues: japanClothSizeListValues,
+              listValues: japanClothesSizes,
             ),
           ],
         );
@@ -264,14 +279,14 @@ void main() {
             usaClothSize,
             30,
             null,
-            listValues: usaClothSizeListValues,
+            listValues: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               usaClothSize,
               30,
               null,
-              listValues: usaClothSizeListValues,
+              listValues: usaClothesSizes,
             ),
             ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
           ],

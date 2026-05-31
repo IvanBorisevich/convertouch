@@ -2,6 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
+import 'mock_unit_group.dart';
+
 const mockUnit = UnitModel(
   id: 1,
   name: "name1",
@@ -60,7 +62,7 @@ const UnitModel centimeter = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 0.01,
-  unitGroupId: 5,
+  unitGroupId: lengthGroupId,
 );
 
 const UnitModel millimeter = UnitModel(
@@ -70,7 +72,7 @@ const UnitModel millimeter = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 0.001,
-  unitGroupId: 5,
+  unitGroupId: lengthGroupId,
 );
 
 const UnitModel decimeter = UnitModel(
@@ -80,7 +82,7 @@ const UnitModel decimeter = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 0.1,
-  unitGroupId: 5,
+  unitGroupId: lengthGroupId,
 );
 
 const UnitModel meter = UnitModel(
@@ -90,7 +92,7 @@ const UnitModel meter = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 1,
-  unitGroupId: 5,
+  unitGroupId: lengthGroupId,
 );
 
 const UnitModel kilometer = UnitModel(
@@ -100,7 +102,7 @@ const UnitModel kilometer = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 1000,
-  unitGroupId: 5,
+  unitGroupId: lengthGroupId,
 );
 
 const UnitModel europeanClothSize = UnitModel(
@@ -109,7 +111,7 @@ const UnitModel europeanClothSize = UnitModel(
   code: "EU",
   valueType: ConvertouchValueType.integerNonNegative,
   listType: ConvertouchListType.clothesSizeEu,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel japanClothSize = UnitModel(
@@ -118,7 +120,7 @@ const UnitModel japanClothSize = UnitModel(
   code: "JP",
   valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.clothesSizeJp,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel italianClothSize = UnitModel(
@@ -127,7 +129,7 @@ const UnitModel italianClothSize = UnitModel(
   code: "IT",
   valueType: ConvertouchValueType.integerNonNegative,
   listType: ConvertouchListType.clothesSizeIt,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel usaClothSize = UnitModel(
@@ -136,7 +138,7 @@ const UnitModel usaClothSize = UnitModel(
   code: 'US',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.clothesSizeUs,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel usaRingSize = UnitModel(
@@ -145,7 +147,7 @@ const UnitModel usaRingSize = UnitModel(
   code: 'US',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeUs,
-  unitGroupId: 8,
+  unitGroupId: ringSizeGroupId,
 );
 
 const UnitModel frRingSize = UnitModel(
@@ -154,7 +156,7 @@ const UnitModel frRingSize = UnitModel(
   code: 'FR',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeFr,
-  unitGroupId: 8,
+  unitGroupId: ringSizeGroupId,
 );
 
 const UnitModel ruRingSize = UnitModel(
@@ -163,7 +165,7 @@ const UnitModel ruRingSize = UnitModel(
   code: 'RU',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeRu,
-  unitGroupId: 8,
+  unitGroupId: ringSizeGroupId,
 );
 
 const UnitModel kilogram = UnitModel(
@@ -173,7 +175,7 @@ const UnitModel kilogram = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 1,
-  unitGroupId: 9,
+  unitGroupId: massGroupId,
 );
 
 const UnitModel pound = UnitModel(
@@ -183,7 +185,7 @@ const UnitModel pound = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 0.45359237,
-  unitGroupId: 9,
+  unitGroupId: massGroupId,
 );
 
 const UnitModel spainClothSize = UnitModel(
@@ -192,7 +194,7 @@ const UnitModel spainClothSize = UnitModel(
   code: "ES",
   valueType: ConvertouchValueType.integerNonNegative,
   listType: ConvertouchListType.clothesSizeEs,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel germanyClothSize = UnitModel(
@@ -201,7 +203,7 @@ const UnitModel germanyClothSize = UnitModel(
   code: "DE",
   valueType: ConvertouchValueType.integerNonNegative,
   listType: ConvertouchListType.clothesSizeDe,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel deRingSize = UnitModel(
@@ -210,7 +212,7 @@ const UnitModel deRingSize = UnitModel(
   code: 'DE',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeDe,
-  unitGroupId: 8,
+  unitGroupId: ringSizeGroupId,
 );
 
 const UnitModel esRingSize = UnitModel(
@@ -219,7 +221,7 @@ const UnitModel esRingSize = UnitModel(
   code: 'ES',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.ringSizeEs,
-  unitGroupId: 8,
+  unitGroupId: ringSizeGroupId,
 );
 
 const UnitModel ton = UnitModel(
@@ -229,7 +231,7 @@ const UnitModel ton = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   minValue: ValueModel.zero,
   coefficient: 1000,
-  unitGroupId: 9,
+  unitGroupId: massGroupId,
 );
 
 const UnitModel degreeFahrenheit = UnitModel(
@@ -237,7 +239,7 @@ const UnitModel degreeFahrenheit = UnitModel(
   name: "Fahrenheit",
   code: UnitCodes.degreeFahrenheit,
   valueType: ConvertouchValueType.decimal,
-  unitGroupId: 7,
+  unitGroupId: temperatureGroupId,
 );
 
 const UnitModel degreeKelvin = UnitModel(
@@ -245,7 +247,7 @@ const UnitModel degreeKelvin = UnitModel(
   name: "Kelvin",
   code: UnitCodes.degreeKelvin,
   valueType: ConvertouchValueType.decimal,
-  unitGroupId: 7,
+  unitGroupId: temperatureGroupId,
 );
 
 const UnitModel ruClothesSize = UnitModel(
@@ -254,7 +256,7 @@ const UnitModel ruClothesSize = UnitModel(
   code: 'RU',
   valueType: ConvertouchValueType.decimalNonNegative,
   listType: ConvertouchListType.clothesSizeRu,
-  unitGroupId: 6,
+  unitGroupId: clothesSizeGroupId,
 );
 
 const UnitModel usd = UnitModel(
@@ -262,7 +264,7 @@ const UnitModel usd = UnitModel(
   name: "Dollar US",
   code: 'USD',
   valueType: ConvertouchValueType.decimalNonNegative,
-  unitGroupId: 10,
+  unitGroupId: currencyGroupId,
 );
 
 const UnitModel eur = UnitModel(
@@ -270,5 +272,5 @@ const UnitModel eur = UnitModel(
   name: "Euro",
   code: 'EUR',
   valueType: ConvertouchValueType.decimalNonNegative,
-  unitGroupId: 10,
+  unitGroupId: currencyGroupId,
 );

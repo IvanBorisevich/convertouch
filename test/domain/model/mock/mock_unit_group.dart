@@ -1,6 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
+const lengthGroupId = 5;
+const clothesSizeGroupId = 6;
+const temperatureGroupId = 7;
+const ringSizeGroupId = 8;
+const massGroupId = 9;
+const currencyGroupId = 10;
+
 const mockUnitGroupWithoutUnits = UnitGroupModel(
   id: 0,
   name: "name",
@@ -32,40 +39,40 @@ const mockUnitGroupWithMultipleBaseUnitsOob = UnitGroupModel(
 );
 
 const UnitGroupModel lengthGroup = UnitGroupModel(
-  id: 5,
+  id: lengthGroupId,
   name: GroupNames.length,
   valueType: ConvertouchValueType.decimalNonNegative,
 );
 
 const UnitGroupModel clothesSizeGroup = UnitGroupModel(
-  id: 6,
+  id: clothesSizeGroupId,
   name: GroupNames.clothesSize,
   valueType: ConvertouchValueType.integerNonNegative,
   conversionType: ConversionType.formula,
 );
 
 const UnitGroupModel temperatureGroup = UnitGroupModel(
-  id: 7,
+  id: temperatureGroupId,
   name: GroupNames.temperature,
   valueType: ConvertouchValueType.decimal,
   conversionType: ConversionType.formula,
 );
 
 const UnitGroupModel ringSizeGroup = UnitGroupModel(
-  id: 8,
+  id: ringSizeGroupId,
   name: GroupNames.ringSize,
   valueType: ConvertouchValueType.decimal,
   conversionType: ConversionType.formula,
 );
 
 const UnitGroupModel massGroup = UnitGroupModel(
-  id: 9,
+  id: massGroupId,
   name: GroupNames.mass,
   valueType: ConvertouchValueType.decimal,
 );
 
 const UnitGroupModel currencyGroup = UnitGroupModel(
-  id: 10,
+  id: currencyGroupId,
   name: GroupNames.currency,
   valueType: ConvertouchValueType.decimalNonNegative,
 );

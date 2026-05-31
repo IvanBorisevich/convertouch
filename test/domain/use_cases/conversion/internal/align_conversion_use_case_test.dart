@@ -7,9 +7,13 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_items_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -20,10 +24,14 @@ import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../model/mock/mock_unit_group.dart';
+import '../../../repositories/mock/mock_conversion_param_repository.dart';
+import '../../../repositories/mock/mock_conversion_param_set_repository.dart';
+import '../../../repositories/mock/mock_dynamic_value_repository.dart';
+import '../../../repositories/mock/mock_unit_group_repository.dart';
 import '../../../repositories/mock/mockito_mock_repository.mocks.dart';
 
 void main() {
-  late final InitItemsListValuesUseCase useCase;
+  late final AlignConversionUseCase useCase;
   late final MockitoNetworkRepository mockitoNetworkRepository =
       MockitoNetworkRepository();
 
@@ -32,27 +40,52 @@ void main() {
       const Right([]),
     );
 
+    final listValueRepository = ListValueRepositoryImpl(
+      networkRepository: mockitoNetworkRepository,
+    );
+
     final fetchListValuesUseCase = FetchListValuesUseCase(
-      listValueRepository: ListValueRepositoryImpl(
-        networkRepository: mockitoNetworkRepository,
+      listValueRepository: listValueRepository,
+    );
+
+    final CalculateDefaultValueUseCase calculateDefaultValueUseCase =
+        CalculateDefaultValueUseCase(
+      dynamicValueRepository: const MockDynamicValueRepository(),
+      listValueRepository: listValueRepository,
+    );
+
+    final CalculateParamSetValueUseCase calculateParamSetValueUseCase =
+        CalculateParamSetValueUseCase(
+      calculateParamValueUseValue: CalculateParamValueUseValue(
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+        initParamListValuesUseCase: InitParamListValuesUseCase(
+          fetchListValuesUseCase: fetchListValuesUseCase,
+        ),
+        unitGroupRepository: const MockUnitGroupRepository(),
       ),
     );
 
-    useCase = InitItemsListValuesUseCase(
-      initUnitListValuesUseCase: InitUnitListValuesUseCase(
-        fetchListValuesUseCase: fetchListValuesUseCase,
+    useCase = AlignConversionUseCase(
+      addParamSetsToConversionUseCase: AddParamSetsToConversionUseCase(
+        calculateParamSetValueUseCase: calculateParamSetValueUseCase,
+        conversionParamRepository: const MockConversionParamRepository(),
+        conversionParamSetRepository: const MockConversionParamSetRepository(),
       ),
-      initParamListValuesUseCase: InitParamListValuesUseCase(
-        fetchListValuesUseCase: fetchListValuesUseCase,
+      calculateUnitValueUseValue: CalculateUnitValueUseValue(
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+        initUnitListValuesUseCase: InitUnitListValuesUseCase(
+          fetchListValuesUseCase: fetchListValuesUseCase,
+        ),
+        unitGroupRepository: const MockUnitGroupRepository(),
       ),
+      calculateParamSetValueUseCase: calculateParamSetValueUseCase,
     );
   });
 
   test(
-      "[Clothes size] Should init list values of 'Person' param without preselect, "
-      "should not init list values of 'Garment' param ('Person' is not selected), "
-      "should not init list values of unit values (not all mandatory params filled)",
-      () async {
+      "[Clothes size] Should init 'Person' list values without preselect, "
+      "should NOT init 'Garment' list values ('Person' is not selected), "
+      "should init list values of unit values", () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       params: ConversionParamSetValueBulkModel(
@@ -81,12 +114,12 @@ void main() {
       ],
     );
 
-    var enrichedConversion = ObjectUtils.tryGet(
+    var alignedConversion = ObjectUtils.tryGet(
       await useCase.execute(conversion),
     );
 
     expect(
-      enrichedConversion.toJson(),
+      alignedConversion.toJson(),
       ConversionModel(
         unitGroup: clothesSizeGroup,
         params: ConversionParamSetValueBulkModel(
@@ -104,50 +137,50 @@ void main() {
                   garmentParam,
                   null,
                   null,
-                  listValues: const OutputListValuesBatch(
-                    items: [],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.garment,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 0,
-                  ),
+                  listValues: const OutputListValuesBatch.empty(),
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   const NumRange.withRight(174, 180),
                   null,
                   unit: meter,
-                  listValues: const OutputListValuesBatch(
-                    items: [],
-                    fetchParams: ListValuesFetchParams(
-                      listType: ConvertouchListType.clothesHeightRange,
-                    ),
-                    hasReachedMax: true,
-                    pageNum: 0,
-                  ),
+                  listValues: const OutputListValuesBatch.empty(),
                 ),
               ],
             )
           ],
           selectedIndex: 0,
         ),
-        srcUnitValue:
-            ConversionUnitValueModel.tuple(japanClothSize, null, null),
+        srcUnitValue: ConversionUnitValueModel.tuple(
+          japanClothSize,
+          null,
+          null,
+          listValues: japanClothesSizes,
+        ),
         convertedUnitValues: [
-          ConversionUnitValueModel.tuple(japanClothSize, null, null),
-          ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+          ConversionUnitValueModel.tuple(
+            japanClothSize,
+            null,
+            null,
+            listValues: japanClothesSizes,
+          ),
+          ConversionUnitValueModel.tuple(
+            germanyClothSize,
+            null,
+            null,
+            listValues: germanyClothesSizes,
+          ),
         ],
       ).toJson(),
     );
   });
 
   test(
-      "[Clothes size] Should init 'Person' param list values with preselect, "
-      "should init 'Garment' param list values with preselect ('Person' is selected), "
-      "should init 'Height' param list values with preselect, "
-      "should init list values of unit values with preselect (all mandatory params filled)",
-      () async {
+      "[Clothes size] Should 'Person' list values without preselect (already selected), "
+      "should init 'Garment' list values without preselect (alignCurrentValues = false), "
+      "should NOT init 'Height' list values ('Garment' is not selected), "
+      "should init conversion items list values without preselect "
+      "(mandatory params NOT full, alignCurrentValues = false)", () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
@@ -163,8 +196,11 @@ void main() {
               ),
               ConversionParamValueModel.tuple(garmentParam, null, null),
               ConversionParamValueModel.tuple(
-                  heightParam, const NumRange.withRight(1.74, 1.8), null,
-                  unit: meter),
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InMeter.items[3].valueModel,
+                null,
+                unit: meter,
+              ),
             ],
           )
         ],
@@ -176,12 +212,12 @@ void main() {
       ],
     );
 
-    var enrichedConversion = ObjectUtils.tryGet(
+    var alignedConversion = ObjectUtils.tryGet(
       await useCase.execute(conversion),
     );
 
     expect(
-      enrichedConversion.toJson(),
+      alignedConversion.toJson(),
       ConversionModel(
         unitGroup: clothesSizeGroup,
         params: ConversionParamSetValueBulkModel(
@@ -197,16 +233,16 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
-                  'Shirt',
+                  null,
                   null,
                   listValues: garmentParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  heightRangesFrom0_164To190InMeter.items[3].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[3].valueModel,
                   null,
                   unit: meter,
-                  listValues: heightRangesFrom0_164To190InMeter,
+                  listValues: const OutputListValuesBatch.empty(),
                 ),
               ],
             )
@@ -215,22 +251,22 @@ void main() {
         ),
         srcUnitValue: ConversionUnitValueModel.tuple(
           japanClothSize,
-          'LL',
           null,
-          listValues: japanClothSizeListValues,
+          null,
+          listValues: japanClothesSizes,
         ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             japanClothSize,
-            'LL',
             null,
-            listValues: japanClothSizeListValues,
+            null,
+            listValues: japanClothesSizes,
           ),
           ConversionUnitValueModel.tuple(
             germanyClothSize,
-            46,
             null,
-            listValues: germanyClothesSizeListValues,
+            null,
+            listValues: germanyClothesSizes,
           ),
         ],
       ).toJson(),
@@ -238,31 +274,12 @@ void main() {
   });
 
   test(
-      "[Currency] Should init 'Source' param list values with preselect, "
-      "should not init 'Bank' param list values", () async {
+      "[Currency] Should automatically add a mandatory param set, "
+      "should make it active (set selectedIndex = 0), "
+      "should not calculate default values", () async {
     final conversion = ConversionModel(
       unitGroup: currencyGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
-      params: ConversionParamSetValueBulkModel(
-        paramSetValues: [
-          ConversionParamSetValueModel(
-            paramSet: exchangeRateParamSet,
-            paramValues: [
-              ConversionParamValueModel.tuple(
-                exchangeRateSourceParam,
-                null,
-                null,
-              ),
-              ConversionParamValueModel.tuple(
-                exchangeRateBankParam,
-                null,
-                null,
-              ),
-            ],
-          ),
-        ],
-        selectedIndex: 0,
-      ),
       convertedUnitValues: [
         ConversionUnitValueModel.tuple(usd, null, null),
         ConversionUnitValueModel.tuple(eur, null, null),
@@ -293,15 +310,14 @@ void main() {
       (_) async => const Right([]),
     );
 
-    var enrichedConversion = ObjectUtils.tryGet(
+    var alignedConversion = ObjectUtils.tryGet(
       await useCase.execute(conversion),
     );
 
     expect(
-      enrichedConversion.toJson(),
+      alignedConversion.toJson(),
       ConversionModel(
         unitGroup: currencyGroup,
-        srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
         params: ConversionParamSetValueBulkModel(
           paramSetValues: [
             ConversionParamSetValueModel(
@@ -311,13 +327,7 @@ void main() {
                   exchangeRateSourceParam,
                   'FloatRates',
                   null,
-                  listValues: const OutputListValuesBatch(
-                    items: [
-                      ListValueModel.str('FloatRates'),
-                    ],
-                    hasReachedMax: true,
-                    pageNum: 1,
-                  ),
+                  listValues: exchangeRateSources,
                 ),
                 ConversionParamValueModel.tuple(
                   exchangeRateBankParam,
@@ -328,8 +338,10 @@ void main() {
               ],
             )
           ],
+          mandatoryParamSetExists: true,
           selectedIndex: 0,
         ),
+        srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(usd, null, null),
           ConversionUnitValueModel.tuple(eur, null, null),
