@@ -13,54 +13,7 @@ import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
 
-// Function rules
-
-final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
-    _formulaRules = {
-  GroupNames.temperature: temperatureRules,
-};
-
-const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
-    _paramBySrcValueRules = {
-  GroupNames.clothesSize: {
-    ParamSetNames.byHeight: {
-      ParamNames.height: getHeightByClothesSize,
-    },
-  },
-  GroupNames.ringSize: {
-    ParamSetNames.byDiameter: {
-      ParamNames.diameter: getDiameterByRingSize,
-    },
-    ParamSetNames.byCircumference: {
-      ParamNames.circumference: getCircumferenceByRingSize,
-    },
-  },
-  GroupNames.mass: {
-    ParamSetNames.barbellWeight: {
-      ParamNames.oneSideWeight: getBarbellOneSideMassByFullMass,
-    },
-  },
-};
-
-const Map<String, Map<String, SrcUnitValueByParamValueFunc>>
-    _nonListSrcValueByParamsRules = {
-  GroupNames.mass: {
-    ParamSetNames.barbellWeight: getBarbellFullMass,
-  },
-};
-
-// Mapping rules -------------------------------------------------------------
-
-const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
-  GroupNames.clothesSize: getClothesSizesMapByParams,
-  GroupNames.ringSize: getRingSizesMapByParams,
-};
-
-const Map<String, MappingRuleBySrcUnitValueFunc> _mappingRulesBySrcUnitValue = {
-  GroupNames.ringSize: getRingSizesMapByValue,
-};
-
-//----------------------------------------------------------------------------
+// Unit values calculation --------------------------------------------------
 
 List<ConversionUnitValueModel> calculateUnitValues(
   InputConversionModel input,
@@ -68,12 +21,12 @@ List<ConversionUnitValueModel> calculateUnitValues(
   Map<String, String>? mappingTable;
 
   if (input.params != null && input.params!.hasAllValues) {
-    mappingTable = getMappingByParams(
+    mappingTable = _getMappingByParams(
       unitGroupName: input.unitGroup.name,
       params: input.params!,
     );
   } else {
-    mappingTable = getMappingBySrcValue(
+    mappingTable = _getMappingBySrcValue(
       unitGroupName: input.unitGroup.name,
       srcUnit: input.sourceUnitValue.unit,
       srcValue: input.sourceUnitValue.eitherValue,
@@ -90,7 +43,7 @@ List<ConversionUnitValueModel> calculateUnitValues(
       continue;
     }
 
-    ValueModel? value = calculateTargetValue(
+    ValueModel? value = _calculateTargetValue(
       unitGroup: input.unitGroup,
       srcValue: input.sourceUnitValue.value,
       srcUnit: input.sourceUnitValue.unit,
@@ -98,7 +51,7 @@ List<ConversionUnitValueModel> calculateUnitValues(
       mapping: mappingTable,
     );
 
-    ValueModel? defaultValue = calculateTargetValue(
+    ValueModel? defaultValue = _calculateTargetValue(
       unitGroup: input.unitGroup,
       srcValue: input.sourceUnitValue.defaultValue,
       srcUnit: input.sourceUnitValue.unit,
@@ -173,13 +126,13 @@ ConversionParamValueModel calculateParamValueForNewUnit({
 
   Map<String, String>? mappingTable;
   if (paramValue.listType == null && paramValue.unit!.listType != null) {
-    mappingTable = getMappingByParams(
+    mappingTable = _getMappingByParams(
       unitGroupName: paramUnitGroup.name,
       params: params,
     );
   }
 
-  ValueModel? value = calculateTargetValue(
+  ValueModel? value = _calculateTargetValue(
     unitGroup: paramUnitGroup,
     srcValue: paramValue.value,
     srcUnit: paramValue.unit!,
@@ -187,7 +140,7 @@ ConversionParamValueModel calculateParamValueForNewUnit({
     mapping: mappingTable,
   );
 
-  ValueModel? defaultValue = calculateTargetValue(
+  ValueModel? defaultValue = _calculateTargetValue(
     unitGroup: paramUnitGroup,
     srcValue: paramValue.defaultValue,
     srcUnit: paramValue.unit!,
@@ -203,91 +156,13 @@ ConversionParamValueModel calculateParamValueForNewUnit({
   );
 }
 
-ValueModel? calculateTargetValue({
-  required UnitGroupModel unitGroup,
-  required ValueModel? srcValue,
-  required UnitModel srcUnit,
-  required UnitModel tgtUnit,
-  Map<String, String>? mapping,
-}) {
-  MappingConverter mappingConverter = MappingConverter(mapping).bySrcValue(
-    srcValue: srcValue,
-    srcUnitCode: srcUnit.code,
-  );
-
-  if (mappingConverter.isNotEmpty) {
-    return mappingConverter.valueByCode(tgtUnit.code);
-  } else {
-    ConversionRule? xToBase = getRule(
-      unitGroup: unitGroup,
-      ruleType: ConversionRuleType.xToBase,
-      unit: srcUnit,
-    );
-
-    ConversionRule? baseToY = getRule(
-      unitGroup: unitGroup,
-      ruleType: ConversionRuleType.baseToY,
-      unit: tgtUnit,
-    );
-
-    return Converter(srcValue)
-        .apply(xToBase)
-        .apply(baseToY)
-        .value
-        ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
-  }
-}
-
-ValueModel? calculateParamValueBySrcValue({
-  required ConversionParamModel param,
-  required ConversionUnitValueModel srcUnitValue,
-  required ConversionParamSetValueModel params,
-  required String unitGroupName,
-}) {
-  ConversionParamValueModel paramValue = params.getParamValue(param.name)!;
-
-  ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
-    func: _paramBySrcValueRules[unitGroupName]?[params.paramSet.name]
-        ?[param.name],
-    srcUnit: srcUnitValue.unit,
-  );
-
-  ValueModel? result = Converter(
-    srcUnitValue.value ?? srcUnitValue.defaultValue,
-    params: params,
-  )
-      .apply(paramBySrc)
-      .value
-      ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
-
-  if (result == null) {
-    return null;
-  }
-
-  if (param.listType != null) {
-    ListValueFuncSet? listValueFuncSet = listValuesFuncSets[param.listType];
-
-    if (listValueFuncSet == null) {
-      return result;
-    }
-
-    return listValueFuncSet.recalculatePublicValueForUnit(
-      result,
-      unit: paramValue.unit,
-      params: params,
-    );
-  }
-
-  return result;
-}
-
 ConversionUnitValueModel calculateSrcValueByParams({
   required UnitModel srcUnit,
   required ConversionParamSetValueModel params,
   required String unitGroupName,
 }) {
   if (srcUnit.listType != null) {
-    Map<String, String>? mapping = getMappingByParams(
+    Map<String, String>? mapping = _getMappingByParams(
       unitGroupName: unitGroupName,
       params: params,
     );
@@ -333,6 +208,53 @@ ConversionUnitValueModel calculateSrcValueByParams({
   }
 }
 
+// Param values calculation -------------------------------------------------
+
+ValueModel? calculateParamValueBySrcValue({
+  required ConversionParamModel param,
+  required ConversionUnitValueModel srcUnitValue,
+  required ConversionParamSetValueModel params,
+  required String unitGroupName,
+}) {
+  ConversionParamValueModel paramValue = params.getParamValue(param.name)!;
+
+  ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
+    func: _paramBySrcValueRules[unitGroupName]?[params.paramSet.name]
+        ?[param.name],
+    srcUnit: srcUnitValue.unit,
+  );
+
+  ValueModel? result = Converter(
+    srcUnitValue.value ?? srcUnitValue.defaultValue,
+    params: params,
+  )
+      .apply(paramBySrc)
+      .value
+      ?.betweenOrNull(paramValue.unit?.minValue, paramValue.unit?.maxValue);
+
+  if (result == null) {
+    return null;
+  }
+
+  if (param.listType != null) {
+    ListValueFuncSet? listValueFuncSet = listValuesFuncSets[param.listType];
+
+    if (listValueFuncSet == null) {
+      return result;
+    }
+
+    return listValueFuncSet.recalculatePublicValueForUnit(
+      result,
+      unit: paramValue.unit,
+      params: params,
+    );
+  }
+
+  return result;
+}
+
+// Rules and mappings ----------------------------------------------------
+
 ConversionRule? getRule({
   required UnitGroupModel unitGroup,
   required UnitModel unit,
@@ -352,7 +274,51 @@ ConversionRule? getRule({
   }
 }
 
-Map<String, String>? getMappingBySrcValue({
+// Private methods -------------------------------------------------------
+
+ValueModel? _calculateTargetValue({
+  required UnitGroupModel unitGroup,
+  required ValueModel? srcValue,
+  required UnitModel srcUnit,
+  required UnitModel tgtUnit,
+  Map<String, String>? mapping,
+}) {
+  MappingConverter mappingConverter = MappingConverter(mapping).bySrcValue(
+    srcValue: srcValue,
+    srcUnitCode: srcUnit.code,
+  );
+
+  if (mappingConverter.isNotEmpty) {
+    return mappingConverter.valueByCode(tgtUnit.code);
+  } else {
+    ConversionRule? xToBase = getRule(
+      unitGroup: unitGroup,
+      ruleType: ConversionRuleType.xToBase,
+      unit: srcUnit,
+    );
+
+    ConversionRule? baseToY = getRule(
+      unitGroup: unitGroup,
+      ruleType: ConversionRuleType.baseToY,
+      unit: tgtUnit,
+    );
+
+    return Converter(srcValue)
+        .apply(xToBase)
+        .apply(baseToY)
+        .value
+        ?.betweenOrNull(tgtUnit.minValue, tgtUnit.maxValue);
+  }
+}
+
+Map<String, String>? _getMappingByParams({
+  required String unitGroupName,
+  required ConversionParamSetValueModel params,
+}) {
+  return _mappingRulesByParam[unitGroupName]?.call(params);
+}
+
+Map<String, String>? _getMappingBySrcValue({
   required String unitGroupName,
   required ValueModel? srcValue,
   required UnitModel srcUnit,
@@ -363,9 +329,49 @@ Map<String, String>? getMappingBySrcValue({
       : null;
 }
 
-Map<String, String>? getMappingByParams({
-  required String unitGroupName,
-  required ConversionParamSetValueModel params,
-}) {
-  return _mappingRulesByParam[unitGroupName]?.call(params);
-}
+// Function rules --------------------------------------------------------
+
+final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
+    _formulaRules = {
+  GroupNames.temperature: temperatureRules,
+};
+
+const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
+    _paramBySrcValueRules = {
+  GroupNames.clothesSize: {
+    ParamSetNames.byHeight: {
+      ParamNames.height: getHeightByClothesSize,
+    },
+  },
+  GroupNames.ringSize: {
+    ParamSetNames.byDiameter: {
+      ParamNames.diameter: getDiameterByRingSize,
+    },
+    ParamSetNames.byCircumference: {
+      ParamNames.circumference: getCircumferenceByRingSize,
+    },
+  },
+  GroupNames.mass: {
+    ParamSetNames.barbellWeight: {
+      ParamNames.oneSideWeight: getBarbellOneSideMassByFullMass,
+    },
+  },
+};
+
+const Map<String, Map<String, SrcUnitValueByParamValueFunc>>
+    _nonListSrcValueByParamsRules = {
+  GroupNames.mass: {
+    ParamSetNames.barbellWeight: getBarbellFullMass,
+  },
+};
+
+// Mapping rules -------------------------------------------------------------
+
+const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
+  GroupNames.clothesSize: getClothesSizesMapByParams,
+  GroupNames.ringSize: getRingSizesMapByParams,
+};
+
+const Map<String, MappingRuleBySrcUnitValueFunc> _mappingRulesBySrcUnitValue = {
+  GroupNames.ringSize: getRingSizesMapByValue,
+};
