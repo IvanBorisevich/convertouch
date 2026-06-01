@@ -54,7 +54,10 @@ class ClothesSizeCriterion extends Criterion {
 
     dynamic heightRaw = heightParamValue?.range ??
         (heightParamValue?.numVal != null
-            ? heightParamValue!.numVal! * heightParam.unit!.coefficient! * 100
+            ? _calculateHeightForUnit(
+                heightParamValue!.numVal!,
+                heightParam.unit,
+              )
             : null);
 
     bool heightMatches = heightCmRange.includes(
@@ -62,14 +65,30 @@ class ClothesSizeCriterion extends Criterion {
       includesNull: false,
     );
 
-    var waistParamValue = params.getParamValue(ParamNames.waist)?.eitherValue;
-    dynamic waistRaw = waistParamValue?.range ?? waistParamValue?.numVal;
+    var waistParam = params.getParamValue(ParamNames.waist);
+    var waistParamValue = waistParam?.eitherValue;
+
+    dynamic waistRaw = waistParamValue?.range ??
+        (waistParamValue?.numVal != null
+            ? _calculateWaistForUnit(
+                waistParamValue!.numVal!,
+                waistParam?.unit,
+              )
+            : null);
 
     bool waistMatches =
         waistCmRange == null || waistCmRange!.includes(waistRaw);
 
     return heightMatches && waistMatches;
   }
+}
+
+num? _calculateHeightForUnit(num heightNum, UnitModel? paramUnit) {
+  return paramUnit != null ? heightNum * paramUnit.coefficient! * 100 : null;
+}
+
+num? _calculateWaistForUnit(num waistNum, UnitModel? paramUnit) {
+  return paramUnit != null ? waistNum * paramUnit.coefficient! * 100 : null;
 }
 
 List<Garment> getGarments({
