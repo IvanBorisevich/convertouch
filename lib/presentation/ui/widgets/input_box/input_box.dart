@@ -3,6 +3,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
+import 'package:convertouch/domain/utils/list_values_utils.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
@@ -812,9 +813,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     ),
                   ),
                   searchMatchFn: (item, searchValue) {
-                    return item.value?.value
-                            .toLowerCase()
-                            .contains(searchValue.toLowerCase()) ??
+                    return listValuesFuncSets[widget.model.listType]
+                            ?.searchFunc(searchValue, item.value) ??
                         false;
                   },
                   noResultsWidget: const DropdownItem(
