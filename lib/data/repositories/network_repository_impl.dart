@@ -1,5 +1,4 @@
 import 'package:convertouch/data/dao/dynamic_value_dao.dart';
-import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/dynamic_value_entity.dart';
@@ -24,7 +23,6 @@ import 'package:either_dart/either.dart';
 import 'package:sqflite/sqflite.dart' as sqlite;
 
 class NetworkRepositoryImpl extends NetworkRepository {
-  final NetworkHelper networkHelper;
   final NetworkDao networkDao;
   final UnitDao unitDao;
   final DynamicValueDao dynamicValueDao;
@@ -32,7 +30,6 @@ class NetworkRepositoryImpl extends NetworkRepository {
   final UnitGroupRepository unitGroupRepository;
 
   const NetworkRepositoryImpl({
-    required this.networkHelper,
     required this.networkDao,
     required this.unitDao,
     required this.dynamicValueDao,
@@ -138,20 +135,6 @@ class NetworkRepositoryImpl extends NetworkRepository {
     int? pageNum,
   }) async {
     try {
-      bool isConnected = await networkHelper.isConnected();
-
-      if (!isConnected) {
-        return Left(
-          NetworkException(
-            message: "No internet connection",
-            severity: ExceptionSeverity.warning,
-            stackTrace: null,
-            dateTime: DateTime.now(),
-            handlingAction: ConvertouchSysAction.connection,
-          ),
-        );
-      }
-
       if (!requestBuilder.readyForFetch(params)) {
         return const Right(null);
       }

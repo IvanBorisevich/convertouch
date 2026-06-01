@@ -1,12 +1,12 @@
-import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
-import '../../../domain/model/mock/mock_list_values_batch.dart';
-import '../../../domain/model/mock/mock_unit.dart';
-import '../../../domain/repositories/mock/mock_network_repository.dart';
+import '../../domain/model/mock/mock_list_values_batch.dart';
+import '../../domain/model/mock/mock_unit.dart';
+import '../../domain/repositories/mock/mock_network_repository.dart';
 
 void main() {
   late ListValueRepositoryImpl listValueRepository;

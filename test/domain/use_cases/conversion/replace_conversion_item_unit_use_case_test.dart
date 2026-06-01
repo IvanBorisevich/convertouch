@@ -1,4 +1,4 @@
-import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';

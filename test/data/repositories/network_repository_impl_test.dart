@@ -6,20 +6,21 @@ import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
-import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
+import 'package:convertouch/data/repositories/network_repository_impl.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../../../domain/model/mock/mock_param.dart';
-import '../../../domain/model/mock/mock_unit.dart';
-import '../../../domain/repositories/mock/mock_unit_group_repository.dart';
+import '../../domain/model/mock/mock_param.dart';
+import '../../domain/model/mock/mock_unit.dart';
+import '../../domain/repositories/mock/mock_unit_group_repository.dart';
 import 'network_repository_impl_test.mocks.dart';
 
 final _locator = GetIt.I;
@@ -40,7 +41,6 @@ Future<void> main() async {
   late NetworkRepositoryImpl networkRepository;
   late ConversionParamSetValueModel exchangeRateParams;
 
-  late MockNetworkHelper mockNetworkHelper;
   late MockNetworkDao mockNetworkDao;
   late MockUnitDao mockUnitDao;
   late MockDynamicValueDao mockDynamicValueDao;
@@ -54,15 +54,15 @@ Future<void> main() async {
     _locator.registerLazySingleton<DynamicCoefficientsTranslator>(
       () => DynamicCoefficientsTranslator(),
     );
+  });
 
-    mockNetworkHelper = MockNetworkHelper();
+  setUp(() {
     mockNetworkDao = MockNetworkDao();
     mockUnitDao = MockUnitDao();
     mockDynamicValueDao = MockDynamicValueDao();
     mockUnitGroupRepository = const MockUnitGroupRepository();
 
     networkRepository = NetworkRepositoryImpl(
-      networkHelper: mockNetworkHelper,
       networkDao: mockNetworkDao,
       unitDao: mockUnitDao,
       dynamicValueDao: mockDynamicValueDao,
@@ -83,8 +83,19 @@ Future<void> main() async {
   group("Should check connectivity", () {
     test("Should detect the lack of connectivity", () async {
       when(
-        mockNetworkHelper.isConnected(),
-      ).thenAnswer((_) async => false);
+        mockNetworkDao.fetch(
+          any,
+          queryParams: anyNamed("queryParams"),
+          headers: anyNamed('headers'),
+        ),
+      ).thenThrow(
+        NetworkException(
+          message: "No internet connection",
+          stackTrace: null,
+          dateTime: DateTime.now(),
+          severity: ExceptionSeverity.warning,
+        ),
+      );
 
       final result = await networkRepository.fetchByParams(
         params: exchangeRateParams,
@@ -106,10 +117,6 @@ Future<void> main() async {
         23: 1,
         24: 1.123,
       };
-
-      when(
-        mockNetworkHelper.isConnected(),
-      ).thenAnswer((_) async => true);
 
       when(
         mockNetworkDao.fetch(exchangeRatePath,

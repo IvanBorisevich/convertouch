@@ -4,14 +4,14 @@ import 'package:convertouch/data/dao/db/dbhelper/dbhelper.dart';
 import 'package:convertouch/data/dao/net/network_dao_impl.dart';
 import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
-import 'package:convertouch/data/repositories/db/conversion_param_repository_impl.dart';
-import 'package:convertouch/data/repositories/db/conversion_param_set_repository_impl.dart';
-import 'package:convertouch/data/repositories/db/conversion_repository_impl.dart';
-import 'package:convertouch/data/repositories/db/dynamic_value_repository_impl.dart';
-import 'package:convertouch/data/repositories/db/unit_group_repository_impl.dart';
-import 'package:convertouch/data/repositories/db/unit_repository_impl.dart';
-import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
-import 'package:convertouch/data/repositories/net/network_repository_impl.dart';
+import 'package:convertouch/data/repositories/conversion_param_repository_impl.dart';
+import 'package:convertouch/data/repositories/conversion_param_set_repository_impl.dart';
+import 'package:convertouch/data/repositories/conversion_repository_impl.dart';
+import 'package:convertouch/data/repositories/dynamic_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
+import 'package:convertouch/data/repositories/network_repository_impl.dart';
+import 'package:convertouch/data/repositories/unit_group_repository_impl.dart';
+import 'package:convertouch/data/repositories/unit_repository_impl.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_param_set_translator.dart';
 import 'package:convertouch/data/translators/conversion_param_translator.dart';
@@ -131,7 +131,9 @@ Future<void> init() async {
 
 Future<void> _initDao() async {
   locator.registerLazySingleton<NetworkDao>(
-    () => const NetworkDaoImpl(),
+    () => NetworkDaoImpl(
+      networkHelper: locator(),
+    ),
   );
 }
 
@@ -162,7 +164,6 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
 
   locator.registerLazySingleton<NetworkRepository>(
     () => NetworkRepositoryImpl(
-      networkHelper: locator(),
       networkDao: locator(),
       unitDao: database.unitDao,
       dynamicValueDao: database.dynamicValueDao,
