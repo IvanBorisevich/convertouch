@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -64,18 +65,15 @@ class CalculateUnitValueUseValue
       }
     }
 
-    bool paramsAreValid = input.paramSetValue != null &&
-        (!input.paramSetValue!.paramSet.mandatory ||
-            input.paramSetValue!.paramSet.mandatory &&
-                input.paramSetValue!.hasAllValues);
-
-    bool paramsAreEmptyOrValid = input.paramSetValue == null || paramsAreValid;
+    bool paramsAreApplicable = areParamsApplicable(input.paramSetValue);
+    bool paramsNotExistOrApplicable =
+        areParamsNullOrApplicable(input.paramSetValue);
 
     ConversionUnitValueModel? calculatedValueByParams;
 
     if (delta == null &&
         input.calculateByParams &&
-        paramsAreValid &&
+        paramsAreApplicable &&
         input.unitGroupName != null) {
       calculatedValueByParams = rules.calculateSrcValueByParams(
         srcUnit: input.unitValue.unit,
@@ -93,7 +91,7 @@ class CalculateUnitValueUseValue
       } else {
         newDefaultValue = newDefaultValue == null &&
                 input.alignCurrentValue &&
-                paramsAreEmptyOrValid
+                paramsNotExistOrApplicable
             ? ObjectUtils.tryGet(
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
@@ -127,7 +125,7 @@ class CalculateUnitValueUseValue
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
-              alignForNull: !paramsAreEmptyOrValid,
+              alignForNull: !paramsNotExistOrApplicable,
             ),
           ),
         ),

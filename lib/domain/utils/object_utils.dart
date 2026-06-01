@@ -179,8 +179,8 @@ class ObjectUtils {
     int startCode = from.codeUnitAt(0);
     int endCode = to.codeUnitAt(0);
 
-    if (!_alphaCodes.includesValue(startCode) ||
-        !_alphaCodes.includesValue(endCode)) {
+    if (!_alphaCodes.includesNum(startCode) ||
+        !_alphaCodes.includesNum(endCode)) {
       return [];
     }
 

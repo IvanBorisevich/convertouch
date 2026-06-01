@@ -179,3 +179,11 @@ class ConversionParamSetValueModel extends ItemModel {
         'paramValues: $paramValues}';
   }
 }
+
+bool areParamsApplicable(ConversionParamSetValueModel? params) {
+  return params != null && (!params.paramSet.mandatory || params.hasAllValues);
+}
+
+bool areParamsNullOrApplicable(ConversionParamSetValueModel? params) {
+  return params == null || areParamsApplicable(params);
+}

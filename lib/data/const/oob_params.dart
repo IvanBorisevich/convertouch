@@ -140,4 +140,30 @@ const conversionParamsV2 = [
       }
     ]
   },
+  {
+    "name": ParamSetNames.byCircumference,
+    "unitGroupName": GroupNames.ringSize,
+    "params": [
+      {
+        "name": ParamNames.circumference,
+        forUpdate: {
+          "valueType": ConvertouchValueType.text,
+          "listType": ConvertouchListType.ringCircumferenceRange,
+        },
+      },
+    ],
+  },
+  {
+    "name": ParamSetNames.byDiameter,
+    "unitGroupName": GroupNames.ringSize,
+    "params": [
+      {
+        "name": ParamNames.diameter,
+        forUpdate: {
+          "valueType": ConvertouchValueType.text,
+          "listType": ConvertouchListType.ringDiameterRange,
+        },
+      },
+    ],
+  },
 ];

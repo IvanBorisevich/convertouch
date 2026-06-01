@@ -4,58 +4,58 @@ import 'package:test/test.dart';
 void main() {
   group('Test num ranges include num value', () {
     test('Test closed ranges', () {
-      expect(const NumRange.withBoth(0, 0).includesValue(0), true);
-      expect(const NumRange.withBoth(0.0, 0.0).includesValue(0.0), true);
-      expect(const NumRange.withBoth(-0.0, 0.0).includesValue(0.0), true);
-      expect(const NumRange.withBoth(0.0, -0.0).includesValue(0.0), true);
-      expect(const NumRange.withBoth(-0.0, -0.0).includesValue(0.0), true);
-      expect(const NumRange.withBoth(-0.0, -0.0).includesValue(-0.0), true);
-      expect(const NumRange.withBoth(0.0, 0.1).includesValue(-0.0), true);
-      expect(const NumRange.withBoth(null, null).includesValue(123), true);
+      expect(const NumRange.withBoth(0, 0).includesNum(0), true);
+      expect(const NumRange.withBoth(0.0, 0.0).includesNum(0.0), true);
+      expect(const NumRange.withBoth(-0.0, 0.0).includesNum(0.0), true);
+      expect(const NumRange.withBoth(0.0, -0.0).includesNum(0.0), true);
+      expect(const NumRange.withBoth(-0.0, -0.0).includesNum(0.0), true);
+      expect(const NumRange.withBoth(-0.0, -0.0).includesNum(-0.0), true);
+      expect(const NumRange.withBoth(0.0, 0.1).includesNum(-0.0), true);
+      expect(const NumRange.withBoth(null, null).includesNum(123), true);
       expect(
         const NumRange.withBoth(null, null)
-            .includesValue(double.negativeInfinity),
+            .includesNum(double.negativeInfinity),
         true,
       );
-      expect(const NumRange.withBoth(null, null).includesValue(double.infinity),
+      expect(const NumRange.withBoth(null, null).includesNum(double.infinity),
           true);
-      expect(const NumRange.withBoth(null, null).includesValue(null), true);
-      expect(const NumRange.withBoth(1, 3).includesValue(null), true);
-      expect(const NumRange.withBoth(0, null).includesValue(-0.5), false);
+      expect(const NumRange.withBoth(null, null).includesNum(null), true);
+      expect(const NumRange.withBoth(1, 3).includesNum(null), true);
+      expect(const NumRange.withBoth(0, null).includesNum(-0.5), false);
       expect(
-          const NumRange.withBoth(null, null).includesValue(double.nan), false);
-      expect(const NumRange.withBoth(2, 3).includesValue(double.nan), false);
+          const NumRange.withBoth(null, null).includesNum(double.nan), false);
+      expect(const NumRange.withBoth(2, 3).includesNum(double.nan), false);
       expect(
-          const NumRange.withBoth(1, 3).includesValue(double.infinity), false);
+          const NumRange.withBoth(1, 3).includesNum(double.infinity), false);
       expect(
-        const NumRange.withBoth(1, 3).includesValue(double.negativeInfinity),
+        const NumRange.withBoth(1, 3).includesNum(double.negativeInfinity),
         false,
       );
 
-      expect(const NumRange.withBoth(0, 2).includesValue(1), true);
-      expect(const NumRange.withBoth(-2, 0).includesValue(-1), true);
-      expect(const NumRange.withBoth(10, 20).includesValue(15), true);
-      expect(const NumRange.withBoth(10, 20).includesValue(10), true);
-      expect(const NumRange.withBoth(10, 20).includesValue(20), true);
+      expect(const NumRange.withBoth(0, 2).includesNum(1), true);
+      expect(const NumRange.withBoth(-2, 0).includesNum(-1), true);
+      expect(const NumRange.withBoth(10, 20).includesNum(15), true);
+      expect(const NumRange.withBoth(10, 20).includesNum(10), true);
+      expect(const NumRange.withBoth(10, 20).includesNum(20), true);
     });
 
     test('Test open ranges', () {
-      expect(const NumRange.withoutBoth(10, 20).includesValue(15), true);
-      expect(const NumRange.withoutBoth(10, 20).includesValue(10), false);
-      expect(const NumRange.withoutBoth(10, 20).includesValue(20), false);
+      expect(const NumRange.withoutBoth(10, 20).includesNum(15), true);
+      expect(const NumRange.withoutBoth(10, 20).includesNum(10), false);
+      expect(const NumRange.withoutBoth(10, 20).includesNum(20), false);
     });
 
     test('Test left open ranges', () {
-      expect(const NumRange.withRight(10, 20).includesValue(15), true);
-      expect(const NumRange.withRight(10, 20).includesValue(10), false);
-      expect(const NumRange.withRight(10, 20).includesValue(20), true);
+      expect(const NumRange.withRight(10, 20).includesNum(15), true);
+      expect(const NumRange.withRight(10, 20).includesNum(10), false);
+      expect(const NumRange.withRight(10, 20).includesNum(20), true);
     });
 
     test('Test right open ranges', () {
-      expect(const NumRange.withLeft(10, 20).includesValue(15), true);
-      expect(const NumRange.withLeft(10, 20).includesValue(20), false);
-      expect(const NumRange.withLeft(10, 20).includesValue(10), true);
-      expect(const NumRange.withLeft(10, double.infinity).includesValue(170),
+      expect(const NumRange.withLeft(10, 20).includesNum(15), true);
+      expect(const NumRange.withLeft(10, 20).includesNum(20), false);
+      expect(const NumRange.withLeft(10, 20).includesNum(10), true);
+      expect(const NumRange.withLeft(10, double.infinity).includesNum(170),
           true);
     });
   });

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
@@ -67,11 +68,12 @@ class ConversionParamsView extends StatelessWidget {
       bodyHeight = _maxBodyHeight;
     }
 
-    bool paramsAreValid = params!.valid;
+    bool paramsAreNullOrApplicable = areParamsNullOrApplicable(params?.active);
 
     return ConvertouchSlidingPanel(
       panelController: panelController,
-      defaultPanelState: paramsAreValid ? PanelState.CLOSED : PanelState.OPEN,
+      defaultPanelState:
+          paramsAreNullOrApplicable ? PanelState.CLOSED : PanelState.OPEN,
       minHeight: _footerHeight,
       maxHeight: _footerHeight + bodyHeight,
       colors: colors.slidingPanel,

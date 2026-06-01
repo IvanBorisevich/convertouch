@@ -23,13 +23,9 @@ typedef SrcUnitValueByParamValueFunc = ValueModel? Function({
   required ConversionParamSetValueModel params,
 });
 
-typedef MappingRuleByParamFunc = Map<String, String>? Function(
-  ConversionParamSetValueModel,
-);
-
-typedef MappingRuleBySrcUnitValueFunc = Map<String, String>? Function({
-  required ValueModel? value,
-  required UnitModel unit,
+typedef MappingRuleByParamsOrSrcValueFunc = Map<String, String>? Function({
+  required ConversionParamSetValueModel? params,
+  required ConversionUnitValueModel? srcUnitValue,
 });
 
 // Converters ----------------------------------------------------------------

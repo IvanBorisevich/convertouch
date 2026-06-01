@@ -196,6 +196,8 @@ enum ConvertouchListType {
   exchangeRateSource(22, fetchedViaApi: true),
   exchangeRateBank(23, fetchedViaApi: true),
   clothesHeightRange(24),
+  ringDiameterRange(25),
+  ringCircumferenceRange(26),
   ;
 
   final int id;

@@ -96,7 +96,7 @@ class ValueModel extends Equatable {
     return NumRange.withBoth(
       min?.numVal,
       max?.numVal,
-    ).includesValue(numVal)
+    ).includesNum(numVal)
         ? this
         : null;
   }

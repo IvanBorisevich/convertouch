@@ -31,8 +31,8 @@ class MappingRow<T extends Criterion, K> {
   }
 }
 
-class MappingTable<T extends Criterion, K> {
-  final List<MappingRow<T, K>> rows;
+class MappingTable<C extends Criterion, K> {
+  final List<MappingRow<C, K>> rows;
   final String Function(K)? unitCodeByKey;
   final K Function(String)? keyByUnitCode;
 
@@ -42,7 +42,15 @@ class MappingTable<T extends Criterion, K> {
     this.keyByUnitCode,
   });
 
-  Map<String, String>? getRowByParams(ConversionParamSetValueModel params) {
+  C? getCriterionByValue(ValueModel? value, UnitModel unit) {
+    return _getTableRowByValue(value, unit)?.criterion;
+  }
+
+  Map<String, String>? getMappingBySrcValue(ValueModel? value, UnitModel unit) {
+    return _getTableRowByValue(value, unit)?.transform(unitCodeByKey);
+  }
+
+  Map<String, String>? getMappingByParams(ConversionParamSetValueModel params) {
     if (rows.isEmpty) {
       return null;
     }
@@ -52,15 +60,7 @@ class MappingTable<T extends Criterion, K> {
         ?.transform(unitCodeByKey);
   }
 
-  T? getCriterionByValue(ValueModel? value, UnitModel unit) {
-    return _getTableRowByValue(value, unit)?.criterion;
-  }
-
-  Map<String, String>? getMappingByValue(ValueModel? value, UnitModel unit) {
-    return _getTableRowByValue(value, unit)?.transform(unitCodeByKey);
-  }
-
-  MappingRow<T, K>? _getTableRowByValue(ValueModel? value, UnitModel unit) {
+  MappingRow<C, K>? _getTableRowByValue(ValueModel? value, UnitModel unit) {
     if (rows.isEmpty) {
       return null;
     }

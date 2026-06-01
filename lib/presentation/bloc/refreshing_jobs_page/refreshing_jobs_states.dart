@@ -41,7 +41,7 @@ class RefreshingJobsFetched extends RefreshingJobsState {
       jobs: ObjectUtils.convertToMap<Map<String, JobModel>>(
         json["jobs"],
         valueMapFunc: (key, value) {
-          /* support backward compatible format for 'Currency' group
+          /* for support backward compatible format for 'Currency' group
               (without param set name key) */
           if (value is! Map<String, Map>) {
             return key == GroupNames.currency

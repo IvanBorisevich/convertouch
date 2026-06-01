@@ -165,6 +165,71 @@ void main() {
           ],
         );
       });
+
+      test(
+          "Should calculate list values for [Man, Shirt, h: cm 162 | IT, JP], "
+          "should calculate unit values by 'Height' non-list value (for backward compatibility), "
+          "should init list values", () async {
+        await testCase(
+          unitGroup: clothesSizeGroup,
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              japanClothSize.id,
+              italianClothSize.id,
+            ],
+          ),
+          currentParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: clothesSizeParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(personParam, "Man", null),
+                  ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                  ConversionParamValueModel.tuple(heightParam, 162, 1,
+                      unit: centimeter),
+                ],
+              )
+            ],
+            selectedIndex: 0,
+          ),
+          currentUnitValues: [],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: clothesSizeParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(personParam, "Man", null),
+                  ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                  ConversionParamValueModel.tuple(heightParam, 162, 1,
+                      unit: centimeter),
+                ],
+              )
+            ],
+            selectedIndex: 0,
+          ),
+          expectedSrc: ConversionUnitValueModel.tuple(
+            japanClothSize,
+            'S',
+            null,
+            listValues: japanClothesSizes,
+          ),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(
+              japanClothSize,
+              'S',
+              null,
+              listValues: japanClothesSizes,
+            ),
+            ConversionUnitValueModel.tuple(
+              italianClothSize,
+              42,
+              null,
+              listValues: italianClothesSizes,
+            ),
+          ],
+        );
+      });
     });
   });
 }

@@ -46,7 +46,7 @@ void main() {
   });
 
   test(
-      "Should select param set 'By Circumference' in conversion with unit values",
+      "Should recalculate conversion on select the new param set 'By Circumference'",
       () async {
     await testCase(
       unitGroup: ringSizeGroup,
@@ -59,15 +59,25 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                  unit: millimeter)
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              ),
             ],
           ),
           ConversionParamSetValueModel(
             paramSet: ringSizeByCircumferenceParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(circumferenceParam, 14.5 * pi, 1,
-                  unit: millimeter)
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                ringCircumferenceRangesInMm.items[1].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              ),
             ],
           ),
         ],
@@ -97,13 +107,112 @@ void main() {
           listValues: frRingSizes,
         ),
       ],
+      expectedParams: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              ),
+            ],
+          ),
+          ConversionParamSetValueModel(
+            paramSet: ringSizeByCircumferenceParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                ringCircumferenceRangesInMm.items[1].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              ),
+            ],
+          ),
+        ],
+        selectedParamSetCanBeRemoved: true,
+        optionalParamSetsExist: true,
+        paramSetsCanBeAdded: false,
+        selectedIndex: 1,
+        totalCount: 2,
+      ),
       expectedSrc: ConversionUnitValueModel.tuple(
+        usaRingSize,
+        3.5,
+        null,
+        listValues: usaRingSizes,
+      ),
+      expectedUnitValues: [
+        ConversionUnitValueModel.tuple(
+          usaRingSize,
+          3.5,
+          null,
+          listValues: usaRingSizes,
+        ),
+        ConversionUnitValueModel.tuple(
+          frRingSize,
+          null,
+          null,
+          listValues: frRingSizes,
+        ),
+      ],
+    );
+  });
+
+  test(
+      "Should recalculate conversion on select the new param set 'By Circumference' "
+      "by param 'Circumference' non-list value (for backward compatibility), "
+      "should initialize list values of previously non-list params", () async {
+    await testCase(
+      unitGroup: ringSizeGroup,
+      useCase: useCase,
+      delta: const SelectParamSetDelta(
+        newSelectedParamSetIndex: 1,
+      ),
+      currentParams: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: ringSizeByDiameterParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              ),
+            ],
+          ),
+          ConversionParamSetValueModel(
+            paramSet: ringSizeByCircumferenceParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                14.6 * pi,
+                1,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              ),
+            ],
+          ),
+        ],
+        selectedParamSetCanBeRemoved: true,
+        optionalParamSetsExist: true,
+        paramSetsCanBeAdded: false,
+        selectedIndex: 0,
+        totalCount: 2,
+      ),
+      currentSrc: ConversionUnitValueModel.tuple(
         usaRingSize,
         3,
         null,
         listValues: usaRingSizes,
       ),
-      expectedUnitValues: [
+      currentUnitValues: [
         ConversionUnitValueModel.tuple(
           usaRingSize,
           3,
@@ -122,15 +231,25 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                  unit: millimeter),
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              ),
             ],
           ),
           ConversionParamSetValueModel(
             paramSet: ringSizeByCircumferenceParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(circumferenceParam, 14.5 * pi, 1,
-                  unit: millimeter),
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                14.6 * pi,
+                1,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              ),
             ],
           ),
         ],
@@ -140,10 +259,32 @@ void main() {
         selectedIndex: 1,
         totalCount: 2,
       ),
+      expectedSrc: ConversionUnitValueModel.tuple(
+        usaRingSize,
+        3.5,
+        null,
+        listValues: usaRingSizes,
+      ),
+      expectedUnitValues: [
+        ConversionUnitValueModel.tuple(
+          usaRingSize,
+          3.5,
+          null,
+          listValues: usaRingSizes,
+        ),
+        ConversionUnitValueModel.tuple(
+          frRingSize,
+          null,
+          null,
+          listValues: frRingSizes,
+        ),
+      ],
     );
   });
 
-  test('Conversion does not have unit values', () async {
+  test(
+      "Should leave empty conversion on select the same param set 'By Circumference'",
+      () async {
     await testCase(
       unitGroup: ringSizeGroup,
       useCase: useCase,
@@ -155,15 +296,25 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                  unit: millimeter)
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              )
             ],
           ),
           ConversionParamSetValueModel(
             paramSet: ringSizeByCircumferenceParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(circumferenceParam, 14.5 * pi, 1,
-                  unit: millimeter)
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                ringCircumferenceRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              )
             ],
           ),
         ],
@@ -173,22 +324,30 @@ void main() {
         selectedIndex: 0,
         totalCount: 2,
       ),
-      currentUnitValues: [],
-      expectedUnitValues: [],
       expectedParams: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(diameterParam, 14, 1,
-                  unit: millimeter),
+              ConversionParamValueModel.tuple(
+                diameterParam,
+                ringDiameterRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringDiameterRangesInMm,
+              )
             ],
           ),
           ConversionParamSetValueModel(
             paramSet: ringSizeByCircumferenceParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(circumferenceParam, 14.5 * pi, 1,
-                  unit: millimeter),
+              ConversionParamValueModel.tuple(
+                circumferenceParam,
+                ringCircumferenceRangesInMm.items[0].valueModel,
+                null,
+                unit: millimeter,
+                listValues: ringCircumferenceRangesInMm,
+              )
             ],
           ),
         ],
@@ -198,6 +357,8 @@ void main() {
         selectedIndex: 1,
         totalCount: 2,
       ),
+      currentUnitValues: [],
+      expectedUnitValues: [],
     );
   });
 }

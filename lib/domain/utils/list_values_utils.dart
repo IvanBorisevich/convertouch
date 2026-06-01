@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/list_value_model.dart';
@@ -5,6 +7,7 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
+import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
@@ -109,6 +112,24 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     publicListValueBuilderFunc: (r, {unit, params}) =>
     (r as NumRange)
         .copyWithFactor(0.01 / unit!.coefficient!)
+        .rangeName,
+    listValueToRawMapFunc: (v) => v.range,
+  ),
+  ConvertouchListType.ringDiameterRange: ListValueFuncSet(
+    rawListBuilderFunc: getRingDiameterRangesMm,
+    internalListValueBuilderFunc: (r) => (r as NumRange).rangeName,
+    publicListValueBuilderFunc: (r, {unit, params}) =>
+    (r as NumRange)
+        .copyWithFactor(0.001 / unit!.coefficient!)
+        .rangeName,
+    listValueToRawMapFunc: (v) => v.range,
+  ),
+  ConvertouchListType.ringCircumferenceRange: ListValueFuncSet(
+    rawListBuilderFunc: getRingDiameterRangesMm,
+    internalListValueBuilderFunc: (r) => (r as NumRange).rangeName,
+    publicListValueBuilderFunc: (r, {unit, params}) =>
+    (r as NumRange)
+        .copyWithFactor(pi * 0.001 / unit!.coefficient!)
         .rangeName,
     listValueToRawMapFunc: (v) => v.range,
   ),

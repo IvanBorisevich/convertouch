@@ -57,9 +57,25 @@ class NumRange extends Equatable {
         includeRight,
       ];
 
-  bool includesValue(num? value) {
+  bool includes(dynamic value, {bool includesNull = true}) {
     if (value == null) {
-      return true;
+      return includesNull;
+    }
+
+    if (value is num) {
+      return includesNum(value, includesNull: includesNull);
+    }
+
+    if (value is NumRange) {
+      return includesRange(value, includesNull: includesNull);
+    }
+
+    return false;
+  }
+
+  bool includesNum(num? value, {bool includesNull = true}) {
+    if (value == null) {
+      return includesNull;
     }
 
     bool isMoreThanLeft = includeLeft ? left <= value : left < value;
@@ -67,9 +83,9 @@ class NumRange extends Equatable {
     return isMoreThanLeft && isLessThanRight;
   }
 
-  bool includesRange(NumRange? another) {
+  bool includesRange(NumRange? another, {bool includesNull = true}) {
     if (another == null) {
-      return false;
+      return includesNull;
     }
 
     return (left == double.negativeInfinity ||
@@ -100,11 +116,11 @@ class NumRange extends Equatable {
   }
 
   num? valOrLeft(num? val) {
-    return val != null && includesValue(val) ? val : left;
+    return val != null && includesNum(val) ? val : left;
   }
 
   num? valOrRight(num? val) {
-    return val != null && includesValue(val) ? val : right;
+    return val != null && includesNum(val) ? val : right;
   }
 
   String? get validationMessage {

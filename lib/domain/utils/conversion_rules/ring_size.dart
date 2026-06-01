@@ -6,10 +6,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/domain/utils/mapping_table.dart';
-
-const int _mmInMeter = 1000;
 
 class RingSizeCriterion extends Criterion {
   final NumRange diameterMmRange;
@@ -22,45 +19,65 @@ class RingSizeCriterion extends Criterion {
   bool matches(ConversionParamSetValueModel params) {
     String paramSetName = params.paramSet.name;
 
+    dynamic diameterRaw;
+
     if (paramSetName == ParamSetNames.byDiameter) {
-      return diameterMmRange
-          .includesValue(_getDiameterCm(params.getParamValue(ParamNames.diameter)));
+      var diameterParam = params.getParamValue(ParamNames.diameter);
+      ValueModel? diameterParamValue = diameterParam?.eitherValue;
+
+      diameterRaw = diameterParamValue?.range ??
+          (diameterParamValue?.numVal != null
+              ? _calculateDiameterForUnit(
+                  diameterParamValue!.numVal!,
+                  diameterParam?.unit,
+                )
+              : null);
+    } else if (paramSetName == ParamSetNames.byCircumference) {
+      var circumferenceParam = params.getParamValue(ParamNames.circumference);
+      ValueModel? circumferenceParamValue = circumferenceParam?.eitherValue;
+
+      diameterRaw = circumferenceParamValue?.range ??
+          (circumferenceParamValue?.numVal != null
+              ? _calculateDiameterForUnit(
+                  circumferenceParamValue!.numVal! / pi,
+                  circumferenceParam?.unit,
+                )
+              : null);
     }
 
-    if (paramSetName == ParamSetNames.byCircumference) {
-      return diameterMmRange.includesValue(
-          _getDiameterCm(params.getParamValue(ParamNames.circumference)));
-    }
-
-    return false;
-  }
-
-  double? _getDiameterCm(ConversionParamValueModel? paramValue) {
-    if (paramValue == null || paramValue.eitherNum == null) {
-      return null;
-    }
-
-    double coefficient = paramValue.unit!.coefficient!;
-
-    return paramValue.param.name == ParamNames.diameter
-        ? DoubleValueUtils.roundToPrecision(
-            paramValue.eitherNum! * coefficient * _mmInMeter, 1)
-        : DoubleValueUtils.roundToPrecision(
-            paramValue.eitherNum! * coefficient * _mmInMeter / pi, 1);
+    return diameterMmRange.includes(diameterRaw);
   }
 }
 
-Map<String, String>? getRingSizesMapByParams(
-  ConversionParamSetValueModel params,
+num? _calculateDiameterForUnit(
+  num diameterNum,
+  UnitModel? paramUnit,
 ) {
-  return _ringSizes.getRowByParams(params);
+  return paramUnit != null ? diameterNum * paramUnit.coefficient! * 1000 : null;
 }
 
-Map<String, String>? getRingSizesMapByValue({
-  required ValueModel? value,
-  required UnitModel unit,
+List<NumRange> getRingDiameterRangesMm({
+  ConversionParamSetValueModel? params,
 }) {
-  return _ringSizes.getMappingByValue(value, unit);
+  return _ringSizes.rows.map((row) => row.criterion.diameterMmRange).toList();
+}
+
+Map<String, String>? getRingSizesMapByParams({
+  required ConversionParamSetValueModel? params,
+  ConversionUnitValueModel? srcUnitValue,
+}) {
+  if (areParamsApplicable(params)) {
+    return _ringSizes.getMappingByParams(params!);
+  }
+
+  if (srcUnitValue != null) {
+    return _ringSizes.getMappingBySrcValue(
+      srcUnitValue.value,
+      srcUnitValue.unit,
+    );
+  }
+
+  return null;
 }
 
 ValueModel? getDiameterByRingSize({
@@ -69,18 +86,7 @@ ValueModel? getDiameterByRingSize({
   required ConversionParamSetValueModel params,
 }) {
   var criterion = _ringSizes.getCriterionByValue(srcValue, srcUnit);
-  return ValueModel.any(criterion?.diameterMmRange.right);
-}
-
-ValueModel? getCircumferenceByRingSize({
-  required ValueModel? srcValue,
-  required UnitModel srcUnit,
-  required ConversionParamSetValueModel params,
-}) {
-  var criterion = _ringSizes.getCriterionByValue(srcValue, srcUnit);
-  return criterion?.diameterMmRange.right != null
-      ? ValueModel.any(criterion!.diameterMmRange.right * pi)
-      : null;
+  return ValueModel.any(criterion?.diameterMmRange);
 }
 
 const MappingTable<RingSizeCriterion, CountryCode> _ringSizes = MappingTable(

@@ -5,6 +5,8 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
 
+import 'mock_unit.dart';
+
 const OutputListValuesBatch japanClothesSizes = OutputItemsFetchModel(
   items: [
     ListValueModel.str('S'),
@@ -349,6 +351,27 @@ final OutputListValuesBatch usaRingSizes = OutputItemsFetchModel(
 
 final OutputListValuesBatch frRingSizes = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringSizeFr]!.buildListValues(),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+final OutputListValuesBatch ringDiameterRangesInMm = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringDiameterRange]!
+      .buildListValues(unit: millimeter),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+final OutputListValuesBatch ringDiameterRangesInCm = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringDiameterRange]!
+      .buildListValues(unit: centimeter),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
+final OutputListValuesBatch ringCircumferenceRangesInMm = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringCircumferenceRange]!
+      .buildListValues(unit: millimeter),
   pageNum: 1,
   hasReachedMax: true,
 );

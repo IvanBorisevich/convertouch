@@ -772,14 +772,14 @@ void main() {
           unitGroupName: GroupNames.ringSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
-            paramValues: const [
+            paramValues: [
               (
                 diameterParam,
-                15.1,
+                ringDiameterRangesInMm.items[2].valueModel,
                 null,
                 unit: millimeter,
                 calculated: false,
-                listValues: null,
+                listValues: ringDiameterRangesInMm,
               ),
             ],
           ),
@@ -809,14 +809,14 @@ void main() {
           unitGroupName: GroupNames.ringSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
-            paramValues: const [
+            paramValues: [
               (
                 diameterParam,
+                ringDiameterRangesInMm.items[2].valueModel,
                 null,
-                15.1,
                 unit: millimeter,
                 calculated: false,
-                listValues: null,
+                listValues: ringDiameterRangesInMm,
               ),
             ],
           ),

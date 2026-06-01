@@ -18,20 +18,11 @@ import 'package:convertouch/domain/utils/list_values_utils.dart';
 List<ConversionUnitValueModel> calculateUnitValues(
   InputConversionModel input,
 ) {
-  Map<String, String>? mappingTable;
-
-  if (input.params != null && input.params!.hasAllValues) {
-    mappingTable = _getMappingByParams(
-      unitGroupName: input.unitGroup.name,
-      params: input.params!,
-    );
-  } else {
-    mappingTable = _getMappingBySrcValue(
-      unitGroupName: input.unitGroup.name,
-      srcUnit: input.sourceUnitValue.unit,
-      srcValue: input.sourceUnitValue.eitherValue,
-    );
-  }
+  Map<String, String>? mappingTable = _getMappingByParamsOrSrcValue(
+    unitGroupName: input.unitGroup.name,
+    params: input.params,
+    srcUnitValue: input.sourceUnitValue,
+  );
 
   List<ConversionUnitValueModel> result = [];
 
@@ -126,7 +117,7 @@ ConversionParamValueModel calculateParamValueForNewUnit({
 
   Map<String, String>? mappingTable;
   if (paramValue.listType == null && paramValue.unit!.listType != null) {
-    mappingTable = _getMappingByParams(
+    mappingTable = _getMappingByParamsOrSrcValue(
       unitGroupName: paramUnitGroup.name,
       params: params,
     );
@@ -162,7 +153,7 @@ ConversionUnitValueModel calculateSrcValueByParams({
   required String unitGroupName,
 }) {
   if (srcUnit.listType != null) {
-    Map<String, String>? mapping = _getMappingByParams(
+    Map<String, String>? mapping = _getMappingByParamsOrSrcValue(
       unitGroupName: unitGroupName,
       params: params,
     );
@@ -219,7 +210,7 @@ ValueModel? calculateParamValueBySrcValue({
   ConversionParamValueModel paramValue = params.getParamValue(param.name)!;
 
   ConversionRule paramBySrc = ConversionRule.paramBySrcValue(
-    func: _paramBySrcValueRules[unitGroupName]?[params.paramSet.name]
+    func: _paramValueBySrcValueRules[unitGroupName]?[params.paramSet.name]
         ?[param.name],
     srcUnit: srcUnitValue.unit,
   );
@@ -311,22 +302,15 @@ ValueModel? _calculateTargetValue({
   }
 }
 
-Map<String, String>? _getMappingByParams({
+Map<String, String>? _getMappingByParamsOrSrcValue({
   required String unitGroupName,
-  required ConversionParamSetValueModel params,
+  required ConversionParamSetValueModel? params,
+  ConversionUnitValueModel? srcUnitValue,
 }) {
-  return _mappingRulesByParam[unitGroupName]?.call(params);
-}
-
-Map<String, String>? _getMappingBySrcValue({
-  required String unitGroupName,
-  required ValueModel? srcValue,
-  required UnitModel srcUnit,
-}) {
-  return srcValue != null
-      ? _mappingRulesBySrcUnitValue[unitGroupName]
-          ?.call(value: srcValue, unit: srcUnit)
-      : null;
+  return _mappingRulesByParamsOrSrcValue[unitGroupName]?.call(
+    params: params,
+    srcUnitValue: srcUnitValue,
+  );
 }
 
 // Function rules --------------------------------------------------------
@@ -337,7 +321,7 @@ final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
 };
 
 const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
-    _paramBySrcValueRules = {
+    _paramValueBySrcValueRules = {
   GroupNames.clothesSize: {
     ParamSetNames.byHeight: {
       ParamNames.height: getHeightByClothesSize,
@@ -348,7 +332,7 @@ const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
       ParamNames.diameter: getDiameterByRingSize,
     },
     ParamSetNames.byCircumference: {
-      ParamNames.circumference: getCircumferenceByRingSize,
+      ParamNames.circumference: getDiameterByRingSize,
     },
   },
   GroupNames.mass: {
@@ -367,11 +351,8 @@ const Map<String, Map<String, SrcUnitValueByParamValueFunc>>
 
 // Mapping rules -------------------------------------------------------------
 
-const Map<String, MappingRuleByParamFunc> _mappingRulesByParam = {
+const Map<String, MappingRuleByParamsOrSrcValueFunc>
+    _mappingRulesByParamsOrSrcValue = {
   GroupNames.clothesSize: getClothesSizesMapByParams,
   GroupNames.ringSize: getRingSizesMapByParams,
-};
-
-const Map<String, MappingRuleBySrcUnitValueFunc> _mappingRulesBySrcUnitValue = {
-  GroupNames.ringSize: getRingSizesMapByValue,
 };

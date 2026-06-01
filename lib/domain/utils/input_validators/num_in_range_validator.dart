@@ -12,7 +12,7 @@ class NumInRangeValidator extends InputValidator {
   InputValidatorResult validate(String? input) {
     NumRange numRange = NumRange.withBoth(min, max);
 
-    if (input == null || numRange.includesValue(double.tryParse(input))) {
+    if (input == null || numRange.includesNum(double.tryParse(input))) {
       return const InputValidatorResult.successful();
     }
 

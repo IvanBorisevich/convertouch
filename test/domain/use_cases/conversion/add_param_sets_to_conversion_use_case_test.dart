@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:convertouch/data/repositories/local/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
@@ -83,10 +81,11 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     circumferenceParam,
+                    ringCircumferenceRangesInMm.items[0].valueModel,
                     null,
-                    14.5 * pi,
                     unit: millimeter,
                     calculated: true,
+                    listValues: ringCircumferenceRangesInMm,
                   ),
                 ],
               ),
@@ -132,10 +131,11 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     diameterParam,
+                    ringDiameterRangesInMm.items[0].valueModel,
                     null,
-                    14.5,
                     unit: millimeter,
                     calculated: true,
+                    listValues: ringDiameterRangesInMm,
                   ),
                 ],
               ),
@@ -144,10 +144,11 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     circumferenceParam,
+                    ringCircumferenceRangesInMm.items[0].valueModel,
                     null,
-                    14.5 * pi,
                     unit: millimeter,
                     calculated: true,
+                    listValues: ringCircumferenceRangesInMm,
                   ),
                 ],
               ),

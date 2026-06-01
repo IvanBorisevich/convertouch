@@ -4,6 +4,13 @@ import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 
 import 'mock_unit.dart';
 
+const testOptionalParamSet = ConversionParamSetModel(
+  id: 0,
+  name: 'Test Optional Param Set',
+  mandatory: false,
+  groupId: -1,
+);
+
 const clothesSizeParamSet = ConversionParamSetModel(
   id: 1,
   name: ParamSetNames.byHeight,
@@ -39,6 +46,14 @@ const exchangeRateParamSet = ConversionParamSetModel(
   groupId: 10,
 );
 
+
+const testParam = ConversionParamModel(
+  id: 0,
+  name: 'Test Param',
+  valueType: ConvertouchValueType.text,
+  paramSetId: 0,
+);
+
 const personParam = ConversionParamModel(
   id: 1,
   name: ParamNames.person,
@@ -70,7 +85,8 @@ const diameterParam = ConversionParamModel(
   id: 4,
   name: ParamNames.diameter,
   unitGroupId: 2,
-  valueType: ConvertouchValueType.decimalNonNegative,
+  valueType: ConvertouchValueType.text,
+  listType: ConvertouchListType.ringDiameterRange,
   defaultUnit: millimeter,
   calculable: true,
   paramSetId: 2,
@@ -80,7 +96,8 @@ const circumferenceParam = ConversionParamModel(
   id: 5,
   name: ParamNames.circumference,
   unitGroupId: 2,
-  valueType: ConvertouchValueType.decimalNonNegative,
+  valueType: ConvertouchValueType.text,
+  listType: ConvertouchListType.ringCircumferenceRange,
   defaultUnit: millimeter,
   calculable: true,
   paramSetId: 3,

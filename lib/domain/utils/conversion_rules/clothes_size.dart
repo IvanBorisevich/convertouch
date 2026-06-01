@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -49,26 +50,26 @@ class ClothesSizeCriterion extends Criterion {
       return false;
     }
 
-    NumRange? actualHeightRangeCm = heightParam.eitherValue?.range;
+    var heightParamValue = heightParam.eitherValue;
 
-    bool heightMatches = heightCmRange.includesRange(actualHeightRangeCm);
+    dynamic heightRaw = heightParamValue?.range ??
+        (heightParamValue?.numVal != null
+            ? heightParamValue!.numVal! * heightParam.unit!.coefficient! * 100
+            : null);
 
-    var waistParam = params.getParamValue(ParamNames.waist);
-    bool waistMatches = waistCmRange == null ||
-        waistParam?.eitherValue?.range == null ||
-        waistCmRange!.includesRange(waistParam!.eitherValue!.range);
+    bool heightMatches = heightCmRange.includes(
+      heightRaw,
+      includesNull: false,
+    );
+
+    var waistParamValue = params.getParamValue(ParamNames.waist)?.eitherValue;
+    dynamic waistRaw = waistParamValue?.range ?? waistParamValue?.numVal;
+
+    bool waistMatches =
+        waistCmRange == null || waistCmRange!.includes(waistRaw);
 
     return heightMatches && waistMatches;
   }
-}
-
-Map<String, String>? getClothesSizesMapByParams(
-  ConversionParamSetValueModel params,
-) {
-  Person? person = params.getValueOfType(ParamNames.person, Person.valueOf);
-  Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
-
-  return _clothesSizes[person]?[garment]?.getRowByParams(params);
 }
 
 List<Garment> getGarments({
@@ -92,6 +93,20 @@ List<NumRange> getHeightRangesCm({
           .map((row) => row.criterion.heightCmRange)
           .toList() ??
       [];
+}
+
+Map<String, String>? getClothesSizesMapByParams({
+  required ConversionParamSetValueModel? params,
+  ConversionUnitValueModel? srcUnitValue,
+}) {
+  if (params == null) {
+    return null;
+  }
+
+  Person? person = params.getValueOfType(ParamNames.person, Person.valueOf);
+  Garment? garment = params.getValueOfType(ParamNames.garment, Garment.valueOf);
+
+  return _clothesSizes[person]?[garment]?.getMappingByParams(params);
 }
 
 ValueModel? getHeightByClothesSize({
