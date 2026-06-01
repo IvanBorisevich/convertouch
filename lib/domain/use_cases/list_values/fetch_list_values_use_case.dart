@@ -1,5 +1,5 @@
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
 import 'package:convertouch/domain/use_cases/common/fetch_items_batch_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -7,7 +7,7 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 const int listValuesPageSize = 100;
 
 class FetchListValuesUseCase
-    extends FetchItemsBatchUseCase<ListValueModel, ListValuesFetchParams> {
+    extends FetchItemsBatchUseCase<ValueModel, ListValuesFetchParams> {
   final ListValueRepository listValueRepository;
 
   const FetchListValuesUseCase({
@@ -15,9 +15,8 @@ class FetchListValuesUseCase
   });
 
   @override
-  Future<List<ListValueModel>> fetchItemsPage(
-    InputItemsFetchModel<ListValuesFetchParams> input,
-  ) async {
+  Future<List<ValueModel>> fetchItemsPage(
+      InputItemsFetchModel<ListValuesFetchParams> input,) async {
     if (input.fetchParams == null) {
       return [];
     }
@@ -36,8 +35,7 @@ class FetchListValuesUseCase
 
   @override
   Future<bool> containsSelectedValue(
-    InputItemsFetchModel<ListValuesFetchParams> input,
-  ) async {
+      InputItemsFetchModel<ListValuesFetchParams> input,) async {
     if (input.fetchParams == null) {
       return false;
     }
@@ -53,7 +51,7 @@ class FetchListValuesUseCase
   }
 
   @override
-  ListValueModel addSearchMatch(ListValueModel item, String searchString) {
+  ValueModel addSearchMatch(ValueModel item, String searchString) {
     return item;
   }
 }

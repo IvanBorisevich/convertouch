@@ -75,7 +75,7 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
     required OutputListValuesBatch listValuesBatch,
     required bool preselected,
   }) {
-    return preselected ? listValuesBatch.items.firstOrNull?.valueModel : null;
+    return preselected ? listValuesBatch.items.firstOrNull : null;
   }
 }
 

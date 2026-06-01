@@ -295,7 +295,7 @@ void main() {
       test("Should change param 'Bar Weight' [lb: 22 -> 44]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[0].valueModel,
+          barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -303,7 +303,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[1].valueModel,
+          barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -311,7 +311,7 @@ void main() {
 
         await testCase(
           delta: EditConversionParamValueDelta.raw(
-            newValue: barWeightParamPoundListValues.items[1].valueModel,
+            newValue: barWeightParamPoundListValues.items[1],
             paramId: barWeightParam.id,
             paramSetId: barbellWeightParamSet.id,
           ),
@@ -331,7 +331,7 @@ void main() {
       test("Should change param 'Height' [m: 1.64-1.7 -> 1.78-1.84]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
+          manShirtHeightRangesFrom0_164To190InMeter.items[0],
           null,
           unit: meter,
           calculated: false,
@@ -340,7 +340,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
+          manShirtHeightRangesFrom0_164To190InMeter.items[4],
           null,
           unit: meter,
           calculated: false,
@@ -349,7 +349,7 @@ void main() {
 
         await testCase(
           delta: EditConversionParamValueDelta.raw(
-            newValue: manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
+            newValue: manShirtHeightRangesFrom0_164To190InMeter.items[4],
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
           ),
@@ -374,7 +374,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InMeter.items[1],
                 null,
                 unit: meter,
                 calculated: false,
@@ -400,7 +400,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[1].valueModel,
+          barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -731,7 +731,8 @@ void main() {
     });
 
     group("Change non-list param value", () {
-      test("Should change non-list param 'One Side Weight' main value [kg: 30 -> 45], "
+      test(
+          "Should change non-list param 'One Side Weight' main value [kg: 30 -> 45], "
           "should replace empty default value with 1", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
@@ -770,7 +771,9 @@ void main() {
         );
       });
 
-      test("Should change non-list param 'One Side Weight' main value [kg: 30 -> <empty>]", () async {
+      test(
+          "Should change non-list param 'One Side Weight' main value [kg: 30 -> <empty>]",
+          () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           30,
@@ -808,7 +811,9 @@ void main() {
         );
       });
 
-      test("Should change non-list param 'One Side Weight' default value [kg: 2 -> 4]", () async {
+      test(
+          "Should change non-list param 'One Side Weight' default value [kg: 2 -> 4]",
+          () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
@@ -846,7 +851,8 @@ void main() {
         );
       });
 
-      test("Should change non-list param 'One Side Weight' default value [kg: 2 -> <empty>], "
+      test(
+          "Should change non-list param 'One Side Weight' default value [kg: 2 -> <empty>], "
           "should replace empty default value with 1", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,

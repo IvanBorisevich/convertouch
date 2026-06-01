@@ -1,9 +1,10 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
-import 'package:equatable/equatable.dart';
 
-class ValueModel extends Equatable {
+class ValueModel extends IdNameSearchableItemModel {
   static const zero = ValueModel(raw: "0", numVal: 0, alt: "0", range: null);
   static const one = ValueModel(raw: "1", numVal: 1, alt: "1", range: null);
   static const empty =
@@ -19,7 +20,20 @@ class ValueModel extends Equatable {
     required this.alt,
     this.numVal,
     this.range,
-  });
+  }) : super(
+          id: -1,
+          name: '',
+          itemType: ItemType.value,
+          oob: false,
+        );
+
+  const ValueModel.rawStr(String value, {String? alt})
+      : this(
+          raw: value,
+          alt: alt ?? value,
+          numVal: null,
+          range: null,
+        );
 
   factory ValueModel.str(
     String value, {
@@ -28,7 +42,7 @@ class ValueModel extends Equatable {
     double? num = double.tryParse(value);
 
     if (num != null) {
-      return ValueModel.numeric(num, alt: alt);
+      return ValueModel.num(num, alt: alt);
     }
 
     return ValueModel(
@@ -39,7 +53,7 @@ class ValueModel extends Equatable {
     );
   }
 
-  factory ValueModel.numeric(
+  factory ValueModel.num(
     num value, {
     String? alt,
   }) {
@@ -74,7 +88,7 @@ class ValueModel extends Equatable {
     }
 
     if (value is num) {
-      return ValueModel.numeric(value);
+      return ValueModel.num(value);
     }
 
     if (value is String) {
@@ -127,6 +141,7 @@ class ValueModel extends Equatable {
         alt,
       ];
 
+  @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       "raw": raw,
@@ -147,7 +162,7 @@ class ValueModel extends Equatable {
       return null;
     }
 
-    String? raw = json["raw"];
+    String? raw = json["raw"] ?? json["value"];
     if (raw == null || raw == '') {
       return null;
     }
@@ -156,7 +171,7 @@ class ValueModel extends Equatable {
       raw: raw,
       numVal: double.tryParse(json["num"]?.toString() ?? "") ??
           double.tryParse(raw),
-      alt: json["alt"] ?? json["scientific"],
+      alt: json["alt"] ?? json["scientific"] ?? json["value"],
       range: NumRange.fromJson(json["range"]),
     );
   }

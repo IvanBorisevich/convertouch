@@ -249,7 +249,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[0].valueModel,
+          barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -272,14 +272,14 @@ void main() {
       test("Should leave value 44 when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[1].valueModel,
+          barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[1].valueModel,
+          barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -309,7 +309,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           barWeightParam,
-          barWeightParamPoundListValues.items[0].valueModel,
+          barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
           listValues: barWeightParamPoundListValues,
@@ -617,7 +617,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[0],
           null,
           unit: centimeter,
           listValues: womanTrousersHeightRangesFrom0_156To186InCm,
@@ -640,14 +640,14 @@ void main() {
       test("Should leave '168-174' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InCm.items[3].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[3],
           null,
           unit: centimeter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InCm.items[3].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[3],
           null,
           unit: centimeter,
           listValues: womanTrousersHeightRangesFrom0_156To186InCm,
@@ -678,7 +678,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InCm.items[0],
           null,
           unit: centimeter,
           listValues: womanTrousersHeightRangesFrom0_156To186InCm,
@@ -806,7 +806,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[0],
           null,
           unit: meter,
           listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
@@ -829,14 +829,14 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
           listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
@@ -867,7 +867,7 @@ void main() {
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[0],
           null,
           unit: meter,
           listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
@@ -925,14 +925,14 @@ void main() {
       test("Should leave '1.56-1.62' when it exists in the list", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
           heightParam,
-          womanTrousersHeightRangesFrom0_156To186InMeter.items[1].valueModel,
+          womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
           listValues: womanTrousersHeightRangesFrom0_156To186InMeter,

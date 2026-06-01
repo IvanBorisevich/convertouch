@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 
 abstract class ResponseEntity {
   const ResponseEntity();
@@ -17,7 +17,7 @@ class DynamicCoefficientsResponseEntity extends ResponseEntity {
 }
 
 class DynamicListValuesResponseEntity extends ResponseEntity {
-  final List<ListValueModel> listValues;
+  final List<ValueModel> listValues;
 
   const DynamicListValuesResponseEntity(this.listValues);
 }

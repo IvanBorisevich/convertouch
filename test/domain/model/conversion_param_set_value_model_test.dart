@@ -106,7 +106,7 @@ void main() {
     expect(
       await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.numeric(20),
+          value: ValueModel.num(20),
         ),
         paramFilter: (paramValue) => paramValue.param.id == barWeightParam.id,
       ),
@@ -115,7 +115,7 @@ void main() {
         paramValues: [
           ConversionParamValueModel(
             param: barWeightParam,
-            value: ValueModel.numeric(20),
+            value: ValueModel.num(20),
           ),
           const ConversionParamValueModel(
             param: oneSideWeightParam,
@@ -129,7 +129,7 @@ void main() {
     expect(
       await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.numeric(40),
+          value: ValueModel.num(40),
         ),
         paramFilter: (paramValue) =>
             paramValue.param.id == oneSideWeightParam.id,
@@ -142,7 +142,7 @@ void main() {
           ),
           ConversionParamValueModel(
             param: oneSideWeightParam,
-            value: ValueModel.numeric(40),
+            value: ValueModel.num(40),
           ),
         ],
       ),
@@ -153,7 +153,7 @@ void main() {
     expect(
       await _barbellWeightParamSetValue.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.numeric(40),
+          value: ValueModel.num(40),
         ),
         paramFilter: (paramValue) => paramValue.param.id == -1,
       ),

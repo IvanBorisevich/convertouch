@@ -59,7 +59,7 @@ class UnitDetailsUtils {
     required double? unitCoefficient,
     required double argUnitCoefficient,
   }) {
-    return ValueModel.numeric(
+    return ValueModel.num(
       unitCoefficient != null
           ? unitCoefficient / argUnitCoefficient * unitValue
           : argUnitCoefficient,

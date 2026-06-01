@@ -332,7 +332,7 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[0],
                   null,
                   unit: meter,
                   listValues: manShirtHeightRangesFrom0_164To190InMeter,
@@ -467,7 +467,7 @@ void main() {
                 ConversionParamValueModel.tuple(
                   heightParam,
                   womanTrousersHeightRangesFrom0_156To186InMeter
-                      .items[1].valueModel,
+                      .items[1],
                   null,
                   unit: meter,
                 ),
@@ -511,7 +511,7 @@ void main() {
                 ConversionParamValueModel.tuple(
                   heightParam,
                   womanTrousersHeightRangesFrom0_156To186InMeter
-                      .items[1].valueModel,
+                      .items[1],
                   null,
                   unit: meter,
                   listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
@@ -648,7 +648,7 @@ void main() {
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[0],
                   null,
                   unit: meter,
                   calculated: true,
@@ -690,7 +690,7 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[0],
                   null,
                   unit: meter,
                   listValues: manShirtHeightRangesFrom0_164To190InMeter,
@@ -828,7 +828,7 @@ void main() {
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[0],
                   null,
                   unit: meter,
                   calculated: true,
@@ -870,7 +870,7 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[4],
                   null,
                   unit: meter,
                   listValues: manShirtHeightRangesFrom0_164To190InMeter,
@@ -1009,7 +1009,7 @@ void main() {
                 ConversionParamValueModel.tuple(
                   heightParam,
                   womanTrousersHeightRangesFrom0_156To186InMeter
-                      .items[1].valueModel,
+                      .items[1],
                   null,
                   unit: meter,
                   calculated: true,
@@ -1052,7 +1052,7 @@ void main() {
                 ConversionParamValueModel.tuple(
                   heightParam,
                   womanTrousersHeightRangesFrom0_156To186InMeter
-                      .items[1].valueModel,
+                      .items[1],
                   null,
                   unit: meter,
                   listValues: womanTrousersHeightRangesFrom0_156To186InMeter,

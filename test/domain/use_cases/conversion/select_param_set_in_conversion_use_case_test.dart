@@ -61,7 +61,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -73,7 +73,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 circumferenceParam,
-                ringCircumferenceRangesInMm.items[1].valueModel,
+                ringCircumferenceRangesInMm.items[1],
                 null,
                 unit: millimeter,
                 listValues: ringCircumferenceRangesInMm,
@@ -114,7 +114,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -126,7 +126,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 circumferenceParam,
-                ringCircumferenceRangesInMm.items[1].valueModel,
+                ringCircumferenceRangesInMm.items[1],
                 null,
                 unit: millimeter,
                 listValues: ringCircumferenceRangesInMm,
@@ -180,7 +180,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -233,7 +233,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -298,7 +298,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -310,7 +310,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 circumferenceParam,
-                ringCircumferenceRangesInMm.items[0].valueModel,
+                ringCircumferenceRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringCircumferenceRangesInMm,
@@ -331,7 +331,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 diameterParam,
-                ringDiameterRangesInMm.items[0].valueModel,
+                ringDiameterRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringDiameterRangesInMm,
@@ -343,7 +343,7 @@ void main() {
             paramValues: [
               ConversionParamValueModel.tuple(
                 circumferenceParam,
-                ringCircumferenceRangesInMm.items[0].valueModel,
+                ringCircumferenceRangesInMm.items[0],
                 null,
                 unit: millimeter,
                 listValues: ringCircumferenceRangesInMm,

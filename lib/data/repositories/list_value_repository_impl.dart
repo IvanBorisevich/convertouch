@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -19,7 +18,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, List<ListValueModel>>> fetch({
+  Future<Either<ConvertouchException, List<ValueModel>>> fetch({
     required ConvertouchListType listType,
     String? searchString,
     required int pageNum,
@@ -63,27 +62,27 @@ class ListValueRepositoryImpl implements ListValueRepository {
     if (listType.fetchedViaApi) {
       belongs = false;
     } else {
-      List<ListValueModel> localListValues =
+      List<ValueModel> localListValues =
           listValuesFuncSets[listType]?.buildListValues(
                 unit: unit,
                 params: params,
               ) ??
               [];
 
-      belongs = localListValues.any((v) => v.value == value.raw);
+      belongs = localListValues.any((v) => v.raw == value.raw);
     }
 
     return Right(belongs);
   }
 
-  List<ListValueModel> _fetchLocal({
+  List<ValueModel> _fetchLocal({
     required ConvertouchListType listType,
     required int pageNum,
     required int pageSize,
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) {
-    List<ListValueModel>? localListValues =
+    List<ValueModel>? localListValues =
         listValuesFuncSets[listType]?.buildListValues(
       unit: unit,
       params: params,
@@ -97,7 +96,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     return localListValues.sublist(pageNum * pageSize, end);
   }
 
-  Future<Either<ConvertouchException, List<ListValueModel>>> _fetchFromNetwork({
+  Future<Either<ConvertouchException, List<ValueModel>>> _fetchFromNetwork({
     required ConvertouchListType listType,
     required int pageNum,
     required int pageSize,

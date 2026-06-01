@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
@@ -23,8 +23,7 @@ abstract class InputBoxModel implements ElementModel {
   }) {
     if (model.listType != null) {
       return ListBoxModel(
-        listValue:
-            model.value != null ? ListValueModel.value(model.value!) : null,
+        selectedValue: model.value,
         listValues: model.listValues!.items,
         listType: model.listType!,
         readonly:
@@ -98,14 +97,14 @@ class TextBoxModel extends InputBoxModel {
 }
 
 class ListBoxModel extends InputBoxModel {
-  final ListValueModel? listValue;
-  final List<ListValueModel> listValues;
+  final ValueModel? selectedValue;
+  final List<ValueModel> listValues;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
 
   const ListBoxModel({
-    this.listValue,
+    this.selectedValue,
     required this.listType,
     super.readonly,
     super.labelText,
@@ -119,7 +118,7 @@ class ListBoxModel extends InputBoxModel {
     return 'ListBoxModel{'
         'labelText: $labelText, '
         'readonly: $readonly, '
-        'listValue: $listValue, '
+        'listValue: $selectedValue, '
         'listValues: $listValues, '
         'listType: $listType, '
         'searchHint: $searchHint, '

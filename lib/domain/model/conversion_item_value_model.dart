@@ -1,14 +1,13 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 typedef OutputListValuesBatch
-    = OutputItemsFetchModel<ListValueModel, ListValuesFetchParams>;
+    = OutputItemsFetchModel<ValueModel, ListValuesFetchParams>;
 
 abstract class ConversionItemValueModel extends ItemModel {
   final ValueModel? value;
@@ -155,7 +154,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
       listValues: OutputItemsFetchModel.fromJson(
         json["listValues"],
-        fromItemJson: (e) => ListValueModel.fromJson(e)!,
+        fromItemJson: (e) => ValueModel.fromJson(e)!,
         fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
       ),
     );
@@ -281,7 +280,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
       listValues: OutputItemsFetchModel.fromJson(
         json['listValues'],
-        fromItemJson: (e) => ListValueModel.fromJson(e)!,
+        fromItemJson: (e) => ValueModel.fromJson(e)!,
         fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
       ),
     );

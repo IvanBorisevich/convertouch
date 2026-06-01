@@ -106,10 +106,10 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       refreshable: json["refreshable"],
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
       minValue: json["minValue"] != null
-          ? ValueModel.numeric(json["minValue"])
+          ? ValueModel.num(json["minValue"])
           : null,
       maxValue: json["maxValue"] != null
-          ? ValueModel.numeric(json["maxValue"])
+          ? ValueModel.num(json["maxValue"])
           : null,
       oob: json["oob"],
     );

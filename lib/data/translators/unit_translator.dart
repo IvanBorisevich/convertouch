@@ -39,9 +39,9 @@ class UnitTranslator extends Translator<UnitModel, UnitEntity> {
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       listType: ConvertouchListType.valueOf(entity.listType),
       minValue:
-          entity.minValue != null ? ValueModel.numeric(entity.minValue!) : null,
+          entity.minValue != null ? ValueModel.num(entity.minValue!) : null,
       maxValue:
-          entity.maxValue != null ? ValueModel.numeric(entity.maxValue!) : null,
+          entity.maxValue != null ? ValueModel.num(entity.maxValue!) : null,
       invertible: int2bool(entity.invertible, ifNull: true),
       oob: int2bool(entity.oob, ifNull: true),
     );

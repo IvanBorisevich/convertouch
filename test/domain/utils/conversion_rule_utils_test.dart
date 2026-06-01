@@ -40,27 +40,27 @@ void main() {
 
         test('Fahrenheit -> Kelvin', () {
           expect(
-            Converter(ValueModel.numeric(32))
+            Converter(ValueModel.num(32))
                 .apply(fahrenheitToCelsius)
                 .apply(celsiusToKelvin)
                 .value,
-            ValueModel.numeric(273.15),
+            ValueModel.num(273.15),
           );
         });
 
         test('Kelvin -> Fahrenheit', () {
           expect(
-            Converter(ValueModel.numeric(273.15))
+            Converter(ValueModel.num(273.15))
                 .apply(kelvinToCelsius)
                 .apply(celsiusToFahrenheit)
                 .value,
-            ValueModel.numeric(32),
+            ValueModel.num(32),
           );
         });
 
         test('Kelvin -> Celsius', () {
           expect(
-            Converter(ValueModel.numeric(273.15)).apply(kelvinToCelsius).value,
+            Converter(ValueModel.num(273.15)).apply(kelvinToCelsius).value,
             ValueModel.zero,
           );
         });
@@ -68,17 +68,17 @@ void main() {
         test('Celsius -> Kelvin', () {
           expect(
             const Converter(ValueModel.zero).apply(celsiusToKelvin).value,
-            ValueModel.numeric(273.15),
+            ValueModel.num(273.15),
           );
         });
 
         test('Kelvin -> Kelvin', () {
           expect(
-            Converter(ValueModel.numeric(100))
+            Converter(ValueModel.num(100))
                 .apply(kelvinToCelsius)
                 .apply(celsiusToKelvin)
                 .value,
-            ValueModel.numeric(100),
+            ValueModel.num(100),
           );
 
           expect(
@@ -103,21 +103,21 @@ void main() {
                 .apply(ConversionRule.identity)
                 .apply(strLen)
                 .value,
-            ValueModel.numeric(7),
+            ValueModel.num(7),
           );
 
           expect(
             Converter(ValueModel.str("Example")).apply(strLen).value,
-            ValueModel.numeric(7),
+            ValueModel.num(7),
           );
 
           expect(
-            Converter(ValueModel.numeric(7)).apply(strLen).apply(null).value,
+            Converter(ValueModel.num(7)).apply(strLen).apply(null).value,
             null,
           );
 
           expect(
-            Converter(ValueModel.numeric(7))
+            Converter(ValueModel.num(7))
                 .apply(strLen)
                 .apply(ConversionRule.identity)
                 .apply(null)
@@ -126,7 +126,7 @@ void main() {
           );
 
           expect(
-            Converter(ValueModel.numeric(7))
+            Converter(ValueModel.num(7))
                 .apply(strLen)
                 .apply(null)
                 .apply(ConversionRule.identity)
@@ -163,36 +163,36 @@ void main() {
 
           test('cm -> km', () {
             expect(
-              Converter(ValueModel.numeric(32)).apply(cmToM).apply(mToKm).value,
-              ValueModel.numeric(0.00032),
+              Converter(ValueModel.num(32)).apply(cmToM).apply(mToKm).value,
+              ValueModel.num(0.00032),
             );
           });
 
           test('cm -> m', () {
             expect(
-              Converter(ValueModel.numeric(32)).apply(cmToM).value,
-              ValueModel.numeric(0.32),
+              Converter(ValueModel.num(32)).apply(cmToM).value,
+              ValueModel.num(0.32),
             );
           });
 
           test('km -> cm', () {
             expect(
-              Converter(ValueModel.numeric(32)).apply(kmToM).apply(mToCm).value,
-              ValueModel.numeric(3200000),
+              Converter(ValueModel.num(32)).apply(kmToM).apply(mToCm).value,
+              ValueModel.num(3200000),
             );
           });
 
           test('km -> m', () {
             expect(
-              Converter(ValueModel.numeric(32)).apply(kmToM).value,
-              ValueModel.numeric(32000),
+              Converter(ValueModel.num(32)).apply(kmToM).value,
+              ValueModel.num(32000),
             );
           });
 
           test('km -> km', () {
             expect(
-              Converter(ValueModel.numeric(32)).apply(kmToM).apply(mToKm).value,
-              ValueModel.numeric(32),
+              Converter(ValueModel.num(32)).apply(kmToM).apply(mToKm).value,
+              ValueModel.num(32),
             );
           });
 
@@ -225,7 +225,7 @@ void main() {
             ),
             unitGroupName: GroupNames.mass,
           ),
-          ValueModel.numeric((1000 - 10) / 2),
+          ValueModel.num((1000 - 10) / 2),
         );
       });
     });
@@ -253,8 +253,8 @@ void main() {
           ),
           ConversionParamValueModel(
             param: oneSideWeightParam,
-            value: ValueModel.numeric(20 / pound.coefficient!),
-            defaultValue: ValueModel.numeric(1 / pound.coefficient!),
+            value: ValueModel.num(20 / pound.coefficient!),
+            defaultValue: ValueModel.num(1 / pound.coefficient!),
             unit: pound,
           ),
         );

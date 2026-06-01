@@ -5,8 +5,8 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -36,7 +36,7 @@ void main() {
       MockitoNetworkRepository();
 
   setUpAll(() {
-    provideDummy<Either<ConvertouchException, List<ListValueModel>>>(
+    provideDummy<Either<ConvertouchException, List<ValueModel>>>(
       const Right([]),
     );
 
@@ -197,7 +197,7 @@ void main() {
               ConversionParamValueModel.tuple(garmentParam, null, null),
               ConversionParamValueModel.tuple(
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InMeter.items[3].valueModel,
+                manShirtHeightRangesFrom0_164To190InMeter.items[3],
                 null,
                 unit: meter,
               ),
@@ -239,7 +239,7 @@ void main() {
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[3].valueModel,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[3],
                   null,
                   unit: meter,
                   listValues: const OutputListValuesBatch.empty(),
@@ -295,7 +295,7 @@ void main() {
       ),
     ).thenAnswer(
       (_) async => const Right([
-        ListValueModel.str('FloatRates'),
+        ValueModel.rawStr('FloatRates'),
       ]),
     );
 

@@ -82,7 +82,7 @@ void main() {
               paramValues: [
                 ConversionParamValueModel.tuple(
                   barWeightParam,
-                  barWeightParamPoundListValues.items[0].valueModel,
+                  barWeightParamPoundListValues.items[0],
                   null,
                   unit: pound,
                   listValues: barWeightParamPoundListValues,

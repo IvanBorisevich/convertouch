@@ -81,7 +81,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     circumferenceParam,
-                    ringCircumferenceRangesInMm.items[0].valueModel,
+                    ringCircumferenceRangesInMm.items[0],
                     null,
                     unit: millimeter,
                     calculated: true,
@@ -131,7 +131,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     diameterParam,
-                    ringDiameterRangesInMm.items[0].valueModel,
+                    ringDiameterRangesInMm.items[0],
                     null,
                     unit: millimeter,
                     calculated: true,
@@ -144,7 +144,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     circumferenceParam,
-                    ringCircumferenceRangesInMm.items[0].valueModel,
+                    ringCircumferenceRangesInMm.items[0],
                     null,
                     unit: millimeter,
                     calculated: true,
@@ -194,7 +194,7 @@ void main() {
                 paramValues: [
                   ConversionParamValueModel.tuple(
                     barWeightParam,
-                    10,
+                    barWeightParamKgListValues.items.first,
                     null,
                     unit: kilogram,
                     listValues: barWeightParamKgListValues,

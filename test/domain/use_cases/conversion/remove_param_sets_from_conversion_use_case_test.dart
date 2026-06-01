@@ -250,7 +250,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         diameterParam,
-                        ringDiameterRangesInMm.items[0].valueModel,
+                        ringDiameterRangesInMm.items[0],
                         null,
                         unit: millimeter,
                         listValues: ringDiameterRangesInMm,
@@ -262,7 +262,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
-                        ringCircumferenceRangesInMm.items[2].valueModel,
+                        ringCircumferenceRangesInMm.items[2],
                         null,
                         unit: millimeter,
                         listValues: ringCircumferenceRangesInMm,
@@ -303,7 +303,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
-                        ringCircumferenceRangesInMm.items[2].valueModel,
+                        ringCircumferenceRangesInMm.items[2],
                         null,
                         unit: millimeter,
                         listValues: ringCircumferenceRangesInMm,
@@ -409,7 +409,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         diameterParam,
-                        ringDiameterRangesInCm.items[0].valueModel,
+                        ringDiameterRangesInCm.items[0],
                         null,
                         unit: centimeter,
                         listValues: ringDiameterRangesInCm,
@@ -565,7 +565,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         diameterParam,
-                        ringDiameterRangesInMm.items[0].valueModel,
+                        ringDiameterRangesInMm.items[0],
                         null,
                         unit: millimeter,
                         listValues: ringDiameterRangesInMm,
@@ -577,7 +577,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
-                        ringCircumferenceRangesInMm.items[1].valueModel,
+                        ringCircumferenceRangesInMm.items[1],
                         null,
                         unit: millimeter,
                         listValues: ringCircumferenceRangesInMm,
@@ -618,7 +618,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         diameterParam,
-                        ringDiameterRangesInMm.items[0].valueModel,
+                        ringDiameterRangesInMm.items[0],
                         null,
                         unit: millimeter,
                         listValues: ringDiameterRangesInMm,
@@ -735,7 +735,7 @@ void main() {
                     paramValues: [
                       ConversionParamValueModel.tuple(
                         circumferenceParam,
-                        ringCircumferenceRangesInMm.items[2].valueModel,
+                        ringCircumferenceRangesInMm.items[2],
                         null,
                         unit: millimeter,
                         listValues: ringCircumferenceRangesInMm,
@@ -989,7 +989,8 @@ void main() {
 
   group("Remove all param sets", () {
     group("Mandatory param set exists", () {
-      test("Should NOT remove mandatory param set, "
+      test(
+          "Should NOT remove mandatory param set, "
           "should leave the same conversion", () async {
         await testCase(
           unitGroup: clothesSizeGroup,
@@ -1068,7 +1069,8 @@ void main() {
         );
       });
 
-      test('Should NOT remove mandatory param set, '
+      test(
+          'Should NOT remove mandatory param set, '
           'should leave empty conversion', () async {
         await testCase(
           unitGroup: clothesSizeGroup,
@@ -1109,7 +1111,8 @@ void main() {
         );
       });
 
-      test('Should NOT remove mandatory param set, '
+      test(
+          'Should NOT remove mandatory param set, '
           'should remove optional param sets if any, '
           'should leave empty conversion', () async {
         await testCase(

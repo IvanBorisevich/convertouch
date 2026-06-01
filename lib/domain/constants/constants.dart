@@ -95,7 +95,7 @@ enum ItemType {
   conversionParam,
   job,
   dynamicValue,
-  listValue,
+  value,
   cron,
   dataSource,
 }

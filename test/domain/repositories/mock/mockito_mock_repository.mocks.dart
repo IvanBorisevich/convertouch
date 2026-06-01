@@ -10,7 +10,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart'
     as _i7;
 import 'package:convertouch/domain/model/dynamic_data_model.dart' as _i6;
 import 'package:convertouch/domain/model/exception_model.dart' as _i5;
-import 'package:convertouch/domain/model/list_value_model.dart' as _i9;
+import 'package:convertouch/domain/model/value_model.dart' as _i9;
 import 'package:convertouch/domain/repositories/network_repository.dart' as _i2;
 import 'package:either_dart/either.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
@@ -63,40 +63,41 @@ class MockitoNetworkRepository extends _i1.Mock
               _i4.Either<_i5.ConvertouchException, _i6.DynamicDataModel?>>);
 
   @override
-  _i3.Future<_i4.Either<_i5.ConvertouchException, List<_i9.ListValueModel>>>
-      fetchList({
+  _i3.Future<
+      _i4.Either<_i5.ConvertouchException, List<_i9.ValueModel>>> fetchList({
     required _i10.ConvertouchListType? listType,
     required _i7.ConversionParamSetValueModel? params,
     required int? pageSize,
     required int? pageNum,
   }) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #fetchList,
-              [],
-              {
-                #listType: listType,
-                #params: params,
-                #pageSize: pageSize,
-                #pageNum: pageNum,
-              },
-            ),
-            returnValue: _i3.Future<
-                _i4.Either<_i5.ConvertouchException,
-                    List<_i9.ListValueModel>>>.value(_i8.dummyValue<
-                _i4.Either<_i5.ConvertouchException, List<_i9.ListValueModel>>>(
-              this,
-              Invocation.method(
-                #fetchList,
-                [],
-                {
-                  #listType: listType,
-                  #params: params,
-                  #pageSize: pageSize,
-                  #pageNum: pageNum,
-                },
-              ),
-            )),
-          ) as _i3.Future<
-              _i4.Either<_i5.ConvertouchException, List<_i9.ListValueModel>>>);
+      (super.noSuchMethod(
+        Invocation.method(
+          #fetchList,
+          [],
+          {
+            #listType: listType,
+            #params: params,
+            #pageSize: pageSize,
+            #pageNum: pageNum,
+          },
+        ),
+        returnValue: _i3.Future<
+                _i4
+                .Either<_i5.ConvertouchException, List<_i9.ValueModel>>>.value(
+            _i8.dummyValue<
+                _i4.Either<_i5.ConvertouchException, List<_i9.ValueModel>>>(
+          this,
+          Invocation.method(
+            #fetchList,
+            [],
+            {
+              #listType: listType,
+              #params: params,
+              #pageSize: pageSize,
+              #pageNum: pageNum,
+            },
+          ),
+        )),
+      ) as _i3
+          .Future<_i4.Either<_i5.ConvertouchException, List<_i9.ValueModel>>>);
 }

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -15,10 +14,10 @@ typedef ListBuilderFunc<T> = List<T> Function({
   ConversionParamSetValueModel? params,
 });
 
-typedef ListValueModelBuilderFunc = ListBuilderFunc<ListValueModel>;
+typedef ValueModelBuilderFunc = ListBuilderFunc<ValueModel>;
 typedef InternalValueFunc = String Function(dynamic raw);
 typedef RawValueMapFunc = dynamic Function(ValueModel v);
-typedef SearchFunc = bool Function(String, ListValueModel?);
+typedef SearchFunc = bool Function(String, ValueModel?);
 
 typedef PublicValueFunc = String Function(
   dynamic raw, {
@@ -74,7 +73,7 @@ class ListValueFuncSet {
     );
   }
 
-  List<ListValueModel> buildListValues({
+  List<ValueModel> buildListValues({
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) {
@@ -85,9 +84,10 @@ class ListValueFuncSet {
       String? publicValue =
           publicListValueBuilderFunc.call(v, unit: unit, params: params);
 
-      return ListValueModel(
-        value: value,
-        publicValue: publicValue,
+      return ValueModel(
+        raw: value,
+        alt: publicValue,
+        numVal: double.tryParse(value),
         range: v is NumRange ? v : null,
       );
     }).toList();

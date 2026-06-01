@@ -3,10 +3,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
@@ -30,7 +30,7 @@ void main() {
       MockitoNetworkRepository();
 
   setUpAll(() {
-    provideDummy<Either<ConvertouchException, List<ListValueModel>>>(
+    provideDummy<Either<ConvertouchException, List<ValueModel>>>(
       const Right([]),
     );
 
@@ -236,7 +236,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -297,7 +297,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -354,7 +354,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             20,
@@ -393,7 +393,7 @@ void main() {
         paramValues: [
           (
             barWeightParam,
-            barWeightParamPoundListValues.items[0].valueModel,
+            barWeightParamPoundListValues.items[0],
             null,
             unit: pound,
             calculated: false,
@@ -415,7 +415,7 @@ void main() {
         paramValues: [
           (
             barWeightParam,
-            barWeightParamPoundListValues.items[1].valueModel,
+            barWeightParamPoundListValues.items[1],
             null,
             unit: pound,
             calculated: false,
@@ -434,7 +434,7 @@ void main() {
 
       await testCase(
         delta: EditConversionParamValueDelta.raw(
-          newValue: barWeightParamPoundListValues.items[1].valueModel,
+          newValue: barWeightParamPoundListValues.items[1],
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
@@ -448,7 +448,7 @@ void main() {
     test("Should change 'One Size Weight' value [kg: 30 -> 40]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -470,7 +470,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -534,7 +534,7 @@ void main() {
         paramValues: [
           (
             barWeightParam,
-            barWeightParamPoundListValues.items[1].valueModel,
+            barWeightParamPoundListValues.items[1],
             null,
             unit: pound,
             calculated: false,
@@ -569,7 +569,7 @@ void main() {
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
             10,
@@ -637,7 +637,7 @@ void main() {
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -686,7 +686,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[0],
             null,
             unit: centimeter,
             calculated: false,
@@ -713,7 +713,7 @@ void main() {
         " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -762,7 +762,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[0],
             null,
             unit: centimeter,
             calculated: true,
@@ -789,7 +789,7 @@ void main() {
         " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -838,7 +838,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[1],
             null,
             unit: centimeter,
             calculated: true,
@@ -869,7 +869,7 @@ void main() {
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -899,7 +899,7 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -922,7 +922,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: true,
-            listValues: OutputListValuesBatch.empty(),
+            listValues: const OutputListValuesBatch.empty(),
           ),
         ],
       );
@@ -946,7 +946,7 @@ void main() {
         "should recalc 'Height' list value [cm: empty -> ..-156]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -995,7 +995,7 @@ void main() {
           ),
           (
             heightParam,
-            womanTrousersHeightRangesFrom0_156To186InCm.items[0].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InCm.items[0],
             null,
             unit: centimeter,
             calculated: false,
@@ -1023,7 +1023,7 @@ void main() {
         "should recalc 'Height' list value [m: empty -> ..-1.56]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -1072,7 +1072,7 @@ void main() {
           ),
           (
             heightParam,
-            womanTrousersHeightRangesFrom0_156To186InMeter.items[0].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InMeter.items[0],
             null,
             unit: meter,
             calculated: false,
@@ -1100,7 +1100,7 @@ void main() {
         "should leave 'Height' = cm: 174-180", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -1119,7 +1119,7 @@ void main() {
           ),
           (
             heightParam,
-            NumRange.withRight(174, 180),
+            const NumRange.withRight(174, 180),
             null,
             unit: centimeter,
             calculated: false,
@@ -1149,7 +1149,7 @@ void main() {
           ),
           (
             heightParam,
-            womanTrousersHeightRangesFrom0_156To186InCm.items[4].valueModel,
+            womanTrousersHeightRangesFrom0_156To186InCm.items[4],
             null,
             unit: centimeter,
             calculated: false,
@@ -1177,7 +1177,7 @@ void main() {
         "should recalc 'Height' list value [cm: 174-180 -> ..-164]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -1196,7 +1196,7 @@ void main() {
           ),
           (
             heightParam,
-            NumRange.withRight(174, 180),
+            const NumRange.withRight(174, 180),
             null,
             unit: centimeter,
             calculated: false,
@@ -1226,7 +1226,7 @@ void main() {
           ),
           (
             heightParam,
-            manTrousersHeightRangesFrom0_164To188InCm.items[0].valueModel,
+            manTrousersHeightRangesFrom0_164To188InCm.items[0],
             null,
             unit: centimeter,
             calculated: false,
@@ -1254,7 +1254,7 @@ void main() {
         "should recalc 'Height' list value [m: 1.74-1.8 -> ..-1.64]", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: const [
+        paramValues: [
           (
             personParam,
             "Man",
@@ -1273,7 +1273,7 @@ void main() {
           ),
           (
             heightParam,
-            NumRange.withRight(1.74, 1.8),
+            const NumRange.withRight(1.74, 1.8),
             null,
             unit: meter,
             calculated: false,
@@ -1303,7 +1303,7 @@ void main() {
           ),
           (
             heightParam,
-            manTrousersHeightRangesFrom0_164To188InMeter.items[0].valueModel,
+            manTrousersHeightRangesFrom0_164To188InMeter.items[0],
             null,
             unit: meter,
             calculated: false,
@@ -1350,7 +1350,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[1],
             null,
             unit: centimeter,
             calculated: false,
@@ -1380,7 +1380,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[4].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[4],
             null,
             unit: centimeter,
             calculated: false,
@@ -1428,7 +1428,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[1],
             null,
             unit: meter,
             calculated: false,
@@ -1458,7 +1458,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[4],
             null,
             unit: meter,
             calculated: false,
@@ -1469,8 +1469,7 @@ void main() {
 
       await testCase(
         delta: EditConversionParamValueDelta.raw(
-          newValue:
-              manShirtHeightRangesFrom0_164To190InMeter.items[4].valueModel,
+          newValue: manShirtHeightRangesFrom0_164To190InMeter.items[4],
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
@@ -1508,7 +1507,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InCm.items[1],
             null,
             unit: centimeter,
             calculated: false,
@@ -1538,7 +1537,7 @@ void main() {
           ),
           (
             heightParam,
-            manShirtHeightRangesFrom0_164To190InMeter.items[1].valueModel,
+            manShirtHeightRangesFrom0_164To190InMeter.items[1],
             null,
             unit: meter,
             calculated: false,
@@ -1609,7 +1608,7 @@ void main() {
         ),
       ).thenAnswer(
         (_) async => const Right([
-          ListValueModel.str('FloatRates'),
+          ValueModel.rawStr('FloatRates'),
         ]),
       );
 

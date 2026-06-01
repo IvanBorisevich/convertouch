@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/list_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
@@ -632,7 +631,7 @@ class _ListField extends StatefulWidget {
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
-  late ValueNotifier<ListValueModel?> _selectedValueNotifier;
+  late ValueNotifier<ValueModel?> _selectedValueNotifier;
 
   TextEditingController? _dropdownSearchController;
   FocusNode? _dropdownSearchFocusNode;
@@ -642,7 +641,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.initState();
 
     _isDropdownOpen = false;
-    _selectedValueNotifier = ValueNotifier(widget.model.listValue);
+    _selectedValueNotifier = ValueNotifier(widget.model.selectedValue);
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -662,7 +661,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedValueNotifier.value = widget.model.listValue;
+    _selectedValueNotifier.value = widget.model.selectedValue;
   }
 
   @override
@@ -674,7 +673,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         }
       },
       child: DropdownButtonHideUnderline(
-        child: DropdownButtonFormField2<ListValueModel>(
+        child: DropdownButtonFormField2<ValueModel>(
           isExpanded: true,
           decoration: _inputFieldDecoration(
             context,
@@ -715,7 +714,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           onChanged: (listValue) {
             if (listValue != null) {
               _selectedValueNotifier.value = listValue;
-              widget.onValueChanged?.call(listValue.valueModel);
+              widget.onValueChanged?.call(listValue);
             }
           },
           /*
@@ -726,7 +725,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             return widget.model.listValues.map(
               (value) {
                 return Text(
-                  widget.model.listValue?.itemName ?? noValueHint,
+                  widget.model.selectedValue?.itemName ?? noValueHint,
                   style: _inputFieldTextStyle(
                     fontSize: widget.fontSize,
                     foregroundColor: widget.foregroundColor,

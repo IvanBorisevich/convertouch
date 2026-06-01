@@ -124,10 +124,10 @@ class UnitModel extends IdNameSearchableItemModel {
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
       listType: ConvertouchListType.valueOf(json["listType"]),
       minValue: json["minValue"] != null
-          ? ValueModel.numeric(json["minValue"])
+          ? ValueModel.num(json["minValue"])
           : null,
       maxValue: json["maxValue"] != null
-          ? ValueModel.numeric(json["maxValue"])
+          ? ValueModel.num(json["maxValue"])
           : null,
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,

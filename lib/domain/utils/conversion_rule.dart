@@ -110,7 +110,7 @@ class ConversionRule {
           func: func != null
               ? (x, {ConversionParamSetValueModel? params}) {
                   return x?.numVal != null
-                      ? ValueModel.numeric(func.call(x!.numVal!))
+                      ? ValueModel.num(func.call(x!.numVal!))
                       : null;
                 }
               : null,

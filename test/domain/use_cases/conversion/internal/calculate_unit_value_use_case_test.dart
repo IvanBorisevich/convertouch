@@ -78,7 +78,7 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothesSizes.items[0].valueModel,
+            japanClothesSizes.items[0],
             null,
             listValues: japanClothesSizes,
           );
@@ -105,7 +105,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -127,7 +127,7 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothesSizes.items[4].valueModel,
+            japanClothesSizes.items[4],
             null,
             listValues: japanClothesSizes,
           );
@@ -154,7 +154,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -177,7 +177,7 @@ void main() {
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
             japanClothSize,
-            japanClothesSizes.items[0].valueModel,
+            japanClothesSizes.items[0],
             null,
             listValues: japanClothesSizes,
           );
@@ -204,7 +204,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -258,7 +258,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -309,7 +309,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -361,7 +361,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -411,7 +411,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -461,7 +461,7 @@ void main() {
                 ),
                 (
                   heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                  manShirtHeightRangesFrom0_164To190InCm.items[0],
                   null,
                   unit: centimeter,
                   calculated: false,
@@ -486,7 +486,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothesSizes.items[1].valueModel,
+          japanClothesSizes.items[1],
           null,
           listValues: japanClothesSizes,
         );
@@ -517,7 +517,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InCm.items[0].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[0],
                 null,
                 unit: centimeter,
                 calculated: false,
@@ -535,14 +535,14 @@ void main() {
       test("Should change list value ['M' JP -> 44 EU]", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothesSizes.items[1].valueModel,
+          japanClothesSizes.items[1],
           null,
           listValues: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           europeanClothSize,
-          europeanClothesSizes.items[5].valueModel,
+          europeanClothesSizes.items[5],
           null,
           listValues: europeanClothesSizes,
         );
@@ -574,7 +574,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1],
                 null,
                 unit: centimeter,
                 calculated: false,
@@ -591,7 +591,7 @@ void main() {
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothesSizes.items[1].valueModel,
+          japanClothesSizes.items[1],
           null,
           listValues: japanClothesSizes,
         );
@@ -630,7 +630,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1],
                 null,
                 unit: centimeter,
                 calculated: false,
@@ -656,7 +656,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           japanClothSize,
-          japanClothesSizes.items[1].valueModel,
+          japanClothesSizes.items[1],
           null,
           listValues: japanClothesSizes,
         );
@@ -685,7 +685,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1],
                 null,
                 unit: centimeter,
                 calculated: false,
@@ -738,7 +738,7 @@ void main() {
               ),
               (
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InCm.items[1].valueModel,
+                manShirtHeightRangesFrom0_164To190InCm.items[1],
                 null,
                 unit: centimeter,
                 calculated: false,
@@ -762,7 +762,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           esRingSize,
-          esRingSizes.items[1].valueModel,
+          esRingSizes.items[1],
           null,
           listValues: esRingSizes,
         );
@@ -775,7 +775,7 @@ void main() {
             paramValues: [
               (
                 diameterParam,
-                ringDiameterRangesInMm.items[2].valueModel,
+                ringDiameterRangesInMm.items[2],
                 null,
                 unit: millimeter,
                 calculated: false,
@@ -799,7 +799,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           esRingSize,
-          esRingSizes.items[1].valueModel,
+          esRingSizes.items[1],
           null,
           listValues: esRingSizes,
         );
@@ -812,7 +812,7 @@ void main() {
             paramValues: [
               (
                 diameterParam,
-                ringDiameterRangesInMm.items[2].valueModel,
+                ringDiameterRangesInMm.items[2],
                 null,
                 unit: millimeter,
                 calculated: false,
@@ -836,7 +836,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           esRingSize,
-          esRingSizes.items[0].valueModel,
+          esRingSizes.items[0],
           null,
           listValues: esRingSizes,
         );
@@ -873,7 +873,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           esRingSize,
-          esRingSizes.items[0].valueModel,
+          esRingSizes.items[0],
           null,
           listValues: esRingSizes,
         );

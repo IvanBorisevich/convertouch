@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/list_value_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class DynamicDataModel extends Equatable {
@@ -33,7 +33,7 @@ class DynamicCoefficientsModel extends DynamicDataModel {
 }
 
 class DynamicListValuesModel extends DynamicDataModel {
-  final List<ListValueModel> listValues;
+  final List<ValueModel> listValues;
 
   const DynamicListValuesModel(this.listValues);
 

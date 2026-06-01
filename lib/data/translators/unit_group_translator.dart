@@ -34,9 +34,9 @@ class UnitGroupTranslator extends Translator<UnitGroupModel, UnitGroupEntity> {
       conversionType: ConversionType.valueOf(entity.conversionType),
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       minValue:
-          entity.minValue != null ? ValueModel.numeric(entity.minValue!) : null,
+          entity.minValue != null ? ValueModel.num(entity.minValue!) : null,
       maxValue:
-          entity.maxValue != null ? ValueModel.numeric(entity.maxValue!) : null,
+          entity.maxValue != null ? ValueModel.num(entity.maxValue!) : null,
       refreshable: int2bool(entity.refreshable),
       oob: int2bool(entity.oob, ifNull: true),
     );

@@ -99,8 +99,8 @@ void main() {
     expect(
       await _clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.numeric(150),
-          defaultValue: ValueModel.numeric(2),
+          value: ValueModel.num(150),
+          defaultValue: ValueModel.num(2),
         ),
         paramSetId: clothesSizeParamSet.id,
         paramId: heightParam.id,
@@ -126,8 +126,8 @@ void main() {
     expect(
       await _clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.numeric(150),
-          defaultValue: ValueModel.numeric(2),
+          value: ValueModel.num(150),
+          defaultValue: ValueModel.num(2),
         ),
         paramSetId: clothesSizeParamSet.id,
         paramId: -1,
