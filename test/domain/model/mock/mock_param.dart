@@ -132,18 +132,10 @@ const someCalculableParam = ConversionParamModel(
   paramSetId: 4,
 );
 
-const exchangeRateSourceParam = ConversionParamModel(
+const exchangeRateSourceBankParam = ConversionParamModel(
   id: 8,
-  name: ParamNames.source,
+  name: ParamNames.sourceOrBank,
   valueType: ConvertouchValueType.text,
   listType: ConvertouchListType.exchangeRateSource,
-  paramSetId: 5,
-);
-
-const exchangeRateBankParam = ConversionParamModel(
-  id: 9,
-  name: ParamNames.bank,
-  valueType: ConvertouchValueType.text,
-  listType: ConvertouchListType.exchangeRateBank,
   paramSetId: 5,
 );

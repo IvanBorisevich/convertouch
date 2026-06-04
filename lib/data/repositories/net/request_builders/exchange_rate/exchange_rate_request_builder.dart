@@ -22,8 +22,7 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
     int? pageNum,
   }) {
     return {
-      'source': params.getParamValue(ParamNames.source)!.raw,
-      'bank': params.getParamValue(ParamNames.bank)!.raw,
+      'source': params.getParamValue(ParamNames.sourceOrBank)!.raw,
     };
   }
 
@@ -35,7 +34,7 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
 
   @override
   bool readyForFetch(ConversionParamSetValueModel params) {
-    return params.hasParamValue(ParamNames.source);
+    return params.hasParamValue(ParamNames.sourceOrBank);
   }
 }
 

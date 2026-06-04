@@ -23,8 +23,7 @@ final _paramsOfSet = {
     oneSideWeightParam,
   ],
   exchangeRateParamSet.id: [
-    exchangeRateSourceParam,
-    exchangeRateBankParam,
+    exchangeRateSourceBankParam,
   ],
 };
 

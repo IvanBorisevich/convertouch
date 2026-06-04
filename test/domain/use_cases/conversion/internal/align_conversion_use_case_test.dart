@@ -299,17 +299,6 @@ void main() {
       ]),
     );
 
-    when(
-      mockitoNetworkRepository.fetchList(
-        listType: ConvertouchListType.exchangeRateBank,
-        params: anyNamed('params'),
-        pageSize: listValuesPageSize,
-        pageNum: 0,
-      ),
-    ).thenAnswer(
-      (_) async => const Right([]),
-    );
-
     var alignedConversion = ObjectUtils.tryGet(
       await useCase.execute(conversion),
     );
@@ -324,16 +313,10 @@ void main() {
               paramSet: exchangeRateParamSet,
               paramValues: [
                 ConversionParamValueModel.tuple(
-                  exchangeRateSourceParam,
-                  'FloatRates',
+                  exchangeRateSourceBankParam,
+                  null,
                   null,
                   listValues: exchangeRateSources,
-                ),
-                ConversionParamValueModel.tuple(
-                  exchangeRateBankParam,
-                  null,
-                  null,
-                  listValues: const OutputListValuesBatch.empty(),
                 ),
               ],
             )

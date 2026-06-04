@@ -127,17 +127,11 @@ const conversionParamsV2 = [
     "mandatory": true,
     "params": [
       {
-        "name": ParamNames.source,
+        "name": ParamNames.sourceOrBank,
         "calculable": false,
         "valueType": ConvertouchValueType.text,
         "listType": ConvertouchListType.exchangeRateSource,
       },
-      {
-        "name": ParamNames.bank,
-        "calculable": false,
-        "valueType": ConvertouchValueType.text,
-        "listType": ConvertouchListType.exchangeRateBank,
-      }
     ]
   },
   {

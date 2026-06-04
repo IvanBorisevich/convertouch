@@ -1562,19 +1562,14 @@ void main() {
 
   group("Should initially calculate param set 'Exchange Rate'", () {
     test(
-        "[Currency] Should init 'Source' param list values with preselect, "
+        "[Currency] Should init 'Source' param list values without preselect, "
         "should NOT init 'Bank' param list values (not found by 'Source')",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,
         paramValues: [
           ConversionParamValueModel.tuple(
-            exchangeRateSourceParam,
-            null,
-            null,
-          ),
-          ConversionParamValueModel.tuple(
-            exchangeRateBankParam,
+            exchangeRateSourceBankParam,
             null,
             null,
           ),
@@ -1585,16 +1580,10 @@ void main() {
         paramSet: exchangeRateParamSet,
         paramValues: [
           ConversionParamValueModel.tuple(
-            exchangeRateSourceParam,
-            'FloatRates',
+            exchangeRateSourceBankParam,
+            null,
             null,
             listValues: exchangeRateSources,
-          ),
-          ConversionParamValueModel.tuple(
-            exchangeRateBankParam,
-            null,
-            null,
-            listValues: const OutputListValuesBatch.empty(),
           ),
         ],
       );
@@ -1610,17 +1599,6 @@ void main() {
         (_) async => const Right([
           ValueModel.rawStr('FloatRates'),
         ]),
-      );
-
-      when(
-        mockitoNetworkRepository.fetchList(
-          listType: ConvertouchListType.exchangeRateBank,
-          params: anyNamed('params'),
-          pageSize: listValuesPageSize,
-          pageNum: 0,
-        ),
-      ).thenAnswer(
-        (_) async => const Right([]),
       );
 
       await testCase(

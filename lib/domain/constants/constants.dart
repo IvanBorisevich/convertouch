@@ -42,8 +42,7 @@ abstract class ParamNames {
   static const circumference = "Circumference";
   static const barWeight = "Bar Weight";
   static const oneSideWeight = "One Side Weight";
-  static const source = "Source";
-  static const bank = "Bank";
+  static const sourceOrBank = "Source / Bank";
 }
 
 abstract class UnitCodes {
@@ -193,8 +192,7 @@ enum ConvertouchListType {
   ringSizeDe(19, listValuesType: ConvertouchValueType.integerNonNegative),
   ringSizeEs(20, listValuesType: ConvertouchValueType.decimalNonNegative),
   ringSizeJp(21, listValuesType: ConvertouchValueType.integerNonNegative),
-  exchangeRateSource(22, fetchedViaApi: true),
-  exchangeRateBank(23, fetchedViaApi: true),
+  exchangeRateSource(22, fetchedViaApi: true, preselected: false),
   clothesHeightRange(24),
   ringDiameterRange(25),
   ringCircumferenceRange(26),

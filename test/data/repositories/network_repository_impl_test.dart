@@ -74,8 +74,7 @@ Future<void> main() async {
       paramSet: exchangeRateParamSet,
       paramValues: [
         ConversionParamValueModel.tuple(
-            exchangeRateSourceParam, "FloatRates", null),
-        ConversionParamValueModel.tuple(exchangeRateBankParam, null, null),
+            exchangeRateSourceBankParam, "FloatRates", null),
       ],
     );
   });
@@ -153,7 +152,7 @@ Future<void> main() async {
       verify(
         mockNetworkDao.fetch(
           exchangeRatePath,
-          queryParams: {'source': 'FloatRates', 'bank': null},
+          queryParams: {'source': 'FloatRates'},
         ),
       ).called(1);
     });

@@ -1,4 +1,3 @@
-import 'package:convertouch/data/repositories/net/request_builders/exchange_rate/exchange_rate_bank_request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/exchange_rate/exchange_rate_request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/exchange_rate/exchange_rate_source_request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
@@ -42,7 +41,6 @@ const Map<String, Map<String, RequestBuilder>> _commonBuilders = {
 
 const Map<ConvertouchListType, RequestBuilder> _listValuesBuilders = {
   ConvertouchListType.exchangeRateSource: ExchangeRateSourceRequestBuilder(),
-  ConvertouchListType.exchangeRateBank: ExchangeRateBankRequestBuilder(),
 };
 
 const requestBuilders = _RequestBuilderFactory.instance;
