@@ -104,10 +104,10 @@ class CalculateUnitValueUseValue
       }
 
       return Right(
-        ConversionUnitValueModel(
+        input.unitValue.copyWith(
           unit: newUnit,
-          value: newValue,
-          defaultValue: newDefaultValue,
+          value: newValue ?? ValueModel.empty,
+          defaultValue: newDefaultValue ?? ValueModel.empty,
         ),
       );
     } else {
@@ -119,8 +119,8 @@ class CalculateUnitValueUseValue
         ObjectUtils.tryGet(
           await initUnitListValuesUseCase.execute(
             InputUnitListValuesInitModel(
-              itemValue: ConversionUnitValueModel(
-                value: newValue,
+              itemValue: input.unitValue.copyWith(
+                value: newValue ?? ValueModel.empty,
                 unit: newUnit,
               ),
               paramSetValue: input.paramSetValue,

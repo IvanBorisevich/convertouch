@@ -80,7 +80,7 @@ void main() {
             japanClothSize,
             japanClothesSizes.items[0],
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -93,7 +93,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -101,7 +101,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -109,7 +109,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -129,7 +129,7 @@ void main() {
             japanClothSize,
             japanClothesSizes.items[4],
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -142,7 +142,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -150,7 +150,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -158,7 +158,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -179,7 +179,7 @@ void main() {
             japanClothSize,
             japanClothesSizes.items[0],
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -192,7 +192,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -200,7 +200,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -208,7 +208,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -232,7 +232,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -246,7 +246,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -254,7 +254,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -262,7 +262,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -284,7 +284,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -297,7 +297,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -305,7 +305,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -313,7 +313,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -335,7 +335,7 @@ void main() {
             japanClothSize,
             null,
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -349,7 +349,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -357,7 +357,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -365,7 +365,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -385,7 +385,7 @@ void main() {
             japanClothSize,
             '3L',
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -399,7 +399,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -407,7 +407,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -415,7 +415,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -435,7 +435,7 @@ void main() {
             japanClothSize,
             'W',
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           );
 
           await testCase(
@@ -449,7 +449,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   garmentParam,
@@ -457,7 +457,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -465,7 +465,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manShirtHeightRangesFrom0_164To190InCm
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
                 ),
               ],
             ),
@@ -488,7 +488,7 @@ void main() {
           japanClothSize,
           japanClothesSizes.items[1],
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         );
 
         await testCase(
@@ -505,7 +505,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 garmentParam,
@@ -513,7 +513,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 heightParam,
@@ -521,7 +521,7 @@ void main() {
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InCm
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -537,14 +537,14 @@ void main() {
           japanClothSize,
           japanClothesSizes.items[1],
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           europeanClothSize,
           europeanClothesSizes.items[5],
           null,
-          listValues: europeanClothesSizes,
+          listValuesFetchResult: europeanClothesSizes,
         );
 
         await testCase(
@@ -562,7 +562,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 garmentParam,
@@ -570,7 +570,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 heightParam,
@@ -578,7 +578,7 @@ void main() {
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InCm
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -593,14 +593,14 @@ void main() {
           japanClothSize,
           japanClothesSizes.items[1],
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           europeanClothSize,
           null,
           null,
-          listValues: europeanClothesSizes,
+          listValuesFetchResult: europeanClothesSizes,
         );
 
         await testCase(
@@ -618,7 +618,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 garmentParam,
@@ -626,7 +626,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 heightParam,
@@ -634,7 +634,7 @@ void main() {
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InCm
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -658,7 +658,7 @@ void main() {
           japanClothSize,
           japanClothesSizes.items[1],
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         );
 
         await testCase(
@@ -673,7 +673,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 garmentParam,
@@ -681,7 +681,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 heightParam,
@@ -689,7 +689,7 @@ void main() {
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InCm
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -711,7 +711,7 @@ void main() {
           japanClothSize,
           null,
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         );
 
         await testCase(
@@ -726,7 +726,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 garmentParam,
@@ -734,7 +734,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
               (
                 heightParam,
@@ -742,7 +742,7 @@ void main() {
                 null,
                 unit: centimeter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InCm
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
               ),
             ],
           ),
@@ -764,7 +764,7 @@ void main() {
           esRingSize,
           esRingSizes.items[1],
           null,
-          listValues: esRingSizes,
+          listValuesFetchResult: esRingSizes,
         );
 
         await testCase(
@@ -779,7 +779,7 @@ void main() {
                 null,
                 unit: millimeter,
                 calculated: false,
-                listValues: ringDiameterRangesInMm,
+                listValuesFetchResult: ringDiameterRangesInMm,
               ),
             ],
           ),
@@ -801,7 +801,7 @@ void main() {
           esRingSize,
           esRingSizes.items[1],
           null,
-          listValues: esRingSizes,
+          listValuesFetchResult: esRingSizes,
         );
 
         await testCase(
@@ -816,7 +816,7 @@ void main() {
                 null,
                 unit: millimeter,
                 calculated: false,
-                listValues: ringDiameterRangesInMm,
+                listValuesFetchResult: ringDiameterRangesInMm,
               ),
             ],
           ),
@@ -838,7 +838,7 @@ void main() {
           esRingSize,
           esRingSizes.items[0],
           null,
-          listValues: esRingSizes,
+          listValuesFetchResult: esRingSizes,
         );
 
         await testCase(
@@ -853,7 +853,7 @@ void main() {
                 null,
                 unit: millimeter,
                 calculated: false,
-                listValues: null,
+                listValuesFetchResult: null,
               ),
             ],
           ),
@@ -875,7 +875,7 @@ void main() {
           esRingSize,
           esRingSizes.items[0],
           null,
-          listValues: esRingSizes,
+          listValuesFetchResult: esRingSizes,
         );
 
         await testCase(

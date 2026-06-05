@@ -22,7 +22,7 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
       return Right(input.itemValue);
     }
 
-    var listValuesBatch = await _fetchFirstBatch(
+    var listValuesFetchResult = await _fetchFirstBatch(
       fetchParams: ListValuesFetchParams(
         listType: input.itemValue.listType!,
         unit: input.itemValue.unitItem,
@@ -34,30 +34,33 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
     return Right(
       input.itemValue.copyWith(
         value: input.alignSelectedValue
-            ? await _alignCurrentValue(input, listValuesBatch)
+            ? await _alignCurrentValue(input, listValuesFetchResult)
             : input.itemValue.value,
-        listValues: listValuesBatch,
+        defaultValue: ValueModel.empty,
+        listValuesFetchResult: listValuesFetchResult,
       ) as M,
     );
   }
 
   Future<ValueModel?> _alignCurrentValue(
-      I input, OutputListValuesBatch batch) async {
+    I input,
+    ListValuesFetchResult fetchResult,
+  ) async {
     if (input.itemValue.value == null && input.alignForNull) {
       return null;
     }
 
-    if (input.itemValue.value != null && batch.containsSelectedValue) {
+    if (input.itemValue.value != null && fetchResult.containsSelectedValue) {
       return input.itemValue.value;
     }
 
     return _getDefaultListValue(
-      listValuesBatch: batch,
+      listValuesFetchResult: fetchResult,
       preselected: input.itemValue.listType!.preselected,
     );
   }
 
-  Future<OutputListValuesBatch> _fetchFirstBatch({
+  Future<ListValuesFetchResult> _fetchFirstBatch({
     required ListValuesFetchParams fetchParams,
   }) async {
     return ObjectUtils.tryGet(
@@ -72,10 +75,10 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
   }
 
   ValueModel? _getDefaultListValue({
-    required OutputListValuesBatch listValuesBatch,
+    required ListValuesFetchResult listValuesFetchResult,
     required bool preselected,
   }) {
-    return preselected ? listValuesBatch.items.firstOrNull : null;
+    return preselected ? listValuesFetchResult.items.firstOrNull : null;
   }
 }
 

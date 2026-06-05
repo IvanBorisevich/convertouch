@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'mock/mock_param.dart';
 import 'mock/mock_unit_group.dart';
 
-const _barbellWeightParamSetValue = ConversionParamSetValueModel(
+final _barbellWeightParamSetValue = ConversionParamSetValueModel(
   paramSet: barbellWeightParamSet,
   paramValues: [
     ConversionParamValueModel(
@@ -18,7 +18,7 @@ const _barbellWeightParamSetValue = ConversionParamSetValueModel(
   ],
 );
 
-const _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
+final _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
   paramSet: barbellWeightParamSet,
   paramValues: [
     ConversionParamValueModel(
@@ -117,7 +117,7 @@ void main() {
             param: barWeightParam,
             value: ValueModel.num(20),
           ),
-          const ConversionParamValueModel(
+          ConversionParamValueModel(
             param: oneSideWeightParam,
           ),
         ],
@@ -137,7 +137,7 @@ void main() {
       ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
-          const ConversionParamValueModel(
+          ConversionParamValueModel(
             param: barWeightParam,
           ),
           ConversionParamValueModel(
@@ -175,7 +175,7 @@ void main() {
       _barbellWeightParamSetValue.copyWithNewCalculatedParam(
         newCalculatedParamId: oneSideWeightParam.id,
       ),
-      const ConversionParamSetValueModel(
+      ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(
@@ -195,7 +195,7 @@ void main() {
       _paramSetValueWithMultipleCalculableParams.copyWithNewCalculatedParam(
         newCalculatedParamId: someCalculableParam.id,
       ),
-      const ConversionParamSetValueModel(
+      ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(
@@ -218,7 +218,7 @@ void main() {
       _paramSetValueWithMultipleCalculableParams.copyWithNewCalculatedParam(
         newCalculatedParamId: oneSideWeightParam.id,
       ),
-      const ConversionParamSetValueModel(
+      ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(

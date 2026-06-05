@@ -8,15 +8,16 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
+import 'mock/mock_list_values_batch.dart';
 import 'mock/mock_param.dart';
 import 'mock/mock_unit.dart';
 import 'mock/mock_unit_group.dart';
 
 void main() {
   group('By coefficients', () {
-    const ConversionModel conversionByCoefficients = ConversionModel(
+    final ConversionModel conversionByCoefficients = ConversionModel(
       id: 1,
-      unitGroup: UnitGroupModel(
+      unitGroup: const UnitGroupModel(
         id: 10,
         name: 'Money',
         conversionType: ConversionType.dynamic,
@@ -24,7 +25,7 @@ void main() {
         valueType: ConvertouchValueType.decimalNonNegative,
       ),
       srcUnitValue: ConversionUnitValueModel(
-        unit: UnitModel(
+        unit: const UnitModel(
           id: 7,
           name: 'Euro',
           code: 'EUR',
@@ -50,7 +51,7 @@ void main() {
       ),
       convertedUnitValues: [
         ConversionUnitValueModel(
-          unit: UnitModel(
+          unit: const UnitModel(
             id: 8,
             name: 'United States Dollar',
             code: 'USD',
@@ -60,7 +61,7 @@ void main() {
           defaultValue: ValueModel.one,
         ),
         ConversionUnitValueModel(
-          unit: UnitModel(
+          unit: const UnitModel(
             id: 9,
             name: 'Australian Dollar',
             code: 'AUD',
@@ -203,19 +204,13 @@ void main() {
                 personParam,
                 "Man",
                 null,
-                listValues: const OutputListValuesBatch(
-                  items: [],
-                  pageNum: 1,
-                ),
+                listValuesFetchResult: personParamListValues,
               ),
               ConversionParamValueModel.tuple(
                 garmentParam,
                 "Shirt",
                 null,
-                listValues: const OutputListValuesBatch(
-                  items: [],
-                  pageNum: 1,
-                ),
+                listValuesFetchResult: garmentParamListValues,
               ),
               ConversionParamValueModel.tuple(heightParam, 180, 1, unit: meter),
             ],
@@ -228,19 +223,11 @@ void main() {
           japanClothSize,
           'S',
           null,
-          listValues: const OutputListValuesBatch(
-            items: [],
-            pageNum: 1,
-          ),
         ),
         ConversionUnitValueModel.tuple(
           germanyClothSize,
           40,
           null,
-          listValues: const OutputListValuesBatch(
-            items: [],
-            pageNum: 1,
-          ),
         ),
       ],
     );
@@ -293,9 +280,12 @@ void main() {
                   'alt': 'Man',
                 },
                 'listValues': {
-                  'items': [],
-                  'hasReachedMax': false,
-                  'pageNum': 1,
+                  'items': [
+                    {'raw': 'Man', 'alt': 'Man'},
+                    {'raw': 'Woman', 'alt': 'Woman'}
+                  ],
+                  'hasReachedMax': true,
+                  'pageNum': 1
                 },
               },
               {
@@ -313,9 +303,12 @@ void main() {
                   'alt': 'Shirt',
                 },
                 'listValues': {
-                  'items': [],
-                  'hasReachedMax': false,
-                  'pageNum': 1,
+                  'items': [
+                    {'raw': 'Shirt', 'alt': 'Shirt'},
+                    {'raw': 'Trousers', 'alt': 'Trousers'}
+                  ],
+                  'hasReachedMax': true,
+                  'pageNum': 1
                 },
               },
               {
@@ -377,11 +370,6 @@ void main() {
             'oob': false
           },
           'value': {'raw': 'S', 'alt': 'S'},
-          'listValues': {
-            'items': [],
-            'hasReachedMax': false,
-            'pageNum': 1,
-          },
         },
         {
           'unit': {
@@ -395,11 +383,6 @@ void main() {
             'oob': false
           },
           'value': {'raw': '40', 'alt': '40', 'num': 40.0},
-          'listValues': {
-            'items': [],
-            'hasReachedMax': false,
-            'pageNum': 1,
-          },
         }
       ]
     };

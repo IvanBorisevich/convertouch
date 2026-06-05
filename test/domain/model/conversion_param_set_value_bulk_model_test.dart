@@ -21,7 +21,7 @@ final _clothesSizeParams = ConversionParamSetValueBulkModel(
   selectedIndex: 0,
 );
 
-const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
+final _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
   paramSetValues: [
     ConversionParamSetValueModel(
       paramSet: barbellWeightParamSet,
@@ -171,7 +171,7 @@ void main() {
           ),
           paramSetId: barbellWeightParamSet.id,
         ),
-        const ConversionParamSetValueBulkModel(
+        ConversionParamSetValueBulkModel(
           paramSetValues: [
             ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
@@ -203,7 +203,7 @@ void main() {
           ),
           paramSetId: barbellWeightParamSet.id,
         ),
-        const ConversionParamSetValueBulkModel(
+        ConversionParamSetValueBulkModel(
           paramSetValues: [
             ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,

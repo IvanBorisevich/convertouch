@@ -5,19 +5,52 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:rxdart/rxdart.dart';
 
-typedef OutputListValuesBatch
+typedef ListValuesFetchResult
     = OutputItemsFetchModel<ValueModel, ListValuesFetchParams>;
+
+typedef UnitValueRecord = (
+  UnitModel,
+  dynamic,
+  dynamic, {
+  ListValuesFetchResult? listValuesFetchResult,
+});
+
+typedef UnitValueRawRecord = (
+  UnitModel,
+  dynamic,
+  dynamic, {
+  ListValuesFetchResult? listValuesFetchResult,
+});
+
+typedef ParamValueRecord = (
+  ConversionParamModel,
+  dynamic,
+  dynamic, {
+  ListValuesFetchResult? listValuesFetchResult,
+  UnitModel? unit,
+  bool calculated
+});
+
+typedef ParamValueRawRecord = (
+  ConversionParamModel,
+  dynamic,
+  dynamic, {
+  ListValuesFetchResult? listValuesFetchResult,
+  UnitModel? unit,
+  bool calculated
+});
 
 abstract class ConversionItemValueModel extends ItemModel {
   final ValueModel? value;
   final ValueModel? defaultValue;
-  final OutputListValuesBatch? listValues;
+  final BehaviorSubject<ListValuesFetchResult?> listValuesBatchStream;
 
   const ConversionItemValueModel({
     this.value,
     this.defaultValue,
-    this.listValues,
+    required this.listValuesBatchStream,
   }) : super(
           itemType: ItemType.conversionItemValue,
         );
@@ -48,10 +81,13 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   UnitModel? get unitItem;
 
+  ListValuesFetchResult? get listValuesFetchResult =>
+      listValuesBatchStream.valueOrNull;
+
   ConversionItemValueModel copyWith({
     ValueModel? value,
     ValueModel? defaultValue,
-    OutputListValuesBatch? listValues,
+    ListValuesFetchResult? listValuesFetchResult,
   });
 
   bool get hasValue {
@@ -64,31 +100,45 @@ abstract class ConversionItemValueModel extends ItemModel {
         itemType,
         value,
         defaultValue,
-        listValues,
+        listValuesFetchResult,
       ];
 }
 
 class ConversionUnitValueModel extends ConversionItemValueModel {
   final UnitModel unit;
 
-  const ConversionUnitValueModel({
+  const ConversionUnitValueModel._({
     required this.unit,
     super.value,
     super.defaultValue,
-    super.listValues,
+    required super.listValuesBatchStream,
   });
+
+  factory ConversionUnitValueModel({
+    required UnitModel unit,
+    ValueModel? value,
+    ValueModel? defaultValue,
+    ListValuesFetchResult? listValuesFetchResult,
+  }) {
+    return ConversionUnitValueModel._(
+      unit: unit,
+      value: value,
+      defaultValue: defaultValue,
+      listValuesBatchStream: BehaviorSubject.seeded(listValuesFetchResult),
+    );
+  }
 
   factory ConversionUnitValueModel.tuple(
     UnitModel unit,
     dynamic value,
     dynamic defaultValue, {
-    OutputListValuesBatch? listValues,
+    ListValuesFetchResult? listValuesFetchResult,
   }) {
     return ConversionUnitValueModel(
       unit: unit,
       value: ValueModel.any(value),
       defaultValue: ValueModel.any(defaultValue),
-      listValues: listValues,
+      listValuesFetchResult: listValuesFetchResult,
     );
   }
 
@@ -97,13 +147,18 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     UnitModel? unit,
     ValueModel? value,
     ValueModel? defaultValue,
-    OutputListValuesBatch? listValues,
+    ListValuesFetchResult? listValuesFetchResult,
   }) {
-    return ConversionUnitValueModel(
+    return ConversionUnitValueModel._(
       unit: unit ?? this.unit,
-      value: value ?? this.value,
-      defaultValue: defaultValue ?? this.defaultValue,
-      listValues: listValues ?? this.listValues,
+      value: patchValueModel(thisValue: this.value, newValue: value),
+      defaultValue: patchValueModel(
+        thisValue: this.defaultValue,
+        newValue: defaultValue,
+      ),
+      listValuesBatchStream: listValuesFetchResult != null
+          ? (listValuesBatchStream..add(listValuesFetchResult))
+          : listValuesBatchStream,
     );
   }
 
@@ -131,7 +186,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
       "unit": unit.toJson(removeNulls: removeNulls),
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValues": listValues?.toJson(
+      "listValues": listValuesFetchResult?.toJson(
         removeNulls: removeNulls,
         saveParams: false,
       ),
@@ -152,7 +207,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
       unit: UnitModel.fromJson(json["unit"])!,
       value: ValueModel.fromJson(json["value"]),
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
-      listValues: OutputItemsFetchModel.fromJson(
+      listValuesFetchResult: OutputItemsFetchModel.fromJson(
         json["listValues"],
         fromItemJson: (e) => ValueModel.fromJson(e)!,
         fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
@@ -166,7 +221,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
         'unit: ${unit.code}, '
         'value: $value, '
         'default: $defaultValue, '
-        'listValues: $listValues}';
+        'listValues: $listValuesFetchResult}';
   }
 }
 
@@ -175,14 +230,32 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   final UnitModel? unit;
   final bool calculated;
 
-  const ConversionParamValueModel({
+  const ConversionParamValueModel._({
     required this.param,
     this.unit,
     this.calculated = false,
     super.value,
     super.defaultValue,
-    super.listValues,
+    required super.listValuesBatchStream,
   });
+
+  factory ConversionParamValueModel({
+    required ConversionParamModel param,
+    UnitModel? unit,
+    bool calculated = false,
+    ValueModel? value,
+    ValueModel? defaultValue,
+    ListValuesFetchResult? listValuesFetchResult,
+  }) {
+    return ConversionParamValueModel._(
+      param: param,
+      unit: unit,
+      calculated: calculated,
+      value: value,
+      defaultValue: defaultValue,
+      listValuesBatchStream: BehaviorSubject.seeded(listValuesFetchResult),
+    );
+  }
 
   factory ConversionParamValueModel.tuple(
     ConversionParamModel param,
@@ -190,7 +263,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     dynamic defaultValue, {
     bool calculated = false,
     UnitModel? unit,
-    OutputListValuesBatch? listValues,
+    ListValuesFetchResult? listValuesFetchResult,
   }) {
     return ConversionParamValueModel(
       param: param,
@@ -198,7 +271,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       calculated: calculated,
       value: ValueModel.any(value),
       defaultValue: ValueModel.any(defaultValue),
-      listValues: listValues,
+      listValuesFetchResult: listValuesFetchResult,
     );
   }
 
@@ -226,15 +299,21 @@ class ConversionParamValueModel extends ConversionItemValueModel {
     bool? calculated,
     ValueModel? value,
     ValueModel? defaultValue,
-    OutputListValuesBatch? listValues,
+    ListValuesFetchResult? listValuesFetchResult,
   }) {
-    return ConversionParamValueModel(
+    print(
+        "[ConversionParamValueModel] name: ${this.param.name}, stream id = ${listValuesBatchStream.hashCode}");
+
+    return ConversionParamValueModel._(
       param: param ?? this.param,
       unit: unit ?? this.unit,
       calculated: calculated ?? this.calculated,
-      value: value ?? this.value,
-      defaultValue: defaultValue ?? this.defaultValue,
-      listValues: listValues ?? this.listValues,
+      value: patchValueModel(thisValue: this.value, newValue: value),
+      defaultValue:
+          patchValueModel(thisValue: this.defaultValue, newValue: defaultValue),
+      listValuesBatchStream: listValuesFetchResult != null
+          ? (listValuesBatchStream..add(listValuesFetchResult))
+          : listValuesBatchStream,
     );
   }
 
@@ -255,7 +334,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValues": listValues?.toJson(
+      "listValues": listValuesFetchResult?.toJson(
         removeNulls: removeNulls,
         saveParams: false,
       ),
@@ -278,7 +357,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
       calculated: json["calculated"],
       value: ValueModel.fromJson(json["value"]),
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
-      listValues: OutputItemsFetchModel.fromJson(
+      listValuesFetchResult: OutputItemsFetchModel.fromJson(
         json['listValues'],
         fromItemJson: (e) => ValueModel.fromJson(e)!,
         fromParamsJson: (e) => ListValuesFetchParams.fromJson(e),
@@ -294,6 +373,6 @@ class ConversionParamValueModel extends ConversionItemValueModel {
         'calculated: $calculated, '
         'value: $value, '
         'default: $defaultValue, '
-        'listValues: $listValues}';
+        'listValues: $listValuesFetchResult}';
   }
 }

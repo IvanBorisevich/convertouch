@@ -96,13 +96,10 @@ class CalculateParamValueUseValue extends UseCase<
       }
 
       return Right(
-        ConversionParamValueModel(
-          param: input.paramValue.param,
+        input.paramValue.copyWith(
           unit: newUnit,
-          value: newValue,
-          defaultValue: newDefaultValue,
-          calculated: input.paramValue.calculated,
-          listValues: input.paramValue.listValues,
+          value: newValue ?? ValueModel.empty,
+          defaultValue: newDefaultValue ?? ValueModel.empty,
         ),
       );
     } else {
@@ -114,11 +111,9 @@ class CalculateParamValueUseValue extends UseCase<
         ObjectUtils.tryGet(
           await initParamListValuesUseCase.execute(
             InputParamListValuesInitModel(
-              itemValue: ConversionParamValueModel(
-                param: input.paramValue.param,
-                value: newValue,
+              itemValue: input.paramValue.copyWith(
+                value: newValue ?? ValueModel.empty,
                 unit: newUnit,
-                calculated: input.paramValue.calculated,
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,

@@ -1,10 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 
 class ConversionParamSetValueModel extends ItemModel {
   final ConversionParamSetModel paramSet;
@@ -24,16 +22,7 @@ class ConversionParamSetValueModel extends ItemModel {
 
   factory ConversionParamSetValueModel.compact({
     required ConversionParamSetModel paramSet,
-    required List<
-            (
-              ConversionParamModel,
-              dynamic,
-              dynamic, {
-              OutputListValuesBatch? listValues,
-              UnitModel? unit,
-              bool calculated
-            })>
-        paramValues,
+    required List<ParamValueRawRecord> paramValues,
   }) {
     return ConversionParamSetValueModel(
       paramSet: paramSet,
@@ -43,7 +32,7 @@ class ConversionParamSetValueModel extends ItemModel {
               r.$1,
               r.$2,
               r.$3,
-              listValues: r.listValues,
+              listValuesFetchResult: r.listValuesFetchResult,
               unit: r.unit,
               calculated: r.calculated,
             ),

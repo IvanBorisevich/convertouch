@@ -6,6 +6,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
@@ -131,20 +132,20 @@ void main() {
                   personParam,
                   null,
                   null,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
                   null,
                   null,
-                  listValues: const OutputListValuesBatch.empty(),
+                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   const NumRange.withRight(174, 180),
                   null,
                   unit: meter,
-                  listValues: const OutputListValuesBatch.empty(),
+                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
                 ),
               ],
             )
@@ -155,20 +156,20 @@ void main() {
           japanClothSize,
           null,
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             japanClothSize,
             null,
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           ),
           ConversionUnitValueModel.tuple(
             germanyClothSize,
             null,
             null,
-            listValues: germanyClothesSizes,
+            listValuesFetchResult: germanyClothesSizes,
           ),
         ],
       ).toJson(),
@@ -229,20 +230,20 @@ void main() {
                   personParam,
                   'Man',
                   null,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
                   null,
                   null,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   manShirtHeightRangesFrom0_164To190InMeter.items[3],
                   null,
                   unit: meter,
-                  listValues: const OutputListValuesBatch.empty(),
+                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
                 ),
               ],
             )
@@ -253,20 +254,20 @@ void main() {
           japanClothSize,
           null,
           null,
-          listValues: japanClothesSizes,
+          listValuesFetchResult: japanClothesSizes,
         ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             japanClothSize,
             null,
             null,
-            listValues: japanClothesSizes,
+            listValuesFetchResult: japanClothesSizes,
           ),
           ConversionUnitValueModel.tuple(
             germanyClothSize,
             null,
             null,
-            listValues: germanyClothesSizes,
+            listValuesFetchResult: germanyClothesSizes,
           ),
         ],
       ).toJson(),
@@ -316,7 +317,7 @@ void main() {
                   exchangeRateSourceBankParam,
                   null,
                   null,
-                  listValues: exchangeRateSources,
+                  listValuesFetchResult: exchangeRateSources,
                 ),
               ],
             )

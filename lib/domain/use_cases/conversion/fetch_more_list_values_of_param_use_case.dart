@@ -26,11 +26,11 @@ class FetchMoreListValuesOfParamUseCase
       changeFirstMatchedParamSetOnly: true,
       changeFirstMatchedParamOnly: true,
       paramFilter: (param) =>
-          param.param.id == delta.paramId && param.listValues != null,
+          param.param.id == delta.paramId && param.listValuesFetchResult != null,
       map: (param, paramSet) async {
-        OutputListValuesBatch currentBatch = param.listValues!;
+        ListValuesFetchResult currentBatch = param.listValuesFetchResult!;
 
-        OutputListValuesBatch newBatch = ObjectUtils.tryGet(
+        ListValuesFetchResult newBatch = ObjectUtils.tryGet(
           await fetchListValuesUseCase.execute(
             InputItemsFetchModel(
               searchString: currentBatch.searchString,
@@ -42,7 +42,7 @@ class FetchMoreListValuesOfParamUseCase
         );
 
         return param.copyWith(
-          listValues: newBatch.copyWith(
+          listValuesFetchResult: newBatch.copyWith(
             items: [
               ...currentBatch.items,
               ...newBatch.items,

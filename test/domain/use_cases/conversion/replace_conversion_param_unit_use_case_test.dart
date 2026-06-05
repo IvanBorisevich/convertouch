@@ -85,7 +85,7 @@ void main() {
                   barWeightParamPoundListValues.items[0],
                   null,
                   unit: pound,
-                  listValues: barWeightParamPoundListValues,
+                  listValuesFetchResult: barWeightParamPoundListValues,
                 ),
                 ConversionParamValueModel.tuple(oneSideWeightParam, 45, 1,
                     unit: kilogram),

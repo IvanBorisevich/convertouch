@@ -7,55 +7,55 @@ import 'package:convertouch/domain/utils/list_values_utils.dart';
 
 import 'mock_unit.dart';
 
-final OutputListValuesBatch japanClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult japanClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeJp]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch usaClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult usaClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeUs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch italianClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult italianClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeIt]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch europeanClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult europeanClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeEu]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch spainClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult spainClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeEs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch germanyClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult germanyClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeDe]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch personParamListValues = OutputItemsFetchModel(
+final ListValuesFetchResult personParamListValues = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.person]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch garmentParamListValues = OutputItemsFetchModel(
+const ListValuesFetchResult garmentParamListValues = OutputItemsFetchModel(
   items: [
     ValueModel.rawStr('Shirt'),
     ValueModel.rawStr('Trousers'),
@@ -64,14 +64,14 @@ const OutputListValuesBatch garmentParamListValues = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch barWeightParamKgListValues = OutputItemsFetchModel(
+final ListValuesFetchResult barWeightParamKgListValues = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.barbellBarWeight]!
       .buildListValues(unit: kilogram),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch barWeightParamPoundListValues =
+final ListValuesFetchResult barWeightParamPoundListValues =
     OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.barbellBarWeight]!
       .buildListValues(unit: pound),
@@ -79,7 +79,7 @@ final OutputListValuesBatch barWeightParamPoundListValues =
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InCm =
+final ListValuesFetchResult womanTrousersHeightRangesFrom0_156To186InCm =
     OutputItemsFetchModel(
   items: [
     ValueModel.range(const NumRange.withRight(0, 156)),
@@ -94,7 +94,7 @@ final OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InCm =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InMeter =
+const ListValuesFetchResult womanTrousersHeightRangesFrom0_156To186InMeter =
     OutputItemsFetchModel(
   items: [
     ValueModel(
@@ -128,7 +128,7 @@ const OutputListValuesBatch womanTrousersHeightRangesFrom0_156To186InMeter =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InCm =
+const ListValuesFetchResult manShirtHeightRangesFrom0_164To190InCm =
     OutputItemsFetchModel(
   items: [
     ValueModel(
@@ -166,7 +166,7 @@ const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InCm =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InMeter =
+const ListValuesFetchResult manShirtHeightRangesFrom0_164To190InMeter =
     OutputItemsFetchModel(
   items: [
     ValueModel(
@@ -204,7 +204,7 @@ const OutputListValuesBatch manShirtHeightRangesFrom0_164To190InMeter =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InCm =
+const ListValuesFetchResult manTrousersHeightRangesFrom0_164To188InCm =
     OutputItemsFetchModel(
   items: [
     ValueModel(
@@ -238,7 +238,7 @@ const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InCm =
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InMeter =
+const ListValuesFetchResult manTrousersHeightRangesFrom0_164To188InMeter =
     OutputItemsFetchModel(
   items: [
     ValueModel(
@@ -272,46 +272,46 @@ const OutputListValuesBatch manTrousersHeightRangesFrom0_164To188InMeter =
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch esRingSizes = OutputItemsFetchModel(
+final ListValuesFetchResult esRingSizes = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringSizeEs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch usaRingSizes = OutputItemsFetchModel(
+final ListValuesFetchResult usaRingSizes = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringSizeUs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch frRingSizes = OutputItemsFetchModel(
+final ListValuesFetchResult frRingSizes = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringSizeFr]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch ringDiameterRangesInMm = OutputItemsFetchModel(
+final ListValuesFetchResult ringDiameterRangesInMm = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringDiameterRange]!
       .buildListValues(unit: millimeter),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch ringDiameterRangesInCm = OutputItemsFetchModel(
+final ListValuesFetchResult ringDiameterRangesInCm = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringDiameterRange]!
       .buildListValues(unit: centimeter),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final OutputListValuesBatch ringCircumferenceRangesInMm = OutputItemsFetchModel(
+final ListValuesFetchResult ringCircumferenceRangesInMm = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringCircumferenceRange]!
       .buildListValues(unit: millimeter),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-const OutputListValuesBatch exchangeRateSources = OutputListValuesBatch(
+const ListValuesFetchResult exchangeRateSources = ListValuesFetchResult(
   items: [
     ValueModel.rawStr('FloatRates'),
   ],

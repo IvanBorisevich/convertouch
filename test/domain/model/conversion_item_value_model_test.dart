@@ -14,7 +14,7 @@ void main() {
       10,
       null,
       unit: kilogram,
-      listValues: const OutputListValuesBatch(
+      listValuesFetchResult: const ListValuesFetchResult(
         items: [],
         pageNum: 1,
         hasReachedMax: true,
@@ -79,7 +79,7 @@ void main() {
   });
 
   group('For conversion unit value', () {
-    const ConversionUnitValueModel unitValue = ConversionUnitValueModel(
+    final ConversionUnitValueModel unitValue = ConversionUnitValueModel(
       unit: meter,
       value: ValueModel.one,
       defaultValue: ValueModel.one,

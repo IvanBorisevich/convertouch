@@ -270,7 +270,7 @@ const _conversionItemTextBox = TextBoxColorScheme(
   ),
   label: MultiColor(
     regular: Color(0xFF63A4E4),
-    disabled: Color(0xFF5382B1),
+    disabled: Color(0xFF536C85),
   ),
   tooltip: _notification,
 );

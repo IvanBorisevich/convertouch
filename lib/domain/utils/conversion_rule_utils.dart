@@ -55,7 +55,7 @@ List<ConversionUnitValueModel> calculateUnitValues(
         unit: tgtUnit,
         value: value,
         defaultValue: defaultValue,
-        listValues: tgtItem.listValues,
+        listValuesFetchResult: tgtItem.listValuesFetchResult,
       ),
     );
   }
@@ -106,8 +106,7 @@ ConversionParamValueModel calculateParamValueForNewUnit({
       params: params,
     );
 
-    return ConversionParamValueModel(
-      param: paramValue.param,
+    return paramValue.copyWith(
       value: paramValue.value!.copyWith(
         alt: listPublicValue,
       ),
@@ -139,10 +138,9 @@ ConversionParamValueModel calculateParamValueForNewUnit({
     mapping: mappingTable,
   );
 
-  return ConversionParamValueModel(
-    param: paramValue.param,
-    value: value,
-    defaultValue: defaultValue,
+  return paramValue.copyWith(
+    value: value ?? ValueModel.empty,
+    defaultValue: defaultValue ?? ValueModel.empty,
     unit: tgtParamUnit,
   );
 }

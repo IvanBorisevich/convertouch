@@ -76,7 +76,7 @@ void main() {
                 null,
                 unit: kilogram,
                 calculated: false,
-                listValues: barWeightParamKgListValues
+                listValuesFetchResult: barWeightParamKgListValues
               ),
               (
                 oneSideWeightParam,
@@ -84,18 +84,18 @@ void main() {
                 1,
                 unit: kilogram,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           ),
-          currentSrc: (ton, 1.01, 0.012, listValues: null),
+          currentSrc: (ton, 1.01, 0.012, listValuesFetchResult: null),
           currentUnitValues: [
-            (ton, 1.01, 0.012, listValues: null),
+            (ton, 1.01, 0.012, listValuesFetchResult: null),
             (
               pound,
               1010 / pound.coefficient!,
               12 / pound.coefficient!,
-              listValues: null
+              listValuesFetchResult: null
             ),
           ],
           expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -107,7 +107,7 @@ void main() {
                 null,
                 unit: kilogram,
                 calculated: false,
-                listValues: barWeightParamKgListValues,
+                listValuesFetchResult: barWeightParamKgListValues,
               ),
               (
                 oneSideWeightParam,
@@ -115,18 +115,18 @@ void main() {
                 1,
                 unit: kilogram,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           ),
-          expectedSrc: (ton, 1.02, 0.022, listValues: null),
+          expectedSrc: (ton, 1.02, 0.022, listValuesFetchResult: null),
           expectedUnitValues: [
-            (ton, 1.02, 0.022, listValues: null),
+            (ton, 1.02, 0.022, listValuesFetchResult: null),
             (
               pound,
               1020 / pound.coefficient!,
               22 / pound.coefficient!,
-              listValues: null
+              listValuesFetchResult: null
             ),
           ],
         );
@@ -150,7 +150,7 @@ void main() {
                 null,
                 unit: pound,
                 calculated: false,
-                listValues: null,
+                listValuesFetchResult: null,
               ),
               (
                 oneSideWeightParam,
@@ -158,18 +158,18 @@ void main() {
                 1,
                 unit: kilogram,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           ),
-          currentSrc: (ton, 1.01, 0.012, listValues: null),
+          currentSrc: (ton, 1.01, 0.012, listValuesFetchResult: null),
           currentUnitValues: [
-            (ton, 1.01, 0.012, listValues: null),
+            (ton, 1.01, 0.012, listValuesFetchResult: null),
             (
               pound,
               1010 / pound.coefficient!,
               12 / pound.coefficient!,
-              listValues: null
+              listValuesFetchResult: null
             ),
           ],
           expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -181,7 +181,7 @@ void main() {
                 null,
                 unit: pound,
                 calculated: false,
-                listValues: barWeightParamPoundListValues,
+                listValuesFetchResult: barWeightParamPoundListValues,
               ),
               (
                 oneSideWeightParam,
@@ -189,18 +189,18 @@ void main() {
                 1,
                 unit: kilogram,
                 calculated: false,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           ),
-          expectedSrc: (ton, 1.02, 0.022, listValues: null),
+          expectedSrc: (ton, 1.02, 0.022, listValuesFetchResult: null),
           expectedUnitValues: [
-            (ton, 1.02, 0.022, listValues: null),
+            (ton, 1.02, 0.022, listValuesFetchResult: null),
             (
               pound,
               1020 / pound.coefficient!,
               22 / pound.coefficient!,
-              listValues: null
+              listValuesFetchResult: null
             ),
           ],
         );
@@ -229,7 +229,7 @@ void main() {
                   null,
                   unit: kilogram,
                   calculated: false,
-                  listValues: barWeightParamKgListValues,
+                  listValuesFetchResult: barWeightParamKgListValues,
                 ),
                 (
                   oneSideWeightParam,
@@ -237,18 +237,18 @@ void main() {
                   1,
                   unit: kilogram,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
-            currentSrc: (kilogram, 70, 12, listValues: null),
+            currentSrc: (kilogram, 70, 12, listValuesFetchResult: null),
             currentUnitValues: [
-              (kilogram, 70, 12, listValues: null),
+              (kilogram, 70, 12, listValuesFetchResult: null),
               (
                 pound,
                 70 / pound.coefficient!,
                 12 / pound.coefficient!,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -260,7 +260,7 @@ void main() {
                   null,
                   unit: kilogram,
                   calculated: false,
-                  listValues: barWeightParamKgListValues,
+                  listValuesFetchResult: barWeightParamKgListValues,
                 ),
                 (
                   oneSideWeightParam,
@@ -268,18 +268,18 @@ void main() {
                   1,
                   unit: kilogram,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
-            expectedSrc: (kilogram, 90, 12, listValues: null),
+            expectedSrc: (kilogram, 90, 12, listValuesFetchResult: null),
             expectedUnitValues: [
-              (kilogram, 90, 12, listValues: null),
+              (kilogram, 90, 12, listValuesFetchResult: null),
               (
                 pound,
                 90 / pound.coefficient!,
                 12 / pound.coefficient!,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           );
@@ -304,7 +304,7 @@ void main() {
                   null,
                   unit: pound,
                   calculated: false,
-                  listValues: barWeightParamPoundListValues,
+                  listValuesFetchResult: barWeightParamPoundListValues,
                 ),
                 (
                   oneSideWeightParam,
@@ -312,18 +312,18 @@ void main() {
                   1,
                   unit: kilogram,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
-            currentSrc: (kilogram, 70, 12, listValues: null),
+            currentSrc: (kilogram, 70, 12, listValuesFetchResult: null),
             currentUnitValues: [
-              (kilogram, 70, 12, listValues: null),
+              (kilogram, 70, 12, listValuesFetchResult: null),
               (
                 pound,
                 70 / pound.coefficient!,
                 12 / pound.coefficient!,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -335,7 +335,7 @@ void main() {
                   null,
                   unit: pound,
                   calculated: false,
-                  listValues: barWeightParamPoundListValues,
+                  listValuesFetchResult: barWeightParamPoundListValues,
                 ),
                 (
                   oneSideWeightParam,
@@ -343,18 +343,18 @@ void main() {
                   1,
                   unit: kilogram,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
-            expectedSrc: (kilogram, 90, 12, listValues: null),
+            expectedSrc: (kilogram, 90, 12, listValuesFetchResult: null),
             expectedUnitValues: [
-              (kilogram, 90, 12, listValues: null),
+              (kilogram, 90, 12, listValuesFetchResult: null),
               (
                 pound,
                 90 / pound.coefficient!,
                 12 / pound.coefficient!,
-                listValues: null
+                listValuesFetchResult: null
               ),
             ],
           );
@@ -385,7 +385,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues
+                  listValuesFetchResult: personParamListValues
                 ),
                 (
                   garmentParam,
@@ -393,7 +393,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -401,7 +401,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
@@ -409,26 +409,26 @@ void main() {
               spainClothSize,
               null,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
                 italianClothSize,
                 null,
                 null,
-                listValues: italianClothesSizes,
+                listValuesFetchResult: italianClothesSizes,
               ),
               (
                 spainClothSize,
                 null,
                 null,
-                listValues: spainClothesSizes,
+                listValuesFetchResult: spainClothesSizes,
               ),
               (
                 germanyClothSize,
                 null,
                 null,
-                listValues: germanyClothesSizes,
+                listValuesFetchResult: germanyClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -440,7 +440,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -448,7 +448,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -456,7 +456,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+                  listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
                 ),
               ],
             ),
@@ -464,17 +464,17 @@ void main() {
               spainClothSize,
               34,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             expectedUnitValues: [
-              (italianClothSize, 38, null, listValues: italianClothesSizes),
+              (italianClothSize, 38, null, listValuesFetchResult: italianClothesSizes),
               (
                 spainClothSize,
                 34,
                 null,
-                listValues: spainClothesSizes,
+                listValuesFetchResult: spainClothesSizes,
               ),
-              (germanyClothSize, 32, null, listValues: germanyClothesSizes),
+              (germanyClothSize, 32, null, listValuesFetchResult: germanyClothesSizes),
             ],
           );
         });
@@ -498,7 +498,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -506,7 +506,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -514,7 +514,7 @@ void main() {
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
@@ -522,26 +522,26 @@ void main() {
               spainClothSize,
               null,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
                 italianClothSize,
                 null,
                 null,
-                listValues: italianClothesSizes,
+                listValuesFetchResult: italianClothesSizes,
               ),
               (
                 spainClothSize,
                 null,
                 null,
-                listValues: spainClothesSizes,
+                listValuesFetchResult: spainClothesSizes,
               ),
               (
                 germanyClothSize,
                 null,
                 null,
-                listValues: germanyClothesSizes,
+                listValuesFetchResult: germanyClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -553,7 +553,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -561,7 +561,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -569,7 +569,7 @@ void main() {
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+                  listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
                 ),
               ],
             ),
@@ -577,26 +577,26 @@ void main() {
               spainClothSize,
               34,
               null,
-              listValues: spainClothesSizes
+              listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
               (
                 italianClothSize,
                 38,
                 null,
-                listValues: italianClothesSizes,
+                listValuesFetchResult: italianClothesSizes,
               ),
               (
                 spainClothSize,
                 34,
                 null,
-                listValues: spainClothesSizes,
+                listValuesFetchResult: spainClothesSizes,
               ),
               (
                 germanyClothSize,
                 32,
                 null,
-                listValues: germanyClothesSizes,
+                listValuesFetchResult: germanyClothesSizes,
               ),
             ],
           );
@@ -622,7 +622,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -630,7 +630,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
                 (
                   heightParam,
@@ -638,7 +638,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
@@ -646,26 +646,26 @@ void main() {
               spainClothSize,
               40,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
                 italianClothSize,
                 48,
                 null,
-                listValues: italianClothesSizes,
+                listValuesFetchResult: italianClothesSizes,
               ),
               (
                 spainClothSize,
                 40,
                 null,
-                listValues: spainClothesSizes,
+                listValuesFetchResult: spainClothesSizes,
               ),
               (
                 germanyClothSize,
                 46,
                 null,
-                listValues: germanyClothesSizes,
+                listValuesFetchResult: germanyClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -677,7 +677,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -685,7 +685,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -693,7 +693,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+                  listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
                 ),
               ],
             ),
@@ -701,12 +701,12 @@ void main() {
               spainClothSize,
               42,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             expectedUnitValues: [
-              (italianClothSize, 46, null, listValues: italianClothesSizes),
-              (spainClothSize, 42, null, listValues: spainClothesSizes),
-              (germanyClothSize, 40, null, listValues: germanyClothesSizes),
+              (italianClothSize, 46, null, listValuesFetchResult: italianClothesSizes),
+              (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
+              (germanyClothSize, 40, null, listValuesFetchResult: germanyClothesSizes),
             ],
           );
         });
@@ -735,7 +735,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -743,7 +743,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -751,7 +751,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
@@ -759,12 +759,12 @@ void main() {
               spainClothSize,
               40,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
-              (italianClothSize, 48, null, listValues: italianClothesSizes),
-              (spainClothSize, 40, null, listValues: spainClothesSizes),
-              (germanyClothSize, 46, null, listValues: germanyClothesSizes),
+              (italianClothSize, 48, null, listValuesFetchResult: italianClothesSizes),
+              (spainClothSize, 40, null, listValuesFetchResult: spainClothesSizes),
+              (germanyClothSize, 46, null, listValuesFetchResult: germanyClothesSizes),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
               paramSet: clothesSizeParamSet,
@@ -775,7 +775,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -783,7 +783,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -791,7 +791,7 @@ void main() {
                   null,
                   unit: centimeter,
                   calculated: false,
-                  listValues: manTrousersHeightRangesFrom0_164To188InCm,
+                  listValuesFetchResult: manTrousersHeightRangesFrom0_164To188InCm,
                 ),
               ],
             ),
@@ -799,12 +799,12 @@ void main() {
               spainClothSize,
               36,
               null,
-              listValues: spainClothesSizes
+              listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
-              (italianClothSize, 44, null, listValues: italianClothesSizes),
-              (spainClothSize, 36, null, listValues: spainClothesSizes),
-              (germanyClothSize, 44, null, listValues: germanyClothesSizes),
+              (italianClothSize, 44, null, listValuesFetchResult: italianClothesSizes),
+              (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+              (germanyClothSize, 44, null, listValuesFetchResult: germanyClothesSizes),
             ],
           );
         });
@@ -829,7 +829,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -837,7 +837,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -845,7 +845,7 @@ void main() {
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: null
+                  listValuesFetchResult: null
                 ),
               ],
             ),
@@ -853,12 +853,12 @@ void main() {
               spainClothSize,
               40,
               null,
-              listValues: spainClothesSizes,
+              listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
-              (italianClothSize, 48, null, listValues: italianClothesSizes),
-              (spainClothSize, 40, null, listValues: spainClothesSizes),
-              (germanyClothSize, 46, null, listValues: germanyClothesSizes),
+              (italianClothSize, 48, null, listValuesFetchResult: italianClothesSizes),
+              (spainClothSize, 40, null, listValuesFetchResult: spainClothesSizes),
+              (germanyClothSize, 46, null, listValuesFetchResult: germanyClothesSizes),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
               paramSet: clothesSizeParamSet,
@@ -869,7 +869,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: personParamListValues,
+                  listValuesFetchResult: personParamListValues,
                 ),
                 (
                   garmentParam,
@@ -877,7 +877,7 @@ void main() {
                   null,
                   unit: null,
                   calculated: false,
-                  listValues: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues,
                 ),
                 (
                   heightParam,
@@ -885,7 +885,7 @@ void main() {
                   null,
                   unit: meter,
                   calculated: false,
-                  listValues: manTrousersHeightRangesFrom0_164To188InMeter,
+                  listValuesFetchResult: manTrousersHeightRangesFrom0_164To188InMeter,
                 ),
               ],
             ),
@@ -893,12 +893,12 @@ void main() {
               spainClothSize,
               36,
               null,
-              listValues: spainClothesSizes
+              listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
-              (italianClothSize, 44, null, listValues: italianClothesSizes),
-              (spainClothSize, 36, null, listValues: spainClothesSizes),
-              (germanyClothSize, 44, null, listValues: germanyClothesSizes),
+              (italianClothSize, 44, null, listValuesFetchResult: italianClothesSizes),
+              (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+              (germanyClothSize, 44, null, listValuesFetchResult: germanyClothesSizes),
             ],
           );
         });
@@ -924,7 +924,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: personParamListValues,
+              listValuesFetchResult: personParamListValues,
             ),
             (
               garmentParam,
@@ -932,7 +932,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: garmentParamListValues,
+              listValuesFetchResult: garmentParamListValues,
             ),
             (
               heightParam,
@@ -940,7 +940,7 @@ void main() {
               null,
               unit: centimeter,
               calculated: false,
-              listValues: manShirtHeightRangesFrom0_164To190InCm,
+              listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
             ),
           ],
         ),
@@ -948,12 +948,12 @@ void main() {
           spainClothSize,
           36,
           null,
-          listValues: spainClothesSizes,
+          listValuesFetchResult: spainClothesSizes,
         ),
         currentUnitValues: [
-          (italianClothSize, 44, null, listValues: italianClothesSizes),
-          (spainClothSize, 36, null, listValues: spainClothesSizes),
-          (germanyClothSize, 42, null, listValues: germanyClothesSizes),
+          (italianClothSize, 44, null, listValuesFetchResult: italianClothesSizes),
+          (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+          (germanyClothSize, 42, null, listValuesFetchResult: germanyClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -964,7 +964,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: personParamListValues,
+              listValuesFetchResult: personParamListValues,
             ),
             (
               garmentParam,
@@ -972,7 +972,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: garmentParamListValues,
+              listValuesFetchResult: garmentParamListValues,
             ),
             (
               heightParam,
@@ -980,15 +980,15 @@ void main() {
               null,
               unit: centimeter,
               calculated: false,
-              listValues: manShirtHeightRangesFrom0_164To190InCm,
+              listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
             ),
           ],
         ),
-        expectedSrc: (spainClothSize, 42, null, listValues: spainClothesSizes),
+        expectedSrc: (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
         expectedUnitValues: [
-          (italianClothSize, 50, null, listValues: italianClothesSizes),
-          (spainClothSize, 42, null, listValues: spainClothesSizes),
-          (germanyClothSize, 48, null, listValues: germanyClothesSizes),
+          (italianClothSize, 50, null, listValuesFetchResult: italianClothesSizes),
+          (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
+          (germanyClothSize, 48, null, listValuesFetchResult: germanyClothesSizes),
         ],
       );
     });
@@ -1012,7 +1012,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: personParamListValues,
+              listValuesFetchResult: personParamListValues,
             ),
             (
               garmentParam,
@@ -1020,7 +1020,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: garmentParamListValues,
+              listValuesFetchResult: garmentParamListValues,
             ),
             (
               heightParam,
@@ -1028,15 +1028,15 @@ void main() {
               null,
               unit: meter,
               calculated: false,
-              listValues: manShirtHeightRangesFrom0_164To190InMeter,
+              listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
             ),
           ],
         ),
-        currentSrc: (spainClothSize, 36, null, listValues: spainClothesSizes),
+        currentSrc: (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
         currentUnitValues: [
-          (italianClothSize, 44, null, listValues: italianClothesSizes),
-          (spainClothSize, 36, null, listValues: spainClothesSizes),
-          (germanyClothSize, 42, null, listValues: germanyClothesSizes),
+          (italianClothSize, 44, null, listValuesFetchResult: italianClothesSizes),
+          (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+          (germanyClothSize, 42, null, listValuesFetchResult: germanyClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -1047,7 +1047,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: personParamListValues,
+              listValuesFetchResult: personParamListValues,
             ),
             (
               garmentParam,
@@ -1055,7 +1055,7 @@ void main() {
               null,
               unit: null,
               calculated: false,
-              listValues: garmentParamListValues,
+              listValuesFetchResult: garmentParamListValues,
             ),
             (
               heightParam,
@@ -1063,15 +1063,15 @@ void main() {
               null,
               unit: meter,
               calculated: false,
-              listValues: manShirtHeightRangesFrom0_164To190InMeter,
+              listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
             ),
           ],
         ),
-        expectedSrc: (spainClothSize, 42, null, listValues: spainClothesSizes),
+        expectedSrc: (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
         expectedUnitValues: [
-          (italianClothSize, 50, null, listValues: italianClothesSizes),
-          (spainClothSize, 42, null, listValues: spainClothesSizes),
-          (germanyClothSize, 48, null, listValues: germanyClothesSizes),
+          (italianClothSize, 50, null, listValuesFetchResult: italianClothesSizes),
+          (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
+          (germanyClothSize, 48, null, listValuesFetchResult: germanyClothesSizes),
         ],
       );
     });

@@ -174,20 +174,20 @@ void main() {
             europeanClothSize,
             44,
             null,
-            listValues: europeanClothesSizes,
+            listValuesFetchResult: europeanClothesSizes,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(
               europeanClothSize,
               44,
               null,
-              listValues: europeanClothesSizes,
+              listValuesFetchResult: europeanClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               japanClothSize,
               'M',
               null,
-              listValues: japanClothesSizes,
+              listValuesFetchResult: japanClothesSizes,
             ),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
@@ -209,20 +209,20 @@ void main() {
             usaClothSize,
             2,
             null,
-            listValues: usaClothesSizes,
+            listValuesFetchResult: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               usaClothSize,
               2,
               null,
-              listValues: usaClothesSizes,
+              listValuesFetchResult: usaClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               japanClothSize,
               null,
               null,
-              listValues: japanClothesSizes,
+              listValuesFetchResult: japanClothesSizes,
             ),
           ],
         );
@@ -279,14 +279,14 @@ void main() {
             usaClothSize,
             30,
             null,
-            listValues: usaClothesSizes,
+            listValuesFetchResult: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               usaClothSize,
               30,
               null,
-              listValues: usaClothesSizes,
+              listValuesFetchResult: usaClothesSizes,
             ),
             ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
           ],

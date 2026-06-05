@@ -3,7 +3,6 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -56,36 +55,12 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
   required AbstractModifyConversionUseCase<T> useCase,
   required T delta,
   required UnitGroupModel unitGroup,
-  (
-    UnitModel,
-    dynamic,
-    dynamic, {
-    OutputListValuesBatch? listValues,
-  })? currentSrc,
+  UnitValueRawRecord? currentSrc,
   ConversionParamSetValueBulkModel? currentParams,
-  required List<
-          (
-            UnitModel,
-            dynamic,
-            dynamic, {
-            OutputListValuesBatch? listValues,
-          })>
-      currentUnitValues,
-  (
-    UnitModel,
-    dynamic,
-    dynamic, {
-    OutputListValuesBatch? listValues,
-  })? expectedSrc,
+  required List<UnitValueRawRecord> currentUnitValues,
+  UnitValueRawRecord? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
-  required List<
-          (
-            UnitModel,
-            dynamic,
-            dynamic, {
-            OutputListValuesBatch? listValues,
-          })>
-      expectedUnitValues,
+  required List<UnitValueRawRecord> expectedUnitValues,
 }) async {
   await testCase(
     useCase: useCase,
@@ -97,7 +72,7 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
             currentSrc.$1,
             currentSrc.$2,
             currentSrc.$3,
-            listValues: currentSrc.listValues,
+            listValuesFetchResult: currentSrc.listValuesFetchResult,
           )
         : null,
     currentUnitValues: currentUnitValues
@@ -106,7 +81,7 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
             r.$1,
             r.$2,
             r.$3,
-            listValues: r.listValues,
+            listValuesFetchResult: r.listValuesFetchResult,
           ),
         )
         .toList(),
@@ -115,7 +90,7 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
             expectedSrc.$1,
             expectedSrc.$2,
             expectedSrc.$3,
-            listValues: expectedSrc.listValues,
+            listValuesFetchResult: expectedSrc.listValuesFetchResult,
           )
         : null,
     expectedParams: expectedParams,
@@ -125,7 +100,7 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
             r.$1,
             r.$2,
             r.$3,
-            listValues: r.listValues,
+            listValuesFetchResult: r.listValuesFetchResult,
           ),
         )
         .toList(),

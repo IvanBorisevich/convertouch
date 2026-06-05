@@ -6,6 +6,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
@@ -98,7 +99,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -106,7 +107,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -120,7 +121,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null,
+            listValuesFetchResult: null,
           ),
           (
             oneSideWeightParam,
@@ -128,7 +129,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -159,7 +160,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -167,7 +168,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -181,7 +182,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null,
+            listValuesFetchResult: null,
           ),
           (
             oneSideWeightParam,
@@ -189,7 +190,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -221,7 +222,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -229,7 +230,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -243,7 +244,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -251,7 +252,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -282,7 +283,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -290,7 +291,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -304,7 +305,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -312,7 +313,7 @@ void main() {
             30,
             unit: kilogram,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -339,7 +340,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -347,7 +348,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -361,7 +362,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -369,7 +370,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -397,7 +398,7 @@ void main() {
             null,
             unit: pound,
             calculated: false,
-            listValues: null,
+            listValuesFetchResult: null,
           ),
           (
             oneSideWeightParam,
@@ -405,7 +406,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -419,7 +420,7 @@ void main() {
             null,
             unit: pound,
             calculated: false,
-            listValues: barWeightParamPoundListValues,
+            listValuesFetchResult: barWeightParamPoundListValues,
           ),
           (
             oneSideWeightParam,
@@ -427,7 +428,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -455,7 +456,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -463,7 +464,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -477,7 +478,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -485,7 +486,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -516,7 +517,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             oneSideWeightParam,
@@ -524,7 +525,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -538,7 +539,7 @@ void main() {
             null,
             unit: pound,
             calculated: false,
-            listValues: barWeightParamPoundListValues,
+            listValuesFetchResult: barWeightParamPoundListValues,
           ),
           (
             oneSideWeightParam,
@@ -546,7 +547,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -576,7 +577,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -584,7 +585,7 @@ void main() {
             1,
             unit: kilogram,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -598,7 +599,7 @@ void main() {
             null,
             unit: kilogram,
             calculated: false,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
@@ -606,7 +607,7 @@ void main() {
             1 / pound.coefficient!,
             unit: pound,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -644,7 +645,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -652,7 +653,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -660,7 +661,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -674,7 +675,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -682,7 +683,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -690,7 +691,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -720,7 +721,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -728,7 +729,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -736,7 +737,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -750,7 +751,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -758,7 +759,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -766,7 +767,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: true,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -796,7 +797,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -804,7 +805,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -812,7 +813,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -826,7 +827,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -834,7 +835,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -842,7 +843,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: true,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -876,7 +877,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -884,7 +885,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -892,7 +893,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: true,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -906,7 +907,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -914,7 +915,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null,
+            listValuesFetchResult: null,
           ),
           (
             heightParam,
@@ -922,7 +923,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: true,
-            listValues: const OutputListValuesBatch.empty(),
+            listValuesFetchResult: const OutputItemsFetchModel.empty(),
           ),
         ],
       );
@@ -953,7 +954,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -961,7 +962,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -969,7 +970,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -983,7 +984,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -991,7 +992,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -999,7 +1000,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+            listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -1030,7 +1031,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1038,7 +1039,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -1046,7 +1047,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -1060,7 +1061,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1068,7 +1069,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1076,7 +1077,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+            listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
           ),
         ],
       );
@@ -1107,7 +1108,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1115,7 +1116,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
           (
             heightParam,
@@ -1123,7 +1124,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -1137,7 +1138,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1145,7 +1146,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1153,7 +1154,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+            listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
           ),
         ],
       );
@@ -1184,7 +1185,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1192,7 +1193,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1200,7 +1201,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -1214,7 +1215,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1222,7 +1223,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1230,7 +1231,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: manTrousersHeightRangesFrom0_164To188InCm,
+            listValuesFetchResult: manTrousersHeightRangesFrom0_164To188InCm,
           ),
         ],
       );
@@ -1261,7 +1262,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1269,7 +1270,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1277,7 +1278,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: null
+            listValuesFetchResult: null
           ),
         ],
       );
@@ -1291,7 +1292,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1299,7 +1300,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1307,7 +1308,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: manTrousersHeightRangesFrom0_164To188InMeter,
+            listValuesFetchResult: manTrousersHeightRangesFrom0_164To188InMeter,
           ),
         ],
       );
@@ -1338,7 +1339,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1346,7 +1347,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1354,7 +1355,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1368,7 +1369,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1376,7 +1377,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1384,7 +1385,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1416,7 +1417,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1424,7 +1425,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1432,7 +1433,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InMeter,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1446,7 +1447,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1454,7 +1455,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1462,7 +1463,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InMeter,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1495,7 +1496,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1503,7 +1504,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1511,7 +1512,7 @@ void main() {
             null,
             unit: centimeter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InCm,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1525,7 +1526,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: personParamListValues,
+            listValuesFetchResult: personParamListValues,
           ),
           (
             garmentParam,
@@ -1533,7 +1534,7 @@ void main() {
             null,
             unit: null,
             calculated: false,
-            listValues: garmentParamListValues,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
@@ -1541,7 +1542,7 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValues: manShirtHeightRangesFrom0_164To190InMeter,
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
           ),
         ],
       );
@@ -1583,7 +1584,7 @@ void main() {
             exchangeRateSourceBankParam,
             null,
             null,
-            listValues: exchangeRateSources,
+            listValuesFetchResult: exchangeRateSources,
           ),
         ],
       );

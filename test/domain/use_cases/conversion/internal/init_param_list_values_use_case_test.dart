@@ -61,7 +61,7 @@ void main() {
           10,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -91,7 +91,7 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -121,7 +121,7 @@ void main() {
           10,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -154,7 +154,7 @@ void main() {
           null,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -185,7 +185,7 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -216,7 +216,7 @@ void main() {
           15,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -252,7 +252,7 @@ void main() {
           barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -282,7 +282,7 @@ void main() {
           barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -312,7 +312,7 @@ void main() {
           barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -345,7 +345,7 @@ void main() {
           null,
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -376,7 +376,7 @@ void main() {
           44,
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -407,7 +407,7 @@ void main() {
           15,
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -438,7 +438,7 @@ void main() {
           garmentParam,
           'Shirt',
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -467,7 +467,7 @@ void main() {
           garmentParam,
           'Shirt',
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -497,7 +497,7 @@ void main() {
           garmentParam,
           'Shirt',
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -526,7 +526,7 @@ void main() {
           garmentParam,
           null,
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -556,7 +556,7 @@ void main() {
           garmentParam,
           'Shirt',
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -586,7 +586,7 @@ void main() {
           garmentParam,
           'Pants',
           null,
-          listValues: garmentParamListValues,
+          listValuesFetchResult: garmentParamListValues,
         );
 
         await testCase(
@@ -620,7 +620,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InCm.items[0],
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -650,7 +650,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InCm.items[3],
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -681,7 +681,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InCm.items[0],
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -714,7 +714,7 @@ void main() {
           null,
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -745,7 +745,7 @@ void main() {
           const NumRange.withRight(168, 174),
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -776,7 +776,7 @@ void main() {
           const NumRange.withRight(10, 20),
           null,
           unit: centimeter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InCm,
         );
 
         await testCase(
@@ -809,7 +809,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InMeter.items[0],
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -839,7 +839,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -870,7 +870,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InMeter.items[0],
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -904,7 +904,7 @@ void main() {
           null,
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -935,7 +935,7 @@ void main() {
           womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(
@@ -966,7 +966,7 @@ void main() {
           const NumRange.withRight(1.5, 3),
           null,
           unit: meter,
-          listValues: womanTrousersHeightRangesFrom0_156To186InMeter,
+          listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
         );
 
         await testCase(

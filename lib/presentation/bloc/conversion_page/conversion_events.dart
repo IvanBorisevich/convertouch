@@ -367,7 +367,7 @@ class ToggleCalculableParam extends ModifyConversion {
 }
 
 abstract class FetchMoreListValues extends ConversionEvent {
-  final OutputListValuesBatch? currentBatch;
+  final ListValuesFetchResult? currentBatch;
 
   const FetchMoreListValues({
     required this.currentBatch,

@@ -12,10 +12,10 @@ import '../../../domain/model/mock/mock_param.dart';
 import '../../../domain/model/mock/mock_unit.dart';
 
 void main() {
-  const ConversionBuilt state1 = ConversionBuilt(
+  final ConversionBuilt state1 = ConversionBuilt(
     conversion: ConversionModel(
       id: -1,
-      unitGroup: UnitGroupModel(
+      unitGroup: const UnitGroupModel(
         id: 10,
         name: "Clothes Size",
         iconName: "clothes-size-group.png",
@@ -52,7 +52,7 @@ void main() {
         mandatoryParamSetExists: true,
         totalCount: 2,
       ),
-      convertedUnitValues: [],
+      convertedUnitValues: const [],
     ),
     showRefreshButton: false,
   );
@@ -74,11 +74,11 @@ void main() {
           ConversionParamSetValueModel(
             paramSet: clothesSizeParamSet,
             paramValues: [
-              const ConversionParamValueModel(
+              ConversionParamValueModel(
                 param: personParam,
                 calculated: false,
               ),
-              const ConversionParamValueModel(
+              ConversionParamValueModel(
                 param: garmentParam,
                 calculated: false,
               ),

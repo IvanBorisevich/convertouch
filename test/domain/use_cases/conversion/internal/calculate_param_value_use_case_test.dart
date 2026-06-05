@@ -81,7 +81,7 @@ void main() {
             10,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -111,7 +111,7 @@ void main() {
             20,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -141,7 +141,7 @@ void main() {
             10,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -173,7 +173,7 @@ void main() {
             null,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -204,7 +204,7 @@ void main() {
             20,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -235,7 +235,7 @@ void main() {
             15,
             null,
             unit: kilogram,
-            listValues: barWeightParamKgListValues,
+            listValuesFetchResult: barWeightParamKgListValues,
           );
 
           await testCase(
@@ -262,7 +262,7 @@ void main() {
           10,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
@@ -270,7 +270,7 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         await testCase(
@@ -298,7 +298,7 @@ void main() {
           barWeightParamPoundListValues.items[0],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
@@ -306,7 +306,7 @@ void main() {
           barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(
@@ -335,7 +335,7 @@ void main() {
           null,
           unit: meter,
           calculated: false,
-          listValues: manShirtHeightRangesFrom0_164To190InMeter,
+          listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
@@ -344,7 +344,7 @@ void main() {
           null,
           unit: meter,
           calculated: false,
-          listValues: manShirtHeightRangesFrom0_164To190InMeter,
+          listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
         );
 
         await testCase(
@@ -362,7 +362,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: personParamListValues,
+                listValuesFetchResult: personParamListValues,
               ),
               (
                 garmentParam,
@@ -370,7 +370,7 @@ void main() {
                 null,
                 unit: null,
                 calculated: false,
-                listValues: garmentParamListValues,
+                listValuesFetchResult: garmentParamListValues,
               ),
               (
                 heightParam,
@@ -378,7 +378,7 @@ void main() {
                 null,
                 unit: meter,
                 calculated: false,
-                listValues: manShirtHeightRangesFrom0_164To190InMeter,
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
               ),
             ],
           ),
@@ -395,7 +395,7 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValues: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues,
         );
 
         final expectedParamValue = ConversionParamValueModel.tuple(
@@ -403,7 +403,7 @@ void main() {
           barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
-          listValues: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues,
         );
 
         await testCase(

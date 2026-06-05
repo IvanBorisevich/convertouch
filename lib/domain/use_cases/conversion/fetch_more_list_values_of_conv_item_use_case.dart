@@ -25,10 +25,10 @@ class FetchMoreListValuesOfConvItemUseCase
   }) async {
     ConversionUnitValueModel unitValue = oldConvertedUnitValues[delta.unitId]!;
 
-    if (unitValue.listValues != null) {
-      OutputListValuesBatch currentBatch = unitValue.listValues!;
+    if (unitValue.listValuesFetchResult != null) {
+      ListValuesFetchResult currentBatch = unitValue.listValuesFetchResult!;
 
-      OutputListValuesBatch newBatch = ObjectUtils.tryGet(
+      ListValuesFetchResult newBatch = ObjectUtils.tryGet(
         await fetchListValuesUseCase.execute(
           InputItemsFetchModel(
             searchString: currentBatch.searchString,
@@ -40,7 +40,7 @@ class FetchMoreListValuesOfConvItemUseCase
       );
 
       unitValue = unitValue.copyWith(
-        listValues: newBatch.copyWith(
+        listValuesFetchResult: newBatch.copyWith(
           items: [
             ...currentBatch.items,
             ...newBatch.items,
@@ -68,10 +68,10 @@ class FetchMoreListValuesOfConvItemUseCase
     required FetchMoreListValuesOfConversionItemDelta delta,
   }) async {
     if (oldSourceUnitValue.unit.id == delta.unitId &&
-        oldSourceUnitValue.listValues != null) {
-      OutputListValuesBatch currentBatch = oldSourceUnitValue.listValues!;
+        oldSourceUnitValue.listValuesFetchResult != null) {
+      ListValuesFetchResult currentBatch = oldSourceUnitValue.listValuesFetchResult!;
 
-      OutputListValuesBatch newBatch = ObjectUtils.tryGet(
+      ListValuesFetchResult newBatch = ObjectUtils.tryGet(
         await fetchListValuesUseCase.execute(
           InputItemsFetchModel(
             searchString: currentBatch.searchString,
@@ -83,7 +83,7 @@ class FetchMoreListValuesOfConvItemUseCase
       );
 
       return oldSourceUnitValue.copyWith(
-        listValues: newBatch.copyWith(
+        listValuesFetchResult: newBatch.copyWith(
           items: [
             ...currentBatch.items,
             ...newBatch.items,

@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
+import 'package:rxdart/rxdart.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
 const String noValueHint = '-';
@@ -24,14 +25,13 @@ abstract class InputBoxModel implements ElementModel {
     if (model.listType != null) {
       return ListBoxModel(
         selectedValue: model.value,
-        listValues: model.listValues!.items,
+        listValuesBatchStream: model.listValuesBatchStream,
         listType: model.listType!,
-        readonly:
-            model.listValues?.items == null || model.listValues!.items.isEmpty,
+        readonly: model.listValuesFetchResult?.items == null ||
+            model.listValuesFetchResult!.items.isEmpty,
         labelText: _getLabelText(model),
-        searchEnabled:
-            model.listValues!.items.length > _nonSearchableListItemsMinLimit,
-        hasMoreListValues: !model.listValues!.hasReachedMax,
+        searchEnabled: model.listValuesFetchResult!.items.length >
+            _nonSearchableListItemsMinLimit,
       ) as T;
     } else {
       return TextBoxModel(
@@ -99,21 +99,19 @@ class TextBoxModel extends InputBoxModel {
 
 class ListBoxModel extends InputBoxModel {
   final ValueModel? selectedValue;
-  final List<ValueModel> listValues;
+  final BehaviorSubject<ListValuesFetchResult?> listValuesBatchStream;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
-  final bool hasMoreListValues;
 
   const ListBoxModel({
     this.selectedValue,
     required this.listType,
     super.readonly,
     super.labelText,
-    this.listValues = const [],
+    required this.listValuesBatchStream,
     this.searchHint,
     this.searchEnabled = true,
-    this.hasMoreListValues = true,
   });
 
   @override
@@ -122,7 +120,7 @@ class ListBoxModel extends InputBoxModel {
         'labelText: $labelText, '
         'readonly: $readonly, '
         'listValue: $selectedValue, '
-        'listValues: $listValues, '
+        'listValuesBatchStream: $listValuesBatchStream, '
         'listType: $listType, '
         'searchHint: $searchHint, '
         'searchEnabled: $searchEnabled}';

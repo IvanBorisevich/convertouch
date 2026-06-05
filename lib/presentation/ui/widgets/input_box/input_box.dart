@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
@@ -8,6 +9,7 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_state
 import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
+import 'package:convertouch/presentation/ui/utils/stream_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
@@ -135,7 +137,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
 
     _onValueChanged = (value) {
       _closeIconNotifier.value =
-          widget.model is! ListBoxModel && value.isNotEmpty;
+          widget.model is! ListBoxModel && value.hasRawValue;
       widget.onValueChanged?.call(value);
     };
 
@@ -408,7 +410,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     }
 
     return (value) {
-      if (!validateEmptyValue && value.isEmpty) {
+      if (!validateEmptyValue && !value.hasRawValue) {
         return _wrapWithValidationReset(
           context: context,
           func: func,
@@ -632,6 +634,7 @@ class _ListField extends StatefulWidget {
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
   late ValueNotifier<ValueModel?> _selectedValueNotifier;
+  late ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
 
   TextEditingController? _dropdownSearchController;
   FocusNode? _dropdownSearchFocusNode;
@@ -643,6 +646,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _isDropdownOpen = false;
     _selectedValueNotifier = ValueNotifier(widget.model.selectedValue);
 
+    print(
+        "[list box] name = ${widget.model.labelText}, stream id = ${widget.model.listValuesBatchStream.hashCode}");
+
+    _listValuesNotifier =
+        BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
+
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
       _dropdownSearchFocusNode = initOrGetFocusNode();
@@ -653,6 +662,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
     _dropdownSearchController?.dispose();
+    _listValuesNotifier.dispose();
     _selectedValueNotifier.dispose();
     super.dispose();
   }
@@ -662,6 +672,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.didUpdateWidget(oldWidget);
 
     _selectedValueNotifier.value = widget.model.selectedValue;
+
+    _listValuesNotifier =
+        BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
+
+    print(
+        "[list box, did update widget] name = ${widget.model.labelText}, stream id = ${widget.model.listValuesBatchStream.hashCode}");
   }
 
   @override
@@ -672,166 +688,174 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           Navigator.of(context).pop();
         }
       },
-      child: DropdownButtonHideUnderline(
-        child: DropdownButtonFormField2<ValueModel>(
-          isExpanded: true,
-          decoration: _inputFieldDecoration(
-            context,
-            margin: widget.margin,
-            fontSize: widget.fontSize,
-            labelText: widget.model.labelText,
-            hintText: noValueHint,
-            hintColor: widget.hintColor,
-            labelColor: widget.labelColor,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 3,
-            ),
-          ),
-          style: _inputFieldTextStyle(
-            fontSize: widget.fontSize,
-            foregroundColor: widget.foregroundColor,
-          ),
-          valueListenable: _selectedValueNotifier,
-          items: widget.model.listValues
-              .map(
-                (value) => DropdownItem(
-                  value: value,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Text(
-                      value.itemName,
-                      style: _inputFieldTextStyle(
-                        fontSize: widget.fontSize,
-                        foregroundColor:
-                            widget.dropdownColors.foreground.regular,
+      child: ValueListenableBuilder(
+        valueListenable: _listValuesNotifier,
+        builder: (_, listValuesFetchResult, child) {
+          return DropdownButtonHideUnderline(
+            child: DropdownButtonFormField2<ValueModel>(
+              isExpanded: true,
+              decoration: _inputFieldDecoration(
+                context,
+                margin: widget.margin,
+                fontSize: widget.fontSize,
+                labelText: widget.model.labelText,
+                hintText: noValueHint,
+                hintColor: widget.hintColor,
+                labelColor: widget.labelColor,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 3,
+                ),
+              ),
+              style: _inputFieldTextStyle(
+                fontSize: widget.fontSize,
+                foregroundColor: widget.foregroundColor,
+              ),
+              valueListenable: _selectedValueNotifier,
+              items: (listValuesFetchResult?.items ?? [])
+                  .map(
+                    (value) => DropdownItem(
+                      value: value,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Text(
+                          value.itemName,
+                          style: _inputFieldTextStyle(
+                            fontSize: widget.fontSize,
+                            foregroundColor:
+                                widget.dropdownColors.foreground.regular,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  )
+                  .toList()
+                ..addAll(
+                  listValuesFetchResult != null &&
+                          !listValuesFetchResult.hasReachedMax
+                      ? [_loadingItem(context)]
+                      : [],
                 ),
-              )
-              .toList()
-            ..addAll(
-              widget.model.hasMoreListValues ? [_loadingItem(context)] : [],
-            ),
-          onChanged: (listValue) {
-            if (listValue != null) {
-              _selectedValueNotifier.value = listValue;
-              widget.onValueChanged?.call(listValue);
-            }
-          },
-          /*
+              onChanged: (listValue) {
+                if (listValue != null) {
+                  _selectedValueNotifier.value = listValue;
+                  widget.onValueChanged?.call(listValue);
+                }
+              },
+              /*
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
-          selectedItemBuilder: (context) {
-            return widget.model.listValues.map(
-              (value) {
-                return Text(
-                  widget.model.selectedValue?.itemName ?? noValueHint,
-                  style: _inputFieldTextStyle(
-                    fontSize: widget.fontSize,
-                    foregroundColor: widget.foregroundColor,
-                  ),
-                  maxLines: 1,
-                );
-              },
-            ).toList();
-          },
-          iconStyleData: IconStyleData(
-            icon: Icon(
-              Icons.expand_more_rounded,
-              color: widget.foregroundColor,
-            ),
-            iconSize: 20,
-          ),
-          dropdownStyleData: DropdownStyleData(
-            scrollbarTheme: ScrollbarThemeData(
-              thickness: WidgetStateProperty.all(4),
-              thumbColor: WidgetStateProperty.all(
-                widget.dropdownColors.foreground.regular,
-              ),
-              trackColor: WidgetStateProperty.all(Colors.transparent),
-              trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-              trackVisibility: WidgetStateProperty.all(true),
-              radius: const Radius.circular(10),
-            ),
-            maxHeight: 250,
-            elevation: 0,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(17)),
-              color: widget.dropdownColors.background.regular,
-            ),
-            padding: EdgeInsets.zero,
-            openInterval: const Interval(0, 0.5, curve: Curves.ease),
-            offset: const Offset(0, -7.5),
-          ),
-          menuItemStyleData: const MenuItemStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          buttonStyleData: const FormFieldButtonStyleData(
-            padding: EdgeInsets.zero,
-          ),
-          dropdownSearchData: _dropdownSearchController != null &&
-                  _dropdownSearchFocusNode != null
-              ? DropdownSearchData(
-                  searchController: _dropdownSearchController,
-                  searchBarWidgetHeight: 80,
-                  searchBarWidget: Container(
-                    padding: const EdgeInsets.only(
-                      top: 6,
-                      bottom: 0,
-                      right: 6,
-                      left: 6,
-                    ),
-                    child: ConvertouchInputBox(
-                      model: TextBoxModel(
-                        hint: widget.model.searchHint ?? _defaultSearchHint,
-                        hintUnfocused:
-                            widget.model.searchHint ?? _defaultSearchHint,
-                        valueType: widget.model.listType.listValuesType,
+              selectedItemBuilder: (context) {
+                return (listValuesFetchResult?.items ?? []).map(
+                  (value) {
+                    return Text(
+                      widget.model.selectedValue?.itemName ?? noValueHint,
+                      style: _inputFieldTextStyle(
+                        fontSize: widget.fontSize,
+                        foregroundColor: widget.foregroundColor,
                       ),
-                      colors: InputBoxColorScheme(
-                        textBox: widget.dropdownColors.searchBox,
-                      ),
-                      inputFieldMargin: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 5,
-                      ),
-                      prefixWidgets: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 7),
-                          child: Icon(
-                            Icons.search,
-                            color: widget.foregroundColor,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                      prefixRightmostDividerVisible: false,
-                      controller: _dropdownSearchController,
-                      focusNode: _dropdownSearchFocusNode,
-                      fontSize: 15,
-                    ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return listValuesFuncSets[widget.model.listType]
-                            ?.searchFunc(searchValue, item.value) ??
-                        false;
+                      maxLines: 1,
+                    );
                   },
-                  noResultsWidget: _noResultItem,
-                )
-              : null,
-          onMenuStateChange: (isOpen) {
-            if (!isOpen) {
-              _dropdownSearchController?.clear();
-            }
+                ).toList();
+              },
+              iconStyleData: IconStyleData(
+                icon: Icon(
+                  Icons.expand_more_rounded,
+                  color: widget.foregroundColor,
+                ),
+                iconSize: 20,
+              ),
+              dropdownStyleData: DropdownStyleData(
+                scrollbarTheme: ScrollbarThemeData(
+                  thickness: WidgetStateProperty.all(4),
+                  thumbColor: WidgetStateProperty.all(
+                    widget.dropdownColors.foreground.regular,
+                  ),
+                  trackColor: WidgetStateProperty.all(Colors.transparent),
+                  trackBorderColor: WidgetStateProperty.all(Colors.transparent),
+                  trackVisibility: WidgetStateProperty.all(true),
+                  radius: const Radius.circular(10),
+                ),
+                maxHeight: 250,
+                elevation: 0,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(17)),
+                  color: widget.dropdownColors.background.regular,
+                ),
+                padding: EdgeInsets.zero,
+                openInterval: const Interval(0, 0.5, curve: Curves.ease),
+                offset: const Offset(0, -7.5),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.zero,
+              ),
+              buttonStyleData: const FormFieldButtonStyleData(
+                padding: EdgeInsets.zero,
+              ),
+              dropdownSearchData: _dropdownSearchController != null &&
+                      _dropdownSearchFocusNode != null
+                  ? DropdownSearchData(
+                      searchController: _dropdownSearchController,
+                      searchBarWidgetHeight: 80,
+                      searchBarWidget: Container(
+                        padding: const EdgeInsets.only(
+                          top: 6,
+                          bottom: 0,
+                          right: 6,
+                          left: 6,
+                        ),
+                        child: ConvertouchInputBox(
+                          model: TextBoxModel(
+                            hint: widget.model.searchHint ?? _defaultSearchHint,
+                            hintUnfocused:
+                                widget.model.searchHint ?? _defaultSearchHint,
+                            valueType: widget.model.listType.listValuesType,
+                          ),
+                          colors: InputBoxColorScheme(
+                            textBox: widget.dropdownColors.searchBox,
+                          ),
+                          inputFieldMargin: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 5,
+                          ),
+                          prefixWidgets: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 7),
+                              child: Icon(
+                                Icons.search,
+                                color: widget.foregroundColor,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                          prefixRightmostDividerVisible: false,
+                          controller: _dropdownSearchController,
+                          focusNode: _dropdownSearchFocusNode,
+                          fontSize: 15,
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        return listValuesFuncSets[widget.model.listType]
+                                ?.searchFunc(searchValue, item.value) ??
+                            false;
+                      },
+                      noResultsWidget: _noResultItem,
+                    )
+                  : null,
+              onMenuStateChange: (isOpen) {
+                if (!isOpen) {
+                  _dropdownSearchController?.clear();
+                }
 
-            setState(() {
-              _isDropdownOpen = isOpen;
-            });
-          },
-        ),
+                setState(() {
+                  _isDropdownOpen = isOpen;
+                });
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -892,7 +916,7 @@ InputDecoration _inputFieldDecoration(
               maxWidth: MediaQuery.of(context).size.width / 2,
             ),
             child: Text(
-              labelText == 'Garment' ? 'Height' : labelText,
+              labelText,
               maxLines: 1,
               softWrap: false,
               style: TextStyle(

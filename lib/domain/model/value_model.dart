@@ -129,9 +129,9 @@ class ValueModel extends IdNameSearchableItemModel {
     );
   }
 
-  bool get isNotEmpty => raw.isNotEmpty;
+  bool get hasRawValue => raw.isNotEmpty;
 
-  bool get isEmpty => !isNotEmpty;
+  bool get isEmpty => this == ValueModel.empty;
 
   @override
   String get itemName => alt ?? raw;
@@ -184,5 +184,18 @@ class ValueModel extends IdNameSearchableItemModel {
         'alt: $alt, '
         'num: $numVal, '
         'range: ${range?.rangeName}}';
+  }
+}
+
+ValueModel? patchValueModel({
+  required ValueModel? thisValue,
+  required ValueModel? newValue,
+}) {
+  if (newValue == null) {
+    return thisValue;
+  } else if (newValue.isEmpty) {
+    return null;
+  } else {
+    return newValue;
   }
 }
