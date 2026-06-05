@@ -79,7 +79,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         visible:
                             unitGroupDetailsState.draftGroup.minValue != null,
                         savedValue:
-                            unitGroupDetailsState.draftGroup.minValue?.altOrRaw,
+                            unitGroupDetailsState.draftGroup.minValue?.itemName,
                         inputBoxColor: inputBoxColor,
                         topMargin: _verticalSpacing,
                       ),
@@ -88,7 +88,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         visible:
                             unitGroupDetailsState.draftGroup.maxValue != null,
                         savedValue:
-                            unitGroupDetailsState.draftGroup.maxValue?.altOrRaw,
+                            unitGroupDetailsState.draftGroup.maxValue?.itemName,
                         inputBoxColor: inputBoxColor,
                         topMargin: _verticalSpacing,
                       ),

@@ -129,11 +129,12 @@ class ValueModel extends IdNameSearchableItemModel {
     );
   }
 
-  String get altOrRaw => alt ?? raw;
-
   bool get isNotEmpty => raw.isNotEmpty;
 
   bool get isEmpty => !isNotEmpty;
+
+  @override
+  String get itemName => alt ?? raw;
 
   @override
   List<Object?> get props => [

@@ -130,7 +130,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                       ConvertouchDetailsItem(
                         name: 'Min Value',
                         savedValue:
-                            pageState.details.savedUnitData.minValue?.altOrRaw,
+                            pageState.details.savedUnitData.minValue?.itemName,
                         visible:
                             pageState.details.savedUnitData.minValue != null,
                         inputBoxColor: inputBoxColor,
@@ -139,7 +139,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                       ConvertouchDetailsItem(
                         name: 'Max Value',
                         savedValue:
-                            pageState.details.savedUnitData.maxValue?.altOrRaw,
+                            pageState.details.savedUnitData.maxValue?.itemName,
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
                         inputBoxColor: inputBoxColor,

@@ -703,8 +703,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       value.itemName,
                       style: _inputFieldTextStyle(
                         fontSize: widget.fontSize,
-                        foregroundColor:
-                            widget.dropdownColors.foreground.regular,
+                        foregroundColor: Colors.green,
+                            //widget.dropdownColors.foreground.regular,
                       ),
                     ),
                   ),

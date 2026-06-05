@@ -116,7 +116,7 @@ class ConversionRuleFormModel extends Equatable {
       String argUnitCode =
           draftUnit.id != argUnit.id ? argUnit.code : secondaryBaseUnit.code;
       return "$unitValue ${draftUnit.code} = "
-          "${argValue.altOrRaw} $argUnitCode";
+          "${argValue.itemName} $argUnitCode";
     }
 
     return noConversionRule;
