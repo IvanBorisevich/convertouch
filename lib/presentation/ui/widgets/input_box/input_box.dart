@@ -703,8 +703,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       value.itemName,
                       style: _inputFieldTextStyle(
                         fontSize: widget.fontSize,
-                        foregroundColor: Colors.green,
-                            //widget.dropdownColors.foreground.regular,
+                        foregroundColor:
+                            widget.dropdownColors.foreground.regular,
                       ),
                     ),
                   ),
@@ -892,7 +892,7 @@ InputDecoration _inputFieldDecoration(
               maxWidth: MediaQuery.of(context).size.width / 2,
             ),
             child: Text(
-              labelText,
+              labelText == 'Garment' ? 'Height' : labelText,
               maxLines: 1,
               softWrap: false,
               style: TextStyle(

@@ -31,6 +31,7 @@ abstract class InputBoxModel implements ElementModel {
         labelText: _getLabelText(model),
         searchEnabled:
             model.listValues!.items.length > _nonSearchableListItemsMinLimit,
+        hasMoreListValues: !model.listValues!.hasReachedMax,
       ) as T;
     } else {
       return TextBoxModel(
