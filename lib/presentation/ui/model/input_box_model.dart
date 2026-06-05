@@ -102,6 +102,7 @@ class ListBoxModel extends InputBoxModel {
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
+  final bool hasMoreListValues;
 
   const ListBoxModel({
     this.selectedValue,
@@ -111,6 +112,7 @@ class ListBoxModel extends InputBoxModel {
     this.listValues = const [],
     this.searchHint,
     this.searchEnabled = true,
+    this.hasMoreListValues = true,
   });
 
   @override

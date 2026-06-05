@@ -710,7 +710,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   ),
                 ),
               )
-              .toList(),
+              .toList()
+            ..addAll(
+              widget.model.hasMoreListValues ? [_loadingItem(context)] : [],
+            ),
           onChanged: (listValue) {
             if (listValue != null) {
               _selectedValueNotifier.value = listValue;
@@ -816,19 +819,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                             ?.searchFunc(searchValue, item.value) ??
                         false;
                   },
-                  noResultsWidget: const DropdownItem(
-                    enabled: false,
-                    alignment: Alignment.center,
-                    height: 30,
-                    child: Text(
-                      "No items found",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ),
+                  noResultsWidget: _noResultItem,
                 )
               : null,
           onMenuStateChange: (isOpen) {
@@ -844,9 +835,40 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       ),
     );
   }
+
+  DropdownItem<ValueModel> _loadingItem(BuildContext context) {
+    return DropdownItem<ValueModel>(
+      enabled: false,
+      alignment: Alignment.center,
+      height: 30,
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(
+          strokeCap: StrokeCap.round,
+          color: widget.dropdownColors.foreground.regular,
+        ),
+      ),
+    );
+  }
 }
 
-// Shared methods -------------------------------------------------------------
+// Shared methods and constants -----------------------------------------------
+
+const DropdownItem _noResultItem = DropdownItem(
+  enabled: false,
+  alignment: Alignment.center,
+  height: 30,
+  child: Text(
+    "No items found",
+    style: TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0,
+    ),
+  ),
+);
 
 InputDecoration _inputFieldDecoration(
   BuildContext context, {
