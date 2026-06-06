@@ -9,10 +9,12 @@ class ListValuesResponseParser extends ResponseParser {
 
   @override
   ResponseEntity parse(String rawJson) {
-    List<Map<String, dynamic>> jsonListValues = json.decode(rawJson);
+    List<dynamic> jsonListValues = json.decode(rawJson);
 
-    List<ValueModel> listValues =
-        jsonListValues.map((item) => ValueModel.fromJson(item)!).toList();
+    List<ValueModel> listValues = jsonListValues
+        .whereType<Map<String, dynamic>>()
+        .map((item) => ValueModel.fromJson(item)!)
+        .toList();
 
     return DynamicListValuesResponseEntity(listValues);
   }

@@ -8,10 +8,12 @@ import 'package:convertouch/data/dao/unit_dao.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/repositories/network_repository_impl.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
@@ -105,6 +107,41 @@ Future<void> main() async {
     });
   });
 
+  group("Should fetch list values", () {
+    test("Should fetch 'Source / Bank' param list values", () async {
+      when(
+        mockNetworkDao.fetch(
+          exchangeRateSourcesPath,
+          queryParams: anyNamed('queryParams'),
+        ),
+      ).thenAnswer(
+        (_) async => jsonEncode([
+          {
+            "raw": "British Bank",
+            "alt": "British Bank",
+          },
+          {
+            "raw": "ExchangeAPI.com",
+            "alt": "ExchangeAPI.com",
+          },
+        ]),
+      );
+
+      var fetchedSources = await networkRepository.fetchList(
+        listType: ConvertouchListType.exchangeRateSource,
+        params: exchangeRateParams,
+        pageSize: 100,
+        pageNum: 1,
+      );
+
+      expect(fetchedSources.isRight, true);
+      expect(fetchedSources.right, const [
+        ValueModel.rawStr('British Bank'),
+        ValueModel.rawStr('ExchangeAPI.com'),
+      ]);
+    });
+  });
+
   group("Should fetch dynamic coefficients", () {
     test('Should fetch exchange rate', () async {
       Map<String, dynamic> ratesResponseMap = {
@@ -118,8 +155,10 @@ Future<void> main() async {
       };
 
       when(
-        mockNetworkDao.fetch(exchangeRatePath,
-            queryParams: anyNamed('queryParams')),
+        mockNetworkDao.fetch(
+          exchangeRatePath,
+          queryParams: anyNamed('queryParams'),
+        ),
       ).thenAnswer((_) async => jsonEncode(ratesResponseMap));
 
       when(

@@ -1563,8 +1563,7 @@ void main() {
 
   group("Should initially calculate param set 'Exchange Rate'", () {
     test(
-        "[Currency] Should init 'Source' param list values without preselect, "
-        "should NOT init 'Bank' param list values (not found by 'Source')",
+        "[Currency] Should init 'Source' param list values without preselect",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,
