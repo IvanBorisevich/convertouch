@@ -9,8 +9,6 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_us
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
@@ -48,9 +46,6 @@ class ConversionBloc
   final EditConversionParamValueUseCase editConversionParamValueUseCase;
   final ReplaceConversionParamUnitUseCase replaceConversionParamUnitUseCase;
   final ToggleCalculableParamUseCase toggleCalculableParamUseCase;
-  final FetchMoreListValuesOfParamUseCase fetchMoreListValuesOfParamUseCase;
-  final FetchMoreListValuesOfConvItemUseCase
-      fetchMoreListValuesOfConvItemUseCase;
 
   ConversionBloc({
     required this.getConversionUseCase,
@@ -69,8 +64,6 @@ class ConversionBloc
     required this.editConversionParamValueUseCase,
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
-    required this.fetchMoreListValuesOfParamUseCase,
-    required this.fetchMoreListValuesOfConvItemUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
     on<GetConversion>(_onGetConversion);
     on<SaveConversion>(_onSaveConversion);
@@ -90,8 +83,6 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
-    on<FetchMoreListValuesOfParam>(_onFetchMoreListValuesOfParam);
-    on<FetchMoreListValuesOfConvItem>(_onFetchMoreListValuesOfConvItem);
   }
 
   _onGetConversion(
@@ -426,52 +417,9 @@ class ConversionBloc
     await _handleAndEmit(result, emit, onError: event.onError);
   }
 
-  _onFetchMoreListValuesOfParam(
-    FetchMoreListValuesOfParam event,
-    Emitter<ConversionState> emit,
-  ) async {
-    final result = await fetchMoreListValuesOfParamUseCase.execute(
-      InputConversionModifyModel<FetchMoreListValuesOfParamDelta>(
-        delta: FetchMoreListValuesOfParamDelta(
-          paramId: event.paramId,
-        ),
-        conversion: state.conversion,
-      ),
-    );
-
-    await _handleAndEmit(
-      result,
-      emit,
-      enrichWithListValues: false,
-      onError: event.onError,
-    );
-  }
-
-  _onFetchMoreListValuesOfConvItem(
-    FetchMoreListValuesOfConvItem event,
-    Emitter<ConversionState> emit,
-  ) async {
-    final result = await fetchMoreListValuesOfConvItemUseCase.execute(
-      InputConversionModifyModel<FetchMoreListValuesOfConversionItemDelta>(
-        delta: FetchMoreListValuesOfConversionItemDelta(
-          unitId: event.unitId,
-        ),
-        conversion: state.conversion,
-      ),
-    );
-
-    await _handleAndEmit(
-      result,
-      emit,
-      enrichWithListValues: false,
-      onError: event.onError,
-    );
-  }
-
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
-    bool enrichWithListValues = true,
     void Function()? onSuccess,
     void Function(ConvertouchException)? onError,
   }) async {

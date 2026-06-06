@@ -44,8 +44,7 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
 
       ConversionParamSetValueBulkModel? newParams = input.conversion.params;
 
-      if (input.delta is ConversionParamsModifyDelta ||
-          input.delta is FetchMoreListValuesOfParamDelta) {
+      if (input.delta is ConversionParamsModifyDelta) {
         newParams = await newConversionParams(
           oldConversionParams: input.conversion.params,
           unitGroup: modifiedGroup,

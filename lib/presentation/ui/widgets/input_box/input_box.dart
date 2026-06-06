@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
@@ -59,6 +60,7 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
 );
 
 const String _defaultSearchHint = "Search...";
+const double _defaultListItemHeight = 45;
 
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   const ConvertouchInputBox({
@@ -263,7 +265,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                     decoration: const BoxDecoration(
                       borderRadius: _borderRadius,
                     ),
-                    child: _inputField(widget.model),
+                    child: _inputField(widget.model, context),
                   ),
                 ),
               ),
@@ -299,7 +301,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  Widget _inputField(M model) {
+  Widget _inputField(M model, BuildContext context) {
     if (model is TextBoxModel) {
       return _TextField(
         model: model,
@@ -339,6 +341,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
         dropdownColors: widget.colors.dropdown,
+        listValuesBloc: BlocProvider.of<ListValuesBloc>(context),
       );
     }
 
@@ -615,6 +618,7 @@ class _ListField extends StatefulWidget {
     required this.fontSize,
     required this.margin,
     required this.dropdownColors,
+    required this.listValuesBloc,
   });
 
   final ListBoxModel model;
@@ -626,6 +630,7 @@ class _ListField extends StatefulWidget {
   final double fontSize;
   final EdgeInsets margin;
   final DropdownColorScheme dropdownColors;
+  final ListValuesBloc listValuesBloc;
 
   @override
   State<StatefulWidget> createState() => _ListFieldState();
@@ -645,9 +650,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _isDropdownOpen = false;
     _selectedValueNotifier = ValueNotifier(widget.model.selectedValue);
-
-    print(
-        "[list box] name = ${widget.model.labelText}, stream id = ${widget.model.listValuesBatchStream.hashCode}");
 
     _listValuesNotifier =
         BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
@@ -675,9 +677,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _listValuesNotifier =
         BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
-
-    print(
-        "[list box, did update widget] name = ${widget.model.labelText}, stream id = ${widget.model.listValuesBatchStream.hashCode}");
   }
 
   @override
@@ -716,6 +715,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   .map(
                     (value) => DropdownItem(
                       value: value,
+                      height: _defaultListItemHeight,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: Text(

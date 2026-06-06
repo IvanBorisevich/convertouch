@@ -36,8 +36,6 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_us
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_conv_item_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/fetch_more_list_values_of_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
@@ -68,6 +66,7 @@ import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
@@ -413,18 +412,6 @@ Future<void> _initUseCases() async {
     () => const ToggleCalculableParamUseCase(),
   );
 
-  locator.registerLazySingleton<FetchMoreListValuesOfParamUseCase>(
-    () => FetchMoreListValuesOfParamUseCase(
-      fetchListValuesUseCase: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<FetchMoreListValuesOfConvItemUseCase>(
-    () => FetchMoreListValuesOfConvItemUseCase(
-      fetchListValuesUseCase: locator(),
-    ),
-  );
-
   locator.registerLazySingleton<StartRefreshingJobUseCase>(
     () => StartRefreshingJobUseCase(
       networkRepository: locator(),
@@ -480,6 +467,12 @@ Future<void> _initBloc() async {
   locator.registerLazySingleton<ItemsSelectionBlocForUnitDetails>(
     () => ItemsSelectionBlocForUnitDetails(
       markItemsUseCase: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ListValuesBloc>(
+    () => ListValuesBloc(
+      fetchListValuesUseCase: locator(),
     ),
   );
 
@@ -548,8 +541,6 @@ Future<void> _initBloc() async {
       editConversionParamValueUseCase: locator(),
       replaceConversionParamUnitUseCase: locator(),
       toggleCalculableParamUseCase: locator(),
-      fetchMoreListValuesOfParamUseCase: locator(),
-      fetchMoreListValuesOfConvItemUseCase: locator(),
     ),
   );
 

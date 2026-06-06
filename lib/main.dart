@@ -8,6 +8,7 @@ import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
@@ -76,6 +77,9 @@ class ConvertouchApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ListValuesBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>(),
