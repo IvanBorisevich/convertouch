@@ -169,11 +169,13 @@ class SlidingPanelColorScheme {
   final TabPanelColorScheme tabPanel;
   final WidgetColorScheme body;
   final WidgetColorScheme footer;
+  final WidgetColorScheme jobInfoBox;
 
   const SlidingPanelColorScheme({
     this.tabPanel = TabPanelColorScheme.none,
     this.body = WidgetColorScheme.none,
     this.footer = WidgetColorScheme.none,
+    this.jobInfoBox = WidgetColorScheme.none,
   });
 }
 

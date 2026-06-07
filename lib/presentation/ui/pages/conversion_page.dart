@@ -194,8 +194,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                         return Column(
                           children: [
                             ConversionParamsView(
-                              panelController: _panelController,
                               params: conversion.params,
+                              unitGroupName: conversion.unitGroup.name,
+                              panelController: _panelController,
                               colors: appColors[appState.theme].paramSetPanel,
                               onParamSetAdd: () {
                                 paramSetsController.showParametersForAdding(

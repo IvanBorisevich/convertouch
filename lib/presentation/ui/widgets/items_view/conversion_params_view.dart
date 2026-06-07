@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
@@ -23,9 +24,11 @@ const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
 const double _calculationSuffixIconWidth = 40;
+const double _jobInfoBoxHeight = 40;
 
 class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
+  final String unitGroupName;
   final PanelController panelController;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
@@ -36,6 +39,7 @@ class ConversionParamsView extends StatelessWidget {
 
   const ConversionParamsView({
     this.params,
+    required this.unitGroupName,
     required this.panelController,
     this.onParamSetAdd,
     this.onParamSetSelect,
@@ -70,93 +74,110 @@ class ConversionParamsView extends StatelessWidget {
 
     bool paramsAreNullOrApplicable = areParamsNullOrApplicable(params?.active);
 
-    return ConvertouchSlidingPanel(
-      panelController: panelController,
-      defaultPanelState:
-          paramsAreNullOrApplicable ? PanelState.CLOSED : PanelState.OPEN,
-      minHeight: _footerHeight,
-      maxHeight: _footerHeight + bodyHeight,
-      colors: colors.slidingPanel,
-      onPanelSlide: () {
-        FocusScope.of(context).unfocus();
-      },
-      content: Column(
-        children: [
-          SizedBox(
-            height: bodyHeight,
-            child: params!.paramSetValues.isNotEmpty
-                ? DynamicTabBarWidget(
-                    isScrollable: true,
-                    showBackIcon: false,
-                    showNextIcon: false,
-                    tabAlignment: TabAlignment.center,
-                    padding: const EdgeInsets.only(top: _paramsSpacing),
-                    indicator: const UnderlineTabIndicator(
-                      borderSide: BorderSide.none,
-                    ),
-                    dividerHeight: 0,
-                    dividerColor: Colors.transparent,
-                    onAddTabMoveTo: MoveToTab.last,
-                    onTabControllerUpdated: (controller) {
-                      controller.index = params!.selectedIndex;
-                    },
-                    onTabChanged: (index) {
-                      onParamSetSelect?.call(index ?? 0);
-                    },
-                    dynamicTabs: params!.paramSetValues
-                        .mapIndexed(
-                          (index, item) => TabData(
-                            index: index,
-                            title: Tab(
-                              height: _tabHeight,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(_tabRadius),
-                                  ),
-                                  color: index == params!.selectedIndex
-                                      ? colors.slidingPanel.tabPanel.tab
-                                          .background.selected
-                                      : colors.slidingPanel.tabPanel.tab
-                                          .background.regular,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 7,
-                                      ),
-                                      child: Text(
-                                        item.paramSet.name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: index == params!.selectedIndex
-                                              ? colors.slidingPanel.tabPanel.tab
-                                                  .foreground.selected
-                                              : colors.slidingPanel.tabPanel.tab
-                                                  .foreground.regular,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+    return refreshingJobsBlocBuilder(
+      builderFunc: (jobsState) {
+        var job = jobsState.jobs[unitGroupName]?[params!.active?.paramSet.name];
+
+        bool jobInfoBoxVisible = params!.active != null && job != null;
+
+        return ConvertouchSlidingPanel(
+          panelController: panelController,
+          defaultPanelState:
+              paramsAreNullOrApplicable ? PanelState.CLOSED : PanelState.OPEN,
+          minHeight: _footerHeight,
+          maxHeight: jobInfoBoxVisible
+              ? _footerHeight + bodyHeight + _jobInfoBoxHeight
+              : _footerHeight + bodyHeight,
+          colors: colors.slidingPanel,
+          onPanelSlide: () {
+            FocusScope.of(context).unfocus();
+          },
+          content: Column(
+            children: [
+              SizedBox(
+                height: bodyHeight,
+                child: params!.paramSetValues.isNotEmpty
+                    ? DynamicTabBarWidget(
+                        isScrollable: true,
+                        showBackIcon: false,
+                        showNextIcon: false,
+                        tabAlignment: TabAlignment.center,
+                        padding: const EdgeInsets.only(top: _paramsSpacing),
+                        indicator: const UnderlineTabIndicator(
+                          borderSide: BorderSide.none,
+                        ),
+                        dividerHeight: 0,
+                        dividerColor: Colors.transparent,
+                        onAddTabMoveTo: MoveToTab.last,
+                        onTabControllerUpdated: (controller) {
+                          controller.index = params!.selectedIndex;
+                        },
+                        onTabChanged: (index) {
+                          onParamSetSelect?.call(index ?? 0);
+                        },
+                        dynamicTabs: params!.paramSetValues
+                            .mapIndexed(
+                              (index, item) => TabData(
+                                index: index,
+                                title: Tab(
+                                  height: _tabHeight,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
                                     ),
-                                    Visibility(
-                                      visible:
-                                          params!.selectedParamSetCanBeRemoved,
-                                      child: GestureDetector(
-                                        onTap: onSelectedParamSetRemove,
-                                        child: Container(
-                                          color: Colors.transparent,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(_tabRadius),
+                                      ),
+                                      color: index == params!.selectedIndex
+                                          ? colors.slidingPanel.tabPanel.tab
+                                              .background.selected
+                                          : colors.slidingPanel.tabPanel.tab
+                                              .background.regular,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
                                           alignment: Alignment.center,
-                                          child: Icon(
-                                            Icons.close,
-                                            color:
-                                                index == params!.selectedIndex
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 7,
+                                          ),
+                                          child: Text(
+                                            item.paramSet.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color:
+                                                  index == params!.selectedIndex
+                                                      ? colors
+                                                          .slidingPanel
+                                                          .tabPanel
+                                                          .tab
+                                                          .foreground
+                                                          .selected
+                                                      : colors
+                                                          .slidingPanel
+                                                          .tabPanel
+                                                          .tab
+                                                          .foreground
+                                                          .regular,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: params!
+                                              .selectedParamSetCanBeRemoved,
+                                          child: GestureDetector(
+                                            onTap: onSelectedParamSetRemove,
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                Icons.close,
+                                                color: index ==
+                                                        params!.selectedIndex
                                                     ? colors
                                                         .slidingPanel
                                                         .tabPanel
@@ -169,89 +190,119 @@ class ConversionParamsView extends StatelessWidget {
                                                         .tab
                                                         .foreground
                                                         .regular,
-                                            size: 15,
+                                                size: 15,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            content: ScrollConfiguration(
-                              behavior: NoGlowScrollBehavior(),
-                              child: ListView.builder(
-                                itemCount: item.paramValues.length,
-                                itemBuilder: (context, index) {
-                                  var paramItem = item.paramValues[index];
+                                content: ScrollConfiguration(
+                                  behavior: NoGlowScrollBehavior(),
+                                  child: ListView.builder(
+                                    itemCount: item.paramValues.length,
+                                    itemBuilder: (context, index) {
+                                      var paramItem = item.paramValues[index];
 
-                                  return Padding(
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: _paramsSpacing,
+                                        ),
+                                        child: _param(
+                                          context,
+                                          paramItem: paramItem,
+                                          colors: colors.paramItem,
+                                          calculationSwitchersVisible: true,
+                                        ),
+                                      );
+                                    },
                                     padding: const EdgeInsets.only(
-                                      bottom: _paramsSpacing,
+                                      top: _paramsSpacing,
+                                      left: _paramsSpacing,
+                                      right: _paramsSpacing,
                                     ),
-                                    child: _param(
-                                      context,
-                                      paramItem: paramItem,
-                                      colors: colors.paramItem,
-                                      calculationSwitchersVisible: true,
-                                    ),
-                                  );
-                                },
-                                padding: const EdgeInsets.only(
-                                  top: _paramsSpacing,
-                                  left: _paramsSpacing,
-                                  right: _paramsSpacing,
+                                  ),
                                 ),
                               ),
+                            )
+                            .toList(),
+                      )
+                    : Center(
+                        child: TextButton.icon(
+                          onPressed: onParamSetAdd,
+                          style: TextButton.styleFrom(
+                            backgroundColor: colors
+                                .slidingPanel.tabPanel.tab.background.regular,
+                            foregroundColor: colors
+                                .slidingPanel.tabPanel.tab.foreground.regular,
+                          ),
+                          icon: const Icon(Icons.add),
+                          label: const Text(
+                            'Add parameters',
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        )
-                        .toList(),
-                  )
-                : Center(
-                    child: TextButton.icon(
-                      onPressed: onParamSetAdd,
-                      style: TextButton.styleFrom(
-                        backgroundColor:
-                            colors.slidingPanel.tabPanel.tab.background.regular,
-                        foregroundColor:
-                            colors.slidingPanel.tabPanel.tab.foreground.regular,
-                      ),
-                      icon: const Icon(Icons.add),
-                      label: const Text(
-                        'Add parameters',
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontWeight: FontWeight.w500,
                         ),
                       ),
+              ),
+              jobInfoBoxVisible
+                  ? Container(
+                      color: colors.slidingPanel.jobInfoBox.background.regular,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      height: _jobInfoBoxHeight,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: colors
+                                .slidingPanel.jobInfoBox.foreground.regular,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Last refreshed: ${job.completedAgo}",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: colors
+                                  .slidingPanel.jobInfoBox.foreground.regular,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: _footerHeight,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: colors.slidingPanel.footer.background.regular,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
                   ),
-          ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: _footerHeight,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: colors.slidingPanel.footer.background.regular,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  child: Container(
+                    width: 25,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: colors.slidingPanel.footer.foreground.regular,
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    ),
+                  ),
                 ),
               ),
-              child: Container(
-                width: 25,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: colors.slidingPanel.footer.foreground.regular,
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                ),
-              ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

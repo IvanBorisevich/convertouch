@@ -92,29 +92,6 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         inputBoxColor: inputBoxColor,
                         topMargin: _verticalSpacing,
                       ),
-                      refreshingJobsBlocBuilder(
-                        builderFunc: (jobState) {
-                          if (!unitGroupDetailsState.draftGroup.refreshable) {
-                            return const SizedBox.shrink();
-                          }
-                          return Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 10,
-                                  bottom: 30,
-                                ),
-                                child: Divider(
-                                  height: 1,
-                                  indent: 5,
-                                  endIndent: 5,
-                                  color: inputBoxColor.textBox.border.regular,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
                     ],
                   ),
                 ),

@@ -291,7 +291,7 @@ const _conversionItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _conversionItemTextBox,
     dropdown: DropdownColorScheme(
-      background: MultiColor.only(Color(0xff9eb6fb)),
+      background: MultiColor.only(Color(0xffbccdfa)),
       foreground: MultiColor.only(Color(0xFF1D578C)),
       searchBox: _dropdownSearchBox,
     ),
@@ -355,7 +355,7 @@ const _paramItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _paramItemTextBox,
     dropdown: DropdownColorScheme(
-      background: MultiColor.only(Color(0xff9eb6fb)),
+      background: MultiColor.only(Color(0xffbccdfa)),
       foreground: MultiColor.only(Color(0xFF1D578C)),
       searchBox: _dropdownSearchBox,
     ),
@@ -404,6 +404,10 @@ const _paramSetPanel = ParamSetPanelColorScheme(
     ),
     body: WidgetColorScheme(
       background: MultiColor.only(Color(0xffd8e3ff)),
+    ),
+    jobInfoBox: WidgetColorScheme(
+      background: MultiColor.only(Color(0xffcddbff)),
+      foreground: MultiColor.only(Color(0xFF395E80)),
     ),
     footer: WidgetColorScheme(
       background: MultiColor.only(Color(0xffadc2f6)),

@@ -382,7 +382,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
       tab: WidgetColorScheme(
         background: MultiColor(
           regular: Color(0xFF3B4351),
-          selected: Color(0xFF6EADE1),
+          selected: Color(0xFF5F98C6),
         ),
         foreground: MultiColor(
           regular: Color(0xFF77C1FD),
@@ -404,6 +404,10 @@ const _paramSetPanel = ParamSetPanelColorScheme(
     ),
     body: WidgetColorScheme(
       background: MultiColor.only(Color(0xFF323944)),
+    ),
+    jobInfoBox: WidgetColorScheme(
+      background: MultiColor.only(Color(0xFF384150)),
+      foreground: MultiColor.only(Color(0xFF77C1FD)),
     ),
     footer: WidgetColorScheme(
       background: MultiColor.only(Color(0xFF4C5970)),
