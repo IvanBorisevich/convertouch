@@ -56,6 +56,7 @@ void main() {
             newUnit: meter,
             unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
+            recalculateUnitValues: true,
           ),
           unitGroup: lengthGroup,
           currentSrc: ConversionUnitValueModel.tuple(decimeter, 10, 1),
@@ -79,6 +80,7 @@ void main() {
             newUnit: meter,
             unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
+            recalculateUnitValues: true,
           ),
           unitGroup: lengthGroup,
           currentSrc: ConversionUnitValueModel.tuple(decimeter, null, 1),
@@ -101,6 +103,7 @@ void main() {
             newUnit: meter,
             unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
+            recalculateUnitValues: false,
           ),
           unitGroup: lengthGroup,
           currentSrc: ConversionUnitValueModel.tuple(decimeter, 10, 1),
@@ -124,6 +127,7 @@ void main() {
             newUnit: meter,
             unitId: decimeter.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
+            recalculateUnitValues: false,
           ),
           unitGroup: lengthGroup,
           currentSrc: ConversionUnitValueModel.tuple(decimeter, null, 1),
@@ -154,6 +158,7 @@ void main() {
             newUnit: usaClothSize,
             unitId: europeanClothSize.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
+            recalculateUnitValues: true,
           ),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -238,6 +243,7 @@ void main() {
             newUnit: usaClothSize,
             unitId: europeanClothSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
+            recalculateUnitValues: false,
           ),
           currentParams: ConversionParamSetValueBulkModel(
             paramSetValues: [

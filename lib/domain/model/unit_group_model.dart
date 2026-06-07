@@ -105,12 +105,10 @@ class UnitGroupModel extends IdNameSearchableItemModel {
       conversionType: ConversionType.valueOf(json["conversionType"]),
       refreshable: json["refreshable"],
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
-      minValue: json["minValue"] != null
-          ? ValueModel.num(json["minValue"])
-          : null,
-      maxValue: json["maxValue"] != null
-          ? ValueModel.num(json["maxValue"])
-          : null,
+      minValue:
+          json["minValue"] != null ? ValueModel.num(json["minValue"]) : null,
+      maxValue:
+          json["maxValue"] != null ? ValueModel.num(json["maxValue"]) : null,
       oob: json["oob"],
     );
   }
@@ -118,16 +116,8 @@ class UnitGroupModel extends IdNameSearchableItemModel {
   @override
   String toString() {
     if (!exists) {
-      return "UnitGroupModel.none";
+      return "UnitGroup.none";
     }
-    return 'UnitGroupModel{'
-        'id: $id, '
-        'name: $name, '
-        'iconName: $iconName, '
-        'conversionType: $conversionType, '
-        'refreshable: $refreshable, '
-        'valueType: $valueType, '
-        'minValue: $minValue, '
-        'maxValue: $maxValue}';
+    return 'UnitGroup{$id, $name}';
   }
 }

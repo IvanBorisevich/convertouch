@@ -260,7 +260,7 @@ void main() {
           {
             'paramSet': {
               'id': 1,
-              'name': 'By Height',
+              'name': 'Clothes Size',
               'mandatory': true,
               'groupId': -1
             },

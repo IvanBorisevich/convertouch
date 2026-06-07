@@ -27,30 +27,25 @@ mixin TextControllerMixin {
     String? initialValue,
   ) {
     if (initialValue != null && initialValue.isNotEmpty) {
-      updateTextControllerValue(controller, value: initialValue);
+      updateTextControllerValue(controller, initialValue);
     }
   }
 
   void updateTextControllerValue(
-    TextEditingController controller, {
-    String? value,
-  }) {
-    if (value == null) {
-      return;
-    }
+    TextEditingController controller, String newValue) {
 
-    if (controller.text == value) {
+    if (controller.text == newValue) {
       return;
     }
 
     int offset = controller.selection.baseOffset;
 
-    if (offset > value.length) {
-      offset = value.length;
+    if (offset > newValue.length) {
+      offset = newValue.length;
     }
 
     controller.value = controller.value.copyWith(
-      text: value,
+      text: newValue,
       selection: TextSelection.collapsed(offset: offset),
     );
   }

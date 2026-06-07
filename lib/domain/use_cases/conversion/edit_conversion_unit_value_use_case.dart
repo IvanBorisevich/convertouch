@@ -63,7 +63,7 @@ class EditConversionUnitValueUseCase
       ),
     );
 
-    return oldConversionParams.copyWithChangedParamSetById(
+    return await oldConversionParams.copyWithChangedParamSetById(
       paramSetId: newParamSetValue.paramSet.id,
       map: (paramSetValue) async => newParamSetValue,
     );

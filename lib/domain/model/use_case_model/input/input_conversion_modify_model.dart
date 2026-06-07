@@ -16,17 +16,23 @@ class InputConversionModifyModel<T extends ConversionModifyDelta> {
 }
 
 abstract class ConversionModifyDelta {
-  const ConversionModifyDelta();
+  final bool recalculateUnitValues;
 
-  bool get recalculateUnitValues => true;
+  const ConversionModifyDelta({
+    required this.recalculateUnitValues,
+  });
 }
 
 abstract class ConversionUnitValuesModifyDelta extends ConversionModifyDelta {
-  const ConversionUnitValuesModifyDelta();
+  const ConversionUnitValuesModifyDelta({
+    required super.recalculateUnitValues,
+  });
 }
 
 abstract class ConversionParamsModifyDelta extends ConversionModifyDelta {
-  const ConversionParamsModifyDelta();
+  const ConversionParamsModifyDelta({
+    required super.recalculateUnitValues,
+  });
 }
 
 abstract class ConversionSingleUnitModifyDelta
@@ -35,6 +41,7 @@ abstract class ConversionSingleUnitModifyDelta
 
   const ConversionSingleUnitModifyDelta({
     required this.unitId,
+    required super.recalculateUnitValues,
   });
 }
 
@@ -46,6 +53,7 @@ abstract class ConversionSingleParamModifyDelta
   const ConversionSingleParamModifyDelta({
     required this.paramId,
     required this.paramSetId,
+    required super.recalculateUnitValues,
   });
 }
 
@@ -54,7 +62,7 @@ class AddUnitsToConversionDelta extends ConversionUnitValuesModifyDelta {
 
   const AddUnitsToConversionDelta({
     required this.unitIds,
-  });
+  }) : super(recalculateUnitValues: true);
 }
 
 class EditConversionGroupDelta extends ConversionModifyDelta {
@@ -62,10 +70,7 @@ class EditConversionGroupDelta extends ConversionModifyDelta {
 
   const EditConversionGroupDelta({
     required this.editedGroup,
-  });
-
-  @override
-  bool get recalculateUnitValues => false;
+  }) : super(recalculateUnitValues: false);
 }
 
 class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
@@ -73,7 +78,7 @@ class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
 
   const EditConversionUnitDelta({
     required this.editedUnit,
-  });
+  }) : super(recalculateUnitValues: true);
 }
 
 class EditConversionUnitValueDelta extends ConversionSingleUnitModifyDelta {
@@ -84,7 +89,7 @@ class EditConversionUnitValueDelta extends ConversionSingleUnitModifyDelta {
     required this.newValue,
     required this.newDefaultValue,
     required super.unitId,
-  });
+  }) : super(recalculateUnitValues: true);
 
   factory EditConversionUnitValueDelta.raw({
     dynamic newValue,
@@ -107,11 +112,8 @@ class ReplaceConversionItemUnitDelta extends ConversionSingleUnitModifyDelta {
     required this.newUnit,
     required super.unitId,
     required this.recalculationMode,
+    required super.recalculateUnitValues,
   });
-
-  @override
-  bool get recalculateUnitValues =>
-      recalculationMode == RecalculationOnUnitChange.otherValues;
 }
 
 class UpdateConversionCoefficientsDelta
@@ -120,7 +122,7 @@ class UpdateConversionCoefficientsDelta
 
   const UpdateConversionCoefficientsDelta({
     required this.newCoefficients,
-  });
+  }) : super(recalculateUnitValues: true);
 }
 
 class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
@@ -128,10 +130,7 @@ class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
 
   const RemoveConversionItemsDelta({
     required this.unitIds,
-  });
-
-  @override
-  bool get recalculateUnitValues => false;
+  }) : super(recalculateUnitValues: false);
 }
 
 class AddParamSetsDelta extends ConversionParamsModifyDelta {
@@ -139,7 +138,7 @@ class AddParamSetsDelta extends ConversionParamsModifyDelta {
 
   const AddParamSetsDelta({
     this.paramSetIds = const [],
-  });
+  }) : super(recalculateUnitValues: false);
 }
 
 class SelectParamSetDelta extends ConversionParamsModifyDelta {
@@ -147,7 +146,7 @@ class SelectParamSetDelta extends ConversionParamsModifyDelta {
 
   const SelectParamSetDelta({
     required this.newSelectedParamSetIndex,
-  });
+  }) : super(recalculateUnitValues: true);
 }
 
 class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
@@ -159,7 +158,7 @@ class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
     required this.newDefaultValue,
     required super.paramId,
     required super.paramSetId,
-  });
+  }) : super(recalculateUnitValues: true);
 
   factory EditConversionParamValueDelta.raw({
     dynamic newValue,
@@ -183,20 +182,24 @@ class ReplaceConversionParamUnitDelta extends ConversionSingleParamModifyDelta {
     required this.newUnit,
     required super.paramId,
     required super.paramSetId,
-  });
+  }) : super(recalculateUnitValues: true);
 }
 
 class RemoveParamSetsDelta extends ConversionParamsModifyDelta {
   final bool allOptional;
 
-  const RemoveParamSetsDelta.current() : allOptional = false;
+  const RemoveParamSetsDelta._({
+    required this.allOptional,
+  }) : super(recalculateUnitValues: true);
 
-  const RemoveParamSetsDelta.all() : allOptional = true;
+  const RemoveParamSetsDelta.current() : this._(allOptional: false);
+
+  const RemoveParamSetsDelta.all() : this._(allOptional: true);
 }
 
 class ToggleCalculableParamDelta extends ConversionSingleParamModifyDelta {
   const ToggleCalculableParamDelta({
     required super.paramId,
     required super.paramSetId,
-  });
+  }) : super(recalculateUnitValues: false);
 }

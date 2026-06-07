@@ -61,10 +61,6 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
 
   @override
   String toString() {
-    return 'ConversionParamSetModel{'
-        'id: $id, '
-        'name: $name, '
-        'mandatory: $mandatory, '
-        'groupId: $groupId}';
+    return 'ParamSet{$id, $name}';
   }
 }

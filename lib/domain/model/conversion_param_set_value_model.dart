@@ -163,9 +163,7 @@ class ConversionParamSetValueModel extends ItemModel {
 
   @override
   String toString() {
-    return 'ConversionParamSetValueModel{'
-        'paramSet: $paramSet, '
-        'paramValues: $paramValues}';
+    return 'ParamSetValue{$paramSet: $paramValues}';
   }
 }
 

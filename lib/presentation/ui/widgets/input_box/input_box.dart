@@ -18,6 +18,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 const Map<ConvertouchValueType, TextInputType> _valueTypeToKeyboardType = {
@@ -60,6 +61,7 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
 );
 
 const String _defaultSearchHint = "Search...";
+const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
 
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
@@ -81,7 +83,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.suffixLeftmostDividerVisible = true,
     this.inputFieldMargin = _defaultInputFieldMargin,
     this.fontSize = _defaultFontSize,
-    this.changeValueOnFocusChanged = false,
     super.key,
   });
 
@@ -102,7 +103,6 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final bool suffixLeftmostDividerVisible;
   final EdgeInsets inputFieldMargin;
   final double fontSize;
-  final bool changeValueOnFocusChanged;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
@@ -309,7 +309,6 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         controller: _controller,
         focusNode: _focusNode,
         validators: widget.validators,
-        changeValueOnFocusChanged: widget.changeValueOnFocusChanged,
         onValueChanged: _wrapWithValidation(
           context: context,
           func: _onValueChanged,
@@ -455,7 +454,6 @@ class _TextField extends StatefulWidget {
     required this.autofocus,
     required this.focusNode,
     this.validators = const [],
-    this.changeValueOnFocusChanged = true,
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
@@ -471,7 +469,6 @@ class _TextField extends StatefulWidget {
   final bool autofocus;
   final FocusNode focusNode;
   final List<InputValidator> validators;
-  final bool changeValueOnFocusChanged;
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function(ValueModel)? onValueUnfocused;
@@ -488,56 +485,67 @@ class _TextField extends StatefulWidget {
 class _TextFieldState extends State<_TextField>
     with FocusNodeMixin, TextControllerMixin {
   late void Function() _focusListener;
-
-  String? _hint;
+  late ValueNotifier<ValueModel?> _valueNotifier;
+  late ValueNotifier<ValueModel?> _hintNotifier;
+  late final ValueNotifier<String?> _rawValueNotifier;
+  late final ValueNotifier<String?> _rawHintNotifier;
 
   @override
   void initState() {
     super.initState();
 
-    _hint = widget.autofocus ? widget.model.hint : widget.model.hintUnfocused;
+    _rawValueNotifier = ValueNotifier(widget.model.valueStream.value?.raw);
+    _rawValueNotifier.addListener(_rawValueNotifierListener);
 
-    initControllerValue(
-      widget.controller,
-      widget.autofocus ? widget.model.value : widget.model.valueUnfocused,
+    _rawHintNotifier = ValueNotifier(widget.model.hintStream.value?.raw);
+
+    _valueNotifier = BehaviorSubjectNotifier(
+      widget.model.valueStream,
+      onListen: (newValue) {
+        _rawValueNotifier.value =
+            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
+      },
+    );
+
+    _hintNotifier = BehaviorSubjectNotifier(
+      widget.model.hintStream,
+      onListen: (newValue) {
+        _rawHintNotifier.value =
+            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
+      },
     );
 
     _focusListener = addFocusListener(
       focusNode: widget.focusNode,
       onFocusSelected: () {
-        widget.onValueFocused?.call(ValueModel.str(widget.controller.text));
-
-        if (widget.changeValueOnFocusChanged) {
-          updateTextControllerValue(
-            widget.controller,
-            value: widget.model.value,
-          );
-        }
-
-        setState(() {
-          _hint = widget.model.hint;
-        });
+        widget.onValueFocused
+            ?.call(widget.model.valueStream.valueOrNull ?? ValueModel.empty);
+        _rawValueNotifier.value = widget.model.valueStream.valueOrNull?.raw;
+        _rawHintNotifier.value = widget.model.hintStream.valueOrNull?.raw;
       },
       onFocusLeft: () {
-        widget.onValueUnfocused?.call(ValueModel.str(widget.controller.text));
-
-        if (widget.changeValueOnFocusChanged) {
-          updateTextControllerValue(
-            widget.controller,
-            value: widget.model.valueUnfocused,
-          );
-        }
-
-        setState(() {
-          _hint = widget.model.hintUnfocused;
-        });
+        widget.onValueUnfocused
+            ?.call(widget.model.valueStream.valueOrNull ?? ValueModel.empty);
+        _rawValueNotifier.value = widget.model.valueStream.valueOrNull?.alt;
+        _rawHintNotifier.value = widget.model.hintStream.valueOrNull?.alt;
       },
     );
+  }
+
+  void _rawValueNotifierListener() {
+    updateTextControllerValue(widget.controller, _rawValueNotifier.value ?? "");
   }
 
   @override
   void dispose() {
     widget.focusNode.removeListener(_focusListener);
+
+    _valueNotifier.dispose();
+    _hintNotifier.dispose();
+
+    _rawValueNotifier.removeListener(_rawValueNotifierListener);
+    _rawValueNotifier.dispose();
+    _rawHintNotifier.dispose();
 
     super.dispose();
   }
@@ -546,61 +554,71 @@ class _TextFieldState extends State<_TextField>
   void didUpdateWidget(_TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    updateTextControllerValue(
-      widget.controller,
-      value: widget.focusNode.hasFocus
-          ? widget.model.value
-          : widget.model.valueUnfocused,
+    _valueNotifier = BehaviorSubjectNotifier(
+      widget.model.valueStream,
+      onListen: (newValue) {
+        _rawValueNotifier.value =
+            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
+      },
     );
 
-    _hint = widget.focusNode.hasFocus
-        ? widget.model.hint
-        : widget.model.hintUnfocused;
+    _hintNotifier = BehaviorSubjectNotifier(
+      widget.model.hintStream,
+      onListen: (newValue) {
+        _rawHintNotifier.value =
+            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     RegExp? inputRegExp = _valueTypeToRegExp[widget.model.valueType];
 
-    return TextField(
-      readOnly: widget.model.readonly,
-      maxLength: widget.model.maxTextLength,
-      textAlignVertical: TextAlignVertical.center,
-      obscureText: false,
-      autofocus: widget.autofocus,
-      focusNode: widget.focusNode,
-      controller: widget.controller,
-      inputFormatters: inputRegExp != null
-          ? [FilteringTextInputFormatter.allow(inputRegExp)]
-          : null,
-      keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
-      onChanged: (value) {
-        widget.onValueChanged?.call(ValueModel.str(value));
+    return ValueListenableBuilder(
+      valueListenable: _rawHintNotifier,
+      builder: (_, hint, child) {
+        return TextField(
+          readOnly: widget.model.readonly,
+          maxLength: widget.model.maxTextLength,
+          textAlignVertical: TextAlignVertical.center,
+          obscureText: false,
+          autofocus: widget.autofocus,
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          inputFormatters: inputRegExp != null
+              ? [FilteringTextInputFormatter.allow(inputRegExp)]
+              : null,
+          keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
+          onChanged: (value) {
+            widget.onValueChanged?.call(ValueModel.str(value));
+          },
+          decoration: _inputFieldDecoration(
+            context,
+            margin: widget.margin,
+            fontSize: widget.fontSize,
+            labelText: widget.model.labelText,
+            hintText: hint ?? _noValueHint,
+            hintColor: widget.hintColor,
+            labelColor: widget.labelColor,
+            floatingLabelBehavior: hint != null && hint.isNotEmpty
+                ? FloatingLabelBehavior.always
+                : null,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 4,
+            ),
+          ).copyWith(
+            suffixText: widget.model.textLengthCounterVisible
+                ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
+                : null,
+          ),
+          style: _inputFieldTextStyle(
+            fontSize: widget.fontSize,
+            foregroundColor: widget.foregroundColor,
+          ),
+          textAlign: TextAlign.start,
+        );
       },
-      decoration: _inputFieldDecoration(
-        context,
-        margin: widget.margin,
-        fontSize: widget.fontSize,
-        labelText: widget.model.labelText,
-        hintText: _hint,
-        hintColor: widget.hintColor,
-        labelColor: widget.labelColor,
-        floatingLabelBehavior: _hint != null && _hint!.isNotEmpty
-            ? FloatingLabelBehavior.always
-            : null,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 4,
-        ),
-      ).copyWith(
-        suffixText: widget.model.textLengthCounterVisible
-            ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
-            : null,
-      ),
-      style: _inputFieldTextStyle(
-        fontSize: widget.fontSize,
-        foregroundColor: widget.foregroundColor,
-      ),
-      textAlign: TextAlign.start,
     );
   }
 }
@@ -649,8 +667,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.initState();
 
     _isDropdownOpen = false;
-    _selectedValueNotifier = ValueNotifier(widget.model.selectedValue);
 
+    _selectedValueNotifier = BehaviorSubjectNotifier(widget.model.valueStream);
     _listValuesNotifier =
         BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
 
@@ -673,8 +691,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedValueNotifier.value = widget.model.selectedValue;
-
+    _selectedValueNotifier = BehaviorSubjectNotifier(widget.model.valueStream);
     _listValuesNotifier =
         BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
   }
@@ -698,7 +715,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 margin: widget.margin,
                 fontSize: widget.fontSize,
                 labelText: widget.model.labelText,
-                hintText: noValueHint,
+                hintText: _noValueHint,
                 hintColor: widget.hintColor,
                 labelColor: widget.labelColor,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -749,13 +766,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               selectedItemBuilder: (context) {
                 return (listValuesFetchResult?.items ?? []).map(
                   (value) {
-                    return Text(
-                      widget.model.selectedValue?.itemName ?? noValueHint,
-                      style: _inputFieldTextStyle(
-                        fontSize: widget.fontSize,
-                        foregroundColor: widget.foregroundColor,
-                      ),
-                      maxLines: 1,
+                    return ValueListenableBuilder(
+                      valueListenable: _selectedValueNotifier,
+                      builder: (_, selectedValue, child) {
+                        return Text(
+                          selectedValue?.itemName ?? _noValueHint,
+                          style: _inputFieldTextStyle(
+                            fontSize: widget.fontSize,
+                            foregroundColor: widget.foregroundColor,
+                          ),
+                          maxLines: 1,
+                        );
+                      },
                     );
                   },
                 ).toList();
@@ -808,9 +830,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         ),
                         child: ConvertouchInputBox(
                           model: TextBoxModel(
-                            hint: widget.model.searchHint ?? _defaultSearchHint,
-                            hintUnfocused:
+                            valueStream: BehaviorSubject.seeded(
+                              ValueModel.empty,
+                            ),
+                            hintStream: BehaviorSubject.seeded(
+                              ValueModel.rawStr(
                                 widget.model.searchHint ?? _defaultSearchHint,
+                              ),
+                            ),
                             valueType: widget.model.listType.listValuesType,
                           ),
                           colors: InputBoxColorScheme(

@@ -13,7 +13,7 @@ const testOptionalParamSet = ConversionParamSetModel(
 
 const clothesSizeParamSet = ConversionParamSetModel(
   id: 1,
-  name: ParamSetNames.byHeight,
+  name: ParamSetNames.clothesSize,
   mandatory: true,
   groupId: -1,
 );

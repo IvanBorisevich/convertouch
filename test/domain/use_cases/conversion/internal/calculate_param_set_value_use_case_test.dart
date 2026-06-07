@@ -6,7 +6,6 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
@@ -83,11 +82,10 @@ void main() {
 
   group("Should initially calculate param set 'Barbell Weight'", () {
     test(
-        "Should NOT init 'Bar Weight', "
-        "should NOT recalc 'One Size Weight' by src value ('Bar Weight' is empty) "
-        "(will start calculation with the calculated param 'One Side Weight':"
-        " - alignCurrentValues = true, "
-        " - 'One Size Weight' calculated = true, "
+        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "should recalc 'One Size Weight' by src value ("
+        " - 'Bar Weight' will not be empty,"
+        " - 'One Size Weight' calculated = true,"
         " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
@@ -114,19 +112,19 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
-            null,
+            barWeightParamKgListValues.items[0],
             null,
             unit: kilogram,
             calculated: false,
-            listValuesFetchResult: null,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
             null,
-            1,
+            30,
             unit: kilogram,
             calculated: true,
             listValuesFetchResult: null
@@ -145,11 +143,10 @@ void main() {
     });
 
     test(
-        "Should NOT init 'Bar Weight', "
-        "should NOT recalc 'One Size Weight' by src value ('Bar Weight' is empty) "
-        "(will start calculation with the calculated param 'One Side Weight':"
-        " - alignCurrentValues = true, "
-        " - 'One Size Weight' calculated = true, "
+        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "should recalc 'One Size Weight' by src value ("
+        " - 'Bar Weight' will not be empty,"
+        " - 'One Size Weight' calculated = true,"
         " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
@@ -175,19 +172,19 @@ void main() {
 
       final expectedParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
-        paramValues: const [
+        paramValues: [
           (
             barWeightParam,
-            null,
+            barWeightParamKgListValues.items[0],
             null,
             unit: kilogram,
             calculated: false,
-            listValuesFetchResult: null,
+            listValuesFetchResult: barWeightParamKgListValues,
           ),
           (
             oneSideWeightParam,
             null,
-            1,
+            30,
             unit: kilogram,
             calculated: true,
             listValuesFetchResult: null
@@ -206,11 +203,10 @@ void main() {
     });
 
     test(
-        "Should init 'Bar Weight', "
-        "should NOT recalc 'One Size Weight' by src value (calculated = false) "
-        "(will start calculation with the first param 'Bar Weight':"
-        " - alignCurrentValues = true, "
-        " - 'One Size Weight' calculated = false, "
+        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "should NOT recalc 'One Size Weight' by src value ("
+        " - 'Bar Weight' will not be empty,"
+        " - 'One Size Weight' calculated = false,"
         " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
@@ -240,7 +236,7 @@ void main() {
         paramValues: [
           (
             barWeightParam,
-            10,
+            barWeightParamKgListValues.items[0],
             null,
             unit: kilogram,
             calculated: false,
@@ -268,12 +264,11 @@ void main() {
     });
 
     test(
-        "Should init 'Bar Weight', "
-        "should recalc 'One Size Weight' by src value "
-        "(will start calculation with the first param 'Bar Weight':"
-        " - alignCurrentValues = true, "
-        " - 'One Size Weight' will become calculated = true, "
-        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
+        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "should recalc 'One Size Weight' by src value ("
+        " - 'Bar Weight' will not be empty,"
+        " - 'One Size Weight' will become calculated = true, because"
+        "enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: barbellWeightParamSet,
         paramValues: const [
@@ -301,7 +296,7 @@ void main() {
         paramValues: [
           (
             barWeightParam,
-            10,
+            barWeightParamKgListValues.items[0],
             null,
             unit: kilogram,
             calculated: false,
@@ -628,24 +623,23 @@ void main() {
 
   group("Should initially calculate param set 'Clothes Size'", () {
     test(
-        "Should leave 'Person' = Man, "
-        "should set default 'Garment' list value [empty -> Shirt], "
-        "should set default 'Height' list value [cm: empty -> ..-164] (no src value) "
-        "(will start calculation with the first param 'Person':"
-        " - alignCurrentValues = true, "
-        " - 'Height' calculated = false, "
+        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
+        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "should set default 'Height' list value [cm: ..-164] ("
+        " - no src value,"
+        " - 'Height' calculated = false,"
         " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: [
+        paramValues: const [
           (
             personParam,
             "Man",
             null,
             unit: null,
             calculated: false,
-            listValuesFetchResult: personParamListValues,
+            listValuesFetchResult: null,
           ),
           (
             garmentParam,
@@ -705,23 +699,22 @@ void main() {
     });
 
     test(
-        "Should leave 'Person' = Man, "
-        "should set default 'Garment' list value [empty -> Shirt], "
-        "should set default 'Height' list value [cm: empty -> ..-164] (no src value) "
-        "(will start calculation with the first param 'Person':"
-        " - alignCurrentValues = true, "
-        " - 'Height' will become calculated = true, "
-        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
+        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
+        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "should set default 'Height' list value [cm: ..-164] ("
+        " - no src value,"
+        " - 'Height' will become calculated = true, because"
+        " enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: [
+        paramValues: const [
           (
             personParam,
             "Man",
             null,
             unit: null,
             calculated: false,
-            listValuesFetchResult: personParamListValues,
+            listValuesFetchResult: null,
           ),
           (
             garmentParam,
@@ -781,23 +774,23 @@ void main() {
     });
 
     test(
-        "Should leave 'Person' = Man, "
-        "should set default 'Garment' list value [empty -> Shirt], "
-        "should recalc 'Height' list value by src value IT 44 "
-        "(will start calculation with the calculated param 'Height':"
-        " - alignCurrentValues = true, "
-        " - 'Height' will become calculated = true, "
-        " - enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
+        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
+        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "should recalc 'Height' list value by src value IT 44 ("
+        " - 'Person' is not empty,"
+        " - 'Garment' is not empty,"
+        " - 'Height' will become calculated = true, because"
+        " enableFirstCalculableParamIfNoCalculatedEnabled = true)", () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: [
+        paramValues: const [
           (
             personParam,
             "Man",
             null,
             unit: null,
             calculated: false,
-            listValuesFetchResult: personParamListValues,
+            listValuesFetchResult: null,
           ),
           (
             garmentParam,
@@ -860,24 +853,24 @@ void main() {
     });
 
     test(
-        "Should leave 'Person' = Man, "
-        "should NOT recalc 'Garment' list value [empty -> Shirt], "
-        "should NOT recalc 'Height' list value by src value IT 44 ('Garment' is empty) "
-        "(will start calculation with the calculated param 'Height':"
-        " - alignCurrentValues = true, "
-        " - 'Height' calculated = true, "
+        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
+        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "should recalc 'Height' list value by src value IT 44 ("
+        " - 'Person' is not empty,"
+        " - 'Garment' is not empty,"
+        " - 'Height' calculated = true,"
         " - enableFirstCalculableParamIfNoCalculatedEnabled = false)",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel.compact(
         paramSet: clothesSizeParamSet,
-        paramValues: [
+        paramValues: const [
           (
             personParam,
             "Man",
             null,
             unit: null,
             calculated: false,
-            listValuesFetchResult: personParamListValues,
+            listValuesFetchResult: null,
           ),
           (
             garmentParam,
@@ -911,19 +904,19 @@ void main() {
           ),
           (
             garmentParam,
-            null,
+            "Shirt",
             null,
             unit: null,
             calculated: false,
-            listValuesFetchResult: null,
+            listValuesFetchResult: garmentParamListValues,
           ),
           (
             heightParam,
-            null,
+            manShirtHeightRangesFrom0_164To190InCm.items[1],
             null,
             unit: centimeter,
             calculated: true,
-            listValuesFetchResult: const OutputItemsFetchModel.empty(),
+            listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
           ),
         ],
       );
@@ -1077,7 +1070,8 @@ void main() {
             null,
             unit: meter,
             calculated: false,
-            listValuesFetchResult: womanTrousersHeightRangesFrom0_156To186InMeter,
+            listValuesFetchResult:
+                womanTrousersHeightRangesFrom0_156To186InMeter,
           ),
         ],
       );
@@ -1562,8 +1556,7 @@ void main() {
   });
 
   group("Should initially calculate param set 'Exchange Rate'", () {
-    test(
-        "[Currency] Should init 'Source' param list values without preselect",
+    test("[Currency] Should init 'Source' param list values without preselect",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,

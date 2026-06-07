@@ -107,10 +107,10 @@ class ConversionModel extends IdNameItemModel {
 
   @override
   String toString() {
-    return 'ConversionModel{'
-        'unitGroup: $unitGroup, '
-        'srcUnitValue: $srcUnitValue, '
-        'params: $params, '
-        'convertedUnitValues: $convertedUnitValues}';
+    return 'Conversion{\n'
+        'group: ${unitGroup.name},\n'
+        'params: $params,\n'
+        'srcItem: $srcUnitValue,\n'
+        'items: $convertedUnitValues}';
   }
 }

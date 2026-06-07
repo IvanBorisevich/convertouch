@@ -7,20 +7,6 @@ import 'package:test/test.dart';
 import 'mock/mock_param.dart';
 import 'mock/mock_unit.dart';
 
-final _clothesSizeParams = ConversionParamSetValueBulkModel(
-  paramSetValues: [
-    ConversionParamSetValueModel(
-      paramSet: clothesSizeParamSet,
-      paramValues: [
-        ConversionParamValueModel.tuple(personParam, "Man", null),
-        ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
-        ConversionParamValueModel.tuple(heightParam, 160, 1, unit: centimeter),
-      ],
-    )
-  ],
-  selectedIndex: 0,
-);
-
 final _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
   paramSetValues: [
     ConversionParamSetValueModel(
@@ -42,10 +28,27 @@ final _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
   selectedIndex: 0,
 );
 
+ConversionParamSetValueBulkModel _clothesSizeParams() {
+  return ConversionParamSetValueBulkModel(
+    paramSetValues: [
+      ConversionParamSetValueModel(
+        paramSet: clothesSizeParamSet,
+        paramValues: [
+          ConversionParamValueModel.tuple(personParam, "Man", null),
+          ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+          ConversionParamValueModel.tuple(heightParam, 160, 1,
+              unit: centimeter),
+        ],
+      )
+    ],
+    selectedIndex: 0,
+  );
+}
+
 void main() {
   test('Copy with changed list param value', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParams(
+      await _clothesSizeParams().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),
@@ -72,7 +75,7 @@ void main() {
 
   test('Copy with changed list param value (in active param set)', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParams(
+      await _clothesSizeParams().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.str("Woman"),
         ),
@@ -97,7 +100,7 @@ void main() {
 
   test('Copy with changed non-list param value', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParamById(
+      await _clothesSizeParams().copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.num(150),
           defaultValue: ValueModel.num(2),
@@ -123,8 +126,10 @@ void main() {
   });
 
   test('Copy with changed unknown param', () async {
+    final clothesSizeParams = _clothesSizeParams();
+
     expect(
-      await _clothesSizeParams.copyWithChangedParamById(
+      await clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.num(150),
           defaultValue: ValueModel.num(2),
@@ -132,13 +137,13 @@ void main() {
         paramSetId: clothesSizeParamSet.id,
         paramId: -1,
       ),
-      _clothesSizeParams,
+      clothesSizeParams,
     );
   });
 
   test('Copy with changed non-list param unit', () async {
     expect(
-      await _clothesSizeParams.copyWithChangedParamById(
+      await _clothesSizeParams().copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           unit: meter,
         ),

@@ -179,13 +179,11 @@ void main() {
           currentSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(kilogram, 40, 1),
-            ConversionUnitValueModel.tuple(pound, 40 / pound.coefficient!, 1),
-          ],
-          expectedSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
-          expectedUnitValues: [
-            ConversionUnitValueModel.tuple(kilogram, 40, 1),
             ConversionUnitValueModel.tuple(
-                pound, 40 / pound.coefficient!, 1 / pound.coefficient!),
+              pound,
+              40 / pound.coefficient!,
+              1 / pound.coefficient!,
+            ),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -215,6 +213,15 @@ void main() {
             selectedIndex: 0,
             totalCount: 1,
           ),
+          expectedSrc: ConversionUnitValueModel.tuple(kilogram, 40, 1),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(kilogram, 40, 1),
+            ConversionUnitValueModel.tuple(
+              pound,
+              40 / pound.coefficient!,
+              1 / pound.coefficient!,
+            ),
+          ],
         );
       });
     });

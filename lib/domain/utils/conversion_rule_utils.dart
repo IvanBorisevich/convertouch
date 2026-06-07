@@ -51,11 +51,9 @@ List<ConversionUnitValueModel> calculateUnitValues(
     );
 
     result.add(
-      ConversionUnitValueModel(
-        unit: tgtUnit,
-        value: value,
-        defaultValue: defaultValue,
-        listValuesFetchResult: tgtItem.listValuesFetchResult,
+      tgtItem.copyWith(
+        value: value ?? ValueModel.empty,
+        defaultValue: defaultValue ?? ValueModel.empty,
       ),
     );
   }
@@ -321,7 +319,7 @@ final Map<String, Map<ConversionRuleType, Map<String, ConversionRule>>>
 const Map<String, Map<String, Map<String, ParamValueBySrcUnitValueFunc>>>
     _paramValueBySrcValueRules = {
   GroupNames.clothesSize: {
-    ParamSetNames.byHeight: {
+    ParamSetNames.clothesSize: {
       ParamNames.height: getHeightByClothesSize,
     },
   },

@@ -123,12 +123,10 @@ class UnitModel extends IdNameSearchableItemModel {
       unitGroupId: json["unitGroupId"] ?? -1,
       valueType: ConvertouchValueType.valueOf(json["valueType"])!,
       listType: ConvertouchListType.valueOf(json["listType"]),
-      minValue: json["minValue"] != null
-          ? ValueModel.num(json["minValue"])
-          : null,
-      maxValue: json["maxValue"] != null
-          ? ValueModel.num(json["maxValue"])
-          : null,
+      minValue:
+          json["minValue"] != null ? ValueModel.num(json["minValue"]) : null,
+      maxValue:
+          json["maxValue"] != null ? ValueModel.num(json["maxValue"]) : null,
       invertible: json["invertible"] ?? true,
       oob: json["oob"] == true,
     );
@@ -156,19 +154,8 @@ class UnitModel extends IdNameSearchableItemModel {
   @override
   String toString() {
     if (!exists) {
-      return "UnitModel.none";
+      return "Unit.none";
     }
-    return 'UnitModel{'
-        'id: $id, '
-        'name: $name, '
-        'code: $code, '
-        'coefficient: $coefficient, '
-        'symbol: $symbol, '
-        'unitGroupId: $unitGroupId, '
-        'valueType: $valueType, '
-        'minValue: $minValue, '
-        'maxValue: $maxValue, '
-        'listType: $listType, '
-        'invertible: $invertible}';
+    return 'Unit{$id, $name, code=$code, c=$coefficient, symbol=$symbol}';
   }
 }

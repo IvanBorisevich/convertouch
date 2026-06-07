@@ -5,15 +5,14 @@ import 'package:convertouch/presentation/ui/model/element_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
-const String noValueHint = '-';
 
 abstract class InputBoxModel implements ElementModel {
-  final String? hint;
+  final BehaviorSubject<ValueModel?> valueStream;
   final String? labelText;
   final bool readonly;
 
   const InputBoxModel({
-    this.hint,
+    required this.valueStream,
     this.labelText,
     this.readonly = false,
   });
@@ -24,22 +23,20 @@ abstract class InputBoxModel implements ElementModel {
   }) {
     if (model.listType != null) {
       return ListBoxModel(
-        selectedValue: model.value,
+        valueStream: model.valueStream,
         listValuesBatchStream: model.listValuesBatchStream,
         listType: model.listType!,
         readonly: model.listValuesFetchResult?.items == null ||
             model.listValuesFetchResult!.items.isEmpty,
         labelText: _getLabelText(model),
-        searchEnabled: model.listValuesFetchResult!.items.length >
-            _nonSearchableListItemsMinLimit,
+        searchEnabled: model.listValuesFetchResult?.items != null &&
+            model.listValuesFetchResult!.items.length >
+                _nonSearchableListItemsMinLimit,
       ) as T;
     } else {
       return TextBoxModel(
-        value: model.value?.raw,
-        valueUnfocused: model.value?.alt ?? model.value?.raw,
-        hint: model.defaultValue?.raw,
-        hintUnfocused:
-            model.defaultValue?.alt ?? model.defaultValue?.raw ?? noValueHint,
+        valueStream: model.valueStream,
+        hintStream: model.defaultValueStream,
         readonly: readonly,
         labelText: _getLabelText(model),
         valueType: model.valueType,
@@ -61,20 +58,14 @@ abstract class InputBoxModel implements ElementModel {
 }
 
 class TextBoxModel extends InputBoxModel {
-  static const TextBoxModel empty = TextBoxModel();
-
-  final String? value;
-  final String? valueUnfocused;
-  final String? hintUnfocused;
+  final BehaviorSubject<ValueModel?> hintStream;
   final ConvertouchValueType valueType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
 
   const TextBoxModel({
-    this.value,
-    this.valueUnfocused,
-    super.hint,
-    this.hintUnfocused,
+    required super.valueStream,
+    required this.hintStream,
     super.readonly,
     super.labelText,
     this.valueType = ConvertouchValueType.text,
@@ -85,10 +76,8 @@ class TextBoxModel extends InputBoxModel {
   @override
   String toString() {
     return 'TextBoxModel{'
-        'value: $value, '
-        'valueUnfocused: $valueUnfocused, '
-        'hint: $hint, '
-        'hintUnfocused: $hintUnfocused, '
+        'value: ${valueStream.valueOrNull}, '
+        'hint: ${hintStream.valueOrNull}, '
         'readonly: $readonly, '
         'labelText: $labelText, '
         'valueType: $valueType, '
@@ -98,14 +87,13 @@ class TextBoxModel extends InputBoxModel {
 }
 
 class ListBoxModel extends InputBoxModel {
-  final ValueModel? selectedValue;
   final BehaviorSubject<ListValuesFetchResult?> listValuesBatchStream;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
 
   const ListBoxModel({
-    this.selectedValue,
+    required super.valueStream,
     required this.listType,
     super.readonly,
     super.labelText,
@@ -119,7 +107,7 @@ class ListBoxModel extends InputBoxModel {
     return 'ListBoxModel{'
         'labelText: $labelText, '
         'readonly: $readonly, '
-        'listValue: $selectedValue, '
+        'listValue: ${valueStream.valueOrNull}, '
         'listValuesBatchStream: $listValuesBatchStream, '
         'listType: $listType, '
         'searchHint: $searchHint, '

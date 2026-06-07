@@ -6,18 +6,6 @@ import 'package:test/test.dart';
 import 'mock/mock_param.dart';
 import 'mock/mock_unit_group.dart';
 
-final _barbellWeightParamSetValue = ConversionParamSetValueModel(
-  paramSet: barbellWeightParamSet,
-  paramValues: [
-    ConversionParamValueModel(
-      param: barWeightParam,
-    ),
-    ConversionParamValueModel(
-      param: oneSideWeightParam,
-    ),
-  ],
-);
-
 final _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
   paramSet: barbellWeightParamSet,
   paramValues: [
@@ -34,7 +22,7 @@ final _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
   ],
 );
 
-const Map<String, dynamic> paramSetValueJson = {
+const Map<String, dynamic> _paramSetValueJson = {
   'paramSet': {
     'id': 4,
     'name': 'Barbell Weight',
@@ -90,21 +78,36 @@ const Map<String, dynamic> paramSetValueJson = {
   ]
 };
 
+// need to get a new instance for a new test in order to 'reset' values streams
+ConversionParamSetValueModel _barbellWeightParamSetValue() {
+  return ConversionParamSetValueModel(
+    paramSet: barbellWeightParamSet,
+    paramValues: [
+      ConversionParamValueModel(
+        param: barWeightParam,
+      ),
+      ConversionParamValueModel(
+        param: oneSideWeightParam,
+      ),
+    ],
+  );
+}
+
 void main() {
   test('Serialize param set value', () {
-    expect(_barbellWeightParamSetValue.toJson(), paramSetValueJson);
+    expect(_barbellWeightParamSetValue().toJson(), _paramSetValueJson);
   });
 
   test('Deserialize param set value', () {
     expect(
-      ConversionParamSetValueModel.fromJson(paramSetValueJson),
-      _barbellWeightParamSetValue,
+      ConversionParamSetValueModel.fromJson(_paramSetValueJson),
+      _barbellWeightParamSetValue(),
     );
   });
 
   test('Copy with changed list param value', () async {
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParams(
+      await _barbellWeightParamSetValue().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.num(20),
         ),
@@ -127,7 +130,7 @@ void main() {
 
   test('Copy with changed non-list param value', () async {
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParams(
+      await _barbellWeightParamSetValue().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.num(40),
         ),
@@ -150,19 +153,21 @@ void main() {
   });
 
   test('Copy with changed unknown param', () async {
+    final barbellWeight = _barbellWeightParamSetValue();
+
     expect(
-      await _barbellWeightParamSetValue.copyWithChangedParams(
+      await barbellWeight.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
           value: ValueModel.num(40),
         ),
         paramFilter: (paramValue) => paramValue.param.id == -1,
       ),
-      _barbellWeightParamSetValue,
+      barbellWeight,
     );
   });
 
   test('Check whether it has multiple calculable params', () {
-    expect(_barbellWeightParamSetValue.hasMultipleCalculableParams, false);
+    expect(_barbellWeightParamSetValue().hasMultipleCalculableParams, false);
 
     expect(
       _paramSetValueWithMultipleCalculableParams.hasMultipleCalculableParams,
@@ -172,7 +177,7 @@ void main() {
 
   test('Switch on the calculable param first time', () {
     expect(
-      _barbellWeightParamSetValue.copyWithNewCalculatedParam(
+      _barbellWeightParamSetValue().copyWithNewCalculatedParam(
         newCalculatedParamId: oneSideWeightParam.id,
       ),
       ConversionParamSetValueModel(

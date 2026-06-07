@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -34,8 +35,8 @@ class ConversionBloc
   final AlignConversionUseCase alignConversionUseCase;
   final AddUnitsToConversionUseCase addUnitsToConversionUseCase;
   final EditConversionGroupUseCase editConversionGroupUseCase;
-  final EditConversionUnitUseCase editConversionItemUnitUseCase;
-  final EditConversionUnitValueUseCase editConversionItemValueUseCase;
+  final EditConversionUnitUseCase editConversionUnitUseCase;
+  final EditConversionUnitValueUseCase editConversionUnitValueUseCase;
   final UpdateConversionCoefficientsUseCase updateConversionCoefficientsUseCase;
   final RemoveConversionItemsUseCase removeConversionItemsUseCase;
   final ReplaceConversionItemUnitUseCase replaceConversionItemUnitUseCase;
@@ -53,8 +54,8 @@ class ConversionBloc
     required this.alignConversionUseCase,
     required this.addUnitsToConversionUseCase,
     required this.editConversionGroupUseCase,
-    required this.editConversionItemUnitUseCase,
-    required this.editConversionItemValueUseCase,
+    required this.editConversionUnitUseCase,
+    required this.editConversionUnitValueUseCase,
     required this.updateConversionCoefficientsUseCase,
     required this.removeConversionItemsUseCase,
     required this.replaceConversionItemUnitUseCase,
@@ -208,7 +209,7 @@ class ConversionBloc
     EditConversionUnit event,
     Emitter<ConversionState> emit,
   ) async {
-    final result = await editConversionItemUnitUseCase.execute(
+    final result = await editConversionUnitUseCase.execute(
       InputConversionModifyModel<EditConversionUnitDelta>(
         delta: EditConversionUnitDelta(
           editedUnit: event.editedUnit,
@@ -217,14 +218,14 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handle(result, onError: event.onError);
   }
 
   _onEditConversionItemValue(
     EditConversionUnitValue event,
     Emitter<ConversionState> emit,
   ) async {
-    final result = await editConversionItemValueUseCase.execute(
+    final result = await editConversionUnitValueUseCase.execute(
       InputConversionModifyModel<EditConversionUnitValueDelta>(
         delta: EditConversionUnitValueDelta(
           newValue: event.newValue,
@@ -280,6 +281,8 @@ class ConversionBloc
           newUnit: event.newUnit,
           unitId: event.oldUnitId,
           recalculationMode: event.recalculationMode,
+          recalculateUnitValues:
+              event.recalculationMode == RecalculationOnUnitChange.otherValues,
         ),
         conversion: state.conversion,
       ),
@@ -415,6 +418,18 @@ class ConversionBloc
     );
 
     await _handleAndEmit(result, emit, onError: event.onError);
+  }
+
+  _handle(
+    Either<ConvertouchException, ConversionModel> result, {
+    void Function()? onSuccess,
+    void Function(ConvertouchException)? onError,
+  }) {
+    if (result.isLeft) {
+      onError?.call(result.left);
+    } else {
+      onSuccess?.call();
+    }
   }
 
   _handleAndEmit(

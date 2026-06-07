@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -29,28 +28,19 @@ class CalculateParamSetValueUseCase extends UseCase<
     ConversionParamSetValueModel newParamSetValue = input.paramSetValue;
     ConversionSingleParamModifyDelta? delta = input.delta;
 
-    int startParamId =
-        delta?.paramId ?? newParamSetValue.paramValues.first.param.id;
-
-    if (delta == null) {
-      int? calculatedParamId = newParamSetValue.paramValues
-          .firstWhereOrNull((paramValue) => paramValue.calculated)
-          ?.param
-          .id;
-
-      if (calculatedParamId != null) {
-        startParamId = calculatedParamId;
-      } else if (input.enableFirstCalculableParamIfNoCalculatedEnabled) {
-        newParamSetValue = await newParamSetValue.copyWithChangedParams(
-          changeFirstMatchedParamOnly: true,
-          paramFilter: (paramValue) => paramValue.param.calculable,
-          map: (paramValue, paramSetValue) async => paramValue.copyWith(
-            calculated: true,
-          ),
-        );
-      }
+    if (delta == null &&
+        input.enableFirstCalculableParamIfNoCalculatedEnabled) {
+      newParamSetValue = await newParamSetValue.copyWithChangedParams(
+        changeFirstMatchedParamOnly: true,
+        paramFilter: (paramValue) => paramValue.param.calculable,
+        map: (paramValue, paramSetValue) async => paramValue.copyWith(
+          calculated: true,
+        ),
+      );
     }
 
+    int startParamId =
+        delta?.paramId ?? newParamSetValue.paramValues.first.param.id;
     var startParamValue = newParamSetValue.getParamValueById(startParamId);
 
     if (startParamValue == null) {
