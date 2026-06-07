@@ -63,6 +63,7 @@ class DropdownColorScheme extends WidgetColorScheme {
   final MultiColor divider;
   final MultiColor removalItem;
   final TextBoxColorScheme searchBox;
+  final WidgetColorScheme selectedItem;
 
   const DropdownColorScheme({
     super.border,
@@ -72,6 +73,7 @@ class DropdownColorScheme extends WidgetColorScheme {
     this.divider = MultiColor.none,
     this.removalItem = MultiColor.none,
     this.searchBox = TextBoxColorScheme.none,
+    this.selectedItem = WidgetColorScheme.none,
   });
 }
 

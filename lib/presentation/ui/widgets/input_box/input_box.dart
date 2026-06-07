@@ -810,8 +810,25 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 openInterval: const Interval(0, 0.5, curve: Curves.ease),
                 offset: const Offset(0, -7.5),
               ),
-              menuItemStyleData: const MenuItemStyleData(
+              menuItemStyleData: MenuItemStyleData(
                 padding: EdgeInsets.zero,
+                selectedMenuItemBuilder: (_, child) {
+                  return Container(
+                    color:
+                        widget.dropdownColors.selectedItem.background.regular,
+                    child: Row(
+                      children: [
+                        Expanded(child: child),
+                        Icon(
+                          Icons.check_circle_rounded,
+                          size: 20,
+                          color: widget.dropdownColors.foreground.regular,
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                    ),
+                  );
+                },
               ),
               buttonStyleData: const FormFieldButtonStyleData(
                 padding: EdgeInsets.zero,
@@ -823,10 +840,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       searchBarWidgetHeight: 80,
                       searchBarWidget: Container(
                         padding: const EdgeInsets.only(
-                          top: 6,
-                          bottom: 0,
-                          right: 6,
-                          left: 6,
+                          top: 7,
+                          bottom: 7,
+                          right: 7,
+                          left: 7,
                         ),
                         child: ConvertouchInputBox(
                           model: TextBoxModel(

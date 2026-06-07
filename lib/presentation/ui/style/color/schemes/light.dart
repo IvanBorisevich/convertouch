@@ -35,6 +35,16 @@ const _notification = NotificationColorScheme(
   action: MultiColor.only(Color(0xFFB6D5F6)),
 );
 
+const _dropdown = DropdownColorScheme(
+  background: MultiColor.only(Color(0xffbccdfa)),
+  foreground: MultiColor.only(Color(0xFF1D578C)),
+  searchBox: _dropdownSearchBox,
+  selectedItem: WidgetColorScheme(
+    background: MultiColor.only(Color(0xffaabef1)),
+    foreground: MultiColor.only(Color(0xFF1D578C)),
+  ),
+);
+
 const _page = PageColorScheme(
   appBar: WidgetColorScheme(
     background: MultiColor.only(Color(0xff7f9dec)),
@@ -290,11 +300,7 @@ const _dropdownSearchBox = TextBoxColorScheme(
 const _conversionItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _conversionItemTextBox,
-    dropdown: DropdownColorScheme(
-      background: MultiColor.only(Color(0xffbccdfa)),
-      foreground: MultiColor.only(Color(0xFF1D578C)),
-      searchBox: _dropdownSearchBox,
-    ),
+    dropdown: _dropdown,
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),
       disabled: Color(0xFF90A8C0),
@@ -354,11 +360,7 @@ const _paramItemTextBox = TextBoxColorScheme(
 const _paramItem = ConversionItemColorScheme(
   inputBox: InputBoxColorScheme(
     textBox: _paramItemTextBox,
-    dropdown: DropdownColorScheme(
-      background: MultiColor.only(Color(0xffbccdfa)),
-      foreground: MultiColor.only(Color(0xFF1D578C)),
-      searchBox: _dropdownSearchBox,
-    ),
+    dropdown: _dropdown,
     divider: MultiColor(
       regular: Color(0xFFBAD2EC),
       disabled: Color(0xFF90A8C0),
