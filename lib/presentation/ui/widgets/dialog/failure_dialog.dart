@@ -43,7 +43,10 @@ class ConvertouchFailureDialog extends StatelessWidget {
       actions: <Widget>[
         handlerFunc != null
             ? TextButton(
-                onPressed: handlerFunc,
+                onPressed: () {
+                  handlerFunc!.call();
+                  Navigator.of(context).pop();
+                },
                 child: Text(
                   handlerActionName ?? 'Try Again',
                   style: TextStyle(
