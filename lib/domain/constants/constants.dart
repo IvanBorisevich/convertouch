@@ -171,7 +171,7 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  person(1, preselected: false),
+  person(1, preselected: false, fetchOnce: true),
   garment(2),
   clothesSizeInter(3),
   clothesSizeUs(4, listValuesType: ConvertouchValueType.integerNonNegative),
@@ -192,7 +192,12 @@ enum ConvertouchListType {
   ringSizeDe(19, listValuesType: ConvertouchValueType.integerNonNegative),
   ringSizeEs(20, listValuesType: ConvertouchValueType.decimalNonNegative),
   ringSizeJp(21, listValuesType: ConvertouchValueType.integerNonNegative),
-  exchangeRateSource(22, fetchedViaApi: true, preselected: false),
+  exchangeRateSource(
+    22,
+    fetchedViaApi: true,
+    preselected: false,
+    fetchOnce: true,
+  ),
   clothesHeightRange(24),
   ringDiameterRange(25),
   ringCircumferenceRange(26),
@@ -201,12 +206,14 @@ enum ConvertouchListType {
   final int id;
   final bool preselected;
   final bool fetchedViaApi;
+  final bool fetchOnce;
   final ConvertouchValueType listValuesType;
 
   const ConvertouchListType(
     this.id, {
     this.listValuesType = ConvertouchValueType.text,
     this.fetchedViaApi = false,
+    this.fetchOnce = false,
     this.preselected = true,
   });
 

@@ -23,15 +23,23 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
       return Right(input.itemValue);
     }
 
-    var listValuesFetchResult = await _fetchFirstBatch(
-      fetchParams: ListValuesFetchParams(
-        itemId: input.itemValue.itemId,
-        listType: input.itemValue.listType!,
-        unit: input.itemValue.unitItem,
-        params: input.paramSetValue,
-        selectedValue: input.itemValue.value,
-      ),
-    );
+    ListValuesFetchResult listValuesFetchResult;
+
+    if (input.itemValue.listValuesFetchResult != null &&
+        input.itemValue.listValuesFetchResult!.hasReachedMax &&
+        input.itemValue.listType!.fetchOnce) {
+      listValuesFetchResult = input.itemValue.listValuesFetchResult!;
+    } else {
+      listValuesFetchResult = await _fetchFirstBatch(
+        fetchParams: ListValuesFetchParams(
+          itemId: input.itemValue.itemId,
+          listType: input.itemValue.listType!,
+          unit: input.itemValue.unitItem,
+          params: input.paramSetValue,
+          selectedValue: input.itemValue.value,
+        ),
+      );
+    }
 
     return Right(
       input.itemValue.copyWith(
