@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +9,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final List<T> items;
   final String? searchString;
   final FetchingStatus status;
+  final ConvertouchException? error;
   final bool hasReachedMax;
   final int pageNum;
   final P? fetchParams;
@@ -25,6 +27,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     required this.items,
     this.searchString,
     this.status = FetchingStatus.success,
+    this.error,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
@@ -35,6 +38,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     List<T>? items,
     String? searchString,
     FetchingStatus? status,
+    ConvertouchException? error,
     bool? hasReachedMax,
     int? pageNum,
     P? params,
@@ -45,6 +49,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       items: items ?? this.items,
       searchString: searchString ?? this.searchString,
       status: status ?? this.status,
+      error: error ?? this.error,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
       fetchParams: params ?? this.fetchParams,
@@ -58,6 +63,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         items,
         searchString,
         status,
+        error,
         hasReachedMax,
         pageNum,
         fetchParams,
@@ -106,10 +112,11 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   @override
   String toString() {
-    return 'OutputItemsFetchModel{'
+    return 'FetchResult{'
         'numOfItems: ${items.length}, '
         'searchString: $searchString, '
         'status: $status, '
+        'error: $error, '
         'hasReachedMax: $hasReachedMax, '
         'pageNum: $pageNum, '
         'fetchParams: $fetchParams}';

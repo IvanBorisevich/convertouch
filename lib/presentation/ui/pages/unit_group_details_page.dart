@@ -33,6 +33,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
             appColors[appState.theme].unitGroupDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitGroupsPageFloatingButton;
+        WidgetColorScheme dialogColors = appColors[appState.theme].dialog;
 
         return unitGroupDetailsBlocBuilder(
           bloc: unitGroupDetailsBloc,
@@ -53,6 +54,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         savedValue: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         onValueChanged: (value) {
                           unitGroupDetailsController.updateGroupName(
                             context,
@@ -65,6 +67,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         savedValue: unitGroupDetailsState
                             .draftGroup.conversionType.name,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -72,6 +75,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         savedValue:
                             unitGroupDetailsState.draftGroup.valueType.name,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -81,6 +85,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         savedValue:
                             unitGroupDetailsState.draftGroup.minValue?.itemName,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -90,6 +95,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         savedValue:
                             unitGroupDetailsState.draftGroup.maxValue?.itemName,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                     ],

@@ -249,25 +249,21 @@ class SelectorSettingItem<T> extends StatelessWidget {
     showConvertouchDialog<T>(
       context: context,
       currentTheme: theme,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setStateDialog) {
-            return ConvertouchRadioDialog<T>(
-              title: title,
-              selectedValue: currentValue,
-              valueMap: valueMap,
-              possibleValues: possibleValues,
-              colors: colors,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  onPossibleValueSelect?.call(newValue);
-                  setStateDialog(() {
-                    currentValue = newValue;
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-            );
+      builder: (context, setStateDialog) {
+        return ConvertouchRadioDialog<T>(
+          title: title,
+          selectedValue: currentValue,
+          valueMap: valueMap,
+          possibleValues: possibleValues,
+          colors: colors,
+          onChanged: (newValue) {
+            if (newValue != null) {
+              onPossibleValueSelect?.call(newValue);
+              setStateDialog(() {
+                currentValue = newValue;
+              });
+              Navigator.of(context).pop();
+            }
           },
         );
       },
@@ -322,15 +318,11 @@ class AboutSettingItem extends StatelessWidget {
     showConvertouchDialog(
       currentTheme: theme,
       context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setStateDialog) {
-            return ConvertouchAboutDialog(
-              applicationVersion: applicationVersion,
-              applicationLegalese: applicationLegalese,
-              colors: colors,
-            );
-          },
+      builder: (context, setStateDialog) {
+        return ConvertouchAboutDialog(
+          applicationVersion: applicationVersion,
+          applicationLegalese: applicationLegalese,
+          colors: colors,
         );
       },
     ).then((returnedValue) {});

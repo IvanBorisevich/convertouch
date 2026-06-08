@@ -22,6 +22,7 @@ class ConvertouchConversionItem<M extends InputBoxModel>
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
   final ConversionItemColorScheme colors;
+  final WidgetColorScheme dialogColors;
 
   const ConvertouchConversionItem(
     this.model, {
@@ -32,6 +33,7 @@ class ConvertouchConversionItem<M extends InputBoxModel>
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
     required this.colors,
+    required this.dialogColors,
     super.key,
   });
 
@@ -49,10 +51,12 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
     return ConvertouchInputBox(
       model: widget.model.inputBoxModel,
       colors: widget.colors.inputBox,
+      dialogColors: widget.dialogColors,
       validators: [
         const NumSignsValidator(),
         NumInRangeValidator(widget.model.min, widget.model.max),
       ],
+      floatingLabelBehavior: FloatingLabelBehavior.always,
       tooltipDirection:
           widget.model.isLast ? TooltipDirection.up : TooltipDirection.down,
       onValueChanged: widget.onValueChanged,

@@ -102,6 +102,7 @@ class _ConvertouchConversionItemsViewState
               widget.onItemRemoveTap?.call(item);
             },
             colors: appColors[widget.theme].conversionItem,
+            dialogColors: appColors[widget.theme].dialog,
           ),
         );
       },

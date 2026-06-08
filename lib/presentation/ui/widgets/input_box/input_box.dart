@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
@@ -10,7 +11,9 @@ import 'package:convertouch/presentation/bloc/common/navigation/navigation_state
 import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
+import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/utils/stream_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
@@ -63,6 +66,7 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
 const String _defaultSearchHint = "Search...";
 const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
+const String _fetchErrorMsg = "Couldn't fetch list";
 
 class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   const ConvertouchInputBox({
@@ -77,12 +81,14 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.validators = const [],
     this.borderWidth = 1,
     required this.colors,
+    required this.dialogColors,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
     this.prefixRightmostDividerVisible = true,
     this.suffixLeftmostDividerVisible = true,
     this.inputFieldMargin = _defaultInputFieldMargin,
     this.fontSize = _defaultFontSize,
+    this.floatingLabelBehavior,
     super.key,
   });
 
@@ -97,12 +103,14 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
+  final WidgetColorScheme dialogColors;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
   final bool prefixRightmostDividerVisible;
   final bool suffixLeftmostDividerVisible;
   final EdgeInsets inputFieldMargin;
   final double fontSize;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
@@ -324,8 +332,10 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
         labelColor: _labelColor,
+        dialogColors: widget.dialogColors,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
 
@@ -340,6 +350,8 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
         dropdownColors: widget.colors.dropdown,
+        dialogColors: widget.dialogColors,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
         listValuesBloc: BlocProvider.of<ListValuesBloc>(context),
       );
     }
@@ -460,8 +472,10 @@ class _TextField extends StatefulWidget {
     required this.foregroundColor,
     required this.hintColor,
     required this.labelColor,
+    required this.dialogColors,
     required this.fontSize,
     required this.margin,
+    this.floatingLabelBehavior,
   });
 
   final TextBoxModel model;
@@ -475,8 +489,10 @@ class _TextField extends StatefulWidget {
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
+  final WidgetColorScheme dialogColors;
   final double fontSize;
   final EdgeInsets margin;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _TextFieldState();
@@ -601,9 +617,7 @@ class _TextFieldState extends State<_TextField>
             hintText: hint ?? _noValueHint,
             hintColor: widget.hintColor,
             labelColor: widget.labelColor,
-            floatingLabelBehavior: hint != null && hint.isNotEmpty
-                ? FloatingLabelBehavior.always
-                : null,
+            floatingLabelBehavior: widget.floatingLabelBehavior,
             contentPadding: const EdgeInsets.symmetric(
               vertical: 4,
             ),
@@ -636,7 +650,9 @@ class _ListField extends StatefulWidget {
     required this.fontSize,
     required this.margin,
     required this.dropdownColors,
+    required this.dialogColors,
     required this.listValuesBloc,
+    this.floatingLabelBehavior,
   });
 
   final ListBoxModel model;
@@ -648,7 +664,9 @@ class _ListField extends StatefulWidget {
   final double fontSize;
   final EdgeInsets margin;
   final DropdownColorScheme dropdownColors;
+  final WidgetColorScheme dialogColors;
   final ListValuesBloc listValuesBloc;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
   State<StatefulWidget> createState() => _ListFieldState();
@@ -707,6 +725,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       child: ValueListenableBuilder(
         valueListenable: _listValuesNotifier,
         builder: (_, listValuesFetchResult, child) {
+          final handlerItem = _handlerDropdownItem(listValuesFetchResult);
+
           return DropdownButtonHideUnderline(
             child: DropdownButtonFormField2<ValueModel>(
               isExpanded: true,
@@ -718,7 +738,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 hintText: _noValueHint,
                 hintColor: widget.hintColor,
                 labelColor: widget.labelColor,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
+                floatingLabelBehavior: widget.floatingLabelBehavior,
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 3,
                 ),
@@ -747,12 +767,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     ),
                   )
                   .toList()
-                ..addAll(
-                  listValuesFetchResult != null &&
-                          !listValuesFetchResult.hasReachedMax
-                      ? [_loadingItem(context)]
-                      : [],
-                ),
+                ..addAll(handlerItem != null ? [handlerItem] : []),
               onChanged: (listValue) {
                 if (listValue != null) {
                   _selectedValueNotifier.value = listValue;
@@ -860,6 +875,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                           colors: InputBoxColorScheme(
                             textBox: widget.dropdownColors.searchBox,
                           ),
+                          dialogColors: widget.dialogColors,
                           inputFieldMargin: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 5,
@@ -885,7 +901,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                                 ?.searchFunc(searchValue, item.value) ??
                             false;
                       },
-                      noResultsWidget: _noResultItem,
+                      noResultsWidget: _noResultDropdownItem,
                     )
                   : null,
               onMenuStateChange: (isOpen) {
@@ -904,27 +920,102 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     );
   }
 
-  DropdownItem<ValueModel> _loadingItem(BuildContext context) {
-    return DropdownItem<ValueModel>(
-      enabled: false,
-      alignment: Alignment.center,
-      height: 30,
-      child: Container(
-        padding: const EdgeInsets.all(2),
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(
-          strokeCap: StrokeCap.round,
-          color: widget.dropdownColors.foreground.regular,
+  DropdownItem<ValueModel>? _handlerDropdownItem(
+    ListValuesFetchResult? listValuesFetchResult, {
+    void Function()? handlerFunc,
+  }) {
+    if (listValuesFetchResult == null) {
+      return null;
+    }
+
+    if (listValuesFetchResult.status == FetchingStatus.failure) {
+      return DropdownItem<ValueModel>(
+        enabled: false,
+        alignment: Alignment.center,
+        height: 40,
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  showConvertouchDialog(
+                    currentTheme: ConvertouchUITheme.dark,
+                    context: context,
+                    builder: (context, setStateDialog) {
+                      return ConvertouchFailureDialog(
+                        title: _fetchErrorMsg,
+                        handlerFunc: handlerFunc,
+                        handlerActionName: "Retry",
+                        content: Text(
+                          listValuesFetchResult.error?.message ??
+                              "Something went wrong during fetch",
+                          style: _inputFieldTextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            foregroundColor:
+                                widget.dialogColors.foreground.regular,
+                          ),
+                        ),
+                        colors: widget.dialogColors,
+                      );
+                    },
+                  ).then((returnedValue) {});
+                },
+                child: Icon(
+                  Icons.help_outline_rounded,
+                  color: widget.dropdownColors.foreground.warning,
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    _fetchErrorMsg,
+                    style: _inputFieldTextStyle(
+                      fontSize: 14,
+                      foregroundColor: widget.dropdownColors.foreground.warning,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: handlerFunc,
+                child: Icon(
+                  Icons.refresh_rounded,
+                  color: widget.dropdownColors.foreground.warning,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    if (!listValuesFetchResult.hasReachedMax) {
+      return DropdownItem<ValueModel>(
+        enabled: false,
+        alignment: Alignment.center,
+        height: 30,
+        child: Container(
+          padding: const EdgeInsets.all(2),
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeCap: StrokeCap.round,
+            color: widget.dropdownColors.foreground.regular,
+          ),
+        ),
+      );
+    }
+
+    return null;
   }
 }
 
 // Shared methods and constants -----------------------------------------------
 
-const DropdownItem _noResultItem = DropdownItem(
+const DropdownItem _noResultDropdownItem = DropdownItem(
   enabled: false,
   alignment: Alignment.center,
   height: 30,
@@ -996,10 +1087,11 @@ InputDecoration _inputFieldDecoration(
 TextStyle _inputFieldTextStyle({
   required double fontSize,
   required Color foregroundColor,
+  FontWeight fontWeight = FontWeight.w500,
 }) {
   return TextStyle(
     fontSize: fontSize,
-    fontWeight: FontWeight.w500,
+    fontWeight: fontWeight,
     fontFamily: quicksandFontFamily,
     overflow: TextOverflow.fade,
     height: _textHeightCoefficient,

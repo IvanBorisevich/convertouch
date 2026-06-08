@@ -18,6 +18,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final bool editableValueLengthVisible;
   final double topMargin;
   final InputBoxColorScheme inputBoxColor;
+  final WidgetColorScheme dialogColors;
 
   const ConvertouchDetailsItem({
     required this.name,
@@ -32,6 +33,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
     this.editableValueLengthVisible = false,
     this.topMargin = 0,
     required this.inputBoxColor,
+    required this.dialogColors,
     super.key,
   });
 
@@ -58,6 +60,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
               ),
               onValueChanged: onValueChanged,
               colors: inputBoxColor,
+              dialogColors: dialogColors,
             )
           : Container(
               width: MediaQuery.of(context).size.width,

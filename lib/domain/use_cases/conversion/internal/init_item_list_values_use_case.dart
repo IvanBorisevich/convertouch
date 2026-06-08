@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
@@ -46,6 +47,10 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
     I input,
     ListValuesFetchResult fetchResult,
   ) async {
+    if (fetchResult.status == FetchingStatus.failure) {
+      return input.itemValue.value;
+    }
+
     if (input.itemValue.value == null && input.alignForNull) {
       return null;
     }

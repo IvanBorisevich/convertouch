@@ -7,6 +7,7 @@ class AppColorScheme {
   final DropdownColorScheme popupMenu;
   final SearchBoxColorScheme searchBox;
   final WidgetColorScheme errorInfoBox;
+  final WidgetColorScheme dialog;
 
   // unit group pages
   final WidgetColorScheme unitGroupsPageFloatingButton;
@@ -34,6 +35,7 @@ class AppColorScheme {
     required this.popupMenu,
     required this.searchBox,
     required this.errorInfoBox,
+    required this.dialog,
     required this.unitGroupsPageFloatingButton,
     required this.unitGroupsMenu,
     required this.unitGroupDetailsInputBox,

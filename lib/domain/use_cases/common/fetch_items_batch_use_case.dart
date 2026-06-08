@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -20,7 +21,31 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     P? params = input.fetchParams;
     bool hasSelectedValue = pageNum == 0 && await containsSelectedValue(input);
 
-    final newPageItems = await fetchItemsPage(input);
+    final List<T> newPageItems;
+
+    try {
+      newPageItems = await fetchItemsPage(input);
+    } catch (e) {
+      ConvertouchException? error = e is ConvertouchException
+          ? e
+          : ConvertouchException(
+              message: e.toString(),
+              stackTrace: null,
+              dateTime: DateTime.now(),
+            );
+
+      return Right(
+        OutputItemsFetchModel(
+          items: const [],
+          searchString: searchString,
+          status: FetchingStatus.failure,
+          error: error,
+          pageNum: pageNum,
+          fetchParams: params,
+          containsSelectedValue: hasSelectedValue,
+        ),
+      );
+    }
 
     final itemsWithMatch = newPageItems
         .map((item) =>

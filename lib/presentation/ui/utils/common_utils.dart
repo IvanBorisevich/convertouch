@@ -49,7 +49,7 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
 
 Future<T?> showConvertouchDialog<T>({
   required BuildContext context,
-  required WidgetBuilder builder,
+  required StatefulWidgetBuilder builder,
   required ConvertouchUITheme currentTheme,
 }) {
   return showGeneralDialog<T>(
@@ -64,7 +64,9 @@ Future<T?> showConvertouchDialog<T>({
           theme: currentTheme,
           dialogOpened: true,
         ),
-        child: builder(buildContext),
+        child: StatefulBuilder(
+          builder: builder,
+        ),
       );
     },
   );

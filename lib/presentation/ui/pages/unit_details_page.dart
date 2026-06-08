@@ -37,6 +37,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
             appColors[appState.theme].unitDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitsPageFloatingButton;
+        WidgetColorScheme dialogColors = appColors[appState.theme].dialog;
 
         return unitDetailsBlocBuilder(
           builderFunc: (pageState) {
@@ -87,6 +88,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                               savedValue: pageState.details.unitGroup.name,
                               visible: true,
                               inputBoxColor: inputBoxColor,
+                              dialogColors: dialogColors,
                               topMargin: _verticalSpacing,
                             ),
                       ConvertouchDetailsItem(
@@ -95,6 +97,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         savedValue: pageState.details.savedUnitData.name,
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                         onValueChanged: (value) {
                           unitDetailsController.updateUnitName(
@@ -109,6 +112,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         savedValue: pageState.details.savedUnitData.code,
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
@@ -125,6 +129,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         savedValue:
                             pageState.details.draftUnitData.valueType.name,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -134,6 +139,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         visible:
                             pageState.details.savedUnitData.minValue != null,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -143,6 +149,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -154,6 +161,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         savedValue: pageState
                             .details.conversionRule.readOnlyDescription,
                         inputBoxColor: inputBoxColor,
+                        dialogColors: dialogColors,
                         topMargin: _verticalSpacing,
                         content: Visibility(
                           visible: pageState.details.editMode &&
@@ -180,6 +188,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 },
                                 colors:
                                     appColors[appState.theme].conversionItem,
+                                dialogColors: dialogColors,
                               ),
                               const SizedBox(height: 8),
                               ConvertouchConversionItem(
@@ -215,6 +224,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 },
                                 colors:
                                     appColors[appState.theme].conversionItem,
+                                dialogColors: dialogColors,
                               ),
                               const SizedBox(height: 25),
                             ],

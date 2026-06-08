@@ -39,6 +39,7 @@ class ConvertouchSearchBar extends StatelessWidget {
         PageColorScheme pageColorScheme = appColors[appState.theme].page;
         SearchBoxColorScheme searchBarColorScheme =
             customColor ?? appColors[appState.theme].searchBox;
+        WidgetColorScheme dialogColors = appColors[appState.theme].dialog;
 
         ItemsViewMode pageViewMode;
 
@@ -64,11 +65,11 @@ class ConvertouchSearchBar extends StatelessWidget {
           child: ConvertouchInputBox(
             model: TextBoxModel(
               valueStream: sendToStream(ValueModel.altStr(placeholder)),
-              hintStream:
-                  sendToStream(ValueModel.altStr(placeholder)),
+              hintStream: sendToStream(ValueModel.altStr(placeholder)),
             ),
             onValueChanged: onValueChanged,
             colors: searchBarColorScheme.inputBox,
+            dialogColors: dialogColors,
             fontSize: 15,
             borderWidth: 0,
             inputFieldMargin: const EdgeInsets.only(

@@ -9,6 +9,7 @@ const colorSchemeDark = AppColorScheme(
   popupMenu: _popupMenu,
   searchBox: _searchBox,
   errorInfoBox: _errorInfoBox,
+  dialog: _dialog,
   unitGroupsPageFloatingButton: _unitGroupsPageFloatingButton,
   unitGroupsMenu: _unitGroupsMenu,
   unitGroupDetailsInputBox: _unitGroupDetailsInputBox,
@@ -23,13 +24,14 @@ const colorSchemeDark = AppColorScheme(
   settingGroup: _settingGroup,
 );
 
-const Color pageBackground = Color(0xFF363D48);
+const Color _pageBackground = Color(0xFF363D48);
+const Color _warningForeground = Color(0xFFEADFB8);
 
 const _notification = NotificationColorScheme(
   background: MultiColor.only(Color(0xFF384867)),
   foreground: MultiColor(
     regular: Color(0xFFA3D4FF),
-    warning: Color(0xFFEADFB8),
+    warning: _warningForeground,
     error: Color(0xFFFFAAAA),
   ),
   action: MultiColor.only(Color(0xFFB6D5F6)),
@@ -37,7 +39,10 @@ const _notification = NotificationColorScheme(
 
 const _dropdown = DropdownColorScheme(
   background: MultiColor.only(Color(0xFF3F4857)),
-  foreground: MultiColor.only(Color(0xFFBFD3E3)),
+  foreground: MultiColor(
+      regular: Color(0xFFBFD3E3),
+    warning: _warningForeground,
+  ),
   searchBox: _dropdownSearchBox,
   selectedItem: WidgetColorScheme(
     background: MultiColor.only(Color(0xFF475163)),
@@ -51,7 +56,7 @@ const _page = PageColorScheme(
     foreground: MultiColor.only(Color(0xFFBDCDDA)),
   ),
   body: WidgetColorScheme(
-    background: MultiColor.only(pageBackground),
+    background: MultiColor.only(_pageBackground),
     foreground: MultiColor.only(Color(0xFFCCD7E0)),
   ),
   bottomBar: WidgetColorScheme(
@@ -96,6 +101,11 @@ const _errorInfoBox = WidgetColorScheme(
   foreground: MultiColor.only(Color(0xFF81B8EC)),
 );
 
+const _dialog = WidgetColorScheme(
+  background: MultiColor.only(Color(0xFF3C4450)),
+  foreground: MultiColor.only(Color(0xFFA5CCF1)),
+);
+
 const _unitGroupsPageFloatingButton = WidgetColorScheme(
   background: MultiColor.only(Color(0xFF5E63A8)),
   foreground: MultiColor.only(Color(0xFFD1CFD3)),
@@ -132,7 +142,7 @@ const _unitGroupsMenu = MenuViewColorScheme(
         regular: Color(0xff849ad2),
       ),
       background: MultiColor(
-        regular: pageBackground,
+        regular: _pageBackground,
         selected: Color(0xff849ad2),
       ),
       foreground: MultiColor(
@@ -156,7 +166,7 @@ const _unitGroupsMenu = MenuViewColorScheme(
 
 const _unitGroupDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
-    background: MultiColor.only(pageBackground),
+    background: MultiColor.only(_pageBackground),
     border: MultiColor(
       regular: Color(0xFF8594F1),
       disabled: Color(0x90A5B2FF),
@@ -212,7 +222,7 @@ const _unitsMenu = MenuViewColorScheme(
         regular: Color(0xFF6F98BD),
       ),
       background: MultiColor(
-        regular: pageBackground,
+        regular: _pageBackground,
         selected: Color(0xFF6F98BD),
       ),
       foreground: MultiColor(
@@ -236,7 +246,7 @@ const _unitsMenu = MenuViewColorScheme(
 
 const _unitDetailsInputBox = InputBoxColorScheme(
   textBox: TextBoxColorScheme(
-    background: MultiColor.only(pageBackground),
+    background: MultiColor.only(_pageBackground),
     border: MultiColor(
       regular: Color(0xFF84A1BD),
       focused: Color(0xFF98BAD9),
@@ -264,7 +274,7 @@ const _conversionPageFloatingButton = WidgetColorScheme(
 );
 
 const _conversionItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(pageBackground),
+  background: MultiColor.only(_pageBackground),
   border: MultiColor(
     regular: Color(0xFF84A1BD),
     focused: Color(0xFFA1C7EA),
@@ -286,7 +296,7 @@ const _conversionItemTextBox = TextBoxColorScheme(
 );
 
 const _dropdownSearchBox = TextBoxColorScheme(
-  background: MultiColor.only(pageBackground),
+  background: MultiColor.only(_pageBackground),
   foreground: MultiColor(
     regular: Color(0xFFA3C2DE),
     disabled: Color(0xFF687A8C),
@@ -330,7 +340,7 @@ const _refreshFloatingButton = WidgetColorScheme(
 );
 
 const _removalFloatingButton = WidgetColorScheme(
-  border: MultiColor.only(pageBackground),
+  border: MultiColor.only(_pageBackground),
   background: MultiColor.only(Color(0xFF9D5225)),
   foreground: MultiColor.only(Color(0xFFDEE9FF)),
 );
@@ -423,7 +433,7 @@ const _settingGroup = SettingGroupColorScheme(
   viewTitle: WidgetColorScheme(
     foreground: MultiColor.only(Color(0xFFCCD7E0)),
   ),
-  divider: MultiColor.only(pageBackground),
+  divider: MultiColor.only(_pageBackground),
   settingItem: SettingItemColorScheme(
     background: MultiColor(
       regular: Color(0xFF3C4450),

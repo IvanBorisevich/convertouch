@@ -26,8 +26,9 @@ abstract class InputBoxModel implements ElementModel {
         valueStream: model.valueStream,
         listValuesBatchStream: model.listValuesBatchStream,
         listType: model.listType!,
-        readonly: model.listValuesFetchResult?.items == null ||
-            model.listValuesFetchResult!.items.isEmpty,
+        readonly: !model.listType!.fetchedViaApi &&
+            (model.listValuesFetchResult?.items == null ||
+                model.listValuesFetchResult!.items.isEmpty),
         labelText: _getLabelText(model),
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >

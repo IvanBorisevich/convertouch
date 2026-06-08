@@ -198,6 +198,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                               unitGroupName: conversion.unitGroup.name,
                               panelController: _panelController,
                               colors: appColors[appState.theme].paramSetPanel,
+                              dialogColors: appColors[appState.theme].dialog,
                               onParamSetAdd: () {
                                 paramSetsController.showParametersForAdding(
                                   context,

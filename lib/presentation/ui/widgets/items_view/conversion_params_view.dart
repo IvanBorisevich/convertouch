@@ -36,6 +36,7 @@ class ConversionParamsView extends StatelessWidget {
   final void Function(ConversionParamValueModel)? onParamUnitTap;
   final void Function(ConversionParamValueModel, ValueModel?)? onValueChanged;
   final ParamSetPanelColorScheme colors;
+  final WidgetColorScheme dialogColors;
 
   const ConversionParamsView({
     this.params,
@@ -47,6 +48,7 @@ class ConversionParamsView extends StatelessWidget {
     this.onParamUnitTap,
     this.onValueChanged,
     required this.colors,
+    required this.dialogColors,
     super.key,
   });
 
@@ -214,6 +216,7 @@ class ConversionParamsView extends StatelessWidget {
                                           context,
                                           paramItem: paramItem,
                                           colors: colors.paramItem,
+                                          dialogColors: dialogColors,
                                           calculationSwitchersVisible: true,
                                         ),
                                       );
@@ -310,6 +313,7 @@ class ConversionParamsView extends StatelessWidget {
     BuildContext context, {
     required ConversionParamValueModel paramItem,
     required ConversionItemColorScheme colors,
+    required WidgetColorScheme dialogColors,
     required bool calculationSwitchersVisible,
   }) {
     return ConvertouchConversionItem(
@@ -322,6 +326,7 @@ class ConversionParamsView extends StatelessWidget {
         removable: false,
       ),
       colors: colors,
+      dialogColors: dialogColors,
       onUnitItemTap: () {
         onParamUnitTap?.call(paramItem);
       },
