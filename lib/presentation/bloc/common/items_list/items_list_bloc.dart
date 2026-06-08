@@ -59,7 +59,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       oobIds = [];
     } else {
       allItems = state.itemsFetch.items;
-      pageNum = state.itemsFetch.pageNum;
+      pageNum = event.pageNum ?? state.itemsFetch.pageNum;
       params = state.itemsFetch.fetchParams;
       searchString = state.itemsFetch.searchString;
       hasReachedMax = state.itemsFetch.hasReachedMax;
@@ -71,19 +71,25 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     }
 
     try {
-      final newBatch = ObjectUtils.tryGet(
-        await fetchBatch(
-          InputItemsFetchModel(
-            searchString: searchString,
-            pageSize: event.pageSize,
-            pageNum: pageNum,
-            fetchParams: params,
-          ),
+      final newBatch = await fetchBatch(
+        InputItemsFetchModel(
+          searchString: searchString,
+          pageSize: event.pageSize,
+          pageNum: pageNum,
+          fetchParams: params,
         ),
       );
 
+      if (newBatch.isLeft) {
+        throw newBatch.left;
+      }
+
+      if (newBatch.right.status == FetchingStatus.failure) {
+        throw newBatch.right.error!;
+      }
+
       oobIds.addAll(
-        newBatch.items
+        newBatch.right.items
             .where((item) => item.oob)
             .map((item) => item.id)
             .toList(),
@@ -94,12 +100,12 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           itemsFetch: OutputItemsFetchModel(
             items: [
               ...allItems,
-              ...newBatch.items,
+              ...newBatch.right.items,
             ],
             status: FetchingStatus.success,
-            hasReachedMax: newBatch.hasReachedMax,
+            hasReachedMax: newBatch.right.hasReachedMax,
             searchString: searchString,
-            pageNum: newBatch.pageNum,
+            pageNum: newBatch.right.pageNum,
             fetchParams: params,
           ),
           oobIds: oobIds,
@@ -116,6 +122,13 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           itemsFetch: OutputItemsFetchModel(
             items: state.itemsFetch.items,
             status: FetchingStatus.failure,
+            error: e is ConvertouchException
+                ? e
+                : ConvertouchException(
+                    message: e.toString(),
+                    stackTrace: null,
+                    dateTime: DateTime.now(),
+                  ),
             hasReachedMax: hasReachedMax,
             searchString: searchString,
             pageNum: pageNum,

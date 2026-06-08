@@ -56,6 +56,8 @@ abstract class ConversionItemValueModel extends ItemModel {
           itemType: ItemType.conversionItemValue,
         );
 
+  String get itemId;
+
   String get name;
 
   ValueModel? get value => valueStream.valueOrNull;
@@ -173,6 +175,9 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   }
 
   @override
+  String get itemId => "unitValue_${unit.id}";
+
+  @override
   String get name => unit.name;
 
   @override
@@ -283,23 +288,6 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   @override
-  List<Object?> get props => [
-        param,
-        unit,
-        calculated,
-        super.props,
-      ];
-
-  @override
-  String get name {
-    if (unit != null) {
-      return "${param.name} | ${unit!.name}";
-    }
-
-    return param.name;
-  }
-
-  @override
   ConversionParamValueModel copyWith({
     ConversionParamModel? param,
     UnitModel? unit,
@@ -329,6 +317,18 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   @override
+  String get itemId => "paramValue_${param.id}";
+
+  @override
+  String get name {
+    if (unit != null) {
+      return "${param.name} | ${unit!.name}";
+    }
+
+    return param.name;
+  }
+
+  @override
   ConvertouchValueType get valueType => param.valueType;
 
   @override
@@ -336,6 +336,14 @@ class ConversionParamValueModel extends ConversionItemValueModel {
 
   @override
   UnitModel? get unitItem => unit ?? param.defaultUnit;
+
+  @override
+  List<Object?> get props => [
+        param,
+        unit,
+        calculated,
+        super.props,
+      ];
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {

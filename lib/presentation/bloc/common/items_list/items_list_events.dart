@@ -11,6 +11,7 @@ abstract class ItemsListEvent extends ConvertouchEvent {
 
 class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   final String? searchString;
+  final int? pageNum;
   final int pageSize;
   final bool firstFetch;
   final void Function()? onFirstFetch;
@@ -18,6 +19,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
 
   const FetchItems({
     this.searchString,
+    this.pageNum,
     this.pageSize = 100,
     this.firstFetch = true,
     this.params,
@@ -28,6 +30,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   @override
   List<Object?> get props => [
         searchString,
+        pageNum,
         pageSize,
         firstFetch,
         params,
@@ -37,6 +40,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   String toString() {
     return 'FetchItems{'
         'searchString: $searchString, '
+        'pageNum: $pageNum, '
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
         'onFirstFetch: $onFirstFetch, '

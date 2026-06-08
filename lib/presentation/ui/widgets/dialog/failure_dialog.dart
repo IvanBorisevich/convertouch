@@ -43,6 +43,7 @@ class ConvertouchFailureDialog extends StatelessWidget {
       actions: <Widget>[
         handlerFunc != null
             ? TextButton(
+                onPressed: handlerFunc,
                 child: Text(
                   handlerActionName ?? 'Try Again',
                   style: TextStyle(
@@ -50,7 +51,6 @@ class ConvertouchFailureDialog extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onPressed: () {},
               )
             : const SizedBox.shrink(),
         TextButton(

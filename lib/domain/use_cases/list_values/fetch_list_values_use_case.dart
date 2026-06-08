@@ -16,7 +16,8 @@ class FetchListValuesUseCase
 
   @override
   Future<List<ValueModel>> fetchItemsPage(
-      InputItemsFetchModel<ListValuesFetchParams> input,) async {
+    InputItemsFetchModel<ListValuesFetchParams> input,
+  ) async {
     if (input.fetchParams == null) {
       return [];
     }
@@ -35,7 +36,8 @@ class FetchListValuesUseCase
 
   @override
   Future<bool> containsSelectedValue(
-      InputItemsFetchModel<ListValuesFetchParams> input,) async {
+    InputItemsFetchModel<ListValuesFetchParams> input,
+  ) async {
     if (input.fetchParams == null) {
       return false;
     }

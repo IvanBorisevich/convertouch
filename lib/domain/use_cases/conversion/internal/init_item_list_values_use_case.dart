@@ -25,6 +25,7 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
 
     var listValuesFetchResult = await _fetchFirstBatch(
       fetchParams: ListValuesFetchParams(
+        itemId: input.itemValue.itemId,
         listType: input.itemValue.listType!,
         unit: input.itemValue.unitItem,
         params: input.paramSetValue,

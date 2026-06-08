@@ -7,11 +7,13 @@ import 'package:rxdart/rxdart.dart';
 const int _nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxModel implements ElementModel {
+  final String? itemId;
   final BehaviorSubject<ValueModel?> valueStream;
   final String? labelText;
   final bool readonly;
 
   const InputBoxModel({
+    this.itemId,
     required this.valueStream,
     this.labelText,
     this.readonly = false,
@@ -23,6 +25,7 @@ abstract class InputBoxModel implements ElementModel {
   }) {
     if (model.listType != null) {
       return ListBoxModel(
+        itemId: model.itemId,
         valueStream: model.valueStream,
         listValuesBatchStream: model.listValuesBatchStream,
         listType: model.listType!,
@@ -36,6 +39,7 @@ abstract class InputBoxModel implements ElementModel {
       ) as T;
     } else {
       return TextBoxModel(
+        itemId: model.itemId,
         valueStream: model.valueStream,
         hintStream: model.defaultValueStream,
         readonly: readonly,
@@ -65,6 +69,7 @@ class TextBoxModel extends InputBoxModel {
   final bool textLengthCounterVisible;
 
   const TextBoxModel({
+    super.itemId,
     required super.valueStream,
     required this.hintStream,
     super.readonly,
@@ -94,6 +99,7 @@ class ListBoxModel extends InputBoxModel {
   final bool searchEnabled;
 
   const ListBoxModel({
+    super.itemId,
     required super.valueStream,
     required this.listType,
     super.readonly,

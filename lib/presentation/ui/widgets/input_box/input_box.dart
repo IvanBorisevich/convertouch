@@ -2,9 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
@@ -716,12 +719,29 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NavigationBloc, NavigationState>(
-      listener: (_, navigationState) {
-        if (_isDropdownOpen) {
-          Navigator.of(context).pop();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NavigationBloc, NavigationState>(
+          listener: (_, navigationState) {
+            if (_isDropdownOpen) {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+        BlocListener<ListValuesBloc,
+            ItemsFetched<ValueModel, ListValuesFetchParams>>(
+          listenWhen: (prev, next) =>
+              widget.model.itemId != null &&
+              widget.model.itemId == next.itemsFetch.fetchParams?.itemId,
+          listener: (_, itemsState) {
+            if (widget.model.itemId != null &&
+                widget.model.itemId ==
+                    itemsState.itemsFetch.fetchParams?.itemId) {
+              _listValuesNotifier.value = itemsState.itemsFetch;
+            }
+          },
+        ),
+      ],
       child: ValueListenableBuilder(
         valueListenable: _listValuesNotifier,
         builder: (_, listValuesFetchResult, child) {
@@ -921,14 +941,23 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   }
 
   DropdownItem<ValueModel>? _handlerDropdownItem(
-    ListValuesFetchResult? listValuesFetchResult, {
-    void Function()? handlerFunc,
-  }) {
+    ListValuesFetchResult? listValuesFetchResult,
+  ) {
     if (listValuesFetchResult == null) {
       return null;
     }
 
     if (listValuesFetchResult.status == FetchingStatus.failure) {
+      retryFunc() {
+        widget.listValuesBloc.add(
+          FetchItems(
+            firstFetch: listValuesFetchResult.pageNum == 0,
+            pageNum: listValuesFetchResult.pageNum,
+            params: listValuesFetchResult.fetchParams,
+          ),
+        );
+      }
+
       return DropdownItem<ValueModel>(
         enabled: false,
         alignment: Alignment.center,
@@ -946,7 +975,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     builder: (context, setStateDialog) {
                       return ConvertouchFailureDialog(
                         title: _fetchErrorMsg,
-                        handlerFunc: handlerFunc,
+                        handlerFunc: retryFunc,
                         handlerActionName: "Retry",
                         content: Text(
                           listValuesFetchResult.error?.message ??
@@ -980,7 +1009,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 ),
               ),
               GestureDetector(
-                onTap: handlerFunc,
+                onTap: retryFunc,
                 child: Icon(
                   Icons.refresh_rounded,
                   color: widget.dropdownColors.foreground.warning,

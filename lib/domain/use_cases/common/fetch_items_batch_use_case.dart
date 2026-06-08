@@ -18,7 +18,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     String? searchString = input.searchString;
     int pageSize = input.pageSize;
     int pageNum = input.pageNum;
-    P? params = input.fetchParams;
+    P? fetchParams = input.fetchParams;
     bool hasSelectedValue = pageNum == 0 && await containsSelectedValue(input);
 
     final List<T> newPageItems;
@@ -41,7 +41,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
           status: FetchingStatus.failure,
           error: error,
           pageNum: pageNum,
-          fetchParams: params,
+          fetchParams: fetchParams,
           containsSelectedValue: hasSelectedValue,
         ),
       );
@@ -66,7 +66,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
         searchString: searchString,
         pageNum: pageNum,
         hasReachedMax: hasReachedMax,
-        fetchParams: params,
+        fetchParams: fetchParams,
         containsSelectedValue: hasSelectedValue,
       ),
     );

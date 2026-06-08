@@ -46,6 +46,11 @@ class UnitsFetchParams extends ItemsFetchParams {
       'parentItemType': parentItemType.name,
     };
   }
+
+  @override
+  String toString() {
+    return 'UnitsFetchParams{parentItemId: $parentItemId}';
+  }
 }
 
 class UnitGroupsFetchParams extends ItemsFetchParams {
@@ -57,6 +62,11 @@ class UnitGroupsFetchParams extends ItemsFetchParams {
   @override
   Map<String, dynamic> toJson() {
     return {};
+  }
+
+  @override
+  String toString() {
+    return 'UnitGroupsFetchParams{}';
   }
 }
 
@@ -78,9 +88,15 @@ class ParamSetsFetchParams extends ItemsFetchParams {
       'parentItemId': parentItemId,
     };
   }
+
+  @override
+  String toString() {
+    return 'ParamSetsFetchParams{parentItemId: $parentItemId}';
+  }
 }
 
 class ListValuesFetchParams extends ItemsFetchParams {
+  final String itemId;
   final ConvertouchListType listType;
   final String? unitGroupName;
   final UnitModel? unit;
@@ -88,6 +104,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
   final ValueModel? selectedValue;
 
   const ListValuesFetchParams({
+    required this.itemId,
     required this.listType,
     this.unit,
     this.unitGroupName,
@@ -97,6 +114,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
 
   @override
   List<Object?> get props => [
+        itemId,
         listType,
         unit,
         unitGroupName,
@@ -107,6 +125,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
   @override
   Map<String, dynamic> toJson() {
     return {
+      'itemId': itemId,
       'listType': listType.id,
       'unit': unit?.toJson(),
       'groupName': unitGroupName,
@@ -120,10 +139,16 @@ class ListValuesFetchParams extends ItemsFetchParams {
     }
 
     return ListValuesFetchParams(
+      itemId: json['itemId'] ?? -1,
       listType: ConvertouchListType.valueOf(json['listType'])!,
       unit: UnitModel.fromJson(json['unit']),
       unitGroupName: json['groupName'],
       params: ConversionParamSetValueModel.fromJson(json['params']),
     );
+  }
+
+  @override
+  String toString() {
+    return 'ListValuesFetchParams{itemId: $itemId, listType: $listType}';
   }
 }
