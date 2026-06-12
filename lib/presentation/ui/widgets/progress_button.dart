@@ -13,10 +13,10 @@ class ConvertouchProgressButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final void Function()? onProgressIndicatorClick;
-  final void Function()? onProgressIndicatorErrorIconClick;
+  final void Function(JobResultModel)? onSuccess;
+  final void Function(ConvertouchException info)? notificationFunc;
   final EdgeInsets? margin;
-  final WidgetColorScheme colorsInProgress;
-  final Color? progressIndicatorErrorIconColor;
+  final WidgetColorScheme colors;
 
   const ConvertouchProgressButton({
     required this.buttonWidget,
@@ -25,10 +25,10 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.visible = true,
     this.onProgressIndicatorClick,
-    this.onProgressIndicatorErrorIconClick,
+    this.onSuccess,
+    this.notificationFunc,
     this.margin,
-    required this.colorsInProgress,
-    this.progressIndicatorErrorIconColor = Colors.red,
+    required this.colors,
     super.key,
   });
 
@@ -49,23 +49,16 @@ class ConvertouchProgressButton extends StatelessWidget {
                   log("Connection: ${snapshot.connectionState}, "
                       "data: ${snapshot.data?.progressPercent}");
 
-                  if (snapshot.hasError) {
-                    log("Snapshot contains an error: ${snapshot.error}");
-                    if (snapshot.error is ConvertouchException) {
-                      return buttonWidget;
-                    } else {
-                      return IconButton(
-                        onPressed: onProgressIndicatorErrorIconClick,
-                        icon: Icon(
-                          Icons.error_outline,
-                          color: progressIndicatorErrorIconColor,
-                          size: radius,
-                        ),
-                      );
-                    }
-                  } else if (snapshot.data == null) {
+                  if (snapshot.data == null) {
                     return buttonWidget;
                   } else if (snapshot.connectionState == ConnectionState.done) {
+                    print("Connection done");
+
+                    onSuccess?.call(snapshot.data!);
+
+                    if (snapshot.data!.notification != null) {
+                      notificationFunc?.call(snapshot.data!.notification!);
+                    }
                     return buttonWidget;
                   } else {
                     return GestureDetector(
@@ -80,12 +73,11 @@ class ConvertouchProgressButton extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10,
-                                  color: colorsInProgress.foreground.selected,
+                                  color: colors.foreground.selected,
                                 ),
                               ),
                               circularStrokeCap: CircularStrokeCap.round,
-                              progressColor:
-                                  colorsInProgress.foreground.selected,
+                              progressColor: colors.foreground.selected,
                               animation: true,
                               animateFromLastPercent: true,
                             )
@@ -97,14 +89,14 @@ class ConvertouchProgressButton extends StatelessWidget {
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(30)),
                                 border: Border.all(
-                                  color: colorsInProgress.border.selected,
+                                  color: colors.border.selected,
                                 ),
                               ),
                               child: CircularProgressIndicator(
                                 value: null,
                                 strokeWidth: 3.0,
                                 strokeCap: StrokeCap.round,
-                                color: colorsInProgress.foreground.selected,
+                                color: colors.foreground.selected,
                               ),
                             ),
                     );

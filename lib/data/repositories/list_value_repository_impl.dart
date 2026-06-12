@@ -102,7 +102,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required int pageSize,
     required ConversionParamSetValueModel params,
   }) async {
-    return await networkRepository.fetchList(
+    return await networkRepository.fetchListValues(
       listType: listType,
       params: params,
       pageSize: pageSize,

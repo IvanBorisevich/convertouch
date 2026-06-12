@@ -2,12 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
+import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
@@ -24,6 +26,8 @@ import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../../controller/refreshing_job_controller.dart';
 
 class ConvertouchConversionPage extends StatefulWidget {
   const ConvertouchConversionPage({super.key});
@@ -92,12 +96,12 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                   ),
                   conversionBlocBuilder(
                     builderFunc: (pageState) {
-                      bool paramsCanBeAdded =
-                          pageState.conversion.params != null &&
-                              pageState.conversion.params!.paramSetsCanBeAdded;
-                      bool paramsCanBeRemoved = pageState.conversion.params !=
-                              null &&
-                          pageState.conversion.params!.optionalParamSetsExist;
+                      final conversion = pageState.conversion;
+
+                      bool paramsCanBeAdded = conversion.params != null &&
+                          conversion.params!.paramSetsCanBeAdded;
+                      bool paramsCanBeRemoved = conversion.params != null &&
+                          conversion.params!.optionalParamSetsExist;
                       bool paramsOptionsExist =
                           paramsCanBeAdded || paramsCanBeRemoved;
 
@@ -122,7 +126,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                     paramSetsController.showParametersForAdding(
                                       context,
                                       groupId: unitGroup.id,
-                                      params: pageState.conversion.params,
+                                      params: conversion.params,
                                     );
                                   },
                                 )
@@ -223,6 +227,33 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                   context,
                                   paramValue: paramValue,
                                   newValue: newValue,
+                                  onChanged: (newConversion, {info}) {
+                                    refreshButtonController.changeState(
+                                      context,
+                                      visible: newConversion.refreshable,
+                                      disabled: !newConversion.readyToRefresh,
+                                    );
+
+                                    if (newConversion.refreshable &&
+                                        newConversion.readyToRefresh) {
+                                      refreshingJobController.startRefresh(
+                                        context,
+                                        groupName: newConversion.unitGroup.name,
+                                        params: newConversion.params!.active!,
+                                        srcUnit:
+                                            newConversion.srcUnitValue?.unit,
+                                        jobExecutionMode:
+                                            JobExecutionMode.startNewJob,
+                                      );
+                                    } else {
+                                      refreshingJobController.stopRefresh(
+                                        context,
+                                        groupName: newConversion.unitGroup.name,
+                                        paramSetName: newConversion
+                                            .params!.active!.paramSet.name,
+                                      );
+                                    }
+                                  },
                                 );
                               },
                               onSelectedParamSetRemove: () {
@@ -289,12 +320,23 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       crossAxisAlignment: WrapCrossAlignment.end,
                       alignment: WrapAlignment.end,
                       children: [
-                        pageState.showRefreshButton
-                            ? ConvertouchRefreshFloatingButton(
-                                unitGroupName: unitGroup.name,
-                                params: conversion.params!.active!,
-                              )
-                            : const SizedBox.shrink(),
+                        refreshButtonBlocBuilder(
+                          builderFunc: (refreshButtonState) {
+                            return ConvertouchRefreshFloatingButton(
+                              conversion: conversion,
+                              visible: refreshButtonState.visible,
+                              disabled: refreshButtonState.disabled,
+                              onRefreshSuccess: (jobResult) {
+                                if (jobResult.result != null) {
+                                  conversionController.updateFromNetwork(
+                                    context,
+                                    data: jobResult.result!,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
                         ConvertouchFloatingActionButton.adding(
                           onClick: () {
                             unitsController.showUnitsForAdding(

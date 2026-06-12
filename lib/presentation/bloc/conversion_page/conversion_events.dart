@@ -1,21 +1,24 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
+  final void Function(ConversionModel, {ConvertouchException? info})? onConversionUpdated;
+
   const ConversionEvent({
-    super.onSuccess,
+    this.onConversionUpdated,
     super.onError,
   });
 }
 
 abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion({
-    super.onSuccess,
+    super.onConversionUpdated,
     super.onError,
   });
 }
@@ -76,7 +79,7 @@ class EditConversionGroup extends ModifyConversion {
 
   const EditConversionGroup({
     required this.editedGroup,
-    super.onSuccess,
+    super.onConversionUpdated,
     super.onError,
   });
 
@@ -205,7 +208,7 @@ class ReplaceConversionItemUnit extends ModifyConversion {
     required this.newUnit,
     required this.oldUnitId,
     required this.recalculationMode,
-    super.onSuccess,
+    super.onConversionUpdated,
     super.onError,
   });
 
@@ -230,7 +233,7 @@ class AddParamSetsToConversion extends ModifyConversion {
 
   const AddParamSetsToConversion({
     required this.paramSetIds,
-    super.onSuccess,
+    super.onConversionUpdated,
     super.onError,
   });
 
@@ -299,6 +302,7 @@ class EditConversionParamValue extends ModifyConversion {
     required this.paramId,
     required this.paramSetId,
     super.onError,
+    super.onConversionUpdated,
   });
 
   @override
@@ -328,7 +332,7 @@ class ReplaceConversionParamUnit extends ModifyConversion {
     required this.newUnit,
     required this.paramId,
     required this.paramSetId,
-    super.onSuccess,
+    super.onConversionUpdated,
     super.onError,
   });
 

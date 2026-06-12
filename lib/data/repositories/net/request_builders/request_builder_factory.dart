@@ -1,3 +1,4 @@
+import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/repositories/net/request_builders/exchange_rate/exchange_rate_request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/exchange_rate/exchange_rate_source_request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
@@ -35,12 +36,18 @@ class _RequestBuilderFactory {
 
 const Map<String, Map<String, RequestBuilder>> _commonBuilders = {
   GroupNames.currency: {
-    ParamSetNames.exchangeRate: ExchangeRateRequestBuilder(),
+    ParamSetNames.exchangeRate: ExchangeRateRequestBuilder(
+      httpMethod: HttpMethod.get,
+      path: exchangeRatePath,
+    ),
   },
 };
 
 const Map<ConvertouchListType, RequestBuilder> _listValuesBuilders = {
-  ConvertouchListType.exchangeRateSource: ExchangeRateSourceRequestBuilder(),
+  ConvertouchListType.exchangeRateSource: ExchangeRateSourceRequestBuilder(
+    httpMethod: HttpMethod.get,
+    path: exchangeRateSourcesPath,
+  ),
 };
 
 const requestBuilders = _RequestBuilderFactory.instance;

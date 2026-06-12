@@ -7,6 +7,7 @@ import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
+import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
@@ -60,6 +61,12 @@ class ConversionGroupsPage extends StatelessWidget {
                     unitGroup: unitGroup,
                     processCurrentConversion: (conversion) {
                       if (conversion != null && conversion.hasItems) {
+                        refreshButtonController.changeState(
+                          context,
+                          visible: conversion.refreshable,
+                          disabled: !conversion.readyToRefresh,
+                        );
+
                         refreshingJobController.getJobs(
                           context,
                           unitGroup: unitGroup,

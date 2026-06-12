@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -81,7 +82,7 @@ class ConversionController {
         newUnit: newUnit,
         oldUnitId: currentUnitId,
         recalculationMode: recalculationMode,
-        onSuccess: ({info}) {
+        onConversionUpdated: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -135,7 +136,7 @@ class ConversionController {
         newUnit: newUnit,
         paramId: param.id,
         paramSetId: param.paramSetId,
-        onSuccess: ({info}) {
+        onConversionUpdated: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -149,6 +150,7 @@ class ConversionController {
     BuildContext context, {
     required ConversionParamValueModel paramValue,
     required ValueModel? newValue,
+    void Function(ConversionModel, {ConvertouchException? info})? onChanged,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionParamValue(
@@ -158,6 +160,7 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
+        onConversionUpdated: onChanged,
       ),
     );
   }
@@ -238,7 +241,7 @@ class ConversionController {
     BlocProvider.of<ConversionBloc>(context).add(
       AddParamSetsToConversion(
         paramSetIds: paramSetIds,
-        onSuccess: ({info}) {
+        onConversionUpdated: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {

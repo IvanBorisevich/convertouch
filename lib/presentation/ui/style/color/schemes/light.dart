@@ -40,7 +40,7 @@ const _notification = NotificationColorScheme(
 const _dropdown = DropdownColorScheme(
   background: MultiColor.only(Color(0xffbccdfa)),
   foreground: MultiColor(
-      regular: Color(0xFF1D578C),
+    regular: Color(0xFF1D578C),
     warning: _warningForeground,
   ),
   searchBox: _dropdownSearchBox,
@@ -331,12 +331,18 @@ const _conversionItem = ConversionItemColorScheme(
 const _refreshFloatingButton = WidgetColorScheme(
   border: MultiColor(
     regular: Color(0xFF2095B7),
+    disabled: Color(0xFF467787),
   ),
   foreground: MultiColor(
     regular: Color(0xFFE8E8FF),
+    disabled: Color(0xFFBABABD),
     selected: Color(0xFF2095B7),
+    error: Color(0xFFAE6A6A),
   ),
-  background: MultiColor.only(Color(0xFF2095B7)),
+  background: MultiColor(
+    regular: Color(0xFF2095B7),
+    disabled: Color(0xFF467787),
+  ),
 );
 
 const _removalFloatingButton = WidgetColorScheme(

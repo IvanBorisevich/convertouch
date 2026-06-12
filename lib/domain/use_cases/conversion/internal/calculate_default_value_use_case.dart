@@ -6,20 +6,21 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/repositories/dynamic_value_repository.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CalculateDefaultValueUseCase<T extends IdNameItemModel>
     extends UseCase<InputDefaultValueCalculationModel<T>, ValueModel?> {
-  final DynamicValueRepository dynamicValueRepository;
+  final FetchDynamicValueUseCase fetchDynamicValueUseCase;
   final ListValueRepository listValueRepository;
 
   const CalculateDefaultValueUseCase({
-    required this.dynamicValueRepository,
+    required this.fetchDynamicValueUseCase,
     required this.listValueRepository,
   });
 
@@ -75,7 +76,11 @@ class CalculateDefaultValueUseCase<T extends IdNameItemModel>
   }) async {
     if (unit != null) {
       var dynamicValue = ObjectUtils.tryGet(
-        await dynamicValueRepository.get(unit.id),
+        await fetchDynamicValueUseCase.execute(
+          InputDynamicValueFetchModel(
+            srcUnit: unit,
+          ),
+        ),
       );
 
       String? srcDefaultValueStr = dynamicValue != null &&

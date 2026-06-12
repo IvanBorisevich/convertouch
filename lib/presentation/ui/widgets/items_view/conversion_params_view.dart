@@ -14,6 +14,7 @@ import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 const double _paramItemHeight = 75;
 const double _minBodyHeight = 150;
@@ -80,7 +81,8 @@ class ConversionParamsView extends StatelessWidget {
       builderFunc: (jobsState) {
         var job = jobsState.jobs[unitGroupName]?[params!.active?.paramSet.name];
 
-        bool jobInfoBoxVisible = params!.active != null && job != null;
+        bool jobInfoBoxVisible =
+            params!.active != null && job != null && job.completedAt != null;
 
         return ConvertouchSlidingPanel(
           panelController: panelController,
@@ -267,7 +269,7 @@ class ConversionParamsView extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            "Last refreshed: ${job.completedAgo}",
+                            "Last refreshed: ${timeago.format(job.completedAt!)}",
                             style: TextStyle(
                               letterSpacing: 0,
                               fontSize: 14,

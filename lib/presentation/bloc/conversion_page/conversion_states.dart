@@ -7,23 +7,19 @@ abstract class ConversionState extends ConvertouchState {
 
 class ConversionBuilt extends ConversionState {
   final ConversionModel conversion;
-  final bool showRefreshButton;
 
   const ConversionBuilt({
     required this.conversion,
-    this.showRefreshButton = false,
   });
 
   @override
   List<Object?> get props => [
         conversion,
-        showRefreshButton,
       ];
 
   Map<String, dynamic> toJson() {
     return {
       "conversion": conversion.toJson(),
-      "showRefreshButton": showRefreshButton,
     };
   }
 
@@ -34,14 +30,11 @@ class ConversionBuilt extends ConversionState {
     return ConversionBuilt(
       conversion:
           ConversionModel.fromJson(json["conversion"]) ?? ConversionModel.none,
-      showRefreshButton: json["showRefreshButton"] ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'ConversionBuilt{'
-        'showRefreshButton: $showRefreshButton, '
-        'conversion: $conversion}';
+    return 'ConversionBuilt{conversion: $conversion}';
   }
 }

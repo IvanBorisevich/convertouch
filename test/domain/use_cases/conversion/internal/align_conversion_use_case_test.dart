@@ -15,6 +15,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -51,7 +52,9 @@ void main() {
 
     final CalculateDefaultValueUseCase calculateDefaultValueUseCase =
         CalculateDefaultValueUseCase(
-      dynamicValueRepository: const MockDynamicValueRepository(),
+      fetchDynamicValueUseCase: const FetchDynamicValueUseCase(
+        dynamicValueRepository: MockDynamicValueRepository(),
+      ),
       listValueRepository: listValueRepository,
     );
 
@@ -288,7 +291,7 @@ void main() {
     );
 
     when(
-      mockitoNetworkRepository.fetchList(
+      mockitoNetworkRepository.fetchListValues(
         listType: ConvertouchListType.exchangeRateSource,
         params: anyNamed('params'),
         pageSize: listValuesPageSize,

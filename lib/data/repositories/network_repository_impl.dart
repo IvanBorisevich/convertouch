@@ -6,7 +6,6 @@ import 'package:convertouch/data/entities/response_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder_factory.dart';
-import 'package:convertouch/data/repositories/net/response_parsers/response_parser.dart';
 import 'package:convertouch/data/repositories/net/response_parsers/response_parser_factory.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
@@ -15,6 +14,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
@@ -38,110 +38,110 @@ class NetworkRepositoryImpl extends NetworkRepository {
   });
 
   @override
-  Future<Either<ConvertouchException, DynamicDataModel?>> fetchByParams({
+  Future<Either<ConvertouchException, DynamicCoefficientsModel>>
+      fetchCoefficients({
     required ConversionParamSetValueModel params,
   }) async {
-    String? groupName = await _getGroupName(params.paramSet.groupId);
-
-    if (groupName == null) {
-      return const Right(null);
-    }
-
-    final result = await _fetch(
-      requestBuilder: requestBuilders.getByGroupAndParamSet(
-        groupName,
-        params.paramSet.name,
-      ),
-      responseParser: responseParsers.getByGroupAndParamSet(
-        groupName,
-        params.paramSet.name,
-      ),
+    return await _fetch<DynamicCoefficientsResponseEntity,
+        DynamicCoefficientsModel>(
       params: params,
+      ifNullResponse: () => DynamicCoefficientsModel.empty,
+      responseHandler: (response) async {
+        List<UnitEntity> updatedUnits = await unitDao.updateUnitsCoefficients(
+          database,
+          params.paramSet.groupId,
+          response.unitCodeToCoefficient,
+        );
+
+        return DynamicCoefficientsTranslator.I.toModel(updatedUnits);
+      },
     );
-
-    if (result.isLeft) {
-      return Left(result.left);
-    }
-
-    ResponseEntity? response = result.right;
-
-    if (response == null) {
-      return const Right(null);
-    }
-
-    if (response is DynamicCoefficientsResponseEntity) {
-      List<UnitEntity> updatedUnits = await unitDao.updateUnitsCoefficients(
-        database,
-        params.paramSet.groupId,
-        response.unitCodeToCoefficient,
-      );
-
-      return Right(DynamicCoefficientsTranslator.I.toModel(updatedUnits));
-    }
-
-    if (response is DynamicValueResponseEntity) {
-      Map<String, String?> unitCodeToValue = response.unitCodeToValue;
-
-      List<UnitEntity> units = await unitDao.getUnitsByCodes(
-        params.paramSet.groupId,
-        unitCodeToValue.keys.toList(),
-      );
-
-      List<DynamicValueEntity> entities = units
-          .map(
-            (unit) => DynamicValueEntity(
-              unitId: unit.id!,
-              value: unitCodeToValue[unit.code],
-            ),
-          )
-          .toList();
-
-      await dynamicValueDao.updateBatch(database, entities);
-      return Right(DynamicValueTranslator.I.toModel(entities.first));
-    }
-
-    return const Right(null);
   }
 
   @override
-  Future<Either<ConvertouchException, List<ValueModel>>> fetchList({
+  Future<Either<ConvertouchException, DynamicValueModel>> fetchDynamicValue({
+    required UnitModel unit,
+    required ConversionParamSetValueModel params,
+  }) async {
+    return await _fetch<DynamicValueResponseEntity, DynamicValueModel>(
+      params: params,
+      ifNullResponse: () => DynamicValueModel(unitId: unit.id),
+      responseHandler: (response) async {
+        Map<String, String?> unitCodeToValue = response.unitCodeToValue;
+
+        List<UnitEntity> units = await unitDao.getUnitsByCodes(
+          params.paramSet.groupId,
+          unitCodeToValue.keys.toList(),
+        );
+
+        List<DynamicValueEntity> entities = units
+            .map(
+              (unit) => DynamicValueEntity(
+                unitId: unit.id!,
+                value: unitCodeToValue[unit.code],
+              ),
+            )
+            .toList();
+
+        await dynamicValueDao.updateBatch(database, entities);
+        return DynamicValueTranslator.I.toModel(entities.first);
+      },
+    );
+  }
+
+  @override
+  Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
     required ConversionParamSetValueModel params,
     required int pageSize,
     required int pageNum,
   }) async {
-    final response = ObjectUtils.tryGet(
-      await _fetch(
-        requestBuilder: requestBuilders.getByListType(listType),
-        responseParser: responseParsers.getByListType(listType),
-        params: params,
-        pageSize: pageSize,
-        pageNum: pageNum,
-      ),
+    return await _fetch<DynamicListValuesResponseEntity, List<ValueModel>>(
+      params: params,
+      listType: listType,
+      pageSize: pageSize,
+      pageNum: pageNum,
+      responseHandler: (response) async => response.listValues,
+      ifNullResponse: () => const [],
     );
-
-    if (response is DynamicListValuesResponseEntity) {
-      return Right(response.listValues);
-    }
-
-    return const Right([]);
   }
 
-  Future<Either<ConvertouchException, ResponseEntity?>> _fetch({
-    required RequestBuilder requestBuilder,
-    required ResponseParser responseParser,
+  Future<Either<ConvertouchException, R>> _fetch<T extends ResponseEntity, R>({
     required ConversionParamSetValueModel params,
+    ConvertouchListType? listType,
     int? pageSize,
     int? pageNum,
+    required Future<R> Function(T) responseHandler,
+    required R Function() ifNullResponse,
   }) async {
     try {
+      String? groupName = await _getGroupName(params.paramSet.groupId);
+
+      if (groupName == null) {
+        return Right(ifNullResponse.call());
+      }
+
+      final requestBuilder = listType != null
+          ? requestBuilders.getByListType(listType)
+          : requestBuilders.getByGroupAndParamSet(
+              groupName,
+              params.paramSet.name,
+            );
+
+      final responseParser = listType != null
+          ? responseParsers.getByListType(listType)
+          : responseParsers.getByGroupAndParamSet(
+              groupName,
+              params.paramSet.name,
+            );
+
       if (!requestBuilder.readyForFetch(params)) {
-        return const Right(null);
+        return Right(ifNullResponse.call());
       }
 
       String responseStr;
 
-      switch (requestBuilder.method) {
+      switch (requestBuilder.httpMethod) {
         case HttpMethod.get:
         default:
           responseStr = await networkDao.fetch(
@@ -160,7 +160,13 @@ class NetworkRepositoryImpl extends NetworkRepository {
           break;
       }
 
-      return Right(responseParser.parse(responseStr));
+      ResponseEntity response = responseParser.parse(responseStr);
+
+      if (response is! T) {
+        return Right(ifNullResponse.call());
+      }
+
+      return Right(await responseHandler(response));
     } on NetworkException catch (e) {
       return Left(e);
     } on Exception catch (e, stackTrace) {

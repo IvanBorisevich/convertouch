@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:test/test.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 final _now = DateTime.now();
 
@@ -29,7 +28,6 @@ void main() {
         JobModel(
           selectedCron: Cron.everyHour,
           completedAt: _now,
-          completedAgo: timeago.format(_now),
         ),
       );
     });
@@ -43,7 +41,6 @@ void main() {
         JobModel(
           selectedCron: Cron.everyHour,
           completedAt: _now,
-          completedAgo: timeago.format(_now),
         ),
       );
     });

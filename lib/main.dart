@@ -11,6 +11,7 @@ import 'package:convertouch/presentation/bloc/common/items_list/items_list_event
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
@@ -62,6 +63,9 @@ class ConvertouchApp extends StatelessWidget {
             ..add(
               const GetAppSettingsInit(),
             ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RefreshButtonBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<InputValidationBloc>(),

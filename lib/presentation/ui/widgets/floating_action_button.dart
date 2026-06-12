@@ -7,6 +7,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final IconData icon;
   final void Function()? onClick;
   final bool visible;
+  final bool disabled;
   final bool extraLabelVisible;
   final String extraLabelText;
   final WidgetColorScheme colorScheme;
@@ -15,6 +16,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     required this.icon,
     this.onClick,
     this.visible = true,
+    this.disabled = false,
     this.extraLabelVisible = false,
     this.extraLabelText = "",
     required this.colorScheme,
@@ -25,6 +27,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.icon = Icons.refresh_rounded,
     this.onClick,
     this.visible = true,
+    this.disabled = false,
     this.extraLabelVisible = false,
     this.extraLabelText = "",
     required this.colorScheme,
@@ -35,6 +38,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.icon = Icons.add,
     this.onClick,
     this.visible = true,
+    this.disabled = false,
     this.extraLabelVisible = false,
     this.extraLabelText = "",
     required this.colorScheme,
@@ -45,6 +49,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.icon = Icons.delete_outline_rounded,
     this.onClick,
     this.visible = true,
+    this.disabled = false,
     this.extraLabelVisible = true,
     required this.extraLabelText,
     required this.colorScheme,
@@ -62,21 +67,23 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
           children: [
             FittedBox(
               child: FloatingActionButton(
-                onPressed: () {
-                  if (visible) {
-                    onClick?.call();
-                  }
-                },
+                onPressed: disabled ? null : onClick,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
-                backgroundColor: colorScheme.background.regular,
-                foregroundColor: colorScheme.foreground.regular,
+                backgroundColor: disabled
+                    ? colorScheme.background.disabled
+                    : colorScheme.background.regular,
+                foregroundColor: disabled
+                    ? colorScheme.foreground.disabled
+                    : colorScheme.foreground.regular,
                 disabledElevation: 0,
                 elevation: 0,
                 child: Icon(
                   icon,
-                  color: colorScheme.foreground.regular,
+                  color: disabled
+                      ? colorScheme.foreground.disabled
+                      : colorScheme.foreground.regular,
                 ),
               ),
             ),
@@ -88,10 +95,14 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                         horizontal: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: colorScheme.background.regular,
+                        color: disabled
+                            ? colorScheme.background.disabled
+                            : colorScheme.background.regular,
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
-                          color: colorScheme.border.regular,
+                          color: disabled
+                              ? colorScheme.border.disabled
+                              : colorScheme.border.regular,
                           width: 1,
                           strokeAlign: BorderSide.strokeAlignOutside,
                         ),
@@ -99,7 +110,9 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                       child: Text(
                         extraLabelText,
                         style: TextStyle(
-                          color: colorScheme.foreground.regular,
+                          color: disabled
+                              ? colorScheme.foreground.disabled
+                              : colorScheme.foreground.regular,
                           fontSize: 14,
                         ),
                       ),

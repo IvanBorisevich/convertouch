@@ -13,7 +13,13 @@ enum HttpMethod {
 }
 
 abstract class RequestBuilder {
-  const RequestBuilder();
+  final HttpMethod httpMethod;
+  final String path;
+
+  const RequestBuilder({
+    required this.httpMethod,
+    required this.path,
+  });
 
   Map<String, dynamic>? buildQueryParams({
     required ConversionParamSetValueModel params,
@@ -28,8 +34,4 @@ abstract class RequestBuilder {
   });
 
   bool readyForFetch(ConversionParamSetValueModel params);
-
-  HttpMethod get method;
-
-  String get path;
 }

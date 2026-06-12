@@ -2,6 +2,7 @@ import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
@@ -14,7 +15,9 @@ void main() {
 
   setUp(() {
     useCase = const CalculateDefaultValueUseCase(
-      dynamicValueRepository: MockDynamicValueRepository(),
+      fetchDynamicValueUseCase: FetchDynamicValueUseCase(
+        dynamicValueRepository: MockDynamicValueRepository(),
+      ),
       listValueRepository: ListValueRepositoryImpl(
         networkRepository: MockNetworkRepository(),
       ),

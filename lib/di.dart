@@ -51,7 +51,9 @@ import 'package:convertouch/domain/use_cases/conversion/save_conversion_use_case
 import 'package:convertouch/domain/use_cases/conversion/select_param_set_in_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
-import 'package:convertouch/domain/use_cases/jobs/start_refreshing_job_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_coefficients_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
+import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
@@ -69,6 +71,7 @@ import 'package:convertouch/presentation/bloc/common/input_validation/input_vali
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
@@ -82,6 +85,7 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
+import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
@@ -173,6 +177,7 @@ Future<void> _initRepositories(ConvertouchDatabase database) async {
 
   locator.registerLazySingleton<DynamicValueRepository>(
     () => DynamicValueRepositoryImpl(
+      networkRepository: locator(),
       dynamicValueDao: database.dynamicValueDao,
       unitDao: database.unitDao,
       database: database.database.database,
@@ -244,7 +249,7 @@ Future<void> _initUseCases() async {
 
   locator.registerLazySingleton<CalculateDefaultValueUseCase>(
     () => CalculateDefaultValueUseCase(
-      dynamicValueRepository: locator(),
+      fetchDynamicValueUseCase: locator(),
       listValueRepository: locator(),
     ),
   );
@@ -412,14 +417,14 @@ Future<void> _initUseCases() async {
     () => const ToggleCalculableParamUseCase(),
   );
 
-  locator.registerLazySingleton<StartRefreshingJobUseCase>(
-    () => StartRefreshingJobUseCase(
-      networkRepository: locator(),
-    ),
-  );
-
   locator.registerLazySingleton<StopJobUseCase>(
     () => const StopJobUseCase(),
+  );
+
+  locator.registerLazySingleton<StartJobUseCase>(
+    () => StartJobUseCase(
+      stopJobUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<MarkItemsUseCase>(
@@ -437,11 +442,27 @@ Future<void> _initUseCases() async {
       listValueRepository: locator(),
     ),
   );
+
+  locator.registerLazySingleton<FetchDynamicCoefficientsUseCase>(
+    () => FetchDynamicCoefficientsUseCase(
+      networkRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<FetchDynamicValueUseCase>(
+    () => FetchDynamicValueUseCase(
+      dynamicValueRepository: locator(),
+    ),
+  );
 }
 
 Future<void> _initBloc() async {
   locator.registerLazySingleton<AppBloc>(
     () => AppBloc(),
+  );
+
+  locator.registerLazySingleton<RefreshButtonBloc>(
+    () => RefreshButtonBloc(),
   );
 
   locator.registerLazySingleton<InputValidationBloc>(
@@ -556,8 +577,10 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<RefreshingJobsBloc>(
     () => RefreshingJobsBloc(
-      startRefreshingJobUseCase: locator(),
+      startJobUseCase: locator(),
       stopJobUseCase: locator(),
+      fetchDynamicValueUseCase: locator(),
+      fetchDynamicCoefficientsUseCase: locator(),
     ),
   );
 }
@@ -565,6 +588,10 @@ Future<void> _initBloc() async {
 Future<void> _initControllers() async {
   locator.registerLazySingleton<NavigationController>(
     () => const NavigationController(),
+  );
+
+  locator.registerLazySingleton<RefreshButtonController>(
+    () => const RefreshButtonController(),
   );
 
   locator.registerLazySingleton<ConversionGroupsController>(

@@ -98,7 +98,7 @@ Future<void> main() async {
         ),
       );
 
-      final result = await networkRepository.fetchByParams(
+      final result = await networkRepository.fetchCoefficients(
         params: exchangeRateParams,
       );
 
@@ -127,7 +127,7 @@ Future<void> main() async {
         ]),
       );
 
-      var fetchedSources = await networkRepository.fetchList(
+      var fetchedSources = await networkRepository.fetchListValues(
         listType: ConvertouchListType.exchangeRateSource,
         params: exchangeRateParams,
         pageSize: 100,
@@ -179,7 +179,7 @@ Future<void> main() async {
             .toList();
       });
 
-      var result = await networkRepository.fetchByParams(
+      var result = await networkRepository.fetchCoefficients(
         params: exchangeRateParams,
       );
 

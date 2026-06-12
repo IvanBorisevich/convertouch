@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class RefreshingJobsEvent extends ConvertouchEvent {
@@ -92,13 +92,14 @@ class ChangeRefreshingJobCron extends SingleJobEvent {
 class StartRefreshingJobForConversion extends RefreshingJobsEvent {
   final String unitGroupName;
   final ConversionParamSetValueModel params;
-  final void Function(DynamicDataModel)? onFetchSuccess;
+  final JobExecutionMode jobExecutionMode;
+  final UnitModel? srcUnit;
 
   const StartRefreshingJobForConversion({
     required this.unitGroupName,
     required this.params,
-    this.onFetchSuccess,
-    super.onSuccess,
+    this.srcUnit,
+    this.jobExecutionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
     super.onError,
   });
 
@@ -106,13 +107,15 @@ class StartRefreshingJobForConversion extends RefreshingJobsEvent {
   List<Object?> get props => [
         unitGroupName,
         params,
+        jobExecutionMode,
       ];
 
   @override
   String toString() {
     return 'StartRefreshingJobForConversion{'
         'unitGroupName: $unitGroupName, '
-        'params: $params}';
+        'params: $params, '
+        'jobExecutionMode: $jobExecutionMode}';
   }
 }
 

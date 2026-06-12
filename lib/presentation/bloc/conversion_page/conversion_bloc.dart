@@ -22,14 +22,13 @@ import 'package:convertouch/domain/use_cases/conversion/toggle_calculable_param_
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
-import 'package:convertouch/presentation/bloc/abstract_event.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversionBloc
-    extends ConvertouchPersistentBloc<ConvertouchEvent, ConversionBuilt> {
+    extends ConvertouchPersistentBloc<ConversionEvent, ConversionBuilt> {
   final GetConversionUseCase getConversionUseCase;
   final SaveConversionUseCase saveConversionUseCase;
   final AlignConversionUseCase alignConversionUseCase;
@@ -117,12 +116,7 @@ class ConversionBloc
     );
 
     emit(
-      ConversionBuilt(
-        conversion: conversion,
-        showRefreshButton: event.unitGroup.refreshable &&
-            conversion.convertedUnitValues.isNotEmpty &&
-            conversion.params?.active != null,
-      ),
+      ConversionBuilt(conversion: conversion),
     );
 
     if (prev != null && prev.conversion.exists) {
@@ -184,7 +178,7 @@ class ConversionBloc
     await _handleAndEmit(
       result,
       emit,
-      onSuccess: event.onSuccess,
+      onSuccess: event.onConversionUpdated,
       onError: event.onError,
     );
   }
@@ -291,7 +285,7 @@ class ConversionBloc
     await _handleAndEmit(
       result,
       emit,
-      onSuccess: event.onSuccess,
+      onSuccess: event.onConversionUpdated,
       onError: event.onError,
     );
   }
@@ -312,7 +306,7 @@ class ConversionBloc
     await _handleAndEmit(
       result,
       emit,
-      onSuccess: event.onSuccess,
+      onSuccess: event.onConversionUpdated,
       onError: event.onError,
     );
   }
@@ -377,7 +371,14 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    log("New params after value change: ${state.conversion.params?.toJson()}");
+
+    await _handleAndEmit(
+      result,
+      emit,
+      onError: event.onError,
+      onSuccess: event.onConversionUpdated,
+    );
   }
 
   _onReplaceConversionParamUnit(
@@ -398,7 +399,7 @@ class ConversionBloc
     await _handleAndEmit(
       result,
       emit,
-      onSuccess: event.onSuccess,
+      onSuccess: event.onConversionUpdated,
       onError: event.onError,
     );
   }
@@ -435,32 +436,33 @@ class ConversionBloc
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
-    void Function()? onSuccess,
+    void Function(ConversionModel)? onSuccess,
     void Function(ConvertouchException)? onError,
   }) async {
     if (result.isLeft) {
       onError?.call(result.left);
     } else {
       emit(
-        ConversionBuilt(
-          conversion: result.right,
-          showRefreshButton: result.right.unitGroup.refreshable &&
-              result.right.convertedUnitValues.isNotEmpty &&
-              result.right.params?.active != null,
-        ),
+        ConversionBuilt(conversion: result.right),
       );
-      onSuccess?.call();
+      onSuccess?.call(result.right);
     }
   }
 
   @override
   ConversionBuilt? fromJson(Map<String, dynamic> json) {
-    log("Serialized conversion json map: $json");
+    log("Deserialize conversion json map: $json");
     return ConversionBuilt.fromJson(json);
   }
 
   @override
   Map<String, dynamic>? toJson(ConversionBuilt state) {
-    return state.toJson();
+    log("Serialize conversion: $state");
+
+    var t = state.toJson();
+
+    log("Serialized conversion state: $t");
+
+    return t;
   }
 }

@@ -1,29 +1,49 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
-class JobModel<P, R> extends IdNameItemModel {
-  final P? params;
+enum JobExecutionMode {
+  continueAlreadyRunningJobIfAny,
+  startNewJob,
+  ;
+
+  static JobExecutionMode? valueOf(dynamic value) {
+    if (value is JobExecutionMode) {
+      return value;
+    }
+
+    return values.firstWhereOrNull((element) => value == element.name);
+  }
+}
+
+class JobModel extends IdNameItemModel {
+  final InputDynamicDataFetchModel? params;
   final Cron selectedCron;
   final DateTime? completedAt;
-  final String? completedAgo;
   final StreamController<JobResultModel>? progressController;
-  final bool alreadyRunning;
-  final void Function(R)? onSuccess;
+  final JobExecutionMode executionMode;
+  final void Function(StreamController<JobResultModel>)? onStart;
+  final Future<DynamicDataModel?> Function(InputDynamicDataFetchModel? params)?
+      onExecute;
+  final void Function(DynamicDataModel?)? onSuccess;
   final void Function(ConvertouchException)? onError;
 
   const JobModel({
     this.params,
     this.selectedCron = Cron.never,
     this.completedAt,
-    this.completedAgo,
     this.progressController,
-    this.alreadyRunning = false,
+    this.executionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
+    this.onStart,
+    this.onExecute,
     this.onSuccess,
     this.onError,
   }) : super(
@@ -32,22 +52,21 @@ class JobModel<P, R> extends IdNameItemModel {
           oob: true,
         );
 
-  JobModel<P, R> copyWith({
-    Patchable<P>? params,
+  JobModel copyWith({
+    Patchable<InputDynamicDataFetchModel>? params,
     Patchable<DateTime>? completedAt,
-    Patchable<String>? completedAtStr,
+    Patchable<String>? completedAgo,
     Patchable<Cron>? selectedCron,
     Patchable<StreamController<JobResultModel>>? progressController,
-    Patchable<bool>? alreadyRunning,
   }) {
     return JobModel(
+      onExecute: onExecute,
+      executionMode: executionMode,
       params: ObjectUtils.patch(this.params, params),
       completedAt: ObjectUtils.patch(this.completedAt, completedAt),
-      completedAgo: ObjectUtils.patch(this.completedAgo, completedAtStr),
       selectedCron: ObjectUtils.patch(this.selectedCron, selectedCron)!,
       progressController:
           ObjectUtils.patch(this.progressController, progressController),
-      alreadyRunning: ObjectUtils.patch(this.alreadyRunning, alreadyRunning)!,
     );
   }
 
@@ -56,30 +75,33 @@ class JobModel<P, R> extends IdNameItemModel {
         params,
         selectedCron,
         completedAt,
-        completedAgo,
-        alreadyRunning,
+        progressController,
         itemType,
+        executionMode,
       ];
 
-
   static JobModel? fromJson(Map<String, dynamic>? json) {
+    log("Job deserialization of json: $json");
+
     if (json == null) {
       return null;
     }
 
-    DateTime? completedAt =
-        ObjectUtils.isNotNullOrEmpty(json["lastRefreshTime"])
-            ? DateTime.parse(json["lastRefreshTime"])
-            : (ObjectUtils.isNotNullOrEmpty(json["completedAt"])
-                ? DateTime.parse(json["completedAt"])
-                : null);
+    String? dateStr = json["completedAt"] ?? json["lastRefreshTime"];
 
-    return JobModel(
+    log("date str: $dateStr");
+
+    DateTime? completedAt =
+        DateTime.tryParse(json["completedAt"] ?? json["lastRefreshTime"] ?? "");
+
+    var t =  JobModel(
       selectedCron: Cron.valueOf(json["selectedCron"]),
       completedAt: completedAt,
-      completedAgo: json["completedAgo"] ??
-          (completedAt != null ? timeago.format(completedAt) : null),
     );
+
+    log("deserialized job: $t");
+
+    return t;
   }
 
   @override
@@ -87,7 +109,6 @@ class JobModel<P, R> extends IdNameItemModel {
     var result = {
       "selectedCron": selectedCron.name,
       "completedAt": completedAt?.toString(),
-      "completedAtStr": completedAgo,
     };
 
     if (removeNulls) {
@@ -103,8 +124,7 @@ class JobModel<P, R> extends IdNameItemModel {
         'params: $params, '
         'selectedCron: $selectedCron, '
         'completedAt: $completedAt, '
-        'completedAgo: $completedAgo, '
         'progressController: $progressController, '
-        'alreadyRunning: $alreadyRunning}';
+        'executionMode: $executionMode}';
   }
 }

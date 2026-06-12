@@ -1,10 +1,12 @@
-import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 
 class ExchangeRateRequestBuilder extends RequestBuilder {
-  const ExchangeRateRequestBuilder();
+  const ExchangeRateRequestBuilder({
+    required super.httpMethod,
+    required super.path,
+  });
 
   @override
   Map<String, String>? buildHeaders({
@@ -25,12 +27,6 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
       'source': params.getParamValue(ParamNames.sourceOrBank)!.raw,
     };
   }
-
-  @override
-  HttpMethod get method => HttpMethod.get;
-
-  @override
-  String get path => exchangeRatePath;
 
   @override
   bool readyForFetch(ConversionParamSetValueModel params) {

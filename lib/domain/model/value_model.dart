@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
@@ -152,6 +154,8 @@ class ValueModel extends IdNameSearchableItemModel {
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
+    log("Save value: $raw");
+
     var result = {
       "raw": raw,
       "alt": alt,
@@ -180,7 +184,7 @@ class ValueModel extends IdNameSearchableItemModel {
       raw: raw,
       numVal: double.tryParse(json["num"]?.toString() ?? "") ??
           double.tryParse(raw),
-      alt: json["alt"] ?? json["scientific"] ?? json["value"],
+      alt: json["alt"] ?? json["scientific"] ?? raw,
       range: NumRange.fromJson(json["range"]),
     );
   }

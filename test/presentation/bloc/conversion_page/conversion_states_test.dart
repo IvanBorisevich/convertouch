@@ -54,7 +54,6 @@ void main() {
       ),
       convertedUnitValues: const [],
     ),
-    showRefreshButton: false,
   );
 
   ConversionBuilt state2 = ConversionBuilt(
@@ -101,7 +100,6 @@ void main() {
       ),
       convertedUnitValues: const [],
     ),
-    showRefreshButton: false,
   );
 
   test('Conversion states are different', () {

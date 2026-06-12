@@ -1,7 +1,8 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
@@ -24,19 +25,20 @@ class RefreshingJobController {
   void startRefresh(
     BuildContext context, {
     required String groupName,
-    required ConversionParamSetValueModel params,
-    void Function(DynamicDataModel)? onFetchSuccess,
+    required ConversionParamSetValueModel? params,
+    required UnitModel? srcUnit,
+    required JobExecutionMode jobExecutionMode,
   }) {
+    if (params == null) {
+      return;
+    }
+
     BlocProvider.of<RefreshingJobsBloc>(context).add(
       StartRefreshingJobForConversion(
         unitGroupName: groupName,
         params: params,
-        onFetchSuccess: onFetchSuccess,
-        onSuccess: ({info}) {
-          if (info != null) {
-            navigationController.showException(context, exception: info);
-          }
-        },
+        srcUnit: srcUnit,
+        jobExecutionMode: jobExecutionMode,
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
@@ -47,8 +49,12 @@ class RefreshingJobController {
   void stopRefresh(
     BuildContext context, {
     required String groupName,
-    required String paramSetName,
+    required String? paramSetName,
   }) {
+    if (paramSetName == null) {
+      return;
+    }
+
     BlocProvider.of<RefreshingJobsBloc>(context).add(
       StopRefreshingJobForConversion(
         unitGroupName: groupName,

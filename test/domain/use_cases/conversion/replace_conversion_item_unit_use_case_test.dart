@@ -9,6 +9,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_defau
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
+import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
 
@@ -38,7 +39,9 @@ void main() {
     useCase = const ReplaceConversionItemUnitUseCase(
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
-          dynamicValueRepository: MockDynamicValueRepository(),
+          fetchDynamicValueUseCase: FetchDynamicValueUseCase(
+            dynamicValueRepository: MockDynamicValueRepository(),
+          ),
           listValueRepository: listValueRepository,
         ),
         unitGroupRepository: MockUnitGroupRepository(),

@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class DynamicDataModel extends Equatable {
@@ -22,6 +21,8 @@ class DynamicValueModel extends DynamicDataModel {
 }
 
 class DynamicCoefficientsModel extends DynamicDataModel {
+  static const DynamicCoefficientsModel empty = DynamicCoefficientsModel({});
+
   final Map<int, double?> unitIdToCoefficient;
 
   const DynamicCoefficientsModel(this.unitIdToCoefficient);
@@ -29,16 +30,5 @@ class DynamicCoefficientsModel extends DynamicDataModel {
   @override
   List<Object?> get props => [
         unitIdToCoefficient,
-      ];
-}
-
-class DynamicListValuesModel extends DynamicDataModel {
-  final List<ValueModel> listValues;
-
-  const DynamicListValuesModel(this.listValues);
-
-  @override
-  List<Object?> get props => [
-        listValues,
       ];
 }
