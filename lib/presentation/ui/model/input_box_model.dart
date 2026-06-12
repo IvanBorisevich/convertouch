@@ -2,19 +2,18 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/model/element_model.dart';
-import 'package:rxdart/rxdart.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxModel implements ElementModel {
   final String? itemId;
-  final BehaviorSubject<ValueModel?> valueStream;
+  final ValueModel? value;
   final String? labelText;
   final bool readonly;
 
   const InputBoxModel({
     this.itemId,
-    required this.valueStream,
+    this.value,
     this.labelText,
     this.readonly = false,
   });
@@ -26,8 +25,8 @@ abstract class InputBoxModel implements ElementModel {
     if (model.listType != null) {
       return ListBoxModel(
         itemId: model.itemId,
-        valueStream: model.valueStream,
-        listValuesBatchStream: model.listValuesBatchStream,
+        value: model.value,
+        listValuesFetchResult: model.listValuesFetchResult,
         listType: model.listType!,
         readonly: !model.listType!.fetchedViaApi &&
             (model.listValuesFetchResult?.items == null ||
@@ -40,8 +39,8 @@ abstract class InputBoxModel implements ElementModel {
     } else {
       return TextBoxModel(
         itemId: model.itemId,
-        valueStream: model.valueStream,
-        hintStream: model.defaultValueStream,
+        value: model.value,
+        hint: model.defaultValue,
         readonly: readonly,
         labelText: _getLabelText(model),
         valueType: model.valueType,
@@ -63,15 +62,15 @@ abstract class InputBoxModel implements ElementModel {
 }
 
 class TextBoxModel extends InputBoxModel {
-  final BehaviorSubject<ValueModel?> hintStream;
+  final ValueModel? hint;
   final ConvertouchValueType valueType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
 
   const TextBoxModel({
     super.itemId,
-    required super.valueStream,
-    required this.hintStream,
+    super.value,
+    this.hint,
     super.readonly,
     super.labelText,
     this.valueType = ConvertouchValueType.text,
@@ -82,8 +81,8 @@ class TextBoxModel extends InputBoxModel {
   @override
   String toString() {
     return 'TextBoxModel{'
-        'value: ${valueStream.valueOrNull}, '
-        'hint: ${hintStream.valueOrNull}, '
+        'value: $value, '
+        'hint: $hint, '
         'readonly: $readonly, '
         'labelText: $labelText, '
         'valueType: $valueType, '
@@ -93,18 +92,18 @@ class TextBoxModel extends InputBoxModel {
 }
 
 class ListBoxModel extends InputBoxModel {
-  final BehaviorSubject<ListValuesFetchResult?> listValuesBatchStream;
+  final ListValuesFetchResult? listValuesFetchResult;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
 
   const ListBoxModel({
     super.itemId,
-    required super.valueStream,
+    super.value,
     required this.listType,
     super.readonly,
     super.labelText,
-    required this.listValuesBatchStream,
+    required this.listValuesFetchResult,
     this.searchHint,
     this.searchEnabled = true,
   });
@@ -114,8 +113,8 @@ class ListBoxModel extends InputBoxModel {
     return 'ListBoxModel{'
         'labelText: $labelText, '
         'readonly: $readonly, '
-        'listValue: ${valueStream.valueOrNull}, '
-        'listValuesBatchStream: $listValuesBatchStream, '
+        'listValue: $value, '
+        'listValuesFetchResult: $listValuesFetchResult, '
         'listType: $listType, '
         'searchHint: $searchHint, '
         'searchEnabled: $searchEnabled}';

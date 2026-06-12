@@ -1,5 +1,4 @@
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/utils/stream_utils.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -50,10 +49,8 @@ class ConvertouchDetailsItem extends StatelessWidget {
       child: editable
           ? ConvertouchInputBox(
               model: TextBoxModel(
-                valueStream: sendToStream(
-                    ValueModel.rawStr(draftValue ?? '', alt: savedValue)),
-                hintStream: sendToStream(
-                    ValueModel.rawStr(draftValue ?? '', alt: savedValue)),
+                value: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
+                hint: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
                 labelText: headerTitle,
                 maxTextLength: editableValueMaxLength,
                 textLengthCounterVisible: editableValueLengthVisible,

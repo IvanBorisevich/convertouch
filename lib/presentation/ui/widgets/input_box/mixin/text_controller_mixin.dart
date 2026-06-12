@@ -32,8 +32,9 @@ mixin TextControllerMixin {
   }
 
   void updateTextControllerValue(
-    TextEditingController controller, String newValue) {
-
+    TextEditingController controller,
+    String newValue,
+  ) {
     if (controller.text == newValue) {
       return;
     }

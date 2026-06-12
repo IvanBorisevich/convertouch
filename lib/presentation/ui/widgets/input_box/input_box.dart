@@ -2,12 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
@@ -15,7 +13,6 @@ import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
-import 'package:convertouch/presentation/ui/utils/stream_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
@@ -24,7 +21,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 const Map<ConvertouchValueType, TextInputType> _valueTypeToKeyboardType = {
@@ -504,67 +500,40 @@ class _TextField extends StatefulWidget {
 class _TextFieldState extends State<_TextField>
     with FocusNodeMixin, TextControllerMixin {
   late void Function() _focusListener;
-  late ValueNotifier<ValueModel?> _valueNotifier;
-  late ValueNotifier<ValueModel?> _hintNotifier;
-  late final ValueNotifier<String?> _rawValueNotifier;
-  late final ValueNotifier<String?> _rawHintNotifier;
+
+  late String _hint;
 
   @override
   void initState() {
     super.initState();
 
-    _rawValueNotifier = ValueNotifier(widget.model.valueStream.value?.raw);
-    _rawValueNotifier.addListener(_rawValueNotifierListener);
+    _hint = _getHint(focused: widget.autofocus);
 
-    _rawHintNotifier = ValueNotifier(widget.model.hintStream.value?.raw);
-
-    _valueNotifier = BehaviorSubjectNotifier(
-      widget.model.valueStream,
-      onListen: (newValue) {
-        _rawValueNotifier.value =
-            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
-      },
-    );
-
-    _hintNotifier = BehaviorSubjectNotifier(
-      widget.model.hintStream,
-      onListen: (newValue) {
-        _rawHintNotifier.value =
-            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
-      },
-    );
+    initControllerValue(
+        widget.controller, _getMainValue(focused: widget.autofocus));
 
     _focusListener = addFocusListener(
       focusNode: widget.focusNode,
       onFocusSelected: () {
-        widget.onValueFocused
-            ?.call(widget.model.valueStream.valueOrNull ?? ValueModel.empty);
-        _rawValueNotifier.value = widget.model.valueStream.valueOrNull?.raw;
-        _rawHintNotifier.value = widget.model.hintStream.valueOrNull?.raw;
+        widget.onValueFocused?.call(widget.model.value ?? ValueModel.empty);
+
+        setState(() {
+          _hint = _getHint(focused: true);
+        });
       },
       onFocusLeft: () {
-        widget.onValueUnfocused
-            ?.call(widget.model.valueStream.valueOrNull ?? ValueModel.empty);
-        _rawValueNotifier.value = widget.model.valueStream.valueOrNull?.alt;
-        _rawHintNotifier.value = widget.model.hintStream.valueOrNull?.alt;
+        widget.onValueUnfocused?.call(widget.model.hint ?? ValueModel.empty);
+
+        setState(() {
+          _hint = _getHint(focused: false);
+        });
       },
     );
-  }
-
-  void _rawValueNotifierListener() {
-    updateTextControllerValue(widget.controller, _rawValueNotifier.value ?? "");
   }
 
   @override
   void dispose() {
     widget.focusNode.removeListener(_focusListener);
-
-    _valueNotifier.dispose();
-    _hintNotifier.dispose();
-
-    _rawValueNotifier.removeListener(_rawValueNotifierListener);
-    _rawValueNotifier.dispose();
-    _rawHintNotifier.dispose();
 
     super.dispose();
   }
@@ -573,69 +542,64 @@ class _TextFieldState extends State<_TextField>
   void didUpdateWidget(_TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _valueNotifier = BehaviorSubjectNotifier(
-      widget.model.valueStream,
-      onListen: (newValue) {
-        _rawValueNotifier.value =
-            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
-      },
+    updateTextControllerValue(
+      widget.controller,
+      _getMainValue(focused: widget.focusNode.hasFocus),
     );
 
-    _hintNotifier = BehaviorSubjectNotifier(
-      widget.model.hintStream,
-      onListen: (newValue) {
-        _rawHintNotifier.value =
-            widget.focusNode.hasFocus ? newValue?.raw : newValue?.alt;
-      },
-    );
+    _hint = _getHint(focused: widget.focusNode.hasFocus);
+  }
+
+  String _getMainValue({required bool focused}) {
+    return (focused ? widget.model.value?.raw : widget.model.value?.alt) ?? "";
+  }
+
+  String _getHint({required bool focused}) {
+    return (focused ? widget.model.hint?.raw : widget.model.hint?.alt) ??
+        _noValueHint;
   }
 
   @override
   Widget build(BuildContext context) {
     RegExp? inputRegExp = _valueTypeToRegExp[widget.model.valueType];
 
-    return ValueListenableBuilder(
-      valueListenable: _rawHintNotifier,
-      builder: (_, hint, child) {
-        return TextField(
-          readOnly: widget.model.readonly,
-          maxLength: widget.model.maxTextLength,
-          textAlignVertical: TextAlignVertical.center,
-          obscureText: false,
-          autofocus: widget.autofocus,
-          focusNode: widget.focusNode,
-          controller: widget.controller,
-          inputFormatters: inputRegExp != null
-              ? [FilteringTextInputFormatter.allow(inputRegExp)]
-              : null,
-          keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
-          onChanged: (value) {
-            widget.onValueChanged?.call(ValueModel.str(value));
-          },
-          decoration: _inputFieldDecoration(
-            context,
-            margin: widget.margin,
-            fontSize: widget.fontSize,
-            labelText: widget.model.labelText,
-            hintText: hint ?? _noValueHint,
-            hintColor: widget.hintColor,
-            labelColor: widget.labelColor,
-            floatingLabelBehavior: widget.floatingLabelBehavior,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 4,
-            ),
-          ).copyWith(
-            suffixText: widget.model.textLengthCounterVisible
-                ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
-                : null,
-          ),
-          style: _inputFieldTextStyle(
-            fontSize: widget.fontSize,
-            foregroundColor: widget.foregroundColor,
-          ),
-          textAlign: TextAlign.start,
-        );
+    return TextField(
+      readOnly: widget.model.readonly,
+      maxLength: widget.model.maxTextLength,
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: false,
+      autofocus: widget.autofocus,
+      focusNode: widget.focusNode,
+      controller: widget.controller,
+      inputFormatters: inputRegExp != null
+          ? [FilteringTextInputFormatter.allow(inputRegExp)]
+          : null,
+      keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
+      onChanged: (value) {
+        widget.onValueChanged?.call(ValueModel.str(value));
       },
+      decoration: _inputFieldDecoration(
+        context,
+        margin: widget.margin,
+        fontSize: widget.fontSize,
+        labelText: widget.model.labelText,
+        hintText: _hint,
+        hintColor: widget.hintColor,
+        labelColor: widget.labelColor,
+        floatingLabelBehavior: widget.floatingLabelBehavior,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
+      ).copyWith(
+        suffixText: widget.model.textLengthCounterVisible
+            ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
+            : null,
+      ),
+      style: _inputFieldTextStyle(
+        fontSize: widget.fontSize,
+        foregroundColor: widget.foregroundColor,
+      ),
+      textAlign: TextAlign.start,
     );
   }
 }
@@ -689,9 +653,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _isDropdownOpen = false;
 
-    _selectedValueNotifier = BehaviorSubjectNotifier(widget.model.valueStream);
-    _listValuesNotifier =
-        BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
+    _selectedValueNotifier = ValueNotifier(widget.model.value);
+    _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -703,7 +666,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
     _dropdownSearchController?.dispose();
-    _listValuesNotifier.dispose();
     _selectedValueNotifier.dispose();
     super.dispose();
   }
@@ -712,9 +674,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedValueNotifier = BehaviorSubjectNotifier(widget.model.valueStream);
-    _listValuesNotifier =
-        BehaviorSubjectNotifier(widget.model.listValuesBatchStream);
+    _selectedValueNotifier.value = widget.model.value;
+    _listValuesNotifier.value = widget.model.listValuesFetchResult;
   }
 
   @override
@@ -725,19 +686,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           listener: (_, navigationState) {
             if (_isDropdownOpen) {
               Navigator.of(context).pop();
-            }
-          },
-        ),
-        BlocListener<ListValuesBloc,
-            ItemsFetched<ValueModel, ListValuesFetchParams>>(
-          listenWhen: (prev, next) =>
-              widget.model.itemId != null &&
-              widget.model.itemId == next.itemsFetch.fetchParams?.itemId,
-          listener: (_, itemsState) {
-            if (widget.model.itemId != null &&
-                widget.model.itemId ==
-                    itemsState.itemsFetch.fetchParams?.itemId) {
-              _listValuesNotifier.value = itemsState.itemsFetch;
             }
           },
         ),
@@ -882,13 +830,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         ),
                         child: ConvertouchInputBox(
                           model: TextBoxModel(
-                            valueStream: BehaviorSubject.seeded(
-                              ValueModel.empty,
-                            ),
-                            hintStream: BehaviorSubject.seeded(
-                              ValueModel.rawStr(
-                                widget.model.searchHint ?? _defaultSearchHint,
-                              ),
+                            value: ValueModel.empty,
+                            hint: ValueModel.rawStr(
+                              widget.model.searchHint ?? _defaultSearchHint,
                             ),
                             valueType: widget.model.listType.listValuesType,
                           ),

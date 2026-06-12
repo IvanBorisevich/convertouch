@@ -15,9 +15,9 @@ import 'mock/mock_unit_group.dart';
 
 void main() {
   group('By coefficients', () {
-    final ConversionModel conversionByCoefficients = ConversionModel(
+    const ConversionModel conversionByCoefficients = ConversionModel(
       id: 1,
-      unitGroup: const UnitGroupModel(
+      unitGroup: UnitGroupModel(
         id: 10,
         name: 'Money',
         conversionType: ConversionType.dynamic,
@@ -25,7 +25,7 @@ void main() {
         valueType: ConvertouchValueType.decimalNonNegative,
       ),
       srcUnitValue: ConversionUnitValueModel(
-        unit: const UnitModel(
+        unit: UnitModel(
           id: 7,
           name: 'Euro',
           code: 'EUR',
@@ -51,7 +51,7 @@ void main() {
       ),
       convertedUnitValues: [
         ConversionUnitValueModel(
-          unit: const UnitModel(
+          unit: UnitModel(
             id: 8,
             name: 'United States Dollar',
             code: 'USD',
@@ -61,7 +61,7 @@ void main() {
           defaultValue: ValueModel.one,
         ),
         ConversionUnitValueModel(
-          unit: const UnitModel(
+          unit: UnitModel(
             id: 9,
             name: 'Australian Dollar',
             code: 'AUD',
@@ -232,6 +232,45 @@ void main() {
       ],
     );
 
+    final ConversionModel deserializedConversionByMappingTable = ConversionModel(
+      id: 2,
+      unitGroup: clothesSizeGroup,
+      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+      params: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                personParam,
+                "Man",
+                null,
+              ),
+              ConversionParamValueModel.tuple(
+                garmentParam,
+                "Shirt",
+                null,
+              ),
+              ConversionParamValueModel.tuple(heightParam, 180, 1, unit: meter),
+            ],
+          )
+        ],
+        selectedIndex: 0,
+      ),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(
+          japanClothSize,
+          'S',
+          null,
+        ),
+        ConversionUnitValueModel.tuple(
+          germanyClothSize,
+          40,
+          null,
+        ),
+      ],
+    );
+
     const Map<String, dynamic> conversionByMappingTableJson = {
       'id': 2,
       'unitGroup': {
@@ -279,14 +318,6 @@ void main() {
                   'raw': 'Man',
                   'alt': 'Man',
                 },
-                'listValues': {
-                  'items': [
-                    {'raw': 'Man', 'alt': 'Man'},
-                    {'raw': 'Woman', 'alt': 'Woman'}
-                  ],
-                  'hasReachedMax': true,
-                  'pageNum': 1
-                },
               },
               {
                 'param': {
@@ -301,14 +332,6 @@ void main() {
                 'value': {
                   'raw': 'Shirt',
                   'alt': 'Shirt',
-                },
-                'listValues': {
-                  'items': [
-                    {'raw': 'Shirt', 'alt': 'Shirt'},
-                    {'raw': 'Trousers', 'alt': 'Trousers'}
-                  ],
-                  'hasReachedMax': true,
-                  'pageNum': 1
                 },
               },
               {
@@ -387,14 +410,14 @@ void main() {
       ]
     };
 
-    test('Should serialize', () {
+    test('Should serialize (should not serialize list values)', () {
       expect(conversionByMappingTable.toJson(), conversionByMappingTableJson);
     });
 
     test('Should deserialize', () {
       expect(
         ConversionModel.fromJson(conversionByMappingTableJson),
-        conversionByMappingTable,
+        deserializedConversionByMappingTable,
       );
     });
   });

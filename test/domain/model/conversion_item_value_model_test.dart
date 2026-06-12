@@ -14,11 +14,14 @@ void main() {
       10,
       null,
       unit: kilogram,
-      listValuesFetchResult: const ListValuesFetchResult(
-        items: [],
-        pageNum: 1,
-        hasReachedMax: true,
-      ),
+      listValuesFetchResult: const ListValuesFetchResult.empty(),
+    );
+
+    final deserializedBarWeightParamVal = ConversionParamValueModel.tuple(
+      barWeightParam,
+      10,
+      null,
+      unit: kilogram,
     );
 
     const Map<String, dynamic> barWeightParamValueJson = {
@@ -59,27 +62,22 @@ void main() {
         'alt': '10',
       },
       'calculated': false,
-      'listValues': {
-        'items': [],
-        'pageNum': 1,
-        'hasReachedMax': true,
-      },
     };
 
-    test('Serialize param value', () {
+    test('Serialize param value (should not serialize list values)', () {
       expect(barWeightParamVal.toJson(), barWeightParamValueJson);
     });
 
     test('Deserialize param value', () {
       expect(
         ConversionParamValueModel.fromJson(barWeightParamValueJson),
-        barWeightParamVal,
+        deserializedBarWeightParamVal,
       );
     });
   });
 
   group('For conversion unit value', () {
-    final ConversionUnitValueModel unitValue = ConversionUnitValueModel(
+    const ConversionUnitValueModel unitValue = ConversionUnitValueModel(
       unit: meter,
       value: ValueModel.one,
       defaultValue: ValueModel.one,
