@@ -29,7 +29,7 @@ class NetworkDaoImpl extends NetworkDao {
     if (urlPath == exchangeRatePath) {
       return await Future.delayed(
         const Duration(seconds: 5),
-        () => '{"EUR": 1.2,"AUD": 0.8,"CAD": 0.74}',
+        () => '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
       );
     }
 

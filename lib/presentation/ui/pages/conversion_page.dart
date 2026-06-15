@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -330,11 +328,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                               visible: refreshButtonState.visible,
                               disabled: refreshButtonState.disabled,
                               onFetchSuccess: (jobResult) {
-                                log("conversion page onFetchSuccess: $jobResult");
-
                                 if (jobResult.data != null) {
-                                  log("Update with dynamic data");
-
                                   conversionController.updateWithDynamicData(
                                     context,
                                     data: jobResult.data!,

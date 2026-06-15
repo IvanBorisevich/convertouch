@@ -274,3 +274,27 @@ const UnitModel eur = UnitModel(
   valueType: ConvertouchValueType.decimalNonNegative,
   unitGroupId: currencyGroupId,
 );
+
+const UnitModel aud = UnitModel(
+  id: 25,
+  name: "Australian Dollar",
+  code: 'AUD',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  unitGroupId: currencyGroupId,
+);
+
+const UnitModel cny = UnitModel(
+  id: 26,
+  name: "Chinese Yuan",
+  code: 'CNY',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  unitGroupId: currencyGroupId,
+);
+
+const UnitModel can = UnitModel(
+  id: 27,
+  name: "Canadian Dollar",
+  code: 'CAN',
+  valueType: ConvertouchValueType.decimalNonNegative,
+  unitGroupId: currencyGroupId,
+);

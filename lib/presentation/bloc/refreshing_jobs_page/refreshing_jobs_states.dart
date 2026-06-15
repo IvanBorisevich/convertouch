@@ -56,15 +56,9 @@ class RefreshingJobsFetched extends RefreshingJobsState {
   RefreshingJobsFetched copyWith({
     JobsMap? jobs,
   }) {
-    print("jobs state before copyWith(): $this, new jobs map: $jobs");
-
-    var t = RefreshingJobsFetched(
+    return RefreshingJobsFetched(
       jobs: jobs ?? this.jobs,
     );
-
-    print("jobs state after copyWith(): $t");
-
-    return t;
   }
 
   @override

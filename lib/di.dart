@@ -377,7 +377,9 @@ Future<void> _initUseCases() async {
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
-    () => const UpdateConversionCoefficientsUseCase(),
+    () => UpdateConversionCoefficientsUseCase(
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<AddParamSetsToConversionUseCase>(

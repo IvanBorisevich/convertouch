@@ -83,7 +83,7 @@ class CalculateUnitValueUseValue
     }
 
     if (input.unitValue.listType == null) {
-      if (calculatedValueByParams != null) {
+      if (calculatedValueByParams != null && calculatedValueByParams.hasValue) {
         newValue = calculatedValueByParams.value;
         newDefaultValue = calculatedValueByParams.defaultValue;
       } else if (newDefaultValueForNewUnit != null) {

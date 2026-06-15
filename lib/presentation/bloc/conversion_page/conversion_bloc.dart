@@ -457,12 +457,6 @@ class ConversionBloc
 
   @override
   Map<String, dynamic>? toJson(ConversionBuilt state) {
-    log("Serialize conversion: $state");
-
-    var t = state.toJson();
-
-    log("Serialized conversion state: $t");
-
-    return t;
+    return state.toJson();
   }
 }

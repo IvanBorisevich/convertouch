@@ -82,21 +82,13 @@ class JobModel extends IdNameItemModel {
       return null;
     }
 
-    String? dateStr = json["completedAt"] ?? json["lastRefreshTime"];
-
-    log("date str: $dateStr");
-
     DateTime? completedAt =
         DateTime.tryParse(json["completedAt"] ?? json["lastRefreshTime"] ?? "");
 
-    var t = JobModel(
+    return JobModel(
       cron: Cron.valueOf(json["selectedCron"]),
       completedAt: completedAt,
     );
-
-    log("deserialized job: $t");
-
-    return t;
   }
 
   @override
