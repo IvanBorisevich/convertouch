@@ -2,6 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_events.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
@@ -19,25 +21,12 @@ import 'package:convertouch/presentation/ui/widgets/popup_menu_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:flutter/material.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../controller/refreshing_job_controller.dart';
 
-class ConvertouchConversionPage extends StatefulWidget {
+class ConvertouchConversionPage extends StatelessWidget {
   const ConvertouchConversionPage({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _ConvertouchConversionPageState();
-}
-
-class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
-  late PanelController _panelController;
-
-  @override
-  void initState() {
-    super.initState();
-    _panelController = PanelController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +61,9 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       size: 22,
                     ),
                     onPressed: () {
-                      if (_panelController.isAttached) {
-                        if (_panelController.isPanelClosed) {
-                          _panelController.open();
-                        } else {
-                          _panelController.close();
-                        }
-                      }
+                      BlocProvider.of<SlidingPanelBloc>(context).add(
+                        const SwitchSlidingPanel(),
+                      );
                     },
                   ),
                 ),
@@ -165,7 +150,6 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                       ConversionParamsView(
                         params: conversion.params,
                         unitGroupName: conversion.unitGroup.name,
-                        panelController: _panelController,
                         colors: appColors[appState.theme].paramSetPanel,
                         dialogColors: appColors[appState.theme].dialog,
                         onParamSetAdd: () {

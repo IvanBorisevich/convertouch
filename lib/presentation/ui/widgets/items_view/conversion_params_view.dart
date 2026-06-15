@@ -30,7 +30,6 @@ const double _jobInfoBoxHeight = 40;
 class ConversionParamsView extends StatelessWidget {
   final ConversionParamSetValueBulkModel? params;
   final String unitGroupName;
-  final PanelController panelController;
   final void Function()? onParamSetAdd;
   final void Function(int)? onParamSetSelect;
   final void Function()? onSelectedParamSetRemove;
@@ -42,7 +41,6 @@ class ConversionParamsView extends StatelessWidget {
   const ConversionParamsView({
     this.params,
     required this.unitGroupName,
-    required this.panelController,
     this.onParamSetAdd,
     this.onParamSetSelect,
     this.onSelectedParamSetRemove,
@@ -90,7 +88,6 @@ class ConversionParamsView extends StatelessWidget {
             params!.active != null && job != null && job.completedAt != null;
 
         return ConvertouchSlidingPanel(
-          panelController: panelController,
           defaultPanelState:
               paramsAreVisible ? PanelState.OPEN : PanelState.CLOSED,
           minHeight: _footerHeight,

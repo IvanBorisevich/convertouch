@@ -16,6 +16,7 @@ import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_butt
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_events.dart';
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_states.dart';
+import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
@@ -95,6 +96,9 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         ),
         BlocProvider(
           create: (context) => di.locator<ConvertouchTooltipBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<SlidingPanelBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<NavigationBloc>(),
