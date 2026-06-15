@@ -10,6 +10,7 @@ class ConvertouchPage extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation floatingButtonLocation;
   final PageColorScheme colors;
+  final Function()? onBackIconTap;
 
   const ConvertouchPage({
     required this.body,
@@ -19,6 +20,7 @@ class ConvertouchPage extends StatelessWidget {
     this.floatingActionButton,
     this.floatingButtonLocation = FloatingActionButtonLocation.endFloat,
     required this.colors,
+    this.onBackIconTap,
     super.key,
   });
 
@@ -40,9 +42,10 @@ class ConvertouchPage extends StatelessWidget {
                     Icons.arrow_back_rounded,
                     color: colors.appBar.foreground.regular,
                   ),
-                  onPressed: () {
-                    navigationController.navigateBack(context);
-                  },
+                  onPressed: onBackIconTap ??
+                      () {
+                        navigationController.navigateBack(context);
+                      },
                 );
               } else {
                 return const SizedBox.shrink();

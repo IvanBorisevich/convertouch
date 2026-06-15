@@ -1,14 +1,32 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/main.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_events.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_events.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_states.dart';
+import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
+import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
+import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_groups_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_page.dart';
 import 'package:convertouch/presentation/ui/pages/conversion_param_sets_page.dart';
@@ -67,167 +85,238 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return appBlocBuilder(
-      builderFunc: (appState) {
-        PageColorScheme pageColorScheme = appColors[appState.theme].page;
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => di.locator<RefreshButtonBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<InputValidationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConvertouchTooltipBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<NavigationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RootScreenBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ItemsSelectionBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ListValuesBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConversionBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitGroupsBloc>()
+            ..add(
+              const FetchItems<UnitGroupsFetchParams>(),
+            ),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<SingleGroupBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitGroupsBlocForUnitDetails>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitsBlocForUnitDetails>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitDetailsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<UnitGroupDetailsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RefreshingJobsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConversionParamSetsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<SingleParamBloc>(),
+        ),
+      ],
+      child: appBlocBuilder(
+        builderFunc: (appState) {
+          PageColorScheme pageColorScheme = appColors[appState.theme].page;
 
-        return BlocConsumer<NavigationBloc, NavigationState>(
-          listenWhen: (prev, next) {
-            return prev != next && next is NavigationDone;
-          },
-          listener: (_, state) {
-            if (state is! NavigationDone) {
-              return;
-            }
-
-            GlobalKey<NavigatorState> navKey =
-                _screenNavigatorKeys[state.selectedNavbarItem]!;
-
-            if (state.exception == null) {
-              if (state.nextPageName != null) {
-                if (!state.isReplaced) {
-                  navKey.currentState?.pushNamed(state.nextPageName!.name);
-                } else {
-                  navKey.currentState
-                      ?.pushReplacementNamed(state.nextPageName!.name);
-                }
-              } else if (state.navigateBack && !state.navigateBackToRoot) {
-                navKey.currentState?.pop();
-              } else if (state.navigateBack && state.navigateBackToRoot) {
-                navKey.currentState?.popUntil(
-                  (route) => route.isFirst,
-                );
-              }
-            } else if (state.exception!.isError) {
-              navKey.currentState?.push(
-                MaterialPageRoute(
-                  builder: (context) => ConvertouchErrorPage(
-                    error: state.exception!,
-                  ),
-                ),
-              );
-            } else {
-              showSnackBar(
-                context,
-                exception: state.exception!,
-                theme: appState.theme,
-              );
-            }
-          },
-          builder: (_, state) {
-            if (state is NavigationDone) {
+          return BlocBuilder<RootScreenBloc, RootScreenState>(
+            builder: (context, state) {
               BottomNavbarItem selectedItem = state.selectedNavbarItem;
-              return WillPopScope(
-                onWillPop: () async {
-                  final isFirstRouteInSelectedNavbarItem =
-                      !await _screenNavigatorKeys[selectedItem]!
-                          .currentState!
-                          .maybePop();
-                  if (isFirstRouteInSelectedNavbarItem) {
-                    if (selectedItem != BottomNavbarItem.home) {
-                      BlocProvider.of<NavigationBloc>(
-                              _screenNavigatorKeys[selectedItem]!
-                                  .currentContext!)
-                          .add(
-                        SelectBottomNavbarItem(
-                          targetItem: BottomNavbarItem.home,
-                          selectedItem: selectedItem,
-                        ),
-                      );
-                      return false;
-                    }
-                  }
-                  return isFirstRouteInSelectedNavbarItem;
+
+              GlobalKey<NavigatorState> navKey =
+                  _screenNavigatorKeys[selectedItem]!;
+
+              return BlocListener<NavigationBloc, NavigationState>(
+                listenWhen: (prev, next) {
+                  return prev != next;
                 },
-                child: SafeArea(
-                  child: Scaffold(
-                    body: Stack(
-                      children: [
-                        ConvertouchRootScreen(
-                          navigatorKey:
-                              _screenNavigatorKeys[BottomNavbarItem.home],
-                          bottomNavbarItem: BottomNavbarItem.home,
-                          rootPageId: PageName.conversionGroupsPage,
-                          selected: selectedItem == BottomNavbarItem.home,
-                          routesMap: {
-                            PageName.conversionPage.name:
-                                const ConvertouchConversionPage(),
-                            PageName.conversionGroupsPage.name:
-                                const ConversionGroupsPage(),
-                            PageName.unitsPageForConversion.name:
-                                const ConvertouchUnitsPageForConversion(),
-                            PageName.unitsPageForConversionParams.name:
-                                const ConvertouchUnitsPageForConversionParams(),
-                            PageName.unitsPageRegular.name:
-                                const ConvertouchUnitsPageRegular(),
-                            PageName.unitGroupsPageForUnitDetails.name:
-                                const ConvertouchUnitGroupsPageForUnitDetails(),
-                            PageName.unitsPageForUnitDetails.name:
-                                const ConvertouchUnitsPageForUnitDetails(),
-                            PageName.unitGroupDetailsPage.name:
-                                const ConvertouchUnitGroupDetailsPage(),
-                            PageName.unitDetailsPage.name:
-                                const ConvertouchUnitDetailsPage(),
-                            PageName.paramSetsPage.name:
-                                const ConversionParamSetsPage(),
-                          },
+                listener: (_, state) {
+                  print("navigation listener inside scaffold");
+                  if (state is! NavigationDone) {
+                    return;
+                  }
+
+                  if (state.closeUiElements) {
+                    navKey.currentState?.pop();
+                  }
+
+                  if (state.exception == null) {
+                    if (state.nextPageName != null) {
+                      if (!state.isReplaced) {
+                        navKey.currentState
+                            ?.pushNamed(state.nextPageName!.name);
+                      } else {
+                        navKey.currentState
+                            ?.pushReplacementNamed(state.nextPageName!.name);
+                      }
+                    } else if (state.navigateBack &&
+                        !state.navigateBackToRoot) {
+                      navKey.currentState?.pop();
+                    } else if (state.navigateBack && state.navigateBackToRoot) {
+                      navKey.currentState?.popUntil(
+                        (route) => route.isFirst,
+                      );
+                    }
+                  } else if (state.exception!.isError) {
+                    navKey.currentState?.push(
+                      MaterialPageRoute(
+                        builder: (context) => ConvertouchErrorPage(
+                          error: state.exception!,
                         ),
-                        ConvertouchRootScreen(
-                          navigatorKey:
-                              _screenNavigatorKeys[BottomNavbarItem.settings],
-                          bottomNavbarItem: BottomNavbarItem.settings,
-                          rootPageId: PageName.settingsPage,
-                          selected: selectedItem == BottomNavbarItem.settings,
-                          routesMap: {
-                            PageName.settingsPage.name:
-                                const ConvertouchSettingsPage(),
-                          },
-                          onInit: () {
-                            BlocProvider.of<RefreshingJobsBloc>(context).add(
-                              const FetchRefreshingJobs(),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    bottomNavigationBar: BottomNavigationBar(
-                      showSelectedLabels: false,
-                      showUnselectedLabels: false,
-                      type: BottomNavigationBarType.fixed,
-                      items: [
-                        _buildNavbarItem(
-                          bottomNavbarItem: BottomNavbarItem.home,
-                          selectedItem: selectedItem,
-                        ),
-                        _buildNavbarItem(
-                          bottomNavbarItem: BottomNavbarItem.settings,
-                          selectedItem: selectedItem,
-                        ),
-                      ],
-                      onTap: (index) {
-                        BlocProvider.of<NavigationBloc>(context).add(
+                      ),
+                    );
+                  } else {
+                    showSnackBar(
+                      context,
+                      exception: state.exception!,
+                      theme: appState.theme,
+                    );
+                  }
+                },
+                child: WillPopScope(
+                  onWillPop: () async {
+                    final isFirstRouteInSelectedNavbarItem =
+                        !await _screenNavigatorKeys[selectedItem]!
+                            .currentState!
+                            .maybePop();
+                    if (isFirstRouteInSelectedNavbarItem) {
+                      if (selectedItem != BottomNavbarItem.home) {
+                        BlocProvider.of<RootScreenBloc>(
+                          _screenNavigatorKeys[selectedItem]!.currentContext!,
+                        ).add(
                           SelectBottomNavbarItem(
-                            targetItem: BottomNavbarItem.values[index],
+                            targetItem: BottomNavbarItem.home,
                             selectedItem: selectedItem,
                           ),
                         );
-                      },
-                      currentIndex: selectedItem.index,
-                      elevation: 0,
-                      selectedFontSize: 12,
-                      unselectedItemColor:
-                          pageColorScheme.bottomBar.foreground.regular,
-                      selectedItemColor:
-                          pageColorScheme.bottomBar.foreground.selected,
+
+                        return false;
+                      }
+                    }
+                    return isFirstRouteInSelectedNavbarItem;
+                  },
+                  child: SafeArea(
+                    child: Scaffold(
+                      body: Stack(
+                        children: [
+                          ConvertouchRootScreen(
+                            navigatorKey:
+                                _screenNavigatorKeys[BottomNavbarItem.home],
+                            bottomNavbarItem: BottomNavbarItem.home,
+                            rootPageId: PageName.conversionGroupsPage,
+                            selected: selectedItem == BottomNavbarItem.home,
+                            routesMap: {
+                              PageName.conversionPage.name:
+                                  const ConvertouchConversionPage(),
+                              PageName.conversionGroupsPage.name:
+                                  const ConversionGroupsPage(),
+                              PageName.unitsPageForConversion.name:
+                                  const ConvertouchUnitsPageForConversion(),
+                              PageName.unitsPageForConversionParams.name:
+                                  const ConvertouchUnitsPageForConversionParams(),
+                              PageName.unitsPageRegular.name:
+                                  const ConvertouchUnitsPageRegular(),
+                              PageName.unitGroupsPageForUnitDetails.name:
+                                  const ConvertouchUnitGroupsPageForUnitDetails(),
+                              PageName.unitsPageForUnitDetails.name:
+                                  const ConvertouchUnitsPageForUnitDetails(),
+                              PageName.unitGroupDetailsPage.name:
+                                  const ConvertouchUnitGroupDetailsPage(),
+                              PageName.unitDetailsPage.name:
+                                  const ConvertouchUnitDetailsPage(),
+                              PageName.paramSetsPage.name:
+                                  const ConversionParamSetsPage(),
+                            },
+                          ),
+                          ConvertouchRootScreen(
+                            navigatorKey:
+                                _screenNavigatorKeys[BottomNavbarItem.settings],
+                            bottomNavbarItem: BottomNavbarItem.settings,
+                            rootPageId: PageName.settingsPage,
+                            selected: selectedItem == BottomNavbarItem.settings,
+                            routesMap: {
+                              PageName.settingsPage.name:
+                                  const ConvertouchSettingsPage(),
+                            },
+                            onInit: () {
+                              BlocProvider.of<RefreshingJobsBloc>(context).add(
+                                const FetchRefreshingJobs(),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      bottomNavigationBar: BottomNavigationBar(
+                        showSelectedLabels: false,
+                        showUnselectedLabels: false,
+                        type: BottomNavigationBarType.fixed,
+                        items: [
+                          _buildNavbarItem(
+                            bottomNavbarItem: BottomNavbarItem.home,
+                            selectedItem: selectedItem,
+                          ),
+                          _buildNavbarItem(
+                            bottomNavbarItem: BottomNavbarItem.settings,
+                            selectedItem: selectedItem,
+                          ),
+                        ],
+                        onTap: (index) {
+                          BlocProvider.of<RootScreenBloc>(context).add(
+                            SelectBottomNavbarItem(
+                              targetItem: BottomNavbarItem.values[index],
+                              selectedItem: selectedItem,
+                            ),
+                          );
+                        },
+                        currentIndex: selectedItem.index,
+                        elevation: 0,
+                        selectedFontSize: 12,
+                        unselectedItemColor:
+                            pageColorScheme.bottomBar.foreground.regular,
+                        selectedItemColor:
+                            pageColorScheme.bottomBar.foreground.selected,
+                      ),
                     ),
                   ),
                 ),
               );
-            }
-            return const SizedBox.shrink();
-          },
-        );
-      },
+            },
+          );
+        },
+      ),
     );
   }
 

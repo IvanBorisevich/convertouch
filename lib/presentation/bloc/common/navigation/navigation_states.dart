@@ -16,52 +16,40 @@ class NavigationInProgress extends NavigationState {
 }
 
 class NavigationDone extends NavigationState {
-  final BottomNavbarItem selectedNavbarItem;
-  final int index;
   final PageName? nextPageName;
   final bool navigateBack;
   final bool navigateBackToRoot;
   final ConvertouchException? exception;
-  final List<BottomNavbarItem> openedNavbarItems;
-  final bool isBottomNavbarOpenedFirstTime;
   final bool isReplaced;
+  final bool closeUiElements;
 
   const NavigationDone({
-    required this.selectedNavbarItem,
-    required this.index,
     this.nextPageName,
     this.navigateBack = false,
     this.navigateBackToRoot = false,
     this.exception,
-    this.openedNavbarItems = const [],
-    this.isBottomNavbarOpenedFirstTime = false,
     this.isReplaced = false,
+    this.closeUiElements = false,
   });
 
   @override
   List<Object?> get props => [
-    selectedNavbarItem,
-    index,
-    nextPageName,
-    navigateBack,
-    navigateBackToRoot,
-    exception,
-    openedNavbarItems,
-    isBottomNavbarOpenedFirstTime,
-    isReplaced,
-  ];
+        nextPageName,
+        navigateBack,
+        navigateBackToRoot,
+        exception,
+        isReplaced,
+        closeUiElements,
+      ];
 
   @override
   String toString() {
     return 'NavigationDone{'
-        'selectedNavbarItem: $selectedNavbarItem, '
-        'index: $index, '
         'nextPageName: $nextPageName, '
         'navigateBack: $navigateBack, '
         'navigateBackToRoot: $navigateBackToRoot, '
-        'openedNavbarItems: $openedNavbarItems, '
-        'isBottomNavbarOpenedFirstTime: $isBottomNavbarOpenedFirstTime, '
         'isReplaced: $isReplaced, '
+        'closeUiElements: $closeUiElements, '
         'exception: $exception}';
   }
 }

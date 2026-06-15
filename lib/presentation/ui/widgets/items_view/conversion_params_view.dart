@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
@@ -76,7 +75,7 @@ class ConversionParamsView extends StatelessWidget {
       bodyHeight = _maxBodyHeight;
     }
 
-    bool paramsAreNullOrApplicable = areParamsNullOrApplicable(params?.active);
+    bool paramsAreVisible = params!.active != null;
 
     final tabColors = colors.slidingPanel.tabPanel.tab;
 
@@ -93,7 +92,7 @@ class ConversionParamsView extends StatelessWidget {
         return ConvertouchSlidingPanel(
           panelController: panelController,
           defaultPanelState:
-              paramsAreNullOrApplicable ? PanelState.CLOSED : PanelState.OPEN,
+              paramsAreVisible ? PanelState.OPEN : PanelState.CLOSED,
           minHeight: _footerHeight,
           maxHeight: jobInfoBoxVisible
               ? _footerHeight + bodyHeight + _jobInfoBoxHeight

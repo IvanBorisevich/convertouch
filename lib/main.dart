@@ -1,27 +1,10 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_observer.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_event.dart';
-import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
-import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_group_details_page/unit_group_details_bloc.dart';
-import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/single_group_bloc.dart';
-import 'package:convertouch/presentation/bloc/units_page/units_bloc.dart';
 import 'package:convertouch/presentation/scaffold.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
@@ -63,63 +46,6 @@ class ConvertouchApp extends StatelessWidget {
             ..add(
               const GetAppSettingsInit(),
             ),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<RefreshButtonBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<InputValidationBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ConvertouchTooltipBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<NavigationBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ItemsSelectionBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ListValuesBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ConversionBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitGroupsBloc>()
-            ..add(
-              const FetchItems<UnitGroupsFetchParams>(),
-            ),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<SingleGroupBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitGroupsBlocForUnitDetails>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitsBlocForUnitDetails>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitDetailsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<UnitGroupDetailsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<RefreshingJobsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ConversionParamSetsBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<SingleParamBloc>(),
         ),
       ],
       child: DismissKeyboard(

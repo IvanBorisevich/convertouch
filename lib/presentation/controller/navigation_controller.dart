@@ -11,9 +11,9 @@ final navigationController = di.locator.get<NavigationController>();
 class NavigationController {
   const NavigationController();
 
-  void navigateBack(BuildContext context) {
+  void navigateBack(BuildContext context, {bool closeUiElements = false}) {
     BlocProvider.of<NavigationBloc>(context).add(
-      const NavigateBack(),
+      NavigateBack(closeUiElements: closeUiElements),
     );
   }
 
@@ -21,11 +21,13 @@ class NavigationController {
     BuildContext context, {
     required PageName pageName,
     bool replace = false,
+    bool closeUiElements = false,
   }) {
     BlocProvider.of<NavigationBloc>(context).add(
       NavigateToPage(
-        pageName: pageName,
+        targetPageName: pageName,
         replace: replace,
+        closeUiElements: closeUiElements,
       ),
     );
   }
@@ -33,9 +35,13 @@ class NavigationController {
   void showException(
     BuildContext context, {
     required ConvertouchException exception,
+    bool closeUiElements = false,
   }) {
     BlocProvider.of<NavigationBloc>(context).add(
-      ShowException(exception: exception),
+      ShowException(
+        exception: exception,
+        closeUiElements: closeUiElements,
+      ),
     );
   }
 }

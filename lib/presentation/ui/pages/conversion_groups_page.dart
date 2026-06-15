@@ -53,36 +53,34 @@ class ConversionGroupsPage extends StatelessWidget {
                 checkableItemsVisible: itemsSelectionState.showCancelIcon,
                 removalModeEnabled: itemsSelectionState.showCancelIcon,
                 onItemTap: (unitGroup) {
-                  groupsController.showGroup(context, unitGroup: unitGroup);
-
-                  conversionController.getConversion(
+                  navigationController.navigateTo(
                     context,
-                    unitGroup: unitGroup,
-                    processCurrentConversion: (conversion) {
-                      if (conversion != null && conversion.hasItems) {
-                        refreshButtonController.changeState(
-                          context,
-                          visible: conversion.refreshable,
-                          disabled: !conversion.readyToRefresh,
-                        );
-
-                        refreshingJobController.getJobs(
-                          context,
-                          unitGroup: unitGroup,
-                        );
-
-                        navigationController.navigateTo(
-                          context,
-                          pageName: PageName.conversionPage,
-                        );
-                      } else {
-                        unitsController.showUnitsForAdding(
-                          context,
-                          groupId: unitGroup.id,
-                        );
-                      }
-                    },
+                    pageName: PageName.conversionPage,
                   );
+
+                  // conversionController.getConversion(
+                  //   context,
+                  //   unitGroup: unitGroup,
+                  //   processCurrentConversion: (conversion) {
+                  //     if (conversion != null && conversion.hasItems) {
+                  //       refreshButtonController.changeState(
+                  //         context,
+                  //         visible: conversion.refreshable,
+                  //         disabled: !conversion.readyToRefresh,
+                  //       );
+                  //
+                  //       refreshingJobController.getJobs(
+                  //         context,
+                  //         unitGroup: unitGroup,
+                  //       );
+                  //     } else {
+                  //       unitsController.showUnitsForAdding(
+                  //         context,
+                  //         groupId: unitGroup.id,
+                  //       );
+                  //     }
+                  //   },
+                  // );
                 },
                 onItemTapForRemoval: (unitGroup) {
                   groupsController.markForRemoval(

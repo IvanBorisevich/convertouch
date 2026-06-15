@@ -72,6 +72,7 @@ import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
@@ -479,6 +480,10 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<NavigationBloc>(
     () => NavigationBloc(),
+  );
+
+  locator.registerLazySingleton<RootScreenBloc>(
+    () => RootScreenBloc(),
   );
 
   locator.registerLazySingleton<ItemsSelectionBloc>(

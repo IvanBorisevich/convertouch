@@ -111,6 +111,14 @@ class ConversionBloc
       conversion = state.conversion;
     }
 
+    if (prev != null && prev.conversion.exists) {
+      event.processPrevConversion?.call(prev.conversion);
+    }
+
+    emit(
+      ConversionBuilt(conversion: conversion),
+    );
+
     conversion = ObjectUtils.tryGet(
       await alignConversionUseCase.execute(conversion),
     );
@@ -118,10 +126,6 @@ class ConversionBloc
     emit(
       ConversionBuilt(conversion: conversion),
     );
-
-    if (prev != null && prev.conversion.exists) {
-      event.processPrevConversion?.call(prev.conversion);
-    }
 
     event.processCurrentConversion?.call(conversion);
   }

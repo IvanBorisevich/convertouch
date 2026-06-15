@@ -72,6 +72,8 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
               widget.closeOnNavigate &&
               widget.focusNode.hasFocus,
           listener: (_, navigationState) {
+            print("navigation listener inside tooltip");
+
             widget.focusNode.unfocus();
           },
         ),

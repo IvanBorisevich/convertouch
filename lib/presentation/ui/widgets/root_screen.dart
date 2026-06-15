@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_states.dart';
 import 'package:convertouch/presentation/ui/animation/navigation_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,16 +25,14 @@ class ConvertouchRootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NavigationBloc, NavigationState>(
+    return BlocListener<RootScreenBloc, RootScreenState>(
       listenWhen: (prev, next) {
         return prev != next &&
-            next is NavigationDone &&
             next.selectedNavbarItem == bottomNavbarItem &&
             next.selectedNavbarItem != BottomNavbarItem.home;
       },
       listener: (_, state) {
-        if (state is NavigationDone &&
-            state.selectedNavbarItem == bottomNavbarItem &&
+        if (state.selectedNavbarItem == bottomNavbarItem &&
             state.selectedNavbarItem != BottomNavbarItem.home &&
             state.isBottomNavbarOpenedFirstTime) {
           onInit?.call();

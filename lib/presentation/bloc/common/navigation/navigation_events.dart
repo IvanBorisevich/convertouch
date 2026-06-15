@@ -3,52 +3,41 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class NavigationEvent extends ConvertouchEvent {
-  const NavigationEvent();
-}
+  final bool closeUiElements;
 
-class SelectBottomNavbarItem extends NavigationEvent {
-  final BottomNavbarItem targetItem;
-  final BottomNavbarItem selectedItem;
-
-  const SelectBottomNavbarItem({
-    required this.targetItem,
-    required this.selectedItem,
+  const NavigationEvent({
+    this.closeUiElements = false,
   });
 
   @override
   List<Object?> get props => [
-        targetItem,
-        selectedItem,
+        closeUiElements,
       ];
-
-  @override
-  String toString() {
-    return 'SelectBottomNavbarItem{'
-        'targetItem: $targetItem, '
-        'selectedItem: $selectedItem}';
-  }
 }
 
 class NavigateToPage extends NavigationEvent {
-  final PageName pageName;
+  final PageName targetPageName;
   final bool replace;
 
   const NavigateToPage({
-    required this.pageName,
+    required this.targetPageName,
     this.replace = false,
+    super.closeUiElements,
   });
 
   @override
   List<Object?> get props => [
-        pageName,
-    replace,
+        targetPageName,
+        replace,
+        super.props,
       ];
 
   @override
   String toString() {
     return 'NavigateToPage{'
-        'pageName: $pageName, '
-        'replace: $replace}';
+        'pageName: $targetPageName, '
+        'replace: $replace, '
+        'closeUiElements: $closeUiElements}';
   }
 }
 
@@ -57,33 +46,41 @@ class ShowException extends NavigationEvent {
 
   const ShowException({
     required this.exception,
+    super.closeUiElements,
   });
 
   @override
   List<Object?> get props => [
         exception,
+        super.props,
       ];
 
   @override
   String toString() {
-    return 'ShowException{exception: $exception}';
+    return 'ShowException{'
+        'exception: $exception, '
+        'closeUiElements: $closeUiElements}';
   }
 }
 
 class NavigateBack extends NavigationEvent {
-  const NavigateBack();
+  const NavigateBack({
+    super.closeUiElements,
+  });
 
   @override
   String toString() {
-    return 'NavigateBack{}';
+    return 'NavigateBack{closeUiElements: $closeUiElements}';
   }
 }
 
 class NavigateBackToRootPage extends NavigationEvent {
-  const NavigateBackToRootPage();
+  const NavigateBackToRootPage({
+    super.closeUiElements,
+  });
 
   @override
   String toString() {
-    return 'NavigateBackToRootPage{}';
+    return 'NavigateBackToRootPage{closeUiElements: $closeUiElements}';
   }
 }

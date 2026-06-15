@@ -684,6 +684,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       listeners: [
         BlocListener<NavigationBloc, NavigationState>(
           listener: (_, navigationState) {
+            print("navigation listener inside input_box");
+
             if (_isDropdownOpen) {
               Navigator.of(context).pop();
             }
