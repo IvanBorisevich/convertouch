@@ -85,19 +85,32 @@ class ConvertouchProgressButton extends StatelessWidget {
                           : Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
-                              padding: const EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
+                                color: colors.background.selected,
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(30)),
                                 border: Border.all(
                                   color: colors.border.selected,
                                 ),
                               ),
-                              child: CircularProgressIndicator(
-                                value: null,
-                                strokeWidth: 3.0,
-                                strokeCap: StrokeCap.round,
-                                color: colors.foreground.selected,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.stop_rounded,
+                                      size: 25,
+                                      color: colors.foreground.selected,
+                                    ),
+                                  ),
+                                  CircularProgressIndicator(
+                                    value: null,
+                                    strokeWidth: 3.0,
+                                    strokeCap: StrokeCap.round,
+                                    color: colors.foreground.selected,
+                                  ),
+                                ],
                               ),
                             ),
                     );

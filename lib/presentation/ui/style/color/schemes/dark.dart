@@ -341,6 +341,7 @@ const _refreshFloatingButton = WidgetColorScheme(
   ),
   background: MultiColor(
     regular: Color(0xFF39889F),
+    selected: _pageBackground,
     disabled: Color(0xFF395D67),
   ),
 );
