@@ -44,6 +44,7 @@ import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConvertouchScaffold extends StatefulWidget {
@@ -209,27 +210,32 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     );
                   }
                 },
-                child: WillPopScope(
-                  onWillPop: () async {
-                    final isFirstRouteInSelectedNavbarItem =
-                        !await _screenNavigatorKeys[selectedItem]!
-                            .currentState!
-                            .maybePop();
-                    if (isFirstRouteInSelectedNavbarItem) {
-                      if (selectedItem != BottomNavbarItem.home) {
-                        BlocProvider.of<RootScreenBloc>(
-                          _screenNavigatorKeys[selectedItem]!.currentContext!,
-                        ).add(
-                          SelectBottomNavbarItem(
-                            targetItem: BottomNavbarItem.home,
-                            selectedItem: selectedItem,
-                          ),
-                        );
+                child: PopScope(
+                  canPop: false,
+                  onPopInvokedWithResult: (didPop, result) async {
+                    if (didPop) {
+                      return;
+                    }
 
-                        return false;
+                    if (selectedItem != BottomNavbarItem.home) {
+                      BlocProvider.of<RootScreenBloc>(
+                        _screenNavigatorKeys[selectedItem]!.currentContext!,
+                      ).add(
+                        SelectBottomNavbarItem(
+                          targetItem: BottomNavbarItem.home,
+                          selectedItem: selectedItem,
+                        ),
+                      );
+                    } else {
+                      final isFirstRouteInSelectedNavbarItem =
+                          !await _screenNavigatorKeys[selectedItem]!
+                              .currentState!
+                              .maybePop();
+
+                      if (isFirstRouteInSelectedNavbarItem) {
+                        SystemNavigator.pop();
                       }
                     }
-                    return isFirstRouteInSelectedNavbarItem;
                   },
                   child: SafeArea(
                     child: Scaffold(
