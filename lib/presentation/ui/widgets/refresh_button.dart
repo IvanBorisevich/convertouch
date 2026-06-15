@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
@@ -16,14 +17,16 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final bool disabled;
-  final void Function(JobResultModel)? onRefreshSuccess;
+  final void Function(JobResultModel)? onFetchSuccess;
+  final void Function(ConvertouchException)? onFetchError;
 
   const ConvertouchRefreshFloatingButton({
     required this.conversion,
     this.determinate = false,
     this.visible = true,
     this.disabled = false,
-    this.onRefreshSuccess,
+    this.onFetchSuccess,
+    this.onFetchError,
     super.key,
   });
 
@@ -48,7 +51,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               buttonWidget: ConvertouchFloatingActionButton.refresh(
                 disabled: disabled,
                 onClick: () {
-                  refreshingJobController.startRefresh(
+                  refreshingJobController.startRefreshingJob(
                     context,
                     groupName: unitGroupName,
                     params: params,
@@ -59,19 +62,58 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 },
                 colorScheme: refreshButtonColor,
               ),
-              onSuccess: onRefreshSuccess,
-              notificationFunc: (info) {
-                navigationController.showException(context, exception: info);
+              onFetchSuccess: (jobResult) {
+                onFetchSuccess?.call(jobResult);
+
+                refreshingJobController.stopRefreshingJob(
+                  context,
+                  groupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
+                  onComplete: () {
+                    navigationController.showException(
+                      context,
+                      exception: jobResult.notification!,
+                    );
+                  },
+                );
+              },
+              onFetchError: (exception) {
+                onFetchError?.call(exception);
+
+                refreshingJobController.stopRefreshingJob(
+                  context,
+                  groupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
+                  stopOnError: true,
+                  onComplete: () {
+                    navigationController.showException(
+                      context,
+                      exception: exception,
+                    );
+                  },
+                );
               },
               onProgressIndicatorClick: () {
-                // refreshingJobController.stopRefresh(
-                //   context,
-                //   groupName: unitGroupName,
-                //   paramSetName: params?.paramSet.name,
-                // );
+                refreshingJobController.stopRefreshingJob(
+                  context,
+                  groupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
+                  forceStop: true,
+                  onComplete: () {
+                    navigationController.showException(
+                      context,
+                      exception: ConvertouchException(
+                        message: "Refreshing stopped",
+                        severity: ExceptionSeverity.info,
+                        stackTrace: null,
+                        dateTime: DateTime.now(),
+                      ),
+                    );
+                  },
+                );
               },
               progressStream: jobsState
-                  .jobs[unitGroupName]?[params?.paramSet.name]
+                  .getJob(unitGroupName, params?.paramSet.name)
                   ?.progressController
                   ?.stream,
             );

@@ -4,10 +4,10 @@ import 'package:convertouch/domain/model/exception_model.dart';
 class JobResultModel {
   final double progressPercent;
   final ConvertouchException? notification;
-  final DynamicDataModel? result;
+  final DynamicDataModel? data;
 
   const JobResultModel({
-    this.result,
+    this.data,
     required this.progressPercent,
     this.notification,
   });
@@ -21,15 +21,19 @@ class JobResultModel {
     DynamicDataModel? result, {
     ConvertouchException? info,
   }) : this(
-          result: result,
+          data: result,
           progressPercent: 1.0,
           notification: info,
         );
 
-  const JobResultModel.noResult()
-      : this(
-          progressPercent: -1,
-        );
+  const JobResultModel.failure(ConvertouchException error) : this(
+    progressPercent: -1,
+    notification: error,
+  );
+
+  bool get finished => progressPercent == 1;
+
+  bool get failed => progressPercent == -1;
 
   @override
   String toString() {

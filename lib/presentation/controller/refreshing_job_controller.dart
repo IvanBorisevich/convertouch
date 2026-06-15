@@ -22,7 +22,7 @@ class RefreshingJobController {
     }
   }
 
-  void startRefresh(
+  void startRefreshingJob(
     BuildContext context, {
     required String groupName,
     required ConversionParamSetValueModel? params,
@@ -34,7 +34,7 @@ class RefreshingJobController {
     }
 
     BlocProvider.of<RefreshingJobsBloc>(context).add(
-      StartRefreshingJobForConversion(
+      StartRefreshingJob(
         unitGroupName: groupName,
         params: params,
         srcUnit: srcUnit,
@@ -46,19 +46,25 @@ class RefreshingJobController {
     );
   }
 
-  void stopRefresh(
+  void stopRefreshingJob(
     BuildContext context, {
     required String groupName,
     required String? paramSetName,
+    bool stopOnError = false,
+    bool forceStop = false,
+    void Function()? onComplete,
   }) {
     if (paramSetName == null) {
       return;
     }
 
     BlocProvider.of<RefreshingJobsBloc>(context).add(
-      StopRefreshingJobForConversion(
+      StopRefreshingJob(
         unitGroupName: groupName,
         paramSetName: paramSetName,
+        stopOnError: stopOnError,
+        forceStop: forceStop,
+        onComplete: onComplete,
       ),
     );
   }

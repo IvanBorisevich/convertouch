@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
@@ -65,37 +64,13 @@ class ChangeJobInfo extends SingleJobEvent {
   }
 }
 
-class ChangeRefreshingJobCron extends SingleJobEvent {
-  final Cron newCron;
-
-  const ChangeRefreshingJobCron({
-    required this.newCron,
-    required super.unitGroupName,
-    required super.paramSetName,
-  });
-
-  @override
-  List<Object?> get props => [
-        newCron,
-        super.props,
-      ];
-
-  @override
-  String toString() {
-    return 'ChangeRefreshingJobCron{'
-        'unitGroupName: $unitGroupName, '
-        'paramsSetName: $paramSetName, '
-        'newCron: $newCron}';
-  }
-}
-
-class StartRefreshingJobForConversion extends RefreshingJobsEvent {
+class StartRefreshingJob extends RefreshingJobsEvent {
   final String unitGroupName;
   final ConversionParamSetValueModel params;
   final JobExecutionMode jobExecutionMode;
   final UnitModel? srcUnit;
 
-  const StartRefreshingJobForConversion({
+  const StartRefreshingJob({
     required this.unitGroupName,
     required this.params,
     this.srcUnit,
@@ -112,24 +87,39 @@ class StartRefreshingJobForConversion extends RefreshingJobsEvent {
 
   @override
   String toString() {
-    return 'StartRefreshingJobForConversion{'
+    return 'StartRefreshingJob{'
         'unitGroupName: $unitGroupName, '
         'params: $params, '
         'jobExecutionMode: $jobExecutionMode}';
   }
 }
 
-class StopRefreshingJobForConversion extends SingleJobEvent {
-  const StopRefreshingJobForConversion({
+class StopRefreshingJob extends SingleJobEvent {
+  final bool stopOnError;
+  final bool forceStop;
+  final void Function()? onComplete;
+
+  const StopRefreshingJob({
     required super.unitGroupName,
     required super.paramSetName,
-    super.onError,
+    this.stopOnError = false,
+    this.forceStop = false,
+    this.onComplete,
   });
 
   @override
+  List<Object?> get props => [
+        super.props,
+        stopOnError,
+        forceStop,
+      ];
+
+  @override
   String toString() {
-    return 'StopRefreshingJobForConversion{'
+    return 'StopRefreshingJob{'
         'unitGroupName: $unitGroupName, '
-        'paramSetName: $paramSetName}';
+        'paramSetName: $paramSetName, '
+        'forceStop: $forceStop, '
+        'stopOnError: $stopOnError}';
   }
 }

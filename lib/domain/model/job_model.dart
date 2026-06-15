@@ -4,11 +4,11 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 enum JobExecutionMode {
   continueAlreadyRunningJobIfAny,
@@ -26,26 +26,22 @@ enum JobExecutionMode {
 
 class JobModel extends IdNameItemModel {
   final InputDynamicDataFetchModel? params;
-  final Cron selectedCron;
+  final Cron cron;
   final DateTime? completedAt;
-  final StreamController<JobResultModel>? progressController;
+  final BehaviorSubject<JobResultModel>? progressController;
   final JobExecutionMode executionMode;
-  final void Function(StreamController<JobResultModel>)? onStart;
+  final void Function(BehaviorSubject<JobResultModel>)? beforeStart;
   final Future<DynamicDataModel?> Function(InputDynamicDataFetchModel? params)?
       onExecute;
-  final void Function(DynamicDataModel?)? onSuccess;
-  final void Function(ConvertouchException)? onError;
 
   const JobModel({
     this.params,
-    this.selectedCron = Cron.never,
+    this.cron = Cron.never,
     this.completedAt,
     this.progressController,
     this.executionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
-    this.onStart,
+    this.beforeStart,
     this.onExecute,
-    this.onSuccess,
-    this.onError,
   }) : super(
           name: "",
           itemType: ItemType.job,
@@ -55,16 +51,15 @@ class JobModel extends IdNameItemModel {
   JobModel copyWith({
     Patchable<InputDynamicDataFetchModel>? params,
     Patchable<DateTime>? completedAt,
-    Patchable<String>? completedAgo,
-    Patchable<Cron>? selectedCron,
-    Patchable<StreamController<JobResultModel>>? progressController,
+    Patchable<Cron>? cron,
+    Patchable<BehaviorSubject<JobResultModel>>? progressController,
   }) {
     return JobModel(
       onExecute: onExecute,
       executionMode: executionMode,
       params: ObjectUtils.patch(this.params, params),
       completedAt: ObjectUtils.patch(this.completedAt, completedAt),
-      selectedCron: ObjectUtils.patch(this.selectedCron, selectedCron)!,
+      cron: ObjectUtils.patch(this.cron, cron)!,
       progressController:
           ObjectUtils.patch(this.progressController, progressController),
     );
@@ -73,9 +68,9 @@ class JobModel extends IdNameItemModel {
   @override
   List<Object?> get props => [
         params,
-        selectedCron,
+        cron,
         completedAt,
-        progressController,
+        progressController.hashCode,
         itemType,
         executionMode,
       ];
@@ -94,8 +89,8 @@ class JobModel extends IdNameItemModel {
     DateTime? completedAt =
         DateTime.tryParse(json["completedAt"] ?? json["lastRefreshTime"] ?? "");
 
-    var t =  JobModel(
-      selectedCron: Cron.valueOf(json["selectedCron"]),
+    var t = JobModel(
+      cron: Cron.valueOf(json["selectedCron"]),
       completedAt: completedAt,
     );
 
@@ -107,7 +102,7 @@ class JobModel extends IdNameItemModel {
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
-      "selectedCron": selectedCron.name,
+      "selectedCron": cron.name,
       "completedAt": completedAt?.toString(),
     };
 
@@ -122,9 +117,10 @@ class JobModel extends IdNameItemModel {
   String toString() {
     return 'JobModel{'
         'params: $params, '
-        'selectedCron: $selectedCron, '
+        'selectedCron: $cron, '
         'completedAt: $completedAt, '
-        'progressController: $progressController, '
+        'progressController: $progressController '
+        '(${progressController?.hashCode}), '
         'executionMode: $executionMode}';
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -236,7 +238,8 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
 
                                     if (newConversion.refreshable &&
                                         newConversion.readyToRefresh) {
-                                      refreshingJobController.startRefresh(
+                                      refreshingJobController
+                                          .startRefreshingJob(
                                         context,
                                         groupName: newConversion.unitGroup.name,
                                         params: newConversion.params!.active!,
@@ -246,7 +249,7 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                                             JobExecutionMode.startNewJob,
                                       );
                                     } else {
-                                      refreshingJobController.stopRefresh(
+                                      refreshingJobController.stopRefreshingJob(
                                         context,
                                         groupName: newConversion.unitGroup.name,
                                         paramSetName: newConversion
@@ -326,11 +329,15 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
                               conversion: conversion,
                               visible: refreshButtonState.visible,
                               disabled: refreshButtonState.disabled,
-                              onRefreshSuccess: (jobResult) {
-                                if (jobResult.result != null) {
-                                  conversionController.updateFromNetwork(
+                              onFetchSuccess: (jobResult) {
+                                log("conversion page onFetchSuccess: $jobResult");
+
+                                if (jobResult.data != null) {
+                                  log("Update with dynamic data");
+
+                                  conversionController.updateWithDynamicData(
                                     context,
-                                    data: jobResult.result!,
+                                    data: jobResult.data!,
                                   );
                                 }
                               },

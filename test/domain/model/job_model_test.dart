@@ -8,7 +8,7 @@ void main() {
   test('Should serialize', () {
     expect(
       JobModel(
-        selectedCron: Cron.everyHour,
+        cron: Cron.everyHour,
         completedAt: _now,
       ).toJson(),
       {
@@ -26,7 +26,7 @@ void main() {
           "lastRefreshTime": _now.toString(),
         }),
         JobModel(
-          selectedCron: Cron.everyHour,
+          cron: Cron.everyHour,
           completedAt: _now,
         ),
       );
@@ -39,7 +39,7 @@ void main() {
           "completedAt": _now.toString(),
         }),
         JobModel(
-          selectedCron: Cron.everyHour,
+          cron: Cron.everyHour,
           completedAt: _now,
         ),
       );

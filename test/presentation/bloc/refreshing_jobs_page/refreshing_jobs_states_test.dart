@@ -1,30 +1,29 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
 final _now = DateTime.now();
+const _jobKey = "${GroupNames.currency}_${ParamSetNames.exchangeRate}";
 
 void main() {
   test('Should serialize', () {
     expect(
       RefreshingJobsFetched(
         jobs: {
-          GroupNames.currency: {
-            ParamSetNames.exchangeRate: JobModel(
-              selectedCron: Cron.everyHour,
-              completedAt: _now,
-            )
-          }
+          _jobKey: JobModel(
+            cron: Cron.everyHour,
+            completedAt: _now,
+          )
         },
       ).toJson(),
       {
         "jobs": {
-          "Currency": {
-            "Exchange Rate": {
-              "selectedCron": "Every hour",
-              "completedAt": _now.toString(),
-            }
+          "Currency_Exchange Rate": {
+            "selectedCron": "Every hour",
+            "completedAt": _now.toString(),
           }
         }
       },
@@ -44,12 +43,10 @@ void main() {
         }),
         RefreshingJobsFetched(
           jobs: {
-            GroupNames.currency: {
-              ParamSetNames.exchangeRate: JobModel(
-                selectedCron: Cron.everyHour,
-                completedAt: _now,
-              )
-            }
+            _jobKey: JobModel(
+              cron: Cron.everyHour,
+              completedAt: _now,
+            )
           },
         ),
       );
@@ -57,7 +54,7 @@ void main() {
       expect(
         RefreshingJobsFetched.fromJson({
           "jobs": {
-            "Currency": {
+            "Currency_Exchange Rate": {
               "selectedCron": "Every hour",
               "lastRefreshTime": _now.toString(),
             }
@@ -65,12 +62,10 @@ void main() {
         }),
         RefreshingJobsFetched(
           jobs: {
-            GroupNames.currency: {
-              ParamSetNames.exchangeRate: JobModel(
-                selectedCron: Cron.everyHour,
-                completedAt: _now,
-              )
-            }
+            _jobKey: JobModel(
+              cron: Cron.everyHour,
+              completedAt: _now,
+            )
           },
         ),
       );
@@ -80,25 +75,78 @@ void main() {
       expect(
         RefreshingJobsFetched.fromJson({
           "jobs": {
-            "Currency": {
-              "Exchange Rate": {
-                "selectedCron": "Every hour",
-                "completedAt": _now.toString(),
-              }
+            "Currency_Exchange Rate": {
+              "selectedCron": "Every hour",
+              "completedAt": _now.toString(),
             }
           }
         }),
         RefreshingJobsFetched(
           jobs: {
-            GroupNames.currency: {
-              ParamSetNames.exchangeRate: JobModel(
-                selectedCron: Cron.everyHour,
-                completedAt: _now,
-              )
-            }
+            _jobKey: JobModel(
+              cron: Cron.everyHour,
+              completedAt: _now,
+            )
           },
         ),
       );
+    });
+  });
+
+  group("Should compare 2 states", () {
+    test("States should be identical", () {
+      const firstState = RefreshingJobsFetched(
+        jobs: {
+          _jobKey: JobModel(
+            cron: Cron.never,
+            executionMode: JobExecutionMode.continueAlreadyRunningJobIfAny,
+          ),
+        },
+      );
+
+      const secondState = RefreshingJobsFetched(
+        jobs: {
+          _jobKey: JobModel(
+            cron: Cron.never,
+            executionMode: JobExecutionMode.continueAlreadyRunningJobIfAny,
+          ),
+        },
+      );
+
+      expect(firstState == secondState, true);
+    });
+
+    test("States should NOT be identical", () async {
+      final BehaviorSubject<JobResultModel> jobStreamController =
+          BehaviorSubject<JobResultModel>();
+
+      final firstState = RefreshingJobsFetched(
+        jobs: {
+          _jobKey: JobModel(
+            params: null,
+            cron: Cron.never,
+            completedAt: null,
+            progressController: jobStreamController,
+            executionMode: JobExecutionMode.continueAlreadyRunningJobIfAny,
+          ),
+        },
+      );
+
+      final secondState = RefreshingJobsFetched(
+        jobs: {
+          _jobKey: JobModel(
+            params: null,
+            cron: Cron.never,
+            completedAt: DateTime.now(),
+            progressController: null,
+            executionMode: JobExecutionMode.continueAlreadyRunningJobIfAny,
+          ),
+        },
+      );
+
+      expect(firstState != secondState, true);
+
+      await jobStreamController.close();
     });
   });
 }

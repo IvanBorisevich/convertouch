@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_job_stop_model.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -35,21 +36,22 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
               dateTime: DateTime.now(),
             ),
           );
-        } else {
-          await stopJobUseCase.execute(
-            input.copyWith(
-              progressController: const Patchable(null),
-            ),
-          );
         }
+
+        await stopJobUseCase.execute(
+          InputJobStopModel(
+            job: input,
+            forceStop: true,
+            stopOnError: false,
+          ),
+        );
       }
 
-      StreamController<JobResultModel>? jobProgressController =
-          _startJob(input);
+      BehaviorSubject<JobResultModel>? jobStreamController = _startJob(input);
 
       return Right(
         input.copyWith(
-          progressController: Patchable(jobProgressController),
+          progressController: Patchable(jobStreamController),
         ),
       );
     } catch (e, stackTrace) {
@@ -65,20 +67,25 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
     }
   }
 
-  StreamController<JobResultModel> _startJob(JobModel job) {
-    final BehaviorSubject<JobResultModel> jobProgressController =
+  BehaviorSubject<JobResultModel> _startJob(JobModel job) {
+    final BehaviorSubject<JobResultModel> jobStreamController =
         BehaviorSubject<JobResultModel>();
+
+    job.beforeStart?.call(jobStreamController);
+
+    _addToController(
+      controller: jobStreamController,
+      result: const JobResultModel.start(),
+    );
 
     () async {
       try {
         log("try block started");
 
         _addToController(
-          controller: jobProgressController,
+          controller: jobStreamController,
           result: const JobResultModel.start(),
         );
-
-        job.onStart?.call(jobProgressController);
 
         DynamicDataModel? result = await job.onExecute?.call(job.params);
 
@@ -90,11 +97,9 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
         );
 
         _addToController(
-          controller: jobProgressController,
+          controller: jobStreamController,
           result: JobResultModel.finish(result, info: info),
         );
-
-        job.onSuccess?.call(result);
 
         log("try block finished");
       } catch (err, stackTrace) {
@@ -110,17 +115,15 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
               );
 
         _addToController(
-          controller: jobProgressController,
-          result: JobResultModel.finish(null, info: e),
+          controller: jobStreamController,
+          result: JobResultModel.failure(e),
         );
-
-        job.onError?.call(e);
 
         log("catch block finished");
       }
     }();
 
-    return jobProgressController;
+    return jobStreamController;
   }
 
   void _addToController({
@@ -131,6 +134,8 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
       log("Stream controller has already been closed");
       return;
     }
+
+    log("Add result to controller: $result");
 
     controller.add(result);
   }

@@ -1,9 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/utils/job_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
-
-typedef JobsMap = Map<String, Map<String, JobModel>>;
 
 abstract class RefreshingJobsState extends ConvertouchState {
   const RefreshingJobsState();
@@ -21,12 +20,18 @@ class RefreshingJobsFetched extends RefreshingJobsState {
         jobs,
       ];
 
+  JobModel? getJob(String unitGroupName, String? paramSetName) {
+    return paramSetName != null
+        ? jobs[jobKey(unitGroupName, paramSetName)]
+        : null;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "jobs": jobs.map(
         (key, value) => MapEntry(
           key,
-          value.map((k, v) => MapEntry(k, v.toJson())),
+          value.toJson(),
         ),
       ),
     };
@@ -38,24 +43,12 @@ class RefreshingJobsFetched extends RefreshingJobsState {
     }
 
     return RefreshingJobsFetched(
-      jobs: ObjectUtils.convertToMap<Map<String, JobModel>>(
+      jobs: ObjectUtils.convertToMap<JobModel>(
         json["jobs"],
-        valueMapFunc: (key, value) {
-          /* for support backward compatible format for 'Currency' group
-              (without param set name key) */
-          if (value is! Map<String, Map>) {
-            return key == GroupNames.currency
-                ? {
-                    ParamSetNames.exchangeRate: JobModel.fromJson(value)!,
-                  }
-                : {};
-          }
-
-          return ObjectUtils.convertToMap<JobModel>(
-            value,
-            valueMapFunc: (key, value) => JobModel.fromJson(value)!,
-          );
-        },
+        keyMapFunc: (key) => key == GroupNames.currency
+            ? "${GroupNames.currency}_${ParamSetNames.exchangeRate}"
+            : key,
+        valueMapFunc: (key, value) => JobModel.fromJson(value)!,
       ),
     );
   }
@@ -63,9 +56,15 @@ class RefreshingJobsFetched extends RefreshingJobsState {
   RefreshingJobsFetched copyWith({
     JobsMap? jobs,
   }) {
-    return RefreshingJobsFetched(
+    print("jobs state before copyWith(): $this, new jobs map: $jobs");
+
+    var t = RefreshingJobsFetched(
       jobs: jobs ?? this.jobs,
     );
+
+    print("jobs state after copyWith(): $t");
+
+    return t;
   }
 
   @override

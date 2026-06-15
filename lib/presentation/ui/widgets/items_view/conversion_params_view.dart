@@ -79,7 +79,10 @@ class ConversionParamsView extends StatelessWidget {
 
     return refreshingJobsBlocBuilder(
       builderFunc: (jobsState) {
-        var job = jobsState.jobs[unitGroupName]?[params!.active?.paramSet.name];
+        var job = jobsState.getJob(
+          unitGroupName,
+          params!.active?.paramSet.name,
+        );
 
         bool jobInfoBoxVisible =
             params!.active != null && job != null && job.completedAt != null;

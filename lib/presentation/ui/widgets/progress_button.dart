@@ -13,8 +13,8 @@ class ConvertouchProgressButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final void Function()? onProgressIndicatorClick;
-  final void Function(JobResultModel)? onSuccess;
-  final void Function(ConvertouchException info)? notificationFunc;
+  final void Function(JobResultModel)? onFetchSuccess;
+  final void Function(ConvertouchException info)? onFetchError;
   final EdgeInsets? margin;
   final WidgetColorScheme colors;
 
@@ -25,8 +25,8 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.visible = true,
     this.onProgressIndicatorClick,
-    this.onSuccess,
-    this.notificationFunc,
+    this.onFetchSuccess,
+    this.onFetchError,
     this.margin,
     required this.colors,
     super.key,
@@ -34,6 +34,8 @@ class ConvertouchProgressButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("Build progress button, progress stream: $progressStream");
+
     return Visibility(
       visible: visible,
       child: Container(
@@ -51,14 +53,13 @@ class ConvertouchProgressButton extends StatelessWidget {
 
                   if (snapshot.data == null) {
                     return buttonWidget;
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    print("Connection done");
-
-                    onSuccess?.call(snapshot.data!);
-
-                    if (snapshot.data!.notification != null) {
-                      notificationFunc?.call(snapshot.data!.notification!);
-                    }
+                  } else if (snapshot.data!.finished) {
+                    log("Data receiving finished successfully");
+                    onFetchSuccess?.call(snapshot.data!);
+                    return buttonWidget;
+                  } else if (snapshot.data!.failed) {
+                    log("Data receiving failed");
+                    onFetchError?.call(snapshot.data!.notification!);
                     return buttonWidget;
                   } else {
                     return GestureDetector(

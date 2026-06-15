@@ -20,6 +20,7 @@ class ObjectUtils {
 
   static Map<String, T> convertToMap<T>(
     Map<String, dynamic>? map, {
+    String Function(String key)? keyMapFunc,
     T Function(String key, dynamic value)? valueMapFunc,
   }) {
     if (map == null) {
@@ -28,7 +29,7 @@ class ObjectUtils {
 
     return map.map(
       (key, value) => MapEntry(
-        key,
+        keyMapFunc != null ? keyMapFunc.call(key) : key,
         valueMapFunc != null
             ? valueMapFunc.call(key, value)
             : value?.toString() as T,

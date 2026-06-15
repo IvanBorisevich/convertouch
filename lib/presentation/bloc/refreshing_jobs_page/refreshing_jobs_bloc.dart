@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_job_stop_model.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/utils/job_utils.dart' as job_utils;
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -28,8 +30,8 @@ class RefreshingJobsBloc
   }) : super(const RefreshingJobsFetched(jobs: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
     on<ChangeJobInfo>(_onChangeJobInfo);
-    on<StartRefreshingJobForConversion>(_onStartRefreshingJobForConversion);
-    on<StopRefreshingJobForConversion>(_onStopRefreshingJobForConversion);
+    on<StartRefreshingJob>(_onStartRefreshingJob);
+    on<StopRefreshingJob>(_onStopRefreshingJob);
   }
 
   _onJobsFetch(
@@ -43,8 +45,7 @@ class RefreshingJobsBloc
     ChangeJobInfo event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    await _patchJobAndEmit(
-      activeJobs: ObjectUtils.copyMap(state.jobs),
+    await _patchJobsMapAndEmit(
       unitGroupName: event.unitGroupName,
       paramSetName: event.paramSetName,
       jobPatch: event.jobPatch,
@@ -52,8 +53,8 @@ class RefreshingJobsBloc
     );
   }
 
-  _onStartRefreshingJobForConversion(
-    StartRefreshingJobForConversion event,
+  _onStartRefreshingJob(
+    StartRefreshingJob event,
     Emitter<RefreshingJobsState> emit,
   ) async {
     DynamicDataType? dynamicDataType = dynamicDataGroups[event.unitGroupName];
@@ -84,7 +85,7 @@ class RefreshingJobsBloc
     JobModel job = JobModel(
       params: inputDynamicDataFetchModel,
       executionMode: event.jobExecutionMode,
-      onStart: (controller) {
+      beforeStart: (controller) {
         add(
           ChangeJobInfo(
             jobPatch: JobModel(
@@ -114,29 +115,6 @@ class RefreshingJobsBloc
 
         return null;
       },
-      onSuccess: (networkData) {
-        add(
-          ChangeJobInfo(
-            jobPatch: JobModel(
-              progressController: null,
-              completedAt: DateTime.now(),
-            ),
-            unitGroupName: event.unitGroupName,
-            paramSetName: event.params.paramSet.name,
-          ),
-        );
-      },
-      onError: (exception) {
-        add(
-          ChangeJobInfo(
-            jobPatch: const JobModel(
-              progressController: null,
-            ),
-            unitGroupName: event.unitGroupName,
-            paramSetName: event.params.paramSet.name,
-          ),
-        );
-      },
     );
 
     final startedJobResult = await startJobUseCase.execute(job);
@@ -146,81 +124,57 @@ class RefreshingJobsBloc
     }
   }
 
-  _onStopRefreshingJobForConversion(
-    StopRefreshingJobForConversion event,
+  _onStopRefreshingJob(
+    StopRefreshingJob event,
     Emitter<RefreshingJobsState> emit,
   ) async {
-    JobsMap activeJobs = ObjectUtils.copyMap(state.jobs);
+    var activeJobs = ObjectUtils.copyMap(state.jobs);
 
-    JobModel? jobToStop = activeJobs[event.unitGroupName]?[event.paramSetName];
+    JobModel? jobToStop =
+        activeJobs[job_utils.jobKey(event.unitGroupName, event.paramSetName)];
 
     if (jobToStop == null) {
       return;
     }
 
-    final stoppedJobResult = await stopJobUseCase.execute(jobToStop);
+    final stoppedJobResult = await stopJobUseCase.execute(
+      InputJobStopModel(
+        job: jobToStop,
+        stopOnError: event.stopOnError,
+        forceStop: event.forceStop,
+      ),
+    );
 
     if (stoppedJobResult.isLeft) {
       event.onError?.call(stoppedJobResult.left);
     } else {
       add(
         ChangeJobInfo(
-          jobPatch: const JobModel(
-            progressController: null,
-          ),
+          jobPatch: stoppedJobResult.right,
           unitGroupName: event.unitGroupName,
           paramSetName: event.paramSetName,
         ),
       );
+
+      event.onComplete?.call();
     }
   }
 
-  _patchJobAndEmit({
-    required JobsMap activeJobs,
+  _patchJobsMapAndEmit({
     required String unitGroupName,
     required String paramSetName,
     required JobModel jobPatch,
     required Emitter<RefreshingJobsState> emit,
   }) async {
-    var jobToPatch = activeJobs[unitGroupName]?[paramSetName];
+    var patchedJobsMap = job_utils.patchJobsMap(
+      state.jobs,
+      unitGroupName: unitGroupName,
+      paramSetName: paramSetName,
+      jobPatch: jobPatch,
+    );
 
-    if (jobToPatch != null) {
-      _updateJobMap(
-        activeJobs,
-        unitGroupName: unitGroupName,
-        paramSetName: paramSetName,
-        modifiedJob: jobToPatch.copyWith(
-          params: Patchable(jobPatch.params),
-          completedAt: Patchable(jobPatch.completedAt),
-          selectedCron: Patchable(jobPatch.selectedCron),
-          progressController: Patchable(
-            jobPatch.progressController,
-            patchNull: true,
-          ),
-        ),
-      );
-    }
-
-    emit(state.copyWith(jobs: activeJobs));
-  }
-
-  void _updateJobMap(
-    JobsMap activeJobs, {
-    required String unitGroupName,
-    required String paramSetName,
-    required JobModel modifiedJob,
-  }) {
-    activeJobs.update(
-      unitGroupName,
-      (groupJobs) => groupJobs
-        ..update(
-          paramSetName,
-          (job) => modifiedJob,
-          ifAbsent: () => modifiedJob,
-        ),
-      ifAbsent: () => {
-        paramSetName: modifiedJob,
-      },
+    emit(
+      state.copyWith(jobs: patchedJobsMap),
     );
   }
 
@@ -237,9 +191,9 @@ class RefreshingJobsBloc
 
   @override
   Future<void> close() async {
-    for (var unitGroupJobs in state.jobs.values) {
-      for (var job in unitGroupJobs.values) {
-        await job.progressController?.close();
+    for (var job in state.jobs.values) {
+      if (job.progressController != null && !job.progressController!.isClosed) {
+        await job.progressController!.close();
       }
     }
 

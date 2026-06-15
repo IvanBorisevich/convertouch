@@ -284,7 +284,7 @@ class ConversionController {
     );
   }
 
-  void updateFromNetwork(
+  void updateWithDynamicData(
     BuildContext context, {
     required DynamicDataModel data,
   }) {
