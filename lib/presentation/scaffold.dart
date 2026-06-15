@@ -168,7 +168,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                   return prev != next;
                 },
                 listener: (_, state) {
-                  print("navigation listener inside scaffold");
                   if (state is! NavigationDone) {
                     return;
                   }
