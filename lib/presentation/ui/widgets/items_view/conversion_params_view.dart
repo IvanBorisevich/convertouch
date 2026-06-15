@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -77,6 +78,8 @@ class ConversionParamsView extends StatelessWidget {
 
     bool paramsAreNullOrApplicable = areParamsNullOrApplicable(params?.active);
 
+    final tabColors = colors.slidingPanel.tabPanel.tab;
+
     return refreshingJobsBlocBuilder(
       builderFunc: (jobsState) {
         var job = jobsState.getJob(
@@ -137,10 +140,8 @@ class ConversionParamsView extends StatelessWidget {
                                         Radius.circular(_tabRadius),
                                       ),
                                       color: index == params!.selectedIndex
-                                          ? colors.slidingPanel.tabPanel.tab
-                                              .background.selected
-                                          : colors.slidingPanel.tabPanel.tab
-                                              .background.regular,
+                                          ? tabColors.background.selected
+                                          : tabColors.background.regular,
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -157,18 +158,10 @@ class ConversionParamsView extends StatelessWidget {
                                             style: TextStyle(
                                               color:
                                                   index == params!.selectedIndex
-                                                      ? colors
-                                                          .slidingPanel
-                                                          .tabPanel
-                                                          .tab
-                                                          .foreground
-                                                          .selected
-                                                      : colors
-                                                          .slidingPanel
-                                                          .tabPanel
-                                                          .tab
-                                                          .foreground
-                                                          .regular,
+                                                      ? tabColors
+                                                          .foreground.selected
+                                                      : tabColors
+                                                          .foreground.regular,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -185,18 +178,10 @@ class ConversionParamsView extends StatelessWidget {
                                                 Icons.close,
                                                 color: index ==
                                                         params!.selectedIndex
-                                                    ? colors
-                                                        .slidingPanel
-                                                        .tabPanel
-                                                        .tab
-                                                        .foreground
-                                                        .selected
-                                                    : colors
-                                                        .slidingPanel
-                                                        .tabPanel
-                                                        .tab
-                                                        .foreground
-                                                        .regular,
+                                                    ? tabColors
+                                                        .foreground.selected
+                                                    : tabColors
+                                                        .foreground.regular,
                                                 size: 15,
                                               ),
                                             ),
@@ -241,10 +226,8 @@ class ConversionParamsView extends StatelessWidget {
                         child: TextButton.icon(
                           onPressed: onParamSetAdd,
                           style: TextButton.styleFrom(
-                            backgroundColor: colors
-                                .slidingPanel.tabPanel.tab.background.regular,
-                            foregroundColor: colors
-                                .slidingPanel.tabPanel.tab.foreground.regular,
+                            backgroundColor: tabColors.background.regular,
+                            foregroundColor: tabColors.foreground.regular,
                           ),
                           icon: const Icon(Icons.add),
                           label: const Text(
@@ -271,14 +254,25 @@ class ConversionParamsView extends StatelessWidget {
                                 .slidingPanel.jobInfoBox.foreground.regular,
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            "Last refreshed: ${timeago.format(job.completedAt!)}",
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: colors
-                                  .slidingPanel.jobInfoBox.foreground.regular,
+                          RichText(
+                            text: TextSpan(
+                              text: "Last refreshed: ",
+                              style: TextStyle(
+                                letterSpacing: 0,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: quicksandFontFamily,
+                                color: colors
+                                    .slidingPanel.jobInfoBox.foreground.regular,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: timeago.format(job.completedAt!),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
