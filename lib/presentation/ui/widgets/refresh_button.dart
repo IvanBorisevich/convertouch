@@ -53,9 +53,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 onClick: () {
                   refreshingJobController.startRefreshingJob(
                     context,
-                    groupName: unitGroupName,
-                    params: params,
-                    srcUnit: conversion.srcUnitValue?.unit,
+                    conversion: conversion,
                     jobExecutionMode:
                         JobExecutionMode.continueAlreadyRunningJobIfAny,
                   );
@@ -67,8 +65,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
 
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  groupName: unitGroupName,
-                  paramSetName: params?.paramSet.name,
+                  conversion: conversion,
                   onComplete: () {
                     navigationController.showException(
                       context,
@@ -82,8 +79,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
 
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  groupName: unitGroupName,
-                  paramSetName: params?.paramSet.name,
+                  conversion: conversion,
                   stopOnError: true,
                   onComplete: () {
                     navigationController.showException(
@@ -96,8 +92,7 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               onProgressIndicatorClick: () {
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  groupName: unitGroupName,
-                  paramSetName: params?.paramSet.name,
+                  conversion: conversion,
                   forceStop: true,
                   onComplete: () {
                     navigationController.showException(

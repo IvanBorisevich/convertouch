@@ -1,9 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
@@ -63,298 +60,257 @@ class _ConvertouchConversionPageState extends State<ConvertouchConversionPage> {
           WidgetColorScheme floatingButtonColor =
               appColors[appState.theme].conversionPageFloatingButton;
 
-          return singleGroupBlocBuilder(
-            builderFunc: (singleGroupState) {
-              UnitGroupModel unitGroup = singleGroupState.unitGroup;
+          return conversionBlocBuilder(
+            builderFunc: (pageState) {
+              final conversion = pageState.conversion;
+
+              bool paramsCanBeAdded = conversion.params != null &&
+                  conversion.params!.paramSetsCanBeAdded;
+              bool paramsCanBeRemoved = conversion.params != null &&
+                  conversion.params!.optionalParamSetsExist;
+              bool paramsOptionsExist = paramsCanBeAdded || paramsCanBeRemoved;
 
               return ConvertouchPage(
-                title: unitGroup.name,
+                title: conversion.unitGroup.name,
                 colors: pageColors,
                 appBarTrailingWidgets: [
-                  conversionBlocBuilder(
-                    builderFunc: (pageState) {
-                      return Visibility(
-                        visible: pageState.conversion.params != null,
-                        child: IconButton(
-                          icon: IconUtils.getIcon(
-                            IconNames.parameters,
-                            color: pageColors.appBar.foreground.regular,
-                            size: 22,
-                          ),
-                          onPressed: () {
-                            if (_panelController.isAttached) {
-                              if (_panelController.isPanelClosed) {
-                                _panelController.open();
-                              } else {
-                                _panelController.close();
-                              }
-                            }
-                          },
-                        ),
-                      );
-                    },
+                  Visibility(
+                    visible: pageState.conversion.params != null,
+                    child: IconButton(
+                      icon: IconUtils.getIcon(
+                        IconNames.parameters,
+                        color: pageColors.appBar.foreground.regular,
+                        size: 22,
+                      ),
+                      onPressed: () {
+                        if (_panelController.isAttached) {
+                          if (_panelController.isPanelClosed) {
+                            _panelController.open();
+                          } else {
+                            _panelController.close();
+                          }
+                        }
+                      },
+                    ),
                   ),
-                  conversionBlocBuilder(
-                    builderFunc: (pageState) {
-                      final conversion = pageState.conversion;
-
-                      bool paramsCanBeAdded = conversion.params != null &&
-                          conversion.params!.paramSetsCanBeAdded;
-                      bool paramsCanBeRemoved = conversion.params != null &&
-                          conversion.params!.optionalParamSetsExist;
-                      bool paramsOptionsExist =
-                          paramsCanBeAdded || paramsCanBeRemoved;
-
-                      return ConvertouchPopupMenu(
-                        width: 230,
-                        colors: popupColors,
-                        customIcon: Icon(
-                          Icons.more_vert_rounded,
-                          color: pageColors.appBar.foreground.regular,
-                        ),
-                        onMenuStateChange: (isOpen) {
-                          setState(() {
-                            _isPopupMenuOpen = isOpen;
-                          });
-                        },
-                        items: [
-                          paramsCanBeAdded
-                              ? PopupMenuItemModel(
-                                  text: 'Add Parameters',
-                                  icon: Icons.add,
-                                  onTap: () {
-                                    paramSetsController.showParametersForAdding(
-                                      context,
-                                      groupId: unitGroup.id,
-                                      params: conversion.params,
-                                    );
-                                  },
-                                )
-                              : null,
-                          paramsCanBeRemoved
-                              ? PopupMenuItemModel(
-                                  text: 'Remove Parameters',
-                                  icon: Icons.delete_outline_rounded,
-                                  iconColor: popupColors.removalItem.regular,
-                                  textColor: popupColors.removalItem.regular,
-                                  onTap: () {
-                                    conversionController.removeOptionalParams(
-                                      context,
-                                    );
-                                  },
-                                )
-                              : null,
-                          paramsOptionsExist
-                              ? PopupMenuItemModel.divider
-                              : null,
-                          PopupMenuItemModel(
-                            text: unitGroup.oob ? 'Group Info' : 'Edit Group',
-                            icon: unitGroup.oob
-                                ? Icons.info_outline_rounded
-                                : Icons.edit_outlined,
-                            onTap: () {
-                              unitGroupDetailsController.showGroupDetails(
-                                context,
-                                unitGroup: unitGroup,
-                              );
-                            },
-                          ),
-                          PopupMenuItemModel(
-                            text: "Units Dictionary",
-                            icon: Icons.dashboard_customize_outlined,
-                            onTap: () {
-                              unitsController.showUnits(
-                                context,
-                                groupId: unitGroup.id,
-                              );
-                            },
-                          ),
-                          PopupMenuItemModel(
-                            text: "Clear Conversion",
-                            icon: Icons.delete_outline_rounded,
-                            iconColor: popupColors.removalItem.regular,
-                            textColor: popupColors.removalItem.regular,
-                            onTap: () {
-                              conversionController.clearConversion(
-                                context,
-                                preserveParams:
-                                    appState.keepParamsOnConversionCleanup,
-                              );
-                            },
-                          ),
-                        ],
-                      );
+                  ConvertouchPopupMenu(
+                    width: 230,
+                    colors: popupColors,
+                    customIcon: Icon(
+                      Icons.more_vert_rounded,
+                      color: pageColors.appBar.foreground.regular,
+                    ),
+                    onMenuStateChange: (isOpen) {
+                      setState(() {
+                        _isPopupMenuOpen = isOpen;
+                      });
                     },
+                    items: [
+                      paramsCanBeAdded
+                          ? PopupMenuItemModel(
+                              text: 'Add Parameters',
+                              icon: Icons.add,
+                              onTap: () {
+                                paramSetsController.showParametersForAdding(
+                                  context,
+                                  conversion: conversion,
+                                );
+                              },
+                            )
+                          : null,
+                      paramsCanBeRemoved
+                          ? PopupMenuItemModel(
+                              text: 'Remove Parameters',
+                              icon: Icons.delete_outline_rounded,
+                              iconColor: popupColors.removalItem.regular,
+                              textColor: popupColors.removalItem.regular,
+                              onTap: () {
+                                conversionController.removeOptionalParams(
+                                  context,
+                                );
+                              },
+                            )
+                          : null,
+                      paramsOptionsExist ? PopupMenuItemModel.divider : null,
+                      PopupMenuItemModel(
+                        text: conversion.unitGroup.oob
+                            ? 'Group Info'
+                            : 'Edit Group',
+                        icon: conversion.unitGroup.oob
+                            ? Icons.info_outline_rounded
+                            : Icons.edit_outlined,
+                        onTap: () {
+                          unitGroupDetailsController.showGroupDetails(
+                            context,
+                            unitGroup: conversion.unitGroup,
+                          );
+                        },
+                      ),
+                      PopupMenuItemModel(
+                        text: "Units Dictionary",
+                        icon: Icons.dashboard_customize_outlined,
+                        onTap: () {
+                          unitsController.showUnits(
+                            context,
+                            groupId: conversion.unitGroup.id,
+                          );
+                        },
+                      ),
+                      PopupMenuItemModel(
+                        text: "Clear Conversion",
+                        icon: Icons.delete_outline_rounded,
+                        iconColor: popupColors.removalItem.regular,
+                        textColor: popupColors.removalItem.regular,
+                        onTap: () {
+                          conversionController.clearConversion(
+                            context,
+                            preserveParams:
+                                appState.keepParamsOnConversionCleanup,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
                 body: Container(
                   color: Colors.transparent,
                   child: ScrollConfiguration(
                     behavior: NoGlowScrollBehavior(),
-                    child: conversionBlocBuilder(
-                      builderFunc: (pageState) {
-                        final conversion = pageState.conversion;
-
-                        return Column(
-                          children: [
-                            ConversionParamsView(
-                              params: conversion.params,
-                              unitGroupName: conversion.unitGroup.name,
-                              panelController: _panelController,
-                              colors: appColors[appState.theme].paramSetPanel,
-                              dialogColors: appColors[appState.theme].dialog,
-                              onParamSetAdd: () {
-                                paramSetsController.showParametersForAdding(
-                                  context,
-                                  groupId: unitGroup.id,
-                                  params: conversion.params,
-                                );
-                              },
-                              onParamSetSelect: (newIndex) {
-                                conversionController.showParamSet(
-                                  context,
-                                  index: newIndex,
-                                );
-                              },
-                              onParamUnitTap: (paramValue) {
-                                unitsController.showUnitsForChangeInParam(
-                                  context,
-                                  paramValue: paramValue,
-                                );
-                              },
-                              onValueChanged: (paramValue, newValue) {
-                                conversionController.changeParamValue(
-                                  context,
-                                  paramValue: paramValue,
-                                  newValue: newValue,
-                                  onChanged: (newConversion, {info}) {
-                                    refreshButtonController.changeState(
-                                      context,
-                                      visible: newConversion.refreshable,
-                                      disabled: !newConversion.readyToRefresh,
-                                    );
-
-                                    if (newConversion.refreshable &&
-                                        newConversion.readyToRefresh) {
-                                      refreshingJobController
-                                          .startRefreshingJob(
-                                        context,
-                                        groupName: newConversion.unitGroup.name,
-                                        params: newConversion.params!.active!,
-                                        srcUnit:
-                                            newConversion.srcUnitValue?.unit,
-                                        jobExecutionMode:
-                                            JobExecutionMode.startNewJob,
-                                      );
-                                    } else {
-                                      refreshingJobController.stopRefreshingJob(
-                                        context,
-                                        groupName: newConversion.unitGroup.name,
-                                        paramSetName: newConversion
-                                            .params!.active!.paramSet.name,
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                              onSelectedParamSetRemove: () {
-                                conversionController.removeSelectedParamSet(
-                                  context,
-                                );
-                              },
-                            ),
-                            Expanded(
-                              child: ConvertouchConversionItemsView(
-                                conversion.convertedUnitValues,
-                                sourceUnitId: conversion.srcUnitValue?.unit.id,
-                                onUnitItemTap: (item) {
-                                  if (appState.unitTapAction ==
-                                      UnitTapAction.selectReplacingUnit) {
-                                    unitsController
-                                        .showUnitsForChangeInConversionItem(
-                                      context,
-                                      groupId: conversion.unitGroup.id,
-                                      currentUnitId: item.unit.id,
-                                      excludedUnitIds: conversion
-                                          .convertedUnitValues
-                                          .map((e) => e.unit.id)
-                                          .whereNot((id) => id == item.unit.id)
-                                          .toList(),
-                                    );
-                                  } else if (appState.unitTapAction ==
-                                      UnitTapAction.showUnitInfo) {
-                                    unitDetailsController.showUnitDetails(
-                                      context,
-                                      unit: item.unit,
-                                      unitGroup: unitGroup,
-                                    );
-                                  }
-                                },
-                                onValueChanged: (item, value) {
-                                  conversionController
-                                      .changeConversionItemValue(
-                                    context,
-                                    unitId: item.unit.id,
-                                    newValue: value,
-                                  );
-                                },
-                                onItemRemoveTap: (item) {
-                                  conversionController.removeConversionItem(
-                                    context,
-                                    unitId: item.unit.id,
-                                  );
-                                },
-                                theme: appState.theme,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                floatingActionButton: conversionBlocBuilder(
-                  builderFunc: (pageState) {
-                    final conversion = pageState.conversion;
-
-                    return Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      alignment: WrapAlignment.end,
+                    child: Column(
                       children: [
-                        refreshButtonBlocBuilder(
-                          builderFunc: (refreshButtonState) {
-                            return ConvertouchRefreshFloatingButton(
+                        ConversionParamsView(
+                          params: conversion.params,
+                          unitGroupName: conversion.unitGroup.name,
+                          panelController: _panelController,
+                          colors: appColors[appState.theme].paramSetPanel,
+                          dialogColors: appColors[appState.theme].dialog,
+                          onParamSetAdd: () {
+                            paramSetsController.showParametersForAdding(
+                              context,
                               conversion: conversion,
-                              visible: refreshButtonState.visible,
-                              disabled: refreshButtonState.disabled,
-                              onFetchSuccess: (jobResult) {
-                                if (jobResult.data != null) {
-                                  conversionController.updateWithDynamicData(
+                            );
+                          },
+                          onParamSetSelect: (newIndex) {
+                            conversionController.showParamSet(
+                              context,
+                              index: newIndex,
+                            );
+                          },
+                          onParamUnitTap: (paramValue) {
+                            unitsController.showUnitsForChangeInParam(
+                              context,
+                              paramValue: paramValue,
+                            );
+                          },
+                          onValueChanged: (paramValue, newValue) {
+                            conversionController.changeParamValue(
+                              context,
+                              paramValue: paramValue,
+                              newValue: newValue,
+                              onChanged: (newConversion, {info}) {
+                                refreshButtonController.changeState(
+                                  context,
+                                  visible: newConversion.refreshable,
+                                  disabled: !newConversion.readyToRefresh,
+                                );
+
+                                if (newConversion.refreshable &&
+                                    newConversion.readyToRefresh) {
+                                  refreshingJobController.startRefreshingJob(
                                     context,
-                                    data: jobResult.data!,
+                                    conversion: newConversion,
+                                    jobExecutionMode:
+                                        JobExecutionMode.startNewJob,
+                                  );
+                                } else {
+                                  refreshingJobController.stopRefreshingJob(
+                                    context,
+                                    conversion: newConversion,
                                   );
                                 }
                               },
                             );
                           },
-                        ),
-                        ConvertouchFloatingActionButton.adding(
-                          onClick: () {
-                            unitsController.showUnitsForAdding(
+                          onSelectedParamSetRemove: () {
+                            conversionController.removeSelectedParamSet(
                               context,
-                              groupId: unitGroup.id,
-                              addedUnitIds: conversion.convertedUnitValues
-                                  .map((unitValue) => unitValue.unit.id)
-                                  .toList(),
-                              markedItemsSelectionMinNum:
-                                  minimumNumberOfConversionItems,
                             );
                           },
-                          colorScheme: floatingButtonColor,
+                        ),
+                        Expanded(
+                          child: ConvertouchConversionItemsView(
+                            conversion.convertedUnitValues,
+                            sourceUnitId: conversion.srcUnitValue?.unit.id,
+                            onUnitItemTap: (item) {
+                              if (appState.unitTapAction ==
+                                  UnitTapAction.selectReplacingUnit) {
+                                unitsController
+                                    .showUnitsForChangeInConversionItem(
+                                  context,
+                                  currentUnitId: item.unit.id,
+                                  conversion: conversion,
+                                );
+                              } else if (appState.unitTapAction ==
+                                  UnitTapAction.showUnitInfo) {
+                                unitDetailsController.showUnitDetails(
+                                  context,
+                                  unit: item.unit,
+                                  unitGroup: conversion.unitGroup,
+                                );
+                              }
+                            },
+                            onValueChanged: (item, value) {
+                              conversionController.changeConversionItemValue(
+                                context,
+                                unitId: item.unit.id,
+                                newValue: value,
+                              );
+                            },
+                            onItemRemoveTap: (item) {
+                              conversionController.removeConversionItem(
+                                context,
+                                unitId: item.unit.id,
+                              );
+                            },
+                            theme: appState.theme,
+                          ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ),
+                ),
+                floatingActionButton: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  alignment: WrapAlignment.end,
+                  children: [
+                    refreshButtonBlocBuilder(
+                      builderFunc: (refreshButtonState) {
+                        return ConvertouchRefreshFloatingButton(
+                          conversion: conversion,
+                          visible: refreshButtonState.visible,
+                          disabled: refreshButtonState.disabled,
+                          onFetchSuccess: (jobResult) {
+                            if (jobResult.data != null) {
+                              conversionController.updateWithDynamicData(
+                                context,
+                                data: jobResult.data!,
+                              );
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    ConvertouchFloatingActionButton.adding(
+                      onClick: () {
+                        unitsController.showUnitsForAdding(
+                          context,
+                          groupId: conversion.unitGroup.id,
+                          conversion: conversion,
+                        );
+                      },
+                      colorScheme: floatingButtonColor,
+                    ),
+                  ],
                 ),
               );
             },
