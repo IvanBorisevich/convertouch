@@ -10,12 +10,12 @@ import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -67,11 +67,13 @@ const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
 const String _fetchErrorMsg = "Couldn't fetch list";
 
-class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
+class ConvertouchInputBox<M extends ConversionItemValueModel>
+    extends StatefulWidget {
   const ConvertouchInputBox({
     required this.model,
     this.focusNode,
     this.autofocus = false,
+    this.readonly = false,
     this.tooltipDirection = TooltipDirection.down,
     this.controller,
     this.onValueChanged,
@@ -88,12 +90,16 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
     this.inputFieldMargin = _defaultInputFieldMargin,
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
+    this.labelText,
+    this.maxTextLength,
+    this.textLengthCounterVisible = false,
     super.key,
   });
 
   final M model;
   final FocusNode? focusNode;
   final bool autofocus;
+  final bool readonly;
   final TooltipDirection tooltipDirection;
   final TextEditingController? controller;
   final void Function(ValueModel)? onValueChanged;
@@ -110,12 +116,15 @@ class ConvertouchInputBox<M extends InputBoxModel> extends StatefulWidget {
   final EdgeInsets inputFieldMargin;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
+  final String? labelText;
+  final int? maxTextLength;
+  final bool textLengthCounterVisible;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
 }
 
-class _ConvertouchInputBoxState<M extends InputBoxModel>
+class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
     extends State<ConvertouchInputBox<M>>
     with FocusNodeMixin, TextControllerMixin {
   Key? _validationKey;
@@ -124,6 +133,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
   void Function(ValueModel)? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconNotifier;
+  late InputBoxModel _inputBoxModel;
 
   late Color _backgroundColor;
   late Color _foregroundColor;
@@ -139,6 +149,14 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     if (widget.validators.isNotEmpty) {
       _validationKey = UniqueKey();
     }
+
+    _inputBoxModel = InputBoxModel.ofValue(
+      widget.model,
+      readonly: widget.readonly,
+      maxTextLength: widget.maxTextLength,
+      textLengthCounterVisible: widget.textLengthCounterVisible,
+      labelText: widget.labelText,
+    );
 
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
@@ -203,10 +221,20 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     if (widget.colors != oldWidget.colors || widget.model != oldWidget.model) {
       _setColors();
     }
+
+    if (widget.model != oldWidget.model) {
+      _inputBoxModel = InputBoxModel.ofValue(
+        widget.model,
+        readonly: widget.readonly,
+        maxTextLength: widget.maxTextLength,
+        textLengthCounterVisible: widget.textLengthCounterVisible,
+        labelText: widget.labelText,
+      );
+    }
   }
 
   void _setColors() {
-    if (widget.model.readonly) {
+    if (widget.readonly) {
       _backgroundColor = widget.colors.textBox.background.disabled;
       _foregroundColor = widget.colors.textBox.foreground.disabled;
       _hintColor = widget.colors.textBox.hint.disabled;
@@ -272,7 +300,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
                     decoration: const BoxDecoration(
                       borderRadius: _borderRadius,
                     ),
-                    child: _inputField(widget.model, context),
+                    child: _inputField(_inputBoxModel, context),
                   ),
                 ),
               ),
@@ -308,7 +336,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     );
   }
 
-  Widget _inputField(M model, BuildContext context) {
+  Widget _inputField(InputBoxModel model, BuildContext context) {
     if (model is TextBoxModel) {
       return _TextField(
         model: model,
@@ -356,7 +384,7 @@ class _ConvertouchInputBoxState<M extends InputBoxModel>
     }
 
     throw Exception(
-      "Cannot create input box by model of type ${widget.model.runtimeType}",
+      "Cannot create input box by model of type ${model.runtimeType}",
     );
   }
 
@@ -822,19 +850,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       searchController: _dropdownSearchController,
                       searchBarWidgetHeight: 80,
                       searchBarWidget: Container(
-                        padding: const EdgeInsets.only(
-                          top: 7,
-                          bottom: 7,
-                          right: 7,
-                          left: 7,
-                        ),
+                        padding: const EdgeInsets.all(7),
                         child: ConvertouchInputBox(
-                          model: TextBoxModel(
+                          model: ConversionUnitValueModel.withoutUnit(
                             value: ValueModel.empty,
-                            hint: ValueModel.rawStr(
+                            defaultValue: ValueModel.rawStr(
                               widget.model.searchHint ?? _defaultSearchHint,
                             ),
-                            valueType: widget.model.listType.listValuesType,
                           ),
                           colors: InputBoxColorScheme(
                             textBox: widget.dropdownColors.searchBox,

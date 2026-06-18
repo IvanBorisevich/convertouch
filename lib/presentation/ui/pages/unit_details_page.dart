@@ -6,7 +6,6 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
-import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -170,16 +169,14 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             children: [
                               const SizedBox(height: 7),
                               ConvertouchConversionItem(
-                                ConversionItemModel.ofValue(
-                                  ConversionUnitValueModel(
-                                    unit: pageState.details.resultUnit,
-                                    value: pageState
-                                        .details.conversionRule.unitValue,
-                                    defaultValue: ValueModel.one,
-                                  ),
-                                  readonly: !pageState
-                                      .details.conversionRule.configEditable,
+                                model: ConversionUnitValueModel(
+                                  unit: pageState.details.resultUnit,
+                                  value: pageState
+                                      .details.conversionRule.unitValue,
+                                  defaultValue: ValueModel.one,
                                 ),
+                                readonly: !pageState
+                                    .details.conversionRule.configEditable,
                                 onValueChanged: (value) {
                                   unitDetailsController.updateUnitValue(
                                     context,
@@ -192,19 +189,17 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               ConvertouchConversionItem(
-                                ConversionItemModel.ofValue(
-                                  ConversionUnitValueModel(
-                                    unit: pageState
-                                        .details.conversionRule.argUnit,
-                                    value: pageState
-                                        .details.conversionRule.draftArgValue,
-                                    defaultValue: pageState
-                                        .details.conversionRule.savedArgValue,
-                                  ),
-                                  readonly: !pageState
-                                      .details.conversionRule.configEditable,
-                                  isLast: true,
+                                model: ConversionUnitValueModel(
+                                  unit:
+                                      pageState.details.conversionRule.argUnit,
+                                  value: pageState
+                                      .details.conversionRule.draftArgValue,
+                                  defaultValue: pageState
+                                      .details.conversionRule.savedArgValue,
                                 ),
+                                readonly: !pageState
+                                    .details.conversionRule.configEditable,
+                                isLast: true,
                                 onValueChanged: (value) {
                                   unitDetailsController.updateArgUnitValue(
                                     context,

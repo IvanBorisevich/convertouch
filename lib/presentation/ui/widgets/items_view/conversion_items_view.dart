@@ -1,8 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
@@ -75,20 +73,14 @@ class _ConvertouchConversionItemsViewState
             bottom: _spacing,
           ),
           child: ConvertouchConversionItem(
-            ConversionItemModel(
-              inputBoxModel: InputBoxModel.ofValue(
-                item,
-                readonly: !item.unit.invertible,
-              ),
-              min: item.min,
-              max: item.max,
-              unit: item.unit,
-              index: index,
-              isSource: item.unit.id == widget.sourceUnitId,
-              isLast: index == widget.convertedItems.length - 1,
-              removable:
-                  widget.convertedItems.length > minimumNumberOfConversionItems,
-            ),
+            model: item,
+            draggable: true,
+            index: index,
+            readonly: !item.unit.invertible,
+            isSource: item.unit.id == widget.sourceUnitId,
+            isLast: index == widget.convertedItems.length - 1,
+            removable:
+                widget.convertedItems.length > minimumNumberOfConversionItems,
             onUnitItemTap: () {
               widget.onUnitItemTap?.call(item);
             },

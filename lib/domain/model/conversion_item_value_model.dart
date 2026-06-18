@@ -112,6 +112,12 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     super.listValuesFetchResult,
   });
 
+  const ConversionUnitValueModel.withoutUnit({
+    super.value,
+    super.defaultValue,
+    super.listValuesFetchResult,
+  }) : unit = UnitModel.none;
+
   factory ConversionUnitValueModel.tuple(
     UnitModel unit,
     dynamic value,

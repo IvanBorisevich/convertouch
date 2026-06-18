@@ -1,11 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/presentation/ui/model/element_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
 
-abstract class InputBoxModel implements ElementModel {
+abstract class InputBoxModel {
   final String? itemId;
   final ValueModel? value;
   final String? labelText;
@@ -20,7 +19,10 @@ abstract class InputBoxModel implements ElementModel {
 
   static T ofValue<T extends InputBoxModel, M extends ConversionItemValueModel>(
     M model, {
+    String? labelText,
     bool readonly = false,
+    int? maxTextLength,
+    bool textLengthCounterVisible = false,
   }) {
     if (model.listType != null) {
       return ListBoxModel(
@@ -31,7 +33,7 @@ abstract class InputBoxModel implements ElementModel {
         readonly: !model.listType!.fetchedViaApi &&
             (model.listValuesFetchResult?.items == null ||
                 model.listValuesFetchResult!.items.isEmpty),
-        labelText: _getLabelText(model),
+        labelText: labelText ?? _getLabelText(model),
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
                 _nonSearchableListItemsMinLimit,
@@ -42,8 +44,10 @@ abstract class InputBoxModel implements ElementModel {
         value: model.value,
         hint: model.defaultValue,
         readonly: readonly,
-        labelText: _getLabelText(model),
+        labelText: labelText ?? _getLabelText(model),
         valueType: model.valueType,
+        maxTextLength: maxTextLength,
+        textLengthCounterVisible: textLengthCounterVisible,
       ) as T;
     }
   }

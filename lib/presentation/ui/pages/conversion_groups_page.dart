@@ -58,29 +58,29 @@ class ConversionGroupsPage extends StatelessWidget {
                     pageName: PageName.conversionPage,
                   );
 
-                  // conversionController.getConversion(
-                  //   context,
-                  //   unitGroup: unitGroup,
-                  //   processCurrentConversion: (conversion) {
-                  //     if (conversion != null && conversion.hasItems) {
-                  //       refreshButtonController.changeState(
-                  //         context,
-                  //         visible: conversion.refreshable,
-                  //         disabled: !conversion.readyToRefresh,
-                  //       );
-                  //
-                  //       refreshingJobController.getJobs(
-                  //         context,
-                  //         unitGroup: unitGroup,
-                  //       );
-                  //     } else {
-                  //       unitsController.showUnitsForAdding(
-                  //         context,
-                  //         groupId: unitGroup.id,
-                  //       );
-                  //     }
-                  //   },
-                  // );
+                  conversionController.getConversion(
+                    context,
+                    unitGroup: unitGroup,
+                    processCurrentConversion: (conversion) {
+                      if (conversion != null && conversion.hasItems) {
+                        refreshButtonController.changeState(
+                          context,
+                          visible: conversion.refreshable,
+                          disabled: !conversion.readyToRefresh,
+                        );
+
+                        refreshingJobController.getJobs(
+                          context,
+                          unitGroup: unitGroup,
+                        );
+                      } else {
+                        unitsController.showUnitsForAdding(
+                          context,
+                          groupId: unitGroup.id,
+                        );
+                      }
+                    },
+                  );
                 },
                 onItemTapForRemoval: (unitGroup) {
                   groupsController.markForRemoval(

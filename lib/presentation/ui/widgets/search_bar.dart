@@ -1,10 +1,10 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/ui/animation/items_view_mode_button_animation.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -62,9 +62,9 @@ class ConvertouchSearchBar extends StatelessWidget {
             right: 7,
           ),
           child: ConvertouchInputBox(
-            model: TextBoxModel(
+            model: ConversionUnitValueModel.withoutUnit(
               value: ValueModel.altStr(placeholder),
-              hint: ValueModel.altStr(placeholder),
+              defaultValue: ValueModel.altStr(placeholder),
             ),
             onValueChanged: onValueChanged,
             colors: searchBarColorScheme.inputBox,

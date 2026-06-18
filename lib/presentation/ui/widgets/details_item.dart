@@ -1,5 +1,5 @@
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +48,16 @@ class ConvertouchDetailsItem extends StatelessWidget {
       padding: EdgeInsets.only(top: topMargin),
       child: editable
           ? ConvertouchInputBox(
-              model: TextBoxModel(
+              model: ConversionUnitValueModel.withoutUnit(
                 value: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
-                hint: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
-                labelText: headerTitle,
-                maxTextLength: editableValueMaxLength,
-                textLengthCounterVisible: editableValueLengthVisible,
+                defaultValue: ValueModel.rawStr(
+                  draftValue ?? '',
+                  alt: savedValue,
+                ),
               ),
+              labelText: headerTitle,
+              maxTextLength: editableValueMaxLength,
+              textLengthCounterVisible: editableValueLengthVisible,
               onValueChanged: onValueChanged,
               colors: inputBoxColor,
               dialogColors: dialogColors,

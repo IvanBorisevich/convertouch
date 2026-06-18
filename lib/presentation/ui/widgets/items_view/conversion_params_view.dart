@@ -5,8 +5,6 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
-import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
@@ -312,14 +310,9 @@ class ConversionParamsView extends StatelessWidget {
     required bool calculationSwitchersVisible,
   }) {
     return ConvertouchConversionItem(
-      ConversionItemModel(
-        inputBoxModel: InputBoxModel.ofValue(paramItem),
-        min: paramItem.min,
-        max: paramItem.max,
-        unit: paramItem.unitItem,
-        draggable: false,
-        removable: false,
-      ),
+      model: paramItem,
+      draggable: false,
+      removable: false,
       colors: colors,
       dialogColors: dialogColors,
       onUnitItemTap: () {

@@ -1,8 +1,7 @@
+import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
-import 'package:convertouch/presentation/ui/model/conversion_item_model.dart';
-import 'package:convertouch/presentation/ui/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,15 @@ const double _dragHandlerWidth = 35;
 const double _removalButtonWidth = 35;
 const double _unitButtonWidth = 76;
 
-class ConvertouchConversionItem<M extends InputBoxModel>
+class ConvertouchConversionItem<M extends ConversionItemValueModel>
     extends StatefulWidget {
-  final ConversionItemModel<M> model;
+  final M model;
+  final bool isLast;
+  final bool draggable;
+  final bool removable;
+  final int? index;
+  final bool isSource;
+  final bool readonly;
   final void Function()? onUnitItemTap;
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
@@ -24,8 +29,14 @@ class ConvertouchConversionItem<M extends InputBoxModel>
   final ConversionItemColorScheme colors;
   final WidgetColorScheme dialogColors;
 
-  const ConvertouchConversionItem(
-    this.model, {
+  const ConvertouchConversionItem({
+    required this.model,
+    this.isLast = false,
+    this.draggable = false,
+    this.removable = false,
+    this.index,
+    this.isSource = false,
+    this.readonly = false,
     this.onUnitItemTap,
     this.onValueChanged,
     this.onValueFocused,
@@ -42,14 +53,14 @@ class ConvertouchConversionItem<M extends InputBoxModel>
       _ConvertouchConversionItemState<M>();
 }
 
-class _ConvertouchConversionItemState<M extends InputBoxModel>
+class _ConvertouchConversionItemState<M extends ConversionItemValueModel>
     extends State<ConvertouchConversionItem<M>> {
   bool _isFocused = false;
 
   @override
   Widget build(BuildContext context) {
     return ConvertouchInputBox(
-      model: widget.model.inputBoxModel,
+      model: widget.model,
       colors: widget.colors.inputBox,
       dialogColors: widget.dialogColors,
       validators: [
@@ -58,7 +69,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       ],
       floatingLabelBehavior: FloatingLabelBehavior.always,
       tooltipDirection:
-          widget.model.isLast ? TooltipDirection.up : TooltipDirection.down,
+          widget.isLast ? TooltipDirection.up : TooltipDirection.down,
       onValueChanged: widget.onValueChanged,
       onValueFocused: (value) {
         setState(() {
@@ -72,15 +83,15 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
         });
       },
       prefixWidgets: [
-        widget.model.draggable && widget.model.index != null
+        widget.draggable && widget.index != null
             ? ReorderableDragStartListener(
-                index: widget.model.index!,
+                index: widget.index!,
                 child: Container(
                   width: _dragHandlerWidth,
                   color: Colors.transparent,
                   padding: const EdgeInsets.only(left: 3),
                   alignment: Alignment.center,
-                  child: widget.model.isSource
+                  child: widget.isSource
                       ? Text(
                           '𝑥',
                           style: TextStyle(
@@ -104,7 +115,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
       ],
       suffixWidgets: [
         ...widget.suffixWidgets,
-        widget.model.unit != null
+        widget.model.unitItem != null && widget.model.unitItem!.exists
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
@@ -115,7 +126,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                   width: _unitButtonWidth,
                   color: Colors.transparent,
                   child: Text(
-                    widget.model.unit!.code,
+                    widget.model.unitItem!.code,
                     style: TextStyle(
                       color: _isFocused
                           ? widget.colors.unitButton.focused
@@ -128,7 +139,7 @@ class _ConvertouchConversionItemState<M extends InputBoxModel>
                 ),
               )
             : null,
-        widget.model.removable
+        widget.removable
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
