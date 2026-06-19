@@ -119,6 +119,18 @@ class ConversionBloc
     //   ConversionBuilt(conversion: conversion),
     // );
 
+    if (conversion.params == null ||
+        !conversion.params!.mandatoryParamSetExists) {
+      conversion = ObjectUtils.tryGet(
+        await addParamSetsToConversionUseCase.execute(
+          InputConversionModifyModel<AddParamSetsDelta>(
+            conversion: conversion,
+            delta: const AddParamSetsDelta(),
+          ),
+        ),
+      );
+    }
+
     conversion = ObjectUtils.tryGet(
       await alignConversionUseCase.execute(conversion),
     );

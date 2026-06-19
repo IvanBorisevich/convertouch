@@ -1,5 +1,5 @@
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'conversion_param_set_model.dart';
@@ -165,6 +165,22 @@ class ConversionParamSetValueBulkModel extends Equatable {
       paramFilter: (p) => p.param.id == paramId,
       changeFirstMatchedParamOnly: true,
       changeFirstMatchedParamSetOnly: true,
+    );
+  }
+
+  Future<ConversionParamSetValueBulkModel> copyWithChangedParamSets({
+    required Future<ConversionParamSetValueModel> Function(
+      ConversionParamSetValueModel,
+    ) map,
+  }) async {
+    List<ConversionParamSetValueModel> newParamSetValues = [];
+
+    for (var paramSetValue in paramSetValues) {
+      newParamSetValues.add(await map.call(paramSetValue));
+    }
+
+    return copyWith(
+      paramSetValues: newParamSetValues,
     );
   }
 

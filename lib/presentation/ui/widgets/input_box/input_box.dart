@@ -687,8 +687,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _selectedValueNotifier = ValueNotifier(widget.model.value);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
 
-    print("initial list field model: ${widget.model}");
-
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
       _dropdownSearchFocusNode = initOrGetFocusNode();
@@ -709,8 +707,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _selectedValueNotifier.value = widget.model.value;
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
-
-    print("new list field model: ${widget.model}");
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController ??= TextEditingController();

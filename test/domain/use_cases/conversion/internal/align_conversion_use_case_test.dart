@@ -1,10 +1,9 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
-import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -272,66 +271,6 @@ void main() {
             null,
             listValuesFetchResult: germanyClothesSizes,
           ),
-        ],
-      ).toJson(),
-    );
-  });
-
-  test(
-      "[Currency] Should automatically add a mandatory param set, "
-      "should make it active (set selectedIndex = 0), "
-      "should not calculate default values", () async {
-    final conversion = ConversionModel(
-      unitGroup: currencyGroup,
-      srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
-      convertedUnitValues: [
-        ConversionUnitValueModel.tuple(usd, null, null),
-        ConversionUnitValueModel.tuple(eur, null, null),
-      ],
-    );
-
-    when(
-      mockitoNetworkRepository.fetchListValues(
-        listType: ConvertouchListType.exchangeRateSource,
-        params: anyNamed('params'),
-        pageSize: listValuesPageSize,
-        pageNum: 0,
-      ),
-    ).thenAnswer(
-      (_) async => const Right([
-        ValueModel.rawStr('FloatRates'),
-      ]),
-    );
-
-    var alignedConversion = ObjectUtils.tryGet(
-      await useCase.execute(conversion),
-    );
-
-    expect(
-      alignedConversion.toJson(),
-      ConversionModel(
-        unitGroup: currencyGroup,
-        params: ConversionParamSetValueBulkModel(
-          paramSetValues: [
-            ConversionParamSetValueModel(
-              paramSet: exchangeRateParamSet,
-              paramValues: [
-                ConversionParamValueModel.tuple(
-                  exchangeRateSourceBankParam,
-                  null,
-                  null,
-                  listValuesFetchResult: exchangeRateSources,
-                ),
-              ],
-            )
-          ],
-          mandatoryParamSetExists: true,
-          selectedIndex: 0,
-        ),
-        srcUnitValue: ConversionUnitValueModel.tuple(usd, null, null),
-        convertedUnitValues: [
-          ConversionUnitValueModel.tuple(usd, null, null),
-          ConversionUnitValueModel.tuple(eur, null, null),
         ],
       ).toJson(),
     );
