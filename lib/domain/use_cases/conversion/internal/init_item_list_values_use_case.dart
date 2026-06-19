@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -9,7 +9,7 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
+abstract class InitItemListValuesUseCase<M extends ItemValueModel,
     I extends InputItemListValuesInitModel<M>> extends UseCase<I, M> {
   final FetchListValuesUseCase fetchListValuesUseCase;
 

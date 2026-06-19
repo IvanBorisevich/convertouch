@@ -41,22 +41,22 @@ typedef ParamValueRawRecord = (
   bool calculated
 });
 
-abstract class ConversionItemValueModel extends ItemModel {
+class ItemValueModel extends ItemModel {
   final ValueModel? value;
   final ValueModel? defaultValue;
   final ListValuesFetchResult? listValuesFetchResult;
 
-  const ConversionItemValueModel({
+  const ItemValueModel({
     this.value,
     this.defaultValue,
     this.listValuesFetchResult,
   }) : super(
-          itemType: ItemType.conversionItemValue,
+          itemType: ItemType.itemValue,
         );
 
-  String get id;
+  String get id => "";
 
-  String get name;
+  String? get name => null;
 
   ValueModel? get eitherValue => value ?? defaultValue;
 
@@ -76,17 +76,27 @@ abstract class ConversionItemValueModel extends ItemModel {
 
   double? get max => unitItem?.maxValue?.numVal;
 
-  ConvertouchValueType get valueType;
+  ConvertouchValueType get valueType => ConvertouchValueType.text;
 
-  ConvertouchListType? get listType;
+  ConvertouchListType? get listType => null;
 
-  UnitModel? get unitItem;
+  UnitModel? get unitItem => null;
 
-  ConversionItemValueModel copyWith({
+  ItemValueModel copyWith({
     ValueModel? value,
     ValueModel? defaultValue,
     ListValuesFetchResult? listValuesFetchResult,
-  });
+  }) {
+    return ItemValueModel(
+      value: patchValueModel(thisValue: this.value, newValue: value),
+      defaultValue: patchValueModel(
+        thisValue: this.defaultValue,
+        newValue: defaultValue,
+      ),
+      listValuesFetchResult:
+          listValuesFetchResult ?? this.listValuesFetchResult,
+    );
+  }
 
   bool get hasValue {
     return listType != null && value != null ||
@@ -100,9 +110,23 @@ abstract class ConversionItemValueModel extends ItemModel {
         defaultValue,
         listValuesFetchResult,
       ];
+
+  @override
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
+    var result = {
+      "value": value?.toJson(),
+      "defaultValue": defaultValue?.toJson(),
+    };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
+  }
 }
 
-class ConversionUnitValueModel extends ConversionItemValueModel {
+class ConversionUnitValueModel extends ItemValueModel {
   final UnitModel unit;
 
   const ConversionUnitValueModel({
@@ -111,12 +135,6 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
     super.defaultValue,
     super.listValuesFetchResult,
   });
-
-  const ConversionUnitValueModel.withoutUnit({
-    super.value,
-    super.defaultValue,
-    super.listValuesFetchResult,
-  }) : unit = UnitModel.none;
 
   factory ConversionUnitValueModel.tuple(
     UnitModel unit,
@@ -155,7 +173,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   String get id => "unitValue_${unit.id}";
 
   @override
-  String get name => unit.name;
+  String get name => unit.itemName;
 
   @override
   ConvertouchValueType get valueType => unit.valueType;
@@ -205,7 +223,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   }
 }
 
-class ConversionParamValueModel extends ConversionItemValueModel {
+class ConversionParamValueModel extends ItemValueModel {
   final ConversionParamModel param;
   final UnitModel? unit;
   final bool calculated;
@@ -264,13 +282,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   String get id => "paramValue_${param.id}";
 
   @override
-  String get name {
-    if (unit != null) {
-      return "${param.name} | ${unit!.name}";
-    }
-
-    return param.name;
-  }
+  String? get name => param.name;
 
   @override
   ConvertouchValueType get valueType => param.valueType;

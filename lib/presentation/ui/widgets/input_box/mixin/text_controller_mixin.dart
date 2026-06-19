@@ -6,7 +6,7 @@ mixin TextControllerMixin {
     String? initialValue,
   }) {
     var resultController = initial ?? TextEditingController();
-    initControllerValue(resultController, initialValue);
+    initTextControllerValue(resultController, initialValue);
     return resultController;
   }
 
@@ -22,7 +22,7 @@ mixin TextControllerMixin {
     return textListener;
   }
 
-  void initControllerValue(
+  void initTextControllerValue(
     TextEditingController controller,
     String? initialValue,
   ) {

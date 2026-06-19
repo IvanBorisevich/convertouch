@@ -8,7 +8,7 @@ import 'package:convertouch/data/entities/conversion_entity.dart';
 import 'package:convertouch/data/entities/conversion_item_value_entity.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';

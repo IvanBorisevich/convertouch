@@ -35,14 +35,6 @@ class ValueModel extends IdNameSearchableItemModel {
           range: null,
         );
 
-  const ValueModel.altStr(String alt)
-      : this(
-          raw: "",
-          alt: alt,
-          numVal: null,
-          range: null,
-        );
-
   factory ValueModel.str(
     String value, {
     String? alt,
@@ -187,7 +179,7 @@ class ValueModel extends IdNameSearchableItemModel {
 
   @override
   String toString() {
-    return 'Value{$alt}';
+    return 'Value{$raw | $alt}';
   }
 }
 

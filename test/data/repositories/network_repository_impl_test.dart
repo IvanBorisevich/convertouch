@@ -9,7 +9,7 @@ import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/repositories/network_repository_impl.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';

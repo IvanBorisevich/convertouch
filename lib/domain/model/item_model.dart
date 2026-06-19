@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ItemModel extends Equatable {
-  final ItemType itemType;
+  final ItemType? itemType;
   final bool oob;
 
   const ItemModel({

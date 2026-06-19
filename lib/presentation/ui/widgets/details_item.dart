@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
@@ -48,7 +48,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
       padding: EdgeInsets.only(top: topMargin),
       child: editable
           ? ConvertouchInputBox(
-              model: ConversionUnitValueModel.withoutUnit(
+              model: ItemValueModel(
                 value: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
                 defaultValue: ValueModel.rawStr(
                   draftValue ?? '',

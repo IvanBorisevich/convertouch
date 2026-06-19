@@ -1,4 +1,4 @@
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
@@ -11,7 +11,7 @@ const double _dragHandlerWidth = 35;
 const double _removalButtonWidth = 35;
 const double _unitButtonWidth = 76;
 
-class ConvertouchConversionItem<M extends ConversionItemValueModel>
+class ConvertouchConversionItem<M extends ItemValueModel>
     extends StatefulWidget {
   final M model;
   final bool isLast;
@@ -53,7 +53,7 @@ class ConvertouchConversionItem<M extends ConversionItemValueModel>
       _ConvertouchConversionItemState<M>();
 }
 
-class _ConvertouchConversionItemState<M extends ConversionItemValueModel>
+class _ConvertouchConversionItemState<M extends ItemValueModel>
     extends State<ConvertouchConversionItem<M>> {
   bool _isFocused = false;
 

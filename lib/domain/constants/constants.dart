@@ -88,7 +88,7 @@ enum ItemType {
   unit,
   unitGroup,
   conversion,
-  conversionItemValue,
+  itemValue,
   conversionParamSet,
   conversionParamSetValue,
   conversionParam,

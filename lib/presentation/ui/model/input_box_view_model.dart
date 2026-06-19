@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
@@ -17,7 +17,7 @@ abstract class InputBoxViewModel {
     this.readonly = false,
   });
 
-  static T ofValue<T extends InputBoxViewModel, M extends ConversionItemValueModel>(
+  static T ofValue<T extends InputBoxViewModel, M extends ItemValueModel>(
     M model, {
     String? labelText,
     bool readonly = false,
@@ -33,7 +33,7 @@ abstract class InputBoxViewModel {
         readonly: !model.listType!.fetchedViaApi &&
             (model.listValuesFetchResult?.items == null ||
                 model.listValuesFetchResult!.items.isEmpty),
-        labelText: labelText ?? _getLabelText(model),
+        labelText: labelText ?? model.name,
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
                 _nonSearchableListItemsMinLimit,
@@ -44,24 +44,12 @@ abstract class InputBoxViewModel {
         value: model.value,
         hint: model.defaultValue,
         readonly: readonly,
-        labelText: labelText ?? _getLabelText(model),
+        labelText: labelText ?? model.name,
         valueType: model.valueType,
         maxTextLength: maxTextLength,
         textLengthCounterVisible: textLengthCounterVisible,
       ) as T;
     }
-  }
-
-  static String? _getLabelText<M extends ConversionItemValueModel>(M model) {
-    if (model is ConversionUnitValueModel) {
-      return model.unit.itemName;
-    }
-
-    if (model is ConversionParamValueModel) {
-      return model.param.name;
-    }
-
-    return null;
   }
 }
 

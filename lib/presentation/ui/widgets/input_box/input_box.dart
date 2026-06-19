@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/conversion_item_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
@@ -67,8 +67,7 @@ const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
 const String _fetchErrorMsg = "Couldn't fetch list";
 
-class ConvertouchInputBox<M extends ConversionItemValueModel>
-    extends StatefulWidget {
+class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   const ConvertouchInputBox({
     required this.model,
     this.focusNode,
@@ -124,7 +123,7 @@ class ConvertouchInputBox<M extends ConversionItemValueModel>
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
 }
 
-class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
+class _ConvertouchInputBoxState<M extends ItemValueModel>
     extends State<ConvertouchInputBox<M>>
     with FocusNodeMixin, TextControllerMixin {
   Key? _validationKey;
@@ -164,7 +163,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
 
     _onValueChanged = (value) {
       _closeIconNotifier.value =
-          widget.model.listType == null && value.hasRawValue;
+          _inputBoxModel is! ListBoxViewModel && value.hasRawValue;
       widget.onValueChanged?.call(value);
     };
 
@@ -176,7 +175,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
         if (!mounted) return;
 
         _closeIconNotifier.value =
-            widget.model.listType == null && _controller.text.isNotEmpty;
+            _inputBoxModel is! ListBoxViewModel && _controller.text.isNotEmpty;
 
         setState(() {
           _setColors();
@@ -529,7 +528,7 @@ class _TextFieldState extends State<_TextField>
     with FocusNodeMixin, TextControllerMixin {
   late void Function() _focusListener;
 
-  late String _hint;
+  late String? _hint;
 
   @override
   void initState() {
@@ -537,7 +536,7 @@ class _TextFieldState extends State<_TextField>
 
     _hint = _getHint(focused: widget.autofocus);
 
-    initControllerValue(
+    initTextControllerValue(
         widget.controller, _getMainValue(focused: widget.autofocus));
 
     _focusListener = addFocusListener(
@@ -570,19 +569,23 @@ class _TextFieldState extends State<_TextField>
   void didUpdateWidget(_TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    updateTextControllerValue(
-      widget.controller,
-      _getMainValue(focused: widget.focusNode.hasFocus),
-    );
+    if (widget.model.value != oldWidget.model.value) {
+      updateTextControllerValue(
+        widget.controller,
+        _getMainValue(focused: widget.focusNode.hasFocus),
+      );
+    }
 
-    _hint = _getHint(focused: widget.focusNode.hasFocus);
+    if (widget.model.hint != oldWidget.model.hint) {
+      _hint = _getHint(focused: widget.focusNode.hasFocus);
+    }
   }
 
   String _getMainValue({required bool focused}) {
     return (focused ? widget.model.value?.raw : widget.model.value?.alt) ?? "";
   }
 
-  String _getHint({required bool focused}) {
+  String? _getHint({required bool focused}) {
     return (focused ? widget.model.hint?.raw : widget.model.hint?.alt) ??
         _noValueHint;
   }
@@ -681,11 +684,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _isDropdownOpen = false;
 
-    print("selected list value: ${widget.model.value}");
-    print("list values: ${widget.model.listValuesFetchResult?.items}");
-
     _selectedValueNotifier = ValueNotifier(widget.model.value);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
+
+    print("initial list field model: ${widget.model}");
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -707,6 +709,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _selectedValueNotifier.value = widget.model.value;
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
+
+    print("new list field model: ${widget.model}");
+
+    if (widget.model.searchEnabled) {
+      _dropdownSearchController ??= TextEditingController();
+      _dropdownSearchFocusNode ??= initOrGetFocusNode();
+    }
   }
 
   @override
@@ -855,8 +864,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       searchBarWidget: Container(
                         padding: const EdgeInsets.all(7),
                         child: ConvertouchInputBox(
-                          model: ConversionUnitValueModel.withoutUnit(
-                            value: ValueModel.empty,
+                          model: ItemValueModel(
                             defaultValue: ValueModel.rawStr(
                               widget.model.searchHint ?? _defaultSearchHint,
                             ),
