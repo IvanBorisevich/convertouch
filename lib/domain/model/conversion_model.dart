@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
@@ -61,8 +59,6 @@ class ConversionModel extends IdNameItemModel {
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
-    log("Save params: ${params?.toJson()}");
-
     var result = {
       "id": id,
       "unitGroup": unitGroup.toJson(removeNulls: removeNulls),
@@ -81,8 +77,6 @@ class ConversionModel extends IdNameItemModel {
   }
 
   static ConversionModel? fromJson(Map<String, dynamic>? json) {
-    log("Load conversion: $json");
-
     if (json == null) {
       return null;
     }
@@ -122,9 +116,9 @@ class ConversionModel extends IdNameItemModel {
   @override
   String toString() {
     return 'Conversion{\n'
-        'group: ${unitGroup.name},\n'
-        'params: $params,\n'
-        'srcItem: $srcUnitValue,\n'
-        'items: $convertedUnitValues}';
+        'group: ${unitGroup.name} (id = ${unitGroup.id}),\n'
+        'params: ${params ?? '-'},\n'
+        'src: $srcUnitValue,\n'
+        'items: \n\t${convertedUnitValues.join("\n\t")}}';
   }
 }

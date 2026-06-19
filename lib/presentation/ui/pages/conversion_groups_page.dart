@@ -53,16 +53,16 @@ class ConversionGroupsPage extends StatelessWidget {
                 checkableItemsVisible: itemsSelectionState.showCancelIcon,
                 removalModeEnabled: itemsSelectionState.showCancelIcon,
                 onItemTap: (unitGroup) {
-                  navigationController.navigateTo(
-                    context,
-                    pageName: PageName.conversionPage,
-                  );
-
                   conversionController.getConversion(
                     context,
                     unitGroup: unitGroup,
                     processCurrentConversion: (conversion) {
                       if (conversion != null && conversion.hasItems) {
+                        navigationController.navigateTo(
+                          context,
+                          pageName: PageName.conversionPage,
+                        );
+
                         refreshButtonController.changeState(
                           context,
                           visible: conversion.refreshable,

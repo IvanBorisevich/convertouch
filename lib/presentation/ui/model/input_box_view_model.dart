@@ -4,20 +4,20 @@ import 'package:convertouch/domain/model/value_model.dart';
 
 const int _nonSearchableListItemsMinLimit = 5;
 
-abstract class InputBoxModel {
+abstract class InputBoxViewModel {
   final String? itemId;
   final ValueModel? value;
   final String? labelText;
   final bool readonly;
 
-  const InputBoxModel({
+  const InputBoxViewModel({
     this.itemId,
     this.value,
     this.labelText,
     this.readonly = false,
   });
 
-  static T ofValue<T extends InputBoxModel, M extends ConversionItemValueModel>(
+  static T ofValue<T extends InputBoxViewModel, M extends ConversionItemValueModel>(
     M model, {
     String? labelText,
     bool readonly = false,
@@ -25,8 +25,8 @@ abstract class InputBoxModel {
     bool textLengthCounterVisible = false,
   }) {
     if (model.listType != null) {
-      return ListBoxModel(
-        itemId: model.itemId,
+      return ListBoxViewModel(
+        itemId: model.id,
         value: model.value,
         listValuesFetchResult: model.listValuesFetchResult,
         listType: model.listType!,
@@ -39,8 +39,8 @@ abstract class InputBoxModel {
                 _nonSearchableListItemsMinLimit,
       ) as T;
     } else {
-      return TextBoxModel(
-        itemId: model.itemId,
+      return TextBoxViewModel(
+        itemId: model.id,
         value: model.value,
         hint: model.defaultValue,
         readonly: readonly,
@@ -65,13 +65,13 @@ abstract class InputBoxModel {
   }
 }
 
-class TextBoxModel extends InputBoxModel {
+class TextBoxViewModel extends InputBoxViewModel {
   final ValueModel? hint;
   final ConvertouchValueType valueType;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
 
-  const TextBoxModel({
+  const TextBoxViewModel({
     super.itemId,
     super.value,
     this.hint,
@@ -95,13 +95,13 @@ class TextBoxModel extends InputBoxModel {
   }
 }
 
-class ListBoxModel extends InputBoxModel {
+class ListBoxViewModel extends InputBoxViewModel {
   final ListValuesFetchResult? listValuesFetchResult;
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
 
-  const ListBoxModel({
+  const ListBoxViewModel({
     super.itemId,
     super.value,
     required this.listType,

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class ConvertouchPage extends StatelessWidget {
   final Widget body;
-  final String title;
+  final String? title;
+  final Widget? titleWidget;
   final Widget? appBarLeadingWidget;
   final List<Widget>? appBarTrailingWidgets;
   final Widget? floatingActionButton;
@@ -14,7 +15,8 @@ class ConvertouchPage extends StatelessWidget {
 
   const ConvertouchPage({
     required this.body,
-    required this.title,
+    this.title,
+    this.titleWidget,
     this.appBarLeadingWidget,
     this.appBarTrailingWidgets,
     this.floatingActionButton,
@@ -53,14 +55,17 @@ class ConvertouchPage extends StatelessWidget {
             },
           ),
           centerTitle: true,
-          title: Text(
-            title,
-            style: TextStyle(
-              color: colors.appBar.foreground.regular,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          title: titleWidget ??
+              (title != null
+                  ? Text(
+                      title!,
+                      style: TextStyle(
+                        color: colors.appBar.foreground.regular,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : null),
           actions: appBarTrailingWidgets,
         ),
         body: body,

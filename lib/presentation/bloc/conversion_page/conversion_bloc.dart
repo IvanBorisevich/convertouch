@@ -115,9 +115,9 @@ class ConversionBloc
       event.processPrevConversion?.call(prev.conversion);
     }
 
-    emit(
-      ConversionBuilt(conversion: conversion),
-    );
+    // emit(
+    //   ConversionBuilt(conversion: conversion),
+    // );
 
     conversion = ObjectUtils.tryGet(
       await alignConversionUseCase.execute(conversion),
@@ -134,7 +134,6 @@ class ConversionBloc
     SaveConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    log("Save conversion to db: ${event.conversion}");
     var result = await saveConversionUseCase.execute(event.conversion);
 
     if (result.isLeft) {

@@ -32,7 +32,7 @@ abstract class InitItemListValuesUseCase<M extends ConversionItemValueModel,
     } else {
       listValuesFetchResult = await _fetchFirstBatch(
         fetchParams: ListValuesFetchParams(
-          itemId: input.itemValue.itemId,
+          itemId: input.itemValue.id,
           listType: input.itemValue.listType!,
           unit: input.itemValue.unitItem,
           params: input.paramSetValue,

@@ -54,7 +54,7 @@ abstract class ConversionItemValueModel extends ItemModel {
           itemType: ItemType.conversionItemValue,
         );
 
-  String get itemId;
+  String get id;
 
   String get name;
 
@@ -152,7 +152,7 @@ class ConversionUnitValueModel extends ConversionItemValueModel {
   }
 
   @override
-  String get itemId => "unitValue_${unit.id}";
+  String get id => "unitValue_${unit.id}";
 
   @override
   String get name => unit.name;
@@ -261,7 +261,7 @@ class ConversionParamValueModel extends ConversionItemValueModel {
   }
 
   @override
-  String get itemId => "paramValue_${param.id}";
+  String get id => "paramValue_${param.id}";
 
   @override
   String get name {

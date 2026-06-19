@@ -10,12 +10,12 @@ import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
+import 'package:convertouch/presentation/ui/model/input_box_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/model/input_box_model.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +133,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
   void Function(ValueModel)? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconNotifier;
-  late InputBoxModel _inputBoxModel;
+  late InputBoxViewModel _inputBoxModel;
 
   late Color _backgroundColor;
   late Color _foregroundColor;
@@ -150,7 +150,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
       _validationKey = UniqueKey();
     }
 
-    _inputBoxModel = InputBoxModel.ofValue(
+    _inputBoxModel = InputBoxViewModel.ofValue(
       widget.model,
       readonly: widget.readonly,
       maxTextLength: widget.maxTextLength,
@@ -164,7 +164,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
 
     _onValueChanged = (value) {
       _closeIconNotifier.value =
-          widget.model is! ListBoxModel && value.hasRawValue;
+          widget.model.listType == null && value.hasRawValue;
       widget.onValueChanged?.call(value);
     };
 
@@ -176,7 +176,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
         if (!mounted) return;
 
         _closeIconNotifier.value =
-            widget.model is! ListBoxModel && _controller.text.isNotEmpty;
+            widget.model.listType == null && _controller.text.isNotEmpty;
 
         setState(() {
           _setColors();
@@ -223,7 +223,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
     }
 
     if (widget.model != oldWidget.model) {
-      _inputBoxModel = InputBoxModel.ofValue(
+      _inputBoxModel = InputBoxViewModel.ofValue(
         widget.model,
         readonly: widget.readonly,
         maxTextLength: widget.maxTextLength,
@@ -336,8 +336,8 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
     );
   }
 
-  Widget _inputField(InputBoxModel model, BuildContext context) {
-    if (model is TextBoxModel) {
+  Widget _inputField(InputBoxViewModel model, BuildContext context) {
+    if (model is TextBoxViewModel) {
       return _TextField(
         model: model,
         autofocus: widget.autofocus,
@@ -366,7 +366,7 @@ class _ConvertouchInputBoxState<M extends ConversionItemValueModel>
       );
     }
 
-    if (model is ListBoxModel) {
+    if (model is ListBoxViewModel) {
       return _ListField(
         model: model,
         controller: widget.controller,
@@ -505,7 +505,7 @@ class _TextField extends StatefulWidget {
     this.floatingLabelBehavior,
   });
 
-  final TextBoxModel model;
+  final TextBoxViewModel model;
   final TextEditingController controller;
   final bool autofocus;
   final FocusNode focusNode;
@@ -650,7 +650,7 @@ class _ListField extends StatefulWidget {
     this.floatingLabelBehavior,
   });
 
-  final ListBoxModel model;
+  final ListBoxViewModel model;
   final TextEditingController? controller;
   final void Function(ValueModel)? onValueChanged;
   final Color foregroundColor;
@@ -680,6 +680,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.initState();
 
     _isDropdownOpen = false;
+
+    print("selected list value: ${widget.model.value}");
+    print("list values: ${widget.model.listValuesFetchResult?.items}");
 
     _selectedValueNotifier = ValueNotifier(widget.model.value);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);

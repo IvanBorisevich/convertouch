@@ -1,7 +1,8 @@
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
@@ -23,18 +24,20 @@ class RefreshingJobController {
 
   void startRefreshingJob(
     BuildContext context, {
-    required ConversionModel conversion,
+    required String unitGroupName,
+    required ConversionParamSetValueModel? params,
+    required UnitModel? srcUnit,
     required JobExecutionMode jobExecutionMode,
   }) {
-    if (conversion.params == null) {
+    if (params == null) {
       return;
     }
 
     BlocProvider.of<RefreshingJobsBloc>(context).add(
       StartRefreshingJob(
-        unitGroupName: conversion.unitGroup.name,
-        params: conversion.params!.active!,
-        srcUnit: conversion.srcUnitValue?.unit,
+        unitGroupName: unitGroupName,
+        params: params,
+        srcUnit: srcUnit,
         jobExecutionMode: jobExecutionMode,
         onError: (error) {
           navigationController.showException(context, exception: error);
@@ -45,20 +48,19 @@ class RefreshingJobController {
 
   void stopRefreshingJob(
     BuildContext context, {
-    required ConversionModel conversion,
+    required String unitGroupName,
+    required String? paramSetName,
     bool stopOnError = false,
     bool forceStop = false,
     void Function()? onComplete,
   }) {
-    String? paramSetName = conversion.params?.active?.paramSet.name;
-
     if (paramSetName == null) {
       return;
     }
 
     BlocProvider.of<RefreshingJobsBloc>(context).add(
       StopRefreshingJob(
-        unitGroupName: conversion.unitGroup.name,
+        unitGroupName: unitGroupName,
         paramSetName: paramSetName,
         stopOnError: stopOnError,
         forceStop: forceStop,

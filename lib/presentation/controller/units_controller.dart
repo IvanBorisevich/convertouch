@@ -3,7 +3,6 @@ import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -58,27 +57,21 @@ class UnitsController {
   void showUnitsForAdding(
     BuildContext context, {
     required int groupId,
-    ConversionModel? conversion,
+    List<int> addedUnitIds = const [],
+    bool paramsApplicable = false,
   }) {
     fetchUnits<UnitsBloc>(context, groupId: groupId);
 
-    List<int> previouslyMarkedIds = conversion != null
-        ? conversion.convertedUnitValues
-            .map((unitValue) => unitValue.unit.id)
-            .toList()
-        : [];
-
-    int markedItemsSelectionMinNum = conversion != null &&
-            (areParamsApplicable(conversion.params?.active) ||
-                previouslyMarkedIds.isNotEmpty)
-        ? 1
-        : minimumNumberOfConversionItems;
+    int markedItemsSelectionMinNum =
+        (paramsApplicable || addedUnitIds.isNotEmpty)
+            ? 1
+            : minimumNumberOfConversionItems;
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       StartItemsMarking(
-        previouslyMarkedIds: previouslyMarkedIds,
+        previouslyMarkedIds: addedUnitIds,
         markedItemsSelectionMinNum: markedItemsSelectionMinNum,
-        excludedIds: previouslyMarkedIds,
+        excludedIds: addedUnitIds,
       ),
     );
 
@@ -91,15 +84,15 @@ class UnitsController {
   void showUnitsForChangeInConversionItem(
     BuildContext context, {
     required int currentUnitId,
-    required ConversionModel conversion,
+    required int unitGroupId,
+    required List<int> convertedUnitValuesIds,
   }) {
-    fetchUnits<UnitsBloc>(context, groupId: conversion.unitGroup.id);
+    fetchUnits<UnitsBloc>(context, groupId: unitGroupId);
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       StartItemSelection(
         previouslySelectedId: currentUnitId,
-        excludedIds: conversion.convertedUnitValues
-            .map((e) => e.unit.id)
+        excludedIds: convertedUnitValuesIds
             .whereNot((id) => id == currentUnitId)
             .toList(),
       ),

@@ -60,6 +60,7 @@ class _ConvertouchConversionItemState<M extends ConversionItemValueModel>
   @override
   Widget build(BuildContext context) {
     return ConvertouchInputBox(
+      key: Key(widget.model.id),
       model: widget.model,
       colors: widget.colors.inputBox,
       dialogColors: widget.dialogColors,

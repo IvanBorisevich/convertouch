@@ -261,9 +261,10 @@ class ConversionParamSetValueBulkModel extends Equatable {
 
   @override
   String toString() {
-    return 'ParamSetValues{$paramSetValues; selected = $selectedIndex, '
-        'added = $paramSetsCanBeAdded, '
-        'removed = $selectedParamSetCanBeRemoved, '
+    return 'ParamSetValues{$paramSetValues; '
+        'selectedIndex = $selectedIndex, '
+        'canBeAdded = $paramSetsCanBeAdded, '
+        'canBeRemoved = $selectedParamSetCanBeRemoved, '
         'total = $totalCount}';
   }
 }
