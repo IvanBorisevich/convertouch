@@ -22,14 +22,6 @@ abstract class ConversionEvent extends ConvertouchEvent {
   });
 }
 
-abstract class ModifyConversion extends ConversionEvent {
-  const ModifyConversion({
-    super.onConversionUpdated,
-    super.onError,
-    required super.rebuildUnitValues,
-  });
-}
-
 class GetConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;
@@ -83,7 +75,32 @@ class CleanupConversion extends ConversionEvent {
   }
 }
 
-class EditConversionGroup extends ModifyConversion {
+class MoveConversionUnitValue extends ConversionEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  const MoveConversionUnitValue({
+    required this.oldIndex,
+    required this.newIndex,
+    super.onError,
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: true);
+
+  @override
+  List<Object?> get props => [
+        oldIndex,
+        newIndex,
+      ];
+
+  @override
+  String toString() {
+    return 'MoveConversionUnitValue{'
+        'oldIndex: $oldIndex, '
+        'newIndex: $newIndex}';
+  }
+}
+
+class EditConversionGroup extends ConversionEvent {
   final UnitGroupModel editedGroup;
 
   const EditConversionGroup({
@@ -103,7 +120,7 @@ class EditConversionGroup extends ModifyConversion {
   }
 }
 
-class AddUnitsToConversion extends ModifyConversion {
+class AddUnitsToConversion extends ConversionEvent {
   final List<int> unitIds;
 
   const AddUnitsToConversion({
@@ -123,7 +140,7 @@ class AddUnitsToConversion extends ModifyConversion {
   }
 }
 
-class EditConversionUnit extends ModifyConversion {
+class EditConversionUnit extends ConversionEvent {
   final UnitModel editedUnit;
 
   const EditConversionUnit({
@@ -143,7 +160,7 @@ class EditConversionUnit extends ModifyConversion {
   }
 }
 
-class EditConversionUnitValue extends ModifyConversion {
+class EditConversionUnitValue extends ConversionEvent {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
   final int unitId;
@@ -172,7 +189,7 @@ class EditConversionUnitValue extends ModifyConversion {
   }
 }
 
-class UpdateConversionCoefficients extends ModifyConversion {
+class UpdateConversionCoefficients extends ConversionEvent {
   final DynamicCoefficientsModel newCoefficients;
 
   const UpdateConversionCoefficients({
@@ -191,7 +208,7 @@ class UpdateConversionCoefficients extends ModifyConversion {
   }
 }
 
-class RemoveConversionItems extends ModifyConversion {
+class RemoveConversionItems extends ConversionEvent {
   final List<int> unitIds;
 
   const RemoveConversionItems({
@@ -211,7 +228,7 @@ class RemoveConversionItems extends ModifyConversion {
   }
 }
 
-class ReplaceConversionItemUnit extends ModifyConversion {
+class ReplaceConversionItemUnit extends ConversionEvent {
   final UnitModel newUnit;
   final int oldUnitId;
   final RecalculationOnUnitChange recalculationMode;
@@ -240,7 +257,7 @@ class ReplaceConversionItemUnit extends ModifyConversion {
   }
 }
 
-class AddParamSetsToConversion extends ModifyConversion {
+class AddParamSetsToConversion extends ConversionEvent {
   final List<int> paramSetIds;
 
   const AddParamSetsToConversion({
@@ -260,7 +277,7 @@ class AddParamSetsToConversion extends ModifyConversion {
   }
 }
 
-class RemoveSelectedParamSetFromConversion extends ModifyConversion {
+class RemoveSelectedParamSetFromConversion extends ConversionEvent {
   const RemoveSelectedParamSetFromConversion({
     super.onError,
   }) : super(rebuildUnitValues: false);
@@ -271,7 +288,7 @@ class RemoveSelectedParamSetFromConversion extends ModifyConversion {
   }
 }
 
-class RemoveAllParamSetsFromConversion extends ModifyConversion {
+class RemoveAllParamSetsFromConversion extends ConversionEvent {
   const RemoveAllParamSetsFromConversion({
     super.onError,
   }) : super(rebuildUnitValues: false);
@@ -282,7 +299,7 @@ class RemoveAllParamSetsFromConversion extends ModifyConversion {
   }
 }
 
-class SelectParamSetInConversion extends ModifyConversion {
+class SelectParamSetInConversion extends ConversionEvent {
   final int newSelectedParamSetIndex;
 
   const SelectParamSetInConversion({
@@ -302,7 +319,7 @@ class SelectParamSetInConversion extends ModifyConversion {
   }
 }
 
-class EditConversionParamValue extends ModifyConversion {
+class EditConversionParamValue extends ConversionEvent {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
   final int paramId;
@@ -335,7 +352,7 @@ class EditConversionParamValue extends ModifyConversion {
   }
 }
 
-class ReplaceConversionParamUnit extends ModifyConversion {
+class ReplaceConversionParamUnit extends ConversionEvent {
   final UnitModel newUnit;
   final int paramId;
   final int paramSetId;
@@ -364,7 +381,7 @@ class ReplaceConversionParamUnit extends ModifyConversion {
   }
 }
 
-class ToggleCalculableParam extends ModifyConversion {
+class ToggleCalculableParam extends ConversionEvent {
   final int paramId;
   final int paramSetId;
 

@@ -18,7 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 const double _spacing = 10;
 const double _bottomSpacing = 85;
 
-class ConvertouchConversionItemsView extends StatefulWidget {
+class ConvertouchConversionItemsView extends StatelessWidget {
   final UnitTapAction unitTapAction;
   final ConvertouchUITheme theme;
 
@@ -28,12 +28,6 @@ class ConvertouchConversionItemsView extends StatefulWidget {
     super.key,
   });
 
-  @override
-  State createState() => _ConvertouchConversionItemsViewState();
-}
-
-class _ConvertouchConversionItemsViewState
-    extends State<ConvertouchConversionItemsView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ConversionBloc, ConversionState>(
@@ -45,8 +39,6 @@ class _ConvertouchConversionItemsViewState
       buildWhen: (prev, next) =>
           next is ConversionBuilt && next.rebuildUnitValues,
       builder: (_, conversionState) {
-        print("Rebuild entire unit values list");
-
         if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
@@ -55,7 +47,7 @@ class _ConvertouchConversionItemsViewState
           return Center(
             child: NoItemsInfoLabel(
               text: "No conversion items added",
-              colors: appColors[widget.theme].unitsMenu.noItemsInfoBox,
+              colors: appColors[theme].unitsMenu.noItemsInfoBox,
             ),
           );
         }
@@ -117,16 +109,14 @@ class _ConvertouchConversionItemsViewState
                     isLast: isLast,
                     removable: removable,
                     onUnitItemTap: () {
-                      if (widget.unitTapAction ==
-                          UnitTapAction.selectReplacingUnit) {
+                      if (unitTapAction == UnitTapAction.selectReplacingUnit) {
                         unitsController.showUnitsForChangeInConversionItem(
                           context,
                           currentUnitId: resultUnitValue.unit.id,
                           unitGroupId: unitGroup.id,
                           convertedUnitValues: unitValues,
                         );
-                      } else if (widget.unitTapAction ==
-                          UnitTapAction.showUnitInfo) {
+                      } else if (unitTapAction == UnitTapAction.showUnitInfo) {
                         unitDetailsController.showUnitDetails(
                           context,
                           unit: resultUnitValue.unit,
@@ -147,8 +137,8 @@ class _ConvertouchConversionItemsViewState
                         unitId: resultUnitValue.unit.id,
                       );
                     },
-                    colors: appColors[widget.theme].conversionItem,
-                    dialogColors: appColors[widget.theme].dialog,
+                    colors: appColors[theme].conversionItem,
+                    dialogColors: appColors[theme].dialog,
                   );
                 },
               ),
@@ -158,14 +148,11 @@ class _ConvertouchConversionItemsViewState
             FocusScope.of(context).unfocus();
           },
           onReorder: (int oldIndex, int newIndex) {
-            setState(() {
-              if (oldIndex < newIndex) {
-                newIndex -= 1;
-              }
-              final ConversionUnitValueModel item =
-                  unitValues.removeAt(oldIndex);
-              unitValues.insert(newIndex, item);
-            });
+            conversionController.moveConversionUnitValue(
+              context,
+              oldIndex: oldIndex,
+              newIndex: newIndex,
+            );
           },
         );
       },

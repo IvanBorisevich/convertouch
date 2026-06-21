@@ -261,13 +261,26 @@ class ConversionController {
     );
   }
 
-  void clearConversion(BuildContext context, {bool preserveParams = true}) {
+  void cleanupConversion(BuildContext context, {bool preserveParams = true}) {
     BlocProvider.of<ConversionBloc>(context).add(
       CleanupConversion(
         keepParams: preserveParams,
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
+      ),
+    );
+  }
+
+  void moveConversionUnitValue(
+    BuildContext context, {
+    required int oldIndex,
+    required int newIndex,
+  }) {
+    BlocProvider.of<ConversionBloc>(context).add(
+      MoveConversionUnitValue(
+        oldIndex: oldIndex,
+        newIndex: newIndex,
       ),
     );
   }

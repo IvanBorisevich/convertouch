@@ -178,7 +178,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                       iconColor: popupColors.removalItem.regular,
                       textColor: popupColors.removalItem.regular,
                       onTap: () {
-                        conversionController.clearConversion(
+                        conversionController.cleanupConversion(
                           context,
                           preserveParams:
                               appState.keepParamsOnConversionCleanup,

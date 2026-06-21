@@ -68,6 +68,7 @@ class ConversionBloc
     on<GetConversion>(_onGetConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
+    on<MoveConversionUnitValue>(_onMoveConversionUnitValue);
     on<EditConversionGroup>(_onEditConversionGroup);
     on<AddUnitsToConversion>(_onAddUnitsToConversion);
     on<EditConversionUnit>(_onEditConversionItemUnit);
@@ -136,7 +137,10 @@ class ConversionBloc
     );
 
     emit(
-      ConversionBuilt(conversion: conversion),
+      ConversionBuilt(
+        conversion: conversion,
+        rebuildUnitValues: event.rebuildUnitValues,
+      ),
     );
 
     event.processCurrentConversion?.call(conversion);
@@ -164,7 +168,12 @@ class ConversionBloc
     );
 
     if (event.keepParams) {
-      emit(ConversionBuilt(conversion: emptyConversion));
+      emit(
+        ConversionBuilt(
+          conversion: emptyConversion,
+          rebuildUnitValues: event.rebuildUnitValues,
+        ),
+      );
     } else {
       final result = await removeParamSetsFromConversionUseCase.execute(
         InputConversionModifyModel<RemoveParamSetsDelta>(
@@ -175,6 +184,34 @@ class ConversionBloc
 
       await _handleAndEmit(result, emit, event: event);
     }
+  }
+
+  _onMoveConversionUnitValue(
+    MoveConversionUnitValue event,
+    Emitter<ConversionState> emit,
+  ) {
+    final unitValues = state.conversion.convertedUnitValues
+        .map((unitValue) => unitValue.copyWith())
+        .toList();
+
+    int oldIndex = event.oldIndex;
+    int newIndex = event.newIndex;
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final item = unitValues.removeAt(oldIndex);
+    unitValues.insert(newIndex, item);
+
+    emit(
+      ConversionBuilt(
+        conversion: state.conversion.copyWith(
+          convertedUnitValues: unitValues,
+        ),
+        rebuildUnitValues: event.rebuildUnitValues,
+      ),
+    );
   }
 
   _onEditConversionGroup(
