@@ -84,6 +84,17 @@ class ConversionController {
         oldUnitId: currentUnitId,
         recalculationMode: recalculationMode,
         onConversionUpdated: (updatedConversion, {info}) {
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateItemValue(
+              context,
+              id: unitValue.unit.id == newUnit.id
+                  ? unitValueKey(currentUnitId)
+                  : unitValue.id,
+              newItemValue: unitValue,
+              isSource: unitValue.unit.id == newUnit.id,
+            );
+          }
+
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -106,6 +117,7 @@ class ConversionController {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateItemValue(
               context,
+              id: unitValue.id,
               newItemValue: unitValue,
               isSource: unitValue.unit.id == unitId,
             );

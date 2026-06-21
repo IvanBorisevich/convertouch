@@ -170,7 +170,7 @@ class ConversionUnitValueModel extends ItemValueModel {
   }
 
   @override
-  String get id => "unitValue_${unit.id}";
+  String get id => unitValueKey(unit.id);
 
   @override
   String get name => unit.itemName;
@@ -279,7 +279,7 @@ class ConversionParamValueModel extends ItemValueModel {
   }
 
   @override
-  String get id => "paramValue_${param.id}";
+  String get id => paramValueKey(param.id);
 
   @override
   String? get name => param.name;
@@ -337,3 +337,7 @@ class ConversionParamValueModel extends ItemValueModel {
         'list size: ${listValuesFetchResult?.items.length}}';
   }
 }
+
+String unitValueKey(int unitId) => "unitValue_$unitId";
+
+String paramValueKey(int paramId) => "paramValue_$paramId";

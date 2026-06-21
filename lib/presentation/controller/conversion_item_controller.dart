@@ -12,12 +12,13 @@ class ConversionItemController {
 
   void updateItemValue(
     BuildContext context, {
+    required String id,
     required ItemValueModel newItemValue,
     bool isSource = false,
   }) {
     BlocProvider.of<ConversionItemBloc>(context).add(
       UpdateItemValue(
-        id: newItemValue.id,
+        id: id,
         newValue: newItemValue,
         isSource: isSource,
       ),

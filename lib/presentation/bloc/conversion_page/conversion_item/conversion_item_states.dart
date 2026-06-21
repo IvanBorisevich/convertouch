@@ -56,6 +56,9 @@ class ConversionItemUpdated extends ConversionItemState {
 
   @override
   String toString() {
-    return 'ConversionItemUpdated{newValue: $value, isSource: $isSource}';
+    return 'ConversionItemUpdated{'
+        'id: $id, '
+        'newValue: $value, '
+        'isSource: $isSource}';
   }
 }

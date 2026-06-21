@@ -179,7 +179,7 @@ class ValueModel extends IdNameSearchableItemModel {
 
   @override
   String toString() {
-    return 'Value{$raw | $alt}';
+    return '{$raw , $alt}';
   }
 }
 
