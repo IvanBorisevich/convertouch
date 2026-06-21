@@ -1,39 +1,85 @@
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
-abstract class ConversionItemEvent extends ConvertouchEvent {
+abstract class ConversionItemEvent<T extends ItemValueModel>
+    extends ConvertouchEvent {
   const ConversionItemEvent();
 }
 
-class UpdateItemValue extends ConversionItemEvent {
+abstract class ConversionUnitValueEvent
+    extends ConversionItemEvent<ConversionUnitValueModel> {
+  const ConversionUnitValueEvent();
+}
+
+abstract class ConversionParamValueEvent
+    extends ConversionItemEvent<ConversionParamValueModel> {
+  const ConversionParamValueEvent();
+}
+
+class UpdateUnitValue extends ConversionUnitValueEvent {
   final String id;
-  final ItemValueModel newValue;
+  final ConversionUnitValueModel newValue;
   final bool isSource;
 
-  const UpdateItemValue({
+  const UpdateUnitValue({
     required this.id,
     required this.newValue,
-    this.isSource = false,
+    required this.isSource,
   });
 
   @override
   List<Object?> get props => [
-    id,
-    newValue,
-    isSource,
-  ];
+        id,
+        newValue,
+        isSource,
+      ];
 
   @override
   String toString() {
-    return 'UpdateItemValue{id: $id, newValue: $newValue}';
+    return 'UpdateUnitValue{'
+        'id: $id, '
+        'newValue: $newValue, '
+        'isSource: $isSource}';
   }
 }
 
-class ResetItemValues extends ConversionItemEvent {
-  const ResetItemValues();
+class UpdateParamValue extends ConversionParamValueEvent {
+  final String id;
+  final ConversionParamValueModel newValue;
+
+  const UpdateParamValue({
+    required this.id,
+    required this.newValue,
+  });
+
+  @override
+  List<Object?> get props => [
+        id,
+        newValue,
+      ];
 
   @override
   String toString() {
-    return 'ResetItemValues{}';
+    return 'UpdateParamValue{'
+        'id: $id, '
+        'newValue: $newValue}';
+  }
+}
+
+class ResetUnitValues extends ConversionUnitValueEvent {
+  const ResetUnitValues();
+
+  @override
+  String toString() {
+    return 'ResetUnitValues{}';
+  }
+}
+
+class ResetParamValues extends ConversionParamValueEvent {
+  const ResetParamValues();
+
+  @override
+  String toString() {
+    return 'ResetParamValues{}';
   }
 }

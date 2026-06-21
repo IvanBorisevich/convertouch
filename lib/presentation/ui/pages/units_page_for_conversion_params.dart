@@ -46,7 +46,7 @@ class ConvertouchUnitsPageForConversionParams extends StatelessWidget {
                     checkIconVisibleIfUnchecked: true,
                     removalModeEnabled: false,
                     onItemTap: (unit) {
-                      conversionController.changeParamUnit(
+                      conversionController.replaceParamUnit(
                         context,
                         param: singleParamState.param,
                         newUnit: unit,

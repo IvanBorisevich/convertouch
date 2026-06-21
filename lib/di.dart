@@ -579,8 +579,12 @@ Future<void> _initBloc() async {
     ),
   );
 
-  locator.registerLazySingleton<ConversionItemBloc>(
-    () => ConversionItemBloc(),
+  locator.registerLazySingleton<ConversionUnitValueBloc>(
+    () => ConversionUnitValueBloc(),
+  );
+
+  locator.registerLazySingleton<ConversionParamValueBloc>(
+    () => ConversionParamValueBloc(),
   );
 
   locator.registerLazySingleton<ConversionParamSetsBloc>(

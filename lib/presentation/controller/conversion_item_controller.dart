@@ -10,24 +10,43 @@ final conversionItemController = di.locator.get<ConversionItemController>();
 class ConversionItemController {
   const ConversionItemController();
 
-  void updateItemValue(
+  void updateUnitValue(
     BuildContext context, {
     required String id,
-    required ItemValueModel newItemValue,
+    required ConversionUnitValueModel newUnitValue,
     bool isSource = false,
   }) {
-    BlocProvider.of<ConversionItemBloc>(context).add(
-      UpdateItemValue(
+    BlocProvider.of<ConversionUnitValueBloc>(context).add(
+      UpdateUnitValue(
         id: id,
-        newValue: newItemValue,
+        newValue: newUnitValue,
         isSource: isSource,
       ),
     );
   }
 
-  void resetItemValues(BuildContext context) {
-    BlocProvider.of<ConversionItemBloc>(context).add(
-      const ResetItemValues(),
+  void updateParamValue(
+    BuildContext context, {
+    required String id,
+    required ConversionParamValueModel newParamValue,
+  }) {
+    BlocProvider.of<ConversionParamValueBloc>(context).add(
+      UpdateParamValue(
+        id: id,
+        newValue: newParamValue,
+      ),
+    );
+  }
+
+  void resetUnitValues(BuildContext context) {
+    BlocProvider.of<ConversionUnitValueBloc>(context).add(
+      const ResetUnitValues(),
+    );
+  }
+
+  void resetParamValues(BuildContext context) {
+    BlocProvider.of<ConversionParamValueBloc>(context).add(
+      const ResetParamValues(),
     );
   }
 }

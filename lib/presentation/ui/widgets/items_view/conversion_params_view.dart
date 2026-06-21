@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -10,6 +16,7 @@ import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavi
 import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -35,8 +42,18 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return conversionBlocBuilder(
-      builderFunc: (conversionState) {
+    return BlocBuilder<ConversionBloc, ConversionState>(
+      buildWhen: (prev, next) {
+        log("[params BlocBuilder] prev state: $prev, next state: $next");
+        return prev != next && next is ConversionBuilt && next.rebuildParams;
+      },
+      builder: (_, conversionState) {
+        print("Rebuild entire params panel");
+
+        if (conversionState is! ConversionBuilt) {
+          return const SizedBox.shrink();
+        }
+
         final params = conversionState.conversion.params;
 
         if (params == null) {
@@ -334,16 +351,33 @@ class ConversionParamsView extends StatelessWidget {
       child: ListView.builder(
         itemCount: paramSetValue.paramValues.length,
         itemBuilder: (context, index) {
+          final paramValue = paramSetValue.paramValues[index];
+
           return Padding(
             padding: const EdgeInsets.only(
               bottom: _paramsSpacing,
             ),
-            child: ConversionParamItem(
-              paramValue: paramSetValue.paramValues[index],
-              unitGroupName: unitGroupName,
-              calculationSwitchersVisible: true,
-              colors: colors.paramItem,
-              dialogColors: dialogColors,
+            child: BlocBuilder<ConversionParamValueBloc,
+                ConversionParamValueState>(
+              buildWhen: (prev, next) {
+                return prev != next &&
+                    (next is ConversionParamValueInitialState ||
+                        next.id == paramValue.id);
+              },
+              builder: (_, itemState) {
+                final resultParamValue =
+                    itemState is ConversionParamValueInitialState
+                        ? paramValue
+                        : itemState.value!;
+
+                return ConversionParamItem(
+                  paramValue: resultParamValue,
+                  unitGroupName: unitGroupName,
+                  calculationSwitchersVisible: true,
+                  colors: colors.paramItem,
+                  dialogColors: dialogColors,
+                );
+              },
             ),
           );
         },

@@ -27,6 +27,9 @@ class ConversionController {
     required UnitGroupModel unitGroup,
     void Function(ConversionModel?)? processCurrentConversion,
   }) {
+    conversionItemController.resetUnitValues(context);
+    conversionItemController.resetParamValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       GetConversion(
         unitGroup: unitGroup,
@@ -59,6 +62,33 @@ class ConversionController {
     );
   }
 
+  void addUnitsToConversion(
+    BuildContext context, {
+    List<int> unitIds = const [],
+    required bool conversionHasItems,
+  }) {
+    conversionItemController.resetUnitValues(context);
+
+    BlocProvider.of<ConversionBloc>(context).add(
+      AddUnitsToConversion(
+        unitIds: unitIds,
+        onError: (error) {
+          navigationController.showException(context, exception: error);
+        },
+      ),
+    );
+
+    if (conversionHasItems) {
+      navigationController.navigateBack(context);
+    } else {
+      navigationController.navigateTo(
+        context,
+        pageName: PageName.conversionPage,
+        replace: true,
+      );
+    }
+  }
+
   void editConversionItemUnit(
     BuildContext context, {
     required UnitModel modifiedUnit,
@@ -75,10 +105,10 @@ class ConversionController {
                   (unitValue) => unitValue.unit.id == modifiedUnit.id);
 
           if (updatedUnitValue != null) {
-            conversionItemController.updateItemValue(
+            conversionItemController.updateUnitValue(
               context,
               id: updatedUnitValue.id,
-              newItemValue: updatedUnitValue,
+              newUnitValue: updatedUnitValue,
               isSource: updatedUnitValue.unit.id ==
                   updatedConversion.srcUnitValue?.unit.id,
             );
@@ -101,12 +131,12 @@ class ConversionController {
         recalculationMode: recalculationMode,
         onConversionUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
-            conversionItemController.updateItemValue(
+            conversionItemController.updateUnitValue(
               context,
               id: unitValue.unit.id == newUnit.id
                   ? unitValueKey(currentUnitId)
                   : unitValue.id,
-              newItemValue: unitValue,
+              newUnitValue: unitValue,
               isSource: unitValue.unit.id == newUnit.id,
             );
           }
@@ -131,10 +161,10 @@ class ConversionController {
         unitId: unitId,
         onConversionUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
-            conversionItemController.updateItemValue(
+            conversionItemController.updateUnitValue(
               context,
               id: unitValue.id,
-              newItemValue: unitValue,
+              newUnitValue: unitValue,
               isSource: unitValue.unit.id == unitId,
             );
           }
@@ -154,6 +184,8 @@ class ConversionController {
     BuildContext context, {
     List<int> unitIds = const [],
   }) {
+    conversionItemController.resetUnitValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveConversionItems(
         unitIds: unitIds,
@@ -164,7 +196,7 @@ class ConversionController {
     );
   }
 
-  void changeParamUnit(
+  void replaceParamUnit(
     BuildContext context, {
     required ConversionParamModel param,
     required UnitModel newUnit,
@@ -175,6 +207,18 @@ class ConversionController {
         paramId: param.id,
         paramSetId: param.paramSetId,
         onConversionUpdated: (updatedConversion, {info}) {
+          final updatedParamValue = updatedConversion.params
+              ?.getParamSetValueById(param.paramSetId)
+              ?.getParamValueById(param.id);
+
+          if (updatedParamValue != null) {
+            conversionItemController.updateParamValue(
+              context,
+              id: updatedParamValue.id,
+              newParamValue: updatedParamValue,
+            );
+          }
+
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -217,6 +261,8 @@ class ConversionController {
   }
 
   void selectParamSet(BuildContext context, {required int index}) {
+    conversionItemController.resetParamValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       SelectParamSetInConversion(
         newSelectedParamSetIndex: index,
@@ -228,6 +274,8 @@ class ConversionController {
   }
 
   void removeSelectedParamSet(BuildContext context) {
+    conversionItemController.resetParamValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveSelectedParamSetFromConversion(
         onError: (error) {
@@ -238,6 +286,8 @@ class ConversionController {
   }
 
   void removeOptionalParamSets(BuildContext context) {
+    conversionItemController.resetParamValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveAllParamSetsFromConversion(
         onError: (error) {
@@ -247,35 +297,12 @@ class ConversionController {
     );
   }
 
-  void addUnitsToConversion(
-    BuildContext context, {
-    List<int> unitIds = const [],
-    required bool conversionHasItems,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      AddUnitsToConversion(
-        unitIds: unitIds,
-        onError: (error) {
-          navigationController.showException(context, exception: error);
-        },
-      ),
-    );
-
-    if (conversionHasItems) {
-      navigationController.navigateBack(context);
-    } else {
-      navigationController.navigateTo(
-        context,
-        pageName: PageName.conversionPage,
-        replace: true,
-      );
-    }
-  }
-
   void addParamsToConversion(
     BuildContext context, {
     List<int> paramSetIds = const [],
   }) {
+    conversionItemController.resetParamValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       AddParamSetsToConversion(
         paramSetIds: paramSetIds,
@@ -290,6 +317,12 @@ class ConversionController {
   }
 
   void cleanupConversion(BuildContext context, {bool preserveParams = true}) {
+    conversionItemController.resetUnitValues(context);
+
+    if (!preserveParams) {
+      conversionItemController.resetParamValues(context);
+    }
+
     BlocProvider.of<ConversionBloc>(context).add(
       CleanupConversion(
         keepParams: preserveParams,
@@ -305,6 +338,8 @@ class ConversionController {
     required int oldIndex,
     required int newIndex,
   }) {
+    conversionItemController.resetUnitValues(context);
+
     BlocProvider.of<ConversionBloc>(context).add(
       MoveConversionUnitValue(
         oldIndex: oldIndex,

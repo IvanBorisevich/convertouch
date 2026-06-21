@@ -1,12 +1,10 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
-import 'package:convertouch/presentation/controller/conversion_item_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
@@ -30,14 +28,12 @@ class ConvertouchConversionItemsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ConversionBloc, ConversionState>(
-      listener: (_, state) {
-        if (state is ConversionBuilt && state.rebuildUnitValues) {
-          conversionItemController.resetItemValues(context);
-        }
+    return BlocBuilder<ConversionBloc, ConversionState>(
+      buildWhen: (prev, next) {
+        return prev != next &&
+            next is ConversionBuilt &&
+            next.rebuildUnitValues;
       },
-      buildWhen: (prev, next) =>
-          next is ConversionBuilt && next.rebuildUnitValues,
       builder: (_, conversionState) {
         print("Rebuild entire unit values list");
 
@@ -82,23 +78,30 @@ class ConvertouchConversionItemsView extends StatelessWidget {
             bool isLast = index == unitValues.length - 1;
 
             return Padding(
-              key: Key('$index'),
+              key: ValueKey(unitValue.id),
               padding: const EdgeInsets.only(
                 bottom: _spacing,
               ),
-              child: BlocBuilder<ConversionItemBloc, ConversionItemState>(
+              child: BlocBuilder<ConversionUnitValueBloc,
+                  ConversionUnitValueState>(
                 buildWhen: (prev, next) {
+                  print(
+                      "[item BlocBuilder] prev state: $prev, next state: $next");
+
                   return prev != next &&
-                      (next is ConversionItemInitialState ||
+                      (next is ConversionUnitValueInitialState ||
                           next.id == unitValue.id);
                 },
                 builder: (_, itemState) {
-                  final resultUnitValue =
-                      itemState is ConversionItemInitialState
-                          ? unitValue
-                          : (itemState.value! as ConversionUnitValueModel);
+                  print(
+                      "conversion unit item builder() is triggered, itemState: $itemState");
 
-                  final isSource = itemState is ConversionItemInitialState
+                  final resultUnitValue =
+                      itemState is ConversionUnitValueInitialState
+                          ? unitValue
+                          : itemState.value!;
+
+                  final isSource = itemState is ConversionUnitValueInitialState
                       ? unitValue.unit.id == srcUnitId
                       : itemState.isSource;
 

@@ -153,8 +153,6 @@ class ConversionRepositoryImpl extends ConversionRepository {
     ConversionModel conversion,
   ) async {
     try {
-      log("Saving the conversion: $conversion");
-
       ConversionEntity entity = ConversionTranslator.I.fromModel(conversion);
       ConversionModel resultConversion = ConversionModel.none;
 

@@ -99,7 +99,6 @@ class ConversionBloc
       );
 
       prev = state;
-      log("Prev conversion state: $prev");
 
       conversion = conversionFromDb.isRight && conversionFromDb.right != null
           ? conversionFromDb.right!
@@ -140,6 +139,7 @@ class ConversionBloc
       ConversionBuilt(
         conversion: conversion,
         rebuildUnitValues: event.rebuildUnitValues,
+        rebuildParams: event.rebuildParams,
       ),
     );
 
@@ -172,6 +172,7 @@ class ConversionBloc
         ConversionBuilt(
           conversion: emptyConversion,
           rebuildUnitValues: event.rebuildUnitValues,
+          rebuildParams: false,
         ),
       );
     } else {
@@ -210,6 +211,7 @@ class ConversionBloc
           convertedUnitValues: unitValues,
         ),
         rebuildUnitValues: event.rebuildUnitValues,
+        rebuildParams: event.rebuildParams,
       ),
     );
   }
@@ -408,8 +410,6 @@ class ConversionBloc
       ),
     );
 
-    log("New params after value change: ${state.conversion.params?.toJson()}");
-
     await _handleAndEmit(result, emit, event: event);
   }
 
@@ -460,6 +460,7 @@ class ConversionBloc
         ConversionBuilt(
           conversion: result.right,
           rebuildUnitValues: event.rebuildUnitValues,
+          rebuildParams: event.rebuildParams,
         ),
       );
 
