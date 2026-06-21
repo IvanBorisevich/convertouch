@@ -202,7 +202,7 @@ class ConversionParamsView extends StatelessWidget {
         controller.index = selectedParamSetIndex;
       },
       onTabChanged: (index) {
-        conversionController.showParamSet(
+        conversionController.selectParamSet(
           context,
           index: index ?? 0,
         );

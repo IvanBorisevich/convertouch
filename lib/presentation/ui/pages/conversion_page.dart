@@ -6,6 +6,7 @@ import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
@@ -139,7 +140,7 @@ class ConvertouchConversionPage extends StatelessWidget {
                             iconColor: popupColors.removalItem.regular,
                             textColor: popupColors.removalItem.regular,
                             onTap: () {
-                              conversionController.removeOptionalParams(
+                              conversionController.removeOptionalParamSets(
                                 context,
                               );
                             },
@@ -166,6 +167,11 @@ class ConvertouchConversionPage extends StatelessWidget {
                       text: "Units Dictionary",
                       icon: Icons.dashboard_customize_outlined,
                       onTap: () {
+                        groupsController.showGroup(
+                          context,
+                          unitGroup: popupViewModel.unitGroup,
+                        );
+
                         unitsController.showUnits(
                           context,
                           groupId: popupViewModel.unitGroup.id,

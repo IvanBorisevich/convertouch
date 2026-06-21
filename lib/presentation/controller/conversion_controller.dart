@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -67,6 +68,21 @@ class ConversionController {
         editedUnit: modifiedUnit,
         onError: (error) {
           navigationController.showException(context, exception: error);
+        },
+        onConversionUpdated: (updatedConversion, {info}) {
+          final updatedUnitValue = updatedConversion.convertedUnitValues
+              .firstWhereOrNull(
+                  (unitValue) => unitValue.unit.id == modifiedUnit.id);
+
+          if (updatedUnitValue != null) {
+            conversionItemController.updateItemValue(
+              context,
+              id: updatedUnitValue.id,
+              newItemValue: updatedUnitValue,
+              isSource: updatedUnitValue.unit.id ==
+                  updatedConversion.srcUnitValue?.unit.id,
+            );
+          }
         },
       ),
     );
@@ -200,7 +216,7 @@ class ConversionController {
     );
   }
 
-  void showParamSet(BuildContext context, {required int index}) {
+  void selectParamSet(BuildContext context, {required int index}) {
     BlocProvider.of<ConversionBloc>(context).add(
       SelectParamSetInConversion(
         newSelectedParamSetIndex: index,
@@ -221,7 +237,7 @@ class ConversionController {
     );
   }
 
-  void removeOptionalParams(BuildContext context) {
+  void removeOptionalParamSets(BuildContext context) {
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveAllParamSetsFromConversion(
         onError: (error) {
@@ -297,43 +313,23 @@ class ConversionController {
     );
   }
 
-  void updateCoefficients(
-    BuildContext context, {
-    required DynamicCoefficientsModel coefficients,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      UpdateConversionCoefficients(newCoefficients: coefficients),
-    );
-  }
-
-  void updateDynamicSrcValue(
-    BuildContext context, {
-    required DynamicValueModel dynamicSrcValue,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      EditConversionUnitValue(
-        newValue: null,
-        newDefaultValue: ValueModel.any(dynamicSrcValue.value),
-        unitId: dynamicSrcValue.unitId,
-      ),
-    );
-  }
-
   void updateWithDynamicData(
     BuildContext context, {
     required DynamicDataModel data,
   }) {
     if (data is DynamicCoefficientsModel) {
-      conversionController.updateCoefficients(
-        context,
-        coefficients: data,
+      BlocProvider.of<ConversionBloc>(context).add(
+        UpdateConversionCoefficients(newCoefficients: data),
       );
     }
 
     if (data is DynamicValueModel) {
-      conversionController.updateDynamicSrcValue(
-        context,
-        dynamicSrcValue: data,
+      BlocProvider.of<ConversionBloc>(context).add(
+        EditConversionUnitValue(
+          newValue: null,
+          newDefaultValue: ValueModel.any(data.value),
+          unitId: data.unitId,
+        ),
       );
     }
   }

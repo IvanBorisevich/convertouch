@@ -39,6 +39,8 @@ class ConvertouchConversionItemsView extends StatelessWidget {
       buildWhen: (prev, next) =>
           next is ConversionBuilt && next.rebuildUnitValues,
       builder: (_, conversionState) {
+        print("Rebuild entire unit values list");
+
         if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
