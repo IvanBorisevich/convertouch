@@ -277,6 +277,19 @@ class ConversionController {
       ToggleCalculableParam(
         paramId: paramId,
         paramSetId: paramSetId,
+        onConversionUpdated: (updatedConversion, {info}) {
+          final updatedParamValue = updatedConversion.params
+              ?.getParamSetValueById(paramSetId)
+              ?.getParamValueById(paramId);
+
+          if (updatedParamValue != null) {
+            conversionItemController.updateParamValue(
+              context,
+              id: updatedParamValue.id,
+              newParamValue: updatedParamValue,
+            );
+          }
+        },
       ),
     );
   }

@@ -390,6 +390,7 @@ class ToggleCalculableParam extends ConversionEvent {
   const ToggleCalculableParam({
     required this.paramId,
     required this.paramSetId,
+    super.onConversionUpdated,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
