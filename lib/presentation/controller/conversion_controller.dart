@@ -242,7 +242,28 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
-        onConversionUpdated: onChanged,
+        onConversionUpdated: (updatedConversion, {info}) {
+          for (final paramValue
+              in updatedConversion.params!.active!.paramValues) {
+            conversionItemController.updateParamValue(
+              context,
+              id: paramValue.id,
+              newParamValue: paramValue,
+            );
+          }
+
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateUnitValue(
+              context,
+              id: unitValue.id,
+              newUnitValue: unitValue,
+              isSource:
+                  unitValue.unit.id == updatedConversion.srcUnitValue?.unit.id,
+            );
+          }
+
+          onChanged?.call(updatedConversion, info: info);
+        },
       ),
     );
   }
