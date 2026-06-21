@@ -7,14 +7,17 @@ abstract class ConversionState extends ConvertouchState {
 
 class ConversionBuilt extends ConversionState {
   final ConversionModel conversion;
+  final bool rebuildUnitValues;
 
   const ConversionBuilt({
     required this.conversion,
+    this.rebuildUnitValues = false,
   });
 
   @override
   List<Object?> get props => [
         conversion,
+        rebuildUnitValues,
       ];
 
   Map<String, dynamic> toJson() {

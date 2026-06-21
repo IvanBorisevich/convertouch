@@ -8,11 +8,17 @@ import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
 abstract class ConversionEvent extends ConvertouchEvent {
-  final void Function(ConversionModel, {ConvertouchException? info})? onConversionUpdated;
+  final bool rebuildUnitValues;
+
+  final void Function(
+    ConversionModel, {
+    ConvertouchException? info,
+  })? onConversionUpdated;
 
   const ConversionEvent({
     this.onConversionUpdated,
     super.onError,
+    required this.rebuildUnitValues,
   });
 }
 
@@ -20,6 +26,7 @@ abstract class ModifyConversion extends ConversionEvent {
   const ModifyConversion({
     super.onConversionUpdated,
     super.onError,
+    required super.rebuildUnitValues,
   });
 }
 
@@ -32,7 +39,7 @@ class GetConversion extends ConversionEvent {
     required this.unitGroup,
     this.processPrevConversion,
     this.processCurrentConversion,
-  });
+  }) : super(rebuildUnitValues: true);
 
   @override
   List<Object?> get props => [
@@ -51,7 +58,8 @@ class SaveConversion extends ConversionEvent {
   const SaveConversion({
     required this.conversion,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: false);
 
   @override
   String toString() {
@@ -65,7 +73,8 @@ class CleanupConversion extends ConversionEvent {
   const CleanupConversion({
     required this.keepParams,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: true);
 
   @override
   String toString() {
@@ -79,9 +88,9 @@ class EditConversionGroup extends ModifyConversion {
 
   const EditConversionGroup({
     required this.editedGroup,
-    super.onConversionUpdated,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -100,7 +109,8 @@ class AddUnitsToConversion extends ModifyConversion {
   const AddUnitsToConversion({
     required this.unitIds,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: true);
 
   @override
   List<Object?> get props => [
@@ -119,7 +129,8 @@ class EditConversionUnit extends ModifyConversion {
   const EditConversionUnit({
     required this.editedUnit,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -142,7 +153,8 @@ class EditConversionUnitValue extends ModifyConversion {
     this.newDefaultValue,
     required this.unitId,
     super.onError,
-  });
+    super.onConversionUpdated,
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -166,7 +178,7 @@ class UpdateConversionCoefficients extends ModifyConversion {
   const UpdateConversionCoefficients({
     required this.newCoefficients,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -185,7 +197,7 @@ class RemoveConversionItems extends ModifyConversion {
   const RemoveConversionItems({
     required this.unitIds,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: true);
 
   @override
   List<Object?> get props => [
@@ -210,7 +222,7 @@ class ReplaceConversionItemUnit extends ModifyConversion {
     required this.recalculationMode,
     super.onConversionUpdated,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -235,7 +247,7 @@ class AddParamSetsToConversion extends ModifyConversion {
     required this.paramSetIds,
     super.onConversionUpdated,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -251,7 +263,7 @@ class AddParamSetsToConversion extends ModifyConversion {
 class RemoveSelectedParamSetFromConversion extends ModifyConversion {
   const RemoveSelectedParamSetFromConversion({
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   String toString() {
@@ -262,7 +274,7 @@ class RemoveSelectedParamSetFromConversion extends ModifyConversion {
 class RemoveAllParamSetsFromConversion extends ModifyConversion {
   const RemoveAllParamSetsFromConversion({
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   String toString() {
@@ -276,7 +288,7 @@ class SelectParamSetInConversion extends ModifyConversion {
   const SelectParamSetInConversion({
     required this.newSelectedParamSetIndex,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -303,7 +315,7 @@ class EditConversionParamValue extends ModifyConversion {
     required this.paramSetId,
     super.onError,
     super.onConversionUpdated,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -334,7 +346,7 @@ class ReplaceConversionParamUnit extends ModifyConversion {
     required this.paramSetId,
     super.onConversionUpdated,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [
@@ -360,7 +372,7 @@ class ToggleCalculableParam extends ModifyConversion {
     required this.paramId,
     required this.paramSetId,
     super.onError,
-  });
+  }) : super(rebuildUnitValues: false);
 
   @override
   List<Object?> get props => [

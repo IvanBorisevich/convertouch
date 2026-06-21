@@ -1,14 +1,14 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
+import 'package:convertouch/presentation/controller/conversion_item_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
-import 'package:convertouch/presentation/ui/model/converted_values_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
@@ -36,25 +36,22 @@ class _ConvertouchConversionItemsViewState
     extends State<ConvertouchConversionItemsView> {
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<ConversionBloc, ConversionState,
-        ConvertedValuesViewModel?>(
-      selector: (state) {
-        if (state is ConversionBuilt) {
-          return ConvertedValuesViewModel(
-            convertedValues: state.conversion.convertedUnitValues,
-            sourceUnitId: state.conversion.srcUnitValue?.unit.id,
-            unitGroup: state.conversion.unitGroup,
-          );
+    return BlocConsumer<ConversionBloc, ConversionState>(
+      listener: (_, state) {
+        if (state is ConversionBuilt && state.rebuildUnitValues) {
+          conversionItemController.resetItemValues(context);
         }
-
-        return null;
       },
-      builder: (_, viewModel) {
-        if (viewModel == null) {
+      buildWhen: (prev, next) =>
+          next is ConversionBuilt && next.rebuildUnitValues,
+      builder: (_, conversionState) {
+        print("Rebuild entire unit values list");
+
+        if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
 
-        if (viewModel.convertedValues.isEmpty) {
+        if (conversionState.conversion.convertedUnitValues.isEmpty) {
           return Center(
             child: NoItemsInfoLabel(
               text: "No conversion items added",
@@ -63,8 +60,13 @@ class _ConvertouchConversionItemsViewState
           );
         }
 
+        final unitGroup = conversionState.conversion.unitGroup;
+        final srcUnitId = conversionState.conversion.srcUnitValue?.unit.id;
+        final unitValues = conversionState.conversion.convertedUnitValues;
+        final removable = unitValues.length > minimumNumberOfConversionItems;
+
         return ReorderableListView.builder(
-          itemCount: viewModel.convertedValues.length,
+          itemCount: unitValues.length,
           buildDefaultDragHandles: false,
           shrinkWrap: true,
           physics: const AlwaysScrollableScrollPhysics(),
@@ -82,57 +84,52 @@ class _ConvertouchConversionItemsViewState
             right: _spacing,
           ),
           itemBuilder: (context, index) {
-            String itemId = viewModel.convertedValues[index].id;
-            int? srcUnitId = viewModel.sourceUnitId;
-            int lastItemIndex = viewModel.convertedValues.length - 1;
-            bool removable = viewModel.convertedValues.length >
-                minimumNumberOfConversionItems;
-            UnitGroupModel unitGroup = viewModel.unitGroup;
-            List<int> convertedUnitValuesIds =
-                viewModel.convertedValues.map((item) => item.unit.id).toList();
+            final unitValue = unitValues[index];
+            bool isLast = index == unitValues.length - 1;
 
             return Padding(
               key: Key('$index'),
               padding: const EdgeInsets.only(
                 bottom: _spacing,
               ),
-              child: BlocSelector<ConversionBloc, ConversionState,
-                  ConversionUnitValueModel?>(
-                selector: (state) {
-                  if (state is! ConversionBuilt) {
-                    return null;
-                  }
-
-                  return state.conversion.convertedUnitValues
-                      .firstWhereOrNull((element) => element.id == itemId);
+              child: BlocBuilder<ConversionItemBloc, ConversionItemState>(
+                buildWhen: (prev, next) {
+                  return prev != next &&
+                      (next is ConversionItemInitialState ||
+                          next.id == unitValue.id);
                 },
-                builder: (_, unitValue) {
-                  if (unitValue == null) {
-                    return const SizedBox.shrink();
-                  }
+                builder: (_, itemState) {
+                  final resultUnitValue =
+                      itemState is ConversionItemInitialState
+                          ? unitValue
+                          : (itemState.value! as ConversionUnitValueModel);
+
+                  final isSource = itemState is ConversionItemInitialState
+                      ? unitValue.unit.id == srcUnitId
+                      : itemState.isSource;
 
                   return ConvertouchConversionItem(
-                    model: unitValue,
+                    model: resultUnitValue,
                     draggable: true,
                     index: index,
-                    readonly: !unitValue.unit.invertible,
-                    isSource: unitValue.unit.id == srcUnitId,
-                    isLast: index == lastItemIndex,
+                    readonly: !resultUnitValue.unit.invertible,
+                    isSource: isSource,
+                    isLast: isLast,
                     removable: removable,
                     onUnitItemTap: () {
                       if (widget.unitTapAction ==
                           UnitTapAction.selectReplacingUnit) {
                         unitsController.showUnitsForChangeInConversionItem(
                           context,
-                          currentUnitId: unitValue.unit.id,
+                          currentUnitId: resultUnitValue.unit.id,
                           unitGroupId: unitGroup.id,
-                          convertedUnitValuesIds: convertedUnitValuesIds,
+                          convertedUnitValues: unitValues,
                         );
                       } else if (widget.unitTapAction ==
                           UnitTapAction.showUnitInfo) {
                         unitDetailsController.showUnitDetails(
                           context,
-                          unit: unitValue.unit,
+                          unit: resultUnitValue.unit,
                           unitGroup: unitGroup,
                         );
                       }
@@ -140,14 +137,14 @@ class _ConvertouchConversionItemsViewState
                     onValueChanged: (value) {
                       conversionController.changeConversionItemValue(
                         context,
-                        unitId: unitValue.unit.id,
+                        unitId: resultUnitValue.unit.id,
                         newValue: value,
                       );
                     },
                     onItemRemoved: () {
                       conversionController.removeConversionItem(
                         context,
-                        unitId: unitValue.unit.id,
+                        unitId: resultUnitValue.unit.id,
                       );
                     },
                     colors: appColors[widget.theme].conversionItem,
@@ -166,8 +163,8 @@ class _ConvertouchConversionItemsViewState
                 newIndex -= 1;
               }
               final ConversionUnitValueModel item =
-                  viewModel.convertedValues.removeAt(oldIndex);
-              viewModel.convertedValues.insert(newIndex, item);
+                  unitValues.removeAt(oldIndex);
+              unitValues.insert(newIndex, item);
             });
           },
         );

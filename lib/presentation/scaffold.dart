@@ -19,6 +19,7 @@ import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_sta
 import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
+import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/conversion_param_sets_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_param_sets_page/single_param_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
@@ -118,6 +119,9 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<ConversionItemBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<UnitGroupsBloc>()

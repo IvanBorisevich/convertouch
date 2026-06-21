@@ -14,7 +14,8 @@ class RefreshButtonViewModel extends Equatable {
   final UnitModel? srcUnit;
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         unitGroupName,
         params,
         srcUnit,

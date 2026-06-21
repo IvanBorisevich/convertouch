@@ -218,7 +218,7 @@ class ConversionUnitValueModel extends ItemValueModel {
 
   @override
   String toString() {
-    return 'UnitValue{$value , $defaultValue | ${unit.code} | '
+    return 'UnitValue{id = $id | $value | alt = $defaultValue | ${unit.code} | '
         'list size: ${listValuesFetchResult?.items.length}}';
   }
 }
@@ -334,6 +334,6 @@ class ConversionParamValueModel extends ItemValueModel {
   @override
   String toString() {
     return 'ParamValue{${param.name}: $value , $defaultValue | ${unit?.code} | '
-        'list size: ${listValuesFetchResult?.items.length}';
+        'list size: ${listValuesFetchResult?.items.length}}';
   }
 }

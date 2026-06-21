@@ -85,14 +85,15 @@ class UnitsController {
     BuildContext context, {
     required int currentUnitId,
     required int unitGroupId,
-    required List<int> convertedUnitValuesIds,
+    required List<ConversionUnitValueModel> convertedUnitValues,
   }) {
     fetchUnits<UnitsBloc>(context, groupId: unitGroupId);
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       StartItemSelection(
         previouslySelectedId: currentUnitId,
-        excludedIds: convertedUnitValuesIds
+        excludedIds: convertedUnitValues
+            .map((item) => item.unit.id)
             .whereNot((id) => id == currentUnitId)
             .toList(),
       ),

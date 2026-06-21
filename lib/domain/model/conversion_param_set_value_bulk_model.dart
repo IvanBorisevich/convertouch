@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:equatable/equatable.dart';
@@ -220,9 +221,10 @@ class ConversionParamSetValueBulkModel extends Equatable {
     );
   }
 
-  ConversionParamSetValueModel getParamSetValueById(int id) {
-    return paramSetValues
-        .firstWhere((paramSetValue) => paramSetValue.paramSet.id == id);
+  ConversionParamSetValueModel? getParamSetValueById(int paramSetId) {
+    return paramSetValues.firstWhereOrNull(
+      (paramSetValue) => paramSetValue.paramSet.id == paramSetId,
+    );
   }
 
   ConversionParamSetValueModel? get active {

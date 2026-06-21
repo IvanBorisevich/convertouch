@@ -1,23 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
-import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
-import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
-import 'package:convertouch/presentation/controller/units_controller.dart';
-import 'package:convertouch/presentation/ui/model/conversion_params_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
+import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_param_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -29,7 +21,6 @@ const double _tabHeight = 35;
 const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
-const double _calculationSuffixIconWidth = 40;
 const double _jobInfoBoxHeight = 40;
 
 class ConversionParamsView extends StatelessWidget {
@@ -44,38 +35,20 @@ class ConversionParamsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<ConversionBloc, ConversionState,
-        ConversionParamsViewModel?>(
-      selector: (state) {
-        if (state is! ConversionBuilt) {
-          return null;
-        }
+    return conversionBlocBuilder(
+      builderFunc: (conversionState) {
+        final params = conversionState.conversion.params;
 
-        final params = state.conversion.params;
-
-        if (params != null) {
-          return ConversionParamsViewModel(
-            selected: params.active,
-            selectedIndex: params.selectedIndex,
-            paramSetsNames: params.paramSetValues
-                .map((paramSetValue) => paramSetValue.paramSet.name)
-                .toList(),
-            removalIconVisible: params.selectedParamSetCanBeRemoved,
-            unitGroup: state.conversion.unitGroup,
-          );
-        }
-
-        return null;
-      },
-      builder: (_, paramsViewModel) {
-        if (paramsViewModel == null) {
+        if (params == null) {
           return const SizedBox.shrink();
         }
 
-        bool paramsAreVisible = paramsViewModel.selected != null;
+        final unitGroup = conversionState.conversion.unitGroup;
 
-        double paramSetMaxHeight = paramsAreVisible
-            ? paramsViewModel.selected!.paramValues.length *
+        bool paramsVisible = params.active != null;
+
+        double paramSetMaxHeight = paramsVisible
+            ? params.active!.paramValues.length *
                     (_paramItemHeight + _paramsSpacing) +
                 _paramsSpacing
             : 0;
@@ -93,16 +66,16 @@ class ConversionParamsView extends StatelessWidget {
         return refreshingJobsBlocBuilder(
           builderFunc: (jobsState) {
             var job = jobsState.getJob(
-              paramsViewModel.unitGroup.name,
-              paramsViewModel.selected?.paramSet.name,
+              unitGroup.name,
+              params.active?.paramSet.name,
             );
 
             bool jobInfoBoxVisible =
-                paramsAreVisible && job != null && job.completedAt != null;
+                paramsVisible && job != null && job.completedAt != null;
 
             return ConvertouchSlidingPanel(
               defaultPanelState:
-                  paramsAreVisible ? PanelState.OPEN : PanelState.CLOSED,
+                  paramsVisible ? PanelState.OPEN : PanelState.CLOSED,
               minHeight: _footerHeight,
               maxHeight: jobInfoBoxVisible
                   ? _footerHeight + bodyHeight + _jobInfoBoxHeight
@@ -115,17 +88,21 @@ class ConversionParamsView extends StatelessWidget {
                 children: [
                   SizedBox(
                     height: bodyHeight,
-                    child: paramsViewModel.paramSetsNames.isNotEmpty
+                    child: params.paramSetValues.isNotEmpty
                         ? _paramsView(
                             context,
-                            paramsViewModel: paramsViewModel,
+                            paramSetValues: params.paramSetValues,
+                            selectedParamSetIndex: params.selectedIndex,
+                            paramsVisible: paramsVisible,
+                            removalIconVisible:
+                                params.selectedParamSetCanBeRemoved,
+                            unitGroupName: unitGroup.name,
                             tabColors: tabColors,
-                            paramsAreVisible: paramsAreVisible,
                           )
                         : _initialParamsView(
                             context,
                             colors: tabColors,
-                            unitGroupId: paramsViewModel.unitGroup.id,
+                            unitGroupId: unitGroup.id,
                           ),
                   ),
                   jobInfoBoxVisible
@@ -202,8 +179,11 @@ class ConversionParamsView extends StatelessWidget {
 
   Widget _paramsView(
     BuildContext context, {
-    required ConversionParamsViewModel paramsViewModel,
-    required bool paramsAreVisible,
+    required List<ConversionParamSetValueModel> paramSetValues,
+    required int selectedParamSetIndex,
+    required bool paramsVisible,
+    required bool removalIconVisible,
+    required String unitGroupName,
     required WidgetColorScheme tabColors,
   }) {
     return DynamicTabBarWidget(
@@ -219,7 +199,7 @@ class ConversionParamsView extends StatelessWidget {
       dividerColor: Colors.transparent,
       onAddTabMoveTo: MoveToTab.last,
       onTabControllerUpdated: (controller) {
-        controller.index = paramsViewModel.selectedIndex;
+        controller.index = selectedParamSetIndex;
       },
       onTabChanged: (index) {
         conversionController.showParamSet(
@@ -227,23 +207,24 @@ class ConversionParamsView extends StatelessWidget {
           index: index ?? 0,
         );
       },
-      dynamicTabs: paramsViewModel.paramSetsNames
+      dynamicTabs: paramSetValues
           .mapIndexed(
-            (index, paramSetName) => TabData(
+            (index, paramSetValue) => TabData(
               index: index,
               title: _tabTitle(
-                name: paramSetName,
-                isSelected: index == paramsViewModel.selectedIndex,
-                removable: paramsViewModel.removalIconVisible,
+                name: paramSetValue.paramSet.name,
+                isSelected: index == selectedParamSetIndex,
+                removable: removalIconVisible,
                 colors: tabColors,
                 onTabRemove: () {
-                  conversionController.removeSelectedParamSet(
-                    context,
-                  );
+                  conversionController.removeSelectedParamSet(context);
                 },
               ),
-              content: paramsAreVisible
-                  ? _tabContent(paramsViewModel)
+              content: paramsVisible
+                  ? _tabContent(
+                      paramSetValue: paramSetValue,
+                      unitGroupName: unitGroupName,
+                    )
                   : const SizedBox.shrink(),
             ),
           )
@@ -344,25 +325,25 @@ class ConversionParamsView extends StatelessWidget {
     );
   }
 
-  Widget _tabContent(ConversionParamsViewModel paramsViewModel) {
+  Widget _tabContent({
+    required ConversionParamSetValueModel paramSetValue,
+    required String unitGroupName,
+  }) {
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
       child: ListView.builder(
-        itemCount: paramsViewModel.selected!.paramValues.length,
+        itemCount: paramSetValue.paramValues.length,
         itemBuilder: (context, index) {
-          var paramValue = paramsViewModel.selected!.paramValues[index];
-
           return Padding(
             padding: const EdgeInsets.only(
               bottom: _paramsSpacing,
             ),
-            child: _param(
-              context,
-              paramValue: paramValue,
+            child: ConversionParamItem(
+              paramValue: paramSetValue.paramValues[index],
+              unitGroupName: unitGroupName,
+              calculationSwitchersVisible: true,
               colors: colors.paramItem,
               dialogColors: dialogColors,
-              calculationSwitchersVisible: true,
-              unitGroupName: paramsViewModel.unitGroup.name,
             ),
           );
         },
@@ -372,89 +353,6 @@ class ConversionParamsView extends StatelessWidget {
           right: _paramsSpacing,
         ),
       ),
-    );
-  }
-
-  Widget _param(
-    BuildContext context, {
-    required ConversionParamValueModel paramValue,
-    required ConversionItemColorScheme colors,
-    required WidgetColorScheme dialogColors,
-    required bool calculationSwitchersVisible,
-    required String unitGroupName,
-  }) {
-    return ConvertouchConversionItem(
-      model: paramValue,
-      draggable: false,
-      removable: false,
-      colors: colors,
-      dialogColors: dialogColors,
-      onUnitItemTap: () {
-        unitsController.showUnitsForChangeInParam(
-          context,
-          paramValue: paramValue,
-        );
-      },
-      onValueChanged: (value) {
-        conversionController.changeParamValue(
-          context,
-          paramValue: paramValue,
-          newValue: value,
-          onChanged: (newConversion, {info}) {
-            refreshButtonController.changeState(
-              context,
-              visible: newConversion.refreshable,
-              disabled: !newConversion.readyToRefresh,
-            );
-
-            if (newConversion.refreshable && newConversion.readyToRefresh) {
-              refreshingJobController.startRefreshingJob(
-                context,
-                unitGroupName: unitGroupName,
-                params: newConversion.params?.active,
-                srcUnit: newConversion.srcUnitValue?.unit,
-                jobExecutionMode: JobExecutionMode.startNewJob,
-              );
-            } else {
-              refreshingJobController.stopRefreshingJob(
-                context,
-                unitGroupName: unitGroupName,
-                paramSetName: newConversion.params?.active?.paramSet.name,
-              );
-            }
-          },
-        );
-      },
-      prefixWidgets: [
-        calculationSwitchersVisible && paramValue.param.calculable
-            ? GestureDetector(
-                onTap: () {
-                  conversionController.toggleParamCalculable(
-                    context,
-                    paramId: paramValue.param.id,
-                    paramSetId: paramValue.param.paramSetId,
-                  );
-                },
-                child: Container(
-                  width: _calculationSuffixIconWidth,
-                  padding: const EdgeInsets.only(left: 2),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12),
-                    ),
-                  ),
-                  child: Icon(
-                    paramValue.calculated
-                        ? Icons.calculate
-                        : Icons.calculate_outlined,
-                    color: paramValue.calculated
-                        ? colors.suffixWidget.selected
-                        : colors.suffixWidget.regular,
-                  ),
-                ),
-              )
-            : null,
-      ],
     );
   }
 }

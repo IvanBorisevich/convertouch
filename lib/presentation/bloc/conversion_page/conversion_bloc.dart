@@ -173,7 +173,7 @@ class ConversionBloc
         ),
       );
 
-      await _handleAndEmit(result, emit, onError: event.onError);
+      await _handleAndEmit(result, emit, event: event);
     }
   }
 
@@ -190,12 +190,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(
-      result,
-      emit,
-      onSuccess: event.onConversionUpdated,
-      onError: event.onError,
-    );
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onAddUnitsToConversion(
@@ -211,7 +206,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionItemUnit(
@@ -227,7 +222,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionItemValue(
@@ -245,7 +240,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onUpdateConversionCoefficients(
@@ -261,7 +256,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveConversionItems(
@@ -277,7 +272,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onReplaceConversionItemUnit(
@@ -297,12 +292,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(
-      result,
-      emit,
-      onSuccess: event.onConversionUpdated,
-      onError: event.onError,
-    );
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onAddParamSetsToConversion(
@@ -318,12 +308,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(
-      result,
-      emit,
-      onSuccess: event.onConversionUpdated,
-      onError: event.onError,
-    );
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveSelectedParamSetFromConversion(
@@ -337,7 +322,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveAllParamSetsFromConversion(
@@ -351,7 +336,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onSelectParamSetInConversion(
@@ -367,7 +352,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionParamValue(
@@ -388,12 +373,7 @@ class ConversionBloc
 
     log("New params after value change: ${state.conversion.params?.toJson()}");
 
-    await _handleAndEmit(
-      result,
-      emit,
-      onError: event.onError,
-      onSuccess: event.onConversionUpdated,
-    );
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onReplaceConversionParamUnit(
@@ -411,12 +391,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(
-      result,
-      emit,
-      onSuccess: event.onConversionUpdated,
-      onError: event.onError,
-    );
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onToggleCalculableParam(
@@ -433,34 +408,25 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, onError: event.onError);
-  }
-
-  _handle(
-    Either<ConvertouchException, ConversionModel> result, {
-    void Function()? onSuccess,
-    void Function(ConvertouchException)? onError,
-  }) {
-    if (result.isLeft) {
-      onError?.call(result.left);
-    } else {
-      onSuccess?.call();
-    }
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
-    void Function(ConversionModel)? onSuccess,
-    void Function(ConvertouchException)? onError,
+    required ConversionEvent event,
   }) async {
     if (result.isLeft) {
-      onError?.call(result.left);
+      event.onError?.call(result.left);
     } else {
       emit(
-        ConversionBuilt(conversion: result.right),
+        ConversionBuilt(
+          conversion: result.right,
+          rebuildUnitValues: event.rebuildUnitValues,
+        ),
       );
-      onSuccess?.call(result.right);
+
+      event.onConversionUpdated?.call(result.right);
     }
   }
 

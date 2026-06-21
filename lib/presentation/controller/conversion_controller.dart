@@ -1,16 +1,17 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
+import 'package:convertouch/presentation/controller/conversion_item_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,6 +102,15 @@ class ConversionController {
       EditConversionUnitValue(
         newValue: newValue,
         unitId: unitId,
+        onConversionUpdated: (updatedConversion, {info}) {
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateItemValue(
+              context,
+              newItemValue: unitValue,
+              isSource: unitValue.unit.id == unitId,
+            );
+          }
+        },
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
