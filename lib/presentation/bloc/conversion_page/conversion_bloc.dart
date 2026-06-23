@@ -173,9 +173,7 @@ class ConversionBloc
           onParamValueUpdated: (newParamValue) {
             event.onParamValueUpdated?.call(newParamValue);
 
-            if (newParamValue.cacheListValues) {
-              log("[${DateTime.now()}] Update params before emit with cached list values");
-
+            if (newParamValue.cacheApiFetchedListValues) {
               final newParamsFuture =
                   state.conversion.params?.copyWithChangedParamById(
                 paramId: newParamValue.param.id,
