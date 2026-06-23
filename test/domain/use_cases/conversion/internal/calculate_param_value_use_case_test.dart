@@ -1,10 +1,10 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -28,11 +28,10 @@ void main() {
     );
 
     useCase = const CalculateParamValueUseValue(
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+      calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
         fetchDynamicValueUseCase: FetchDynamicValueUseCase(
           dynamicValueRepository: MockDynamicValueRepository(),
         ),
-        listValueRepository: listValueRepository,
       ),
       initParamListValuesUseCase: InitParamListValuesUseCase(
         fetchListValuesUseCase: FetchListValuesUseCase(
@@ -55,7 +54,7 @@ void main() {
     final modifiedParamValue = ObjectUtils.tryGet(
       await useCase.execute(
         InputParamValueCalculationModel(
-          paramValue: currentParamValue,
+          itemValue: currentParamValue,
           paramSetValue: paramSetValue,
           delta: delta,
           alignCurrentValue: alignCurrentValue,
@@ -381,7 +380,8 @@ void main() {
                 null,
                 unit: meter,
                 calculated: false,
-                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
+                listValuesFetchResult:
+                    manShirtHeightRangesFrom0_164To190InMeter,
               ),
             ],
           ),

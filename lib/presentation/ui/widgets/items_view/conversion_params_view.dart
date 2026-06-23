@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -44,12 +42,9 @@ class ConversionParamsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ConversionBloc, ConversionState>(
       buildWhen: (prev, next) {
-        log("[params BlocBuilder] prev state: $prev, next state: $next");
         return prev != next && next is ConversionBuilt && next.rebuildParams;
       },
       builder: (_, conversionState) {
-        print("Rebuild entire params panel");
-
         if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }

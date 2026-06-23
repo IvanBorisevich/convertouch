@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
@@ -115,9 +117,19 @@ class ConversionBloc
       event.processPrevConversion?.call(prev.conversion);
     }
 
-    // emit(
-    //   ConversionBuilt(conversion: conversion),
-    // );
+    log("Emit after getting conversion from storage or db");
+
+    emit(
+      ConversionBuilt(
+        conversion: conversion,
+        rebuildUnitValues: event.rebuildUnitValues,
+        rebuildParams: event.rebuildParams,
+      ),
+    );
+
+    event.processCurrentConversion?.call(conversion);
+
+    log("[${DateTime.now()}] after current conversion processing");
 
     if (conversion.params == null ||
         !conversion.params!.mandatoryParamSetExists) {
@@ -129,11 +141,31 @@ class ConversionBloc
           ),
         ),
       );
+
+      log("[${DateTime.now()}] Emit after mandatory param set adding");
+
+      emit(
+        ConversionBuilt(
+          conversion: conversion,
+          rebuildUnitValues: event.rebuildUnitValues,
+          rebuildParams: event.rebuildParams,
+        ),
+      );
     }
 
+    log("[${DateTime.now()}] Before conversion align");
+
     conversion = ObjectUtils.tryGet(
-      await alignConversionUseCase.execute(conversion),
+      await alignConversionUseCase.execute(
+        InputConversionAlignModel(
+          conversion: conversion,
+          listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
+          onParamValueUpdated: event.onParamValueUpdated,
+        ),
+      ),
     );
+
+    log("[${DateTime.now()}] Emit after conversion align");
 
     emit(
       ConversionBuilt(
@@ -142,8 +174,6 @@ class ConversionBloc
         rebuildParams: event.rebuildParams,
       ),
     );
-
-    event.processCurrentConversion?.call(conversion);
   }
 
   _onSaveConversion(

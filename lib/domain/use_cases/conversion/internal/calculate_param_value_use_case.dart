@@ -1,14 +1,14 @@
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
@@ -17,7 +17,7 @@ import 'package:either_dart/either.dart';
 
 class CalculateParamValueUseValue extends UseCase<
     InputParamValueCalculationModel, ConversionParamValueModel> {
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
+  final CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase;
   final InitParamListValuesUseCase initParamListValuesUseCase;
   final UnitGroupRepository unitGroupRepository;
 
@@ -32,9 +32,11 @@ class CalculateParamValueUseValue extends UseCase<
     InputParamValueCalculationModel input,
   ) async {
     ConversionSingleParamModifyDelta? delta = input.delta;
-    ValueModel? newValue = input.paramValue.value;
-    ValueModel? newDefaultValue = input.paramValue.defaultValue;
-    UnitModel? newUnit = input.paramValue.unit;
+    ConversionParamValueModel paramValue = input.itemValue;
+
+    ValueModel? newValue = paramValue.value;
+    ValueModel? newDefaultValue = paramValue.defaultValue;
+    UnitModel? newUnit = paramValue.unit;
 
     ValueModel? newDefaultValueForNewUnit;
 
@@ -50,7 +52,7 @@ class CalculateParamValueUseValue extends UseCase<
 
       if (paramUnitGroup != null) {
         var paramValueForNewUnit = rules.calculateParamValueForNewUnit(
-          paramValue: input.paramValue,
+          paramValue: paramValue,
           tgtParamUnit: newUnit,
           params: input.paramSetValue,
           paramUnitGroup: paramUnitGroup,
@@ -63,19 +65,19 @@ class CalculateParamValueUseValue extends UseCase<
 
     ValueModel? autoCalculatedValue;
 
-    if (delta == null && input.paramValue.calculated) {
+    if (delta == null && paramValue.calculated) {
       autoCalculatedValue =
           input.srcUnitValue != null && input.unitGroupName != null
               ? rules.calculateParamValueBySrcValue(
                   srcUnitValue: input.srcUnitValue!,
                   unitGroupName: input.unitGroupName!,
                   params: input.paramSetValue,
-                  param: input.paramValue.param,
+                  param: paramValue.param,
                 )
               : null;
     }
 
-    if (input.paramValue.listType == null) {
+    if (paramValue.listType == null) {
       if (autoCalculatedValue != null) {
         newValue = null;
         newDefaultValue = autoCalculatedValue;
@@ -86,8 +88,8 @@ class CalculateParamValueUseValue extends UseCase<
             ? ObjectUtils.tryGet(
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
-                    item: input.paramValue.param,
-                    currentParamUnit: input.paramValue.unit,
+                    item: paramValue.param,
+                    currentParamUnit: paramValue.unit,
                     replacingUnit: newUnit,
                   ),
                 ),
@@ -95,13 +97,15 @@ class CalculateParamValueUseValue extends UseCase<
             : newDefaultValue;
       }
 
-      return Right(
-        input.paramValue.copyWith(
-          unit: newUnit,
-          value: newValue ?? ValueModel.empty,
-          defaultValue: newDefaultValue ?? ValueModel.empty,
-        ),
+      final resultParamValue = paramValue.copyWith(
+        unit: newUnit,
+        value: newValue ?? ValueModel.empty,
+        defaultValue: newDefaultValue ?? ValueModel.empty,
       );
+
+      input.onItemValueUpdated?.call(resultParamValue);
+
+      return Right(resultParamValue);
     } else {
       if (autoCalculatedValue != null) {
         newValue = autoCalculatedValue;
@@ -111,12 +115,15 @@ class CalculateParamValueUseValue extends UseCase<
         ObjectUtils.tryGet(
           await initParamListValuesUseCase.execute(
             InputParamListValuesInitModel(
-              itemValue: input.paramValue.copyWith(
+              itemValue: paramValue.copyWith(
                 value: newValue ?? ValueModel.empty,
                 unit: newUnit,
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
+              keepSelectedValueIfNotInList: input.keepSelectedValueIfNotInList,
+              asyncFetchMode: input.listValuesAsyncFetchMode,
+              onListValuesFetched: input.onItemValueUpdated,
             ),
           ),
         ),

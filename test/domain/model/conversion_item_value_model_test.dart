@@ -14,7 +14,7 @@ void main() {
       10,
       null,
       unit: kilogram,
-      listValuesFetchResult: const ListValuesFetchResult.empty(),
+      listValuesFetchResult: const ListValuesFetchResult.successEmpty(),
     );
 
     final deserializedBarWeightParamVal = ConversionParamValueModel.tuple(

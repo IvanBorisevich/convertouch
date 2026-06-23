@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -672,8 +674,11 @@ class _ListField extends StatefulWidget {
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
-  late ValueNotifier<ValueModel?> _selectedValueNotifier;
-  late ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
+  late bool _isDropdownClosedProgrammatically;
+
+  late final ValueNotifier<ValueModel?> _selectedValueNotifier;
+  late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
+  late final ValueNotifier<Object?> _openDropdownNotifier;
 
   TextEditingController? _dropdownSearchController;
   FocusNode? _dropdownSearchFocusNode;
@@ -683,9 +688,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.initState();
 
     _isDropdownOpen = false;
+    _isDropdownClosedProgrammatically = false;
 
     _selectedValueNotifier = ValueNotifier(widget.model.value);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
+    _listValuesNotifier.addListener(_onListValuesUpdated);
+
+    _openDropdownNotifier = ValueNotifier<Object?>(null);
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController = TextEditingController();
@@ -693,9 +702,23 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     }
   }
 
+  void _onListValuesUpdated() {
+    if (_isDropdownOpen) {
+      log("Auto-closing dropdown on list values updated");
+      Navigator.of(context).pop();
+
+      setState(() {
+        _isDropdownClosedProgrammatically = true;
+      });
+    }
+  }
+
   @override
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
+    _listValuesNotifier.removeListener(_onListValuesUpdated);
+    _listValuesNotifier.dispose();
+    _openDropdownNotifier.dispose();
     _dropdownSearchController?.dispose();
     _selectedValueNotifier.dispose();
     super.dispose();
@@ -729,10 +752,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       child: ValueListenableBuilder(
         valueListenable: _listValuesNotifier,
         builder: (_, listValuesFetchResult, child) {
-          final handlerItem = _handlerDropdownItem(listValuesFetchResult);
+          final items = _buildDropdownItems(listValuesFetchResult);
 
           return DropdownButtonHideUnderline(
             child: DropdownButtonFormField2<ValueModel>(
+              valueListenable: _selectedValueNotifier,
+              items: items,
+              openDropdownListenable: _openDropdownNotifier,
               isExpanded: true,
               decoration: _inputFieldDecoration(
                 context,
@@ -751,27 +777,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 fontSize: widget.fontSize,
                 foregroundColor: widget.foregroundColor,
               ),
-              valueListenable: _selectedValueNotifier,
-              items: (listValuesFetchResult?.items ?? [])
-                  .map(
-                    (value) => DropdownItem(
-                      value: value,
-                      height: _defaultListItemHeight,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 17),
-                        child: Text(
-                          value.itemName,
-                          style: _inputFieldTextStyle(
-                            fontSize: widget.fontSize,
-                            foregroundColor:
-                                widget.dropdownColors.foreground.regular,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList()
-                ..addAll(handlerItem != null ? [handlerItem] : []),
               onChanged: (listValue) {
                 if (listValue != null) {
                   _selectedValueNotifier.value = listValue;
@@ -898,12 +903,22 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     )
                   : null,
               onMenuStateChange: (isOpen) {
+                if (!mounted) {
+                  return;
+                }
+
                 if (!isOpen) {
                   _dropdownSearchController?.clear();
                 }
 
+                if (!isOpen && _isDropdownClosedProgrammatically) {
+                  log("Auto-reopening dropdown on list values updated");
+                  _openDropdownNotifier.value = Object();
+                }
+
                 setState(() {
                   _isDropdownOpen = isOpen;
+                  _isDropdownClosedProgrammatically = false;
                 });
               },
             ),
@@ -913,14 +928,57 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     );
   }
 
-  DropdownItem<ValueModel>? _handlerDropdownItem(
+  List<DropdownItem<ValueModel>>? _buildDropdownItems(
     ListValuesFetchResult? listValuesFetchResult,
   ) {
+    log("[handlerDropdownItem] listValuesFetchResult: $listValuesFetchResult");
+
     if (listValuesFetchResult == null) {
-      return null;
+      log("[handlerDropdownItem] listValuesFetchResult = null");
+      return const [];
     }
 
-    if (listValuesFetchResult.status == FetchingStatus.failure) {
+    List<DropdownItem<ValueModel>> items = listValuesFetchResult.items
+        .map(
+          (value) => DropdownItem(
+            value: value,
+            height: _defaultListItemHeight,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              child: Text(
+                value.itemName,
+                style: _inputFieldTextStyle(
+                  fontSize: widget.fontSize,
+                  foregroundColor: widget.dropdownColors.foreground.regular,
+                ),
+              ),
+            ),
+          ),
+        )
+        .toList();
+
+    if (listValuesFetchResult.status == FetchingStatus.loading) {
+      log("[handlerDropdownItem] listValuesFetchResult status = loading");
+
+      items.add(
+        DropdownItem<ValueModel>(
+          enabled: false,
+          alignment: Alignment.center,
+          height: 30,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeCap: StrokeCap.round,
+              color: widget.dropdownColors.foreground.regular,
+            ),
+          ),
+        ),
+      );
+    } else if (listValuesFetchResult.status == FetchingStatus.failure) {
+      log("[handlerDropdownItem] listValuesFetchResult status = failure");
+
       retryFunc() {
         widget.listValuesBloc.add(
           FetchItems(
@@ -931,87 +989,75 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         );
       }
 
-      return DropdownItem<ValueModel>(
-        enabled: false,
-        alignment: Alignment.center,
-        height: 40,
-        child: Container(
+      items.add(
+        DropdownItem<ValueModel>(
+          enabled: false,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showConvertouchDialog(
-                    currentTheme: ConvertouchUITheme.dark,
-                    context: context,
-                    builder: (context, setStateDialog) {
-                      return ConvertouchFailureDialog(
-                        title: _fetchErrorMsg,
-                        handlerFunc: retryFunc,
-                        handlerActionName: "Retry",
-                        content: Text(
-                          listValuesFetchResult.error?.message ??
-                              "Something went wrong during fetch",
-                          style: _inputFieldTextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            foregroundColor:
-                                widget.dialogColors.foreground.regular,
+          height: 40,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    showConvertouchDialog(
+                      currentTheme: ConvertouchUITheme.dark,
+                      context: context,
+                      builder: (context, setStateDialog) {
+                        return ConvertouchFailureDialog(
+                          title: _fetchErrorMsg,
+                          handlerFunc: retryFunc,
+                          handlerActionName: "Retry",
+                          content: Text(
+                            listValuesFetchResult.error?.message ??
+                                "Something went wrong during fetch",
+                            style: _inputFieldTextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              foregroundColor:
+                                  widget.dialogColors.foreground.regular,
+                            ),
                           ),
-                        ),
-                        colors: widget.dialogColors,
-                      );
-                    },
-                  ).then((returnedValue) {});
-                },
-                child: Icon(
-                  Icons.help_outline_rounded,
-                  color: widget.dropdownColors.foreground.warning,
+                          colors: widget.dialogColors,
+                        );
+                      },
+                    ).then((returnedValue) {});
+                  },
+                  child: Icon(
+                    Icons.help_outline_rounded,
+                    color: widget.dropdownColors.foreground.warning,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    _fetchErrorMsg,
-                    style: _inputFieldTextStyle(
-                      fontSize: 14,
-                      foregroundColor: widget.dropdownColors.foreground.warning,
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      _fetchErrorMsg,
+                      style: _inputFieldTextStyle(
+                        fontSize: 14,
+                        foregroundColor:
+                            widget.dropdownColors.foreground.warning,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: retryFunc,
-                child: Icon(
-                  Icons.refresh_rounded,
-                  color: widget.dropdownColors.foreground.warning,
+                GestureDetector(
+                  onTap: retryFunc,
+                  child: Icon(
+                    Icons.refresh_rounded,
+                    color: widget.dropdownColors.foreground.warning,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
     }
 
-    if (!listValuesFetchResult.hasReachedMax) {
-      return DropdownItem<ValueModel>(
-        enabled: false,
-        alignment: Alignment.center,
-        height: 30,
-        child: Container(
-          padding: const EdgeInsets.all(2),
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeCap: StrokeCap.round,
-            color: widget.dropdownColors.foreground.regular,
-          ),
-        ),
-      );
-    }
+    log("[handlerDropdownItem] items size: ${items.length}");
 
-    return null;
+    return items;
   }
 }
 

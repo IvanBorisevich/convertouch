@@ -5,11 +5,12 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
@@ -49,12 +50,11 @@ void main() {
       listValueRepository: listValueRepository,
     );
 
-    final CalculateDefaultValueUseCase calculateDefaultValueUseCase =
-        CalculateDefaultValueUseCase(
-      fetchDynamicValueUseCase: const FetchDynamicValueUseCase(
+    const CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase =
+        CalculateNonListDefaultValueUseCase(
+      fetchDynamicValueUseCase: FetchDynamicValueUseCase(
         dynamicValueRepository: MockDynamicValueRepository(),
       ),
-      listValueRepository: listValueRepository,
     );
 
     final CalculateParamSetValueUseCase calculateParamSetValueUseCase =
@@ -118,7 +118,7 @@ void main() {
     );
 
     var alignedConversion = ObjectUtils.tryGet(
-      await useCase.execute(conversion),
+      await useCase.execute(InputConversionAlignModel(conversion: conversion)),
     );
 
     expect(
@@ -140,14 +140,16 @@ void main() {
                   garmentParam,
                   null,
                   null,
-                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
+                  listValuesFetchResult:
+                      const OutputItemsFetchModel.successEmpty(),
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   const NumRange.withRight(174, 180),
                   null,
                   unit: meter,
-                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
+                  listValuesFetchResult:
+                      const OutputItemsFetchModel.successEmpty(),
                 ),
               ],
             )
@@ -216,7 +218,7 @@ void main() {
     );
 
     var alignedConversion = ObjectUtils.tryGet(
-      await useCase.execute(conversion),
+      await useCase.execute(InputConversionAlignModel(conversion: conversion)),
     );
 
     expect(
@@ -245,7 +247,8 @@ void main() {
                   manShirtHeightRangesFrom0_164To190InMeter.items[3],
                   null,
                   unit: meter,
-                  listValuesFetchResult: const OutputItemsFetchModel.empty(),
+                  listValuesFetchResult:
+                      const OutputItemsFetchModel.successEmpty(),
                 ),
               ],
             )

@@ -222,7 +222,16 @@ enum ConvertouchListType {
   }
 }
 
-enum FetchingStatus { success, failure }
+enum ListValuesAsyncFetchMode {
+  all,
+  viaApiOnly,
+}
+
+enum FetchingStatus {
+  success,
+  loading,
+  failure,
+}
 
 enum ConvertouchSysAction {
   connection("SETTINGS");

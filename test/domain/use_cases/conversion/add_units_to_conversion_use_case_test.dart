@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -38,11 +38,10 @@ void main() {
 
     useCase = const AddUnitsToConversionUseCase(
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
-        calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+        calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
           fetchDynamicValueUseCase: FetchDynamicValueUseCase(
             dynamicValueRepository: MockDynamicValueRepository(),
           ),
-          listValueRepository: listValueRepository,
         ),
         unitGroupRepository: MockUnitGroupRepository(),
         initUnitListValuesUseCase: initUnitListValuesUseCase,

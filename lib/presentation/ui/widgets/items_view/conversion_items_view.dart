@@ -35,8 +35,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
             next.rebuildUnitValues;
       },
       builder: (_, conversionState) {
-        print("Rebuild entire unit values list");
-
         if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
@@ -85,17 +83,11 @@ class ConvertouchConversionItemsView extends StatelessWidget {
               child: BlocBuilder<ConversionUnitValueBloc,
                   ConversionUnitValueState>(
                 buildWhen: (prev, next) {
-                  print(
-                      "[item BlocBuilder] prev state: $prev, next state: $next");
-
                   return prev != next &&
                       (next is ConversionUnitValueInitialState ||
                           next.id == unitValue.id);
                 },
                 builder: (_, itemState) {
-                  print(
-                      "conversion unit item builder() is triggered, itemState: $itemState");
-
                   final resultUnitValue =
                       itemState is ConversionUnitValueInitialState
                           ? unitValue

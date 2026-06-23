@@ -15,14 +15,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final P? fetchParams;
   final bool containsSelectedValue;
 
-  const OutputItemsFetchModel.empty()
-      : this(
-          items: const [],
-          status: FetchingStatus.success,
-          hasReachedMax: true,
-          pageNum: 0,
-        );
-
   const OutputItemsFetchModel({
     required this.items,
     this.searchString,
@@ -33,6 +25,44 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.fetchParams,
     this.containsSelectedValue = true,
   });
+
+  const OutputItemsFetchModel.loading()
+      : this(
+          items: const [],
+          status: FetchingStatus.loading,
+          hasReachedMax: false,
+          pageNum: 0,
+        );
+
+  const OutputItemsFetchModel.failure({
+    required this.items,
+    this.searchString,
+    this.error,
+    this.hasReachedMax = false,
+    this.pageNum = 0,
+    this.fetchParams,
+    this.containsSelectedValue = true,
+  }) : status = FetchingStatus.failure;
+
+  const OutputItemsFetchModel.success({
+    required this.items,
+    this.searchString,
+    this.hasReachedMax = false,
+    this.pageNum = 0,
+    this.fetchParams,
+    this.containsSelectedValue = true,
+  })  : status = FetchingStatus.success,
+        error = null;
+
+  const OutputItemsFetchModel.successEmpty({
+    this.items = const [],
+    this.searchString,
+    this.pageNum = 0,
+    this.fetchParams,
+  })  : status = FetchingStatus.success,
+        error = null,
+        hasReachedMax = true,
+        containsSelectedValue = true;
 
   OutputItemsFetchModel<T, P> copyWith({
     List<T>? items,

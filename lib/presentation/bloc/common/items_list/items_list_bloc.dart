@@ -28,7 +28,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
   ItemsListBloc()
       : super(
           ItemsFetched<T, P>(
-            itemsFetch: const OutputItemsFetchModel.empty(),
+            itemsFetch: const OutputItemsFetchModel.successEmpty(),
           ),
         ) {
     on<FetchItems<P>>(

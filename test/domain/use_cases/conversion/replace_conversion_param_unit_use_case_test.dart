@@ -3,7 +3,7 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
@@ -32,11 +32,10 @@ void main() {
     useCase = const ReplaceConversionParamUnitUseCase(
       calculateParamSetValueUseCase: CalculateParamSetValueUseCase(
         calculateParamValueUseValue: CalculateParamValueUseValue(
-          calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+          calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
             fetchDynamicValueUseCase: FetchDynamicValueUseCase(
               dynamicValueRepository: MockDynamicValueRepository(),
             ),
-            listValueRepository: listValueRepository,
           ),
           initParamListValuesUseCase: InitParamListValuesUseCase(
             fetchListValuesUseCase: FetchListValuesUseCase(

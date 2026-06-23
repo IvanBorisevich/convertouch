@@ -1,9 +1,10 @@
-import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_param_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -50,12 +51,15 @@ class CalculateParamSetValueUseCase extends UseCase<
     ConversionParamValueModel changedStartParamValue = ObjectUtils.tryGet(
       await calculateParamValueUseValue.execute(
         InputParamValueCalculationModel(
-          paramValue: startParamValue,
+          itemValue: startParamValue,
           paramSetValue: newParamSetValue,
           delta: delta,
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
           alignCurrentValue: input.alignCurrentValues,
+          keepSelectedValueIfNotInList: input.keepSelectedValuesIfNotInList,
+          listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
+          onItemValueUpdated: input.onParamValueUpdated,
         ),
       ),
     );
@@ -73,6 +77,9 @@ class CalculateParamSetValueUseCase extends UseCase<
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
           alignCurrentValues: input.alignCurrentValues,
+          keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
+          onParamValueUpdated: input.onParamValueUpdated,
+          listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
         ),
       );
     } else {
@@ -86,6 +93,9 @@ class CalculateParamSetValueUseCase extends UseCase<
     ConversionUnitValueModel? srcUnitValue,
     String? unitGroupName,
     required bool alignCurrentValues,
+    required bool keepSelectedValuesIfNotInList,
+    required ListValuesAsyncFetchMode listValuesAsyncFetchMode,
+    void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
     int indexByParamId =
         paramSetValue.paramValues.indexWhere((e) => e.param.id == paramId);
@@ -105,11 +115,14 @@ class CalculateParamSetValueUseCase extends UseCase<
       final modifiedParamValue = ObjectUtils.tryGet(
         await calculateParamValueUseValue.execute(
           InputParamValueCalculationModel(
-            paramValue: paramValue,
+            itemValue: paramValue,
             paramSetValue: modifiedParamSetValue,
             srcUnitValue: srcUnitValue,
             unitGroupName: unitGroupName,
             alignCurrentValue: alignCurrentValues,
+            keepSelectedValueIfNotInList: keepSelectedValuesIfNotInList,
+            listValuesAsyncFetchMode: listValuesAsyncFetchMode,
+            onItemValueUpdated: onParamValueUpdated,
           ),
         ),
       );

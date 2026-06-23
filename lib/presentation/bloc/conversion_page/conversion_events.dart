@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -28,11 +29,13 @@ class GetConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;
   final void Function(ConversionModel?)? processCurrentConversion;
+  final void Function(ConversionParamValueModel)? onParamValueUpdated;
 
   const GetConversion({
     required this.unitGroup,
     this.processPrevConversion,
     this.processCurrentConversion,
+    this.onParamValueUpdated,
   }) : super(rebuildUnitValues: true, rebuildParams: true);
 
   @override

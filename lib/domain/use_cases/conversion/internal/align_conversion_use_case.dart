@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
@@ -11,7 +13,8 @@ import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-class AlignConversionUseCase extends UseCase<ConversionModel, ConversionModel> {
+class AlignConversionUseCase
+    extends UseCase<InputConversionAlignModel, ConversionModel> {
   final CalculateParamSetValueUseCase calculateParamSetValueUseCase;
   final CalculateUnitValueUseValue calculateUnitValueUseValue;
   final AddParamSetsToConversionUseCase addParamSetsToConversionUseCase;
@@ -24,16 +27,18 @@ class AlignConversionUseCase extends UseCase<ConversionModel, ConversionModel> {
 
   @override
   Future<Either<ConvertouchException, ConversionModel>> execute(
-    ConversionModel input,
+    InputConversionAlignModel input,
   ) async {
     ConversionModel alignedConversion = await _alignParams(
-      input,
-      unitGroupName: input.unitGroup.name,
+      input.conversion,
+      unitGroupName: input.conversion.unitGroup.name,
+      listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
+      onParamValueUpdated: input.onParamValueUpdated,
     );
 
     alignedConversion = await _alignConversionUnitValues(
       alignedConversion,
-      unitGroupName: input.unitGroup.name,
+      unitGroupName: input.conversion.unitGroup.name,
     );
 
     return Right(alignedConversion);
@@ -42,6 +47,8 @@ class AlignConversionUseCase extends UseCase<ConversionModel, ConversionModel> {
   Future<ConversionModel> _alignParams(
     ConversionModel conversion, {
     required String unitGroupName,
+    required ListValuesAsyncFetchMode listValuesAsyncFetchMode,
+    void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
     if (conversion.params == null) {
       return conversion;
@@ -55,7 +62,10 @@ class AlignConversionUseCase extends UseCase<ConversionModel, ConversionModel> {
               paramSetValue: paramSetValue,
               unitGroupName: unitGroupName,
               alignCurrentValues: false,
+              keepSelectedValuesIfNotInList: false,
+              listValuesAsyncFetchMode: listValuesAsyncFetchMode,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
+              onParamValueUpdated: onParamValueUpdated,
             ),
           ),
         );
@@ -77,7 +87,7 @@ class AlignConversionUseCase extends UseCase<ConversionModel, ConversionModel> {
       var newUnitValue = ObjectUtils.tryGet(
         await calculateUnitValueUseValue.execute(
           InputUnitValueCalculationModel(
-            unitValue: unitValue,
+            itemValue: unitValue,
             paramSetValue: conversion.params?.active,
             alignCurrentValue: false,
             unitGroupName: unitGroupName,

@@ -1,16 +1,16 @@
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
@@ -19,7 +19,7 @@ import 'package:either_dart/either.dart';
 
 class CalculateUnitValueUseValue
     extends UseCase<InputUnitValueCalculationModel, ConversionUnitValueModel> {
-  final CalculateDefaultValueUseCase calculateDefaultValueUseCase;
+  final CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase;
   final InitUnitListValuesUseCase initUnitListValuesUseCase;
   final UnitGroupRepository unitGroupRepository;
 
@@ -34,9 +34,11 @@ class CalculateUnitValueUseValue
     InputUnitValueCalculationModel input,
   ) async {
     ConversionSingleUnitModifyDelta? delta = input.delta;
-    ValueModel? newValue = input.unitValue.value;
-    ValueModel? newDefaultValue = input.unitValue.defaultValue;
-    UnitModel? newUnit = input.unitValue.unit;
+    ConversionUnitValueModel unitValue = input.itemValue;
+
+    ValueModel? newValue = unitValue.value;
+    ValueModel? newDefaultValue = unitValue.defaultValue;
+    UnitModel? newUnit = unitValue.unit;
 
     ValueModel? newDefaultValueForNewUnit;
 
@@ -53,7 +55,7 @@ class CalculateUnitValueUseValue
 
         if (paramUnitGroup != null) {
           var unitValueForNewUnit = rules.calculateUnitValueForNewUnit(
-            unitValue: input.unitValue,
+            unitValue: unitValue,
             paramUnitGroup: paramUnitGroup,
             tgtParamUnit: newUnit,
             params: input.paramSetValue,
@@ -76,13 +78,13 @@ class CalculateUnitValueUseValue
         paramsAreApplicable &&
         input.unitGroupName != null) {
       calculatedValueByParams = rules.calculateSrcValueByParams(
-        srcUnit: input.unitValue.unit,
+        srcUnit: unitValue.unit,
         params: input.paramSetValue!,
         unitGroupName: input.unitGroupName!,
       );
     }
 
-    if (input.unitValue.listType == null) {
+    if (unitValue.listType == null) {
       if (calculatedValueByParams != null && calculatedValueByParams.hasValue) {
         newValue = calculatedValueByParams.value;
         newDefaultValue = calculatedValueByParams.defaultValue;
@@ -95,7 +97,7 @@ class CalculateUnitValueUseValue
             ? ObjectUtils.tryGet(
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
-                    item: input.unitValue.unit,
+                    item: unitValue.unit,
                     replacingUnit: newUnit,
                   ),
                 ),
@@ -104,7 +106,7 @@ class CalculateUnitValueUseValue
       }
 
       return Right(
-        input.unitValue.copyWith(
+        unitValue.copyWith(
           unit: newUnit,
           value: newValue ?? ValueModel.empty,
           defaultValue: newDefaultValue ?? ValueModel.empty,
@@ -119,13 +121,15 @@ class CalculateUnitValueUseValue
         ObjectUtils.tryGet(
           await initUnitListValuesUseCase.execute(
             InputUnitListValuesInitModel(
-              itemValue: input.unitValue.copyWith(
+              itemValue: unitValue.copyWith(
                 value: newValue ?? ValueModel.empty,
                 unit: newUnit,
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
-              alignForNull: !paramsNotExistOrApplicable,
+              keepSelectedValueIfNotInList:
+                  input.keepSelectedValueIfNotInList ||
+                      !paramsNotExistOrApplicable,
             ),
           ),
         ),

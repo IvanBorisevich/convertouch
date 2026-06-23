@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -35,10 +34,9 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
             );
 
       return Right(
-        OutputItemsFetchModel(
+        OutputItemsFetchModel.failure(
           items: const [],
           searchString: searchString,
-          status: FetchingStatus.failure,
           error: error,
           pageNum: pageNum,
           fetchParams: fetchParams,
@@ -61,7 +59,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     bool hasReachedMax = newPageItems.length < pageSize;
 
     return Right(
-      OutputItemsFetchModel(
+      OutputItemsFetchModel.success(
         items: itemsWithMatch,
         searchString: searchString,
         pageNum: pageNum,

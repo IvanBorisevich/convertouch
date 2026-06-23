@@ -44,6 +44,13 @@ class ConversionController {
           );
         },
         processCurrentConversion: processCurrentConversion,
+        onParamValueUpdated: (newParamValue) {
+          conversionItemController.updateParamValue(
+            context,
+            id: newParamValue.id,
+            newParamValue: newParamValue,
+          );
+        },
       ),
     );
   }

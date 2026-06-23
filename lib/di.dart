@@ -38,7 +38,7 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
@@ -251,10 +251,9 @@ Future<void> _initUseCases() async {
     () => const ValidateInputUseCase(),
   );
 
-  locator.registerLazySingleton<CalculateDefaultValueUseCase>(
-    () => CalculateDefaultValueUseCase(
+  locator.registerLazySingleton<CalculateNonListDefaultValueUseCase>(
+    () => CalculateNonListDefaultValueUseCase(
       fetchDynamicValueUseCase: locator(),
-      listValueRepository: locator(),
     ),
   );
 

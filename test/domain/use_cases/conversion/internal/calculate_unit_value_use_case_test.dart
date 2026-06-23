@@ -4,8 +4,8 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_unit_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_default_value_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -29,11 +29,10 @@ void main() {
     );
 
     useCase = const CalculateUnitValueUseValue(
-      calculateDefaultValueUseCase: CalculateDefaultValueUseCase(
+      calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
         fetchDynamicValueUseCase: FetchDynamicValueUseCase(
           dynamicValueRepository: MockDynamicValueRepository(),
         ),
-        listValueRepository: listValueRepository,
       ),
       initUnitListValuesUseCase: InitUnitListValuesUseCase(
         fetchListValuesUseCase: FetchListValuesUseCase(
@@ -50,16 +49,18 @@ void main() {
     ConversionSingleUnitModifyDelta? delta,
     ConversionParamSetValueModel? paramSetValue,
     bool alignCurrentValue = true,
+    bool keepSelectedValueIfNotInList = false,
     bool calculateByParams = false,
     String? unitGroupName,
   }) async {
     final modifiedUnitValue = ObjectUtils.tryGet(
       await useCase.execute(
         InputUnitValueCalculationModel(
-          unitValue: currentUnitValue,
+          itemValue: currentUnitValue,
           paramSetValue: paramSetValue,
           delta: delta,
           alignCurrentValue: alignCurrentValue,
+          keepSelectedValueIfNotInList: keepSelectedValueIfNotInList,
           calculateByParams: calculateByParams,
           unitGroupName: unitGroupName,
         ),
