@@ -767,7 +767,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _isDropdownOpen = false;
     _isDropdownClosedProgrammatically = false;
 
-    _selectedValueNotifier = ValueNotifier(widget.model.value);
+    _selectedValueNotifier = ValueNotifier(_getMainValue());
     widget.listValuesNotifier.addListener(_onListValuesUpdated);
 
     _openDropdownNotifier = ValueNotifier<Object?>(null);
@@ -776,6 +776,16 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       _dropdownSearchController = TextEditingController();
       _dropdownSearchFocusNode = initOrGetFocusNode();
     }
+  }
+
+  ValueModel? _getMainValue() {
+    return widget.model.valueExistsForEmptyList ? null : widget.model.value;
+  }
+
+  String _getHint() {
+    return widget.model.valueExistsForEmptyList
+        ? (widget.model.value?.itemName ?? _noValueHint)
+        : _noValueHint;
   }
 
   void _onListValuesUpdated() {
@@ -803,7 +813,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedValueNotifier.value = widget.model.value;
+    _selectedValueNotifier.value = _getMainValue();
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController ??= TextEditingController();
@@ -839,8 +849,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 margin: widget.margin,
                 fontSize: widget.fontSize,
                 labelText: widget.model.labelText,
-                hintText: _noValueHint,
-                hintColor: widget.hintColor,
+                hintText: _getHint(),
+                hintColor: widget.model.valueExistsForEmptyList
+                    ? widget.foregroundColor
+                    : widget.hintColor,
                 labelColor: widget.labelColor,
                 floatingLabelBehavior: widget.floatingLabelBehavior,
                 contentPadding: const EdgeInsets.symmetric(

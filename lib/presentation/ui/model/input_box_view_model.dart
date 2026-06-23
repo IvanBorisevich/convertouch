@@ -37,6 +37,10 @@ abstract class InputBoxViewModel {
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
                 _nonSearchableListItemsMinLimit,
+        valueExistsForEmptyList: model.value != null &&
+            model.value!.hasRawValue &&
+            (model.listValuesFetchResult == null ||
+                model.listValuesFetchResult!.items.isEmpty),
       ) as T;
     } else {
       return TextBoxViewModel(
@@ -88,6 +92,7 @@ class ListBoxViewModel extends InputBoxViewModel {
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
+  final bool valueExistsForEmptyList;
 
   const ListBoxViewModel({
     super.itemId,
@@ -98,6 +103,7 @@ class ListBoxViewModel extends InputBoxViewModel {
     required this.listValuesFetchResult,
     this.searchHint,
     this.searchEnabled = true,
+    this.valueExistsForEmptyList = false,
   });
 
   @override
@@ -109,6 +115,7 @@ class ListBoxViewModel extends InputBoxViewModel {
         'listValuesFetchResult: $listValuesFetchResult, '
         'listType: $listType, '
         'searchHint: $searchHint, '
-        'searchEnabled: $searchEnabled}';
+        'searchEnabled: $searchEnabled, '
+        'valueExistsForEmptyList: $valueExistsForEmptyList}';
   }
 }
