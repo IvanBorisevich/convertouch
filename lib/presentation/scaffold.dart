@@ -8,7 +8,6 @@ import 'package:convertouch/main.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
@@ -113,9 +112,6 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
         ),
         BlocProvider(
           create: (context) => di.locator<ItemsSelectionBlocForUnitDetails>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ListValuesBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<ConversionBloc>(),

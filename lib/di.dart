@@ -68,7 +68,6 @@ import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
@@ -110,22 +109,22 @@ Future<void> init() async {
   );
 
   locator.registerLazySingleton<ConvertouchDatabaseHelper>(
-        () => ConvertouchDatabaseHelper(),
+    () => ConvertouchDatabaseHelper(),
   );
 
   locator.registerLazySingleton<NetworkHelper>(
-        () => NetworkHelper(Connectivity()),
+    () => NetworkHelper(Connectivity()),
   );
 
   ConvertouchDatabase database =
-  await ConvertouchDatabaseHelper.I.initDatabase();
+      await ConvertouchDatabaseHelper.I.initDatabase();
 
   locator.registerLazySingleton<ConvertouchDatabase>(
-        () => database,
+    () => database,
   );
 
   locator.registerLazySingleton<Connectivity>(
-        () => Connectivity(),
+    () => Connectivity(),
   );
 
   await _initDao();
@@ -138,564 +137,513 @@ Future<void> init() async {
 
 Future<void> _initDao() async {
   locator.registerLazySingleton<NetworkDao>(
-        () =>
-        NetworkDaoImpl(
-          networkHelper: locator(),
-        ),
+    () => NetworkDaoImpl(
+      networkHelper: locator(),
+    ),
   );
 }
 
 Future<void> _initRepositories(ConvertouchDatabase database) async {
   locator.registerLazySingleton<UnitGroupRepository>(
-        () => UnitGroupRepositoryImpl(database.unitGroupDao),
+    () => UnitGroupRepositoryImpl(database.unitGroupDao),
   );
 
   locator.registerLazySingleton<UnitRepository>(
-        () =>
-        UnitRepositoryImpl(
-          unitDao: database.unitDao,
-          conversionParamUnitDao: database.conversionParamUnitDao,
-        ),
+    () => UnitRepositoryImpl(
+      unitDao: database.unitDao,
+      conversionParamUnitDao: database.conversionParamUnitDao,
+    ),
   );
 
   locator.registerLazySingleton<ConversionRepository>(
-        () =>
-        ConversionRepositoryImpl(
-          conversionDao: database.conversionDao,
-          conversionUnitValueDao: database.conversionUnitValueDao,
-          conversionParamValueDao: database.conversionParamValueDao,
-          unitGroupRepository: locator(),
-          unitRepository: locator(),
-          conversionParamRepository: locator(),
-          conversionParamSetRepository: locator(),
-          database: database.database.database,
-        ),
+    () => ConversionRepositoryImpl(
+      conversionDao: database.conversionDao,
+      conversionUnitValueDao: database.conversionUnitValueDao,
+      conversionParamValueDao: database.conversionParamValueDao,
+      unitGroupRepository: locator(),
+      unitRepository: locator(),
+      conversionParamRepository: locator(),
+      conversionParamSetRepository: locator(),
+      database: database.database.database,
+    ),
   );
 
   locator.registerLazySingleton<NetworkRepository>(
-        () =>
-        NetworkRepositoryImpl(
-          networkDao: locator(),
-          unitDao: database.unitDao,
-          dynamicValueDao: database.dynamicValueDao,
-          database: database.database.database,
-          unitGroupRepository: locator(),
-        ),
+    () => NetworkRepositoryImpl(
+      networkDao: locator(),
+      unitDao: database.unitDao,
+      dynamicValueDao: database.dynamicValueDao,
+      database: database.database.database,
+      unitGroupRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<DynamicValueRepository>(
-        () =>
-        DynamicValueRepositoryImpl(
-          networkRepository: locator(),
-          dynamicValueDao: database.dynamicValueDao,
-          unitDao: database.unitDao,
-          database: database.database.database,
-        ),
+    () => DynamicValueRepositoryImpl(
+      networkRepository: locator(),
+      dynamicValueDao: database.dynamicValueDao,
+      unitDao: database.unitDao,
+      database: database.database.database,
+    ),
   );
 
   locator.registerLazySingleton<ConversionParamSetRepository>(
-        () =>
-        ConversionParamSetRepositoryImpl(
-          conversionParamSetDao: database.conversionParamSetDao,
-        ),
+    () => ConversionParamSetRepositoryImpl(
+      conversionParamSetDao: database.conversionParamSetDao,
+    ),
   );
 
   locator.registerLazySingleton<ConversionParamRepository>(
-        () =>
-        ConversionParamRepositoryImpl(
-          conversionParamDao: database.conversionParamDao,
-          unitDao: database.unitDao,
-        ),
+    () => ConversionParamRepositoryImpl(
+      conversionParamDao: database.conversionParamDao,
+      unitDao: database.unitDao,
+    ),
   );
 
   locator.registerLazySingleton<ListValueRepository>(
-        () =>
-        ListValueRepositoryImpl(
-          networkRepository: locator(),
-        ),
+    () => ListValueRepositoryImpl(
+      networkRepository: locator(),
+    ),
   );
 }
 
 Future<void> _initTranslators() async {
   locator.registerLazySingleton<UnitGroupTranslator>(
-        () => UnitGroupTranslator(),
+    () => UnitGroupTranslator(),
   );
 
   locator.registerLazySingleton<UnitTranslator>(
-        () => UnitTranslator(),
+    () => UnitTranslator(),
   );
 
   locator.registerLazySingleton<DynamicValueTranslator>(
-        () => DynamicValueTranslator(),
+    () => DynamicValueTranslator(),
   );
 
   locator.registerLazySingleton<ConversionTranslator>(
-        () => ConversionTranslator(),
+    () => ConversionTranslator(),
   );
 
   locator.registerLazySingleton<ConversionUnitValueTranslator>(
-        () => ConversionUnitValueTranslator(),
+    () => ConversionUnitValueTranslator(),
   );
 
   locator.registerLazySingleton<ConversionParamValueTranslator>(
-        () => ConversionParamValueTranslator(),
+    () => ConversionParamValueTranslator(),
   );
 
   locator.registerLazySingleton<ConversionParamSetTranslator>(
-        () => ConversionParamSetTranslator(),
+    () => ConversionParamSetTranslator(),
   );
 
   locator.registerLazySingleton<ConversionParamTranslator>(
-        () => ConversionParamTranslator(),
+    () => ConversionParamTranslator(),
   );
 
   locator.registerLazySingleton<DynamicCoefficientsTranslator>(
-        () => DynamicCoefficientsTranslator(),
+    () => DynamicCoefficientsTranslator(),
   );
 }
 
 Future<void> _initUseCases() async {
   locator.registerLazySingleton<ValidateInputUseCase>(
-        () => const ValidateInputUseCase(),
+    () => const ValidateInputUseCase(),
   );
 
   locator.registerLazySingleton<CalculateNonListDefaultValueUseCase>(
-        () =>
-        CalculateNonListDefaultValueUseCase(
-          fetchDynamicValueUseCase: locator(),
-        ),
+    () => CalculateNonListDefaultValueUseCase(
+      fetchDynamicValueUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchUnitGroupsUseCase>(
-        () => FetchUnitGroupsUseCase(locator()),
+    () => FetchUnitGroupsUseCase(locator()),
   );
   locator.registerLazySingleton<GetUnitGroupUseCase>(
-        () => GetUnitGroupUseCase(locator()),
+    () => GetUnitGroupUseCase(locator()),
   );
   locator.registerLazySingleton<SaveUnitGroupUseCase>(
-        () => SaveUnitGroupUseCase(locator()),
+    () => SaveUnitGroupUseCase(locator()),
   );
   locator.registerLazySingleton<RemoveUnitGroupsUseCase>(
-        () => RemoveUnitGroupsUseCase(locator()),
+    () => RemoveUnitGroupsUseCase(locator()),
   );
 
   locator.registerLazySingleton<FetchUnitsUseCase>(
-        () => FetchUnitsUseCase(locator()),
+    () => FetchUnitsUseCase(locator()),
   );
   locator.registerLazySingleton<SaveUnitUseCase>(
-        () => SaveUnitUseCase(locator()),
+    () => SaveUnitUseCase(locator()),
   );
 
   locator.registerLazySingleton<BuildUnitDetailsUseCase>(
-        () =>
-        BuildUnitDetailsUseCase(
-          unitRepository: locator(),
-        ),
+    () => BuildUnitDetailsUseCase(
+      unitRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ModifyUnitDetailsUseCase>(
-        () =>
-        ModifyUnitDetailsUseCase(
-          unitRepository: locator(),
-        ),
+    () => ModifyUnitDetailsUseCase(
+      unitRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<RemoveUnitsUseCase>(
-        () => RemoveUnitsUseCase(locator()),
+    () => RemoveUnitsUseCase(locator()),
   );
 
   locator.registerLazySingleton<GetConversionUseCase>(
-        () =>
-        GetConversionUseCase(
-          conversionRepository: locator(),
-        ),
+    () => GetConversionUseCase(
+      conversionRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<SaveConversionUseCase>(
-        () =>
-        SaveConversionUseCase(
-          conversionRepository: locator(),
-        ),
+    () => SaveConversionUseCase(
+      conversionRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<InitUnitListValuesUseCase>(
-        () =>
-        InitUnitListValuesUseCase(
-          fetchListValuesUseCase: locator(),
-        ),
+    () => InitUnitListValuesUseCase(
+      fetchListValuesUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<InitParamListValuesUseCase>(
-        () =>
-        InitParamListValuesUseCase(
-          fetchListValuesUseCase: locator(),
-        ),
+    () => InitParamListValuesUseCase(
+      fetchListValuesUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<CalculateUnitValueUseValue>(
-        () =>
-        CalculateUnitValueUseValue(
-          calculateDefaultValueUseCase: locator(),
-          initUnitListValuesUseCase: locator(),
-          unitGroupRepository: locator(),
-        ),
+    () => CalculateUnitValueUseValue(
+      calculateDefaultValueUseCase: locator(),
+      initUnitListValuesUseCase: locator(),
+      unitGroupRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<CalculateParamValueUseValue>(
-        () =>
-        CalculateParamValueUseValue(
-          calculateDefaultValueUseCase: locator(),
-          initParamListValuesUseCase: locator(),
-          unitGroupRepository: locator(),
-        ),
+    () => CalculateParamValueUseValue(
+      calculateDefaultValueUseCase: locator(),
+      initParamListValuesUseCase: locator(),
+      unitGroupRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<CalculateParamSetValueUseCase>(
-        () =>
-        CalculateParamSetValueUseCase(
-          calculateParamValueUseValue: locator(),
-        ),
+    () => CalculateParamSetValueUseCase(
+      calculateParamValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<AddUnitsToConversionUseCase>(
-        () =>
-        AddUnitsToConversionUseCase(
-          unitRepository: locator(),
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => AddUnitsToConversionUseCase(
+      unitRepository: locator(),
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<AlignConversionUseCase>(
-        () =>
-        AlignConversionUseCase(
-          calculateParamSetValueUseCase: locator(),
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => AlignConversionUseCase(
+      calculateParamSetValueUseCase: locator(),
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<EditConversionGroupUseCase>(
-        () => const EditConversionGroupUseCase(),
+    () => const EditConversionGroupUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionUnitUseCase>(
-        () => const EditConversionUnitUseCase(),
+    () => const EditConversionUnitUseCase(),
   );
 
   locator.registerLazySingleton<EditConversionUnitValueUseCase>(
-        () =>
-        EditConversionUnitValueUseCase(
-          calculateUnitValueUseValue: locator(),
-          calculateParamSetValueUseCase: locator(),
-        ),
+    () => EditConversionUnitValueUseCase(
+      calculateUnitValueUseValue: locator(),
+      calculateParamSetValueUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<RemoveConversionItemsUseCase>(
-        () => const RemoveConversionItemsUseCase(),
+    () => const RemoveConversionItemsUseCase(),
   );
 
   locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
-        () =>
-        ReplaceConversionItemUnitUseCase(
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => ReplaceConversionItemUnitUseCase(
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UpdateConversionCoefficientsUseCase>(
-        () =>
-        UpdateConversionCoefficientsUseCase(
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => UpdateConversionCoefficientsUseCase(
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<AddParamSetsToConversionUseCase>(
-        () =>
-        AddParamSetsToConversionUseCase(
-          conversionParamSetRepository: locator(),
-          conversionParamRepository: locator(),
-          calculateParamSetValueUseCase: locator(),
-        ),
+    () => AddParamSetsToConversionUseCase(
+      conversionParamSetRepository: locator(),
+      conversionParamRepository: locator(),
+      calculateParamSetValueUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<RemoveParamSetsFromConversionUseCase>(
-        () =>
-        RemoveParamSetsFromConversionUseCase(
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => RemoveParamSetsFromConversionUseCase(
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<SelectParamSetInConversionUseCase>(
-        () =>
-        SelectParamSetInConversionUseCase(
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => SelectParamSetInConversionUseCase(
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<EditConversionParamValueUseCase>(
-        () =>
-        EditConversionParamValueUseCase(
-          calculateParamSetValueUseCase: locator(),
-          calculateUnitValueUseValue: locator(),
-        ),
+    () => EditConversionParamValueUseCase(
+      calculateParamSetValueUseCase: locator(),
+      calculateUnitValueUseValue: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ReplaceConversionParamUnitUseCase>(
-        () =>
-        ReplaceConversionParamUnitUseCase(
-          calculateParamSetValueUseCase: locator(),
-        ),
+    () => ReplaceConversionParamUnitUseCase(
+      calculateParamSetValueUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ToggleCalculableParamUseCase>(
-        () => const ToggleCalculableParamUseCase(),
+    () => const ToggleCalculableParamUseCase(),
   );
 
   locator.registerLazySingleton<StopJobUseCase>(
-        () => const StopJobUseCase(),
+    () => const StopJobUseCase(),
   );
 
   locator.registerLazySingleton<StartJobUseCase>(
-        () =>
-        StartJobUseCase(
-          stopJobUseCase: locator(),
-        ),
+    () => StartJobUseCase(
+      stopJobUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<MarkItemsUseCase>(
-        () => MarkItemsUseCase(),
+    () => MarkItemsUseCase(),
   );
 
   locator.registerLazySingleton<FetchParamSetsUseCase>(
-        () =>
-        FetchParamSetsUseCase(
-          conversionParamSetRepository: locator(),
-        ),
+    () => FetchParamSetsUseCase(
+      conversionParamSetRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchListValuesUseCase>(
-        () =>
-        FetchListValuesUseCase(
-          listValueRepository: locator(),
-        ),
+    () => FetchListValuesUseCase(
+      listValueRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchDynamicCoefficientsUseCase>(
-        () =>
-        FetchDynamicCoefficientsUseCase(
-          networkRepository: locator(),
-        ),
+    () => FetchDynamicCoefficientsUseCase(
+      networkRepository: locator(),
+    ),
   );
 
   locator.registerLazySingleton<FetchDynamicValueUseCase>(
-        () =>
-        FetchDynamicValueUseCase(
-          dynamicValueRepository: locator(),
-        ),
+    () => FetchDynamicValueUseCase(
+      dynamicValueRepository: locator(),
+    ),
   );
 }
 
 Future<void> _initBloc() async {
   locator.registerLazySingleton<AppBloc>(
-        () => AppBloc(),
+    () => AppBloc(),
   );
 
   locator.registerLazySingleton<RefreshButtonBloc>(
-        () => RefreshButtonBloc(),
+    () => RefreshButtonBloc(),
   );
 
   locator.registerLazySingleton<InputValidationBloc>(
-        () =>
-        InputValidationBloc(
-          validateInputUseCase: locator(),
-        ),
+    () => InputValidationBloc(
+      validateInputUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ConvertouchTooltipBloc>(
-        () => ConvertouchTooltipBloc(),
+    () => ConvertouchTooltipBloc(),
   );
 
   locator.registerLazySingleton<SlidingPanelBloc>(
-        () => SlidingPanelBloc(),
+    () => SlidingPanelBloc(),
   );
 
   locator.registerLazySingleton<NavigationBloc>(
-        () => NavigationBloc(),
+    () => NavigationBloc(),
   );
 
   locator.registerLazySingleton<RootScreenBloc>(
-        () => RootScreenBloc(),
+    () => RootScreenBloc(),
   );
 
   locator.registerLazySingleton<ItemsSelectionBloc>(
-        () =>
-        ItemsSelectionBloc(
-          markItemsUseCase: locator(),
-        ),
+    () => ItemsSelectionBloc(
+      markItemsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ItemsSelectionBlocForUnitDetails>(
-        () =>
-        ItemsSelectionBlocForUnitDetails(
-          markItemsUseCase: locator(),
-        ),
-  );
-
-  locator.registerLazySingleton<ListValuesBloc>(
-        () =>
-        ListValuesBloc(
-          fetchListValuesUseCase: locator(),
-        ),
+    () => ItemsSelectionBlocForUnitDetails(
+      markItemsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitGroupsBloc>(
-        () =>
-        UnitGroupsBloc(
-          fetchUnitGroupsUseCase: locator(),
-          saveUnitGroupUseCase: locator(),
-          removeUnitGroupsUseCase: locator(),
-        ),
+    () => UnitGroupsBloc(
+      fetchUnitGroupsUseCase: locator(),
+      saveUnitGroupUseCase: locator(),
+      removeUnitGroupsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitGroupsBlocForUnitDetails>(
-        () =>
-        UnitGroupsBlocForUnitDetails(
-          fetchUnitGroupsUseCase: locator(),
-          saveUnitGroupUseCase: locator(),
-          removeUnitGroupsUseCase: locator(),
-        ),
+    () => UnitGroupsBlocForUnitDetails(
+      fetchUnitGroupsUseCase: locator(),
+      saveUnitGroupUseCase: locator(),
+      removeUnitGroupsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<SingleGroupBloc>(
-        () => SingleGroupBloc(),
+    () => SingleGroupBloc(),
   );
 
   locator.registerLazySingleton<UnitsBloc>(
-        () =>
-        UnitsBloc(
-          saveUnitUseCase: locator(),
-          fetchUnitsUseCase: locator(),
-          removeUnitsUseCase: locator(),
-        ),
+    () => UnitsBloc(
+      saveUnitUseCase: locator(),
+      fetchUnitsUseCase: locator(),
+      removeUnitsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitsBlocForUnitDetails>(
-        () =>
-        UnitsBlocForUnitDetails(
-          saveUnitUseCase: locator(),
-          fetchUnitsUseCase: locator(),
-          removeUnitsUseCase: locator(),
-        ),
+    () => UnitsBlocForUnitDetails(
+      saveUnitUseCase: locator(),
+      fetchUnitsUseCase: locator(),
+      removeUnitsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitDetailsBloc>(
-        () =>
-        UnitDetailsBloc(
-          buildUnitDetailsUseCase: locator(),
-          modifyUnitDetailsUseCase: locator(),
-        ),
+    () => UnitDetailsBloc(
+      buildUnitDetailsUseCase: locator(),
+      modifyUnitDetailsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitGroupDetailsBloc>(
-        () => UnitGroupDetailsBloc(),
+    () => UnitGroupDetailsBloc(),
   );
 
   locator.registerLazySingleton<ConversionBloc>(
-        () =>
-        ConversionBloc(
-          getConversionUseCase: locator(),
-          saveConversionUseCase: locator(),
-          alignConversionUseCase: locator(),
-          addUnitsToConversionUseCase: locator(),
-          editConversionGroupUseCase: locator(),
-          editConversionUnitUseCase: locator(),
-          editConversionUnitValueUseCase: locator(),
-          updateConversionCoefficientsUseCase: locator(),
-          removeConversionItemsUseCase: locator(),
-          replaceConversionItemUnitUseCase: locator(),
-          addParamSetsToConversionUseCase: locator(),
-          removeParamSetsFromConversionUseCase: locator(),
-          selectParamSetInConversionUseCase: locator(),
-          editConversionParamValueUseCase: locator(),
-          replaceConversionParamUnitUseCase: locator(),
-          toggleCalculableParamUseCase: locator(),
-        ),
+    () => ConversionBloc(
+      getConversionUseCase: locator(),
+      saveConversionUseCase: locator(),
+      alignConversionUseCase: locator(),
+      addUnitsToConversionUseCase: locator(),
+      editConversionGroupUseCase: locator(),
+      editConversionUnitUseCase: locator(),
+      editConversionUnitValueUseCase: locator(),
+      updateConversionCoefficientsUseCase: locator(),
+      removeConversionItemsUseCase: locator(),
+      replaceConversionItemUnitUseCase: locator(),
+      addParamSetsToConversionUseCase: locator(),
+      removeParamSetsFromConversionUseCase: locator(),
+      selectParamSetInConversionUseCase: locator(),
+      editConversionParamValueUseCase: locator(),
+      replaceConversionParamUnitUseCase: locator(),
+      toggleCalculableParamUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<ConversionUnitValueBloc>(
-        () => ConversionUnitValueBloc(),
+    () => ConversionUnitValueBloc(),
   );
 
   locator.registerLazySingleton<ConversionParamValueBloc>(
-        () => ConversionParamValueBloc(),
+    () => ConversionParamValueBloc(),
   );
 
   locator.registerLazySingleton<ConversionParamSetsBloc>(
-        () =>
-        ConversionParamSetsBloc(
-          fetchParamSetsUseCase: locator(),
-        ),
+    () => ConversionParamSetsBloc(
+      fetchParamSetsUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<SingleParamBloc>(
-        () => SingleParamBloc(),
+    () => SingleParamBloc(),
   );
 
   locator.registerLazySingleton<RefreshingJobsBloc>(
-        () =>
-        RefreshingJobsBloc(
-          startJobUseCase: locator(),
-          stopJobUseCase: locator(),
-          fetchDynamicValueUseCase: locator(),
-          fetchDynamicCoefficientsUseCase: locator(),
-        ),
+    () => RefreshingJobsBloc(
+      startJobUseCase: locator(),
+      stopJobUseCase: locator(),
+      fetchDynamicValueUseCase: locator(),
+      fetchDynamicCoefficientsUseCase: locator(),
+    ),
   );
 }
 
 Future<void> _initControllers() async {
   locator.registerLazySingleton<NavigationController>(
-        () => const NavigationController(),
+    () => const NavigationController(),
   );
 
   locator.registerLazySingleton<RefreshButtonController>(
-        () => const RefreshButtonController(),
+    () => const RefreshButtonController(),
   );
 
   locator.registerLazySingleton<ConversionGroupsController>(
-        () => const ConversionGroupsController(),
+    () => const ConversionGroupsController(),
   );
 
   locator.registerLazySingleton<ConversionController>(
-        () => const ConversionController(),
+    () => const ConversionController(),
   );
 
   locator.registerLazySingleton<ConversionItemController>(
-        () => const ConversionItemController(),
+    () => const ConversionItemController(),
   );
 
   locator.registerLazySingleton<ConversionParamSetsController>(
-        () => const ConversionParamSetsController(),
+    () => const ConversionParamSetsController(),
   );
 
   locator.registerLazySingleton<SettingsController>(
-        () => const SettingsController(),
+    () => const SettingsController(),
   );
 
   locator.registerLazySingleton<UnitDetailsController>(
-        () => const UnitDetailsController(),
+    () => const UnitDetailsController(),
   );
 
   locator.registerLazySingleton<UnitGroupDetailsController>(
-        () => const UnitGroupDetailsController(),
+    () => const UnitGroupDetailsController(),
   );
 
   locator.registerLazySingleton<UnitsController>(
-        () => const UnitsController(),
+    () => const UnitsController(),
   );
 
   locator.registerLazySingleton<RefreshingJobController>(
-        () => const RefreshingJobController(),
+    () => const RefreshingJobController(),
   );
 
   locator.registerLazySingleton<ValidationController>(
-        () => const ValidationController(),
+    () => const ValidationController(),
   );
 }
