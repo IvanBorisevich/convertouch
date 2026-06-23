@@ -42,6 +42,12 @@ class AlignConversionUseCase
       alignedConversion = await _alignConversionUnitValues(
         alignedConversion,
         unitGroupName: input.conversion.unitGroup.name,
+        onUnitValueUpdated: (newUnitValue) {
+          input.onUnitValueUpdated?.call(
+            newUnitValue,
+            newUnitValue.unit.id == input.conversion.srcUnitValue?.unit.id,
+          );
+        },
         listValuesAutoFetch: input.listValuesAutoFetch,
       );
     }
@@ -74,6 +80,7 @@ class AlignConversionUseCase
                   : null,
               alignCurrentValues: false,
               listValuesAutoFetch: listValuesAutoFetch,
+              listValuesAsyncFetch: true,
               keepSelectedValuesIfNotInList: false,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
               onParamValueUpdated: onParamValueUpdated,
@@ -92,6 +99,7 @@ class AlignConversionUseCase
     ConversionModel conversion, {
     required String unitGroupName,
     required bool listValuesAutoFetch,
+    void Function(ConversionUnitValueModel)? onUnitValueUpdated,
   }) async {
     List<ConversionUnitValueModel> alignedUnitValues = [];
 
@@ -104,6 +112,7 @@ class AlignConversionUseCase
             alignCurrentValue: false,
             listValuesAutoFetch: listValuesAutoFetch,
             unitGroupName: unitGroupName,
+            onItemValueUpdated: onUnitValueUpdated,
           ),
         ),
       );

@@ -60,6 +60,14 @@ class ConversionController {
             newParamValue: newParamValue,
           );
         },
+        onUnitValueUpdated: (newUnitValue, isSource) {
+          conversionItemController.updateUnitValue(
+            context,
+            id: newUnitValue.id,
+            newUnitValue: newUnitValue,
+            isSource: isSource,
+          );
+        }
       ),
     );
   }

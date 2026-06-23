@@ -122,6 +122,7 @@ class CalculateParamValueUseValue extends UseCase<
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
               autoFetch: input.listValuesAutoFetch,
+              asyncFetch: input.listValuesAsyncFetch,
               keepSelectedValueIfNotInList: input.keepSelectedValueIfNotInList,
               onListValuesFetched: input.onItemValueUpdated,
             ),

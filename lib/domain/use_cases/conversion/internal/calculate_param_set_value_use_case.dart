@@ -57,6 +57,7 @@ class CalculateParamSetValueUseCase extends UseCase<
           unitGroupName: input.unitGroupName,
           alignCurrentValue: input.alignCurrentValues,
           listValuesAutoFetch: input.listValuesAutoFetch,
+          listValuesAsyncFetch: input.listValuesAsyncFetch,
           keepSelectedValueIfNotInList: input.keepSelectedValuesIfNotInList,
           onItemValueUpdated: input.onParamValueUpdated,
         ),
@@ -79,6 +80,7 @@ class CalculateParamSetValueUseCase extends UseCase<
           keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
           onParamValueUpdated: input.onParamValueUpdated,
           listValuesAutoFetch: input.listValuesAutoFetch,
+          listValuesAsyncFetch: input.listValuesAsyncFetch,
         ),
       );
     } else {
@@ -93,6 +95,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     String? unitGroupName,
     required bool alignCurrentValues,
     required bool listValuesAutoFetch,
+    required bool listValuesAsyncFetch,
     required bool keepSelectedValuesIfNotInList,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
@@ -120,6 +123,7 @@ class CalculateParamSetValueUseCase extends UseCase<
             unitGroupName: unitGroupName,
             alignCurrentValue: alignCurrentValues,
             listValuesAutoFetch: listValuesAutoFetch,
+            listValuesAsyncFetch: listValuesAsyncFetch,
             keepSelectedValueIfNotInList: keepSelectedValuesIfNotInList,
             onItemValueUpdated: onParamValueUpdated,
           ),

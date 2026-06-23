@@ -7,6 +7,7 @@ abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
   final String? unitGroupName;
   final bool alignCurrentValue;
   final bool listValuesAutoFetch;
+  final bool listValuesAsyncFetch;
   final bool keepSelectedValueIfNotInList;
   final void Function(M)? onItemValueUpdated;
 
@@ -15,6 +16,7 @@ abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
     this.unitGroupName,
     this.alignCurrentValue = true,
     this.listValuesAutoFetch = true,
+    this.listValuesAsyncFetch = false,
     this.keepSelectedValueIfNotInList = false,
     this.onItemValueUpdated,
   });
@@ -34,6 +36,7 @@ class InputUnitValueCalculationModel
     super.unitGroupName,
     super.alignCurrentValue,
     super.listValuesAutoFetch,
+    super.listValuesAsyncFetch,
     super.keepSelectedValueIfNotInList,
     super.onItemValueUpdated,
   }) : assert(
@@ -56,6 +59,7 @@ class InputParamValueCalculationModel
     super.unitGroupName,
     super.alignCurrentValue,
     super.listValuesAutoFetch,
+    super.listValuesAsyncFetch,
     super.keepSelectedValueIfNotInList,
     super.onItemValueUpdated,
   });

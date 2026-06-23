@@ -9,6 +9,7 @@ class InputParamSetValueCalculationModel {
   final String? unitGroupName;
   final bool alignCurrentValues;
   final bool listValuesAutoFetch;
+  final bool listValuesAsyncFetch;
   final bool keepSelectedValuesIfNotInList;
   final bool enableFirstCalculableParamIfNoCalculatedEnabled;
   final void Function(ConversionParamValueModel)? onParamValueUpdated;
@@ -20,6 +21,7 @@ class InputParamSetValueCalculationModel {
     this.unitGroupName,
     required this.alignCurrentValues,
     this.listValuesAutoFetch = true,
+    this.listValuesAsyncFetch = true,
     this.keepSelectedValuesIfNotInList = false,
     required this.enableFirstCalculableParamIfNoCalculatedEnabled,
     this.onParamValueUpdated,

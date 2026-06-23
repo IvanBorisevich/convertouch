@@ -28,9 +28,13 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
     }
 
     bool needToFetch = !input.itemValue.listType!.cached ||
-        !input.itemValue.listType!.fetchedViaApi || !input.autoFetch;
+        input.itemValue.listValuesFetchResult == null ||
+        !input.itemValue.listValuesFetchResult!.hasReachedMax ||
+        !input.itemValue.listType!.fetchedViaApi ||
+        !input.autoFetch;
 
-    bool asyncFetch = input.itemValue.listType!.fetchedViaApi;
+    bool asyncFetch =
+        input.asyncFetch && input.itemValue.listType!.fetchedViaApi;
 
     M resultValue;
 
@@ -59,7 +63,8 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
           input.onListValuesFetched?.call(itemValue);
         });
       } else {
-        log("Sync fetch first batch of list values");
+        log("Sync fetch first batch of list values, list type: "
+            "${input.itemValue.listType}");
 
         resultValue = _buildItemValue(
           input: input,
@@ -67,10 +72,13 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
               ObjectUtils.tryGet(await fetchFirstBatchFuture),
         );
 
+        log("After sync fetch first batch of list values: $resultValue");
+
         input.onListValuesFetched?.call(resultValue);
       }
     } else {
-      log("No need to fetch list values");
+      log("No need to fetch list values, list type: "
+          "${input.itemValue.listType}");
 
       resultValue = _buildItemValue(
         input: input,

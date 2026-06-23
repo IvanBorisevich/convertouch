@@ -174,6 +174,10 @@ class ConversionBloc
             event.onParamValueUpdated?.call(newParamValue);
             _onParamListValuesFetched.call(newParamValue);
           },
+          onUnitValueUpdated: (newUnitValue, isSource) {
+            event.onUnitValueUpdated?.call(newUnitValue, isSource);
+            _onUnitListValuesFetched.call(newUnitValue);
+          },
         ),
       ),
     );
@@ -501,7 +505,7 @@ class ConversionBloc
   }
 
   void _onParamListValuesFetched(ConversionParamValueModel newParamValue) {
-    if (!newParamValue.cacheApiFetchedListValues) {
+    if (!newParamValue.cacheListValuesFetchedViaApi) {
       return;
     }
 
@@ -520,6 +524,25 @@ class ConversionBloc
 
           return conversion.copyWith(
             params: newParams,
+          );
+        },
+      ),
+    );
+  }
+
+  void _onUnitListValuesFetched(ConversionUnitValueModel newUnitValue) {
+    add(
+      GetUpdatedConversion(
+        mappingFunc: (conversion) async {
+          final newUnitValues = conversion.convertedUnitValues
+              .map(
+                (unitValue) =>
+                    unitValue.id == newUnitValue.id ? newUnitValue : unitValue,
+              )
+              .toList();
+
+          return conversion.copyWith(
+            convertedUnitValues: newUnitValues,
           );
         },
       ),

@@ -48,12 +48,14 @@ class GetOrBuildConversion extends ConversionEvent {
   final void Function(ConversionModel)? processPrevConversion;
   final void Function(ConversionModel?)? processCurrentConversion;
   final void Function(ConversionParamValueModel)? onParamValueUpdated;
+  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
 
   const GetOrBuildConversion({
     required this.unitGroup,
     this.processPrevConversion,
     this.processCurrentConversion,
     this.onParamValueUpdated,
+    this.onUnitValueUpdated,
   }) : super(rebuildUnitValues: true, rebuildParams: true);
 
   @override

@@ -73,6 +73,7 @@ void main() {
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroupName,
           alignCurrentValues: alignCurrentValues,
+          listValuesAsyncFetch: false,
           enableFirstCalculableParamIfNoCalculatedEnabled:
               enableFirstCalculableParamIfNoCalculatedEnabled,
         ),
@@ -1600,6 +1601,7 @@ void main() {
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
+
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });

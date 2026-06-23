@@ -82,7 +82,7 @@ class ItemValueModel extends ItemModel {
 
   ConvertouchListType? get listType => null;
 
-  bool get cacheApiFetchedListValues =>
+  bool get cacheListValuesFetchedViaApi =>
       listType != null && listType!.fetchedViaApi && listType!.cached;
 
   UnitModel? get unitItem => null;
@@ -315,7 +315,7 @@ class ConversionParamValueModel extends ItemValueModel {
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValuesFetchResult": cacheApiFetchedListValues
+      "listValuesFetchResult": cacheListValuesFetchedViaApi
           ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
           : null,
     };

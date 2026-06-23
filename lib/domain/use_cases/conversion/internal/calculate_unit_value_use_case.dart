@@ -128,9 +128,11 @@ class CalculateUnitValueUseValue
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
               autoFetch: input.listValuesAutoFetch,
+              asyncFetch: input.listValuesAsyncFetch,
               keepSelectedValueIfNotInList:
                   input.keepSelectedValueIfNotInList ||
                       !paramsNotExistOrApplicable,
+              onListValuesFetched: input.onItemValueUpdated,
             ),
           ),
         ),

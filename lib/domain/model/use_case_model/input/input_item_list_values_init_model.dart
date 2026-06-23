@@ -7,6 +7,7 @@ abstract class InputItemListValuesInitModel<M extends ItemValueModel> {
   final bool alignSelectedValue;
   final bool keepSelectedValueIfNotInList;
   final bool autoFetch;
+  final bool asyncFetch;
   final void Function(M itemValue)? onListValuesFetched;
 
   const InputItemListValuesInitModel({
@@ -14,6 +15,7 @@ abstract class InputItemListValuesInitModel<M extends ItemValueModel> {
     this.paramSetValue,
     this.alignSelectedValue = true,
     this.autoFetch = true,
+    this.asyncFetch = false,
     this.keepSelectedValueIfNotInList = false,
     this.onListValuesFetched,
   });
@@ -26,6 +28,7 @@ class InputUnitListValuesInitModel
     super.paramSetValue,
     super.alignSelectedValue,
     super.autoFetch,
+    super.asyncFetch,
     super.keepSelectedValueIfNotInList,
     super.onListValuesFetched,
   });
@@ -38,6 +41,7 @@ class InputParamListValuesInitModel
     super.paramSetValue,
     super.alignSelectedValue,
     super.autoFetch,
+    super.asyncFetch,
     super.keepSelectedValueIfNotInList,
     super.onListValuesFetched,
   });
