@@ -62,7 +62,8 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
         fetchFirstBatchFuture.then((fetchResult) {
           final listValuesFetchResult = ObjectUtils.tryGet(fetchResult);
 
-          log("After async fetch first batch of list values: $listValuesFetchResult");
+          log("After async fetch first batch of list values: "
+              "$listValuesFetchResult");
 
           M itemValue = _buildItemValue(
             input: input,

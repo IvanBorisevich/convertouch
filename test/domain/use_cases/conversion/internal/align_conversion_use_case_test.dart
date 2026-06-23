@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
@@ -26,8 +25,6 @@ import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
 import '../../../model/mock/mock_unit_group.dart';
-import '../../../repositories/mock/mock_conversion_param_repository.dart';
-import '../../../repositories/mock/mock_conversion_param_set_repository.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../../repositories/mock/mock_unit_group_repository.dart';
 import '../../../repositories/mock/mockito_mock_repository.mocks.dart';
@@ -69,11 +66,6 @@ void main() {
     );
 
     useCase = AlignConversionUseCase(
-      addParamSetsToConversionUseCase: AddParamSetsToConversionUseCase(
-        calculateParamSetValueUseCase: calculateParamSetValueUseCase,
-        conversionParamRepository: const MockConversionParamRepository(),
-        conversionParamSetRepository: const MockConversionParamSetRepository(),
-      ),
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
         initUnitListValuesUseCase: InitUnitListValuesUseCase(

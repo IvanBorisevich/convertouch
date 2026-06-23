@@ -25,21 +25,21 @@ abstract class ConversionEvent extends ConvertouchEvent {
   });
 }
 
-class GetConversion extends ConversionEvent {
-  final ConversionModel conversion;
+class GetUpdatedConversion extends ConversionEvent {
+  final Future<ConversionModel> Function(ConversionModel) mappingFunc;
 
-  const GetConversion({
-    required this.conversion,
+  const GetUpdatedConversion({
+    required this.mappingFunc,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
   List<Object?> get props => [
-    conversion,
-  ];
+        mappingFunc,
+      ];
 
   @override
   String toString() {
-    return 'GetConversion{conversion: $conversion}';
+    return 'GetUpdatedConversion{}';
   }
 }
 
@@ -420,4 +420,31 @@ class ToggleCalculableParam extends ConversionEvent {
         paramId,
         paramSetId,
       ];
+
+  @override
+  String toString() {
+    return 'ToggleCalculableParam{'
+        'paramId: $paramId, '
+        'paramSetId: $paramSetId}';
+  }
+}
+
+class RefreshParamListValues extends ConversionEvent {
+  final int paramId;
+  final void Function(ConversionParamValueModel)? onParamValueUpdated;
+
+  const RefreshParamListValues({
+    required this.paramId,
+    this.onParamValueUpdated,
+  }) : super(rebuildUnitValues: false, rebuildParams: false);
+
+  @override
+  List<Object?> get props => [
+        paramId,
+      ];
+
+  @override
+  String toString() {
+    return 'RefreshParamListValues{paramId: $paramId}';
+  }
 }

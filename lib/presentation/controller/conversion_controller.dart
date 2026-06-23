@@ -22,7 +22,16 @@ final conversionController = di.locator.get<ConversionController>();
 class ConversionController {
   const ConversionController();
 
-  void getConversion(
+  void getUpdatedConversion(
+    BuildContext context, {
+    required Future<ConversionModel> Function(ConversionModel) mappingFunc,
+  }) {
+    BlocProvider.of<ConversionBloc>(context).add(
+      GetUpdatedConversion(mappingFunc: mappingFunc),
+    );
+  }
+
+  void getOrBuildConversion(
     BuildContext context, {
     required UnitGroupModel unitGroup,
     void Function(ConversionModel?)? processCurrentConversion,
@@ -297,6 +306,21 @@ class ConversionController {
             );
           }
         },
+      ),
+    );
+  }
+
+  void refreshParamListValues(BuildContext context, {required int paramId,}) {
+    BlocProvider.of<ConversionBloc>(context).add(
+      RefreshParamListValues(
+        paramId: paramId,
+        onParamValueUpdated: (newParamValue) {
+          conversionItemController.updateParamValue(
+            context,
+            id: newParamValue.id,
+            newParamValue: newParamValue,
+          );
+        }
       ),
     );
   }

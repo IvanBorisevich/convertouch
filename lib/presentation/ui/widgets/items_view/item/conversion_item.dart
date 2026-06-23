@@ -23,6 +23,7 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final void Function()? onUnitItemTap;
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
+  final void Function(ListValuesFetchResult)? onRefreshTap;
   final void Function()? onItemRemoved;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
@@ -40,6 +41,7 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.onUnitItemTap,
     this.onValueChanged,
     this.onValueFocused,
+    this.onRefreshTap,
     this.onItemRemoved,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
@@ -83,6 +85,7 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
           _isFocused = false;
         });
       },
+      onRefreshTap: widget.onRefreshTap,
       prefixWidgets: [
         widget.draggable && widget.index != null
             ? ReorderableDragStartListener(

@@ -48,11 +48,9 @@ abstract class ConversionSingleUnitModifyDelta
 abstract class ConversionSingleParamModifyDelta
     extends ConversionParamsModifyDelta {
   final int paramId;
-  final int paramSetId;
 
   const ConversionSingleParamModifyDelta({
     required this.paramId,
-    required this.paramSetId,
     required super.recalculateUnitValues,
   });
 }
@@ -162,12 +160,13 @@ class SelectParamSetDelta extends ConversionParamsModifyDelta {
 class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
+  final int paramSetId;
 
   const EditConversionParamValueDelta({
     required this.newValue,
     required this.newDefaultValue,
     required super.paramId,
-    required super.paramSetId,
+    required this.paramSetId,
     super.recalculateUnitValues = true,
   });
 
@@ -190,11 +189,12 @@ class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
 
 class ReplaceConversionParamUnitDelta extends ConversionSingleParamModifyDelta {
   final UnitModel newUnit;
+  final int paramSetId;
 
   const ReplaceConversionParamUnitDelta({
     required this.newUnit,
     required super.paramId,
-    required super.paramSetId,
+    required this.paramSetId,
     super.recalculateUnitValues = true,
   });
 }
@@ -221,9 +221,18 @@ class RemoveParamSetsDelta extends ConversionParamsModifyDelta {
 }
 
 class ToggleCalculableParamDelta extends ConversionSingleParamModifyDelta {
+  final int paramSetId;
+
   const ToggleCalculableParamDelta({
     required super.paramId,
-    required super.paramSetId,
+    required this.paramSetId,
+    super.recalculateUnitValues = false,
+  });
+}
+
+class RefreshParamListValuesDelta extends ConversionSingleParamModifyDelta {
+  const RefreshParamListValuesDelta({
+    required super.paramId,
     super.recalculateUnitValues = false,
   });
 }

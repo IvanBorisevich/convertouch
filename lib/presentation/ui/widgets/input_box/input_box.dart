@@ -7,8 +7,6 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
-import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
@@ -64,6 +62,8 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
   horizontal: 14,
 );
 
+const double _refreshButtonWidth = 20;
+
 const String _defaultSearchHint = "Search...";
 const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
@@ -80,6 +80,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
+    this.onRefreshTap,
     this.validators = const [],
     this.borderWidth = 1,
     required this.colors,
@@ -106,6 +107,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function(ValueModel)? onValueUnfocused;
+  final void Function(ListValuesFetchResult)? onRefreshTap;
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -134,6 +136,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   void Function(ValueModel)? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconNotifier;
+  late final ValueNotifier<bool> _refreshIconNotifier;
+  late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
   late InputBoxViewModel _inputBoxModel;
 
   late Color _backgroundColor;
@@ -161,7 +165,10 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
 
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
+
     _closeIconNotifier = ValueNotifier(false);
+    _refreshIconNotifier = ValueNotifier(widget.model.listType != null);
+    _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
 
     _onValueChanged = (value) {
       _closeIconNotifier.value =
@@ -211,6 +218,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     }
 
     _closeIconNotifier.dispose();
+    _refreshIconNotifier.dispose();
+    _listValuesNotifier.dispose();
 
     super.dispose();
   }
@@ -232,6 +241,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelText: widget.labelText,
       );
     }
+
+    _listValuesNotifier.value = widget.model.listValuesFetchResult;
+    _refreshIconNotifier.value = widget.model.listType != null;
   }
 
   void _setColors() {
@@ -307,6 +319,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
               ),
             ),
             _suffixCloseIcon(context),
+            _suffixRefreshIcon(context),
             ...widget.suffixWidgets.mapIndexed(
               (index, suffixWidget) => suffixWidget != null
                   ? Row(
@@ -372,6 +385,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         model: model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
+        onRefreshTap: widget.onRefreshTap,
+        refreshIconNotifier: _refreshIconNotifier,
+        listValuesNotifier: _listValuesNotifier,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
         labelColor: _labelColor,
@@ -380,12 +396,69 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         dropdownColors: widget.colors.dropdown,
         dialogColors: widget.dialogColors,
         floatingLabelBehavior: widget.floatingLabelBehavior,
-        listValuesBloc: BlocProvider.of<ListValuesBloc>(context),
       );
     }
 
     throw Exception(
       "Cannot create input box by model of type ${model.runtimeType}",
+    );
+  }
+
+  Widget _suffixRefreshIcon(BuildContext context) {
+    if (_inputBoxModel is! ListBoxViewModel) {
+      return const SizedBox.shrink();
+    }
+
+    return ValueListenableBuilder(
+      valueListenable: _listValuesNotifier,
+      builder: (_, listValuesFetchResult, child) {
+        if (listValuesFetchResult == null) {
+          return const SizedBox.shrink();
+        }
+
+        if (listValuesFetchResult.status != FetchingStatus.loading) {
+          return GestureDetector(
+            onTap: () {
+              widget.onRefreshTap?.call(listValuesFetchResult);
+            },
+            child: Container(
+              padding: const EdgeInsets.only(right: 14),
+              color: Colors.transparent,
+              child: Icon(
+                Icons.refresh_rounded,
+                color: _foregroundColor,
+                size: 20,
+              ),
+            ),
+          );
+        }
+
+        return ValueListenableBuilder(
+          valueListenable: _refreshIconNotifier,
+          builder: (_, refreshIconVisible, child) {
+            if (!refreshIconVisible) {
+              return const SizedBox.shrink();
+            }
+
+            return Container(
+              padding: const EdgeInsets.only(right: 14),
+              color: Colors.transparent,
+              child: Container(
+                width: _refreshButtonWidth,
+                height: _refreshButtonWidth,
+                color: Colors.transparent,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(2),
+                child: CircularProgressIndicator(
+                  strokeCap: StrokeCap.round,
+                  strokeWidth: 2,
+                  color: _foregroundColor,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -644,6 +717,9 @@ class _ListField extends StatefulWidget {
     required this.model,
     this.controller,
     this.onValueChanged,
+    this.onRefreshTap,
+    required this.refreshIconNotifier,
+    required this.listValuesNotifier,
     required this.foregroundColor,
     required this.hintColor,
     required this.labelColor,
@@ -651,13 +727,15 @@ class _ListField extends StatefulWidget {
     required this.margin,
     required this.dropdownColors,
     required this.dialogColors,
-    required this.listValuesBloc,
     this.floatingLabelBehavior,
   });
 
   final ListBoxViewModel model;
   final TextEditingController? controller;
   final void Function(ValueModel)? onValueChanged;
+  final void Function(ListValuesFetchResult)? onRefreshTap;
+  final ValueNotifier<bool> refreshIconNotifier;
+  final ValueNotifier<ListValuesFetchResult?> listValuesNotifier;
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
@@ -665,7 +743,6 @@ class _ListField extends StatefulWidget {
   final EdgeInsets margin;
   final DropdownColorScheme dropdownColors;
   final WidgetColorScheme dialogColors;
-  final ListValuesBloc listValuesBloc;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
@@ -677,7 +754,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownClosedProgrammatically;
 
   late final ValueNotifier<ValueModel?> _selectedValueNotifier;
-  late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
   late final ValueNotifier<Object?> _openDropdownNotifier;
 
   TextEditingController? _dropdownSearchController;
@@ -691,8 +767,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _isDropdownClosedProgrammatically = false;
 
     _selectedValueNotifier = ValueNotifier(widget.model.value);
-    _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
-    _listValuesNotifier.addListener(_onListValuesUpdated);
+    widget.listValuesNotifier.addListener(_onListValuesUpdated);
 
     _openDropdownNotifier = ValueNotifier<Object?>(null);
 
@@ -716,8 +791,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   @override
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
-    _listValuesNotifier.removeListener(_onListValuesUpdated);
-    _listValuesNotifier.dispose();
+    widget.listValuesNotifier.removeListener(_onListValuesUpdated);
     _openDropdownNotifier.dispose();
     _dropdownSearchController?.dispose();
     _selectedValueNotifier.dispose();
@@ -729,7 +803,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.didUpdateWidget(oldWidget);
 
     _selectedValueNotifier.value = widget.model.value;
-    _listValuesNotifier.value = widget.model.listValuesFetchResult;
 
     if (widget.model.searchEnabled) {
       _dropdownSearchController ??= TextEditingController();
@@ -750,7 +823,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         ),
       ],
       child: ValueListenableBuilder(
-        valueListenable: _listValuesNotifier,
+        valueListenable: widget.listValuesNotifier,
         builder: (_, listValuesFetchResult, child) {
           final items = _buildDropdownItems(listValuesFetchResult);
 
@@ -916,6 +989,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   _openDropdownNotifier.value = Object();
                 }
 
+                widget.refreshIconNotifier.value = !isOpen;
+
                 setState(() {
                   _isDropdownOpen = isOpen;
                   _isDropdownClosedProgrammatically = false;
@@ -964,13 +1039,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         DropdownItem<ValueModel>(
           enabled: false,
           alignment: Alignment.center,
-          height: 30,
+          height: 40,
           child: Container(
             padding: const EdgeInsets.all(2),
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
               strokeCap: StrokeCap.round,
+              strokeWidth: 2,
               color: widget.dropdownColors.foreground.regular,
             ),
           ),
@@ -978,16 +1054,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       );
     } else if (listValuesFetchResult.status == FetchingStatus.failure) {
       log("[handlerDropdownItem] listValuesFetchResult status = failure");
-
-      retryFunc() {
-        widget.listValuesBloc.add(
-          FetchItems(
-            firstFetch: listValuesFetchResult.pageNum == 0,
-            pageNum: listValuesFetchResult.pageNum,
-            params: listValuesFetchResult.fetchParams,
-          ),
-        );
-      }
 
       items.add(
         DropdownItem<ValueModel>(
@@ -1007,7 +1073,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       builder: (context, setStateDialog) {
                         return ConvertouchFailureDialog(
                           title: _fetchErrorMsg,
-                          handlerFunc: retryFunc,
+                          handlerFunc: () {
+                            widget.onRefreshTap?.call(listValuesFetchResult);
+                          },
                           handlerActionName: "Retry",
                           content: Text(
                             listValuesFetchResult.error?.message ??
@@ -1039,13 +1107,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                             widget.dropdownColors.foreground.warning,
                       ),
                     ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: retryFunc,
-                  child: Icon(
-                    Icons.refresh_rounded,
-                    color: widget.dropdownColors.foreground.warning,
                   ),
                 ),
               ],

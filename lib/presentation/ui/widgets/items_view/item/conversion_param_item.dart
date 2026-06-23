@@ -70,6 +70,12 @@ class ConversionParamItem extends StatelessWidget {
           },
         );
       },
+      onRefreshTap: (listValuesFetchResult) {
+        conversionController.refreshParamListValues(
+          context,
+          paramId: paramValue.param.id,
+        );
+      },
       prefixWidgets: [
         calculationSwitchersVisible && paramValue.param.calculable
             ? GestureDetector(

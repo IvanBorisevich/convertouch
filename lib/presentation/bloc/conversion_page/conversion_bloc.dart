@@ -4,6 +4,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
@@ -67,7 +68,7 @@ class ConversionBloc
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
-    on<GetConversion>(_onGetConversion);
+    on<GetUpdatedConversion>(_onGetConversion);
     on<GetOrBuildConversion>(_onGetOrBuildConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
@@ -87,15 +88,16 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
+    on<RefreshParamListValues>(_onRefreshParamListValues);
   }
 
   _onGetConversion(
-    GetConversion event,
+    GetUpdatedConversion event,
     Emitter<ConversionState> emit,
   ) async {
     emit(
       ConversionBuilt(
-        conversion: event.conversion,
+        conversion: await event.mappingFunc.call(state.conversion),
         rebuildUnitValues: event.rebuildUnitValues,
         rebuildParams: event.rebuildParams,
       ),
@@ -165,34 +167,14 @@ class ConversionBloc
       );
     }
 
-    conversion = ObjectUtils.tryGet(
+    ObjectUtils.tryGet(
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
           conversion: conversion,
           listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
           onParamValueUpdated: (newParamValue) {
             event.onParamValueUpdated?.call(newParamValue);
-
-            if (newParamValue.cacheApiFetchedListValues) {
-              final newParamsFuture =
-                  state.conversion.params?.copyWithChangedParamById(
-                paramId: newParamValue.param.id,
-                paramSetId: newParamValue.param.paramSetId,
-                map: (paramValue, paramSetValue) async => paramValue.copyWith(
-                  listValuesFetchResult: newParamValue.listValuesFetchResult,
-                ),
-              );
-
-              newParamsFuture?.then((newParams) {
-                final updatedConversion = state.conversion.copyWith(
-                  params: newParams,
-                );
-
-                log("Emit after conversion update with a new param value");
-
-                add(GetConversion(conversion: updatedConversion));
-              });
-            }
+            _onParamListValuesFetched.call(newParamValue);
           },
         ),
       ),
@@ -499,6 +481,51 @@ class ConversionBloc
     );
 
     await _handleAndEmit(result, emit, event: event);
+  }
+
+  _onRefreshParamListValues(
+    RefreshParamListValues event,
+    Emitter<ConversionState> emit,
+  ) async {
+    ObjectUtils.tryGet(
+      await alignConversionUseCase.execute(
+        InputConversionAlignModel(
+          alignUnits: false,
+          conversion: state.conversion,
+          listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
+          onParamValueUpdated: (newParamValue) {
+            event.onParamValueUpdated?.call(newParamValue);
+            _onParamListValuesFetched.call(newParamValue);
+          },
+        ),
+      ),
+    );
+  }
+
+  void _onParamListValuesFetched(ConversionParamValueModel newParamValue) {
+    if (!newParamValue.cacheApiFetchedListValues) {
+      return;
+    }
+
+    add(
+      GetUpdatedConversion(
+        mappingFunc: (conversion) async {
+          final newParams = await conversion.params?.copyWithChangedParamById(
+            paramId: newParamValue.param.id,
+            paramSetId: newParamValue.param.paramSetId,
+            map: (paramValue, paramSetValue) async {
+              return paramValue.copyWith(
+                listValuesFetchResult: newParamValue.listValuesFetchResult,
+              );
+            },
+          );
+
+          return conversion.copyWith(
+            params: newParams,
+          );
+        },
+      ),
+    );
   }
 
   _handleAndEmit(
