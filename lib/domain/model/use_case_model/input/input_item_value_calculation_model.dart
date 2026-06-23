@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -7,16 +6,16 @@ abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
   final M itemValue;
   final String? unitGroupName;
   final bool alignCurrentValue;
+  final bool listValuesAutoFetch;
   final bool keepSelectedValueIfNotInList;
-  final ListValuesAsyncFetchMode listValuesAsyncFetchMode;
   final void Function(M)? onItemValueUpdated;
 
   const _InputItemValueCalculationModel({
     required this.itemValue,
     this.unitGroupName,
     this.alignCurrentValue = true,
+    this.listValuesAutoFetch = true,
     this.keepSelectedValueIfNotInList = false,
-    required this.listValuesAsyncFetchMode,
     this.onItemValueUpdated,
   });
 }
@@ -34,8 +33,8 @@ class InputUnitValueCalculationModel
     this.calculateByParams = false,
     super.unitGroupName,
     super.alignCurrentValue,
+    super.listValuesAutoFetch,
     super.keepSelectedValueIfNotInList,
-    super.listValuesAsyncFetchMode = ListValuesAsyncFetchMode.all,
     super.onItemValueUpdated,
   }) : assert(
           !calculateByParams || calculateByParams && unitGroupName != null,
@@ -56,8 +55,8 @@ class InputParamValueCalculationModel
     this.srcUnitValue,
     super.unitGroupName,
     super.alignCurrentValue,
+    super.listValuesAutoFetch,
     super.keepSelectedValueIfNotInList,
-    super.listValuesAsyncFetchMode = ListValuesAsyncFetchMode.viaApiOnly,
     super.onItemValueUpdated,
   });
 }

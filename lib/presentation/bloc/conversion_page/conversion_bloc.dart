@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -88,7 +87,7 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
-    on<RefreshParamListValues>(_onRefreshParamListValues);
+    on<RefreshParamListValuesManually>(_onRefreshParamListValuesManually);
   }
 
   _onGetConversion(
@@ -171,7 +170,6 @@ class ConversionBloc
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
           conversion: conversion,
-          listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
           onParamValueUpdated: (newParamValue) {
             event.onParamValueUpdated?.call(newParamValue);
             _onParamListValuesFetched.call(newParamValue);
@@ -483,16 +481,16 @@ class ConversionBloc
     await _handleAndEmit(result, emit, event: event);
   }
 
-  _onRefreshParamListValues(
-    RefreshParamListValues event,
+  _onRefreshParamListValuesManually(
+    RefreshParamListValuesManually event,
     Emitter<ConversionState> emit,
   ) async {
     ObjectUtils.tryGet(
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
           alignUnits: false,
+          listValuesAutoFetch: false,
           conversion: state.conversion,
-          listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
           onParamValueUpdated: (newParamValue) {
             event.onParamValueUpdated?.call(newParamValue);
             _onParamListValuesFetched.call(newParamValue);

@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -57,8 +56,8 @@ class CalculateParamSetValueUseCase extends UseCase<
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
           alignCurrentValue: input.alignCurrentValues,
+          listValuesAutoFetch: input.listValuesAutoFetch,
           keepSelectedValueIfNotInList: input.keepSelectedValuesIfNotInList,
-          listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
           onItemValueUpdated: input.onParamValueUpdated,
         ),
       ),
@@ -79,7 +78,7 @@ class CalculateParamSetValueUseCase extends UseCase<
           alignCurrentValues: input.alignCurrentValues,
           keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
           onParamValueUpdated: input.onParamValueUpdated,
-          listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
+          listValuesAutoFetch: input.listValuesAutoFetch,
         ),
       );
     } else {
@@ -93,8 +92,8 @@ class CalculateParamSetValueUseCase extends UseCase<
     ConversionUnitValueModel? srcUnitValue,
     String? unitGroupName,
     required bool alignCurrentValues,
+    required bool listValuesAutoFetch,
     required bool keepSelectedValuesIfNotInList,
-    required ListValuesAsyncFetchMode listValuesAsyncFetchMode,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
     int indexByParamId =
@@ -120,8 +119,8 @@ class CalculateParamSetValueUseCase extends UseCase<
             srcUnitValue: srcUnitValue,
             unitGroupName: unitGroupName,
             alignCurrentValue: alignCurrentValues,
+            listValuesAutoFetch: listValuesAutoFetch,
             keepSelectedValueIfNotInList: keepSelectedValuesIfNotInList,
-            listValuesAsyncFetchMode: listValuesAsyncFetchMode,
             onItemValueUpdated: onParamValueUpdated,
           ),
         ),

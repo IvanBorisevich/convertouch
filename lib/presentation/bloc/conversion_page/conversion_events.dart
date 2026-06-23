@@ -429,11 +429,11 @@ class ToggleCalculableParam extends ConversionEvent {
   }
 }
 
-class RefreshParamListValues extends ConversionEvent {
+class RefreshParamListValuesManually extends ConversionEvent {
   final int paramId;
   final void Function(ConversionParamValueModel)? onParamValueUpdated;
 
-  const RefreshParamListValues({
+  const RefreshParamListValuesManually({
     required this.paramId,
     this.onParamValueUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: false);

@@ -405,7 +405,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   }
 
   Widget _suffixRefreshIcon(BuildContext context) {
-    if (_inputBoxModel is! ListBoxViewModel) {
+    if (widget.model.listType == null ||
+        !widget.model.listType!.fetchedViaApi) {
       return const SizedBox.shrink();
     }
 

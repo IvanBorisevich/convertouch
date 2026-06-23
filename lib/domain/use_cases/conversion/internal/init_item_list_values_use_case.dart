@@ -27,28 +27,14 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
       return Right(input.itemValue);
     }
 
-    bool cached = input.itemValue.listValuesFetchResult != null &&
-        input.itemValue.listValuesFetchResult!.hasReachedMax &&
-        input.itemValue.listType!.cached;
+    bool needToFetch = !input.itemValue.listType!.cached ||
+        !input.itemValue.listType!.fetchedViaApi || !input.autoFetch;
 
-    bool asyncFetch =
-        input.asyncFetchMode == ListValuesAsyncFetchMode.viaApiOnly &&
-                input.itemValue.listType != null &&
-                input.itemValue.listType!.fetchedViaApi ||
-            input.asyncFetchMode == ListValuesAsyncFetchMode.all;
+    bool asyncFetch = input.itemValue.listType!.fetchedViaApi;
 
     M resultValue;
 
-    if (cached) {
-      log("No need to fetch list values");
-
-      resultValue = _buildItemValue(
-        input: input,
-        listValuesFetchResult: input.itemValue.listValuesFetchResult!,
-      );
-
-      input.onListValuesFetched?.call(resultValue);
-    } else {
+    if (needToFetch) {
       final fetchFirstBatchFuture = _fetchFirstBatch(input);
 
       if (asyncFetch) {
@@ -83,6 +69,15 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
 
         input.onListValuesFetched?.call(resultValue);
       }
+    } else {
+      log("No need to fetch list values");
+
+      resultValue = _buildItemValue(
+        input: input,
+        listValuesFetchResult: input.itemValue.listValuesFetchResult!,
+      );
+
+      input.onListValuesFetched?.call(resultValue);
     }
 
     return Right(resultValue);

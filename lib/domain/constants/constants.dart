@@ -232,11 +232,6 @@ enum ConvertouchListType {
   }
 }
 
-enum ListValuesAsyncFetchMode {
-  all,
-  viaApiOnly,
-}
-
 enum FetchingStatus {
   success,
   loading,

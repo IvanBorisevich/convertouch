@@ -312,7 +312,7 @@ class ConversionController {
 
   void refreshParamListValues(BuildContext context, {required int paramId,}) {
     BlocProvider.of<ConversionBloc>(context).add(
-      RefreshParamListValues(
+      RefreshParamListValuesManually(
         paramId: paramId,
         onParamValueUpdated: (newParamValue) {
           conversionItemController.updateParamValue(

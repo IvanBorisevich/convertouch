@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -33,9 +32,9 @@ class AlignConversionUseCase
       alignedConversion = await _alignParams(
         input.conversion,
         unitGroupName: input.conversion.unitGroup.name,
-        listValuesAsyncFetchMode: input.listValuesAsyncFetchMode,
         onParamValueUpdated: input.onParamValueUpdated,
         paramIdToRefreshListValues: input.paramIdToRefreshListValues,
+        listValuesAutoFetch: input.listValuesAutoFetch,
       );
     }
 
@@ -43,6 +42,7 @@ class AlignConversionUseCase
       alignedConversion = await _alignConversionUnitValues(
         alignedConversion,
         unitGroupName: input.conversion.unitGroup.name,
+        listValuesAutoFetch: input.listValuesAutoFetch,
       );
     }
 
@@ -52,7 +52,7 @@ class AlignConversionUseCase
   Future<ConversionModel> _alignParams(
     ConversionModel conversion, {
     required String unitGroupName,
-    required ListValuesAsyncFetchMode listValuesAsyncFetchMode,
+    required bool listValuesAutoFetch,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
     int? paramIdToRefreshListValues,
   }) async {
@@ -73,8 +73,8 @@ class AlignConversionUseCase
                     )
                   : null,
               alignCurrentValues: false,
+              listValuesAutoFetch: listValuesAutoFetch,
               keepSelectedValuesIfNotInList: false,
-              listValuesAsyncFetchMode: listValuesAsyncFetchMode,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
               onParamValueUpdated: onParamValueUpdated,
             ),
@@ -91,6 +91,7 @@ class AlignConversionUseCase
   Future<ConversionModel> _alignConversionUnitValues(
     ConversionModel conversion, {
     required String unitGroupName,
+    required bool listValuesAutoFetch,
   }) async {
     List<ConversionUnitValueModel> alignedUnitValues = [];
 
@@ -101,6 +102,7 @@ class AlignConversionUseCase
             itemValue: unitValue,
             paramSetValue: conversion.params?.active,
             alignCurrentValue: false,
+            listValuesAutoFetch: listValuesAutoFetch,
             unitGroupName: unitGroupName,
           ),
         ),
