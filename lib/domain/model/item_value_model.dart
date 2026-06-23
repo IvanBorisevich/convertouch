@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
@@ -79,6 +81,9 @@ class ItemValueModel extends ItemModel {
   ConvertouchValueType get valueType => ConvertouchValueType.text;
 
   ConvertouchListType? get listType => null;
+
+  bool get cacheListValues =>
+      listType != null && listType!.fetchedViaApi && listType!.cached;
 
   UnitModel? get unitItem => null;
 
@@ -209,6 +214,7 @@ class ConversionUnitValueModel extends ItemValueModel {
     if (json == null) {
       return null;
     }
+
     return ConversionUnitValueModel(
       unit: UnitModel.fromJson(json["unit"])!,
       value: ValueModel.fromJson(json["value"]),
@@ -309,6 +315,9 @@ class ConversionParamValueModel extends ItemValueModel {
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
+      "listValuesFetchResult": cacheListValues
+          ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
+          : null,
     };
 
     if (removeNulls) {
@@ -319,15 +328,22 @@ class ConversionParamValueModel extends ItemValueModel {
   }
 
   static ConversionParamValueModel? fromJson(Map<String, dynamic>? json) {
+    log("Deserializing param value json map: $json");
+
     if (json == null) {
       return null;
     }
+
     return ConversionParamValueModel(
       param: ConversionParamModel.fromJson(json["param"])!,
       unit: UnitModel.fromJson(json["unit"]),
       calculated: json["calculated"],
       value: ValueModel.fromJson(json["value"]),
       defaultValue: ValueModel.fromJson(json["defaultValue"]),
+      listValuesFetchResult: OutputItemsFetchModel.fromJson(
+        json["listValuesFetchResult"],
+        fromItemJson: (listValueJson) => ValueModel.fromJson(listValueJson)!,
+      ),
     );
   }
 

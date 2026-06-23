@@ -26,12 +26,30 @@ abstract class ConversionEvent extends ConvertouchEvent {
 }
 
 class GetConversion extends ConversionEvent {
+  final ConversionModel conversion;
+
+  const GetConversion({
+    required this.conversion,
+  }) : super(rebuildUnitValues: false, rebuildParams: false);
+
+  @override
+  List<Object?> get props => [
+    conversion,
+  ];
+
+  @override
+  String toString() {
+    return 'GetConversion{conversion: $conversion}';
+  }
+}
+
+class GetOrBuildConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;
   final void Function(ConversionModel?)? processCurrentConversion;
   final void Function(ConversionParamValueModel)? onParamValueUpdated;
 
-  const GetConversion({
+  const GetOrBuildConversion({
     required this.unitGroup,
     this.processPrevConversion,
     this.processCurrentConversion,
@@ -45,7 +63,7 @@ class GetConversion extends ConversionEvent {
 
   @override
   String toString() {
-    return 'GetConversion{unitGroup: $unitGroup}';
+    return 'GetOrBuildConversion{unitGroup: $unitGroup}';
   }
 }
 

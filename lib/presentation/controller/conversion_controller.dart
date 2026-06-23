@@ -31,7 +31,7 @@ class ConversionController {
     conversionItemController.resetParamValues(context);
 
     BlocProvider.of<ConversionBloc>(context).add(
-      GetConversion(
+      GetOrBuildConversion(
         unitGroup: unitGroup,
         processPrevConversion: (prevConversion) {
           BlocProvider.of<ConversionBloc>(context).add(

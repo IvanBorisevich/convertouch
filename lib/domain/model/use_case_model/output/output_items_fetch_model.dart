@@ -100,16 +100,12 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         containsSelectedValue,
       ];
 
-  Map<String, dynamic> toJson({
-    bool removeNulls = true,
-    bool saveParams = true,
-  }) {
+  Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       'items': items.map((e) => e.toJson()).toList(),
       'searchString': searchString,
       'hasReachedMax': hasReachedMax,
       'pageNum': pageNum,
-      'params': saveParams ? fetchParams?.toJson() : null,
     };
 
     if (removeNulls) {
@@ -123,7 +119,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       fromJson<T extends IdNameSearchableItemModel, P extends ItemsFetchParams>(
     Map<String, dynamic>? json, {
     required T Function(Map<String, dynamic>) fromItemJson,
-    required P? Function(Map<String, dynamic>?) fromParamsJson,
   }) {
     if (json == null) {
       return null;
@@ -136,7 +131,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       searchString: json['searchString'],
       hasReachedMax: json['hasReachedMax'],
       pageNum: json['pageNum'],
-      fetchParams: fromParamsJson.call(json['params']),
     );
   }
 

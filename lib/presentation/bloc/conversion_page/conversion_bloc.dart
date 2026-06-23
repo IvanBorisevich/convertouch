@@ -68,6 +68,7 @@ class ConversionBloc
     required this.toggleCalculableParamUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
     on<GetConversion>(_onGetConversion);
+    on<GetOrBuildConversion>(_onGetOrBuildConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
     on<MoveConversionUnitValue>(_onMoveConversionUnitValue);
@@ -90,6 +91,19 @@ class ConversionBloc
 
   _onGetConversion(
     GetConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
+    emit(
+      ConversionBuilt(
+        conversion: event.conversion,
+        rebuildUnitValues: event.rebuildUnitValues,
+        rebuildParams: event.rebuildParams,
+      ),
+    );
+  }
+
+  _onGetOrBuildConversion(
+    GetOrBuildConversion event,
     Emitter<ConversionState> emit,
   ) async {
     ConversionModel conversion;
@@ -129,8 +143,6 @@ class ConversionBloc
 
     event.processCurrentConversion?.call(conversion);
 
-    log("[${DateTime.now()}] after current conversion processing");
-
     if (conversion.params == null ||
         !conversion.params!.mandatoryParamSetExists) {
       conversion = ObjectUtils.tryGet(
@@ -142,7 +154,7 @@ class ConversionBloc
         ),
       );
 
-      log("[${DateTime.now()}] Emit after mandatory param set adding");
+      log("Emit after mandatory param set adding");
 
       emit(
         ConversionBuilt(
@@ -153,25 +165,38 @@ class ConversionBloc
       );
     }
 
-    log("[${DateTime.now()}] Before conversion align");
-
     conversion = ObjectUtils.tryGet(
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
           conversion: conversion,
           listValuesAsyncFetchMode: ListValuesAsyncFetchMode.viaApiOnly,
-          onParamValueUpdated: event.onParamValueUpdated,
+          onParamValueUpdated: (newParamValue) {
+            event.onParamValueUpdated?.call(newParamValue);
+
+            if (newParamValue.cacheListValues) {
+              log("[${DateTime.now()}] Update params before emit with cached list values");
+
+              final newParamsFuture =
+                  state.conversion.params?.copyWithChangedParamById(
+                paramId: newParamValue.param.id,
+                paramSetId: newParamValue.param.paramSetId,
+                map: (paramValue, paramSetValue) async => paramValue.copyWith(
+                  listValuesFetchResult: newParamValue.listValuesFetchResult,
+                ),
+              );
+
+              newParamsFuture?.then((newParams) {
+                final updatedConversion = state.conversion.copyWith(
+                  params: newParams,
+                );
+
+                log("Emit after conversion update with a new param value");
+
+                add(GetConversion(conversion: updatedConversion));
+              });
+            }
+          },
         ),
-      ),
-    );
-
-    log("[${DateTime.now()}] Emit after conversion align");
-
-    emit(
-      ConversionBuilt(
-        conversion: conversion,
-        rebuildUnitValues: event.rebuildUnitValues,
-        rebuildParams: event.rebuildParams,
       ),
     );
   }
@@ -500,12 +525,13 @@ class ConversionBloc
 
   @override
   ConversionBuilt? fromJson(Map<String, dynamic> json) {
-    log("Deserialize conversion json map: $json");
+    log("Deserializing conversion json map: $json");
     return ConversionBuilt.fromJson(json);
   }
 
   @override
   Map<String, dynamic>? toJson(ConversionBuilt state) {
+    log("Serializing conversion: $state");
     return state.toJson();
   }
 }

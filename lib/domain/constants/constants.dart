@@ -171,7 +171,7 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  person(1, preselected: false, fetchOnce: true),
+  person(1, preselected: false, cached: true),
   garment(2),
   clothesSizeInter(3),
   clothesSizeUs(4, listValuesType: ConvertouchValueType.integerNonNegative),
@@ -196,24 +196,34 @@ enum ConvertouchListType {
     22,
     fetchedViaApi: true,
     preselected: false,
-    fetchOnce: true,
+    cached: true,
   ),
   clothesHeightRange(24),
   ringDiameterRange(25),
   ringCircumferenceRange(26),
   ;
 
+  /// The id of the list type used for storing in db
   final int id;
+
+  /// If true, the first element of list values is preselected by default,
+  /// if the list is empty, no value is preselected
   final bool preselected;
+
+  /// If true, list values of this type are fetched via API, not from db
   final bool fetchedViaApi;
-  final bool fetchOnce;
+
+  /// If true, list values of this type are stored in a Hydrated Bloc Hive
+  final bool cached;
+
+  /// The type of list value itself - the keyboard type depends on it
   final ConvertouchValueType listValuesType;
 
   const ConvertouchListType(
     this.id, {
     this.listValuesType = ConvertouchValueType.text,
     this.fetchedViaApi = false,
-    this.fetchOnce = false,
+    this.cached = false,
     this.preselected = true,
   });
 

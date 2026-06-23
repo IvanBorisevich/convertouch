@@ -27,9 +27,9 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
       return Right(input.itemValue);
     }
 
-    bool fetchOnce = input.itemValue.listValuesFetchResult != null &&
+    bool cached = input.itemValue.listValuesFetchResult != null &&
         input.itemValue.listValuesFetchResult!.hasReachedMax &&
-        input.itemValue.listType!.fetchOnce;
+        input.itemValue.listType!.cached;
 
     bool asyncFetch =
         input.asyncFetchMode == ListValuesAsyncFetchMode.viaApiOnly &&
@@ -39,7 +39,9 @@ abstract class _InitItemListValuesUseCase<M extends ItemValueModel,
 
     M resultValue;
 
-    if (fetchOnce) {
+    if (cached) {
+      log("No need to fetch list values");
+
       resultValue = _buildItemValue(
         input: input,
         listValuesFetchResult: input.itemValue.listValuesFetchResult!,
