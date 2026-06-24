@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/co
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
+import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_param_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
@@ -29,17 +31,17 @@ const double _paramsSpacing = 10;
 const double _jobInfoBoxHeight = 40;
 
 class ConversionParamsView extends StatelessWidget {
-  final ParamSetPanelColorScheme colors;
-  final WidgetColorScheme dialogColors;
+  final ConvertouchUITheme theme;
 
   const ConversionParamsView({
-    required this.colors,
-    required this.dialogColors,
+    required this.theme,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final colors = appColors[theme].paramSetPanel;
+
     return BlocBuilder<ConversionBloc, ConversionState>(
       buildWhen: (prev, next) {
         return prev != next && next is ConversionBuilt && next.rebuildParams;
@@ -110,6 +112,7 @@ class ConversionParamsView extends StatelessWidget {
                                 params.selectedParamSetCanBeRemoved,
                             unitGroupName: unitGroup.name,
                             tabColors: tabColors,
+                            colors: colors,
                           )
                         : _initialParamsView(
                             context,
@@ -197,6 +200,7 @@ class ConversionParamsView extends StatelessWidget {
     required bool removalIconVisible,
     required String unitGroupName,
     required WidgetColorScheme tabColors,
+    required ParamSetPanelColorScheme colors,
   }) {
     return DynamicTabBarWidget(
       isScrollable: true,
@@ -236,6 +240,7 @@ class ConversionParamsView extends StatelessWidget {
                   ? _tabContent(
                       paramSetValue: paramSetValue,
                       unitGroupName: unitGroupName,
+                      colors: colors,
                     )
                   : const SizedBox.shrink(),
             ),
@@ -340,6 +345,7 @@ class ConversionParamsView extends StatelessWidget {
   Widget _tabContent({
     required ConversionParamSetValueModel paramSetValue,
     required String unitGroupName,
+    required ParamSetPanelColorScheme colors,
   }) {
     return ScrollConfiguration(
       behavior: NoGlowScrollBehavior(),
@@ -370,7 +376,8 @@ class ConversionParamsView extends StatelessWidget {
                   unitGroupName: unitGroupName,
                   calculationSwitchersVisible: true,
                   colors: colors.paramItem,
-                  dialogColors: dialogColors,
+                  dialogColors: appColors[theme].dialog,
+                  theme: theme,
                 );
               },
             ),

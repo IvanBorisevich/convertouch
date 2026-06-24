@@ -62,12 +62,12 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
   horizontal: 14,
 );
 
-const double _refreshButtonWidth = 20;
+const double _refreshButtonWidth = 25;
 
 const String _defaultSearchHint = "Search...";
 const String _noValueHint = '-';
 const double _defaultListItemHeight = 45;
-const String _fetchErrorMsg = "Couldn't fetch list";
+const String _fetchErrorMsg = "Something went wrong during fetch";
 
 class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   const ConvertouchInputBox({
@@ -95,6 +95,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.labelText,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
+    required this.theme,
     super.key,
   });
 
@@ -122,6 +123,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final String? labelText;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
+  final ConvertouchUITheme theme;
 
   @override
   State<ConvertouchInputBox<M>> createState() => _ConvertouchInputBoxState<M>();
@@ -136,7 +138,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   void Function(ValueModel)? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconNotifier;
-  late final ValueNotifier<bool> _refreshIconNotifier;
+  late final ValueNotifier<bool> _refreshProgressIconNotifier;
   late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
   late InputBoxViewModel _inputBoxModel;
 
@@ -167,7 +169,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     _controller = initOrGetController(initial: widget.controller);
 
     _closeIconNotifier = ValueNotifier(false);
-    _refreshIconNotifier = ValueNotifier(widget.model.listType != null);
+    _refreshProgressIconNotifier = ValueNotifier(widget.model.listType != null);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
 
     _onValueChanged = (value) {
@@ -218,7 +220,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     }
 
     _closeIconNotifier.dispose();
-    _refreshIconNotifier.dispose();
+    _refreshProgressIconNotifier.dispose();
     _listValuesNotifier.dispose();
 
     super.dispose();
@@ -243,7 +245,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     }
 
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
-    _refreshIconNotifier.value = widget.model.listType != null;
+    _refreshProgressIconNotifier.value = widget.model.listType != null;
   }
 
   void _setColors() {
@@ -385,8 +387,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         model: model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
-        onRefreshTap: widget.onRefreshTap,
-        refreshIconNotifier: _refreshIconNotifier,
+        refreshProgressIconNotifier: _refreshProgressIconNotifier,
         listValuesNotifier: _listValuesNotifier,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
@@ -396,6 +397,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         dropdownColors: widget.colors.dropdown,
         dialogColors: widget.dialogColors,
         floatingLabelBehavior: widget.floatingLabelBehavior,
+        theme: widget.theme,
       );
     }
 
@@ -417,25 +419,65 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
           return const SizedBox.shrink();
         }
 
-        if (listValuesFetchResult.status != FetchingStatus.loading) {
+        if (listValuesFetchResult.status == FetchingStatus.success) {
           return GestureDetector(
             onTap: () {
               widget.onRefreshTap?.call(listValuesFetchResult);
             },
             child: Container(
+              height: double.infinity,
               padding: const EdgeInsets.only(right: 14),
               color: Colors.transparent,
               child: Icon(
                 Icons.refresh_rounded,
                 color: _foregroundColor,
-                size: 20,
+                size: 25,
+              ),
+            ),
+          );
+        }
+
+        if (listValuesFetchResult.status == FetchingStatus.failure) {
+          return GestureDetector(
+            onTap: () {
+              showConvertouchDialog(
+                currentTheme: ConvertouchUITheme.dark,
+                context: context,
+                builder: (context, setStateDialog) {
+                  return ConvertouchFailureDialog(
+                    title: "Fetch failed",
+                    handlerFunc: () {
+                      widget.onRefreshTap?.call(listValuesFetchResult);
+                    },
+                    handlerActionName: "Retry",
+                    content: Text(
+                      listValuesFetchResult.error?.message ?? _fetchErrorMsg,
+                      style: _inputFieldTextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        foregroundColor: widget.dialogColors.foreground.regular,
+                      ),
+                    ),
+                    colors: widget.dialogColors,
+                  );
+                },
+              ).then((returnedValue) {});
+            },
+            child: Container(
+              height: double.infinity,
+              padding: const EdgeInsets.only(right: 14),
+              color: Colors.transparent,
+              child: Icon(
+                Icons.sync_problem_rounded,
+                color: widget.colors.textBox.foreground.warning,
+                size: 25,
               ),
             ),
           );
         }
 
         return ValueListenableBuilder(
-          valueListenable: _refreshIconNotifier,
+          valueListenable: _refreshProgressIconNotifier,
           builder: (_, refreshIconVisible, child) {
             if (!refreshIconVisible) {
               return const SizedBox.shrink();
@@ -718,8 +760,7 @@ class _ListField extends StatefulWidget {
     required this.model,
     this.controller,
     this.onValueChanged,
-    this.onRefreshTap,
-    required this.refreshIconNotifier,
+    required this.refreshProgressIconNotifier,
     required this.listValuesNotifier,
     required this.foregroundColor,
     required this.hintColor,
@@ -729,13 +770,13 @@ class _ListField extends StatefulWidget {
     required this.dropdownColors,
     required this.dialogColors,
     this.floatingLabelBehavior,
+    required this.theme,
   });
 
   final ListBoxViewModel model;
   final TextEditingController? controller;
   final void Function(ValueModel)? onValueChanged;
-  final void Function(ListValuesFetchResult)? onRefreshTap;
-  final ValueNotifier<bool> refreshIconNotifier;
+  final ValueNotifier<bool> refreshProgressIconNotifier;
   final ValueNotifier<ListValuesFetchResult?> listValuesNotifier;
   final Color foregroundColor;
   final Color hintColor;
@@ -745,6 +786,7 @@ class _ListField extends StatefulWidget {
   final DropdownColorScheme dropdownColors;
   final WidgetColorScheme dialogColors;
   final FloatingLabelBehavior? floatingLabelBehavior;
+  final ConvertouchUITheme theme;
 
   @override
   State<StatefulWidget> createState() => _ListFieldState();
@@ -978,6 +1020,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                           controller: _dropdownSearchController,
                           focusNode: _dropdownSearchFocusNode,
                           fontSize: 15,
+                          theme: widget.theme,
                         ),
                       ),
                       searchMatchFn: (item, searchValue) {
@@ -1002,7 +1045,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   _openDropdownNotifier.value = Object();
                 }
 
-                widget.refreshIconNotifier.value = !isOpen;
+                widget.refreshProgressIconNotifier.value = !isOpen;
 
                 setState(() {
                   _isDropdownOpen = isOpen;
@@ -1061,68 +1104,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               strokeCap: StrokeCap.round,
               strokeWidth: 2,
               color: widget.dropdownColors.foreground.regular,
-            ),
-          ),
-        ),
-      );
-    } else if (listValuesFetchResult.status == FetchingStatus.failure) {
-      log("[handlerDropdownItem] listValuesFetchResult status = failure");
-
-      items.add(
-        DropdownItem<ValueModel>(
-          enabled: false,
-          alignment: Alignment.center,
-          height: 40,
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    showConvertouchDialog(
-                      currentTheme: ConvertouchUITheme.dark,
-                      context: context,
-                      builder: (context, setStateDialog) {
-                        return ConvertouchFailureDialog(
-                          title: _fetchErrorMsg,
-                          handlerFunc: () {
-                            widget.onRefreshTap?.call(listValuesFetchResult);
-                          },
-                          handlerActionName: "Retry",
-                          content: Text(
-                            listValuesFetchResult.error?.message ??
-                                "Something went wrong during fetch",
-                            style: _inputFieldTextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              foregroundColor:
-                                  widget.dialogColors.foreground.regular,
-                            ),
-                          ),
-                          colors: widget.dialogColors,
-                        );
-                      },
-                    ).then((returnedValue) {});
-                  },
-                  child: Icon(
-                    Icons.help_outline_rounded,
-                    color: widget.dropdownColors.foreground.warning,
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      _fetchErrorMsg,
-                      style: _inputFieldTextStyle(
-                        fontSize: 14,
-                        foregroundColor:
-                            widget.dropdownColors.foreground.warning,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),

@@ -9,20 +9,22 @@ import 'package:super_tooltip/super_tooltip.dart';
 
 class ConvertouchTooltip extends StatefulWidget {
   final Widget content;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final SuperTooltipController? controller;
   final Color backgroundColor;
   final TooltipDirection tooltipDirection;
   final bool closeOnNavigate;
+  final double verticalOffset;
   final Widget child;
 
   const ConvertouchTooltip({
     required this.content,
-    required this.focusNode,
+    this.focusNode,
     this.controller,
     required this.backgroundColor,
     this.tooltipDirection = TooltipDirection.down,
     this.closeOnNavigate = true,
+    this.verticalOffset = 0,
     required this.child,
     super.key,
   });
@@ -33,6 +35,7 @@ class ConvertouchTooltip extends StatefulWidget {
 
 class _ConvertouchTooltipState extends State<ConvertouchTooltip>
     with FocusNodeMixin {
+  late final FocusNode _focusNode;
   late final SuperTooltipController _controller;
 
   late void Function() _focusListener;
@@ -43,8 +46,9 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
 
     _controller = widget.controller ?? SuperTooltipController();
 
+    _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _focusListener = addFocusListener(
-      focusNode: widget.focusNode,
+      focusNode: _focusNode,
       onFocusLeft: () async {
         if (_controller.isVisible) {
           await _controller.hideTooltip();
@@ -57,7 +61,12 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
   void dispose() {
     _controller.dispose();
 
-    widget.focusNode.removeListener(_focusListener);
+    if (widget.focusNode == null) {
+      disposeFocusNode(
+        focusNode: _focusNode,
+        listener: _focusListener,
+      );
+    }
 
     super.dispose();
   }
@@ -68,11 +77,9 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
       listeners: [
         BlocListener<NavigationBloc, NavigationState>(
           listenWhen: (prev, current) =>
-              prev != current &&
-              widget.closeOnNavigate &&
-              widget.focusNode.hasFocus,
+              prev != current && widget.closeOnNavigate && _focusNode.hasFocus,
           listener: (_, navigationState) {
-            widget.focusNode.unfocus();
+            _focusNode.unfocus();
           },
         ),
         BlocListener<ConvertouchTooltipBloc, ConvertouchTooltipState>(
@@ -97,6 +104,7 @@ class _ConvertouchTooltipState extends State<ConvertouchTooltip>
         arrowBaseWidth: 10,
         minimumOutsideMargin: 10,
         showBarrier: false,
+        verticalOffset: widget.verticalOffset,
         backgroundColor: widget.backgroundColor,
         borderColor: widget.backgroundColor,
         content: widget.content,

@@ -21,8 +21,13 @@ class NetworkDaoImpl extends NetworkDao {
     if (urlPath == exchangeRateSourcesPath) {
       return await Future.delayed(
         const Duration(seconds: 5),
-        () =>
-            '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
+        () => throw NetworkException(
+          message: "Connection issue",
+          stackTrace: null,
+          dateTime: DateTime.now(),
+          severity: ExceptionSeverity.warning,
+        )
+            //'[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
       );
     }
 

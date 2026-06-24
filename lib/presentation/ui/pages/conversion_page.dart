@@ -203,8 +203,7 @@ class ConvertouchConversionPage extends StatelessWidget {
               child: Column(
                 children: [
                   ConversionParamsView(
-                    colors: appColors[appState.theme].paramSetPanel,
-                    dialogColors: appColors[appState.theme].dialog,
+                    theme: appState.theme,
                   ),
                   Expanded(
                     child: ConvertouchConversionItemsView(

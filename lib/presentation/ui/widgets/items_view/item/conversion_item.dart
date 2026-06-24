@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
@@ -29,6 +30,7 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final List<Widget?> suffixWidgets;
   final ConversionItemColorScheme colors;
   final WidgetColorScheme dialogColors;
+  final ConvertouchUITheme theme;
 
   const ConvertouchConversionItem({
     required this.model,
@@ -47,6 +49,7 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.suffixWidgets = const [],
     required this.colors,
     required this.dialogColors,
+    required this.theme,
     super.key,
   });
 
@@ -66,6 +69,7 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
       model: widget.model,
       colors: widget.colors.inputBox,
       dialogColors: widget.dialogColors,
+      theme: widget.theme,
       validators: [
         const NumSignsValidator(),
         NumInRangeValidator(widget.model.min, widget.model.max),

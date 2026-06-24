@@ -88,6 +88,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                               visible: true,
                               inputBoxColor: inputBoxColor,
                               dialogColors: dialogColors,
+                              theme: appState.theme,
                               topMargin: _verticalSpacing,
                             ),
                       ConvertouchDetailsItem(
@@ -97,6 +98,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                         onValueChanged: (value) {
                           unitDetailsController.updateUnitName(
@@ -112,6 +114,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         editable: pageState.details.editMode,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
@@ -129,6 +132,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.draftUnitData.valueType.name,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -139,6 +143,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.savedUnitData.minValue != null,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -149,6 +154,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.savedUnitData.maxValue != null,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -161,6 +167,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             .details.conversionRule.readOnlyDescription,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                         content: Visibility(
                           visible: pageState.details.editMode &&
@@ -186,6 +193,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 colors:
                                     appColors[appState.theme].conversionItem,
                                 dialogColors: dialogColors,
+                                theme: appState.theme,
                               ),
                               const SizedBox(height: 8),
                               ConvertouchConversionItem(
@@ -220,6 +228,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 colors:
                                     appColors[appState.theme].conversionItem,
                                 dialogColors: dialogColors,
+                                theme: appState.theme,
                               ),
                               const SizedBox(height: 25),
                             ],

@@ -32,7 +32,7 @@ const _notification = NotificationColorScheme(
   foreground: MultiColor(
     regular: Color(0xFFA3D4FF),
     warning: _warningForeground,
-    error: Color(0xFFFFAAAA),
+    error: Color(0xFFFB9B9B),
   ),
   action: MultiColor.only(Color(0xFFB6D5F6)),
 );
@@ -362,6 +362,7 @@ const _paramItemTextBox = TextBoxColorScheme(
   foreground: MultiColor(
     regular: Color(0xFFA3C2DE),
     disabled: Color(0xFF687A8C),
+    warning: Color(0xFFF18461),
   ),
   hint: MultiColor(
     regular: Color(0xFF84A1BD),

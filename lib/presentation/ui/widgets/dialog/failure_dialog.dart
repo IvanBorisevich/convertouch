@@ -39,7 +39,8 @@ class ConvertouchFailureDialog extends StatelessWidget {
       ),
       backgroundColor: colors.background.regular,
       content: content,
-      actionsPadding: const EdgeInsets.only(top: 15, bottom: 10, right: 20),
+      actionsAlignment: MainAxisAlignment.center,
+      actionsPadding: const EdgeInsets.symmetric(vertical: 15),
       actions: <Widget>[
         handlerFunc != null
             ? TextButton(
@@ -50,24 +51,24 @@ class ConvertouchFailureDialog extends StatelessWidget {
                 child: Text(
                   handlerActionName ?? 'Try Again',
                   style: TextStyle(
+                    fontSize: 15,
                     color: colors.foreground.regular,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               )
-            : const SizedBox.shrink(),
-        TextButton(
-          child: Text(
-            'Close',
-            style: TextStyle(
-              color: colors.foreground.regular,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+            : TextButton(
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    color: colors.foreground.regular,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
       ],
     );
   }

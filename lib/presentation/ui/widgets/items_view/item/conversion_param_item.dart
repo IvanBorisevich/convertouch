@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
@@ -16,6 +17,7 @@ class ConversionParamItem extends StatelessWidget {
   final bool calculationSwitchersVisible;
   final ConversionItemColorScheme colors;
   final WidgetColorScheme dialogColors;
+  final ConvertouchUITheme theme;
 
   const ConversionParamItem({
     required this.paramValue,
@@ -23,6 +25,7 @@ class ConversionParamItem extends StatelessWidget {
     this.calculationSwitchersVisible = false,
     required this.colors,
     required this.dialogColors,
+    required this.theme,
     super.key,
   });
 
@@ -34,6 +37,7 @@ class ConversionParamItem extends StatelessWidget {
       removable: false,
       colors: colors,
       dialogColors: dialogColors,
+      theme: theme,
       onUnitItemTap: () {
         unitsController.showUnitsForChangeInParam(
           context,

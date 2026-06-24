@@ -362,6 +362,7 @@ const _paramItemTextBox = TextBoxColorScheme(
   foreground: MultiColor(
     regular: Color(0xBE143656),
     disabled: Color(0xFF90A8C0),
+    warning: Color(0xFFAF5A3F),
   ),
   hint: MultiColor(
     regular: Color(0xFF799BBB),

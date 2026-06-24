@@ -1,5 +1,9 @@
+import 'package:app_settings/app_settings.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
+import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -71,3 +75,65 @@ Future<T?> showConvertouchDialog<T>({
     },
   );
 }
+
+void showSnackBar(
+  BuildContext context, {
+  required ConvertouchException exception,
+  required ConvertouchUITheme theme,
+  int durationInSec = 2,
+}) {
+  NotificationColorScheme snackBarColor = appColors[theme].notification;
+
+  Color foreground;
+  switch (exception.severity) {
+    case ExceptionSeverity.warning:
+      foreground = snackBarColor.foreground.warning;
+      break;
+    case ExceptionSeverity.error:
+      foreground = snackBarColor.foreground.error;
+      break;
+    case ExceptionSeverity.info:
+      foreground = snackBarColor.foreground.regular;
+      break;
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      showCloseIcon: exception.handlingAction == null,
+      closeIconColor: foreground,
+      backgroundColor: snackBarColor.background.regular,
+      duration: Duration(seconds: durationInSec),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(7),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+      ),
+      action: exception.handlingAction != null
+          ? SnackBarAction(
+              label: exception.handlingAction!.label,
+              textColor: snackBarColor.action.regular,
+              onPressed: _snackBarActions[exception.handlingAction!] ?? () {},
+            )
+          : null,
+      content: Text(
+        exception.message,
+        style: TextStyle(
+          color: foreground,
+          fontFamily: quicksandFontFamily,
+          fontWeight: FontWeight.w600,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+  );
+}
+
+final Map<ConvertouchSysAction, void Function()> _snackBarActions = {
+  ConvertouchSysAction.connection: () {
+    AppSettings.openAppSettings(
+      type: AppSettingsType.wireless,
+      asAnotherTask: true,
+    );
+  },
+};

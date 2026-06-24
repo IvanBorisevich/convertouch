@@ -55,6 +55,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         editable: !unitGroupDetailsState.savedGroup.oob,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         onValueChanged: (value) {
                           unitGroupDetailsController.updateGroupName(
                             context,
@@ -68,6 +69,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             .draftGroup.conversionType.name,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -76,6 +78,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             unitGroupDetailsState.draftGroup.valueType.name,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -86,6 +89,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             unitGroupDetailsState.draftGroup.minValue?.itemName,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                       ConvertouchDetailsItem(
@@ -96,6 +100,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             unitGroupDetailsState.draftGroup.maxValue?.itemName,
                         inputBoxColor: inputBoxColor,
                         dialogColors: dialogColors,
+                        theme: appState.theme,
                         topMargin: _verticalSpacing,
                       ),
                     ],

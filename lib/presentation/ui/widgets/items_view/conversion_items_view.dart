@@ -136,6 +136,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                     },
                     colors: appColors[theme].conversionItem,
                     dialogColors: appColors[theme].dialog,
+                    theme: theme,
                   );
                 },
               ),

@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -18,6 +19,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final double topMargin;
   final InputBoxColorScheme inputBoxColor;
   final WidgetColorScheme dialogColors;
+  final ConvertouchUITheme theme;
 
   const ConvertouchDetailsItem({
     required this.name,
@@ -33,6 +35,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
     this.topMargin = 0,
     required this.inputBoxColor,
     required this.dialogColors,
+    required this.theme,
     super.key,
   });
 
@@ -61,6 +64,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
               onValueChanged: onValueChanged,
               colors: inputBoxColor,
               dialogColors: dialogColors,
+              theme: theme,
             )
           : Container(
               width: MediaQuery.of(context).size.width,
