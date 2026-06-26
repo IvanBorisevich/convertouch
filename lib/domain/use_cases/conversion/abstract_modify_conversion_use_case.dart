@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -79,6 +79,20 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           unitGroup: modifiedGroup,
           srcUnitValue: newSrcUnitValue,
           delta: input.delta,
+        );
+      }
+
+      if (areParamsFilled(newParams?.active)) {
+        input.ifParamSetFilled?.call(
+          newParams!.active!,
+          modifiedGroup,
+          newSrcUnitValue.unit,
+        );
+      } else if (areParamsPartiallyFilled(newParams?.active)) {
+        input.ifParamSetFilledPartiallyOrEmpty?.call(
+          newParams!.active!,
+          modifiedGroup,
+          newSrcUnitValue.unit,
         );
       }
 

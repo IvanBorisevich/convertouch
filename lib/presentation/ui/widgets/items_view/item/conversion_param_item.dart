@@ -49,28 +49,33 @@ class ConversionParamItem extends StatelessWidget {
           context,
           paramValue: paramValue,
           newValue: value,
-          onChanged: (newConversion, {info}) {
+          ifParamSetFilled: (params, group, srcUnit) {
             refreshButtonController.changeState(
               context,
-              visible: newConversion.refreshable,
-              disabled: !newConversion.readyToRefresh,
+              visible: true,
+              disabled: false,
             );
 
-            if (newConversion.refreshable && newConversion.readyToRefresh) {
-              refreshingJobController.startRefreshingJob(
-                context,
-                unitGroupName: unitGroupName,
-                params: newConversion.params?.active,
-                srcUnit: newConversion.srcUnitValue?.unit,
-                jobExecutionMode: JobExecutionMode.startNewJob,
-              );
-            } else {
-              refreshingJobController.stopRefreshingJob(
-                context,
-                unitGroupName: unitGroupName,
-                paramSetName: newConversion.params?.active?.paramSet.name,
-              );
-            }
+            refreshingJobController.startRefreshingJob(
+              context,
+              unitGroupName: unitGroupName,
+              params: params,
+              srcUnit: srcUnit,
+              jobExecutionMode: JobExecutionMode.startNewJob,
+            );
+          },
+          ifParamSetFilledPartiallyOrEmpty: (params, group, srcUnit) {
+            refreshingJobController.stopRefreshingJob(
+              context,
+              unitGroupName: group.name,
+              paramSetName: params.paramSet.name,
+            );
+
+            refreshButtonController.changeState(
+              context,
+              visible: group.refreshable,
+              disabled: false,
+            );
           },
         );
       },

@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
@@ -26,6 +27,20 @@ abstract class ConversionEvent extends ConvertouchEvent {
     required this.rebuildParams,
     this.onUnitValueUpdated,
     this.onParamValueUpdated,
+  });
+}
+
+abstract class ConversionParamsEvent extends ConversionEvent {
+  final ParamSetValueChangedCallback? ifParamSetFilled;
+  final ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty;
+
+  const ConversionParamsEvent({
+    this.ifParamSetFilled,
+    this.ifParamSetFilledPartiallyOrEmpty,
+    super.onError,
+    super.onConversionUpdated,
+    required super.rebuildUnitValues,
+    required super.rebuildParams,
   });
 }
 
@@ -200,8 +215,6 @@ class AddUnitsToConversion extends ConversionEvent {
     required this.unitIds,
     super.onError,
     super.onConversionUpdated,
-    super.onParamValueUpdated,
-    super.onUnitValueUpdated,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
@@ -332,13 +345,14 @@ class ReplaceConversionItemUnit extends ConversionEvent {
   }
 }
 
-class AddParamSetsToConversion extends ConversionEvent {
+class AddParamSetsToConversion extends ConversionParamsEvent {
   final List<int> paramSetIds;
   final bool fetchListValues;
 
   const AddParamSetsToConversion({
     required this.paramSetIds,
     required this.fetchListValues,
+    super.ifParamSetFilled,
     super.onConversionUpdated,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -355,7 +369,7 @@ class AddParamSetsToConversion extends ConversionEvent {
   }
 }
 
-class RemoveSelectedParamSetFromConversion extends ConversionEvent {
+class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
   const RemoveSelectedParamSetFromConversion({
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -366,7 +380,7 @@ class RemoveSelectedParamSetFromConversion extends ConversionEvent {
   }
 }
 
-class RemoveAllParamSetsFromConversion extends ConversionEvent {
+class RemoveAllParamSetsFromConversion extends ConversionParamsEvent {
   const RemoveAllParamSetsFromConversion({
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -377,7 +391,7 @@ class RemoveAllParamSetsFromConversion extends ConversionEvent {
   }
 }
 
-class SelectParamSetInConversion extends ConversionEvent {
+class SelectParamSetInConversion extends ConversionParamsEvent {
   final int newSelectedParamSetIndex;
 
   const SelectParamSetInConversion({
@@ -397,7 +411,7 @@ class SelectParamSetInConversion extends ConversionEvent {
   }
 }
 
-class EditConversionParamValue extends ConversionEvent {
+class EditConversionParamValue extends ConversionParamsEvent {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
   final int paramId;
@@ -408,6 +422,8 @@ class EditConversionParamValue extends ConversionEvent {
     this.newDefaultValue,
     required this.paramId,
     required this.paramSetId,
+    super.ifParamSetFilled,
+    super.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
     super.onConversionUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
@@ -430,7 +446,7 @@ class EditConversionParamValue extends ConversionEvent {
   }
 }
 
-class ReplaceConversionParamUnit extends ConversionEvent {
+class ReplaceConversionParamUnit extends ConversionParamsEvent {
   final UnitModel newUnit;
   final int paramId;
   final int paramSetId;
@@ -459,7 +475,7 @@ class ReplaceConversionParamUnit extends ConversionEvent {
   }
 }
 
-class ToggleCalculableParam extends ConversionEvent {
+class ToggleCalculableParam extends ConversionParamsEvent {
   final int paramId;
   final int paramSetId;
 

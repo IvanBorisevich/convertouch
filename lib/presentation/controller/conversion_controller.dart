@@ -5,10 +5,10 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
-import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
@@ -104,13 +104,6 @@ class ConversionController {
         unitIds: unitIds,
         onError: (error) {
           navigationController.showException(context, exception: error);
-        },
-        onParamValueUpdated: (newParamValue) {
-          conversionItemController.updateParamValue(
-            context,
-            id: newParamValue.id,
-            newParamValue: newParamValue,
-          );
         },
       ),
     );
@@ -269,13 +262,16 @@ class ConversionController {
     BuildContext context, {
     required ConversionParamValueModel paramValue,
     required ValueModel? newValue,
-    void Function(ConversionModel, {ConvertouchException? info})? onChanged,
+    ParamSetValueChangedCallback? ifParamSetFilled,
+    ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionParamValue(
         newValue: newValue,
         paramId: paramValue.param.id,
         paramSetId: paramValue.param.paramSetId,
+        ifParamSetFilled: ifParamSetFilled,
+        ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
@@ -298,8 +294,6 @@ class ConversionController {
                   unitValue.unit.id == updatedConversion.srcUnitValue?.unit.id,
             );
           }
-
-          onChanged?.call(updatedConversion, info: info);
         },
       ),
     );

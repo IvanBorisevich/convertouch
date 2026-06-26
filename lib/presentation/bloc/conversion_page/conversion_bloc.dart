@@ -242,18 +242,11 @@ class ConversionBloc
           rebuildParams: false,
         ),
       );
-      // emit(
-      //   ConversionBuilt(
-      //     conversion: emptyConversion,
-      //     rebuildUnitValues: event.rebuildUnitValues,
-      //     rebuildParams: false,
-      //   ),
-      // );
     } else {
       final result = await removeParamSetsFromConversionUseCase.execute(
         InputConversionModifyModel<RemoveParamSetsDelta>(
-          delta: const RemoveParamSetsDelta.all(),
           conversion: emptyConversion,
+          delta: const RemoveParamSetsDelta.all(),
         ),
       );
 
@@ -288,16 +281,6 @@ class ConversionBloc
         rebuildParams: event.rebuildParams,
       ),
     );
-
-    // emit(
-    //   ConversionBuilt(
-    //     conversion: state.conversion.copyWith(
-    //       convertedUnitValues: unitValues,
-    //     ),
-    //     rebuildUnitValues: event.rebuildUnitValues,
-    //     rebuildParams: event.rebuildParams,
-    //   ),
-    // );
   }
 
   _onEditConversionGroup(
@@ -306,10 +289,10 @@ class ConversionBloc
   ) async {
     final result = await editConversionGroupUseCase.execute(
       InputConversionModifyModel<EditConversionGroupDelta>(
+        conversion: state.conversion,
         delta: EditConversionGroupDelta(
           editedGroup: event.editedGroup,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -322,10 +305,10 @@ class ConversionBloc
   ) async {
     final result = await addUnitsToConversionUseCase.execute(
       InputConversionModifyModel<AddUnitsToConversionDelta>(
+        conversion: state.conversion,
         delta: AddUnitsToConversionDelta(
           unitIds: event.unitIds,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -338,10 +321,10 @@ class ConversionBloc
   ) async {
     final result = await editConversionUnitUseCase.execute(
       InputConversionModifyModel<EditConversionUnitDelta>(
+        conversion: state.conversion,
         delta: EditConversionUnitDelta(
           editedUnit: event.editedUnit,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -354,12 +337,12 @@ class ConversionBloc
   ) async {
     final result = await editConversionUnitValueUseCase.execute(
       InputConversionModifyModel<EditConversionUnitValueDelta>(
+        conversion: state.conversion,
         delta: EditConversionUnitValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
           unitId: event.unitId,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -372,10 +355,10 @@ class ConversionBloc
   ) async {
     final result = await updateConversionCoefficientsUseCase.execute(
       InputConversionModifyModel<UpdateConversionCoefficientsDelta>(
+        conversion: state.conversion,
         delta: UpdateConversionCoefficientsDelta(
           newCoefficients: event.newCoefficients,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -388,10 +371,10 @@ class ConversionBloc
   ) async {
     final result = await removeConversionItemsUseCase.execute(
       InputConversionModifyModel<RemoveConversionItemsDelta>(
+        conversion: state.conversion,
         delta: RemoveConversionItemsDelta(
           unitIds: event.unitIds,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -404,6 +387,7 @@ class ConversionBloc
   ) async {
     final result = await replaceConversionItemUnitUseCase.execute(
       InputConversionModifyModel<ReplaceConversionItemUnitDelta>(
+        conversion: state.conversion,
         delta: ReplaceConversionItemUnitDelta(
           newUnit: event.newUnit,
           unitId: event.oldUnitId,
@@ -411,7 +395,6 @@ class ConversionBloc
           recalculateUnitValues:
               event.recalculationMode == RecalculationOnUnitChange.otherValues,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -424,11 +407,13 @@ class ConversionBloc
   ) async {
     final result = await addParamSetsToConversionUseCase.execute(
       InputConversionModifyModel<AddParamSetsDelta>(
+        conversion: state.conversion,
         delta: AddParamSetsDelta(
           paramSetIds: event.paramSetIds,
           fetchListValues: event.fetchListValues,
         ),
-        conversion: state.conversion,
+        ifParamSetFilled: event.ifParamSetFilled,
+        ifParamSetFilledPartiallyOrEmpty: event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 
@@ -441,8 +426,8 @@ class ConversionBloc
   ) async {
     final result = await removeParamSetsFromConversionUseCase.execute(
       InputConversionModifyModel<RemoveParamSetsDelta>(
-        delta: const RemoveParamSetsDelta.current(),
         conversion: state.conversion,
+        delta: const RemoveParamSetsDelta.current(),
       ),
     );
 
@@ -455,8 +440,8 @@ class ConversionBloc
   ) async {
     final result = await removeParamSetsFromConversionUseCase.execute(
       InputConversionModifyModel<RemoveParamSetsDelta>(
-        delta: const RemoveParamSetsDelta.all(),
         conversion: state.conversion,
+        delta: const RemoveParamSetsDelta.all(),
       ),
     );
 
@@ -469,10 +454,10 @@ class ConversionBloc
   ) async {
     final result = await selectParamSetInConversionUseCase.execute(
       InputConversionModifyModel<SelectParamSetDelta>(
+        conversion: state.conversion,
         delta: SelectParamSetDelta(
           newSelectedParamSetIndex: event.newSelectedParamSetIndex,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -485,13 +470,15 @@ class ConversionBloc
   ) async {
     final result = await editConversionParamValueUseCase.execute(
       InputConversionModifyModel<EditConversionParamValueDelta>(
+        conversion: state.conversion,
         delta: EditConversionParamValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),
-        conversion: state.conversion,
+        ifParamSetFilled: event.ifParamSetFilled,
+        ifParamSetFilledPartiallyOrEmpty: event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 
@@ -504,12 +491,12 @@ class ConversionBloc
   ) async {
     final result = await replaceConversionParamUnitUseCase.execute(
       InputConversionModifyModel<ReplaceConversionParamUnitDelta>(
+        conversion: state.conversion,
         delta: ReplaceConversionParamUnitDelta(
           newUnit: event.newUnit,
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -522,11 +509,11 @@ class ConversionBloc
   ) async {
     final result = await toggleCalculableParamUseCase.execute(
       InputConversionModifyModel<ToggleCalculableParamDelta>(
+        conversion: state.conversion,
         delta: ToggleCalculableParamDelta(
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),
-        conversion: state.conversion,
       ),
     );
 
@@ -548,14 +535,6 @@ class ConversionBloc
           rebuildParams: event.rebuildParams,
         ),
       );
-
-      // emit(
-      //   ConversionBuilt(
-      //     conversion: result.right,
-      //     rebuildUnitValues: event.rebuildUnitValues,
-      //     rebuildParams: event.rebuildParams,
-      //   ),
-      // );
 
       event.onConversionUpdated?.call(result.right);
     }

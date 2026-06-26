@@ -173,6 +173,14 @@ class ConversionParamSetValueModel extends ItemModel {
   }
 }
 
+bool areParamsFilled(ConversionParamSetValueModel? params) {
+  return params != null && params.hasAllValues;
+}
+
+bool areParamsPartiallyFilled(ConversionParamSetValueModel? params) {
+  return params != null && !params.hasAllValues;
+}
+
 bool areParamsApplicable(ConversionParamSetValueModel? params) {
   return params != null && (!params.paramSet.mandatory || params.hasAllValues);
 }
