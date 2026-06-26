@@ -80,7 +80,7 @@ class ConversionGroupsPage extends StatelessWidget {
                         refreshButtonController.changeState(
                           context,
                           visible: conversion.unitGroup.refreshable,
-                          disabled: areParamsFilled(conversion.params?.active),
+                          disabled: !areParamsFilled(conversion.params?.active),
                         );
 
                         refreshingJobController.getJobs(

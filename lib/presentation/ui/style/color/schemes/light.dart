@@ -331,18 +331,19 @@ const _conversionItem = ConversionItemColorScheme(
 const _refreshFloatingButton = WidgetColorScheme(
   border: MultiColor(
     regular: Color(0xFF2095B7),
-    disabled: Color(0xFF467787),
+    disabled: Color(0xFF9FBEC8),
+    error: Color(0xFFAE6A6A),
   ),
   foreground: MultiColor(
     regular: Color(0xFFE8E8FF),
-    disabled: Color(0xFFBABABD),
+    disabled: Color(0xFF9FBEC8),
     selected: Color(0xFF2095B7),
     error: Color(0xFFAE6A6A),
   ),
   background: MultiColor(
     regular: Color(0xFF2095B7),
     selected: _pageBackground,
-    disabled: Color(0xFF467787),
+    disabled: _pageBackground,
   ),
 );
 

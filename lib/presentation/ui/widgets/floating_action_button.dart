@@ -68,8 +68,14 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
             FittedBox(
               child: FloatingActionButton(
                 onPressed: disabled ? null : onClick,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  side: BorderSide(
+                    color: disabled
+                        ? colorScheme.border.disabled
+                        : colorScheme.border.regular,
+                    width: 1,
+                  ),
                 ),
                 backgroundColor: disabled
                     ? colorScheme.background.disabled
