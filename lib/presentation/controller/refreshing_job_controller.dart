@@ -37,7 +37,7 @@ class RefreshingJobController {
       StartRefreshingJob(
         unitGroupName: unitGroupName,
         params: params,
-        srcUnit: srcUnit,
+        srcUnitOfRefreshingValue: srcUnit,
         jobExecutionMode: jobExecutionMode,
         onError: (error) {
           navigationController.showException(context, exception: error);

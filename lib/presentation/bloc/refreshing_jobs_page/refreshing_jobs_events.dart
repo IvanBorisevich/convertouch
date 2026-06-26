@@ -68,12 +68,12 @@ class StartRefreshingJob extends RefreshingJobsEvent {
   final String unitGroupName;
   final ConversionParamSetValueModel params;
   final JobExecutionMode jobExecutionMode;
-  final UnitModel? srcUnit;
+  final UnitModel? srcUnitOfRefreshingValue;
 
   const StartRefreshingJob({
     required this.unitGroupName,
     required this.params,
-    this.srcUnit,
+    this.srcUnitOfRefreshingValue,
     this.jobExecutionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
     super.onError,
   });
@@ -83,6 +83,7 @@ class StartRefreshingJob extends RefreshingJobsEvent {
         unitGroupName,
         params,
         jobExecutionMode,
+        srcUnitOfRefreshingValue,
       ];
 
   @override
@@ -90,7 +91,8 @@ class StartRefreshingJob extends RefreshingJobsEvent {
     return 'StartRefreshingJob{'
         'unitGroupName: $unitGroupName, '
         'params: $params, '
-        'jobExecutionMode: $jobExecutionMode}';
+        'jobExecutionMode: $jobExecutionMode, '
+        'srcUnitOfRefreshingValue: $srcUnitOfRefreshingValue}';
   }
 }
 

@@ -67,9 +67,9 @@ class RefreshingJobsBloc
         );
         break;
       case DynamicDataType.singleValue:
-        if (event.srcUnit != null) {
+        if (event.srcUnitOfRefreshingValue != null) {
           inputDynamicDataFetchModel = InputDynamicValueFetchModel(
-            srcUnit: event.srcUnit!,
+            srcUnit: event.srcUnitOfRefreshingValue!,
             params: event.params,
           );
         }
