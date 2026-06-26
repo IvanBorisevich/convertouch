@@ -12,12 +12,12 @@ class AppColorScheme {
   // unit group pages
   final WidgetColorScheme unitGroupsPageFloatingButton;
   final MenuViewColorScheme unitGroupsMenu;
-  final InputBoxColorScheme unitGroupDetailsInputBox;
+  final DetailsItemColorsScheme unitGroupDetailsInputBox;
 
   // unit pages
   final WidgetColorScheme unitsPageFloatingButton;
   final MenuViewColorScheme unitsMenu;
-  final InputBoxColorScheme unitDetailsInputBox;
+  final DetailsItemColorsScheme unitDetailsInputBox;
 
   // conversion pages
   final WidgetColorScheme conversionPageFloatingButton;

@@ -38,15 +38,10 @@ class ConvertouchConversionPage extends StatelessWidget {
             appColors[appState.theme].conversionPageFloatingButton;
 
         return ConvertouchPage(
-          titleWidget: BlocSelector<ConversionBloc, ConversionState, String>(
-            selector: (state) {
-              return state is ConversionBuilt
-                  ? state.conversion.unitGroup.name
-                  : "Conversion";
-            },
-            builder: (_, groupName) {
+          titleWidget: singleGroupBlocBuilder(
+            builderFunc: (singleGroupState) {
               return Text(
-                groupName,
+                singleGroupState.unitGroup.name,
                 style: TextStyle(
                   color: pageColors.appBar.foreground.regular,
                   fontSize: 20,

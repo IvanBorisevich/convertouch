@@ -17,7 +17,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double topMargin;
-  final InputBoxColorScheme inputBoxColor;
+  final DetailsItemColorsScheme colors;
   final WidgetColorScheme dialogColors;
   final ConvertouchUITheme theme;
 
@@ -33,7 +33,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
     this.editableValueMaxLength,
     this.editableValueLengthVisible = false,
     this.topMargin = 0,
-    required this.inputBoxColor,
+    required this.colors,
     required this.dialogColors,
     required this.theme,
     super.key,
@@ -62,13 +62,17 @@ class ConvertouchDetailsItem extends StatelessWidget {
               maxTextLength: editableValueMaxLength,
               textLengthCounterVisible: editableValueLengthVisible,
               onValueChanged: onValueChanged,
-              colors: inputBoxColor,
+              colors: colors.editable,
               dialogColors: dialogColors,
               theme: theme,
             )
           : Container(
               width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: colors.readonly.textBox.background.regular,
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -78,7 +82,8 @@ class ConvertouchDetailsItem extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: inputBoxColor.textBox.border.regular,
+                            color: colors.readonly.textBox.border.regular,
+                            letterSpacing: 0,
                           ),
                         )
                       : const SizedBox.shrink(),
@@ -88,7 +93,8 @@ class ConvertouchDetailsItem extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,
-                            color: inputBoxColor.textBox.foreground.regular,
+                            color: colors.readonly.textBox.foreground.regular,
+                            letterSpacing: 0,
                           ),
                         )
                       : const SizedBox.shrink(),

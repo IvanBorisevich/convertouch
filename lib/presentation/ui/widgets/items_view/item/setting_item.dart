@@ -15,7 +15,7 @@ enum SubtitlePosition {
 const double _defaultItemHeight = 60;
 const double _radioItemHeight = 52;
 const double _bottomSubtitleHeight = 23;
-const double _bottomSubtitleFontSize = 13;
+const double _bottomSubtitleFontSize = 14;
 const double _rightSubtitleFontSize = 14;
 
 const EdgeInsets _defaultItemPadding = EdgeInsets.only(
@@ -138,6 +138,7 @@ class ConvertouchSettingItem extends StatelessWidget {
           fontSize: fontSize,
           color: colors.selectedValue.regular,
           fontWeight: FontWeight.w500,
+          letterSpacing: 0,
         ),
       ),
     );

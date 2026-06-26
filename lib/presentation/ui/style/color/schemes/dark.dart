@@ -164,23 +164,32 @@ const _unitGroupsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitGroupDetailsInputBox = InputBoxColorScheme(
-  textBox: TextBoxColorScheme(
-    background: MultiColor.only(_pageBackground),
-    border: MultiColor(
-      regular: Color(0xFF8594F1),
-      disabled: Color(0x90A5B2FF),
+const _unitGroupDetailsInputBox = DetailsItemColorsScheme(
+  editable: InputBoxColorScheme(
+    textBox: TextBoxColorScheme(
+      background: MultiColor.only(_pageBackground),
+      border: MultiColor(
+        regular: Color(0xFF8594F1),
+        disabled: Color(0x90A5B2FF),
+      ),
+      foreground: MultiColor(
+        regular: Color(0xFFC9D0FD),
+        disabled: Color(0x90B3BBEA),
+      ),
+      hint: MultiColor(
+        regular: Color(0xFF8594F1),
+      ),
+      label: MultiColor(
+        regular: Color(0xFF8594F1),
+        disabled: Color(0x90A5B2FF),
+      ),
     ),
-    foreground: MultiColor(
-      regular: Color(0xFFC9D0FD),
-      disabled: Color(0x90B3BBEA),
-    ),
-    hint: MultiColor(
-      regular: Color(0xFF8594F1),
-    ),
-    label: MultiColor(
-      regular: Color(0xFF8594F1),
-      disabled: Color(0x90A5B2FF),
+  ),
+  readonly: InputBoxColorScheme(
+    textBox: TextBoxColorScheme(
+      background: MultiColor.only(Color(0xFF3D4253)),
+      border: MultiColor.only(Color(0xFF8594F1)),
+      foreground: MultiColor.only(Color(0xFFC9D0FD)),
     ),
   ),
 );
@@ -244,26 +253,35 @@ const _unitsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitDetailsInputBox = InputBoxColorScheme(
-  textBox: TextBoxColorScheme(
-    background: MultiColor.only(_pageBackground),
-    border: MultiColor(
-      regular: Color(0xFF84A1BD),
-      focused: Color(0xFF98BAD9),
-      disabled: Color(0xFF687A8C),
+const _unitDetailsInputBox = DetailsItemColorsScheme(
+  editable: InputBoxColorScheme(
+    textBox: TextBoxColorScheme(
+      background: MultiColor.only(_pageBackground),
+      border: MultiColor(
+        regular: Color(0xFF84A1BD),
+        focused: Color(0xFF98BAD9),
+        disabled: Color(0xFF687A8C),
+      ),
+      foreground: MultiColor(
+        regular: Color(0xFFC5DDF3),
+        disabled: Color(0xFF687A8C),
+      ),
+      hint: MultiColor(
+        regular: Color(0xFF84A1BD),
+        disabled: Color(0xFF7C9EBE),
+      ),
+      label: MultiColor(
+        regular: Color(0xFF84A1BD),
+        focused: Color(0xFF98BAD9),
+        disabled: Color(0xFF687A8C),
+      ),
     ),
-    foreground: MultiColor(
-      regular: Color(0xFFC5DDF3),
-      disabled: Color(0xFF687A8C),
-    ),
-    hint: MultiColor(
-      regular: Color(0xFF84A1BD),
-      disabled: Color(0xFF7C9EBE),
-    ),
-    label: MultiColor(
-      regular: Color(0xFF84A1BD),
-      focused: Color(0xFF98BAD9),
-      disabled: Color(0xFF687A8C),
+  ),
+  readonly: InputBoxColorScheme(
+    textBox: TextBoxColorScheme(
+      background: MultiColor.only(Color(0xFF3C4655)),
+      border: MultiColor.only(Color(0xFF84A1BD)),
+      foreground: MultiColor.only(Color(0xFFC5DDF3)),
     ),
   ),
 );

@@ -89,6 +89,16 @@ class InputBoxColorScheme {
   });
 }
 
+class DetailsItemColorsScheme {
+  final InputBoxColorScheme editable;
+  final InputBoxColorScheme readonly;
+
+  const DetailsItemColorsScheme({
+    required this.editable,
+    required this.readonly,
+  });
+}
+
 class SearchBoxColorScheme {
   final InputBoxColorScheme inputBox;
   final WidgetColorScheme viewModeButton;

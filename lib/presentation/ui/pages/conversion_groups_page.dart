@@ -56,6 +56,11 @@ class ConversionGroupsPage extends StatelessWidget {
                 checkableItemsVisible: itemsSelectionState.showCancelIcon,
                 removalModeEnabled: itemsSelectionState.showCancelIcon,
                 onItemTap: (unitGroup) {
+                  groupsController.showGroup(
+                    context,
+                    unitGroup: unitGroup,
+                  );
+
                   conversionController.getOrBuildConversion(
                     context,
                     unitGroup: unitGroup,

@@ -29,7 +29,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        InputBoxColorScheme inputBoxColor =
+        DetailsItemColorsScheme detailsItemColors =
             appColors[appState.theme].unitGroupDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitGroupsPageFloatingButton;
@@ -53,7 +53,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         draftValue: unitGroupDetailsState.draftGroup.name,
                         savedValue: unitGroupDetailsState.savedGroup.name,
                         editable: !unitGroupDetailsState.savedGroup.oob,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         onValueChanged: (value) {
@@ -67,7 +67,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         name: "Conversion Type",
                         savedValue: unitGroupDetailsState
                             .draftGroup.conversionType.name,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -76,7 +76,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         name: "Values Type",
                         savedValue:
                             unitGroupDetailsState.draftGroup.valueType.name,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -87,7 +87,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             unitGroupDetailsState.draftGroup.minValue != null,
                         savedValue:
                             unitGroupDetailsState.draftGroup.minValue?.itemName,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -98,7 +98,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                             unitGroupDetailsState.draftGroup.maxValue != null,
                         savedValue:
                             unitGroupDetailsState.draftGroup.maxValue?.itemName,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,

@@ -20,7 +20,6 @@ const double _verticalSpacing = 12;
 
 const EdgeInsets _pagePadding = EdgeInsets.only(
   left: 10,
-  top: 10,
   right: 10,
   bottom: 70,
 );
@@ -32,7 +31,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return appBlocBuilder(
       builderFunc: (appState) {
-        InputBoxColorScheme inputBoxColor =
+        DetailsItemColorsScheme detailsItemColors =
             appColors[appState.theme].unitDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitsPageFloatingButton;
@@ -86,7 +85,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                               name: 'Unit Group',
                               savedValue: pageState.details.unitGroup.name,
                               visible: true,
-                              inputBoxColor: inputBoxColor,
+                              colors: detailsItemColors,
                               dialogColors: dialogColors,
                               theme: appState.theme,
                               topMargin: _verticalSpacing,
@@ -96,7 +95,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         draftValue: pageState.details.draftUnitData.name,
                         savedValue: pageState.details.savedUnitData.name,
                         editable: pageState.details.editMode,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -112,7 +111,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         draftValue: pageState.details.draftUnitData.code,
                         savedValue: pageState.details.savedUnitData.code,
                         editable: pageState.details.editMode,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -130,7 +129,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         name: 'Value Type',
                         savedValue:
                             pageState.details.draftUnitData.valueType.name,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -141,7 +140,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.savedUnitData.minValue?.itemName,
                         visible:
                             pageState.details.savedUnitData.minValue != null,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -152,7 +151,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.savedUnitData.maxValue?.itemName,
                         visible:
                             pageState.details.savedUnitData.maxValue != null,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
@@ -165,7 +164,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                             pageState.details.conversionRule.configVisible,
                         savedValue: pageState
                             .details.conversionRule.readOnlyDescription,
-                        inputBoxColor: inputBoxColor,
+                        colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
                         topMargin: _verticalSpacing,
