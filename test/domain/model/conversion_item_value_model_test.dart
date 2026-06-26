@@ -7,8 +7,7 @@ import 'mock/mock_unit.dart';
 
 void main() {
   group(
-      'For conversion param value with list values '
-      '(local list values should not be serialized)', () {
+      'For conversion param value', () {
     final barWeightParamVal = ConversionParamValueModel.tuple(
       barWeightParam,
       10,
@@ -17,7 +16,7 @@ void main() {
       listValuesFetchResult: const ListValuesFetchResult.successEmpty(),
     );
 
-    final deserializedBarWeightParamVal = ConversionParamValueModel.tuple(
+    final barWeightParamValWithoutListValues = ConversionParamValueModel.tuple(
       barWeightParam,
       10,
       null,
@@ -71,8 +70,12 @@ void main() {
     test('Deserialize param value', () {
       expect(
         ConversionParamValueModel.fromJson(barWeightParamValueJson),
-        deserializedBarWeightParamVal,
+        barWeightParamValWithoutListValues,
       );
+    });
+
+    test('Param values should differ', () {
+      expect(barWeightParamVal != barWeightParamValWithoutListValues, true);
     });
   });
 

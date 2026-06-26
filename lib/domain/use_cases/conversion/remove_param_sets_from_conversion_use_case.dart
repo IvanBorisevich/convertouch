@@ -68,7 +68,7 @@ class RemoveParamSetsFromConversionUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required RemoveParamSetsDelta delta,
   }) async {
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
@@ -76,8 +76,9 @@ class RemoveParamSetsFromConversionUseCase
           alignCurrentValue: true,
           calculateByParams: true,
           unitGroupName: unitGroup.name,
+          fetchListValues: false,
         ),
       ),
-    );
+    ).result();
   }
 }

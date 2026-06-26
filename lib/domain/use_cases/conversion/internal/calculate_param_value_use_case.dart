@@ -6,6 +6,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
@@ -16,7 +17,7 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CalculateParamValueUseValue extends UseCase<
-    InputParamValueCalculationModel, ConversionParamValueModel> {
+    InputParamValueCalculationModel, OutputParamValueCalculationModel> {
   final CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase;
   final InitParamListValuesUseCase initParamListValuesUseCase;
   final UnitGroupRepository unitGroupRepository;
@@ -28,9 +29,8 @@ class CalculateParamValueUseValue extends UseCase<
   });
 
   @override
-  Future<Either<ConvertouchException, ConversionParamValueModel>> execute(
-    InputParamValueCalculationModel input,
-  ) async {
+  Future<Either<ConvertouchException, OutputParamValueCalculationModel>>
+      execute(InputParamValueCalculationModel input) async {
     ConversionSingleParamModifyDelta? delta = input.delta;
     ConversionParamValueModel paramValue = input.itemValue;
 
@@ -105,7 +105,11 @@ class CalculateParamValueUseValue extends UseCase<
 
       input.onItemValueUpdated?.call(resultParamValue);
 
-      return Right(resultParamValue);
+      return Right(
+        OutputParamValueCalculationModel(
+          itemValue: resultParamValue,
+        ),
+      );
     } else {
       if (autoCalculatedValue != null) {
         newValue = autoCalculatedValue;
@@ -121,8 +125,7 @@ class CalculateParamValueUseValue extends UseCase<
               ),
               paramSetValue: input.paramSetValue,
               alignSelectedValue: input.alignCurrentValue,
-              autoFetch: input.listValuesAutoFetch,
-              asyncFetch: input.listValuesAsyncFetch,
+              fetchListValues: input.fetchListValues,
               keepSelectedValueIfNotInList: input.keepSelectedValueIfNotInList,
               onListValuesFetched: input.onItemValueUpdated,
             ),

@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -47,7 +48,7 @@ class CalculateParamSetValueUseCase extends UseCase<
       return Right(newParamSetValue);
     }
 
-    ConversionParamValueModel changedStartParamValue = ObjectUtils.tryGet(
+    OutputParamValueCalculationModel changedStartParam = ObjectUtils.tryGet(
       await calculateParamValueUseValue.execute(
         InputParamValueCalculationModel(
           itemValue: startParamValue,
@@ -56,13 +57,16 @@ class CalculateParamSetValueUseCase extends UseCase<
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
           alignCurrentValue: input.alignCurrentValues,
-          listValuesAutoFetch: input.listValuesAutoFetch,
-          listValuesAsyncFetch: input.listValuesAsyncFetch,
+          fetchListValues:
+              input.fetchListValues && delta is! EditConversionParamValueDelta,
           keepSelectedValueIfNotInList: input.keepSelectedValuesIfNotInList,
           onItemValueUpdated: input.onParamValueUpdated,
         ),
       ),
     );
+
+    ConversionParamValueModel changedStartParamValue =
+        await changedStartParam.result();
 
     newParamSetValue = await newParamSetValue.copyWithChangedParamById(
       paramId: startParamValue.param.id,
@@ -70,22 +74,19 @@ class CalculateParamSetValueUseCase extends UseCase<
     );
 
     if (delta == null || delta is EditConversionParamValueDelta) {
-      return Right(
-        await _recalculateOtherParams(
-          paramSetValue: newParamSetValue,
-          paramId: changedStartParamValue.param.id,
-          srcUnitValue: input.srcUnitValue,
-          unitGroupName: input.unitGroupName,
-          alignCurrentValues: input.alignCurrentValues,
-          keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
-          onParamValueUpdated: input.onParamValueUpdated,
-          listValuesAutoFetch: input.listValuesAutoFetch,
-          listValuesAsyncFetch: input.listValuesAsyncFetch,
-        ),
+      newParamSetValue = await _recalculateOtherParams(
+        paramSetValue: newParamSetValue,
+        paramId: changedStartParamValue.param.id,
+        srcUnitValue: input.srcUnitValue,
+        unitGroupName: input.unitGroupName,
+        alignCurrentValues: input.alignCurrentValues,
+        keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
+        onParamValueUpdated: input.onParamValueUpdated,
+        fetchListValues: input.fetchListValues,
       );
-    } else {
-      return Right(newParamSetValue);
     }
+
+    return Right(newParamSetValue);
   }
 
   Future<ConversionParamSetValueModel> _recalculateOtherParams({
@@ -94,8 +95,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     ConversionUnitValueModel? srcUnitValue,
     String? unitGroupName,
     required bool alignCurrentValues,
-    required bool listValuesAutoFetch,
-    required bool listValuesAsyncFetch,
+    required bool fetchListValues,
     required bool keepSelectedValuesIfNotInList,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
@@ -114,7 +114,7 @@ class CalculateParamSetValueUseCase extends UseCase<
         continue;
       }
 
-      final modifiedParamValue = ObjectUtils.tryGet(
+      OutputParamValueCalculationModel modifiedParam = ObjectUtils.tryGet(
         await calculateParamValueUseValue.execute(
           InputParamValueCalculationModel(
             itemValue: paramValue,
@@ -122,13 +122,15 @@ class CalculateParamSetValueUseCase extends UseCase<
             srcUnitValue: srcUnitValue,
             unitGroupName: unitGroupName,
             alignCurrentValue: alignCurrentValues,
-            listValuesAutoFetch: listValuesAutoFetch,
-            listValuesAsyncFetch: listValuesAsyncFetch,
+            fetchListValues: fetchListValues,
             keepSelectedValueIfNotInList: keepSelectedValuesIfNotInList,
             onItemValueUpdated: onParamValueUpdated,
           ),
         ),
       );
+
+      ConversionParamValueModel modifiedParamValue =
+          await modifiedParam.result();
 
       modifiedParamSetValue =
           await modifiedParamSetValue.copyWithChangedParamById(

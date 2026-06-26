@@ -1,6 +1,6 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
@@ -42,7 +42,10 @@ void main() {
       ),
     );
 
-    expect(modifiedParamValue.toJson(), expectedParamValue.toJson());
+    expect(
+      (await modifiedParamValue.result()).toJson(),
+      expectedParamValue.toJson(),
+    );
   }
 
   group("Should init list values of param 'Bar Weight' kg", () {

@@ -28,16 +28,17 @@ class EditConversionUnitValueUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required EditConversionUnitValueDelta delta,
   }) async {
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: newConvertedUnitValues[delta.unitId]!,
           delta: delta,
           paramSetValue: activeParams,
           alignCurrentValue: true,
+          fetchListValues: false,
         ),
       ),
-    );
+    ).result();
   }
 
   @override
@@ -58,6 +59,7 @@ class EditConversionUnitValueUseCase
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroup.name,
           alignCurrentValues: true,
+          fetchListValues: false,
           enableFirstCalculableParamIfNoCalculatedEnabled: false,
         ),
       ),

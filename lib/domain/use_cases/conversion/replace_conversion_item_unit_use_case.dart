@@ -25,7 +25,7 @@ class ReplaceConversionItemUnitUseCase
     ConversionUnitValueModel oldUnitValue =
         oldConvertedUnitValues[delta.unitId]!;
 
-    ConversionUnitValueModel newUnitValue = ObjectUtils.tryGet(
+    ConversionUnitValueModel newUnitValue = await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldUnitValue,
@@ -34,7 +34,7 @@ class ReplaceConversionItemUnitUseCase
           alignCurrentValue: true,
         ),
       ),
-    );
+    ).result();
 
     return oldConvertedUnitValues.map(
       (key, value) => key == delta.unitId

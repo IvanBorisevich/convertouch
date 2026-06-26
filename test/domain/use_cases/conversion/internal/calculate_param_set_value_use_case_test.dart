@@ -73,7 +73,6 @@ void main() {
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroupName,
           alignCurrentValues: alignCurrentValues,
-          listValuesAsyncFetch: false,
           enableFirstCalculableParamIfNoCalculatedEnabled:
               enableFirstCalculableParamIfNoCalculatedEnabled,
         ),

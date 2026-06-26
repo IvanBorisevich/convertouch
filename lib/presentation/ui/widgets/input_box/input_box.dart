@@ -415,8 +415,33 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     return ValueListenableBuilder(
       valueListenable: _listValuesNotifier,
       builder: (_, listValuesFetchResult, child) {
-        if (listValuesFetchResult == null) {
-          return const SizedBox.shrink();
+        if (listValuesFetchResult == null ||
+            listValuesFetchResult.status == FetchingStatus.loading) {
+          return ValueListenableBuilder(
+            valueListenable: _refreshProgressIconNotifier,
+            builder: (_, refreshIconVisible, child) {
+              if (!refreshIconVisible) {
+                return const SizedBox.shrink();
+              }
+
+              return Container(
+                padding: const EdgeInsets.only(right: 14),
+                color: Colors.transparent,
+                child: Container(
+                  width: _refreshButtonWidth,
+                  height: _refreshButtonWidth,
+                  color: Colors.transparent,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(2),
+                  child: CircularProgressIndicator(
+                    strokeCap: StrokeCap.round,
+                    strokeWidth: 2,
+                    color: _foregroundColor,
+                  ),
+                ),
+              );
+            },
+          );
         }
 
         if (listValuesFetchResult.status == FetchingStatus.success) {
@@ -476,31 +501,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
           );
         }
 
-        return ValueListenableBuilder(
-          valueListenable: _refreshProgressIconNotifier,
-          builder: (_, refreshIconVisible, child) {
-            if (!refreshIconVisible) {
-              return const SizedBox.shrink();
-            }
-
-            return Container(
-              padding: const EdgeInsets.only(right: 14),
-              color: Colors.transparent,
-              child: Container(
-                width: _refreshButtonWidth,
-                height: _refreshButtonWidth,
-                color: Colors.transparent,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(2),
-                child: CircularProgressIndicator(
-                  strokeCap: StrokeCap.round,
-                  strokeWidth: 2,
-                  color: _foregroundColor,
-                ),
-              ),
-            );
-          },
-        );
+        return const SizedBox.shrink();
       },
     );
   }
@@ -1062,10 +1063,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
     ListValuesFetchResult? listValuesFetchResult,
   ) {
-    log("[handlerDropdownItem] listValuesFetchResult: $listValuesFetchResult");
-
     if (listValuesFetchResult == null) {
-      log("[handlerDropdownItem] listValuesFetchResult = null");
       return const [];
     }
 
@@ -1089,8 +1087,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         .toList();
 
     if (listValuesFetchResult.status == FetchingStatus.loading) {
-      log("[handlerDropdownItem] listValuesFetchResult status = loading");
-
       items.add(
         DropdownItem<ValueModel>(
           enabled: false,
@@ -1109,8 +1105,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         ),
       );
     }
-
-    log("[handlerDropdownItem] items size: ${items.length}");
 
     return items;
   }

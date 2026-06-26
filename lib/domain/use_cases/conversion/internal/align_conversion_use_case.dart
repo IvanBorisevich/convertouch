@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -6,14 +8,14 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_a
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-class AlignConversionUseCase
-    extends UseCase<InputConversionAlignModel, ConversionModel> {
+class AlignConversionUseCase extends UseCase<InputConversionAlignModel, void> {
   final CalculateParamSetValueUseCase calculateParamSetValueUseCase;
   final CalculateUnitValueUseValue calculateUnitValueUseValue;
 
@@ -23,42 +25,84 @@ class AlignConversionUseCase
   });
 
   @override
-  Future<Either<ConvertouchException, ConversionModel>> execute(
+  Future<Either<ConvertouchException, void>> execute(
     InputConversionAlignModel input,
   ) async {
-    ConversionModel alignedConversion = input.conversion;
-
     if (input.alignParams) {
-      alignedConversion = await _alignParams(
+      Future<ConversionModel> alignedConversionByParamsFuture = _alignParams(
         input.conversion,
         unitGroupName: input.conversion.unitGroup.name,
-        onParamValueUpdated: input.onParamValueUpdated,
         paramIdToRefreshListValues: input.paramIdToRefreshListValues,
-        listValuesAutoFetch: input.listValuesAutoFetch,
+        fetchListValues: input.fetchListValues,
+        alignCurrentValues: input.alignCurrentValues,
+        onParamValueUpdated: input.onParamValueUpdated,
       );
-    }
 
-    if (input.alignUnits) {
-      alignedConversion = await _alignConversionUnitValues(
-        alignedConversion,
-        unitGroupName: input.conversion.unitGroup.name,
-        onUnitValueUpdated: (newUnitValue) {
-          input.onUnitValueUpdated?.call(
-            newUnitValue,
-            newUnitValue.unit.id == input.conversion.srcUnitValue?.unit.id,
+      if (input.asyncAlign) {
+        alignedConversionByParamsFuture.then((alignedConversion) {
+          input.onConversionParamsAligned?.call(alignedConversion);
+
+          log("${DateTime.now()} - [async] Conversion params have been aligned, unit values size = ${alignedConversion.convertedUnitValues.length}");
+
+          if (input.alignUnits) {
+            log("${DateTime.now()} - [async] Align units");
+
+            _alignConversionUnitValues(
+              alignedConversion,
+              unitGroupName: alignedConversion.unitGroup.name,
+              onUnitValueUpdated: input.onUnitValueUpdated,
+              fetchListValues: input.fetchListValues,
+              alignCurrentValues: input.alignCurrentValues,
+              onUnitValuesAligned: input.onConversionUnitValuesAligned,
+            );
+          }
+        });
+      } else {
+        ConversionModel alignedConversion =
+            await alignedConversionByParamsFuture;
+
+        input.onConversionParamsAligned?.call(alignedConversion);
+
+        log("${DateTime.now()} - Conversion params have been aligned");
+
+        if (input.alignUnits) {
+          log("${DateTime.now()} - Align units");
+
+          await _alignConversionUnitValues(
+            alignedConversion,
+            unitGroupName: alignedConversion.unitGroup.name,
+            onUnitValueUpdated: input.onUnitValueUpdated,
+            fetchListValues: input.fetchListValues,
+            alignCurrentValues: input.alignCurrentValues,
+            onUnitValuesAligned: input.onConversionUnitValuesAligned,
+            asyncAlign: false,
           );
-        },
-        listValuesAutoFetch: input.listValuesAutoFetch,
+
+          log("${DateTime.now()} - Conversion unit values have been aligned by params");
+        }
+      }
+    } else if (input.alignUnits) {
+      _alignConversionUnitValues(
+        input.conversion,
+        unitGroupName: input.conversion.unitGroup.name,
+        onUnitValueUpdated: input.onUnitValueUpdated,
+        fetchListValues: input.fetchListValues,
+        alignCurrentValues: input.alignCurrentValues,
+        onUnitValuesAligned: input.onConversionUnitValuesAligned,
+        asyncAlign: input.asyncAlign,
       );
+
+      log("${DateTime.now()} - Conversion unit values have been aligned");
     }
 
-    return Right(alignedConversion);
+    return const Right(null);
   }
 
   Future<ConversionModel> _alignParams(
     ConversionModel conversion, {
     required String unitGroupName,
-    required bool listValuesAutoFetch,
+    required bool fetchListValues,
+    required bool alignCurrentValues,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
     int? paramIdToRefreshListValues,
   }) async {
@@ -78,9 +122,8 @@ class AlignConversionUseCase
                       paramId: paramIdToRefreshListValues,
                     )
                   : null,
-              alignCurrentValues: false,
-              listValuesAutoFetch: listValuesAutoFetch,
-              listValuesAsyncFetch: true,
+              alignCurrentValues: alignCurrentValues,
+              fetchListValues: fetchListValues,
               keepSelectedValuesIfNotInList: false,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
               onParamValueUpdated: onParamValueUpdated,
@@ -95,36 +138,111 @@ class AlignConversionUseCase
     );
   }
 
-  Future<ConversionModel> _alignConversionUnitValues(
+  Future<void> _alignConversionUnitValues(
     ConversionModel conversion, {
     required String unitGroupName,
-    required bool listValuesAutoFetch,
-    void Function(ConversionUnitValueModel)? onUnitValueUpdated,
+    required bool fetchListValues,
+    required bool alignCurrentValues,
+    void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated,
+    void Function(ConversionModel)? onUnitValuesAligned,
+    bool asyncAlign = true,
   }) async {
     List<ConversionUnitValueModel> alignedUnitValues = [];
+    List<ItemValueFuture<ConversionUnitValueModel>> futureAlignedUnitValues =
+        [];
 
     for (var unitValue in conversion.convertedUnitValues) {
-      var newUnitValue = ObjectUtils.tryGet(
+      var unitValueCalculationOutput = ObjectUtils.tryGet(
         await calculateUnitValueUseValue.execute(
           InputUnitValueCalculationModel(
             itemValue: unitValue,
             paramSetValue: conversion.params?.active,
-            alignCurrentValue: false,
-            listValuesAutoFetch: listValuesAutoFetch,
+            alignCurrentValue: alignCurrentValues,
+            fetchListValues: fetchListValues,
             unitGroupName: unitGroupName,
-            onItemValueUpdated: onUnitValueUpdated,
+            onItemValueUpdated: (newUnitValue) {
+              onUnitValueUpdated?.call(
+                newUnitValue,
+                newUnitValue.unit.id == conversion.srcUnitValue?.unit.id,
+              );
+            },
           ),
         ),
       );
 
-      alignedUnitValues.add(newUnitValue);
+      if (unitValueCalculationOutput.itemValueFuture != null) {
+        futureAlignedUnitValues
+            .add(unitValueCalculationOutput.itemValueFuture!);
+      } else {
+        alignedUnitValues.add(unitValueCalculationOutput.itemValue);
+      }
     }
 
-    return conversion.copyWith(
-      srcUnitValue: alignedUnitValues.firstWhereOrNull(
-        (unitValue) => unitValue.unit.id == conversion.srcUnitValue?.unit.id,
-      ),
-      convertedUnitValues: alignedUnitValues,
-    );
+    ConversionModel alignedConversion = conversion;
+
+    if (alignedUnitValues.isNotEmpty) {
+      log("${DateTime.now()} - Align non-delayed conversion unit values");
+
+      alignedConversion = conversion.copyWith(
+        srcUnitValue: alignedUnitValues.firstWhereOrNull(
+          (unitValue) => unitValue.unit.id == conversion.srcUnitValue?.unit.id,
+        ),
+        convertedUnitValues: alignedUnitValues,
+      );
+
+      onUnitValuesAligned?.call(alignedConversion);
+
+      log("${DateTime.now()} - Non-delayed conversion unit values "
+          "have been aligned");
+    }
+
+    if (futureAlignedUnitValues.isEmpty) {
+      log("${DateTime.now()} - No delayed conversion unit values to be aligned");
+      return;
+    }
+
+    if (asyncAlign) {
+      log("${DateTime.now()} - [async] Delayed conversion units align starting");
+
+      Future.wait(futureAlignedUnitValues).then(
+        (alignedEitherValues) {
+          List<ConversionUnitValueModel> delayedUnitValues = alignedEitherValues
+              .map((eitherUnitValue) => ObjectUtils.tryGet(eitherUnitValue))
+              .toList();
+
+          alignedConversion = alignedConversion.copyWith(
+            srcUnitValue: delayedUnitValues.firstWhereOrNull(
+              (unitValue) =>
+                  unitValue.unit.id == alignedConversion.srcUnitValue?.unit.id,
+            ),
+            convertedUnitValues: delayedUnitValues,
+          );
+
+          onUnitValuesAligned?.call(alignedConversion);
+
+          log("${DateTime.now()} - [async] Delayed conversion unit values "
+              "have been aligned");
+        },
+      );
+    } else {
+      log("${DateTime.now()} - Delayed conversion units align starting");
+
+      List<ConversionUnitValueModel> delayedUnitValues =
+          (await Future.wait(futureAlignedUnitValues))
+              .map((eitherUnitValue) => ObjectUtils.tryGet(eitherUnitValue))
+              .toList();
+
+      alignedConversion = alignedConversion.copyWith(
+        srcUnitValue: delayedUnitValues.firstWhereOrNull(
+          (unitValue) =>
+              unitValue.unit.id == alignedConversion.srcUnitValue?.unit.id,
+        ),
+        convertedUnitValues: delayedUnitValues,
+      );
+
+      onUnitValuesAligned?.call(alignedConversion);
+
+      log("${DateTime.now()} - Delayed conversion unit values have been aligned");
+    }
   }
 }

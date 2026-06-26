@@ -81,7 +81,7 @@ class ConversionUnitValueUpdated extends ConversionUnitValueState {
   }
 }
 
-class ConversionParamValueState
+abstract class ConversionParamValueState
     extends ConversionItemState<ConversionParamValueModel> {
   const ConversionParamValueState({
     required super.id,

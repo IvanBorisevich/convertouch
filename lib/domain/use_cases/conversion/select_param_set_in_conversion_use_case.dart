@@ -43,7 +43,7 @@ class SelectParamSetInConversionUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required SelectParamSetDelta delta,
   }) async {
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
@@ -53,6 +53,6 @@ class SelectParamSetInConversionUseCase
           unitGroupName: unitGroup.name,
         ),
       ),
-    );
+    ).result();
   }
 }

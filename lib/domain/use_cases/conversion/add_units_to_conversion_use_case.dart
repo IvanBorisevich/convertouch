@@ -49,7 +49,7 @@ class AddUnitsToConversionUseCase
         ),
       );
 
-      newUnitValues.add(newUnitValue);
+      newUnitValues.add(await newUnitValue.result());
     }
 
     final newConversionItemsMap = {
@@ -70,7 +70,7 @@ class AddUnitsToConversionUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required AddUnitsToConversionDelta delta,
   }) async {
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
@@ -80,6 +80,6 @@ class AddUnitsToConversionUseCase
           alignCurrentValue: true,
         ),
       ),
-    );
+    ).result();
   }
 }

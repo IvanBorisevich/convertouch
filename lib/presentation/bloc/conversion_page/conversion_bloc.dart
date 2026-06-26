@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
@@ -67,8 +66,9 @@ class ConversionBloc
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
-    on<GetUpdatedConversion>(_onGetConversion);
+    on<PatchConversion>(_onPatchConversion);
     on<GetOrBuildConversion>(_onGetOrBuildConversion);
+    on<AlignConversion>(_onAlignConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
     on<MoveConversionUnitValue>(_onMoveConversionUnitValue);
@@ -87,16 +87,28 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
-    on<RefreshParamListValuesManually>(_onRefreshParamListValuesManually);
   }
 
-  _onGetConversion(
-    GetUpdatedConversion event,
+  _onPatchConversion(
+    PatchConversion event,
     Emitter<ConversionState> emit,
   ) async {
     emit(
       ConversionBuilt(
-        conversion: await event.mappingFunc.call(state.conversion),
+        conversion: ConversionModel(
+          id: state.conversion.id,
+          name: state.conversion.name,
+          unitGroup: state.conversion.unitGroup,
+          params: event.rebuildParams
+              ? event.conversionPatch.params
+              : state.conversion.params,
+          convertedUnitValues: event.rebuildUnitValues
+              ? event.conversionPatch.convertedUnitValues
+              : state.conversion.convertedUnitValues,
+          srcUnitValue: event.rebuildUnitValues
+              ? event.conversionPatch.srcUnitValue
+              : state.conversion.srcUnitValue,
+        ),
         rebuildUnitValues: event.rebuildUnitValues,
         rebuildParams: event.rebuildParams,
       ),
@@ -132,7 +144,7 @@ class ConversionBloc
       event.processPrevConversion?.call(prev.conversion);
     }
 
-    log("Emit after getting conversion from storage or db");
+    log("${DateTime.now()} - Emit after getting conversion from storage or db");
 
     emit(
       ConversionBuilt(
@@ -142,20 +154,20 @@ class ConversionBloc
       ),
     );
 
-    event.processCurrentConversion?.call(conversion);
-
     if (conversion.params == null ||
         !conversion.params!.mandatoryParamSetExists) {
       conversion = ObjectUtils.tryGet(
         await addParamSetsToConversionUseCase.execute(
           InputConversionModifyModel<AddParamSetsDelta>(
             conversion: conversion,
-            delta: const AddParamSetsDelta(),
+            delta: const AddParamSetsDelta(
+              fetchListValues: false,
+            ),
           ),
         ),
       );
 
-      log("Emit after mandatory param set adding");
+      log("${DateTime.now()} - Emit after mandatory param set adding");
 
       emit(
         ConversionBuilt(
@@ -166,17 +178,43 @@ class ConversionBloc
       );
     }
 
+    event.processCurrentConversion?.call(conversion);
+  }
+
+  _onAlignConversion(
+    AlignConversion event,
+    Emitter<ConversionState> emit,
+  ) async {
     ObjectUtils.tryGet(
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
-          conversion: conversion,
-          onParamValueUpdated: (newParamValue) {
-            event.onParamValueUpdated?.call(newParamValue);
-            _onParamListValuesFetched.call(newParamValue);
+          conversion: event.conversion ?? state.conversion,
+          alignUnits: event.alignUnits,
+          alignParams: event.alignParams,
+          paramIdToRefreshListValues: event.paramIdToRefreshListValues,
+          onParamValueUpdated: event.onParamValueUpdated,
+          onUnitValueUpdated: event.onUnitValueUpdated,
+          onConversionParamsAligned: (updatedConversion) {
+            log("${DateTime.now()} - Emit conversion with aligned params");
+
+            add(
+              PatchConversion(
+                conversionPatch: updatedConversion,
+                rebuildParams: true,
+                rebuildUnitValues: false,
+              ),
+            );
           },
-          onUnitValueUpdated: (newUnitValue, isSource) {
-            event.onUnitValueUpdated?.call(newUnitValue, isSource);
-            _onUnitListValuesFetched.call(newUnitValue);
+          onConversionUnitValuesAligned: (updatedConversion) {
+            log("${DateTime.now()} - Emit conversion with aligned unit values");
+
+            add(
+              PatchConversion(
+                conversionPatch: updatedConversion,
+                rebuildParams: false,
+                rebuildUnitValues: true,
+              ),
+            );
           },
         ),
       ),
@@ -379,6 +417,7 @@ class ConversionBloc
       InputConversionModifyModel<AddParamSetsDelta>(
         delta: AddParamSetsDelta(
           paramSetIds: event.paramSetIds,
+          fetchListValues: event.fetchListValues,
         ),
         conversion: state.conversion,
       ),
@@ -485,70 +524,6 @@ class ConversionBloc
     await _handleAndEmit(result, emit, event: event);
   }
 
-  _onRefreshParamListValuesManually(
-    RefreshParamListValuesManually event,
-    Emitter<ConversionState> emit,
-  ) async {
-    ObjectUtils.tryGet(
-      await alignConversionUseCase.execute(
-        InputConversionAlignModel(
-          alignUnits: false,
-          listValuesAutoFetch: false,
-          conversion: state.conversion,
-          onParamValueUpdated: (newParamValue) {
-            event.onParamValueUpdated?.call(newParamValue);
-            _onParamListValuesFetched.call(newParamValue);
-          },
-        ),
-      ),
-    );
-  }
-
-  void _onParamListValuesFetched(ConversionParamValueModel newParamValue) {
-    if (!newParamValue.cacheListValuesFetchedViaApi) {
-      return;
-    }
-
-    add(
-      GetUpdatedConversion(
-        mappingFunc: (conversion) async {
-          final newParams = await conversion.params?.copyWithChangedParamById(
-            paramId: newParamValue.param.id,
-            paramSetId: newParamValue.param.paramSetId,
-            map: (paramValue, paramSetValue) async {
-              return paramValue.copyWith(
-                listValuesFetchResult: newParamValue.listValuesFetchResult,
-              );
-            },
-          );
-
-          return conversion.copyWith(
-            params: newParams,
-          );
-        },
-      ),
-    );
-  }
-
-  void _onUnitListValuesFetched(ConversionUnitValueModel newUnitValue) {
-    add(
-      GetUpdatedConversion(
-        mappingFunc: (conversion) async {
-          final newUnitValues = conversion.convertedUnitValues
-              .map(
-                (unitValue) =>
-                    unitValue.id == newUnitValue.id ? newUnitValue : unitValue,
-              )
-              .toList();
-
-          return conversion.copyWith(
-            convertedUnitValues: newUnitValues,
-          );
-        },
-      ),
-    );
-  }
-
   _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
@@ -571,13 +546,11 @@ class ConversionBloc
 
   @override
   ConversionBuilt? fromJson(Map<String, dynamic> json) {
-    log("Deserializing conversion json map: $json");
     return ConversionBuilt.fromJson(json);
   }
 
   @override
   Map<String, dynamic>? toJson(ConversionBuilt state) {
-    log("Serializing conversion: $state");
     return state.toJson();
   }
 }

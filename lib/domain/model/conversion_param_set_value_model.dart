@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 
 class ConversionParamSetValueModel extends ItemModel {
   final ConversionParamSetModel paramSet;
@@ -142,10 +142,15 @@ class ConversionParamSetValueModel extends ItemModel {
   }
 
   @override
-  Map<String, dynamic> toJson({bool removeNulls = true}) {
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveListValues = false,
+  }) {
     return {
       "paramSet": paramSet.toJson(),
-      "paramValues": paramValues.map((value) => value.toJson()).toList(),
+      "paramValues": paramValues
+          .map((value) => value.toJson(saveListValues: saveListValues))
+          .toList(),
     };
   }
 
@@ -163,7 +168,8 @@ class ConversionParamSetValueModel extends ItemModel {
 
   @override
   String toString() {
-    return 'ParamSetValue{$paramSet: $paramValues}';
+    return 'ParamSetValue{${paramSet.name}: '
+        'params: \n\t${paramValues.join("\n\t")}\n}';
   }
 }
 

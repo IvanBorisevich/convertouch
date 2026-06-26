@@ -117,10 +117,16 @@ class ItemValueModel extends ItemModel {
       ];
 
   @override
-  Map<String, dynamic> toJson({bool removeNulls = true}) {
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveListValues = false,
+  }) {
     var result = {
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
+      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
+          ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
+          : null,
     };
 
     if (removeNulls) {
@@ -196,11 +202,17 @@ class ConversionUnitValueModel extends ItemValueModel {
       ];
 
   @override
-  Map<String, dynamic> toJson({bool removeNulls = true}) {
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveListValues = false,
+  }) {
     var result = {
       "unit": unit.toJson(removeNulls: removeNulls),
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
+      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
+          ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
+          : null,
     };
 
     if (removeNulls) {
@@ -308,14 +320,17 @@ class ConversionParamValueModel extends ItemValueModel {
       ];
 
   @override
-  Map<String, dynamic> toJson({bool removeNulls = true}) {
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveListValues = false,
+  }) {
     var result = {
       "param": param.toJson(removeNulls: removeNulls),
       "unit": unit?.toJson(removeNulls: removeNulls),
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValuesFetchResult": cacheListValuesFetchedViaApi
+      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
           ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
           : null,
     };
@@ -349,7 +364,7 @@ class ConversionParamValueModel extends ItemValueModel {
 
   @override
   String toString() {
-    return 'ParamValue{${param.name}: $value , $defaultValue | ${unit?.code} | '
+    return 'ParamValue{id = $id, ${param.name} | $value , $defaultValue | ${unit?.code} | '
         'list size: ${listValuesFetchResult?.items.length}}';
   }
 }

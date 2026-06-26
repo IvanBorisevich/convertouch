@@ -90,6 +90,7 @@ class AddParamSetsToConversionUseCase
         paramSet: paramSet,
         srcUnitValue: srcUnitValue,
         unitGroupName: unitGroup.name,
+        fetchListValues: delta.fetchListValues,
       );
 
       newParamSetValues.add(paramSetValue);
@@ -113,6 +114,7 @@ class AddParamSetsToConversionUseCase
     required ConversionParamSetModel paramSet,
     ConversionUnitValueModel? srcUnitValue,
     required String unitGroupName,
+    required bool fetchListValues,
   }) async {
     List<ConversionParamModel> params = ObjectUtils.tryGet(
       await conversionParamRepository.getBySetId(paramSet.id),
@@ -136,6 +138,7 @@ class AddParamSetsToConversionUseCase
           ),
           srcUnitValue: srcUnitValue,
           unitGroupName: unitGroupName,
+          fetchListValues: fetchListValues,
           alignCurrentValues: true,
           enableFirstCalculableParamIfNoCalculatedEnabled: true,
         ),

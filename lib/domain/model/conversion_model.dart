@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 
 const int minimumNumberOfConversionItems = 2;
@@ -58,14 +58,25 @@ class ConversionModel extends IdNameItemModel {
   }
 
   @override
-  Map<String, dynamic> toJson({bool removeNulls = true}) {
+  Map<String, dynamic> toJson({
+    bool removeNulls = true,
+    bool saveListValues = false,
+  }) {
     var result = {
       "id": id,
       "unitGroup": unitGroup.toJson(removeNulls: removeNulls),
-      "sourceItem": srcUnitValue?.toJson(removeNulls: removeNulls),
-      "params": params?.toJson(),
+      "sourceItem": srcUnitValue?.toJson(
+        removeNulls: removeNulls,
+        saveListValues: saveListValues,
+      ),
+      "params": params?.toJson(saveListValues: saveListValues),
       "targetItems": convertedUnitValues
-          .map((item) => item.toJson(removeNulls: removeNulls))
+          .map(
+            (item) => item.toJson(
+              removeNulls: removeNulls,
+              saveListValues: saveListValues,
+            ),
+          )
           .toList(),
     };
 
@@ -119,6 +130,6 @@ class ConversionModel extends IdNameItemModel {
         'group: ${unitGroup.name} (id = ${unitGroup.id}),\n'
         'params: ${params ?? '-'},\n'
         'src: $srcUnitValue,\n'
-        'items: \n\t${convertedUnitValues.join("\n\t")}}';
+        'items: [\n\t${convertedUnitValues.join("\n\t")}\n]\n}';
   }
 }

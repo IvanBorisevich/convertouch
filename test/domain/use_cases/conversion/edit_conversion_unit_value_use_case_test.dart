@@ -309,8 +309,11 @@ void main() {
                 ConversionParamValueModel.tuple(personParam, "Man", null),
                 ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(
-                    heightParam, const NumRange.withRight(0, 1.64), null,
-                    unit: meter),
+                  heightParam,
+                  manShirtHeightRangesFrom0_164To190InMeter.items[0],
+                  null,
+                  unit: meter,
+                ),
               ],
             ),
             currentSrc: ConversionUnitValueModel.tuple(

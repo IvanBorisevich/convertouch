@@ -64,7 +64,10 @@ void main() {
       ),
     );
 
-    expect(modifiedParamValue.toJson(), expectedParamValue.toJson());
+    expect(
+      (await modifiedParamValue.result()).toJson(),
+      expectedParamValue.toJson(),
+    );
   }
 
   group("List params", () {

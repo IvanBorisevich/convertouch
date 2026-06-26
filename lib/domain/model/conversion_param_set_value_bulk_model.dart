@@ -244,9 +244,13 @@ class ConversionParamSetValueBulkModel extends Equatable {
         totalCount,
       ];
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({
+    bool saveListValues = false,
+  }) {
     return {
-      "paramSetValues": paramSetValues.map((item) => item.toJson()).toList(),
+      "paramSetValues": paramSetValues
+          .map((item) => item.toJson(saveListValues: saveListValues))
+          .toList(),
       "selectedIndex": selectedIndex,
       "paramSetsCanBeAdded": paramSetsCanBeAdded,
       "paramSetCanBeRemoved": selectedParamSetCanBeRemoved,

@@ -57,7 +57,7 @@ class UpdateConversionCoefficientsUseCase
           newConvertedUnitValues[firstUpdatedUnitId] ?? oldSourceUnitValue;
     }
 
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: newSrcUnitValue,
@@ -65,8 +65,9 @@ class UpdateConversionCoefficientsUseCase
           calculateByParams: true,
           unitGroupName: unitGroup.name,
           alignCurrentValue: true,
+          fetchListValues: false,
         ),
       ),
-    );
+    ).result();
   }
 }

@@ -6,7 +6,7 @@ class ConvertouchBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    log("Convertouch event: $event");
+    log("${DateTime.now()} - Convertouch event: $event");
   }
 
   @override

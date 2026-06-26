@@ -22,19 +22,10 @@ final conversionController = di.locator.get<ConversionController>();
 class ConversionController {
   const ConversionController();
 
-  void getUpdatedConversion(
-    BuildContext context, {
-    required Future<ConversionModel> Function(ConversionModel) mappingFunc,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      GetUpdatedConversion(mappingFunc: mappingFunc),
-    );
-  }
-
   void getOrBuildConversion(
     BuildContext context, {
     required UnitGroupModel unitGroup,
-    void Function(ConversionModel?)? processCurrentConversion,
+    void Function(ConversionModel)? processCurrentConversion,
   }) {
     conversionItemController.resetUnitValues(context);
     conversionItemController.resetParamValues(context);
@@ -53,6 +44,21 @@ class ConversionController {
           );
         },
         processCurrentConversion: processCurrentConversion,
+      ),
+    );
+  }
+
+  void alignConversion(
+    BuildContext context, {
+    required ConversionModel conversion,
+    bool alignParams = true,
+    bool alignUnits = true,
+  }) {
+    BlocProvider.of<ConversionBloc>(context).add(
+      AlignConversion(
+        conversion: conversion,
+        alignParams: alignParams,
+        alignUnits: alignUnits,
         onParamValueUpdated: (newParamValue) {
           conversionItemController.updateParamValue(
             context,
@@ -67,7 +73,7 @@ class ConversionController {
             newUnitValue: newUnitValue,
             isSource: isSource,
           );
-        }
+        },
       ),
     );
   }
@@ -98,6 +104,13 @@ class ConversionController {
         unitIds: unitIds,
         onError: (error) {
           navigationController.showException(context, exception: error);
+        },
+        onParamValueUpdated: (newParamValue) {
+          conversionItemController.updateParamValue(
+            context,
+            id: newParamValue.id,
+            newParamValue: newParamValue,
+          );
         },
       ),
     );
@@ -318,17 +331,21 @@ class ConversionController {
     );
   }
 
-  void refreshParamListValues(BuildContext context, {required int paramId,}) {
+  void refreshParamListValues(
+    BuildContext context, {
+    required int paramId,
+  }) {
     BlocProvider.of<ConversionBloc>(context).add(
-      RefreshParamListValuesManually(
-        paramId: paramId,
+      AlignConversion(
+        alignUnits: false,
+        paramIdToRefreshListValues: paramId,
         onParamValueUpdated: (newParamValue) {
           conversionItemController.updateParamValue(
             context,
             id: newParamValue.id,
             newParamValue: newParamValue,
           );
-        }
+        },
       ),
     );
   }
@@ -373,12 +390,14 @@ class ConversionController {
   void addParamsToConversion(
     BuildContext context, {
     List<int> paramSetIds = const [],
+    bool fetchListValues = true,
   }) {
     conversionItemController.resetParamValues(context);
 
     BlocProvider.of<ConversionBloc>(context).add(
       AddParamSetsToConversion(
         paramSetIds: paramSetIds,
+        fetchListValues: fetchListValues,
         onConversionUpdated: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },

@@ -64,7 +64,7 @@ class EditConversionParamValueUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required EditConversionParamValueDelta delta,
   }) async {
-    return ObjectUtils.tryGet(
+    return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
@@ -74,6 +74,6 @@ class EditConversionParamValueUseCase
           alignCurrentValue: true,
         ),
       ),
-    );
+    ).result();
   }
 }

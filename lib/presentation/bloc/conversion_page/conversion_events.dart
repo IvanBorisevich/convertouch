@@ -11,6 +11,8 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 abstract class ConversionEvent extends ConvertouchEvent {
   final bool rebuildUnitValues;
   final bool rebuildParams;
+  final void Function(ConversionParamValueModel)? onParamValueUpdated;
+  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
 
   final void Function(
     ConversionModel, {
@@ -22,40 +24,45 @@ abstract class ConversionEvent extends ConvertouchEvent {
     super.onError,
     required this.rebuildUnitValues,
     required this.rebuildParams,
+    this.onUnitValueUpdated,
+    this.onParamValueUpdated,
   });
 }
 
-class GetUpdatedConversion extends ConversionEvent {
-  final Future<ConversionModel> Function(ConversionModel) mappingFunc;
+class PatchConversion extends ConversionEvent {
+  final ConversionModel conversionPatch;
 
-  const GetUpdatedConversion({
-    required this.mappingFunc,
-  }) : super(rebuildUnitValues: false, rebuildParams: false);
+  const PatchConversion({
+    required this.conversionPatch,
+    required super.rebuildUnitValues,
+    required super.rebuildParams,
+  });
 
   @override
   List<Object?> get props => [
-        mappingFunc,
+        conversionPatch,
+        rebuildUnitValues,
+        rebuildParams,
       ];
 
   @override
   String toString() {
-    return 'GetUpdatedConversion{}';
+    return 'PatchConversion{'
+        'conversion: $conversionPatch, '
+        'rebuildUnitValues: $rebuildUnitValues, '
+        'rebuildParams: $rebuildParams}';
   }
 }
 
 class GetOrBuildConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;
-  final void Function(ConversionModel?)? processCurrentConversion;
-  final void Function(ConversionParamValueModel)? onParamValueUpdated;
-  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
+  final void Function(ConversionModel)? processCurrentConversion;
 
   const GetOrBuildConversion({
     required this.unitGroup,
     this.processPrevConversion,
     this.processCurrentConversion,
-    this.onParamValueUpdated,
-    this.onUnitValueUpdated,
   }) : super(rebuildUnitValues: true, rebuildParams: true);
 
   @override
@@ -66,6 +73,43 @@ class GetOrBuildConversion extends ConversionEvent {
   @override
   String toString() {
     return 'GetOrBuildConversion{unitGroup: $unitGroup}';
+  }
+}
+
+class AlignConversion extends ConversionEvent {
+  final ConversionModel? conversion;
+  final bool alignParams;
+  final bool alignUnits;
+  final int? paramIdToRefreshListValues;
+  final void Function(ConversionModel)? onConversionParamsAligned;
+  final void Function(ConversionModel)? onConversionUnitValuesAligned;
+
+  const AlignConversion({
+    this.conversion,
+    this.alignParams = true,
+    this.alignUnits = true,
+    this.paramIdToRefreshListValues,
+    super.onParamValueUpdated,
+    super.onUnitValueUpdated,
+    this.onConversionParamsAligned,
+    this.onConversionUnitValuesAligned,
+  }) : super(rebuildUnitValues: alignUnits, rebuildParams: alignParams);
+
+  @override
+  List<Object?> get props => [
+        conversion,
+        alignParams,
+        alignUnits,
+        paramIdToRefreshListValues,
+      ];
+
+  @override
+  String toString() {
+    return 'AlignConversion{'
+        'conversion: $conversion, '
+        'alignParams: $alignParams, '
+        'alignUnits: $alignUnits, '
+        'paramIdToRefreshListValues: $paramIdToRefreshListValues}';
   }
 }
 
@@ -152,6 +196,8 @@ class AddUnitsToConversion extends ConversionEvent {
     required this.unitIds,
     super.onError,
     super.onConversionUpdated,
+    super.onParamValueUpdated,
+    super.onUnitValueUpdated,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
@@ -284,9 +330,11 @@ class ReplaceConversionItemUnit extends ConversionEvent {
 
 class AddParamSetsToConversion extends ConversionEvent {
   final List<int> paramSetIds;
+  final bool fetchListValues;
 
   const AddParamSetsToConversion({
     required this.paramSetIds,
+    required this.fetchListValues,
     super.onConversionUpdated,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -294,6 +342,7 @@ class AddParamSetsToConversion extends ConversionEvent {
   @override
   List<Object?> get props => [
         paramSetIds,
+        fetchListValues,
       ];
 
   @override
@@ -428,25 +477,5 @@ class ToggleCalculableParam extends ConversionEvent {
     return 'ToggleCalculableParam{'
         'paramId: $paramId, '
         'paramSetId: $paramSetId}';
-  }
-}
-
-class RefreshParamListValuesManually extends ConversionEvent {
-  final int paramId;
-  final void Function(ConversionParamValueModel)? onParamValueUpdated;
-
-  const RefreshParamListValuesManually({
-    required this.paramId,
-    this.onParamValueUpdated,
-  }) : super(rebuildUnitValues: false, rebuildParams: false);
-
-  @override
-  List<Object?> get props => [
-        paramId,
-      ];
-
-  @override
-  String toString() {
-    return 'RefreshParamListValues{paramId: $paramId}';
   }
 }

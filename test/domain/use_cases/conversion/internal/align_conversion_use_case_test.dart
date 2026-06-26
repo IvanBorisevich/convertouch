@@ -93,10 +93,17 @@ void main() {
                 null,
                 null,
               ),
-              ConversionParamValueModel.tuple(garmentParam, null, null),
               ConversionParamValueModel.tuple(
-                  heightParam, const NumRange.withRight(174, 180), null,
-                  unit: meter),
+                garmentParam,
+                null,
+                null,
+              ),
+              ConversionParamValueModel.tuple(
+                heightParam,
+                const NumRange.withRight(174, 180),
+                null,
+                unit: meter,
+              ),
             ],
           )
         ],
@@ -109,71 +116,133 @@ void main() {
       ],
     );
 
-    var alignedConversion = ObjectUtils.tryGet(
-      await useCase.execute(InputConversionAlignModel(conversion: conversion)),
-    );
-
-    expect(
-      alignedConversion.toJson(),
-      ConversionModel(
-        unitGroup: clothesSizeGroup,
-        params: ConversionParamSetValueBulkModel(
-          paramSetValues: [
-            ConversionParamSetValueModel(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                ConversionParamValueModel.tuple(
-                  personParam,
-                  null,
-                  null,
-                  listValuesFetchResult: personParamListValues,
+    ObjectUtils.tryGet(
+      await useCase.execute(
+        InputConversionAlignModel(
+          asyncAlign: false,
+          conversion: conversion,
+          onConversionParamsAligned: (alignedConversion) {
+            expect(
+              alignedConversion.toJson(saveListValues: true),
+              ConversionModel(
+                unitGroup: clothesSizeGroup,
+                params: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: clothesSizeParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          personParam,
+                          null,
+                          null,
+                          listValuesFetchResult: personParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          garmentParam,
+                          null,
+                          null,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                        ConversionParamValueModel.tuple(
+                          heightParam,
+                          const NumRange.withRight(174, 180),
+                          null,
+                          unit: meter,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                      ],
+                    )
+                  ],
+                  selectedIndex: 0,
                 ),
-                ConversionParamValueModel.tuple(
-                  garmentParam,
+                srcUnitValue: ConversionUnitValueModel.tuple(
+                  japanClothSize,
                   null,
                   null,
-                  listValuesFetchResult:
-                      const OutputItemsFetchModel.successEmpty(),
                 ),
-                ConversionParamValueModel.tuple(
-                  heightParam,
-                  const NumRange.withRight(174, 180),
-                  null,
-                  unit: meter,
-                  listValuesFetchResult:
-                      const OutputItemsFetchModel.successEmpty(),
+                convertedUnitValues: [
+                  ConversionUnitValueModel.tuple(
+                    japanClothSize,
+                    null,
+                    null,
+                  ),
+                  ConversionUnitValueModel.tuple(
+                    germanyClothSize,
+                    null,
+                    null,
+                  ),
+                ],
+              ).toJson(saveListValues: true),
+            );
+          },
+          onConversionUnitValuesAligned: (alignedConversion) {
+            expect(
+              alignedConversion.toJson(saveListValues: true),
+              ConversionModel(
+                unitGroup: clothesSizeGroup,
+                params: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: clothesSizeParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          personParam,
+                          null,
+                          null,
+                          listValuesFetchResult: personParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          garmentParam,
+                          null,
+                          null,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                        ConversionParamValueModel.tuple(
+                          heightParam,
+                          const NumRange.withRight(174, 180),
+                          null,
+                          unit: meter,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                      ],
+                    )
+                  ],
+                  selectedIndex: 0,
                 ),
-              ],
-            )
-          ],
-          selectedIndex: 0,
+                srcUnitValue: ConversionUnitValueModel.tuple(
+                  japanClothSize,
+                  null,
+                  null,
+                  listValuesFetchResult: japanClothesSizes,
+                ),
+                convertedUnitValues: [
+                  ConversionUnitValueModel.tuple(
+                    japanClothSize,
+                    null,
+                    null,
+                    listValuesFetchResult: japanClothesSizes,
+                  ),
+                  ConversionUnitValueModel.tuple(
+                    germanyClothSize,
+                    null,
+                    null,
+                    listValuesFetchResult: germanyClothesSizes,
+                  ),
+                ],
+              ).toJson(saveListValues: true),
+            );
+          },
         ),
-        srcUnitValue: ConversionUnitValueModel.tuple(
-          japanClothSize,
-          null,
-          null,
-          listValuesFetchResult: japanClothesSizes,
-        ),
-        convertedUnitValues: [
-          ConversionUnitValueModel.tuple(
-            japanClothSize,
-            null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          ),
-          ConversionUnitValueModel.tuple(
-            germanyClothSize,
-            null,
-            null,
-            listValuesFetchResult: germanyClothesSizes,
-          ),
-        ],
-      ).toJson(),
+      ),
     );
   });
 
   test(
-      "[Clothes size] Should 'Person' list values without preselect (already selected), "
+      "[Clothes size] Should init 'Person' list values without preselect (already selected), "
       "should init 'Garment' list values without preselect (alignCurrentValues = false), "
       "should NOT init 'Height' list values ('Garment' is not selected), "
       "should init conversion items list values without preselect "
@@ -209,65 +278,126 @@ void main() {
       ],
     );
 
-    var alignedConversion = ObjectUtils.tryGet(
-      await useCase.execute(InputConversionAlignModel(conversion: conversion)),
-    );
-
-    expect(
-      alignedConversion.toJson(),
-      ConversionModel(
-        unitGroup: clothesSizeGroup,
-        params: ConversionParamSetValueBulkModel(
-          paramSetValues: [
-            ConversionParamSetValueModel(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                ConversionParamValueModel.tuple(
-                  personParam,
-                  'Man',
-                  null,
-                  listValuesFetchResult: personParamListValues,
+    ObjectUtils.tryGet(
+      await useCase.execute(
+        InputConversionAlignModel(
+          asyncAlign: false,
+          conversion: conversion,
+          onConversionParamsAligned: (alignedConversion) {
+            expect(
+              alignedConversion.toJson(saveListValues: true),
+              ConversionModel(
+                unitGroup: clothesSizeGroup,
+                params: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: clothesSizeParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          personParam,
+                          'Man',
+                          null,
+                          listValuesFetchResult: personParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          garmentParam,
+                          null,
+                          null,
+                          listValuesFetchResult: garmentParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          heightParam,
+                          manShirtHeightRangesFrom0_164To190InMeter.items[3],
+                          null,
+                          unit: meter,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                      ],
+                    )
+                  ],
+                  selectedIndex: 0,
                 ),
-                ConversionParamValueModel.tuple(
-                  garmentParam,
+                srcUnitValue: ConversionUnitValueModel.tuple(
+                  japanClothSize,
                   null,
                   null,
-                  listValuesFetchResult: garmentParamListValues,
                 ),
-                ConversionParamValueModel.tuple(
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InMeter.items[3],
-                  null,
-                  unit: meter,
-                  listValuesFetchResult:
-                      const OutputItemsFetchModel.successEmpty(),
+                convertedUnitValues: [
+                  ConversionUnitValueModel.tuple(
+                    japanClothSize,
+                    null,
+                    null,
+                  ),
+                  ConversionUnitValueModel.tuple(
+                    germanyClothSize,
+                    null,
+                    null,
+                  ),
+                ],
+              ).toJson(saveListValues: true),
+            );
+          },
+          onConversionUnitValuesAligned: (alignedConversion) {
+            expect(
+              alignedConversion.toJson(saveListValues: true),
+              ConversionModel(
+                unitGroup: clothesSizeGroup,
+                params: ConversionParamSetValueBulkModel(
+                  paramSetValues: [
+                    ConversionParamSetValueModel(
+                      paramSet: clothesSizeParamSet,
+                      paramValues: [
+                        ConversionParamValueModel.tuple(
+                          personParam,
+                          'Man',
+                          null,
+                          listValuesFetchResult: personParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          garmentParam,
+                          null,
+                          null,
+                          listValuesFetchResult: garmentParamListValues,
+                        ),
+                        ConversionParamValueModel.tuple(
+                          heightParam,
+                          manShirtHeightRangesFrom0_164To190InMeter.items[3],
+                          null,
+                          unit: meter,
+                          listValuesFetchResult:
+                              const OutputItemsFetchModel.successEmpty(),
+                        ),
+                      ],
+                    )
+                  ],
+                  selectedIndex: 0,
                 ),
-              ],
-            )
-          ],
-          selectedIndex: 0,
+                srcUnitValue: ConversionUnitValueModel.tuple(
+                  japanClothSize,
+                  null,
+                  null,
+                  listValuesFetchResult: japanClothesSizes,
+                ),
+                convertedUnitValues: [
+                  ConversionUnitValueModel.tuple(
+                    japanClothSize,
+                    null,
+                    null,
+                    listValuesFetchResult: japanClothesSizes,
+                  ),
+                  ConversionUnitValueModel.tuple(
+                    germanyClothSize,
+                    null,
+                    null,
+                    listValuesFetchResult: germanyClothesSizes,
+                  ),
+                ],
+              ).toJson(saveListValues: true),
+            );
+          },
         ),
-        srcUnitValue: ConversionUnitValueModel.tuple(
-          japanClothSize,
-          null,
-          null,
-          listValuesFetchResult: japanClothesSizes,
-        ),
-        convertedUnitValues: [
-          ConversionUnitValueModel.tuple(
-            japanClothSize,
-            null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          ),
-          ConversionUnitValueModel.tuple(
-            germanyClothSize,
-            null,
-            null,
-            listValuesFetchResult: germanyClothesSizes,
-          ),
-        ],
-      ).toJson(),
+      ),
     );
   });
 }

@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -8,10 +9,14 @@ import 'package:convertouch/domain/model/value_model.dart';
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
   final T delta;
+  final void Function(ConversionParamValueModel)? onParamValueUpdated;
+  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
 
   const InputConversionModifyModel({
     required this.conversion,
     required this.delta,
+    this.onParamValueUpdated,
+    this.onUnitValueUpdated,
   });
 }
 
@@ -141,9 +146,11 @@ class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
 
 class AddParamSetsDelta extends ConversionParamsModifyDelta {
   final List<int> paramSetIds;
+  final bool fetchListValues;
 
   const AddParamSetsDelta({
     this.paramSetIds = const [],
+    this.fetchListValues = true,
     super.recalculateUnitValues = false,
   });
 }
