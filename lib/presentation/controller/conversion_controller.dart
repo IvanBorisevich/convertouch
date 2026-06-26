@@ -53,12 +53,16 @@ class ConversionController {
     required ConversionModel conversion,
     bool alignParams = true,
     bool alignUnits = true,
+    ParamSetValueChangedCallback? ifParamSetFilled,
+    ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       AlignConversion(
         conversion: conversion,
         alignParams: alignParams,
         alignUnits: alignUnits,
+        ifParamSetFilled: ifParamSetFilled,
+        ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
         onParamValueUpdated: (newParamValue) {
           conversionItemController.updateParamValue(
             context,

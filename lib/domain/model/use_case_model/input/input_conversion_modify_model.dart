@@ -1,17 +1,12 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-typedef ParamSetValueChangedCallback = void Function(
-  ConversionParamSetValueModel,
-  UnitGroupModel,
-  UnitModel?,
-);
+typedef ParamSetValueChangedCallback = void Function(ConversionModel);
 
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;

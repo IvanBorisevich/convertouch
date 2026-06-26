@@ -1,8 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
-import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -49,34 +47,8 @@ class ConversionParamItem extends StatelessWidget {
           context,
           paramValue: paramValue,
           newValue: value,
-          ifParamSetFilled: (params, group, srcUnit) {
-            refreshButtonController.changeState(
-              context,
-              visible: true,
-              disabled: false,
-            );
-
-            refreshingJobController.startRefreshingJob(
-              context,
-              unitGroupName: unitGroupName,
-              params: params,
-              srcUnit: srcUnit,
-              jobExecutionMode: JobExecutionMode.startNewJob,
-            );
-          },
-          ifParamSetFilledPartiallyOrEmpty: (params, group, srcUnit) {
-            refreshingJobController.stopRefreshingJob(
-              context,
-              unitGroupName: group.name,
-              paramSetName: params.paramSet.name,
-            );
-
-            refreshButtonController.changeState(
-              context,
-              visible: group.refreshable,
-              disabled: false,
-            );
-          },
+          ifParamSetFilled: startRefreshByParams(context),
+          ifParamSetFilledPartiallyOrEmpty: stopRefreshByParams(context),
         );
       },
       onRefreshTap: (listValuesFetchResult) {

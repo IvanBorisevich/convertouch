@@ -195,8 +195,8 @@ enum ConvertouchListType {
   exchangeRateSource(
     22,
     fetchedViaApi: true,
-    preselected: true,
-    cached: false,
+    preselected: false,
+    cached: true,
   ),
   clothesHeightRange(24),
   ringDiameterRange(25),

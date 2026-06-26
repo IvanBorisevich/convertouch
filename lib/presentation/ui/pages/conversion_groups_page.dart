@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
@@ -65,6 +66,9 @@ class ConversionGroupsPage extends StatelessWidget {
                         context,
                         conversion: conversion,
                         alignUnits: conversion.hasItems,
+                        // ifParamSetFilled: startRefreshByParams(context),
+                        // ifParamSetFilledPartiallyOrEmpty:
+                        //     stopRefreshByParams(context),
                       );
 
                       if (conversion.hasItems) {
@@ -75,8 +79,8 @@ class ConversionGroupsPage extends StatelessWidget {
 
                         refreshButtonController.changeState(
                           context,
-                          visible: conversion.refreshable,
-                          disabled: !conversion.readyToRefresh,
+                          visible: conversion.unitGroup.refreshable,
+                          disabled: areParamsFilled(conversion.params?.active),
                         );
 
                         refreshingJobController.getJobs(

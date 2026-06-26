@@ -144,13 +144,6 @@ class ConversionModel extends IdNameItemModel {
         convertedUnitValues,
       ];
 
-  bool get refreshable => unitGroup.refreshable;
-
-  bool get readyToRefresh =>
-      params?.active != null &&
-      params!.active!.hasAllValues &&
-      convertedUnitValues.isNotEmpty;
-
   bool get exists => this != none;
 
   bool get hasItems => convertedUnitValues.isNotEmpty;

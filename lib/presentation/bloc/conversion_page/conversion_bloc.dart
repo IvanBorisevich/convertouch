@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -186,6 +187,14 @@ class ConversionBloc
           onUnitValueUpdated: event.onUnitValueUpdated,
           onConversionParamsAligned: (updatedConversion) {
             log("${DateTime.now()} - Emit conversion with aligned params");
+
+            var paramSetValue = updatedConversion.params?.active;
+
+            if (areParamsFilled(paramSetValue)) {
+              event.ifParamSetFilled?.call(updatedConversion);
+            } else if (areParamsPartiallyFilled(paramSetValue)) {
+              event.ifParamSetFilledPartiallyOrEmpty?.call(updatedConversion);
+            }
 
             add(
               PatchConversion(
@@ -413,7 +422,8 @@ class ConversionBloc
           fetchListValues: event.fetchListValues,
         ),
         ifParamSetFilled: event.ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty: event.ifParamSetFilledPartiallyOrEmpty,
+        ifParamSetFilledPartiallyOrEmpty:
+            event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 
@@ -478,7 +488,8 @@ class ConversionBloc
           paramSetId: event.paramSetId,
         ),
         ifParamSetFilled: event.ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty: event.ifParamSetFilledPartiallyOrEmpty,
+        ifParamSetFilledPartiallyOrEmpty:
+            event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 

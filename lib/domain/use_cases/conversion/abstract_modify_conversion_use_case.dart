@@ -82,26 +82,18 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       }
 
-      if (areParamsFilled(newParams?.active)) {
-        input.ifParamSetFilled?.call(
-          newParams!.active!,
-          modifiedGroup,
-          newSrcUnitValue.unit,
-        );
-      } else if (areParamsPartiallyFilled(newParams?.active)) {
-        input.ifParamSetFilledPartiallyOrEmpty?.call(
-          newParams!.active!,
-          modifiedGroup,
-          newSrcUnitValue.unit,
-        );
-      }
-
       ConversionModel conversion = ConversionModel(
         id: input.conversion.id,
         unitGroup: modifiedGroup,
         srcUnitValue: newSrcUnitValue,
         params: newParams,
       );
+
+      if (areParamsFilled(newParams?.active)) {
+        input.ifParamSetFilled?.call(conversion);
+      } else if (areParamsPartiallyFilled(newParams?.active)) {
+        input.ifParamSetFilledPartiallyOrEmpty?.call(conversion);
+      }
 
       if (input.delta.recalculateUnitValues) {
         var convertedUnitValues = rules.calculateUnitValues(
