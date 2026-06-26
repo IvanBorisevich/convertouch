@@ -105,8 +105,9 @@ void showSnackBar(
       duration: Duration(seconds: durationInSec),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(7),
+      padding: const EdgeInsets.only(left: 18),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       action: exception.handlingAction != null
           ? SnackBarAction(
@@ -121,6 +122,7 @@ void showSnackBar(
           color: foreground,
           fontFamily: quicksandFontFamily,
           fontWeight: FontWeight.w600,
+          letterSpacing: 0,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
