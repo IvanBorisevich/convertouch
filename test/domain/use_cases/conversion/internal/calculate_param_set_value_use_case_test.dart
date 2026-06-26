@@ -1,8 +1,8 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
@@ -845,7 +845,7 @@ void main() {
 
       await testCase(
         srcUnitValue:
-            ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+            ConversionUnitValueModel.tuple(itClothesSize, 44, null),
         unitGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
@@ -925,7 +925,7 @@ void main() {
 
       await testCase(
         srcUnitValue:
-            ConversionUnitValueModel.tuple(italianClothSize, 44, null),
+            ConversionUnitValueModel.tuple(itClothesSize, 44, null),
         unitGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
@@ -1558,7 +1558,7 @@ void main() {
   });
 
   group("Should initially calculate param set 'Exchange Rate'", () {
-    test("[Currency] Should init 'Source' param list values without preselect",
+    test("[Currency] Should init 'Source' param list values with preselect",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,
@@ -1576,7 +1576,9 @@ void main() {
         paramValues: [
           ConversionParamValueModel.tuple(
             exchangeRateSourceBankParam,
-            null,
+            ConvertouchListType.exchangeRateSource.preselected
+                ? exchangeRateSources.items[0]
+                : null,
             null,
             listValuesFetchResult: exchangeRateSources,
           ),
@@ -1600,7 +1602,6 @@ void main() {
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
-
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -32,8 +30,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ConversionBloc, ConversionState>(
       buildWhen: (prev, next) {
-        log("[unit values] ConversionBloc buildWhen(): prev: $prev, next: $next");
-
         return prev != next &&
             next is ConversionBuilt &&
             next.rebuildUnitValues;
@@ -87,9 +83,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
               child: BlocBuilder<ConversionUnitValueBloc,
                   ConversionUnitValueState>(
                 buildWhen: (prev, next) {
-                  log("ConversionUnitValueBloc buildWhen(): current unit value id: ${unitValue.id},"
-                      " prev: $prev, next: $next");
-
                   return prev != next &&
                       (next is ConversionUnitValueInitialState ||
                           next.id == unitValue.id);

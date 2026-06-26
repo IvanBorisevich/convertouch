@@ -408,26 +408,26 @@ void main() {
               ],
             ),
             currentSrc: (
-              spainClothSize,
+              spClothesSize,
               null,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 null,
                 null,
                 listValuesFetchResult: italianClothesSizes,
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 null,
                 null,
                 listValuesFetchResult: spainClothesSizes,
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 null,
                 null,
                 listValuesFetchResult: germanyClothesSizes,
@@ -464,26 +464,26 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spainClothSize,
+              spClothesSize,
               34,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             expectedUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 38,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 34,
                 null,
                 listValuesFetchResult: spainClothesSizes,
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 32,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -532,26 +532,26 @@ void main() {
               ],
             ),
             currentSrc: (
-              spainClothSize,
+              spClothesSize,
               null,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 null,
                 null,
                 listValuesFetchResult: italianClothesSizes,
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 null,
                 null,
                 listValuesFetchResult: spainClothesSizes,
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 null,
                 null,
                 listValuesFetchResult: germanyClothesSizes,
@@ -588,26 +588,26 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spainClothSize,
+              spClothesSize,
               34,
               null,
               listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 38,
                 null,
                 listValuesFetchResult: italianClothesSizes,
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 34,
                 null,
                 listValuesFetchResult: spainClothesSizes,
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 32,
                 null,
                 listValuesFetchResult: germanyClothesSizes,
@@ -657,26 +657,26 @@ void main() {
               ],
             ),
             currentSrc: (
-              spainClothSize,
+              spClothesSize,
               40,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 48,
                 null,
                 listValuesFetchResult: italianClothesSizes,
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 40,
                 null,
                 listValuesFetchResult: spainClothesSizes,
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 46,
                 null,
                 listValuesFetchResult: germanyClothesSizes,
@@ -713,26 +713,26 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spainClothSize,
+              spClothesSize,
               42,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             expectedUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 46,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 42,
                 null,
                 listValuesFetchResult: spainClothesSizes
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 40,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -786,26 +786,26 @@ void main() {
               ],
             ),
             currentSrc: (
-              spainClothSize,
+              spClothesSize,
               40,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 48,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 40,
                 null,
                 listValuesFetchResult: spainClothesSizes
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 46,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -842,26 +842,26 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spainClothSize,
+              spClothesSize,
               36,
               null,
               listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 44,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 36,
                 null,
                 listValuesFetchResult: spainClothesSizes
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 44,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -911,26 +911,26 @@ void main() {
               ],
             ),
             currentSrc: (
-              spainClothSize,
+              spClothesSize,
               40,
               null,
               listValuesFetchResult: spainClothesSizes,
             ),
             currentUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 48,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 40,
                 null,
                 listValuesFetchResult: spainClothesSizes
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 46,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -967,26 +967,26 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spainClothSize,
+              spClothesSize,
               36,
               null,
               listValuesFetchResult: spainClothesSizes
             ),
             expectedUnitValues: [
               (
-                italianClothSize,
+                itClothesSize,
                 44,
                 null,
                 listValuesFetchResult: italianClothesSizes
               ),
               (
-                spainClothSize,
+                spClothesSize,
                 36,
                 null,
                 listValuesFetchResult: spainClothesSizes
               ),
               (
-                germanyClothSize,
+                deClothesSize,
                 44,
                 null,
                 listValuesFetchResult: germanyClothesSizes
@@ -1037,21 +1037,21 @@ void main() {
           ],
         ),
         currentSrc: (
-          spainClothSize,
+          spClothesSize,
           36,
           null,
           listValuesFetchResult: spainClothesSizes,
         ),
         currentUnitValues: [
           (
-            italianClothSize,
+            itClothesSize,
             44,
             null,
             listValuesFetchResult: italianClothesSizes
           ),
-          (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+          (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
           (
-            germanyClothSize,
+            deClothesSize,
             42,
             null,
             listValuesFetchResult: germanyClothesSizes
@@ -1087,21 +1087,21 @@ void main() {
           ],
         ),
         expectedSrc: (
-          spainClothSize,
+          spClothesSize,
           42,
           null,
           listValuesFetchResult: spainClothesSizes
         ),
         expectedUnitValues: [
           (
-            italianClothSize,
+            itClothesSize,
             50,
             null,
             listValuesFetchResult: italianClothesSizes
           ),
-          (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
+          (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
           (
-            germanyClothSize,
+            deClothesSize,
             48,
             null,
             listValuesFetchResult: germanyClothesSizes
@@ -1150,21 +1150,21 @@ void main() {
           ],
         ),
         currentSrc: (
-          spainClothSize,
+          spClothesSize,
           36,
           null,
           listValuesFetchResult: spainClothesSizes
         ),
         currentUnitValues: [
           (
-            italianClothSize,
+            itClothesSize,
             44,
             null,
             listValuesFetchResult: italianClothesSizes
           ),
-          (spainClothSize, 36, null, listValuesFetchResult: spainClothesSizes),
+          (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
           (
-            germanyClothSize,
+            deClothesSize,
             42,
             null,
             listValuesFetchResult: germanyClothesSizes
@@ -1200,21 +1200,21 @@ void main() {
           ],
         ),
         expectedSrc: (
-          spainClothSize,
+          spClothesSize,
           42,
           null,
           listValuesFetchResult: spainClothesSizes
         ),
         expectedUnitValues: [
           (
-            italianClothSize,
+            itClothesSize,
             50,
             null,
             listValuesFetchResult: italianClothesSizes
           ),
-          (spainClothSize, 42, null, listValuesFetchResult: spainClothesSizes),
+          (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
           (
-            germanyClothSize,
+            deClothesSize,
             48,
             null,
             listValuesFetchResult: germanyClothesSizes

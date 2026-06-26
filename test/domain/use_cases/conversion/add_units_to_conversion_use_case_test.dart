@@ -110,8 +110,8 @@ void main() {
           useCase: useCase,
           delta: AddUnitsToConversionDelta(
             unitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
+              jpClothesSize.id,
+              itClothesSize.id,
             ],
           ),
           currentParams: ConversionParamSetValueBulkModel(
@@ -146,20 +146,20 @@ void main() {
             selectedIndex: 0,
           ),
           expectedSrc: ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             'S',
             null,
             listValuesFetchResult: japanClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
-              japanClothSize,
+              jpClothesSize,
               'S',
               null,
               listValuesFetchResult: japanClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
-              italianClothSize,
+              itClothesSize,
               42,
               null,
               listValuesFetchResult: italianClothesSizes,
@@ -177,8 +177,8 @@ void main() {
           useCase: useCase,
           delta: AddUnitsToConversionDelta(
             unitIds: [
-              japanClothSize.id,
-              italianClothSize.id,
+              jpClothesSize.id,
+              itClothesSize.id,
             ],
           ),
           currentParams: ConversionParamSetValueBulkModel(
@@ -211,20 +211,20 @@ void main() {
             selectedIndex: 0,
           ),
           expectedSrc: ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             'S',
             null,
             listValuesFetchResult: japanClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
-              japanClothSize,
+              jpClothesSize,
               'S',
               null,
               listValuesFetchResult: japanClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
-              italianClothSize,
+              itClothesSize,
               42,
               null,
               listValuesFetchResult: italianClothesSizes,

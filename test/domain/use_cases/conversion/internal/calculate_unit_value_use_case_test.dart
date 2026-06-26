@@ -76,16 +76,20 @@ void main() {
   group("List unit values - clothes size", () {
     group("Should init list values of item 'JP'", () {
       group("Should align selected value", () {
-        test("Should preselect default list value 'S'", () async {
+        test(
+            "Should / shouldn't preselect default list value 'S' "
+            "(depends on the param 'preselected' of the list type)", () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
-            japanClothesSizes.items[0],
+            jpClothesSize,
+            ConvertouchListType.clothesSizeJp.preselected
+                ? japanClothesSizes.items[0]
+                : null,
             null,
             listValuesFetchResult: japanClothesSizes,
           );
@@ -127,13 +131,13 @@ void main() {
 
         test("Should leave value '3L' when it exists in the list", () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             '3L',
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             japanClothesSizes.items[4],
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -174,17 +178,20 @@ void main() {
           );
         });
 
-        test("Should replace unknown value 'W' with default value 'S'",
-            () async {
+        test(
+            "Should / shouldn't replace unknown value 'W' with default value 'S' "
+            "(depends on the param 'preselected' of the list type)", () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             'W',
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
-            japanClothesSizes.items[0],
+            jpClothesSize,
+            ConvertouchListType.clothesSizeJp.preselected
+                ? japanClothesSizes.items[0]
+                : 'W',
             null,
             listValuesFetchResult: japanClothesSizes,
           );
@@ -230,13 +237,13 @@ void main() {
             "Should NOT preselect default list value 'S' (align = false, params full)",
             () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -282,13 +289,13 @@ void main() {
             "Should NOT preselect default list value 'S' (align = true, params NOT full)",
             () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -333,13 +340,13 @@ void main() {
             "Should NOT preselect default list value 'S' (align = false, params NOT full)",
             () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             null,
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -383,13 +390,13 @@ void main() {
 
         test("Should leave value '3L' when it exists in the list", () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             '3L',
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             '3L',
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -433,13 +440,13 @@ void main() {
 
         test("Should leave unknown value 'W'", () async {
           final currentUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             'W',
             null,
           );
 
           final expectedUnitValue = ConversionUnitValueModel.tuple(
-            japanClothSize,
+            jpClothesSize,
             'W',
             null,
             listValuesFetchResult: japanClothesSizes,
@@ -486,13 +493,13 @@ void main() {
     group("Change list conversion item value", () {
       test("Should change list value [JP: 'S' -> 'M']", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           null,
           null,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           japanClothesSizes.items[1],
           null,
           listValuesFetchResult: japanClothesSizes,
@@ -501,7 +508,7 @@ void main() {
         await testCase(
           delta: EditConversionUnitValueDelta.raw(
             newValue: 'M',
-            unitId: japanClothSize.id,
+            unitId: jpClothesSize.id,
           ),
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
@@ -541,14 +548,14 @@ void main() {
     group('Replace list conversion item unit', () {
       test("Should change list value ['M' JP -> 44 EU]", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           japanClothesSizes.items[1],
           null,
           listValuesFetchResult: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
-          europeanClothSize,
+          euClothesSize,
           europeanClothesSizes.items[5],
           null,
           listValuesFetchResult: europeanClothesSizes,
@@ -556,8 +563,8 @@ void main() {
 
         await testCase(
           delta: ReplaceConversionItemUnitDelta(
-            newUnit: europeanClothSize,
-            unitId: japanClothSize.id,
+            newUnit: euClothesSize,
+            unitId: jpClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
@@ -598,14 +605,14 @@ void main() {
       test("Should change list value ['M' JP -> null EU] (params NOT full)",
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           japanClothesSizes.items[1],
           null,
           listValuesFetchResult: japanClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
-          europeanClothSize,
+          euClothesSize,
           null,
           null,
           listValuesFetchResult: europeanClothesSizes,
@@ -613,8 +620,8 @@ void main() {
 
         await testCase(
           delta: ReplaceConversionItemUnitDelta(
-            newUnit: europeanClothSize,
-            unitId: japanClothSize.id,
+            newUnit: euClothesSize,
+            unitId: jpClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
@@ -658,13 +665,13 @@ void main() {
           "Should calculate list value 'M' JP (clothes size, mandatory params full)",
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           null,
           null,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           japanClothesSizes.items[1],
           null,
           listValuesFetchResult: japanClothesSizes,
@@ -711,13 +718,13 @@ void main() {
           "Should calculate list value <empty> JP (clothes size, mandatory params NOT full)",
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           null,
           null,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           null,
           null,
           listValuesFetchResult: japanClothesSizes,

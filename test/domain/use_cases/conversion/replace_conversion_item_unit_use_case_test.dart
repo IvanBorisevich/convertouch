@@ -157,8 +157,8 @@ void main() {
           unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
-            newUnit: usaClothSize,
-            unitId: europeanClothSize.id,
+            newUnit: usaClothesSize,
+            unitId: euClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
             recalculateUnitValues: true,
           ),
@@ -178,20 +178,20 @@ void main() {
             selectedIndex: 0,
           ),
           currentSrc: ConversionUnitValueModel.tuple(
-            europeanClothSize,
+            euClothesSize,
             44,
             null,
             listValuesFetchResult: europeanClothesSizes,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(
-              europeanClothSize,
+              euClothesSize,
               44,
               null,
               listValuesFetchResult: europeanClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
-              japanClothSize,
+              jpClothesSize,
               'M',
               null,
               listValuesFetchResult: japanClothesSizes,
@@ -213,20 +213,20 @@ void main() {
             selectedIndex: 0,
           ),
           expectedSrc: ConversionUnitValueModel.tuple(
-            usaClothSize,
+            usaClothesSize,
             2,
             null,
             listValuesFetchResult: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
-              usaClothSize,
+              usaClothesSize,
               2,
               null,
               listValuesFetchResult: usaClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
-              japanClothSize,
+              jpClothesSize,
               null,
               null,
               listValuesFetchResult: japanClothesSizes,
@@ -242,8 +242,8 @@ void main() {
           unitGroup: clothesSizeGroup,
           useCase: useCase,
           delta: ReplaceConversionItemUnitDelta(
-            newUnit: usaClothSize,
-            unitId: europeanClothSize.id,
+            newUnit: usaClothesSize,
+            unitId: euClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
@@ -263,10 +263,10 @@ void main() {
             selectedIndex: 0,
           ),
           currentSrc:
-              ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
+              ConversionUnitValueModel.tuple(euClothesSize, 44, null),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(europeanClothSize, 44, null),
-            ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
+            ConversionUnitValueModel.tuple(euClothesSize, 44, null),
+            ConversionUnitValueModel.tuple(jpClothesSize, 'M', null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
             paramSetValues: [
@@ -284,19 +284,19 @@ void main() {
             selectedIndex: 0,
           ),
           expectedSrc: ConversionUnitValueModel.tuple(
-            usaClothSize,
+            usaClothesSize,
             30,
             null,
             listValuesFetchResult: usaClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
-              usaClothSize,
+              usaClothesSize,
               30,
               null,
               listValuesFetchResult: usaClothesSizes,
             ),
-            ConversionUnitValueModel.tuple(japanClothSize, 'M', null),
+            ConversionUnitValueModel.tuple(jpClothesSize, 'M', null),
           ],
         );
       });

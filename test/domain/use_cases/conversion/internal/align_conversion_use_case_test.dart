@@ -109,10 +109,10 @@ void main() {
         ],
         selectedIndex: 0,
       ),
-      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
+      srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, null, null),
       convertedUnitValues: [
-        ConversionUnitValueModel.tuple(japanClothSize, null, null),
-        ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ConversionUnitValueModel.tuple(jpClothesSize, null, null),
+        ConversionUnitValueModel.tuple(deClothesSize, null, null),
       ],
     );
 
@@ -158,18 +158,18 @@ void main() {
                   selectedIndex: 0,
                 ),
                 srcUnitValue: ConversionUnitValueModel.tuple(
-                  japanClothSize,
+                  jpClothesSize,
                   null,
                   null,
                 ),
                 convertedUnitValues: [
                   ConversionUnitValueModel.tuple(
-                    japanClothSize,
+                    jpClothesSize,
                     null,
                     null,
                   ),
                   ConversionUnitValueModel.tuple(
-                    germanyClothSize,
+                    deClothesSize,
                     null,
                     null,
                   ),
@@ -214,20 +214,20 @@ void main() {
                   selectedIndex: 0,
                 ),
                 srcUnitValue: ConversionUnitValueModel.tuple(
-                  japanClothSize,
+                  jpClothesSize,
                   null,
                   null,
                   listValuesFetchResult: japanClothesSizes,
                 ),
                 convertedUnitValues: [
                   ConversionUnitValueModel.tuple(
-                    japanClothSize,
+                    jpClothesSize,
                     null,
                     null,
                     listValuesFetchResult: japanClothesSizes,
                   ),
                   ConversionUnitValueModel.tuple(
-                    germanyClothSize,
+                    deClothesSize,
                     null,
                     null,
                     listValuesFetchResult: germanyClothesSizes,
@@ -243,13 +243,12 @@ void main() {
 
   test(
       "[Clothes size] Should init 'Person' list values without preselect (already selected), "
-      "should init 'Garment' list values without preselect (alignCurrentValues = false), "
-      "should NOT init 'Height' list values ('Garment' is not selected), "
-      "should init conversion items list values without preselect "
-      "(mandatory params NOT full, alignCurrentValues = false)", () async {
+      "should init 'Garment' list values with preselect, "
+      "should init 'Height' list values ('Garment' is selected), "
+      "should init list values and calculate conversion items", () async {
     var conversion = ConversionModel(
       unitGroup: clothesSizeGroup,
-      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, null, null),
+      srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, null, null),
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -273,8 +272,8 @@ void main() {
         selectedIndex: 0,
       ),
       convertedUnitValues: [
-        ConversionUnitValueModel.tuple(japanClothSize, null, null),
-        ConversionUnitValueModel.tuple(germanyClothSize, null, null),
+        ConversionUnitValueModel.tuple(jpClothesSize, null, null),
+        ConversionUnitValueModel.tuple(deClothesSize, null, null),
       ],
     );
 
@@ -285,7 +284,9 @@ void main() {
           conversion: conversion,
           onConversionParamsAligned: (alignedConversion) {
             expect(
-              alignedConversion.toJson(saveListValues: true),
+              alignedConversion.toJson(
+                saveListValues: true,
+              ),
               ConversionModel(
                 unitGroup: clothesSizeGroup,
                 params: ConversionParamSetValueBulkModel(
@@ -301,7 +302,7 @@ void main() {
                         ),
                         ConversionParamValueModel.tuple(
                           garmentParam,
-                          null,
+                          'Shirt',
                           null,
                           listValuesFetchResult: garmentParamListValues,
                         ),
@@ -311,7 +312,7 @@ void main() {
                           null,
                           unit: meter,
                           listValuesFetchResult:
-                              const OutputItemsFetchModel.successEmpty(),
+                              manShirtHeightRangesFrom0_164To190InMeter,
                         ),
                       ],
                     )
@@ -319,18 +320,18 @@ void main() {
                   selectedIndex: 0,
                 ),
                 srcUnitValue: ConversionUnitValueModel.tuple(
-                  japanClothSize,
+                  jpClothesSize,
                   null,
                   null,
                 ),
                 convertedUnitValues: [
                   ConversionUnitValueModel.tuple(
-                    japanClothSize,
+                    jpClothesSize,
                     null,
                     null,
                   ),
                   ConversionUnitValueModel.tuple(
-                    germanyClothSize,
+                    deClothesSize,
                     null,
                     null,
                   ),
@@ -356,7 +357,7 @@ void main() {
                         ),
                         ConversionParamValueModel.tuple(
                           garmentParam,
-                          null,
+                          'Shirt',
                           null,
                           listValuesFetchResult: garmentParamListValues,
                         ),
@@ -366,7 +367,7 @@ void main() {
                           null,
                           unit: meter,
                           listValuesFetchResult:
-                              const OutputItemsFetchModel.successEmpty(),
+                              manShirtHeightRangesFrom0_164To190InMeter,
                         ),
                       ],
                     )
@@ -374,21 +375,21 @@ void main() {
                   selectedIndex: 0,
                 ),
                 srcUnitValue: ConversionUnitValueModel.tuple(
-                  japanClothSize,
-                  null,
+                  jpClothesSize,
+                  japanClothesSizes.items[0],
                   null,
                   listValuesFetchResult: japanClothesSizes,
                 ),
                 convertedUnitValues: [
                   ConversionUnitValueModel.tuple(
-                    japanClothSize,
-                    null,
+                    jpClothesSize,
+                    japanClothesSizes.items[0],
                     null,
                     listValuesFetchResult: japanClothesSizes,
                   ),
                   ConversionUnitValueModel.tuple(
-                    germanyClothSize,
-                    null,
+                    deClothesSize,
+                    germanyClothesSizes.items[0],
                     null,
                     listValuesFetchResult: germanyClothesSizes,
                   ),

@@ -93,26 +93,16 @@ class ConversionBloc
     PatchConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    emit(
-      ConversionBuilt(
-        conversion: ConversionModel(
-          id: state.conversion.id,
-          name: state.conversion.name,
-          unitGroup: state.conversion.unitGroup,
-          params: event.rebuildParams
-              ? event.conversionPatch.params
-              : state.conversion.params,
-          convertedUnitValues: event.rebuildUnitValues
-              ? event.conversionPatch.convertedUnitValues
-              : state.conversion.convertedUnitValues,
-          srcUnitValue: event.rebuildUnitValues
-              ? event.conversionPatch.srcUnitValue
-              : state.conversion.srcUnitValue,
-        ),
-        rebuildUnitValues: event.rebuildUnitValues,
-        rebuildParams: event.rebuildParams,
+    ConversionBuilt patchedConversionState = ConversionBuilt(
+      conversion: state.conversion.patchWith(
+        event.conversionPatch,
+        isPatchAligned: event.isAligned,
       ),
+      rebuildUnitValues: event.rebuildUnitValues,
+      rebuildParams: event.rebuildParams,
     );
+
+    emit(patchedConversionState);
   }
 
   _onGetOrBuildConversion(
@@ -200,6 +190,7 @@ class ConversionBloc
             add(
               PatchConversion(
                 conversionPatch: updatedConversion,
+                isAligned: true,
                 rebuildParams: true,
                 rebuildUnitValues: false,
               ),
@@ -211,6 +202,7 @@ class ConversionBloc
             add(
               PatchConversion(
                 conversionPatch: updatedConversion,
+                isAligned: true,
                 rebuildParams: false,
                 rebuildUnitValues: true,
               ),
@@ -243,13 +235,20 @@ class ConversionBloc
     );
 
     if (event.keepParams) {
-      emit(
-        ConversionBuilt(
-          conversion: emptyConversion,
+      add(
+        PatchConversion(
+          conversionPatch: emptyConversion,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: false,
         ),
       );
+      // emit(
+      //   ConversionBuilt(
+      //     conversion: emptyConversion,
+      //     rebuildUnitValues: event.rebuildUnitValues,
+      //     rebuildParams: false,
+      //   ),
+      // );
     } else {
       final result = await removeParamSetsFromConversionUseCase.execute(
         InputConversionModifyModel<RemoveParamSetsDelta>(
@@ -280,15 +279,25 @@ class ConversionBloc
     final item = unitValues.removeAt(oldIndex);
     unitValues.insert(newIndex, item);
 
-    emit(
-      ConversionBuilt(
-        conversion: state.conversion.copyWith(
+    add(
+      PatchConversion(
+        conversionPatch: state.conversion.copyWith(
           convertedUnitValues: unitValues,
         ),
         rebuildUnitValues: event.rebuildUnitValues,
         rebuildParams: event.rebuildParams,
       ),
     );
+
+    // emit(
+    //   ConversionBuilt(
+    //     conversion: state.conversion.copyWith(
+    //       convertedUnitValues: unitValues,
+    //     ),
+    //     rebuildUnitValues: event.rebuildUnitValues,
+    //     rebuildParams: event.rebuildParams,
+    //   ),
+    // );
   }
 
   _onEditConversionGroup(
@@ -532,13 +541,21 @@ class ConversionBloc
     if (result.isLeft) {
       event.onError?.call(result.left);
     } else {
-      emit(
-        ConversionBuilt(
-          conversion: result.right,
+      add(
+        PatchConversion(
+          conversionPatch: result.right,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: event.rebuildParams,
         ),
       );
+
+      // emit(
+      //   ConversionBuilt(
+      //     conversion: result.right,
+      //     rebuildUnitValues: event.rebuildUnitValues,
+      //     rebuildParams: event.rebuildParams,
+      //   ),
+      // );
 
       event.onConversionUpdated?.call(result.right);
     }

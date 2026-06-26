@@ -105,7 +105,7 @@ const UnitModel kilometer = UnitModel(
   unitGroupId: lengthGroupId,
 );
 
-const UnitModel europeanClothSize = UnitModel(
+const UnitModel euClothesSize = UnitModel(
   id: 6,
   name: "Europe",
   code: "EU",
@@ -114,7 +114,7 @@ const UnitModel europeanClothSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel japanClothSize = UnitModel(
+const UnitModel jpClothesSize = UnitModel(
   id: 7,
   name: "Japan",
   code: "JP",
@@ -123,7 +123,7 @@ const UnitModel japanClothSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel italianClothSize = UnitModel(
+const UnitModel itClothesSize = UnitModel(
   id: 8,
   name: "Italia",
   code: "IT",
@@ -132,7 +132,7 @@ const UnitModel italianClothSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel usaClothSize = UnitModel(
+const UnitModel usaClothesSize = UnitModel(
   id: 9,
   name: 'Clothes Size US',
   code: 'US',
@@ -188,7 +188,7 @@ const UnitModel pound = UnitModel(
   unitGroupId: massGroupId,
 );
 
-const UnitModel spainClothSize = UnitModel(
+const UnitModel spClothesSize = UnitModel(
   id: 15,
   name: "Spain",
   code: "ES",
@@ -197,7 +197,7 @@ const UnitModel spainClothSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel germanyClothSize = UnitModel(
+const UnitModel deClothesSize = UnitModel(
   id: 16,
   name: "Germany",
   code: "DE",

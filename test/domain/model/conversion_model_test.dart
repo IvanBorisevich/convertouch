@@ -1,8 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -194,7 +194,7 @@ void main() {
     final ConversionModel conversionByMappingTable = ConversionModel(
       id: 2,
       unitGroup: clothesSizeGroup,
-      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+      srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, 'S', null),
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -220,22 +220,23 @@ void main() {
       ),
       convertedUnitValues: [
         ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           'S',
           null,
         ),
         ConversionUnitValueModel.tuple(
-          germanyClothSize,
+          deClothesSize,
           40,
           null,
         ),
       ],
     );
 
-    final ConversionModel deserializedConversionByMappingTable = ConversionModel(
+    final ConversionModel deserializedConversionByMappingTable =
+        ConversionModel(
       id: 2,
       unitGroup: clothesSizeGroup,
-      srcUnitValue: ConversionUnitValueModel.tuple(japanClothSize, 'S', null),
+      srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, 'S', null),
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -259,12 +260,12 @@ void main() {
       ),
       convertedUnitValues: [
         ConversionUnitValueModel.tuple(
-          japanClothSize,
+          jpClothesSize,
           'S',
           null,
         ),
         ConversionUnitValueModel.tuple(
-          germanyClothSize,
+          deClothesSize,
           40,
           null,
         ),
@@ -420,5 +421,268 @@ void main() {
         deserializedConversionByMappingTable,
       );
     });
+  });
+
+  group('Should patch conversion', () {
+    // Conversion A -----------------------------------------------------------
+
+    final ConversionModel conversionA = ConversionModel(
+      id: 1,
+      unitGroup: currencyGroup,
+      srcUnitValue: ConversionUnitValueModel.tuple(eur, 3, 1),
+      params: ConversionParamSetValueBulkModel.singleCompact(
+        paramSet: exchangeRateParamSet,
+        paramValues: const [
+          (
+            exchangeRateSourceBankParam,
+            null,
+            null,
+            unit: null,
+            calculated: false,
+            listValuesFetchResult: null,
+          ),
+        ],
+      ),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(eur, 3, 1),
+        ConversionUnitValueModel.tuple(usd, 7, 1),
+        ConversionUnitValueModel.tuple(aud, 14, 1),
+      ],
+    );
+
+    // Conversion B -----------------------------------------------------------
+
+    final ConversionModel conversionB = ConversionModel(
+      id: 1,
+      unitGroup: currencyGroup,
+      srcUnitValue: ConversionUnitValueModel.tuple(usd, 10, 1),
+      params: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: exchangeRateParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                exchangeRateSourceBankParam,
+                exchangeRateSources.items[0],
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: exchangeRateSources,
+              ),
+            ],
+          ),
+          ConversionParamSetValueModel(
+            paramSet: testOptionalParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(testParam, "Test", null),
+            ],
+          ),
+        ],
+        selectedIndex: 0,
+        totalCount: 2,
+      ),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(usd, 10, 1),
+        ConversionUnitValueModel.tuple(eur, 7, 1),
+      ],
+    );
+
+    test('Should patch A with B (B aligned = true)', () {
+      expect(
+        conversionA
+            .patchWith(
+              conversionB,
+              isPatchAligned: true,
+            )
+            .toJson(saveListValues: true),
+        ConversionModel(
+          id: 1,
+          unitGroup: currencyGroup,
+          srcUnitValue: ConversionUnitValueModel.tuple(eur, 7, 1),
+          params: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: exchangeRateParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    exchangeRateSourceBankParam,
+                    exchangeRateSources.items[0],
+                    null,
+                    unit: null,
+                    calculated: false,
+                    listValuesFetchResult: exchangeRateSources,
+                  ),
+                ],
+              ),
+            ],
+            selectedIndex: 0,
+            totalCount: 1,
+          ),
+          convertedUnitValues: [
+            ConversionUnitValueModel.tuple(eur, 7, 1),
+            ConversionUnitValueModel.tuple(usd, 10, 1),
+            ConversionUnitValueModel.tuple(aud, 14, 1),
+          ],
+        ).toJson(saveListValues: true),
+      );
+    });
+
+    test('Should patch A with B (B aligned = false)', () {
+      expect(
+        conversionA
+            .patchWith(
+              conversionB,
+              isPatchAligned: false,
+            )
+            .toJson(saveListValues: true),
+        conversionB.toJson(saveListValues: true),
+      );
+    });
+
+    test('Should patch B with A (A aligned = true)', () {
+      expect(
+        conversionB
+            .patchWith(
+              conversionA,
+              isPatchAligned: true,
+            )
+            .toJson(saveListValues: true),
+        ConversionModel(
+          id: 1,
+          unitGroup: currencyGroup,
+          srcUnitValue: ConversionUnitValueModel.tuple(usd, 7, 1),
+          params: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: exchangeRateParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    exchangeRateSourceBankParam,
+                    null,
+                    null,
+                    unit: null,
+                    calculated: false,
+                    listValuesFetchResult: null,
+                  ),
+                ],
+              ),
+              ConversionParamSetValueModel(
+                paramSet: testOptionalParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(testParam, "Test", null),
+                ],
+              ),
+            ],
+            selectedIndex: 0,
+            totalCount: 2,
+          ),
+          convertedUnitValues: [
+            ConversionUnitValueModel.tuple(usd, 7, 1),
+            ConversionUnitValueModel.tuple(eur, 3, 1),
+          ],
+        ).toJson(saveListValues: true),
+      );
+    });
+
+    test('Should patch B with A (A aligned = false)', () {
+      expect(
+        conversionB
+            .patchWith(
+              conversionA,
+              isPatchAligned: false,
+            )
+            .toJson(saveListValues: true),
+        conversionA.toJson(saveListValues: true),
+      );
+    });
+  });
+
+  test(
+      "[AlignConversion start (align params) "
+      "-> AddUnitsToConversion "
+      "-> AlignConversion finish] "
+      "Should enrich param 'Source / Bank' list values, "
+      "should keep the same number of unit values", () {
+    final ConversionModel conversionAfterUnitsAdded = ConversionModel(
+      id: 1,
+      unitGroup: currencyGroup,
+      params: ConversionParamSetValueBulkModel.singleCompact(
+        paramSet: exchangeRateParamSet,
+        paramValues: [
+          (
+            exchangeRateSourceBankParam,
+            exchangeRateSources.items[0],
+            null,
+            unit: null,
+            calculated: false,
+            listValuesFetchResult: null,
+          ),
+        ],
+      ),
+      srcUnitValue: ConversionUnitValueModel.tuple(eur, 3, 1),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(eur, 3, 1),
+        ConversionUnitValueModel.tuple(usd, 7, 1),
+        ConversionUnitValueModel.tuple(aud, 14, 1),
+        ConversionUnitValueModel.tuple(cny, 15, 1),
+      ],
+    );
+
+    final ConversionModel conversionAfterAligned = ConversionModel(
+      id: 1,
+      unitGroup: currencyGroup,
+      params: ConversionParamSetValueBulkModel.singleCompact(
+        paramSet: exchangeRateParamSet,
+        paramValues: [
+          (
+            exchangeRateSourceBankParam,
+            exchangeRateSources.items[0],
+            null,
+            unit: null,
+            calculated: false,
+            listValuesFetchResult: exchangeRateSources,
+          ),
+        ],
+      ),
+      srcUnitValue: ConversionUnitValueModel.tuple(eur, 3, 1),
+      convertedUnitValues: [
+        ConversionUnitValueModel.tuple(eur, 3, 1),
+        ConversionUnitValueModel.tuple(usd, 7, 1),
+        ConversionUnitValueModel.tuple(aud, 14, 1),
+      ],
+    );
+
+    expect(
+      conversionAfterUnitsAdded
+          .patchWith(
+            conversionAfterAligned,
+            isPatchAligned: true,
+          )
+          .toJson(saveListValues: true),
+      ConversionModel(
+        id: 1,
+        unitGroup: currencyGroup,
+        params: ConversionParamSetValueBulkModel.singleCompact(
+          paramSet: exchangeRateParamSet,
+          paramValues: [
+            (
+              exchangeRateSourceBankParam,
+              exchangeRateSources.items[0],
+              null,
+              unit: null,
+              calculated: false,
+              listValuesFetchResult: exchangeRateSources,
+            ),
+          ],
+        ),
+        srcUnitValue: ConversionUnitValueModel.tuple(eur, 3, 1),
+        convertedUnitValues: [
+          ConversionUnitValueModel.tuple(eur, 3, 1),
+          ConversionUnitValueModel.tuple(usd, 7, 1),
+          ConversionUnitValueModel.tuple(aud, 14, 1),
+          ConversionUnitValueModel.tuple(cny, 15, 1),
+        ],
+      ).toJson(saveListValues: true),
+    );
   });
 }

@@ -31,9 +31,11 @@ abstract class ConversionEvent extends ConvertouchEvent {
 
 class PatchConversion extends ConversionEvent {
   final ConversionModel conversionPatch;
+  final bool isAligned;
 
   const PatchConversion({
     required this.conversionPatch,
+    this.isAligned = false,
     required super.rebuildUnitValues,
     required super.rebuildParams,
   });
@@ -41,6 +43,7 @@ class PatchConversion extends ConversionEvent {
   @override
   List<Object?> get props => [
         conversionPatch,
+        isAligned,
         rebuildUnitValues,
         rebuildParams,
       ];
@@ -50,7 +53,8 @@ class PatchConversion extends ConversionEvent {
     return 'PatchConversion{'
         'conversion: $conversionPatch, '
         'rebuildUnitValues: $rebuildUnitValues, '
-        'rebuildParams: $rebuildParams}';
+        'rebuildParams: $rebuildParams, '
+        'isAligned: $isAligned}';
   }
 }
 

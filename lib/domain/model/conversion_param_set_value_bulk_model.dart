@@ -290,3 +290,40 @@ class ConversionParamSetValueBulkModel extends Equatable {
         'total = $totalCount}';
   }
 }
+
+ConversionParamSetValueBulkModel? patchParams(
+  ConversionParamSetValueBulkModel? whatParams,
+  ConversionParamSetValueBulkModel? patch,
+) {
+  if (whatParams == null) {
+    return patch;
+  }
+
+  if (patch == null) {
+    return null;
+  }
+
+  Map<int, ConversionParamSetValueModel> patchParamSetValuesMap = {
+    for (var v in patch.paramSetValues) v.paramSet.id: v
+  };
+
+  final patchedParamSetValues = whatParams.paramSetValues.map(
+    (whatParamSetValue) {
+      var paramSetValuePatch =
+          patchParamSetValuesMap[whatParamSetValue.paramSet.id];
+      return paramSetValuePatch != null
+          ? patchParamSetValue(whatParamSetValue, paramSetValuePatch)
+          : whatParamSetValue;
+    },
+  ).toList();
+
+  return ConversionParamSetValueBulkModel(
+    paramSetValues: patchedParamSetValues,
+    selectedIndex: whatParams.selectedIndex,
+    paramSetsCanBeAdded: whatParams.paramSetsCanBeAdded,
+    selectedParamSetCanBeRemoved: whatParams.selectedParamSetCanBeRemoved,
+    optionalParamSetsExist: whatParams.optionalParamSetsExist,
+    mandatoryParamSetExists: whatParams.mandatoryParamSetExists,
+    totalCount: whatParams.totalCount,
+  );
+}

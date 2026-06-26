@@ -180,3 +180,25 @@ bool areParamsApplicable(ConversionParamSetValueModel? params) {
 bool areParamsNullOrApplicable(ConversionParamSetValueModel? params) {
   return params == null || areParamsApplicable(params);
 }
+
+ConversionParamSetValueModel patchParamSetValue(
+  ConversionParamSetValueModel whatParamSetValue,
+  ConversionParamSetValueModel patch,
+) {
+  Map<int, ConversionParamValueModel> paramValuesPatchMap = {
+    for (var v in patch.paramValues) v.param.id: v
+  };
+
+  List<ConversionParamValueModel> patchedParamValues =
+      whatParamSetValue.paramValues
+          .map(
+            (whatParamValue) =>
+                paramValuesPatchMap[whatParamValue.param.id] ?? whatParamValue,
+          )
+          .toList();
+
+  return ConversionParamSetValueModel(
+    paramSet: patch.paramSet,
+    paramValues: patchedParamValues,
+  );
+}
