@@ -94,16 +94,20 @@ class ConversionBloc
     PatchConversion event,
     Emitter<ConversionState> emit,
   ) async {
+    ConversionModel patchedConversion = state.conversion.patchWith(
+      event.conversionPatch,
+      isPatchAligned: event.isAligned,
+    );
+
     ConversionBuilt patchedConversionState = ConversionBuilt(
-      conversion: state.conversion.patchWith(
-        event.conversionPatch,
-        isPatchAligned: event.isAligned,
-      ),
+      conversion: patchedConversion,
       rebuildUnitValues: event.rebuildUnitValues,
       rebuildParams: event.rebuildParams,
     );
 
     emit(patchedConversionState);
+
+    event.onConversionUpdated?.call(patchedConversion);
   }
 
   _onGetOrBuildConversion(
@@ -257,7 +261,7 @@ class ConversionBloc
         ),
       );
 
-      await _handleAndEmit(result, emit, event: event);
+      await _handle(result, emit, event: event);
     }
   }
 
@@ -303,7 +307,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onAddUnitsToConversion(
@@ -319,7 +323,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onEditConversionItemUnit(
@@ -335,7 +339,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onEditConversionItemValue(
@@ -353,13 +357,15 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onUpdateConversionCoefficients(
     UpdateConversionCoefficients event,
     Emitter<ConversionState> emit,
   ) async {
+    log("${DateTime.now()} - Update conversion coefficients handler started");
+
     final result = await updateConversionCoefficientsUseCase.execute(
       InputConversionModifyModel<UpdateConversionCoefficientsDelta>(
         conversion: state.conversion,
@@ -369,7 +375,9 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    log("${DateTime.now()} - Update conversion coefficients result: ${result.right}");
+
+    await _handle(result, emit, event: event);
   }
 
   _onRemoveConversionItems(
@@ -385,7 +393,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onReplaceConversionItemUnit(
@@ -405,7 +413,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onAddParamSetsToConversion(
@@ -425,7 +433,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onRemoveSelectedParamSetFromConversion(
@@ -439,7 +447,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onRemoveAllParamSetsFromConversion(
@@ -453,7 +461,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onSelectParamSetInConversion(
@@ -469,7 +477,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onEditConversionParamValue(
@@ -491,7 +499,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onReplaceConversionParamUnit(
@@ -509,7 +517,7 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
   _onToggleCalculableParam(
@@ -526,10 +534,10 @@ class ConversionBloc
       ),
     );
 
-    await _handleAndEmit(result, emit, event: event);
+    await _handle(result, emit, event: event);
   }
 
-  _handleAndEmit(
+  _handle(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
     required ConversionEvent event,
@@ -542,10 +550,9 @@ class ConversionBloc
           conversionPatch: result.right,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: event.rebuildParams,
+          onConversionUpdated: event.onConversionUpdated,
         ),
       );
-
-      event.onConversionUpdated?.call(result.right);
     }
   }
 

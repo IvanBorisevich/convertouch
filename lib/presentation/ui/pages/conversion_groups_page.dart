@@ -76,14 +76,14 @@ class ConversionGroupsPage extends StatelessWidget {
                       conversionController.alignConversion(
                         context,
                         conversion: conversion,
-                        alignUnits: conversion.hasItems,
+                        alignUnits: conversion.convertedUnitValues.isNotEmpty,
                         ifParamSetFilled: startRefreshByParams(
                           context,
                           autoRefresh: appState.autoFetchOnRefreshableGroupOpen,
                         ),
                       );
 
-                      if (conversion.hasItems) {
+                      if (conversion.convertedUnitValues.isNotEmpty) {
                         navigationController.navigateTo(
                           context,
                           pageName: PageName.conversionPage,

@@ -124,8 +124,8 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                   conversionController.addUnitsToConversion(
                     context,
                     unitIds: itemsSelectionState.markedIds,
-                    conversionHasItems:
-                        conversionBloc.state.conversion.hasItems,
+                    conversionHasItems: conversionBloc
+                        .state.conversion.convertedUnitValues.isNotEmpty,
                   );
                 },
                 colorScheme: floatingButtonColor,

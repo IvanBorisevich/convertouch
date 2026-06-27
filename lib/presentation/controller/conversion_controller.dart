@@ -442,7 +442,20 @@ class ConversionController {
   }) {
     if (data is DynamicCoefficientsModel) {
       BlocProvider.of<ConversionBloc>(context).add(
-        UpdateConversionCoefficients(newCoefficients: data),
+        UpdateConversionCoefficients(
+          newCoefficients: data,
+          onConversionUpdated: (updatedConversion, {info}) {
+            for (final unitValue in updatedConversion.convertedUnitValues) {
+              conversionItemController.updateUnitValue(
+                context,
+                id: unitValue.id,
+                newUnitValue: unitValue,
+                isSource: unitValue.unit.id ==
+                    updatedConversion.srcUnitValue?.unit.id,
+              );
+            }
+          },
+        ),
       );
     }
 

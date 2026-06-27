@@ -353,6 +353,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   }
 
   Widget _inputField(InputBoxViewModel model, BuildContext context) {
+    log("[input box] Input field model = ${model}");
+
     if (model is TextBoxViewModel) {
       return _TextField(
         model: model,
@@ -687,6 +689,8 @@ class _TextFieldState extends State<_TextField>
   @override
   void didUpdateWidget(_TextField oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    log("${DateTime.now()} - text field didUpdateWidget(), new model = ${widget.model}");
 
     if (widget.model.value != oldWidget.model.value) {
       updateTextControllerValue(

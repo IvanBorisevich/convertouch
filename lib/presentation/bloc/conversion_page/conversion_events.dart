@@ -53,6 +53,7 @@ class PatchConversion extends ConversionEvent {
     this.isAligned = false,
     required super.rebuildUnitValues,
     required super.rebuildParams,
+    super.onConversionUpdated,
   });
 
   @override
@@ -285,6 +286,7 @@ class UpdateConversionCoefficients extends ConversionEvent {
   const UpdateConversionCoefficients({
     required this.newCoefficients,
     super.onError,
+    super.onConversionUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
