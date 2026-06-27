@@ -88,7 +88,9 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     );
   }
 
-  bool get isSuccessEmpty => items.isEmpty && status == FetchingStatus.success;
+  bool get isFinalEmpty =>
+      items.isEmpty &&
+      (status == FetchingStatus.success || status == FetchingStatus.failure);
 
   @override
   List<Object?> get props => [
@@ -139,11 +141,11 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   @override
   String toString() {
     return 'FetchResult{'
-        'numOfItems: ${items.length}, '
-        'searchString: $searchString, '
+        'size: ${items.length}, '
+        '${searchString != null ? "$searchString, " : ''}'
         'status: $status, '
-        'error: $error, '
-        'hasReachedMax: $hasReachedMax, '
+        '${error != null ? "${error!.message}, " : ''}'
+        'more items: ${!hasReachedMax}, '
         'pageNum: $pageNum, '
         'fetchParams: $fetchParams}';
   }

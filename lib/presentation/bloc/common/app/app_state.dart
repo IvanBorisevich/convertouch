@@ -14,6 +14,7 @@ class AppStateReady extends AppState {
   final UnitTapAction unitTapAction;
   final RecalculationOnUnitChange recalculationOnUnitChange;
   final bool keepParamsOnConversionCleanup;
+  final bool autoFetchOnRefreshableGroupOpen;
   final PageName? changedFromPage;
   final String appVersion;
 
@@ -25,6 +26,7 @@ class AppStateReady extends AppState {
     required this.unitTapAction,
     required this.recalculationOnUnitChange,
     required this.keepParamsOnConversionCleanup,
+    required this.autoFetchOnRefreshableGroupOpen,
     this.changedFromPage,
     required this.appVersion,
   });
@@ -39,6 +41,7 @@ class AppStateReady extends AppState {
         unitTapAction,
         recalculationOnUnitChange,
         keepParamsOnConversionCleanup,
+        autoFetchOnRefreshableGroupOpen,
         appVersion,
       ];
 
@@ -53,6 +56,7 @@ class AppStateReady extends AppState {
       SettingKey.recalculationOnUnitChange.name: recalculationOnUnitChange.id,
       SettingKey.keepParamsOnConversionCleanup.name:
           keepParamsOnConversionCleanup,
+      SettingKey.autoFetchOnRefreshableGroupOpen.name: autoFetchOnRefreshableGroupOpen,
     };
   }
 
@@ -71,6 +75,8 @@ class AppStateReady extends AppState {
           json?[SettingKey.recalculationOnUnitChange.name]),
       keepParamsOnConversionCleanup:
           json?[SettingKey.keepParamsOnConversionCleanup.name] ?? true,
+      autoFetchOnRefreshableGroupOpen:
+          json?[SettingKey.autoFetchOnRefreshableGroupOpen.name] ?? false,
       appVersion: json?[SettingKey.appVersion.name] ?? unknownAppVersion,
       changedFromPage: json?['changedFromPage'],
     );
@@ -86,6 +92,7 @@ class AppStateReady extends AppState {
         'unitTapAction: $unitTapAction, '
         'recalculationOnUnitChange: $recalculationOnUnitChange, '
         'keepParamsOnConversionCleanup: $keepParamsOnConversionCleanup, '
+        'autoRefreshOnPageOpen: $autoFetchOnRefreshableGroupOpen, '
         'changedFromPage: $changedFromPage, '
         'appVersion: $appVersion}';
   }

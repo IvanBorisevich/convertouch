@@ -1063,7 +1063,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
     ListValuesFetchResult? listValuesFetchResult,
   ) {
-    if (listValuesFetchResult == null || listValuesFetchResult.isSuccessEmpty) {
+    if (listValuesFetchResult == null || listValuesFetchResult.isFinalEmpty) {
       return [
         DropdownItem(
           height: _defaultListItemHeight,

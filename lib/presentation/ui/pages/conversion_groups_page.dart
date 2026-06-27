@@ -71,9 +71,13 @@ class ConversionGroupsPage extends StatelessWidget {
                         context,
                         conversion: conversion,
                         alignUnits: conversion.hasItems,
-                        // ifParamSetFilled: startRefreshByParams(context),
-                        // ifParamSetFilledPartiallyOrEmpty:
-                        //     stopRefreshByParams(context),
+                        ifParamSetFilled: appState.autoFetchOnRefreshableGroupOpen
+                            ? startRefreshByParams(context)
+                            : null,
+                        ifParamSetFilledPartiallyOrEmpty:
+                            appState.autoFetchOnRefreshableGroupOpen
+                                ? stopRefreshByParams(context)
+                                : null,
                       );
 
                       if (conversion.hasItems) {

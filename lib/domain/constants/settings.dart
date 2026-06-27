@@ -8,6 +8,7 @@ enum SettingKey {
   conversionUnitTapAction,
   recalculationOnUnitChange,
   keepParamsOnConversionCleanup,
+  autoFetchOnRefreshableGroupOpen,
   appVersion,
 }
 

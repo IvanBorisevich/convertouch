@@ -364,8 +364,10 @@ class ConversionParamValueModel extends ItemValueModel {
 
   @override
   String toString() {
-    return 'ParamValue{id = $id, ${param.name} | $value , $defaultValue | ${unit?.code} | '
-        'list size: ${listValuesFetchResult?.items.length}}';
+    return 'ParamValue{id = $id, ${param.name} | '
+        '$value , $defaultValue | '
+        '${unit?.code} | '
+        'list fetch: $listValuesFetchResult}';
   }
 }
 
