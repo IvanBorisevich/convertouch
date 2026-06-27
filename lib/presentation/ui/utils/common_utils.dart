@@ -61,7 +61,16 @@ Future<T?> showConvertouchDialog<T>({
     barrierDismissible: true,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
     barrierColor: Colors.black54,
-    transitionDuration: Duration.zero,
+    transitionDuration: const Duration(milliseconds: 100),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeIn,
+        ),
+        child: child,
+      );
+    },
     pageBuilder: (buildContext, animation, secondaryAnimation) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: buildSystemUiOverlayStyle(
