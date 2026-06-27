@@ -1063,8 +1063,25 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
     ListValuesFetchResult? listValuesFetchResult,
   ) {
-    if (listValuesFetchResult == null) {
-      return const [];
+    if (listValuesFetchResult == null || listValuesFetchResult.isSuccessEmpty) {
+      return [
+        DropdownItem(
+          height: _defaultListItemHeight,
+          enabled: false,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 17),
+            child: Text(
+              'No Items',
+              style: _inputFieldTextStyle(
+                fontSize: widget.fontSize,
+                fontWeight: FontWeight.w600,
+                foregroundColor: widget.dropdownColors.foreground.regular,
+              ),
+            ),
+          ),
+        ),
+      ];
     }
 
     List<DropdownItem<ValueModel>> items = listValuesFetchResult.items

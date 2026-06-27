@@ -88,6 +88,8 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     );
   }
 
+  bool get isSuccessEmpty => items.isEmpty && status == FetchingStatus.success;
+
   @override
   List<Object?> get props => [
         items,
