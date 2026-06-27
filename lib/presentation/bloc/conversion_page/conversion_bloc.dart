@@ -192,8 +192,6 @@ class ConversionBloc
 
             if (areParamsFilled(paramSetValue)) {
               event.ifParamSetFilled?.call(updatedConversion);
-            } else if (areParamsPartiallyFilled(paramSetValue)) {
-              event.ifParamSetFilledPartiallyOrEmpty?.call(updatedConversion);
             }
 
             add(

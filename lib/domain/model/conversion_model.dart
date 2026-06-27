@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
@@ -147,6 +148,8 @@ class ConversionModel extends IdNameItemModel {
   bool get exists => this != none;
 
   bool get hasItems => convertedUnitValues.isNotEmpty;
+
+  bool get readyToRefresh => areParamsFilled(params?.active) && hasItems;
 
   @override
   String toString() {

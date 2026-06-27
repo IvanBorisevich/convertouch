@@ -67,17 +67,20 @@ class ConversionGroupsPage extends StatelessWidget {
                     processCurrentConversion: (conversion) {
                       log("${DateTime.now()} - Process current conversion");
 
+                      refreshButtonController.changeState(
+                        context,
+                        visible: unitGroup.refreshable,
+                        disabled: !conversion.readyToRefresh,
+                      );
+
                       conversionController.alignConversion(
                         context,
                         conversion: conversion,
                         alignUnits: conversion.hasItems,
-                        ifParamSetFilled: appState.autoFetchOnRefreshableGroupOpen
-                            ? startRefreshByParams(context)
-                            : null,
-                        ifParamSetFilledPartiallyOrEmpty:
-                            appState.autoFetchOnRefreshableGroupOpen
-                                ? stopRefreshByParams(context)
-                                : null,
+                        ifParamSetFilled: startRefreshByParams(
+                          context,
+                          autoRefresh: appState.autoFetchOnRefreshableGroupOpen,
+                        ),
                       );
 
                       if (conversion.hasItems) {

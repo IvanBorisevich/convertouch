@@ -103,7 +103,6 @@ class AlignConversion extends ConversionEvent {
   final void Function(ConversionModel)? onConversionParamsAligned;
   final void Function(ConversionModel)? onConversionUnitValuesAligned;
   final ParamSetValueChangedCallback? ifParamSetFilled;
-  final ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty;
 
   const AlignConversion({
     this.conversion,
@@ -115,7 +114,6 @@ class AlignConversion extends ConversionEvent {
     this.onConversionParamsAligned,
     this.onConversionUnitValuesAligned,
     this.ifParamSetFilled,
-    this.ifParamSetFilledPartiallyOrEmpty,
   }) : super(rebuildUnitValues: alignUnits, rebuildParams: alignParams);
 
   @override

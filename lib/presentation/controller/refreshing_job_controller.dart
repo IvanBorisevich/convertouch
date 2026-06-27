@@ -72,36 +72,25 @@ class RefreshingJobController {
   }
 }
 
-ParamSetValueChangedCallback startRefreshByParams(BuildContext context) {
+ParamSetValueChangedCallback startRefreshByParams(
+  BuildContext context, {
+  bool autoRefresh = false,
+}) {
   return (conversion) {
-    refreshButtonController.changeState(
-      context,
-      visible: true,
-      disabled: false,
-    );
-
-    refreshingJobController.startRefreshingJob(
-      context,
-      unitGroupName: conversion.unitGroup.name,
-      params: conversion.params?.active,
-      srcUnit: conversion.srcUnitValue?.unit,
-      jobExecutionMode: JobExecutionMode.startNewJob,
-    );
-  };
-}
-
-ParamSetValueChangedCallback stopRefreshByParams(BuildContext context) {
-  return (conversion) {
-    refreshingJobController.stopRefreshingJob(
-      context,
-      unitGroupName: conversion.unitGroup.name,
-      paramSetName: conversion.params?.active?.paramSet.name,
-    );
-
     refreshButtonController.changeState(
       context,
       visible: conversion.unitGroup.refreshable,
       disabled: false,
     );
+
+    if (autoRefresh) {
+      refreshingJobController.startRefreshingJob(
+        context,
+        unitGroupName: conversion.unitGroup.name,
+        params: conversion.params?.active,
+        srcUnit: conversion.srcUnitValue?.unit,
+        jobExecutionMode: JobExecutionMode.startNewJob,
+      );
+    }
   };
 }

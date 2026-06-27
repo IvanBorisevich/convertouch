@@ -18,19 +18,19 @@ class NetworkDaoImpl extends NetworkDao {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    // if (urlPath == exchangeRateSourcesPath) {
-    //   return await Future.delayed(
-    //     const Duration(seconds: 5),
-    //     () => '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
-    //   );
-    // }
-    //
-    // if (urlPath == exchangeRatePath) {
-    //   return await Future.delayed(
-    //     const Duration(seconds: 5),
-    //     () => '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
-    //   );
-    // }
+    if (urlPath == exchangeRateSourcesPath) {
+      return await Future.delayed(
+        const Duration(seconds: 5),
+        () => '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
+      );
+    }
+
+    if (urlPath == exchangeRatePath) {
+      return await Future.delayed(
+        const Duration(seconds: 5),
+        () => '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
+      );
+    }
 
     await _checkConnection();
 
