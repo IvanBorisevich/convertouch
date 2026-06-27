@@ -19,6 +19,7 @@ const colorSchemeDark = AppColorScheme(
   conversionPageFloatingButton: _conversionPageFloatingButton,
   conversionItem: _conversionItem,
   refreshFloatingButton: _refreshFloatingButton,
+  failureFloatingButton: _failureFloatingButton,
   removalFloatingButton: _removalFloatingButton,
   paramSetPanel: _paramSetPanel,
   settingGroup: _settingGroup,
@@ -350,19 +351,23 @@ const _refreshFloatingButton = WidgetColorScheme(
   border: MultiColor(
     regular: Color(0xFF39889F),
     disabled: Color(0xFF587983),
-    error: Color(0xFFC87B7B),
   ),
   foreground: MultiColor(
     regular: Color(0xFFBFEFFF),
     disabled: Color(0xFF587983),
     selected: Color(0xFF5BAEC7),
-    error: Color(0xFFC87B7B),
   ),
   background: MultiColor(
     regular: Color(0xFF39889F),
     selected: _pageBackground,
     disabled: _pageBackground,
   ),
+);
+
+const _failureFloatingButton = WidgetColorScheme(
+  border: MultiColor.only(Color(0xFFC87B7B)),
+  foreground: MultiColor.only(Color(0xFFC87B7B)),
+  background: MultiColor.only(_pageBackground),
 );
 
 const _removalFloatingButton = WidgetColorScheme(

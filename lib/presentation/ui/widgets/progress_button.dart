@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ConvertouchProgressButton extends StatelessWidget {
-  final Widget buttonWidget;
+  final Widget initialButtonWidget;
   final Stream<JobResultModel>? progressStream;
   final double radius;
   final bool determinate;
@@ -15,11 +16,13 @@ class ConvertouchProgressButton extends StatelessWidget {
   final void Function()? onProgressIndicatorClick;
   final void Function(JobResultModel)? onFetchSuccess;
   final void Function(ConvertouchException info)? onFetchError;
+  final void Function()? onRetry;
   final EdgeInsets? margin;
   final WidgetColorScheme colors;
+  final ConvertouchUITheme theme;
 
   const ConvertouchProgressButton({
-    required this.buttonWidget,
+    required this.initialButtonWidget,
     required this.progressStream,
     this.radius = 25,
     this.determinate = false,
@@ -27,13 +30,17 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.onProgressIndicatorClick,
     this.onFetchSuccess,
     this.onFetchError,
+    this.onRetry,
     this.margin,
     required this.colors,
+    required this.theme,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    log("Progress button build(): progressStream: $progressStream");
+
     return Visibility(
       visible: visible,
       child: Container(
@@ -42,7 +49,7 @@ class ConvertouchProgressButton extends StatelessWidget {
         alignment: Alignment.center,
         margin: margin,
         child: progressStream == null
-            ? buttonWidget
+            ? initialButtonWidget
             : StreamBuilder<JobResultModel>(
                 stream: progressStream,
                 builder: (context, snapshot) {
@@ -50,15 +57,15 @@ class ConvertouchProgressButton extends StatelessWidget {
                       "data: ${snapshot.data?.progressPercent}");
 
                   if (snapshot.data == null) {
-                    return buttonWidget;
+                    return initialButtonWidget;
                   } else if (snapshot.data!.finished) {
                     log("Data receiving finished successfully");
                     onFetchSuccess?.call(snapshot.data!);
-                    return buttonWidget;
+                    return initialButtonWidget;
                   } else if (snapshot.data!.failed) {
                     log("Data receiving failed");
                     onFetchError?.call(snapshot.data!.notification!);
-                    return buttonWidget;
+                    return initialButtonWidget;
                   } else {
                     return GestureDetector(
                       onTap: onProgressIndicatorClick,
@@ -118,4 +125,40 @@ class ConvertouchProgressButton extends StatelessWidget {
       ),
     );
   }
+
+// Widget _failureFloatingButton(
+//   BuildContext context, {
+//   required ConvertouchException error,
+//   void Function()? retry,
+// }) {
+//   WidgetColorScheme dialogColors = appColors[theme].dialog;
+//   WidgetColorScheme buttonColors = appColors[theme].failureFloatingButton;
+//
+//   return ConvertouchFloatingActionButton.failure(
+//     colorScheme: buttonColors,
+//     iconSize: 30,
+//     onClick: () {
+//       showConvertouchDialog(
+//         currentTheme: theme,
+//         context: context,
+//         builder: (context, setStateDialog) {
+//           return ConvertouchFailureDialog(
+//             title: "Fetch failed",
+//             handlerFunc: retry,
+//             handlerActionName: "Retry",
+//             content: Text(
+//               error.message,
+//               style: TextStyle(
+//                 fontSize: 15,
+//                 fontWeight: FontWeight.w400,
+//                 color: dialogColors.foreground.regular,
+//               ),
+//             ),
+//             colors: dialogColors,
+//           );
+//         },
+//       );
+//     },
+//   );
+// }
 }

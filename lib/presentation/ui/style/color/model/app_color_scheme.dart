@@ -23,6 +23,7 @@ class AppColorScheme {
   final WidgetColorScheme conversionPageFloatingButton;
   final ConversionItemColorScheme conversionItem;
   final WidgetColorScheme refreshFloatingButton;
+  final WidgetColorScheme failureFloatingButton;
   final WidgetColorScheme removalFloatingButton;
   final ParamSetPanelColorScheme paramSetPanel;
 
@@ -45,6 +46,7 @@ class AppColorScheme {
     required this.conversionPageFloatingButton,
     required this.conversionItem,
     required this.refreshFloatingButton,
+    required this.failureFloatingButton,
     required this.removalFloatingButton,
     required this.paramSetPanel,
     required this.settingGroup,

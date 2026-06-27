@@ -60,8 +60,10 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               radius: 28,
               margin: const EdgeInsets.only(right: 7),
               colors: refreshButtonColor,
-              buttonWidget: ConvertouchFloatingActionButton.refresh(
+              theme: theme,
+              initialButtonWidget: ConvertouchFloatingActionButton.refresh(
                 disabled: disabled,
+                colorScheme: refreshButtonColor,
                 onClick: () {
                   refreshingJobController.startRefreshingJob(
                     context,
@@ -72,8 +74,17 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                         JobExecutionMode.continueAlreadyRunningJobIfAny,
                   );
                 },
-                colorScheme: refreshButtonColor,
               ),
+              onRetry: () {
+                refreshingJobController.startRefreshingJob(
+                  context,
+                  unitGroupName: viewModel.unitGroupName,
+                  params: viewModel.params,
+                  srcUnit: viewModel.srcUnit,
+                  jobExecutionMode:
+                  JobExecutionMode.continueAlreadyRunningJobIfAny,
+                );
+              },
               onFetchSuccess: (jobResult) {
                 if (jobResult.data != null) {
                   conversionController.updateWithDynamicData(

@@ -5,6 +5,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   static const double defaultHeight = 70;
 
   final IconData icon;
+  final double? iconSize;
   final void Function()? onClick;
   final bool visible;
   final bool disabled;
@@ -14,6 +15,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   const ConvertouchFloatingActionButton({
     required this.icon,
+    this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
@@ -24,7 +26,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   });
 
   const ConvertouchFloatingActionButton.refresh({
-    this.icon = Icons.refresh_rounded,
+    this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
@@ -32,10 +34,21 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.extraLabelText = "",
     required this.colorScheme,
     super.key,
-  });
+  }) : icon = Icons.refresh_rounded;
+
+  const ConvertouchFloatingActionButton.failure({
+    this.iconSize,
+    this.onClick,
+    this.visible = true,
+    required this.colorScheme,
+    super.key,
+  })  : icon = Icons.sync_problem_rounded,
+        disabled = false,
+        extraLabelVisible = false,
+        extraLabelText = "";
 
   const ConvertouchFloatingActionButton.adding({
-    this.icon = Icons.add,
+    this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
@@ -43,10 +56,10 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.extraLabelText = "",
     required this.colorScheme,
     super.key,
-  });
+  }) : icon = Icons.add;
 
   const ConvertouchFloatingActionButton.removal({
-    this.icon = Icons.delete_outline_rounded,
+    this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
@@ -54,7 +67,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     required this.extraLabelText,
     required this.colorScheme,
     super.key,
-  });
+  }) : icon = Icons.delete_outline_rounded;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +103,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                   color: disabled
                       ? colorScheme.foreground.disabled
                       : colorScheme.foreground.regular,
+                  size: iconSize,
                 ),
               ),
             ),
