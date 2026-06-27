@@ -1,7 +1,7 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_model.dart';
@@ -12,6 +12,7 @@ import 'package:convertouch/domain/utils/conversion_rules/clothes_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/ring_size.dart';
 import 'package:convertouch/domain/utils/conversion_rules/temperature.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 // Unit values calculation --------------------------------------------------
 
@@ -52,8 +53,8 @@ List<ConversionUnitValueModel> calculateUnitValues(
 
     result.add(
       tgtItem.copyWith(
-        value: value ?? ValueModel.empty,
-        defaultValue: defaultValue ?? ValueModel.empty,
+        value: Patchable(value, patchNull: true),
+        defaultValue: Patchable(defaultValue, patchNull: true),
       ),
     );
   }
@@ -98,15 +99,17 @@ ConversionParamValueModel calculateParamValueForNewUnit({
       return paramValue;
     }
 
-    String? listPublicValue = listValueFuncSet.publicListValueBuilderFunc.call(
-      listValueFuncSet.listValueToRawMapFunc.call(paramValue.value!),
+    String? listPublicValue = listValueFuncSet.publicListValueBuilder.call(
+      listValueFuncSet.listValueToRaw.call(paramValue.value!),
       unit: tgtParamUnit,
       params: params,
     );
 
     return paramValue.copyWith(
-      value: paramValue.value!.copyWith(
-        alt: listPublicValue,
+      value: Patchable(
+        paramValue.value!.copyWith(
+          alt: listPublicValue,
+        ),
       ),
       unit: tgtParamUnit,
     );
@@ -137,8 +140,8 @@ ConversionParamValueModel calculateParamValueForNewUnit({
   );
 
   return paramValue.copyWith(
-    value: value ?? ValueModel.empty,
-    defaultValue: defaultValue ?? ValueModel.empty,
+    value: Patchable(value, patchNull: true),
+    defaultValue: Patchable(defaultValue, patchNull: true),
     unit: tgtParamUnit,
   );
 }

@@ -32,12 +32,12 @@ import 'package:convertouch/domain/use_cases/common/mark_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/common/validate_input_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
@@ -56,6 +56,7 @@ import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_us
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/param_set/fetch_param_sets_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/build_unit_details_use_case.dart';
 import 'package:convertouch/domain/use_cases/unit_details/modify_unit_details_use_case.dart';
@@ -304,15 +305,29 @@ Future<void> _initUseCases() async {
     ),
   );
 
+  locator.registerLazySingleton<FetchListValuesUseCase>(
+    () => FetchListValuesUseCase(
+      listValueRepository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ValidateListValueUseCase>(
+    () => ValidateListValueUseCase(
+      listValueRepository: locator(),
+    ),
+  );
+
   locator.registerLazySingleton<InitUnitListValuesUseCase>(
     () => InitUnitListValuesUseCase(
       fetchListValuesUseCase: locator(),
+      validateListValueUseCase: locator(),
     ),
   );
 
   locator.registerLazySingleton<InitParamListValuesUseCase>(
     () => InitParamListValuesUseCase(
       fetchListValuesUseCase: locator(),
+      validateListValueUseCase: locator(),
     ),
   );
 
@@ -437,12 +452,6 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<FetchParamSetsUseCase>(
     () => FetchParamSetsUseCase(
       conversionParamSetRepository: locator(),
-    ),
-  );
-
-  locator.registerLazySingleton<FetchListValuesUseCase>(
-    () => FetchListValuesUseCase(
-      listValueRepository: locator(),
     ),
   );
 

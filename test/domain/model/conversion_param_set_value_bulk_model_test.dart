@@ -2,12 +2,13 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_param.dart';
 import 'mock/mock_unit.dart';
 
-final _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
+const _paramSetValueWithCalculableParams = ConversionParamSetValueBulkModel(
   paramSetValues: [
     ConversionParamSetValueModel(
       paramSet: barbellWeightParamSet,
@@ -50,7 +51,7 @@ void main() {
     expect(
       await _clothesSizeParams().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.str("Woman"),
+          value: Patchable(ValueModel.str("Woman")),
         ),
         paramSetFilter: (paramSetValue) =>
             paramSetValue.paramSet.id == clothesSizeParamSet.id,
@@ -77,7 +78,7 @@ void main() {
     expect(
       await _clothesSizeParams().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.str("Woman"),
+          value: Patchable(ValueModel.str("Woman")),
         ),
         paramFilter: (paramValue) => paramValue.param.id == personParam.id,
       ),
@@ -102,8 +103,8 @@ void main() {
     expect(
       await _clothesSizeParams().copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.num(150),
-          defaultValue: ValueModel.num(2),
+          value: Patchable(ValueModel.num(150)),
+          defaultValue: Patchable(ValueModel.num(2)),
         ),
         paramSetId: clothesSizeParamSet.id,
         paramId: heightParam.id,
@@ -131,8 +132,8 @@ void main() {
     expect(
       await clothesSizeParams.copyWithChangedParamById(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.num(150),
-          defaultValue: ValueModel.num(2),
+          value: Patchable(ValueModel.num(150)),
+          defaultValue: Patchable(ValueModel.num(2)),
         ),
         paramSetId: clothesSizeParamSet.id,
         paramId: -1,
@@ -176,7 +177,7 @@ void main() {
           ),
           paramSetId: barbellWeightParamSet.id,
         ),
-        ConversionParamSetValueBulkModel(
+        const ConversionParamSetValueBulkModel(
           paramSetValues: [
             ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
@@ -208,7 +209,7 @@ void main() {
           ),
           paramSetId: barbellWeightParamSet.id,
         ),
-        ConversionParamSetValueBulkModel(
+        const ConversionParamSetValueBulkModel(
           paramSetValues: [
             ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,

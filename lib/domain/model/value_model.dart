@@ -131,8 +131,6 @@ class ValueModel extends IdNameSearchableItemModel {
 
   bool get hasRawValue => raw.isNotEmpty;
 
-  bool get isEmpty => this == ValueModel.empty;
-
   @override
   String get itemName => alt ?? raw;
 
@@ -180,18 +178,5 @@ class ValueModel extends IdNameSearchableItemModel {
   @override
   String toString() {
     return '{$raw , $alt}';
-  }
-}
-
-ValueModel? patchValueModel({
-  required ValueModel? thisValue,
-  required ValueModel? newValue,
-}) {
-  if (newValue == null) {
-    return thisValue;
-  } else if (newValue.isEmpty) {
-    return null;
-  } else {
-    return newValue;
   }
 }

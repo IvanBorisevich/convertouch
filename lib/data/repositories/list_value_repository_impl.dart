@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
@@ -47,32 +48,40 @@ class ListValueRepositoryImpl implements ListValueRepository {
   }
 
   @override
-  Future<Either<ConvertouchException, bool>> belongsToList({
+  Future<Either<ConvertouchException, ValueModel?>> validateValue({
     required ValueModel? value,
     required ConvertouchListType listType,
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) async {
     if (value == null) {
-      return const Right(true);
+      return const Right(null);
     }
-
-    bool belongs;
 
     if (listType.fetchedViaApi) {
-      belongs = false;
-    } else {
-      List<ValueModel> localListValues =
-          listValuesFuncSets[listType]?.buildListValues(
-                unit: unit,
-                params: params,
-              ) ??
-              [];
-
-      belongs = localListValues.any((v) => v.raw == value.raw);
+      return const Right(null);
     }
 
-    return Right(belongs);
+    ListValueFuncSet? listValueFuncSet = listValuesFuncSets[listType];
+
+    if (listValueFuncSet == null) {
+      return const Right(null);
+    }
+
+    List<ValueModel> localListValues = listValueFuncSet.buildListValues(
+      unit: unit,
+      params: params,
+    );
+
+    ValueModel? validatedValue = localListValues.firstWhereOrNull(
+      (v) => listValueFuncSet.publicValuePredicate(
+        input: value,
+        v: v,
+        unit: unit,
+      ),
+    );
+
+    return Right(validatedValue);
   }
 
   List<ValueModel> _fetchLocal({

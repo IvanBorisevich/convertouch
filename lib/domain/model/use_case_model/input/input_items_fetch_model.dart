@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
 class InputItemsFetchModel<P extends ItemsFetchParams> {
@@ -101,7 +100,6 @@ class ListValuesFetchParams extends ItemsFetchParams {
   final String? unitGroupName;
   final UnitModel? unit;
   final ConversionParamSetValueModel? params;
-  final ValueModel? selectedValue;
 
   const ListValuesFetchParams({
     required this.itemId,
@@ -109,7 +107,6 @@ class ListValuesFetchParams extends ItemsFetchParams {
     this.unit,
     this.unitGroupName,
     this.params,
-    this.selectedValue,
   });
 
   @override
@@ -119,7 +116,6 @@ class ListValuesFetchParams extends ItemsFetchParams {
         unit,
         unitGroupName,
         params,
-        selectedValue,
       ];
 
   @override

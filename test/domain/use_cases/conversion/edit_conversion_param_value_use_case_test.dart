@@ -10,6 +10,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_list_values_batch.dart';
@@ -36,26 +37,33 @@ void main() {
     );
 
     useCase = const EditConversionParamValueUseCase(
-        calculateParamSetValueUseCase: CalculateParamSetValueUseCase(
-          calculateParamValueUseValue: CalculateParamValueUseValue(
-            calculateDefaultValueUseCase: calculateDefaultValueUseCase,
-            initParamListValuesUseCase: InitParamListValuesUseCase(
-              fetchListValuesUseCase: FetchListValuesUseCase(
-                listValueRepository: listValueRepository,
-              ),
-            ),
-            unitGroupRepository: MockUnitGroupRepository(),
-          ),
-        ),
-        calculateUnitValueUseValue: CalculateUnitValueUseValue(
+      calculateParamSetValueUseCase: CalculateParamSetValueUseCase(
+        calculateParamValueUseValue: CalculateParamValueUseValue(
           calculateDefaultValueUseCase: calculateDefaultValueUseCase,
-          initUnitListValuesUseCase: InitUnitListValuesUseCase(
+          initParamListValuesUseCase: InitParamListValuesUseCase(
             fetchListValuesUseCase: FetchListValuesUseCase(
+              listValueRepository: listValueRepository,
+            ),
+            validateListValueUseCase: ValidateListValueUseCase(
               listValueRepository: listValueRepository,
             ),
           ),
           unitGroupRepository: MockUnitGroupRepository(),
-        ));
+        ),
+      ),
+      calculateUnitValueUseValue: CalculateUnitValueUseValue(
+        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+        initUnitListValuesUseCase: InitUnitListValuesUseCase(
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: listValueRepository,
+          ),
+          validateListValueUseCase: ValidateListValueUseCase(
+            listValueRepository: listValueRepository,
+          ),
+        ),
+        unitGroupRepository: MockUnitGroupRepository(),
+      ),
+    );
   });
 
   group('By coefficients - mass', () {
@@ -145,14 +153,14 @@ void main() {
           ),
           currentParams: ConversionParamSetValueBulkModel.singleCompact(
             paramSet: barbellWeightParamSet,
-            paramValues: const [
+            paramValues: [
               (
                 barWeightParam,
                 22,
                 null,
                 unit: pound,
                 calculated: false,
-                listValuesFetchResult: null,
+                listValuesFetchResult: barWeightParamPoundListValues,
               ),
               (
                 oneSideWeightParam,
@@ -1043,19 +1051,9 @@ void main() {
           listValuesFetchResult: spainClothesSizes,
         ),
         currentUnitValues: [
-          (
-            itClothesSize,
-            44,
-            null,
-            listValuesFetchResult: italianClothesSizes
-          ),
+          (itClothesSize, 44, null, listValuesFetchResult: italianClothesSizes),
           (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
-          (
-            deClothesSize,
-            42,
-            null,
-            listValuesFetchResult: germanyClothesSizes
-          ),
+          (deClothesSize, 42, null, listValuesFetchResult: germanyClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -1093,19 +1091,9 @@ void main() {
           listValuesFetchResult: spainClothesSizes
         ),
         expectedUnitValues: [
-          (
-            itClothesSize,
-            50,
-            null,
-            listValuesFetchResult: italianClothesSizes
-          ),
+          (itClothesSize, 50, null, listValuesFetchResult: italianClothesSizes),
           (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
-          (
-            deClothesSize,
-            48,
-            null,
-            listValuesFetchResult: germanyClothesSizes
-          ),
+          (deClothesSize, 48, null, listValuesFetchResult: germanyClothesSizes),
         ],
       );
     });
@@ -1156,19 +1144,9 @@ void main() {
           listValuesFetchResult: spainClothesSizes
         ),
         currentUnitValues: [
-          (
-            itClothesSize,
-            44,
-            null,
-            listValuesFetchResult: italianClothesSizes
-          ),
+          (itClothesSize, 44, null, listValuesFetchResult: italianClothesSizes),
           (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
-          (
-            deClothesSize,
-            42,
-            null,
-            listValuesFetchResult: germanyClothesSizes
-          ),
+          (deClothesSize, 42, null, listValuesFetchResult: germanyClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -1206,19 +1184,9 @@ void main() {
           listValuesFetchResult: spainClothesSizes
         ),
         expectedUnitValues: [
-          (
-            itClothesSize,
-            50,
-            null,
-            listValuesFetchResult: italianClothesSizes
-          ),
+          (itClothesSize, 50, null, listValuesFetchResult: italianClothesSizes),
           (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
-          (
-            deClothesSize,
-            48,
-            null,
-            listValuesFetchResult: germanyClothesSizes
-          ),
+          (deClothesSize, 48, null, listValuesFetchResult: germanyClothesSizes),
         ],
       );
     });

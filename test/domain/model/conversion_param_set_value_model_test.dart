@@ -1,12 +1,13 @@
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_param.dart';
 import 'mock/mock_unit_group.dart';
 
-final _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
+const _paramSetValueWithMultipleCalculableParams = ConversionParamSetValueModel(
   paramSet: barbellWeightParamSet,
   paramValues: [
     ConversionParamValueModel(
@@ -80,7 +81,7 @@ const Map<String, dynamic> _paramSetValueJson = {
 
 // need to get a new instance for a new test in order to 'reset' values streams
 ConversionParamSetValueModel _barbellWeightParamSetValue() {
-  return ConversionParamSetValueModel(
+  return const ConversionParamSetValueModel(
     paramSet: barbellWeightParamSet,
     paramValues: [
       ConversionParamValueModel(
@@ -109,7 +110,7 @@ void main() {
     expect(
       await _barbellWeightParamSetValue().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.num(20),
+          value: Patchable(ValueModel.num(20)),
         ),
         paramFilter: (paramValue) => paramValue.param.id == barWeightParam.id,
       ),
@@ -120,7 +121,7 @@ void main() {
             param: barWeightParam,
             value: ValueModel.num(20),
           ),
-          ConversionParamValueModel(
+          const ConversionParamValueModel(
             param: oneSideWeightParam,
           ),
         ],
@@ -132,7 +133,7 @@ void main() {
     expect(
       await _barbellWeightParamSetValue().copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.num(40),
+          value: Patchable(ValueModel.num(40)),
         ),
         paramFilter: (paramValue) =>
             paramValue.param.id == oneSideWeightParam.id,
@@ -140,7 +141,7 @@ void main() {
       ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
-          ConversionParamValueModel(
+          const ConversionParamValueModel(
             param: barWeightParam,
           ),
           ConversionParamValueModel(
@@ -158,7 +159,7 @@ void main() {
     expect(
       await barbellWeight.copyWithChangedParams(
         map: (paramValue, paramSetValue) async => paramValue.copyWith(
-          value: ValueModel.num(40),
+          value: Patchable(ValueModel.num(40)),
         ),
         paramFilter: (paramValue) => paramValue.param.id == -1,
       ),
@@ -180,7 +181,7 @@ void main() {
       _barbellWeightParamSetValue().copyWithNewCalculatedParam(
         newCalculatedParamId: oneSideWeightParam.id,
       ),
-      ConversionParamSetValueModel(
+      const ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(
@@ -200,7 +201,7 @@ void main() {
       _paramSetValueWithMultipleCalculableParams.copyWithNewCalculatedParam(
         newCalculatedParamId: someCalculableParam.id,
       ),
-      ConversionParamSetValueModel(
+      const ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(
@@ -223,7 +224,7 @@ void main() {
       _paramSetValueWithMultipleCalculableParams.copyWithNewCalculatedParam(
         newCalculatedParamId: oneSideWeightParam.id,
       ),
-      ConversionParamSetValueModel(
+      const ConversionParamSetValueModel(
         paramSet: barbellWeightParamSet,
         paramValues: [
           ConversionParamValueModel(

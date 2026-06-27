@@ -99,8 +99,8 @@ class CalculateParamValueUseValue extends UseCase<
 
       final resultParamValue = paramValue.copyWith(
         unit: newUnit,
-        value: newValue ?? ValueModel.empty,
-        defaultValue: newDefaultValue ?? ValueModel.empty,
+        value: Patchable(newValue, patchNull: true),
+        defaultValue: Patchable(newDefaultValue, patchNull: true),
       );
 
       input.onItemValueUpdated?.call(resultParamValue);
@@ -120,7 +120,7 @@ class CalculateParamValueUseValue extends UseCase<
           await initParamListValuesUseCase.execute(
             InputParamListValuesInitModel(
               itemValue: paramValue.copyWith(
-                value: newValue ?? ValueModel.empty,
+                value: Patchable(newValue, patchNull: true),
                 unit: newUnit,
               ),
               paramSetValue: input.paramSetValue,

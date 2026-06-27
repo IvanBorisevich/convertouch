@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
 class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
@@ -13,7 +14,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   final bool hasReachedMax;
   final int pageNum;
   final P? fetchParams;
-  final bool containsSelectedValue;
 
   const OutputItemsFetchModel({
     required this.items,
@@ -23,7 +23,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
-    this.containsSelectedValue = true,
   });
 
   const OutputItemsFetchModel.loading()
@@ -41,7 +40,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
-    this.containsSelectedValue = true,
   }) : status = FetchingStatus.failure;
 
   const OutputItemsFetchModel.success({
@@ -50,7 +48,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.hasReachedMax = false,
     this.pageNum = 0,
     this.fetchParams,
-    this.containsSelectedValue = true,
   })  : status = FetchingStatus.success,
         error = null;
 
@@ -61,8 +58,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.fetchParams,
   })  : status = FetchingStatus.success,
         error = null,
-        hasReachedMax = true,
-        containsSelectedValue = true;
+        hasReachedMax = true;
 
   OutputItemsFetchModel<T, P> copyWith({
     List<T>? items,
@@ -73,7 +69,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     int? pageNum,
     P? params,
     bool? fetchedRemotely,
-    bool? containsSelectedValue,
+    ValueModel? foundSelectedValue,
   }) {
     return OutputItemsFetchModel(
       items: items ?? this.items,
@@ -83,8 +79,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       pageNum: pageNum ?? this.pageNum,
       fetchParams: params ?? this.fetchParams,
-      containsSelectedValue:
-          containsSelectedValue ?? this.containsSelectedValue,
     );
   }
 
@@ -101,7 +95,6 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         hasReachedMax,
         pageNum,
         fetchParams,
-        containsSelectedValue,
       ];
 
   Map<String, dynamic> toJson({bool removeNulls = true}) {

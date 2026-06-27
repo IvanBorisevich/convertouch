@@ -11,6 +11,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_list_values_batch.dart';
@@ -40,6 +41,9 @@ void main() {
       fetchListValuesUseCase: FetchListValuesUseCase(
         listValueRepository: listValueRepository,
       ),
+      validateListValueUseCase: ValidateListValueUseCase(
+        listValueRepository: listValueRepository,
+      ),
     );
 
     useCase = const EditConversionUnitValueUseCase(
@@ -53,6 +57,9 @@ void main() {
           calculateDefaultValueUseCase: calculateDefaultValueUseCase,
           initParamListValuesUseCase: InitParamListValuesUseCase(
             fetchListValuesUseCase: FetchListValuesUseCase(
+              listValueRepository: listValueRepository,
+            ),
+            validateListValueUseCase: ValidateListValueUseCase(
               listValueRepository: listValueRepository,
             ),
           ),
@@ -172,8 +179,13 @@ void main() {
           currentParams: ConversionParamSetValueBulkModel.single(
             paramSet: barbellWeightParamSet,
             paramValues: [
-              ConversionParamValueModel.tuple(barWeightParam, 20, null,
-                  unit: kilogram),
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                20,
+                null,
+                unit: kilogram,
+                listValuesFetchResult: barWeightParamKgListValues,
+              ),
               ConversionParamValueModel.tuple(oneSideWeightParam, 20, 1,
                   unit: kilogram),
             ],
@@ -220,11 +232,25 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel.single(
               paramSet: clothesSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(personParam, "Man", null),
-                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
                 ConversionParamValueModel.tuple(
-                    heightParam, const NumRange.withRight(0, 164), null,
-                    unit: centimeter),
+                  personParam,
+                  "Man",
+                  null,
+                  listValuesFetchResult: personParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  "Shirt",
+                  null,
+                  listValuesFetchResult: garmentParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  heightParam,
+                  const NumRange.withRight(0, 164),
+                  null,
+                  unit: centimeter,
+                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm,
+                ),
               ],
             ),
             currentSrc: ConversionUnitValueModel.tuple(
@@ -306,13 +332,25 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel.single(
               paramSet: clothesSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(personParam, "Man", null),
-                ConversionParamValueModel.tuple(garmentParam, "Shirt", null),
+                ConversionParamValueModel.tuple(
+                  personParam,
+                  "Man",
+                  null,
+                  listValuesFetchResult: personParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  "Shirt",
+                  null,
+                  listValuesFetchResult: garmentParamListValues,
+                ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   manShirtHeightRangesFrom0_164To190InMeter.items[0],
                   null,
                   unit: meter,
+                  listValuesFetchResult:
+                      manShirtHeightRangesFrom0_164To190InMeter,
                 ),
               ],
             ),
@@ -397,11 +435,26 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel.single(
               paramSet: clothesSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(personParam, "Woman", null),
-                ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
                 ConversionParamValueModel.tuple(
-                    heightParam, const NumRange.withRight(156, 162), null,
-                    unit: centimeter),
+                  personParam,
+                  "Woman",
+                  null,
+                  listValuesFetchResult: personParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  "Trousers",
+                  null,
+                  listValuesFetchResult: garmentParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  heightParam,
+                  const NumRange.withRight(156, 162),
+                  null,
+                  unit: centimeter,
+                  listValuesFetchResult:
+                      womanTrousersHeightRangesFrom0_156To186InCm,
+                ),
               ],
             ),
             currentSrc: ConversionUnitValueModel.tuple(
@@ -485,13 +538,25 @@ void main() {
             currentParams: ConversionParamSetValueBulkModel.single(
               paramSet: clothesSizeParamSet,
               paramValues: [
-                ConversionParamValueModel.tuple(personParam, "Woman", null),
-                ConversionParamValueModel.tuple(garmentParam, "Trousers", null),
+                ConversionParamValueModel.tuple(
+                  personParam,
+                  "Woman",
+                  null,
+                  listValuesFetchResult: personParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  "Trousers",
+                  null,
+                  listValuesFetchResult: garmentParamListValues,
+                ),
                 ConversionParamValueModel.tuple(
                   heightParam,
                   womanTrousersHeightRangesFrom0_156To186InMeter.items[1],
                   null,
                   unit: meter,
+                  listValuesFetchResult:
+                      womanTrousersHeightRangesFrom0_156To186InMeter,
                 ),
               ],
             ),

@@ -17,7 +17,7 @@ abstract interface class ListValueRepository {
     required ConversionParamSetValueModel? params,
   });
 
-  Future<Either<ConvertouchException, bool>> belongsToList({
+  Future<Either<ConvertouchException, ValueModel?>> validateValue({
     required ValueModel? value,
     required ConvertouchListType listType,
     required UnitModel? unit,

@@ -5,6 +5,7 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
@@ -17,11 +18,16 @@ void main() {
   late InitParamListValuesUseCase useCase;
 
   setUpAll(() {
+    const listValueRepository = ListValueRepositoryImpl(
+      networkRepository: MockNetworkRepository(),
+    );
+
     useCase = const InitParamListValuesUseCase(
       fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: ListValueRepositoryImpl(
-          networkRepository: MockNetworkRepository(),
-        ),
+        listValueRepository: listValueRepository,
+      ),
+      validateListValueUseCase: ValidateListValueUseCase(
+        listValueRepository: listValueRepository,
       ),
     );
   });

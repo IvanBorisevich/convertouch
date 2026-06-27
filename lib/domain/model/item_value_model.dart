@@ -7,6 +7,7 @@ import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 
 typedef ListValuesFetchResult
     = OutputItemsFetchModel<ValueModel, ListValuesFetchParams>;
@@ -88,18 +89,15 @@ class ItemValueModel extends ItemModel {
   UnitModel? get unitItem => null;
 
   ItemValueModel copyWith({
-    ValueModel? value,
-    ValueModel? defaultValue,
-    ListValuesFetchResult? listValuesFetchResult,
+    Patchable<ValueModel>? value,
+    Patchable<ValueModel>? defaultValue,
+    Patchable<ListValuesFetchResult>? listValuesFetchResult,
   }) {
     return ItemValueModel(
-      value: patchValueModel(thisValue: this.value, newValue: value),
-      defaultValue: patchValueModel(
-        thisValue: this.defaultValue,
-        newValue: defaultValue,
-      ),
+      value: ObjectUtils.patch(this.value, value),
+      defaultValue: ObjectUtils.patch(this.defaultValue, defaultValue),
       listValuesFetchResult:
-          listValuesFetchResult ?? this.listValuesFetchResult,
+          ObjectUtils.patch(this.listValuesFetchResult, listValuesFetchResult),
     );
   }
 
@@ -164,19 +162,16 @@ class ConversionUnitValueModel extends ItemValueModel {
   @override
   ConversionUnitValueModel copyWith({
     UnitModel? unit,
-    ValueModel? value,
-    ValueModel? defaultValue,
-    ListValuesFetchResult? listValuesFetchResult,
+    Patchable<ValueModel>? value,
+    Patchable<ValueModel>? defaultValue,
+    Patchable<ListValuesFetchResult>? listValuesFetchResult,
   }) {
     return ConversionUnitValueModel(
       unit: unit ?? this.unit,
-      value: patchValueModel(thisValue: this.value, newValue: value),
-      defaultValue: patchValueModel(
-        thisValue: this.defaultValue,
-        newValue: defaultValue,
-      ),
+      value: ObjectUtils.patch(this.value, value),
+      defaultValue: ObjectUtils.patch(this.defaultValue, defaultValue),
       listValuesFetchResult:
-          listValuesFetchResult ?? this.listValuesFetchResult,
+          ObjectUtils.patch(this.listValuesFetchResult, listValuesFetchResult),
     );
   }
 
@@ -278,21 +273,18 @@ class ConversionParamValueModel extends ItemValueModel {
     ConversionParamModel? param,
     UnitModel? unit,
     bool? calculated,
-    ValueModel? value,
-    ValueModel? defaultValue,
-    ListValuesFetchResult? listValuesFetchResult,
+    Patchable<ValueModel>? value,
+    Patchable<ValueModel>? defaultValue,
+    Patchable<ListValuesFetchResult>? listValuesFetchResult,
   }) {
     return ConversionParamValueModel(
       param: param ?? this.param,
       unit: unit ?? this.unit,
       calculated: calculated ?? this.calculated,
-      value: patchValueModel(thisValue: this.value, newValue: value),
-      defaultValue: patchValueModel(
-        thisValue: this.defaultValue,
-        newValue: defaultValue,
-      ),
+      value: ObjectUtils.patch(this.value, value),
+      defaultValue: ObjectUtils.patch(this.defaultValue, defaultValue),
       listValuesFetchResult:
-          listValuesFetchResult ?? this.listValuesFetchResult,
+          ObjectUtils.patch(this.listValuesFetchResult, listValuesFetchResult),
     );
   }
 

@@ -9,6 +9,7 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param
 import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
@@ -35,6 +36,9 @@ void main() {
       ),
       initParamListValuesUseCase: InitParamListValuesUseCase(
         fetchListValuesUseCase: FetchListValuesUseCase(
+          listValueRepository: listValueRepository,
+        ),
+        validateListValueUseCase: ValidateListValueUseCase(
           listValueRepository: listValueRepository,
         ),
       ),

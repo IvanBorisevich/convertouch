@@ -35,24 +35,6 @@ class FetchListValuesUseCase
   }
 
   @override
-  Future<bool> containsSelectedValue(
-    InputItemsFetchModel<ListValuesFetchParams> input,
-  ) async {
-    if (input.fetchParams == null) {
-      return false;
-    }
-
-    return ObjectUtils.tryGet(
-      await listValueRepository.belongsToList(
-        value: input.fetchParams!.selectedValue,
-        listType: input.fetchParams!.listType,
-        unit: input.fetchParams!.unit,
-        params: input.fetchParams!.params,
-      ),
-    );
-  }
-
-  @override
   ValueModel addSearchMatch(ValueModel item, String searchString) {
     return item;
   }

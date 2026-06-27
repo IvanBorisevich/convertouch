@@ -110,8 +110,8 @@ class CalculateUnitValueUseValue extends UseCase<InputUnitValueCalculationModel,
         OutputUnitValueCalculationModel(
           itemValue: unitValue.copyWith(
             unit: newUnit,
-            value: newValue ?? ValueModel.empty,
-            defaultValue: newDefaultValue ?? ValueModel.empty,
+            value: Patchable(newValue, patchNull: true),
+            defaultValue: Patchable(newDefaultValue, patchNull: true),
           ),
         ),
       );
@@ -125,7 +125,7 @@ class CalculateUnitValueUseValue extends UseCase<InputUnitValueCalculationModel,
           await initUnitListValuesUseCase.execute(
             InputUnitListValuesInitModel(
               itemValue: unitValue.copyWith(
-                value: newValue ?? ValueModel.empty,
+                value: Patchable(newValue, patchNull: true),
                 unit: newUnit,
               ),
               paramSetValue: input.paramSetValue,

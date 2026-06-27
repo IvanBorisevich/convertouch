@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_list_value_validation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -19,9 +20,11 @@ abstract class _InitItemListValuesUseCase<
     I extends InputItemListValuesInitModel<M>,
     O extends OutputItemValueCalculationModel<M>> extends UseCase<I, O> {
   final FetchListValuesUseCase fetchListValuesUseCase;
+  final ValidateListValueUseCase validateListValueUseCase;
 
   const _InitItemListValuesUseCase({
     required this.fetchListValuesUseCase,
+    required this.validateListValueUseCase,
   });
 
   @override
@@ -47,34 +50,53 @@ abstract class _InitItemListValuesUseCase<
 
     bool asyncFetch = input.itemValue.listType!.fetchedViaApi;
 
+    ListValuesFetchParams fetchParams = ListValuesFetchParams(
+      itemId: input.itemValue.id,
+      listType: input.itemValue.listType!,
+      unit: input.itemValue.unitItem,
+      params: input.paramSetValue,
+    );
+
     if (needToFetch) {
-      final listValuesFetchFuture = _fetchFirstBatch(input);
+      final listValuesFetchFuture = _fetchFirstBatch(fetchParams);
 
       if (asyncFetch) {
-        log("${DateTime.now()} - Async fetch future creation started, list type: ${input.itemValue.listType}");
+        log("${DateTime.now()} - Async fetch future creation started, "
+            "list type: ${input.itemValue.listType}");
 
-        M resultValue = _buildItemValue(
-          input: input,
+        M resultValue = _enrichItemValue(
+          input.itemValue,
           listValuesFetchResult: const OutputItemsFetchModel.loading(),
         );
 
         input.onListValuesFetched?.call(resultValue);
 
         ItemValueFuture<M>? itemValueFuture = listValuesFetchFuture.then(
-          (fetchResult) {
+          (fetchResult) async {
             final listValuesFetchResult = ObjectUtils.tryGet(fetchResult);
 
-            log("${DateTime.now()} - After async fetch first batch of list values: "
-                "$listValuesFetchResult");
+            log("${DateTime.now()} - After async fetch first batch of list values");
 
-            M itemValue = _buildItemValue(
-              input: input,
+            ValueModel? alignedValue = input.alignSelectedValue
+                ? await _alignCurrentValue(
+                    input.itemValue.value,
+                    listValuesFetchResult.items,
+                    fetchParams: fetchParams,
+                    keepSelectedValueIfNotInList:
+                        input.keepSelectedValueIfNotInList,
+                    preselected: input.itemValue.listType!.preselected,
+                  )
+                : input.itemValue.value;
+
+            M resultItemValue = _enrichItemValue(
+              input.itemValue,
+              value: alignedValue,
               listValuesFetchResult: listValuesFetchResult,
             );
 
-            input.onListValuesFetched?.call(itemValue);
+            input.onListValuesFetched?.call(resultItemValue);
 
-            return Right(itemValue);
+            return Right(resultItemValue);
           },
         );
 
@@ -90,16 +112,30 @@ abstract class _InitItemListValuesUseCase<
         log("${DateTime.now()} - Sync fetch first batch of list values, list type: "
             "${input.itemValue.listType}");
 
-        M resultValue = _buildItemValue(
-          input: input,
-          listValuesFetchResult:
-              ObjectUtils.tryGet(await listValuesFetchFuture),
+        ListValuesFetchResult? listValuesFetchResult =
+            ObjectUtils.tryGet(await listValuesFetchFuture);
+
+        ValueModel? alignedValue = input.alignSelectedValue
+            ? await _alignCurrentValue(
+                input.itemValue.value,
+                listValuesFetchResult?.items,
+                fetchParams: fetchParams,
+                keepSelectedValueIfNotInList:
+                    input.keepSelectedValueIfNotInList,
+                preselected: input.itemValue.listType!.preselected,
+              )
+            : input.itemValue.value;
+
+        M resultItemValue = _enrichItemValue(
+          input.itemValue,
+          value: alignedValue,
+          listValuesFetchResult: listValuesFetchResult,
         );
 
-        input.onListValuesFetched?.call(resultValue);
+        input.onListValuesFetched?.call(resultItemValue);
 
         return Right(
-          buildOutput(itemValue: resultValue),
+          buildOutput(itemValue: resultItemValue),
         );
       }
     }
@@ -107,8 +143,19 @@ abstract class _InitItemListValuesUseCase<
     log("${DateTime.now()} - No need to fetch list values, list type: "
         "${input.itemValue.listType}");
 
-    M resultValue = _buildItemValue(
-      input: input,
+    ValueModel? alignedValue = input.alignSelectedValue
+        ? await _alignCurrentValue(
+            input.itemValue.value,
+            input.itemValue.listValuesFetchResult?.items,
+            fetchParams: fetchParams,
+            keepSelectedValueIfNotInList: input.keepSelectedValueIfNotInList,
+            preselected: input.itemValue.listType!.preselected,
+          )
+        : input.itemValue.value;
+
+    M resultValue = _enrichItemValue(
+      input.itemValue,
+      value: alignedValue,
       listValuesFetchResult: input.itemValue.listValuesFetchResult,
     );
 
@@ -120,61 +167,55 @@ abstract class _InitItemListValuesUseCase<
   }
 
   Future<Either<ConvertouchException, ListValuesFetchResult>> _fetchFirstBatch(
-    I input,
+    ListValuesFetchParams fetchParams,
   ) {
     return fetchListValuesUseCase.execute(
       InputItemsFetchModel(
         pageSize: listValuesPageSize,
         pageNum: 0,
-        fetchParams: ListValuesFetchParams(
-          itemId: input.itemValue.id,
-          listType: input.itemValue.listType!,
-          unit: input.itemValue.unitItem,
-          params: input.paramSetValue,
-          selectedValue: input.itemValue.value,
-        ),
+        fetchParams: fetchParams,
       ),
     );
   }
 
-  M _buildItemValue({
-    required I input,
-    required ListValuesFetchResult? listValuesFetchResult,
-  }) {
-    return input.itemValue.copyWith(
-      value: input.alignSelectedValue
-          ? _alignCurrentValue(input, listValuesFetchResult)
-          : input.itemValue.value,
-      defaultValue: ValueModel.empty,
-      listValuesFetchResult: listValuesFetchResult,
-    ) as M;
-  }
-
-  ValueModel? _alignCurrentValue(
-    I input,
-    ListValuesFetchResult? fetchResult,
-  ) {
-    if (fetchResult == null) {
-      return input.keepSelectedValueIfNotInList ? input.itemValue.value : null;
+  Future<ValueModel?> _alignCurrentValue(
+    ValueModel? value,
+    List<ValueModel>? listValues, {
+    required ListValuesFetchParams? fetchParams,
+    required bool keepSelectedValueIfNotInList,
+    required bool preselected,
+  }) async {
+    if (listValues == null || listValues.isEmpty) {
+      return keepSelectedValueIfNotInList ? value : null;
     }
 
-    if (fetchResult.status == FetchingStatus.failure) {
-      return input.itemValue.value;
-    }
+    ValueModel? foundSelectedValue = ObjectUtils.tryGet(
+      await validateListValueUseCase.execute(
+        InputListValueValidationModel(
+          value: value,
+          fetchParams: fetchParams,
+        ),
+      ),
+    );
 
-    if (input.itemValue.value != null) {
-      if (fetchResult.containsSelectedValue) {
-        return input.itemValue.value;
-      } else if (input.keepSelectedValueIfNotInList) {
-        return input.itemValue.value;
-      }
-    } else if (input.keepSelectedValueIfNotInList) {
+    if (foundSelectedValue != null) {
+      return keepSelectedValueIfNotInList ? value : foundSelectedValue;
+    } else if (keepSelectedValueIfNotInList) {
       return null;
     }
 
-    return input.itemValue.listType!.preselected
-        ? fetchResult.items.firstOrNull
-        : null;
+    return preselected ? listValues.firstOrNull : null;
+  }
+
+  M _enrichItemValue(
+    M itemValue, {
+    ValueModel? value,
+    ListValuesFetchResult? listValuesFetchResult,
+  }) {
+    return itemValue.copyWith(
+      value: Patchable(value, patchNull: true),
+      listValuesFetchResult: Patchable(listValuesFetchResult, patchNull: true),
+    ) as M;
   }
 
   O buildOutput({
@@ -189,6 +230,7 @@ class InitUnitListValuesUseCase extends _InitItemListValuesUseCase<
     OutputUnitValueCalculationModel> {
   const InitUnitListValuesUseCase({
     required super.fetchListValuesUseCase,
+    required super.validateListValueUseCase,
   });
 
   @override
@@ -209,6 +251,7 @@ class InitParamListValuesUseCase extends _InitItemListValuesUseCase<
     OutputParamValueCalculationModel> {
   const InitParamListValuesUseCase({
     required super.fetchListValuesUseCase,
+    required super.validateListValueUseCase,
   });
 
   @override

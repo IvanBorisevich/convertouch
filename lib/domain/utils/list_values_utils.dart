@@ -16,8 +16,14 @@ typedef ListBuilderFunc<T> = List<T> Function({
 
 typedef ValueModelBuilderFunc = ListBuilderFunc<ValueModel>;
 typedef InternalValueFunc = String Function(dynamic raw);
+typedef PublicValueToInternalValueFunc<T> = T Function(T, {UnitModel? unit});
 typedef RawValueMapFunc = dynamic Function(ValueModel v);
-typedef SearchFunc = bool Function(String, ValueModel?);
+typedef SearchStringPredicate = bool Function(String, ValueModel?);
+typedef PublicValuePredicate = bool Function({
+  required ValueModel input,
+  required ValueModel v,
+  required UnitModel? unit,
+});
 
 typedef PublicValueFunc = String Function(
   dynamic raw, {
@@ -29,47 +35,89 @@ InternalValueFunc defaultInternalValueFunc = (r) => r.toString();
 PublicValueFunc defaultPublicValueFunc = (r, {unit, params}) => r.toString();
 RawValueMapFunc defaultRawValueMapFunc = (v) => v.raw;
 
-SearchFunc defaultSearchFunc = (searchString, v) =>
+SearchStringPredicate defaultSearchStringPredicate = (searchString, v) =>
     v?.itemName.toLowerCase().contains(searchString.toLowerCase()) ?? false;
 
-SearchFunc rangesSearchFunc = (searchString, v) {
+PublicValuePredicate defaultPublicValuePredicate = ({
+  required input,
+  required v,
+  unit,
+}) =>
+    v.raw == input.raw;
+
+SearchStringPredicate searchStringPredicateForRange = (searchString, v) {
   if (searchString.isEmpty) {
     return true;
   }
+
   double? inputValue = double.tryParse(searchString);
   return v?.range?.includesNum(inputValue) ?? false;
 };
 
+PublicValuePredicate _publicValuePredicateForRange({
+  PublicValueToInternalValueFunc<double>? inputToInternalValue,
+}) {
+  return ({
+    required input,
+    required v,
+    unit,
+  }) {
+    if (input.range != null) {
+      return input.range == v.range;
+    }
+
+    if (input.raw.isEmpty) {
+      return false;
+    }
+
+    double? publicInputValue = double.tryParse(input.raw);
+
+    if (publicInputValue == null) {
+      return false;
+    }
+
+    double? internalInputValue = inputToInternalValue != null
+        ? inputToInternalValue.call(publicInputValue, unit: unit)
+        : publicInputValue;
+
+    return v.range?.includesNum(internalInputValue) ?? false;
+  };
+}
+
 class ListValueFuncSet {
-  final ListBuilderFunc rawListBuilderFunc;
-  final InternalValueFunc internalListValueBuilderFunc;
-  final PublicValueFunc publicListValueBuilderFunc;
-  final RawValueMapFunc listValueToRawMapFunc;
-  final SearchFunc searchFunc;
+  final ListBuilderFunc rawListBuilder;
+  final InternalValueFunc internalListValueBuilder;
+  final PublicValueFunc publicListValueBuilder;
+  final RawValueMapFunc listValueToRaw;
+  final SearchStringPredicate searchStringPredicate;
+  final PublicValuePredicate publicValuePredicate;
 
   const ListValueFuncSet._({
-    required this.rawListBuilderFunc,
-    required this.internalListValueBuilderFunc,
-    required this.publicListValueBuilderFunc,
-    required this.listValueToRawMapFunc,
-    required this.searchFunc,
+    required this.rawListBuilder,
+    required this.internalListValueBuilder,
+    required this.publicListValueBuilder,
+    required this.listValueToRaw,
+    required this.searchStringPredicate,
+    required this.publicValuePredicate,
   });
 
   factory ListValueFuncSet({
-    required ListBuilderFunc rawListBuilderFunc,
-    InternalValueFunc? internalListValueBuilderFunc,
-    PublicValueFunc? publicListValueBuilderFunc,
-    RawValueMapFunc? listValueToRawMapFunc,
-    SearchFunc? searchFunc,
+    required ListBuilderFunc rawListBuilder,
+    InternalValueFunc? internalListValueBuilder,
+    PublicValueFunc? publicListValueBuilder,
+    RawValueMapFunc? listValueToRaw,
+    SearchStringPredicate? searchStringPredicate,
+    PublicValuePredicate? publicValuePredicate,
   }) {
     return ListValueFuncSet._(
-      rawListBuilderFunc: rawListBuilderFunc,
-      internalListValueBuilderFunc:
-          internalListValueBuilderFunc ?? defaultInternalValueFunc,
-      publicListValueBuilderFunc:
-          publicListValueBuilderFunc ?? defaultPublicValueFunc,
-      listValueToRawMapFunc: listValueToRawMapFunc ?? defaultRawValueMapFunc,
-      searchFunc: searchFunc ?? defaultSearchFunc,
+      rawListBuilder: rawListBuilder,
+      internalListValueBuilder:
+          internalListValueBuilder ?? defaultInternalValueFunc,
+      publicListValueBuilder: publicListValueBuilder ?? defaultPublicValueFunc,
+      listValueToRaw: listValueToRaw ?? defaultRawValueMapFunc,
+      searchStringPredicate:
+          searchStringPredicate ?? defaultSearchStringPredicate,
+      publicValuePredicate: publicValuePredicate ?? defaultPublicValuePredicate,
     );
   }
 
@@ -77,12 +125,12 @@ class ListValueFuncSet {
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) {
-    List srcList = rawListBuilderFunc.call(params: params);
+    List srcList = rawListBuilder.call(params: params);
 
     return srcList.map((v) {
-      String value = internalListValueBuilderFunc.call(v);
+      String value = internalListValueBuilder.call(v);
       String? publicValue =
-          publicListValueBuilderFunc.call(v, unit: unit, params: params);
+          publicListValueBuilder.call(v, unit: unit, params: params);
 
       return ValueModel(
         raw: value,
@@ -98,8 +146,8 @@ class ListValueFuncSet {
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) {
-    dynamic rawValue = listValueToRawMapFunc.call(src);
-    dynamic publicListValue = publicListValueBuilderFunc.call(
+    dynamic rawValue = listValueToRaw.call(src);
+    dynamic publicListValue = publicListValueBuilder.call(
       rawValue,
       unit: unit,
       params: params,
@@ -116,52 +164,55 @@ class ListValueFuncSet {
 
 final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
   ConvertouchListType.person: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => Person.values,
-    internalListValueBuilderFunc: (r) => (r as Person).name,
-    publicListValueBuilderFunc: (r, {unit, params}) => (r as Person).name,
+    rawListBuilder: ({params}) => Person.values,
+    internalListValueBuilder: (r) => (r as Person).name,
+    publicListValueBuilder: (r, {unit, params}) => (r as Person).name,
   ),
   ConvertouchListType.garment: ListValueFuncSet(
-    rawListBuilderFunc: getGarments,
-    internalListValueBuilderFunc: (r) => (r as Garment).name,
-    publicListValueBuilderFunc: (r, {unit, params}) => (r as Garment).name,
+    rawListBuilder: getGarments,
+    internalListValueBuilder: (r) => (r as Garment).name,
+    publicListValueBuilder: (r, {unit, params}) => (r as Garment).name,
   ),
   ConvertouchListType.clothesHeightRange: ListValueFuncSet(
-    rawListBuilderFunc: getHeightRangesCm,
-    internalListValueBuilderFunc: (r) => (r as NumRange).rangeName,
-    publicListValueBuilderFunc: (r, {unit, params}) =>
+    rawListBuilder: getHeightRangesCm,
+    internalListValueBuilder: (r) => (r as NumRange).rangeName,
+    publicListValueBuilder: (r, {unit, params}) =>
         (r as NumRange).copyWithFactor(0.01 / unit!.coefficient!).rangeName,
-    listValueToRawMapFunc: (v) => v.range,
-    searchFunc: rangesSearchFunc,
+    listValueToRaw: (v) => v.range,
+    searchStringPredicate: searchStringPredicateForRange,
+    publicValuePredicate: _publicValuePredicateForRange(
+      inputToInternalValue: (inputPublicNum, {unit}) =>
+          inputPublicNum * unit!.coefficient! * 100,
+    ),
   ),
   ConvertouchListType.ringDiameterRange: ListValueFuncSet(
-    rawListBuilderFunc: getRingDiameterRangesMm,
-    internalListValueBuilderFunc: (r) => (r as NumRange).rangeName,
-    publicListValueBuilderFunc: (r, {unit, params}) =>
+    rawListBuilder: getRingDiameterRangesMm,
+    internalListValueBuilder: (r) => (r as NumRange).rangeName,
+    publicListValueBuilder: (r, {unit, params}) =>
         (r as NumRange).copyWithFactor(0.001 / unit!.coefficient!).rangeName,
-    listValueToRawMapFunc: (v) => v.range,
-    searchFunc: rangesSearchFunc,
+    listValueToRaw: (v) => v.range,
+    searchStringPredicate: searchStringPredicateForRange,
   ),
   ConvertouchListType.ringCircumferenceRange: ListValueFuncSet(
-    rawListBuilderFunc: getRingDiameterRangesMm,
-    internalListValueBuilderFunc: (r) => (r as NumRange).rangeName,
-    publicListValueBuilderFunc: (r, {unit, params}) => (r as NumRange)
+    rawListBuilder: getRingDiameterRangesMm,
+    internalListValueBuilder: (r) => (r as NumRange).rangeName,
+    publicListValueBuilder: (r, {unit, params}) => (r as NumRange)
         .copyWithFactor(pi * 0.001 / unit!.coefficient!)
         .rangeName,
-    listValueToRawMapFunc: (v) => v.range,
-    searchFunc: rangesSearchFunc,
+    listValueToRaw: (v) => v.range,
+    searchStringPredicate: searchStringPredicateForRange,
   ),
   ConvertouchListType.barbellBarWeight: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       10,
       20,
     ],
-    publicListValueBuilderFunc: (r, {unit, params}) =>
-        DoubleValueUtils.numToStr(
+    publicListValueBuilder: (r, {unit, params}) => DoubleValueUtils.numToStr(
       unit != null ? r / unit.coefficient! : r,
       fractionDigits: 0,
     ),
-    listValueToRawMapFunc: (v) => v.numVal!.toInt(),
-    searchFunc: (searchString, v) {
+    listValueToRaw: (v) => v.numVal!.toInt(),
+    searchStringPredicate: (searchString, v) {
       if (v == null) {
         return false;
       }
@@ -176,7 +227,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     },
   ),
   ConvertouchListType.clothesSizeInter: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       "XXS",
       "XS",
       "S",
@@ -188,13 +239,13 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ],
   ),
   ConvertouchListType.clothesSizeUs: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(2, 14, step: 2),
       ...ObjectUtils.generateNumStrList(28, 42, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeJp: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       'S',
       'M',
       'L',
@@ -206,48 +257,48 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ],
   ),
   ConvertouchListType.clothesSizeFr: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(34, 48, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeEu: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(34, 56, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeRu: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(40, 56, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeIt: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(38, 56, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeUk: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(6, 18, step: 2),
       ...ObjectUtils.generateNumStrList(26, 40, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeDe: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(32, 56, step: 2),
     ],
   ),
   ConvertouchListType.clothesSizeEs: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(34, 48, step: 2),
     ],
   ),
   ConvertouchListType.ringSizeUs: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.generateNumStrList(3, 15, step: 0.5, fractionDigits: 1),
     ],
   ),
   ConvertouchListType.ringSizeUk: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       'F',
       'G',
       'H',
@@ -276,7 +327,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ],
   ),
   ConvertouchListType.ringSizeDe: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       44,
       47,
       48,
@@ -303,7 +354,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ],
   ),
   ConvertouchListType.ringSizeEs: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => ObjectUtils.fromNumList([
+    rawListBuilder: ({params}) => ObjectUtils.fromNumList([
       4,
       6.5,
       8,
@@ -331,7 +382,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ]),
   ),
   ConvertouchListType.ringSizeFr: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => ObjectUtils.fromNumList([
+    rawListBuilder: ({params}) => ObjectUtils.fromNumList([
       44,
       46.5,
       48,
@@ -359,7 +410,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ]),
   ),
   ConvertouchListType.ringSizeRu: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => ObjectUtils.fromNumList([
+    rawListBuilder: ({params}) => ObjectUtils.fromNumList([
       44,
       46.5,
       48,
@@ -387,7 +438,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ]),
   ),
   ConvertouchListType.ringSizeIt: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => ObjectUtils.fromNumList([
+    rawListBuilder: ({params}) => ObjectUtils.fromNumList([
       4,
       5.5,
       7,
@@ -415,7 +466,7 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
     ]),
   ),
   ConvertouchListType.ringSizeJp: ListValueFuncSet(
-    rawListBuilderFunc: ({params}) => [
+    rawListBuilder: ({params}) => [
       ...ObjectUtils.fromNumList([4, 5, 7, 8, 9, 10, 11]),
       ...ObjectUtils.generateNumStrList(13, 20),
       ...ObjectUtils.generateNumStrList(22, 23),
