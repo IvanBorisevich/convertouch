@@ -2,7 +2,8 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:equatable/equatable.dart';
 
 enum ExceptionSeverity {
-  error,
+  errorNewPage,
+  errorNotification,
   warning,
   info,
 }
@@ -16,7 +17,7 @@ class ConvertouchException extends Equatable {
 
   const ConvertouchException({
     required this.message,
-    this.severity = ExceptionSeverity.error,
+    this.severity = ExceptionSeverity.errorNewPage,
     required this.stackTrace,
     required this.dateTime,
     this.handlingAction,
@@ -31,7 +32,10 @@ class ConvertouchException extends Equatable {
         handlingAction,
       ];
 
-  bool get isError => severity == ExceptionSeverity.error;
+  bool get isErrorNewPage => severity == ExceptionSeverity.errorNewPage;
+
+  bool get isErrorNotification =>
+      severity == ExceptionSeverity.errorNotification;
 
   bool get isWarning => severity == ExceptionSeverity.warning;
 

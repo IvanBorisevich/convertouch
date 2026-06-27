@@ -98,12 +98,14 @@ void showSnackBar(
     case ExceptionSeverity.warning:
       foreground = snackBarColor.foreground.warning;
       break;
-    case ExceptionSeverity.error:
+    case ExceptionSeverity.errorNotification:
       foreground = snackBarColor.foreground.error;
       break;
     case ExceptionSeverity.info:
       foreground = snackBarColor.foreground.regular;
       break;
+    case ExceptionSeverity.errorNewPage:
+      return;
   }
 
   ScaffoldMessenger.of(context).showSnackBar(

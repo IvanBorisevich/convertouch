@@ -195,7 +195,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                         (route) => route.isFirst,
                       );
                     }
-                  } else if (state.exception!.isError) {
+                  } else if (state.exception!.isErrorNewPage) {
                     navKey.currentState?.push(
                       MaterialPageRoute(
                         builder: (context) => ConvertouchErrorPage(
