@@ -311,6 +311,13 @@ final ListValuesFetchResult ringCircumferenceRangesInMm = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
+final ListValuesFetchResult ringCircumferenceRangesInCm = OutputItemsFetchModel(
+  items: listValuesFuncSets[ConvertouchListType.ringCircumferenceRange]!
+      .buildListValues(unit: centimeter),
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
 const ListValuesFetchResult exchangeRateSources = ListValuesFetchResult(
   items: [
     ValueModel.rawStr('FloatRates'),

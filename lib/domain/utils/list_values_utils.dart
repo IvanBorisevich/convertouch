@@ -192,6 +192,10 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
         (r as NumRange).copyWithFactor(0.001 / unit!.coefficient!).rangeName,
     listValueToRaw: (v) => v.range,
     searchStringPredicate: searchStringPredicateForRange,
+    publicValuePredicate: _publicValuePredicateForRange(
+      inputToInternalValue: (inputPublicNum, {unit}) =>
+          inputPublicNum * unit!.coefficient! * 1000,
+    ),
   ),
   ConvertouchListType.ringCircumferenceRange: ListValueFuncSet(
     rawListBuilder: getRingDiameterRangesMm,
@@ -201,6 +205,10 @@ final Map<ConvertouchListType, ListValueFuncSet> listValuesFuncSets = {
         .rangeName,
     listValueToRaw: (v) => v.range,
     searchStringPredicate: searchStringPredicateForRange,
+    publicValuePredicate: _publicValuePredicateForRange(
+      inputToInternalValue: (inputPublicNum, {unit}) =>
+          inputPublicNum * unit!.coefficient! * 1000 / pi,
+    ),
   ),
   ConvertouchListType.barbellBarWeight: ListValueFuncSet(
     rawListBuilder: ({params}) => [

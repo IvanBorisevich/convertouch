@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
@@ -89,7 +91,7 @@ void main() {
       "should NOT init 'Garment' list values ('Person' is not selected), "
       "should remove 'Height' value since it has no list values"
       "should init list values of unit values", () async {
-    var conversion = ConversionModel(
+    var misalignedConversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
@@ -128,7 +130,7 @@ void main() {
       await useCase.execute(
         InputConversionAlignModel(
           asyncAlign: false,
-          conversion: conversion,
+          conversion: misalignedConversion,
           onConversionParamsAligned: (alignedConversion) {
             expect(
               alignedConversion.toJson(saveListValues: true),
@@ -254,7 +256,7 @@ void main() {
       "should init 'Garment' list values with preselect, "
       "should init 'Height' list values ('Garment' is selected), "
       "should init list values with preselect", () async {
-    var conversion = ConversionModel(
+    var misalignedConversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, null, null),
       params: ConversionParamSetValueBulkModel(
@@ -289,7 +291,7 @@ void main() {
       await useCase.execute(
         InputConversionAlignModel(
           asyncAlign: false,
-          conversion: conversion,
+          conversion: misalignedConversion,
           onConversionParamsAligned: (alignedConversion) {
             expect(
               alignedConversion.toJson(
@@ -419,7 +421,7 @@ void main() {
         "should NOT init 'Garment' list values ('Person' is not selected), "
         "should remove 'Height' value since it has no list values"
         "should init list values of unit values", () async {
-      var conversion = ConversionModel(
+      var misalignedConversion = ConversionModel(
         unitGroup: clothesSizeGroup,
         params: ConversionParamSetValueBulkModel(
           paramSetValues: [
@@ -458,7 +460,7 @@ void main() {
         await useCase.execute(
           InputConversionAlignModel(
             asyncAlign: false,
-            conversion: conversion,
+            conversion: misalignedConversion,
             onConversionParamsAligned: (alignedConversion) {
               expect(
                 alignedConversion.toJson(saveListValues: true),
@@ -584,7 +586,7 @@ void main() {
         "should init 'Garment' list values with preselect, "
         "should init 'Height' list values ('Garment' is selected), "
         "should init list values with preselect", () async {
-      var conversion = ConversionModel(
+      var misalignedConversion = ConversionModel(
         unitGroup: clothesSizeGroup,
         srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, null, null),
         params: ConversionParamSetValueBulkModel(
@@ -623,7 +625,7 @@ void main() {
         await useCase.execute(
           InputConversionAlignModel(
             asyncAlign: false,
-            conversion: conversion,
+            conversion: misalignedConversion,
             onConversionParamsAligned: (alignedConversion) {
               expect(
                 alignedConversion.toJson(
@@ -734,6 +736,181 @@ void main() {
                       germanyClothesSizes.items[0],
                       null,
                       listValuesFetchResult: germanyClothesSizes,
+                    ),
+                  ],
+                ).toJson(saveListValues: true),
+              );
+            },
+          ),
+        ),
+      );
+    });
+
+    test(
+        "[Ring size] Should init 'Diameter' and 'Circumference' list values, "
+        "should align non-list values, "
+        "should init unit list values with preselect", () async {
+      var misalignedConversion = ConversionModel(
+        unitGroup: ringSizeGroup,
+        params: ConversionParamSetValueBulkModel(
+          paramSetValues: [
+            ConversionParamSetValueModel(
+              paramSet: ringSizeByDiameterParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(
+                  diameterParam,
+                  15.4,
+                  null,
+                  unit: millimeter,
+                ),
+              ],
+            ),
+            ConversionParamSetValueModel(
+              paramSet: ringSizeByDiameterParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(
+                  circumferenceParam,
+                  1.61 * pi,
+                  null,
+                  unit: centimeter,
+                ),
+              ],
+            ),
+          ],
+          selectedIndex: 0,
+        ),
+        srcUnitValue: ConversionUnitValueModel.tuple(
+          esRingSize,
+          null,
+          null,
+        ),
+        convertedUnitValues: [
+          ConversionUnitValueModel.tuple(
+            esRingSize,
+            null,
+            null,
+          ),
+          ConversionUnitValueModel.tuple(
+            usaRingSize,
+            null,
+            null,
+          ),
+        ],
+      );
+
+      ObjectUtils.tryGet(
+        await useCase.execute(
+          InputConversionAlignModel(
+            asyncAlign: false,
+            conversion: misalignedConversion,
+            onConversionParamsAligned: (alignedConversion) {
+              expect(
+                alignedConversion.toJson(
+                  saveListValues: true,
+                ),
+                ConversionModel(
+                  unitGroup: ringSizeGroup,
+                  params: ConversionParamSetValueBulkModel(
+                    paramSetValues: [
+                      ConversionParamSetValueModel(
+                        paramSet: ringSizeByDiameterParamSet,
+                        paramValues: [
+                          ConversionParamValueModel.tuple(
+                            diameterParam,
+                            ringDiameterRangesInMm.items[3],
+                            null,
+                            unit: millimeter,
+                            listValuesFetchResult: ringDiameterRangesInMm,
+                          ),
+                        ],
+                      ),
+                      ConversionParamSetValueModel(
+                        paramSet: ringSizeByDiameterParamSet,
+                        paramValues: [
+                          ConversionParamValueModel.tuple(
+                            circumferenceParam,
+                            ringCircumferenceRangesInCm.items[4],
+                            null,
+                            unit: centimeter,
+                            listValuesFetchResult: ringCircumferenceRangesInCm,
+                          ),
+                        ],
+                      ),
+                    ],
+                    selectedIndex: 0,
+                  ),
+                  srcUnitValue: ConversionUnitValueModel.tuple(
+                    esRingSize,
+                    null,
+                    null,
+                  ),
+                  convertedUnitValues: [
+                    ConversionUnitValueModel.tuple(
+                      esRingSize,
+                      null,
+                      null,
+                    ),
+                    ConversionUnitValueModel.tuple(
+                      usaRingSize,
+                      null,
+                      null,
+                    ),
+                  ],
+                ).toJson(saveListValues: true),
+              );
+            },
+            onConversionUnitValuesAligned: (alignedConversion) {
+              expect(
+                alignedConversion.toJson(saveListValues: true),
+                ConversionModel(
+                  unitGroup: ringSizeGroup,
+                  params: ConversionParamSetValueBulkModel(
+                    paramSetValues: [
+                      ConversionParamSetValueModel(
+                        paramSet: ringSizeByDiameterParamSet,
+                        paramValues: [
+                          ConversionParamValueModel.tuple(
+                            diameterParam,
+                            ringDiameterRangesInMm.items[3],
+                            null,
+                            unit: millimeter,
+                            listValuesFetchResult: ringDiameterRangesInMm,
+                          ),
+                        ],
+                      ),
+                      ConversionParamSetValueModel(
+                        paramSet: ringSizeByDiameterParamSet,
+                        paramValues: [
+                          ConversionParamValueModel.tuple(
+                            circumferenceParam,
+                            ringCircumferenceRangesInCm.items[4],
+                            null,
+                            unit: centimeter,
+                            listValuesFetchResult: ringCircumferenceRangesInCm,
+                          ),
+                        ],
+                      ),
+                    ],
+                    selectedIndex: 0,
+                  ),
+                  srcUnitValue: ConversionUnitValueModel.tuple(
+                    esRingSize,
+                    esRingSizes.items[0],
+                    null,
+                    listValuesFetchResult: esRingSizes,
+                  ),
+                  convertedUnitValues: [
+                    ConversionUnitValueModel.tuple(
+                      esRingSize,
+                      esRingSizes.items[0],
+                      null,
+                      listValuesFetchResult: esRingSizes,
+                    ),
+                    ConversionUnitValueModel.tuple(
+                      usaRingSize,
+                      usaRingSizes.items[0],
+                      null,
+                      listValuesFetchResult: usaRingSizes,
                     ),
                   ],
                 ).toJson(saveListValues: true),
