@@ -375,6 +375,7 @@ class AddParamSetsToConversion extends ConversionParamsEvent {
 
 class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
   const RemoveSelectedParamSetFromConversion({
+    super.onConversionUpdated,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -386,6 +387,7 @@ class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
 
 class RemoveAllParamSetsFromConversion extends ConversionParamsEvent {
   const RemoveAllParamSetsFromConversion({
+    super.onConversionUpdated,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -401,6 +403,7 @@ class SelectParamSetInConversion extends ConversionParamsEvent {
   const SelectParamSetInConversion({
     required this.newSelectedParamSetIndex,
     super.onError,
+    super.onConversionUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
   @override

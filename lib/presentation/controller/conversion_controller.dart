@@ -150,7 +150,7 @@ class ConversionController {
     );
   }
 
-  void changeConversionItemUnit(
+  void replaceConversionItemUnit(
     BuildContext context, {
     required int currentUnitId,
     required UnitModel newUnit,
@@ -182,7 +182,7 @@ class ConversionController {
     );
   }
 
-  void changeConversionItemValue(
+  void editConversionItemValue(
     BuildContext context, {
     required int unitId,
     required ValueModel? newValue,
@@ -355,6 +355,17 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
+        onConversionUpdated: (updatedConversion, {info}) {
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateUnitValue(
+              context,
+              id: unitValue.id,
+              newUnitValue: unitValue,
+              isSource:
+                  unitValue.unit.id == updatedConversion.srcUnitValue?.unit.id,
+            );
+          }
+        },
       ),
     );
   }
@@ -364,6 +375,17 @@ class ConversionController {
 
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveSelectedParamSetFromConversion(
+        onConversionUpdated: (updatedConversion, {info}) {
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateUnitValue(
+              context,
+              id: unitValue.id,
+              newUnitValue: unitValue,
+              isSource:
+                  unitValue.unit.id == updatedConversion.srcUnitValue?.unit.id,
+            );
+          }
+        },
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
@@ -376,6 +398,17 @@ class ConversionController {
 
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveAllParamSetsFromConversion(
+        onConversionUpdated: (updatedConversion, {info}) {
+          for (final unitValue in updatedConversion.convertedUnitValues) {
+            conversionItemController.updateUnitValue(
+              context,
+              id: unitValue.id,
+              newUnitValue: unitValue,
+              isSource:
+                  unitValue.unit.id == updatedConversion.srcUnitValue?.unit.id,
+            );
+          }
+        },
         onError: (error) {
           navigationController.showException(context, exception: error);
         },

@@ -106,7 +106,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                 removalModeEnabled: false,
                 onItemTap: (unit) {
                   if (itemsSelectionState.singleItemSelectionMode) {
-                    conversionController.changeConversionItemUnit(
+                    conversionController.replaceConversionItemUnit(
                       context,
                       currentUnitId: itemsSelectionState.selectedId!,
                       newUnit: unit,

@@ -48,38 +48,43 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       pageState.details.editMode
-                          ? ConvertouchMenuListItem(
-                              pageState.details.unitGroup,
-                              checkIconVisible: false,
-                              checkIconVisibleIfUnchecked: false,
-                              checked: false,
-                              colors: appColors[appState.theme]
-                                  .unitGroupsMenu
-                                  .menuItem,
-                              disabled: false,
-                              editIconVisible: false,
-                              logoFunc: (
-                                item, {
-                                required Color foreground,
-                                required Color matchForeground,
-                                required Color matchBackground,
-                                required double fontSize,
-                              }) {
-                                return IconUtils.getItemLogoIcon(
-                                  iconName: item.iconName,
-                                  color: foreground,
-                                );
-                              },
-                              onTap: () {
-                                FocusScope.of(context).unfocus();
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                top: _verticalSpacing,
+                              ),
+                              child: ConvertouchMenuListItem(
+                                pageState.details.unitGroup,
+                                checkIconVisible: false,
+                                checkIconVisibleIfUnchecked: false,
+                                checked: false,
+                                colors: appColors[appState.theme]
+                                    .unitGroupsMenu
+                                    .menuItem,
+                                disabled: false,
+                                editIconVisible: false,
+                                logoFunc: (
+                                  item, {
+                                  required Color foreground,
+                                  required Color matchForeground,
+                                  required Color matchBackground,
+                                  required double fontSize,
+                                }) {
+                                  return IconUtils.getItemLogoIcon(
+                                    iconName: item.iconName,
+                                    color: foreground,
+                                  );
+                                },
+                                onTap: () {
+                                  FocusScope.of(context).unfocus();
 
-                                groupsController
-                                    .showGroupsForChangeInUnitDetails(
-                                  context,
-                                  currentGroupId:
-                                      pageState.details.unitGroup.id,
-                                );
-                              },
+                                  groupsController
+                                      .showGroupsForChangeInUnitDetails(
+                                    context,
+                                    currentGroupId:
+                                        pageState.details.unitGroup.id,
+                                  );
+                                },
+                              ),
                             )
                           : ConvertouchDetailsItem(
                               name: 'Unit Group',

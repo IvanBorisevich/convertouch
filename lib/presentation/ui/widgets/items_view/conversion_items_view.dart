@@ -130,7 +130,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                       }
                     },
                     onValueChanged: (value) {
-                      conversionController.changeConversionItemValue(
+                      conversionController.editConversionItemValue(
                         context,
                         unitId: resultUnitValue.unit.id,
                         newValue: value,
