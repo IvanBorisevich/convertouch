@@ -11,7 +11,6 @@ class ConversionParamModel extends IdNameItemModel {
   final ConvertouchListType? listType;
   final UnitModel? defaultUnit;
   final int paramSetId;
-  final bool optional;
 
   const ConversionParamModel({
     super.id,
@@ -22,7 +21,6 @@ class ConversionParamModel extends IdNameItemModel {
     this.listType,
     this.defaultUnit,
     required this.paramSetId,
-    this.optional = false,
   }) : super(itemType: ItemType.conversionParam);
 
   const ConversionParamModel._()
@@ -42,7 +40,6 @@ class ConversionParamModel extends IdNameItemModel {
         listType,
         defaultUnit,
         paramSetId,
-    optional,
       ];
 
   ConversionParamModel copyWith({
@@ -54,7 +51,6 @@ class ConversionParamModel extends IdNameItemModel {
     ConvertouchListType? listType,
     UnitModel? defaultUnit,
     int? paramSetId,
-    bool? optional,
   }) {
     return ConversionParamModel(
       id: id ?? this.id,
@@ -65,7 +61,6 @@ class ConversionParamModel extends IdNameItemModel {
       listType: listType ?? this.listType,
       defaultUnit: defaultUnit ?? this.defaultUnit,
       paramSetId: paramSetId ?? this.paramSetId,
-      optional: optional ?? this.optional,
     );
   }
 
@@ -80,7 +75,6 @@ class ConversionParamModel extends IdNameItemModel {
       "listType": listType?.id,
       "defaultUnit": defaultUnit?.toJson(removeNulls: removeNulls),
       "paramSetId": paramSetId,
-      "optional": optional ? true : null,
     };
 
     if (removeNulls) {
@@ -104,7 +98,6 @@ class ConversionParamModel extends IdNameItemModel {
       calculable: json["calculable"],
       unitGroupId: json["unitGroupId"],
       defaultUnit: UnitModel.fromJson(json["defaultUnit"]),
-      optional: json["optional"] ?? false,
     );
   }
 
@@ -118,7 +111,6 @@ class ConversionParamModel extends IdNameItemModel {
         'valueType: $valueType, '
         'listType: $listType, '
         'defaultUnit: $defaultUnit, '
-        'paramSetId: $paramSetId, '
-        'optional: $optional}';
+        'paramSetId: $paramSetId}';
   }
 }

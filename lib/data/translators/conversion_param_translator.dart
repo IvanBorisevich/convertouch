@@ -20,7 +20,6 @@ class ConversionParamTranslator
       valueType: model.valueType.id,
       listType: model.listType?.id,
       paramSetId: model.paramSetId,
-      optional: bool2int(model.optional),
     );
   }
 
@@ -34,7 +33,6 @@ class ConversionParamTranslator
       unitGroupId: entity.unitGroupId,
       valueType: ConvertouchValueType.valueOf(entity.valueType)!,
       listType: ConvertouchListType.valueOf(entity.listType),
-      optional: int2bool(entity.optional, ifNull: false),
     );
   }
 }

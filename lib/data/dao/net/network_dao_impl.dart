@@ -3,6 +3,7 @@ import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/env/env.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkDaoImpl extends NetworkDao {
@@ -21,7 +22,8 @@ class NetworkDaoImpl extends NetworkDao {
     if (urlPath == exchangeRateSourcesPath) {
       return await Future.delayed(
         const Duration(seconds: 5),
-        () => '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
+        () =>
+            '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
       );
     }
 
@@ -34,7 +36,7 @@ class NetworkDaoImpl extends NetworkDao {
 
     await _checkConnection();
 
-    final uri = Uri.https(apiHost, urlPath, queryParams);
+    final uri = Uri.https(Env.apiHost, urlPath, queryParams);
     final http.Response response =
         await http.get(uri, headers: headers).catchError(
       (err, stackTrace) {

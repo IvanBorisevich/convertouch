@@ -32,7 +32,6 @@ class ConversionParamEntity extends ConvertouchEntity {
   final int? defaultUnitId;
   @ColumnInfo(name: 'param_set_id')
   final int paramSetId;
-  final int? optional;
 
   const ConversionParamEntity({
     super.id,
@@ -43,7 +42,6 @@ class ConversionParamEntity extends ConvertouchEntity {
     this.listType,
     this.defaultUnitId,
     required this.paramSetId,
-    this.optional,
   });
 
   @override
@@ -57,7 +55,6 @@ class ConversionParamEntity extends ConvertouchEntity {
       'value_type': valueType,
       'default_unit_id': defaultUnitId,
       'list_type': listType,
-      'optional': optional,
     };
   }
 
@@ -82,7 +79,6 @@ class ConversionParamEntity extends ConvertouchEntity {
       'list_type': item['listType'] != null
           ? (item['listType'] as ConvertouchListType).id
           : null,
-      'optional': bool2int(item['optional']),
     }, excludedColumns: excludedColumns);
   }
 }
