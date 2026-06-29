@@ -13,6 +13,7 @@ import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
@@ -57,9 +58,11 @@ const BorderRadius _borderRadius = BorderRadius.all(Radius.circular(15));
 const double _textHeightCoefficient = 1.2;
 
 const double _defaultFontSize = 17;
-const EdgeInsets _defaultInputFieldMargin = EdgeInsets.symmetric(
-  vertical: 10,
-  horizontal: 14,
+const EdgeInsets _defaultInputFieldMargin = EdgeInsets.only(
+  top: 10,
+  bottom: 10,
+  left: 14,
+  right: 14,
 );
 
 const double _refreshButtonWidth = 25;
@@ -922,13 +925,36 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     return ValueListenableBuilder(
                       valueListenable: _selectedValueNotifier,
                       builder: (_, selectedValue, child) {
-                        return Text(
-                          selectedValue?.itemName ?? _noValueHint,
-                          style: _inputFieldTextStyle(
-                            fontSize: widget.fontSize,
-                            foregroundColor: widget.foregroundColor,
-                          ),
-                          maxLines: 1,
+                        String? iconUri =
+                            widget.model.listType.defaultIconUri != null
+                                ? (value.iconUri ??
+                                    widget.model.listType.defaultIconUri)
+                                : null;
+
+                        return Row(
+                          children: [
+                            iconUri != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: IconUtils.getSvgIcon(
+                                      iconUri,
+                                      color: widget
+                                          .dropdownColors.foreground.regular,
+                                      size: 14,
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                            Expanded(
+                              child: Text(
+                                selectedValue?.itemName ?? _noValueHint,
+                                style: _inputFieldTextStyle(
+                                  fontSize: widget.fontSize,
+                                  foregroundColor: widget.foregroundColor,
+                                ),
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
                         );
                       },
                     );
@@ -1085,24 +1111,46 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       ];
     }
 
-    List<DropdownItem<ValueModel>> items = listValuesFetchResult.items
-        .map(
-          (value) => DropdownItem(
-            value: value,
-            height: _defaultListItemHeight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 17),
-              child: Text(
-                value.itemName,
-                style: _inputFieldTextStyle(
-                  fontSize: widget.fontSize,
-                  foregroundColor: widget.dropdownColors.foreground.regular,
+    List<DropdownItem<ValueModel>> items = listValuesFetchResult.items.map(
+      (value) {
+        String? iconUri = widget.model.listType.defaultIconUri != null
+            ? (value.iconUri ?? widget.model.listType.defaultIconUri)
+            : null;
+
+        return DropdownItem(
+          value: value,
+          height: _defaultListItemHeight,
+          child: Row(
+            children: [
+              iconUri != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: IconUtils.getSvgIcon(
+                        iconUri,
+                        color: widget.dropdownColors.foreground.regular,
+                        size: 14,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: iconUri != null ? 10 : 17,
+                  ),
+                  child: Text(
+                    value.itemName,
+                    style: _inputFieldTextStyle(
+                      fontSize: widget.fontSize,
+                      foregroundColor: widget.dropdownColors.foreground.regular,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        )
-        .toList();
+        );
+      },
+    ).toList();
 
     if (listValuesFetchResult.status == FetchingStatus.loading) {
       items.add(

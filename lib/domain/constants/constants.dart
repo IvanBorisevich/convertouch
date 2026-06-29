@@ -232,6 +232,7 @@ enum ConvertouchListType {
     fetchedViaApi: true,
     preselected: true,
     cached: true,
+    defaultIconUri: IconKeys.dataSource,
   ),
   clothesHeightRange(24),
   ringDiameterRange(25),
@@ -254,12 +255,16 @@ enum ConvertouchListType {
   /// The type of list value itself - the keyboard type depends on it
   final ConvertouchValueType listValuesType;
 
+  /// Default prefix icon uri for list values of this type
+  final String? defaultIconUri;
+
   const ConvertouchListType(
     this.id, {
     this.listValuesType = ConvertouchValueType.text,
     this.fetchedViaApi = false,
     this.cached = false,
     this.preselected = true,
+    this.defaultIconUri,
   });
 
   static ConvertouchListType? valueOf(int? id) {

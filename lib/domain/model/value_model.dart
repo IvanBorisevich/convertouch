@@ -14,12 +14,14 @@ class ValueModel extends IdNameSearchableItemModel {
   final String? alt;
   final double? numVal;
   final NumRange? range;
+  final String? iconUri;
 
   const ValueModel({
     required this.raw,
     required this.alt,
     this.numVal,
     this.range,
+    this.iconUri,
   }) : super(
           id: -1,
           name: '',
@@ -147,6 +149,7 @@ class ValueModel extends IdNameSearchableItemModel {
       "alt": alt,
       "num": numVal,
       "range": range?.toJson(removeNulls: removeNulls),
+      "iconUri": iconUri,
     };
 
     if (removeNulls) {
@@ -172,6 +175,7 @@ class ValueModel extends IdNameSearchableItemModel {
           double.tryParse(raw),
       alt: json["alt"] ?? json["scientific"] ?? raw,
       range: NumRange.fromJson(json["range"]),
+      iconUri: json["iconUri"],
     );
   }
 
