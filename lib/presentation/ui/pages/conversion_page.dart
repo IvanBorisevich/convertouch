@@ -60,8 +60,8 @@ class ConvertouchConversionPage extends StatelessWidget {
               builder: (_, paramsExist) {
                 return paramsExist
                     ? IconButton(
-                        icon: IconUtils.getIcon(
-                          IconNames.parameters,
+                        icon: IconUtils.getSvgIcon(
+                          IconKeys.parameters,
                           color: pageColors.appBar.foreground.regular,
                           size: 22,
                         ),

@@ -823,7 +823,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Pressure",
+    "groupName": GroupNames.pressure,
     "iconName": "pressure-group.png",
     "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
@@ -840,7 +840,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Speed",
+    "groupName": GroupNames.speed,
     "iconName": "speed-group.png",
     "valueType": ConvertouchValueType.decimalNonNegative,
     "minValue": 0,
@@ -879,7 +879,7 @@ const unitsV1 = [
     ]
   },
   {
-    "groupName": "Angle",
+    "groupName": GroupNames.angle,
     "iconName": "angle-group.png",
     "valueType": ConvertouchValueType.decimal,
     "units": [
@@ -955,7 +955,7 @@ const unitsV3 = [
     ]
   },
   {
-    "groupName": "Angle",
+    "groupName": GroupNames.angle,
     "units": [
       {
         "code": "arcmin",
@@ -1230,4 +1230,73 @@ const unitsV6 = [
       {"code": "ft²", "name": "Square Foot", "coefficient": 0.09290304},
     ]
   },
+];
+
+const unitsV7 = [
+  {
+    "groupName": GroupNames.angle,
+    forUpdate: {
+      "iconName": IconKeys.angle,
+    },
+  },
+  {
+    "groupName": GroupNames.area,
+    forUpdate: {
+      "iconName": IconKeys.area,
+    },
+  },
+  {
+    "groupName": GroupNames.clothesSize,
+    forUpdate: {
+      "iconName": IconKeys.clothesSize,
+    },
+  },
+  {
+    "groupName": GroupNames.currency,
+    forUpdate: {
+      "iconName": IconKeys.currency,
+    },
+  },
+  {
+    "groupName": GroupNames.length,
+    forUpdate: {
+      "iconName": IconKeys.length,
+    },
+  },
+  {
+    "groupName": GroupNames.mass,
+    forUpdate: {
+      "iconName": IconKeys.mass,
+    },
+  },
+  {
+    "groupName": GroupNames.pressure,
+    forUpdate: {
+      "iconName": IconKeys.pressure,
+    },
+  },
+  {
+    "groupName": GroupNames.ringSize,
+    forUpdate: {
+      "iconName": IconKeys.ringSize,
+    },
+  },
+  {
+    "groupName": GroupNames.speed,
+    forUpdate: {
+      "iconName": IconKeys.speed,
+    },
+  },
+  {
+    "groupName": GroupNames.temperature,
+    forUpdate: {
+      "iconName": IconKeys.temperature,
+    },
+  },
+  {
+    "groupName": GroupNames.volume,
+    forUpdate: {
+      "iconName": IconKeys.volume,
+    },
+  }
 ];

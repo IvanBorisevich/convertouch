@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -300,9 +299,7 @@ class AboutSettingItem extends StatelessWidget {
           context,
           colors: colors,
           theme: theme,
-          applicationName: appName,
           applicationVersion: value,
-          applicationLegalese: "© ${DateTime.now().year} johnbor7",
         );
       },
     );
@@ -312,9 +309,7 @@ class AboutSettingItem extends StatelessWidget {
     BuildContext context, {
     required SettingItemColorScheme colors,
     required ConvertouchUITheme theme,
-    required String applicationName,
     required String applicationVersion,
-    required String applicationLegalese,
   }) {
     showConvertouchDialog(
       currentTheme: theme,
@@ -322,7 +317,6 @@ class AboutSettingItem extends StatelessWidget {
       builder: (context, setStateDialog) {
         return ConvertouchAboutDialog(
           applicationVersion: applicationVersion,
-          applicationLegalese: applicationLegalese,
           colors: colors,
         );
       },

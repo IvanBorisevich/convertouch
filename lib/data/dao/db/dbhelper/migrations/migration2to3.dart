@@ -6,6 +6,8 @@ import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Migration2to3 extends ConvertouchDbMigration {
+  const Migration2to3();
+
   @override
   Future<void> execute(Database database) async {
     log("Migration database from version 2 to 3");

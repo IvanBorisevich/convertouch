@@ -6,6 +6,8 @@ import 'package:convertouch/data/dao/db/utils/sql_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 class InitialMigration extends ConvertouchDbMigration {
+  const InitialMigration();
+
   @override
   Future<void> execute(Database database) async {
     log("Initial migration database for version 1");

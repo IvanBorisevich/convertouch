@@ -1,5 +1,4 @@
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -41,17 +40,11 @@ class ConvertouchPopupMenu extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          item.iconName != null
-                              ? IconUtils.getIcon(
-                                  item.iconName!,
-                                  color: item.iconColor ?? colors.icon.regular,
-                                  size: 24,
-                                )
-                              : Icon(
-                                  item.icon,
-                                  color: item.iconColor ?? colors.icon.regular,
-                                  size: 24,
-                                ),
+                          Icon(
+                            item.icon,
+                            color: item.iconColor ?? colors.icon.regular,
+                            size: 24,
+                          ),
                           const SizedBox(width: 14),
                           Expanded(
                             child: Container(
@@ -109,7 +102,6 @@ class PopupMenuItemModel {
 
   final String text;
   final IconData? icon;
-  final String? iconName;
   final Color? textColor;
   final Color? iconColor;
   final void Function()? onTap;
@@ -117,7 +109,6 @@ class PopupMenuItemModel {
   const PopupMenuItemModel({
     required this.text,
     this.icon,
-    this.iconName,
     this.textColor,
     this.iconColor,
     this.onTap,

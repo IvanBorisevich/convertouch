@@ -3,13 +3,13 @@ import 'package:convertouch/presentation/ui/style/color/model/widget_color_schem
 import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:flutter/material.dart';
 
+final _appLegalese = "© ${DateTime.now().year} johnbor7";
+
 class ConvertouchAboutDialog extends StatelessWidget {
   final String applicationVersion;
-  final String applicationLegalese;
   final SettingItemColorScheme colors;
 
   const ConvertouchAboutDialog({
-    required this.applicationLegalese,
     required this.applicationVersion,
     required this.colors,
     super.key,
@@ -32,7 +32,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
               top: 2,
             ),
             child: IconUtils.getImage(
-              "app-logo.png",
+              IconKeys.appLogo,
               size: 35,
             ),
           ),
@@ -51,7 +51,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
               Text(
                 applicationVersion,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: colors.foreground.regular,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0,
@@ -60,9 +60,9 @@ class ConvertouchAboutDialog extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Text(
-                  applicationLegalese,
+                  _appLegalese,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: colors.foreground.regular,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0,
@@ -95,7 +95,7 @@ class ConvertouchAboutDialog extends StatelessWidget {
               context: context,
               applicationName: appName,
               applicationVersion: applicationVersion,
-              applicationLegalese: applicationLegalese,
+              applicationLegalese: _appLegalese,
             );
           },
         ),

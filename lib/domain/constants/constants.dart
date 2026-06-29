@@ -10,14 +10,17 @@ const noConversionRule = "-";
 abstract class GroupNames {
   const GroupNames._();
 
-  static const length = "Length";
-  static const volume = "Volume";
+  static const angle = "Angle";
   static const area = "Area";
-  static const temperature = "Temperature";
-  static const currency = "Currency";
   static const clothesSize = "Clothes Size";
-  static const ringSize = "Ring Size";
+  static const currency = "Currency";
+  static const length = "Length";
   static const mass = "Mass";
+  static const pressure = "Pressure";
+  static const ringSize = "Ring Size";
+  static const speed = "Speed";
+  static const temperature = "Temperature";
+  static const volume = "Volume";
 }
 
 abstract class ParamSetNames {
@@ -58,11 +61,43 @@ abstract class UnitCodes {
   static const degreeRomer = "°Rø";
 }
 
-abstract class IconNames {
-  const IconNames._();
+abstract class IconKeys {
+  const IconKeys._();
 
-  static const parameters = "parameters.png";
+  static const angle = "angle";
+  static const appLogo = "app_logo";
+  static const area = "area";
+  static const clothesSize = "clothes_size";
+  static const currency = "currency";
+  static const dataSource = "data_source";
+  static const defaultGroup = "default_group";
+  static const length = "length";
+  static const mass = "mass";
+  static const parameters = "parameters";
+  static const pressure = "pressure";
+  static const ringSize = "ring_size";
+  static const speed = "speed";
+  static const temperature = "temperature";
+  static const volume = "volume";
 }
+
+const Map<String, String> idToIconName = {
+  IconKeys.angle: "angle-group.svg",
+  IconKeys.appLogo: "app-logo.png",
+  IconKeys.area: "area-group.svg",
+  IconKeys.clothesSize: "clothes-size-group.svg",
+  IconKeys.currency: "currency-group.svg",
+  IconKeys.dataSource: "data-source.svg",
+  IconKeys.defaultGroup: "default-group.svg",
+  IconKeys.length: "length-group.svg",
+  IconKeys.mass: "mass-group.svg",
+  IconKeys.parameters: "parameters.svg",
+  IconKeys.pressure: "pressure-group.svg",
+  IconKeys.ringSize: "ring-size-group.svg",
+  IconKeys.speed: "speed-group.svg",
+  IconKeys.temperature: "temperature-group.svg",
+  IconKeys.volume: "volume-group.svg",
+};
 
 enum PageName {
   conversionGroupsPage,
