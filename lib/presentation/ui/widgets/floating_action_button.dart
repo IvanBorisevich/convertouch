@@ -10,8 +10,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
   final void Function()? onClick;
   final bool visible;
   final bool disabled;
-  final bool extraLabelVisible;
-  final String extraLabelText;
+  final String? extraLabelText;
   final WidgetColorScheme colorScheme;
 
   const ConvertouchFloatingActionButton({
@@ -20,8 +19,7 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.onClick,
     this.visible = true,
     this.disabled = false,
-    this.extraLabelVisible = false,
-    this.extraLabelText = "",
+    this.extraLabelText,
     required this.colorScheme,
     super.key,
   });
@@ -31,7 +29,6 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.onClick,
     this.visible = true,
     this.disabled = false,
-    this.extraLabelVisible = false,
     this.extraLabelText = "",
     required this.colorScheme,
     super.key,
@@ -45,26 +42,23 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     super.key,
   })  : icon = Icons.sync_problem_rounded,
         disabled = false,
-        extraLabelVisible = false,
-        extraLabelText = "";
+        extraLabelText = null;
 
   const ConvertouchFloatingActionButton.adding({
     this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
-    this.extraLabelText = "",
     required this.colorScheme,
     super.key,
   })  : icon = Icons.add,
-        extraLabelVisible = false;
+        extraLabelText = null;
 
   const ConvertouchFloatingActionButton.removal({
     this.iconSize,
     this.onClick,
     this.visible = true,
     this.disabled = false,
-    this.extraLabelVisible = true,
     required this.extraLabelText,
     required this.colorScheme,
     super.key,
@@ -80,70 +74,65 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
           FittedBox(
             child: ConvertouchAnimatedSwitcher(
               visible: visible,
-              child: FloatingActionButton(
-                onPressed: disabled ? null : onClick,
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  side: BorderSide(
-                    color: disabled
-                        ? colorScheme.border.disabled
-                        : colorScheme.border.regular,
-                    width: 1,
-                  ),
-                ),
-                backgroundColor: disabled
-                    ? colorScheme.background.disabled
-                    : colorScheme.background.regular,
-                foregroundColor: disabled
-                    ? colorScheme.foreground.disabled
-                    : colorScheme.foreground.regular,
-                disabledElevation: 0,
-                elevation: 0,
-                child: Icon(
-                  icon,
-                  color: disabled
-                      ? colorScheme.foreground.disabled
-                      : colorScheme.foreground.regular,
-                  size: iconSize,
-                ),
-              ),
-            ),
-          ),
-          extraLabelVisible
-              ? Align(
-                  alignment: Alignment.topRight,
-                  child: ConvertouchAnimatedSwitcher(
-                    visible: visible,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
+              child: extraLabelText != null && extraLabelText!.isNotEmpty
+                  ? FloatingActionButton.extended(
+                      label: Container(
+                        width: 10,
+                        alignment: Alignment.center,
+                        child: Text(
+                          extraLabelText!,
+                          style: TextStyle(
+                            color: disabled
+                                ? colorScheme.foreground.disabled
+                                : colorScheme.foreground.regular,
+                            letterSpacing: 0,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
-                      decoration: BoxDecoration(
+                      icon: Icon(
+                        icon,
                         color: disabled
-                            ? colorScheme.background.disabled
-                            : colorScheme.background.regular,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          color: disabled
-                              ? colorScheme.border.disabled
-                              : colorScheme.border.regular,
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignOutside,
-                        ),
+                            ? colorScheme.foreground.disabled
+                            : colorScheme.foreground.regular,
+                        size: iconSize,
                       ),
-                      child: Text(
-                        extraLabelText,
-                        style: TextStyle(
-                          color: disabled
-                              ? colorScheme.foreground.disabled
-                              : colorScheme.foreground.regular,
-                          fontSize: 14,
-                        ),
+                      onPressed: disabled ? null : onClick,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      backgroundColor: disabled
+                          ? colorScheme.background.disabled
+                          : colorScheme.background.regular,
+                      foregroundColor: disabled
+                          ? colorScheme.foreground.disabled
+                          : colorScheme.foreground.regular,
+                      disabledElevation: 0,
+                      elevation: 0,
+                    )
+                  : FloatingActionButton(
+                      onPressed: disabled ? null : onClick,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      backgroundColor: disabled
+                          ? colorScheme.background.disabled
+                          : colorScheme.background.regular,
+                      foregroundColor: disabled
+                          ? colorScheme.foreground.disabled
+                          : colorScheme.foreground.regular,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      child: Icon(
+                        icon,
+                        color: disabled
+                            ? colorScheme.foreground.disabled
+                            : colorScheme.foreground.regular,
+                        size: iconSize,
                       ),
                     ),
-                  ),
-                )
-              : const SizedBox.shrink(),
+            ),
+          ),
         ],
       ),
     );
