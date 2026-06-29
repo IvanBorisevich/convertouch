@@ -71,9 +71,12 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                       unitsController.markUnit(context, unitId: unit.id);
                     },
                     onItemLongPress: (unit) {
+                      if (itemsSelectionState.showCancelIcon) {
+                        return;
+                      }
+
                       unitsController.startRemoval(
                         context,
-                        showCancelIcon: true,
                         unitId: unit.id,
                         oobIds: unitsBloc.state.oobIds,
                       );

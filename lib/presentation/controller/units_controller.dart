@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -157,19 +157,16 @@ class UnitsController {
 
   void startRemoval(
     BuildContext context, {
-    required bool showCancelIcon,
     required int unitId,
     List<int> oobIds = const [],
   }) {
-    if (!showCancelIcon) {
-      BlocProvider.of<ItemsSelectionBloc>(context).add(
-        StartItemsMarking(
-          showCancelIcon: true,
-          previouslyMarkedIds: [unitId],
-          excludedIds: oobIds,
-        ),
-      );
-    }
+    BlocProvider.of<ItemsSelectionBloc>(context).add(
+      StartItemsMarking(
+        showCancelIcon: true,
+        previouslyMarkedIds: [unitId],
+        excludedIds: oobIds,
+      ),
+    );
   }
 
   void save(

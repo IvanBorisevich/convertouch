@@ -1,3 +1,4 @@
+import 'package:convertouch/presentation/ui/animation/animated_switcher_ext.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -52,11 +53,11 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
     this.onClick,
     this.visible = true,
     this.disabled = false,
-    this.extraLabelVisible = false,
     this.extraLabelText = "",
     required this.colorScheme,
     super.key,
-  }) : icon = Icons.add;
+  })  : icon = Icons.add,
+        extraLabelVisible = false;
 
   const ConvertouchFloatingActionButton.removal({
     this.iconSize,
@@ -71,14 +72,14 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: visible,
-      child: SizedBox(
-        height: defaultHeight,
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            FittedBox(
+    return SizedBox(
+      height: defaultHeight,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          FittedBox(
+            child: ConvertouchAnimatedSwitcher(
+              visible: visible,
               child: FloatingActionButton(
                 onPressed: disabled ? null : onClick,
                 shape: RoundedRectangleBorder(
@@ -107,9 +108,12 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                 ),
               ),
             ),
-            extraLabelVisible
-                ? Align(
-                    alignment: Alignment.topRight,
+          ),
+          extraLabelVisible
+              ? Align(
+                  alignment: Alignment.topRight,
+                  child: ConvertouchAnimatedSwitcher(
+                    visible: visible,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 4,
@@ -137,10 +141,10 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
-                : const SizedBox.shrink(),
-          ],
-        ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
       ),
     );
   }

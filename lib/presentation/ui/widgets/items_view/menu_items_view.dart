@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 
 const double _minGridItemWidth = 90;
 const double _spacing = 8;
-const double _bottomSpacing = 85;
+const double _bottomSpacing = 70;
 const String _defaultSearchPlaceholder = "Search...";
 const String _defaultNoItemsLabel = "No Items";
 

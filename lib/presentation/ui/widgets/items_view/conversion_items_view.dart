@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -37,8 +35,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
             next.rebuildUnitValues;
       },
       builder: (_, conversionState) {
-        log("${DateTime.now()} - conversion item view bloc builder()");
-
         if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
@@ -98,8 +94,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                           : (itemState.id == unitValue.id
                               ? itemState.value!
                               : unitValue);
-
-                  log("${DateTime.now()} - conversion item view builder() resultUnitValue = $resultUnitValue, unit value state: $itemState");
 
                   final isSource = itemState is ConversionUnitValueInitialState
                       ? unitValue.unit.id == srcUnitId
