@@ -192,17 +192,22 @@ class UnitsController {
 
   void remove(
     BuildContext context, {
+      required int unitGroupId,
     List<int> unitIds = const [],
     void Function()? onSuccess,
   }) {
     BlocProvider.of<UnitsBloc>(context).add(
-      RemoveItems(ids: unitIds),
+      RemoveItems(
+        ids: unitIds,
+        onSuccess: ({info}) {
+          fetchUnits<UnitsBloc>(context, groupId: unitGroupId);
+          onSuccess?.call();
+        },
+      ),
     );
 
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       const CancelItemsMarking(),
     );
-
-    onSuccess?.call();
   }
 }

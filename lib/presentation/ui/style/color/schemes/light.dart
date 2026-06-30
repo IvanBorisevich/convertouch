@@ -189,7 +189,7 @@ const _unitGroupDetailsInputBox = DetailsItemColorsScheme(
   ),
   readonly: InputBoxColorScheme(
     textBox: TextBoxColorScheme(
-      background: MultiColor.only(Color(0xFFE0E0FF)),
+      background: MultiColor.only(Color(0xFFD9DFFF)),
       border: MultiColor.only(Color(0xFF6766D3)),
       foreground: MultiColor.only(Color(0xFF282771)),
     ),

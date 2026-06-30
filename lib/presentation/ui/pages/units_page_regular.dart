@@ -91,6 +91,7 @@ class ConvertouchUnitsPageRegular extends StatelessWidget {
                           onClick: () {
                             unitsController.remove(
                               context,
+                              unitGroupId: unitGroup.id,
                               unitIds: itemsSelectionState.markedIds,
                               onSuccess: () {
                                 conversionController.removeConversionItems(

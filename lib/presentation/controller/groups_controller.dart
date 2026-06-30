@@ -90,8 +90,16 @@ class ConversionGroupsController {
 
   void remove(BuildContext context, {List<int> groupIds = const []}) {
     BlocProvider.of<UnitGroupsBloc>(context).add(
-      RemoveItems(ids: groupIds),
+      RemoveItems(
+        ids: groupIds,
+        onSuccess: ({info}) {
+          BlocProvider.of<UnitGroupsBloc>(context).add(
+            const FetchItems<UnitGroupsFetchParams>(),
+          );
+        },
+      ),
     );
+
     BlocProvider.of<ItemsSelectionBloc>(context).add(
       const CancelItemsMarking(),
     );
