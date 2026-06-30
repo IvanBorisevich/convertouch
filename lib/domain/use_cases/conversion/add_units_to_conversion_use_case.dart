@@ -75,7 +75,7 @@ class AddUnitsToConversionUseCase
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
-          calculateByParams: true,
+          calculateByParams: !unitGroup.refreshable,
           unitGroupName: unitGroup.name,
           alignCurrentValue: true,
         ),
