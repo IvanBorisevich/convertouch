@@ -44,6 +44,7 @@ const _dropdown = DropdownColorScheme(
     regular: Color(0xFF1D578C),
     warning: _warningForeground,
   ),
+  icon: MultiColor.only(Color(0xFF293F5C)),
   searchBox: _dropdownSearchBox,
   selectedItem: WidgetColorScheme(
     background: MultiColor.only(Color(0xffaabef1)),

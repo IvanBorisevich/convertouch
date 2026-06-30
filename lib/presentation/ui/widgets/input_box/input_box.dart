@@ -938,9 +938,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                                     padding: const EdgeInsets.only(right: 10),
                                     child: IconUtils.getSvgIcon(
                                       iconUri,
-                                      color: widget
-                                          .dropdownColors.foreground.regular,
-                                      size: 14,
+                                      color: widget.dropdownColors.icon.regular,
+                                      size: 15,
                                     ),
                                   )
                                 : const SizedBox.shrink(),
@@ -1127,8 +1126,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       padding: const EdgeInsets.only(left: 14),
                       child: IconUtils.getSvgIcon(
                         iconUri,
-                        color: widget.dropdownColors.foreground.regular,
-                        size: 14,
+                        color: widget.dropdownColors.icon.regular,
+                        size: 15,
                       ),
                     )
                   : const SizedBox.shrink(),
