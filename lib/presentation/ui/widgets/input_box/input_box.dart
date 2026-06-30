@@ -381,6 +381,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         dialogColors: widget.dialogColors,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
+        contentPadding: const EdgeInsets.only(top: 10, bottom: 0),
         floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     }
@@ -397,6 +398,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelColor: _labelColor,
         fontSize: widget.fontSize,
         margin: widget.inputFieldMargin,
+        contentPadding: const EdgeInsets.only(top: 8, bottom: 0),
         dropdownColors: widget.colors.dropdown,
         dialogColors: widget.dialogColors,
         floatingLabelBehavior: widget.floatingLabelBehavior,
@@ -623,6 +625,7 @@ class _TextField extends StatefulWidget {
     required this.dialogColors,
     required this.fontSize,
     required this.margin,
+    required this.contentPadding,
     this.floatingLabelBehavior,
   });
 
@@ -640,6 +643,7 @@ class _TextField extends StatefulWidget {
   final WidgetColorScheme dialogColors;
   final double fontSize;
   final EdgeInsets margin;
+  final EdgeInsets contentPadding;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
@@ -740,9 +744,7 @@ class _TextFieldState extends State<_TextField>
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
         floatingLabelBehavior: widget.floatingLabelBehavior,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 4,
-        ),
+        contentPadding: widget.contentPadding,
       ).copyWith(
         suffixText: widget.model.textLengthCounterVisible
             ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
@@ -771,6 +773,7 @@ class _ListField extends StatefulWidget {
     required this.labelColor,
     required this.fontSize,
     required this.margin,
+    required this.contentPadding,
     required this.dropdownColors,
     required this.dialogColors,
     this.floatingLabelBehavior,
@@ -787,6 +790,7 @@ class _ListField extends StatefulWidget {
   final Color labelColor;
   final double fontSize;
   final EdgeInsets margin;
+  final EdgeInsets contentPadding;
   final DropdownColorScheme dropdownColors;
   final WidgetColorScheme dialogColors;
   final FloatingLabelBehavior? floatingLabelBehavior;
@@ -901,9 +905,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     : widget.hintColor,
                 labelColor: widget.labelColor,
                 floatingLabelBehavior: widget.floatingLabelBehavior,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 3,
-                ),
+                contentPadding: widget.contentPadding,
               ),
               style: _inputFieldTextStyle(
                 fontSize: widget.fontSize,
