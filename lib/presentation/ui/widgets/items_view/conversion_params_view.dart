@@ -31,9 +31,11 @@ const double _paramsSpacing = 10;
 const double _jobInfoBoxHeight = 40;
 
 class ConversionParamsView extends StatelessWidget {
+  final int unitGroupId;
   final ConvertouchUITheme theme;
 
   const ConversionParamsView({
+    required this.unitGroupId,
     required this.theme,
     super.key,
   });
@@ -44,7 +46,10 @@ class ConversionParamsView extends StatelessWidget {
 
     return BlocBuilder<ConversionBloc, ConversionState>(
       buildWhen: (prev, next) {
-        return prev != next && next is ConversionBuilt && next.rebuildParams;
+        return prev != next &&
+            next is ConversionBuilt &&
+            next.rebuildParams &&
+            unitGroupId == next.conversion.unitGroup.id;
       },
       builder: (_, conversionState) {
         if (conversionState is! ConversionBuilt) {

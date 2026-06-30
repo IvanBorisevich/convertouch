@@ -1,6 +1,8 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_states.dart';
 import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -10,8 +12,6 @@ import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
-import 'package:convertouch/presentation/ui/model/add_units_button_view_model.dart';
-import 'package:convertouch/presentation/ui/model/conversion_popup_menu_view_model.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -52,141 +52,142 @@ class ConvertouchConversionPage extends StatelessWidget {
           ),
           colors: pageColors,
           appBarTrailingWidgets: [
-            BlocSelector<ConversionBloc, ConversionState, bool>(
-              selector: (state) {
-                return state is ConversionBuilt &&
-                    state.conversion.params != null;
-              },
-              builder: (_, paramsExist) {
-                return paramsExist
-                    ? IconButton(
-                        icon: IconUtils.getSvgIcon(
-                          IconKeys.parameters,
-                          color: pageColors.appBar.foreground.regular,
-                          size: 22,
-                        ),
-                        onPressed: () {
-                          BlocProvider.of<SlidingPanelBloc>(context).add(
-                            const SwitchSlidingPanel(),
-                          );
-                        },
-                      )
-                    : const SizedBox.shrink();
+            singleGroupBlocBuilder(
+              builderFunc: (singleGroupState) {
+                return BlocBuilder<ConversionBloc, ConversionState>(
+                  buildWhen: (prev, next) =>
+                      prev != next &&
+                      next is ConversionBuilt &&
+                      next.conversion.unitGroup.id ==
+                          singleGroupState.unitGroup.id,
+                  builder: (_, conversionState) {
+                    if (conversionState is! ConversionBuilt ||
+                        conversionState.conversion.params == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return IconButton(
+                      icon: IconUtils.getSvgIcon(
+                        IconKeys.parameters,
+                        color: pageColors.appBar.foreground.regular,
+                        size: 22,
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<SlidingPanelBloc>(context).add(
+                          const SwitchSlidingPanel(),
+                        );
+                      },
+                    );
+                  },
+                );
               },
             ),
-            BlocSelector<ConversionBloc, ConversionState,
-                ConversionPopupMenuViewModel?>(
-              selector: (state) {
-                if (state is ConversionBuilt) {
-                  final conversion = state.conversion;
-                  bool paramsCanBeAdded = conversion.params != null &&
-                      conversion.params!.paramSetsCanBeAdded;
-                  bool paramsCanBeRemoved = conversion.params != null &&
-                      conversion.params!.optionalParamSetsExist;
-                  bool paramsOptionsExist =
-                      paramsCanBeAdded || paramsCanBeRemoved;
-                  List<int> addedParamSetIds = conversion.params?.paramSetValues
-                          .map((item) => item.paramSet.id)
-                          .toList() ??
-                      [];
+            singleGroupBlocBuilder(
+              builderFunc: (singleGroupState) {
+                return BlocBuilder<ConversionBloc, ConversionState>(
+                  buildWhen: (prev, next) =>
+                      prev != next &&
+                      next is ConversionBuilt &&
+                      next.conversion.unitGroup.id ==
+                          singleGroupState.unitGroup.id,
+                  builder: (_, conversionState) {
+                    if (conversionState is! ConversionBuilt) {
+                      return const SizedBox.shrink();
+                    }
 
-                  return ConversionPopupMenuViewModel(
-                    paramsCanBeAdded: paramsCanBeAdded,
-                    paramsCanBeRemoved: paramsCanBeRemoved,
-                    paramsOptionsExist: paramsOptionsExist,
-                    addedParamSetIds: addedParamSetIds,
-                    unitGroup: conversion.unitGroup,
-                  );
-                }
+                    final conversion = conversionState.conversion;
+                    bool paramsCanBeAdded = conversion.params != null &&
+                        conversion.params!.paramSetsCanBeAdded;
+                    bool paramsCanBeRemoved = conversion.params != null &&
+                        conversion.params!.optionalParamSetsExist;
+                    bool paramsOptionsExist =
+                        paramsCanBeAdded || paramsCanBeRemoved;
+                    List<int> addedParamSetIds = conversion
+                            .params?.paramSetValues
+                            .map((item) => item.paramSet.id)
+                            .toList() ??
+                        [];
 
-                return null;
-              },
-              builder: (_, popupViewModel) {
-                if (popupViewModel == null) {
-                  return const SizedBox.shrink();
-                }
+                    return ConvertouchPopupMenu(
+                      width: 230,
+                      colors: popupColors,
+                      customIcon: Icon(
+                        Icons.more_vert_rounded,
+                        color: pageColors.appBar.foreground.regular,
+                      ),
+                      items: [
+                        paramsCanBeAdded
+                            ? PopupMenuItemModel(
+                                text: 'Add Parameters',
+                                icon: Icons.add,
+                                onTap: () {
+                                  paramSetsController.showParametersForAdding(
+                                    context,
+                                    unitGroupId: conversion.unitGroup.id,
+                                    addedParamSetIds: addedParamSetIds,
+                                  );
+                                },
+                              )
+                            : null,
+                        paramsCanBeRemoved
+                            ? PopupMenuItemModel(
+                                text: 'Remove Parameters',
+                                icon: Icons.delete_outline_rounded,
+                                iconColor: popupColors.removalItem.regular,
+                                textColor: popupColors.removalItem.regular,
+                                onTap: () {
+                                  conversionController.removeOptionalParamSets(
+                                    context,
+                                  );
+                                },
+                              )
+                            : null,
+                        paramsOptionsExist ? PopupMenuItemModel.divider : null,
+                        PopupMenuItemModel(
+                          text: conversion.unitGroup.oob
+                              ? 'Group Info'
+                              : 'Edit Group',
+                          icon: conversion.unitGroup.oob
+                              ? Icons.info_outline_rounded
+                              : Icons.edit_outlined,
+                          onTap: () {
+                            unitGroupDetailsController.showGroupDetails(
+                              context,
+                              unitGroup: conversion.unitGroup,
+                            );
+                          },
+                        ),
+                        PopupMenuItemModel(
+                          text: "Units Dictionary",
+                          icon: Icons.dashboard_customize_outlined,
+                          onTap: () {
+                            groupsController.showGroup(
+                              context,
+                              unitGroup: conversion.unitGroup,
+                            );
 
-                return ConvertouchPopupMenu(
-                  width: 230,
-                  colors: popupColors,
-                  customIcon: Icon(
-                    Icons.more_vert_rounded,
-                    color: pageColors.appBar.foreground.regular,
-                  ),
-                  items: [
-                    popupViewModel.paramsCanBeAdded
-                        ? PopupMenuItemModel(
-                            text: 'Add Parameters',
-                            icon: Icons.add,
-                            onTap: () {
-                              paramSetsController.showParametersForAdding(
-                                context,
-                                unitGroupId: popupViewModel.unitGroup.id,
-                                addedParamSetIds:
-                                    popupViewModel.addedParamSetIds,
-                              );
-                            },
-                          )
-                        : null,
-                    popupViewModel.paramsCanBeRemoved
-                        ? PopupMenuItemModel(
-                            text: 'Remove Parameters',
-                            icon: Icons.delete_outline_rounded,
-                            iconColor: popupColors.removalItem.regular,
-                            textColor: popupColors.removalItem.regular,
-                            onTap: () {
-                              conversionController.removeOptionalParamSets(
-                                context,
-                              );
-                            },
-                          )
-                        : null,
-                    popupViewModel.paramsOptionsExist
-                        ? PopupMenuItemModel.divider
-                        : null,
-                    PopupMenuItemModel(
-                      text: popupViewModel.unitGroup.oob
-                          ? 'Group Info'
-                          : 'Edit Group',
-                      icon: popupViewModel.unitGroup.oob
-                          ? Icons.info_outline_rounded
-                          : Icons.edit_outlined,
-                      onTap: () {
-                        unitGroupDetailsController.showGroupDetails(
-                          context,
-                          unitGroup: popupViewModel.unitGroup,
-                        );
-                      },
-                    ),
-                    PopupMenuItemModel(
-                      text: "Units Dictionary",
-                      icon: Icons.dashboard_customize_outlined,
-                      onTap: () {
-                        groupsController.showGroup(
-                          context,
-                          unitGroup: popupViewModel.unitGroup,
-                        );
-
-                        unitsController.showUnits(
-                          context,
-                          groupId: popupViewModel.unitGroup.id,
-                        );
-                      },
-                    ),
-                    PopupMenuItemModel(
-                      text: "Clear Conversion",
-                      icon: Icons.delete_outline_rounded,
-                      iconColor: popupColors.removalItem.regular,
-                      textColor: popupColors.removalItem.regular,
-                      onTap: () {
-                        conversionController.cleanupConversion(
-                          context,
-                          preserveParams:
-                              appState.keepParamsOnConversionCleanup,
-                        );
-                      },
-                    ),
-                  ],
+                            unitsController.showUnits(
+                              context,
+                              groupId: conversion.unitGroup.id,
+                            );
+                          },
+                        ),
+                        PopupMenuItemModel(
+                          text: "Clear Conversion",
+                          icon: Icons.delete_outline_rounded,
+                          iconColor: popupColors.removalItem.regular,
+                          textColor: popupColors.removalItem.regular,
+                          onTap: () {
+                            conversionController.cleanupConversion(
+                              context,
+                              preserveParams:
+                                  appState.keepParamsOnConversionCleanup,
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),
@@ -197,13 +198,23 @@ class ConvertouchConversionPage extends StatelessWidget {
               behavior: NoGlowScrollBehavior(),
               child: Column(
                 children: [
-                  ConversionParamsView(
-                    theme: appState.theme,
+                  singleGroupBlocBuilder(
+                    builderFunc: (singleGroupState) {
+                      return ConversionParamsView(
+                        unitGroupId: singleGroupState.unitGroup.id,
+                        theme: appState.theme,
+                      );
+                    },
                   ),
                   Expanded(
-                    child: ConvertouchConversionItemsView(
-                      unitTapAction: appState.unitTapAction,
-                      theme: appState.theme,
+                    child: singleGroupBlocBuilder(
+                      builderFunc: (singleGroupState) {
+                        return ConvertouchConversionItemsView(
+                          unitGroupId: singleGroupState.unitGroup.id,
+                          unitTapAction: appState.unitTapAction,
+                          theme: appState.theme,
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -214,46 +225,52 @@ class ConvertouchConversionPage extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.end,
             alignment: WrapAlignment.end,
             children: [
-              refreshButtonBlocBuilder(
-                builderFunc: (refreshButtonState) {
-                  return ConvertouchRefreshFloatingButton(
-                    visible: refreshButtonState.visible,
-                    disabled: refreshButtonState.disabled,
-                    theme: appState.theme,
+              singleGroupBlocBuilder(
+                builderFunc: (singleGroupState) {
+                  return BlocBuilder<RefreshButtonBloc, RefreshButtonState>(
+                    buildWhen: (prev, next) =>
+                        prev != next &&
+                        next.unitGroupId == singleGroupState.unitGroup.id,
+                    builder: (_, refreshButtonState) {
+                      return ConvertouchRefreshFloatingButton(
+                        visible: refreshButtonState.visible,
+                        disabled: refreshButtonState.disabled,
+                        theme: appState.theme,
+                      );
+                    },
                   );
                 },
               ),
-              BlocSelector<ConversionBloc, ConversionState,
-                  AddUnitsButtonViewModel?>(
-                selector: (state) {
-                  if (state is ConversionBuilt) {
-                    return AddUnitsButtonViewModel(
-                      addedUnitIds: state.conversion.convertedUnitValues
-                          .map((item) => item.unit.id)
-                          .toList(),
-                      paramsApplicable:
-                          areParamsApplicable(state.conversion.params?.active),
-                      unitGroupId: state.conversion.unitGroup.id,
-                    );
-                  }
+              singleGroupBlocBuilder(
+                builderFunc: (singleGroupState) {
+                  return BlocBuilder<ConversionBloc, ConversionState>(
+                    buildWhen: (prev, next) =>
+                        prev != next &&
+                        next is ConversionBuilt &&
+                        next.conversion.unitGroup.id ==
+                            singleGroupState.unitGroup.id,
+                    builder: (_, conversionState) {
+                      if (conversionState is! ConversionBuilt) {
+                        return const SizedBox.shrink();
+                      }
 
-                  return null;
-                },
-                builder: (_, viewModel) {
-                  if (viewModel == null) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return ConvertouchFloatingActionButton.adding(
-                    onClick: () {
-                      unitsController.showUnitsForAdding(
-                        context,
-                        groupId: viewModel.unitGroupId,
-                        addedUnitIds: viewModel.addedUnitIds,
-                        paramsApplicable: viewModel.paramsApplicable,
+                      return ConvertouchFloatingActionButton.adding(
+                        onClick: () {
+                          unitsController.showUnitsForAdding(
+                            context,
+                            groupId: conversionState.conversion.unitGroup.id,
+                            addedUnitIds: conversionState
+                                .conversion.convertedUnitValues
+                                .map((item) => item.unit.id)
+                                .toList(),
+                            paramsApplicable: areParamsApplicable(
+                              conversionState.conversion.params?.active,
+                            ),
+                          );
+                        },
+                        colorScheme: floatingButtonColor,
                       );
                     },
-                    colorScheme: floatingButtonColor,
                   );
                 },
               ),

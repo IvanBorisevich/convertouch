@@ -17,10 +17,12 @@ const double _spacing = 10;
 const double _bottomSpacing = 85;
 
 class ConvertouchConversionItemsView extends StatelessWidget {
+  final int unitGroupId;
   final UnitTapAction unitTapAction;
   final ConvertouchUITheme theme;
 
   const ConvertouchConversionItemsView({
+    required this.unitGroupId,
     required this.unitTapAction,
     required this.theme,
     super.key,
@@ -32,7 +34,8 @@ class ConvertouchConversionItemsView extends StatelessWidget {
       buildWhen: (prev, next) {
         return prev != next &&
             next is ConversionBuilt &&
-            next.rebuildUnitValues;
+            next.rebuildUnitValues &&
+            next.conversion.unitGroup.id == unitGroupId;
       },
       builder: (_, conversionState) {
         if (conversionState is! ConversionBuilt) {

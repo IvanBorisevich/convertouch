@@ -52,6 +52,7 @@ class ConversionParamItem extends StatelessWidget {
           ifParamSetFilledPartiallyOrEmpty: (conversion) {
             refreshButtonController.changeState(
               context,
+              unitGroupId: conversion.unitGroup.id,
               visible: conversion.unitGroup.refreshable,
               disabled: false,
             );

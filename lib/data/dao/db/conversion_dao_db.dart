@@ -5,15 +5,17 @@ import 'package:floor/floor.dart';
 @dao
 abstract class ConversionDaoDb extends ConversionDao {
   @override
-  @Query('SELECT c.* '
-      'FROM $conversionsTableName c '
-      'INNER JOIN ('
-      ' SELECT id, MAX(last_modified) as latest_modified'
+  @Query('SELECT c1.* '
+      'FROM $conversionsTableName c1 '
+      'LEFT JOIN ('
+      ' SELECT unit_group_id, MAX(last_modified) as latest_modified'
       ' FROM $conversionsTableName'
       ' WHERE unit_group_id = :unitGroupId'
-      ' GROUP BY id'
-      ' LIMIT 1'
-      ') mc ON c.id = mc.id AND c.last_modified = mc.latest_modified')
+      ' GROUP BY unit_group_id'
+      ') c2 '
+      'ON c1.unit_group_id = c2.unit_group_id '
+      'AND c1.last_modified = c2.latest_modified '
+      'WHERE c2.latest_modified IS NOT NULL')
   Future<ConversionEntity?> getLast(int unitGroupId);
 
   @override

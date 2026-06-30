@@ -8,13 +8,13 @@ import 'package:convertouch/data/entities/conversion_entity.dart';
 import 'package:convertouch/data/entities/conversion_item_value_entity.dart';
 import 'package:convertouch/data/translators/conversion_item_value_translator.dart';
 import 'package:convertouch/data/translators/conversion_translator.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/repositories/conversion_param_repository.dart';
@@ -62,6 +62,9 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
       ConversionEntity? conversion = await conversionDao.getLast(unitGroupId);
 
+      log("Selected last conversion from DB by group id = $unitGroupId: "
+          "$conversion");
+
       if (conversion == null || conversion.sourceUnitId == null) {
         return const Right(null);
       }
@@ -76,11 +79,13 @@ class ConversionRepositoryImpl extends ConversionRepository {
 
       List<ConversionUnitValueEntity> conversionItemEntities =
           await conversionUnitValueDao.getByConversionId(conversion.id!);
+
       List<UnitModel> conversionItemUnits = ObjectUtils.tryGet(
         await unitRepository.getByIds(
           conversionItemEntities.map((e) => e.unitId).toList(),
         ),
       );
+
       Map<int, UnitModel> conversionItemUnitsMap = {
         for (var unit in conversionItemUnits) unit.id: unit
       };
@@ -154,6 +159,14 @@ class ConversionRepositoryImpl extends ConversionRepository {
   ) async {
     try {
       ConversionEntity entity = ConversionTranslator.I.fromModel(conversion);
+
+      if (conversion.convertedUnitValues.isEmpty &&
+          !conversion.hasAddedParams) {
+        log("Conversion of group ${conversion.unitGroup.name} does not have "
+            "items and added params, nothing to save");
+        return const Right(ConversionModel.none);
+      }
+
       ConversionModel resultConversion = ConversionModel.none;
 
       if (conversion.hasId) {
@@ -162,7 +175,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         await conversionUnitValueDao.removeByConversionId(conversion.id);
         await conversionParamValueDao.removeByConversionId(conversion.id);
         resultConversion = conversion;
-      } else if (conversion.convertedUnitValues.isNotEmpty) {
+      } else {
         log("Inserting a new conversion: $entity");
         int id = await conversionDao.insert(entity);
         resultConversion = conversion.copyWith(
@@ -186,23 +199,23 @@ class ConversionRepositoryImpl extends ConversionRepository {
               )
               .toList(),
         );
+      }
 
-        if (conversion.params != null) {
-          log("Inserting conversion params");
+      if (conversion.params != null) {
+        log("Inserting conversion params");
 
-          for (var paramSetValue in conversion.params!.paramSetValues) {
-            await conversionParamValueDao.insertBatch(
-                database,
-                paramSetValue.paramValues
-                    .mapIndexed(
-                      (index, item) => ConversionParamValueTranslator.I.fromModel(
-                    item,
-                    sequenceNum: index,
-                    conversionId: resultConversion.id,
-                  ),
-                )
-                    .toList());
-          }
+        for (var paramSetValue in conversion.params!.paramSetValues) {
+          await conversionParamValueDao.insertBatch(
+              database,
+              paramSetValue.paramValues
+                  .mapIndexed(
+                    (index, item) => ConversionParamValueTranslator.I.fromModel(
+                      item,
+                      sequenceNum: index,
+                      conversionId: resultConversion.id,
+                    ),
+                  )
+                  .toList());
         }
       }
 

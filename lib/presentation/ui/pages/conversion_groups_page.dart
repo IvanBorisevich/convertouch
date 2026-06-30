@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -65,11 +63,10 @@ class ConversionGroupsPage extends StatelessWidget {
                     context,
                     unitGroup: unitGroup,
                     processCurrentConversion: (conversion) {
-                      log("${DateTime.now()} - Process current conversion");
-
                       refreshButtonController.changeState(
                         context,
-                        visible: unitGroup.refreshable,
+                        unitGroupId: conversion.unitGroup.id,
+                        visible: conversion.unitGroup.refreshable,
                         disabled: !conversion.readyToRefresh,
                       );
 
@@ -91,18 +88,19 @@ class ConversionGroupsPage extends StatelessWidget {
 
                         refreshButtonController.changeState(
                           context,
+                          unitGroupId: conversion.unitGroup.id,
                           visible: conversion.unitGroup.refreshable,
                           disabled: !areParamsFilled(conversion.params?.active),
                         );
 
                         refreshingJobController.getJobs(
                           context,
-                          unitGroup: unitGroup,
+                          unitGroup: conversion.unitGroup,
                         );
                       } else {
                         unitsController.showUnitsForAdding(
                           context,
-                          groupId: unitGroup.id,
+                          groupId: conversion.unitGroup.id,
                         );
                       }
                     },

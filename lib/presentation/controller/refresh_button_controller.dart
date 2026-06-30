@@ -11,13 +11,17 @@ class RefreshButtonController {
 
   void changeState(
     BuildContext context, {
+    required int unitGroupId,
     required bool visible,
     required bool disabled,
   }) {
     BlocProvider.of<RefreshButtonBloc>(context).add(
       visible
-          ? ShowRefreshButton(disabled: disabled)
-          : const HideRefreshButton(),
+          ? ShowRefreshButton(
+              unitGroupId: unitGroupId,
+              disabled: disabled,
+            )
+          : HideRefreshButton(unitGroupId: unitGroupId),
     );
   }
 }

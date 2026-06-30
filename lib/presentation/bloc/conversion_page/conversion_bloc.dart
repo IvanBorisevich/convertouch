@@ -8,12 +8,12 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_a
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_param_sets_to_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/add_units_to_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_group_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/align_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -124,16 +124,26 @@ class ConversionBloc
 
       prev = state;
 
-      conversion = conversionFromDb.isRight && conversionFromDb.right != null
-          ? conversionFromDb.right!
-          : ConversionModel.noItems(
-              id: -1,
-              unitGroup: event.unitGroup,
-              params: null,
-            );
+      if (conversionFromDb.isRight && conversionFromDb.right != null) {
+        conversion = conversionFromDb.right!;
+
+        log("${DateTime.now()} - Selected conversion from db: $conversion");
+      } else {
+        conversion = ConversionModel.noItems(
+          id: -1,
+          unitGroup: event.unitGroup,
+          params: null,
+        );
+
+        log("${DateTime.now()} - Built new conversion of group id = "
+            "${event.unitGroup.id}");
+      }
     } else {
       conversion = state.conversion;
     }
+
+    log("${DateTime.now()} - Selected conversion from storage or db: "
+        "$conversion");
 
     if (prev != null && prev.conversion.exists) {
       event.processPrevConversion?.call(prev.conversion);
@@ -141,9 +151,9 @@ class ConversionBloc
 
     log("${DateTime.now()} - Emit after getting conversion from storage or db");
 
-    emit(
-      ConversionBuilt(
-        conversion: conversion,
+    add(
+      PatchConversion(
+        conversionPatch: conversion,
         rebuildUnitValues: event.rebuildUnitValues,
         rebuildParams: event.rebuildParams,
       ),
@@ -164,9 +174,9 @@ class ConversionBloc
 
       log("${DateTime.now()} - Emit after mandatory param set adding");
 
-      emit(
-        ConversionBuilt(
-          conversion: conversion,
+      add(
+        PatchConversion(
+          conversionPatch: conversion,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: event.rebuildParams,
         ),

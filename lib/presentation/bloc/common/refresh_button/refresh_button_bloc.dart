@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshButtonBloc
     extends ConvertouchBloc<RefreshButtonEvent, RefreshButtonState> {
-  RefreshButtonBloc() : super(const RefreshButtonState()) {
+  RefreshButtonBloc() : super(const RefreshButtonState(unitGroupId: -1)) {
     on<ShowRefreshButton>(_onShowRefreshButton);
     on<HideRefreshButton>(_onHideRefreshButton);
   }
@@ -16,6 +16,7 @@ class RefreshButtonBloc
   ) async {
     emit(
       RefreshButtonState(
+        unitGroupId: event.unitGroupId,
         visible: true,
         disabled: event.disabled,
       ),
@@ -27,7 +28,8 @@ class RefreshButtonBloc
     Emitter<RefreshButtonState> emit,
   ) async {
     emit(
-      const RefreshButtonState(
+      RefreshButtonState(
+        unitGroupId: event.unitGroupId,
         visible: false,
         disabled: false,
       ),

@@ -63,18 +63,18 @@ class ConversionModel extends IdNameItemModel {
     ConversionModel patch, {
     required bool isPatchAligned,
   }) {
-    List<ConversionUnitValueModel> patchedUnits;
+    List<ConversionUnitValueModel> patchedUnitValues;
     ConversionUnitValueModel? patchedSrc;
     ConversionParamSetValueBulkModel? patchedParams;
 
-    if (isPatchAligned) {
-      patchedUnits =
-          _patchUnits(convertedUnitValues, patch.convertedUnitValues);
+    if (isPatchAligned && unitGroup.id == patch.unitGroup.id) {
+      patchedUnitValues =
+          _patchUnitValues(convertedUnitValues, patch.convertedUnitValues);
       patchedSrc = patch.convertedUnitValues.firstWhereOrNull(
           (unitValue) => unitValue.unit.id == srcUnitValue?.unit.id);
       patchedParams = patchParams(params, patch.params);
     } else {
-      patchedUnits = patch.convertedUnitValues;
+      patchedUnitValues = patch.convertedUnitValues;
       patchedSrc = patch.srcUnitValue;
       patchedParams = patch.params;
     }
@@ -83,7 +83,7 @@ class ConversionModel extends IdNameItemModel {
       id: patch.id,
       name: patch.name,
       unitGroup: patch.unitGroup,
-      convertedUnitValues: patchedUnits,
+      convertedUnitValues: patchedUnitValues,
       params: patchedParams,
       srcUnitValue: patchedSrc,
     );
@@ -145,6 +145,9 @@ class ConversionModel extends IdNameItemModel {
         convertedUnitValues,
       ];
 
+  bool get hasAddedParams =>
+      params != null && params!.paramSetValues.isNotEmpty;
+
   bool get exists => this != none;
 
   bool get readyToRefresh =>
@@ -153,6 +156,7 @@ class ConversionModel extends IdNameItemModel {
   @override
   String toString() {
     return 'Conversion{\n'
+        'id: $id,\n'
         'group: ${unitGroup.name} (id = ${unitGroup.id}),\n'
         'params: ${params ?? '-'},\n'
         'src: $srcUnitValue,\n'
@@ -160,7 +164,7 @@ class ConversionModel extends IdNameItemModel {
   }
 }
 
-List<ConversionUnitValueModel> _patchUnits(
+List<ConversionUnitValueModel> _patchUnitValues(
   List<ConversionUnitValueModel> whatList,
   List<ConversionUnitValueModel> patch,
 ) {

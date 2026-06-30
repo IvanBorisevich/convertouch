@@ -605,7 +605,7 @@ class _$ConversionDaoDb extends ConversionDaoDb {
   @override
   Future<ConversionEntity?> getLast(int unitGroupId) async {
     return _queryAdapter.query(
-        'SELECT c.* FROM conversions c INNER JOIN ( SELECT id, MAX(last_modified) as latest_modified FROM conversions WHERE unit_group_id = ?1 GROUP BY id LIMIT 1) mc ON c.id = mc.id AND c.last_modified = mc.latest_modified',
+        'SELECT c1.* FROM conversions c1 LEFT JOIN ( SELECT unit_group_id, MAX(last_modified) as latest_modified FROM conversions WHERE unit_group_id = ?1 GROUP BY unit_group_id) c2 ON c1.unit_group_id = c2.unit_group_id AND c1.last_modified = c2.latest_modified WHERE c2.latest_modified IS NOT NULL',
         mapper: (Map<String, Object?> row) => ConversionEntity(id: row['id'] as int?, unitGroupId: row['unit_group_id'] as int, sourceUnitId: row['source_unit_id'] as int?, sourceValue: row['source_value'] as String?, lastModified: row['last_modified'] as int),
         arguments: [unitGroupId]);
   }
