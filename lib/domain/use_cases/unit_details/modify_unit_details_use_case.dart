@@ -1,4 +1,3 @@
-import 'package:basic_utils/basic_utils.dart';
 import 'package:convertouch/domain/model/conversion_rule_form_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
@@ -8,6 +7,7 @@ import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:convertouch/domain/utils/string_utils.dart';
 import 'package:convertouch/domain/utils/unit_details_utils.dart';
 import 'package:either_dart/either.dart';
 

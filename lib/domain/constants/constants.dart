@@ -83,7 +83,7 @@ abstract class IconKeys {
 
 const Map<String, String> idToIconName = {
   IconKeys.angle: "angle-group.svg",
-  IconKeys.appLogo: "app-logo.png",
+  IconKeys.appLogo: "app-logo.svg",
   IconKeys.area: "area-group.svg",
   IconKeys.clothesSize: "clothes-size-group.svg",
   IconKeys.currency: "currency-group.svg",

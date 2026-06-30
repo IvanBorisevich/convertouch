@@ -1,8 +1,8 @@
-import 'package:basic_utils/basic_utils.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/utils/double_value_utils.dart';
+import 'package:convertouch/domain/utils/string_utils.dart';
 import 'package:either_dart/either.dart';
 
 const _alphaCodes = NumRange.withBoth(65, 90);

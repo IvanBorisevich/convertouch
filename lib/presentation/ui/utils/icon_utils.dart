@@ -22,6 +22,19 @@ class IconUtils {
     );
   }
 
+  static Widget getSvgImage(
+    String imageName, {
+    double? size,
+  }) {
+    String resultImageName = idToIconName[imageName] ?? imageName;
+
+    return SvgPicture.asset(
+      "$iconAssetsPathPrefix/$resultImageName",
+      width: size ?? defaultIconSize,
+      height: size ?? defaultIconSize,
+    );
+  }
+
   static Widget getSvgIcon(
     String iconName, {
     AlignmentGeometry alignment = Alignment.center,

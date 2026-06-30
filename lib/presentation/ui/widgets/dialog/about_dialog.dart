@@ -31,9 +31,9 @@ class ConvertouchAboutDialog extends StatelessWidget {
               right: 20,
               top: 2,
             ),
-            child: IconUtils.getImage(
+            child: IconUtils.getSvgImage(
               IconKeys.appLogo,
-              size: 35,
+              size: 45,
             ),
           ),
           Column(
