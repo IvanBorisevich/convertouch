@@ -43,6 +43,7 @@ class AddUnitsToConversionUseCase
             itemValue: ConversionUnitValueModel(
               unit: unit,
             ),
+            unitGroupName: unitGroup.name,
             paramSetValue: params,
             alignCurrentValue: false,
           ),

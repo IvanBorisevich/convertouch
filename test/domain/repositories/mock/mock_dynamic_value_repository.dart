@@ -11,6 +11,7 @@ class MockDynamicValueRepository extends DynamicValueRepository {
   @override
   Future<Either<ConvertouchException, DynamicValueModel?>> get({
     required UnitModel unit,
+    required String conversionGroupName,
     ConversionParamSetValueModel? params,
   }) async {
     return const Right(null);

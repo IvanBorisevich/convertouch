@@ -53,7 +53,7 @@ void main() {
     required ConversionParamSetValueModel paramSetValue,
     bool alignCurrentValue = true,
     ConversionUnitValueModel? srcUnitValue,
-    String? unitGroupName,
+    required String conversionGroupName,
   }) async {
     final modifiedParamValue = ObjectUtils.tryGet(
       await useCase.execute(
@@ -63,7 +63,7 @@ void main() {
           delta: delta,
           alignCurrentValue: alignCurrentValue,
           srcUnitValue: srcUnitValue,
-          unitGroupName: unitGroupName,
+          unitGroupName: conversionGroupName,
         ),
       ),
     );
@@ -94,6 +94,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -124,6 +125,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -154,6 +156,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -186,6 +189,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
@@ -217,6 +221,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
@@ -248,6 +253,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.mass,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
@@ -288,6 +294,7 @@ void main() {
             paramId: barWeightParam.id,
             paramSetId: barbellWeightParamSet.id,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -324,6 +331,7 @@ void main() {
             paramId: barWeightParam.id,
             paramSetId: barbellWeightParamSet.id,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -362,6 +370,7 @@ void main() {
             paramId: heightParam.id,
             paramSetId: heightParam.paramSetId,
           ),
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -422,6 +431,7 @@ void main() {
             paramId: barWeightParam.id,
             paramSetId: barbellWeightParamSet.id,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -457,6 +467,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -492,6 +503,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -530,7 +542,7 @@ void main() {
 
         await testCase(
           srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 60, 1),
-          unitGroupName: GroupNames.mass,
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -570,7 +582,7 @@ void main() {
         await testCase(
           alignCurrentValue: false,
           srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 60, 1),
-          unitGroupName: GroupNames.mass,
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -609,6 +621,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -646,6 +659,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           alignCurrentValue: false,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
@@ -682,6 +696,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           alignCurrentValue: false,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
@@ -721,6 +736,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           alignCurrentValue: false,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
@@ -764,6 +780,7 @@ void main() {
             paramId: oneSideWeightParam.id,
             paramSetId: oneSideWeightParam.paramSetId,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -804,6 +821,7 @@ void main() {
             paramId: oneSideWeightParam.id,
             paramSetId: oneSideWeightParam.paramSetId,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -844,6 +862,7 @@ void main() {
             paramId: oneSideWeightParam.id,
             paramSetId: oneSideWeightParam.paramSetId,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -884,6 +903,7 @@ void main() {
             paramId: oneSideWeightParam.id,
             paramSetId: oneSideWeightParam.paramSetId,
           ),
+          conversionGroupName: GroupNames.mass,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,
             paramValues: [
@@ -930,6 +950,7 @@ void main() {
               paramId: oneSideWeightParam.id,
               paramSetId: oneSideWeightParam.paramSetId,
             ),
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -972,6 +993,7 @@ void main() {
               paramId: oneSideWeightParam.id,
               paramSetId: oneSideWeightParam.paramSetId,
             ),
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -1015,6 +1037,7 @@ void main() {
               paramId: oneSideWeightParam.id,
               paramSetId: oneSideWeightParam.paramSetId,
             ),
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [
@@ -1057,6 +1080,7 @@ void main() {
               paramId: oneSideWeightParam.id,
               paramSetId: oneSideWeightParam.paramSetId,
             ),
+            conversionGroupName: GroupNames.mass,
             paramSetValue: ConversionParamSetValueModel(
               paramSet: barbellWeightParamSet,
               paramValues: [

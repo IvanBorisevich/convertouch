@@ -37,11 +37,9 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
 
         return unitGroupDetailsBlocBuilder(
           bloc: unitGroupDetailsBloc,
-          builderFunc: (unitGroupDetailsState) {
+          builderFunc: (pageState) {
             return ConvertouchPage(
-              title: unitGroupDetailsState.isExistingGroup
-                  ? 'Group Info'
-                  : 'New Group',
+              title: pageState.isExistingGroup ? 'Group Info' : 'New Group',
               colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
@@ -50,9 +48,9 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                     children: [
                       ConvertouchDetailsItem(
                         name: "Group Name",
-                        draftValue: unitGroupDetailsState.draftGroup.name,
-                        savedValue: unitGroupDetailsState.savedGroup.name,
-                        editable: !unitGroupDetailsState.savedGroup.oob,
+                        draftValue: pageState.draftGroup.name,
+                        savedValue: pageState.savedGroup.name,
+                        editable: !pageState.savedGroup.oob,
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
@@ -65,8 +63,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                       ),
                       ConvertouchDetailsItem(
                         name: "Conversion Type",
-                        savedValue: unitGroupDetailsState
-                            .draftGroup.conversionType.name,
+                        savedValue: pageState.draftGroup.conversionType.name,
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
@@ -74,8 +71,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Type",
-                        savedValue:
-                            unitGroupDetailsState.draftGroup.valueType.name,
+                        savedValue: pageState.draftGroup.valueType.name,
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
@@ -83,10 +79,8 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Minimum",
-                        visible:
-                            unitGroupDetailsState.draftGroup.minValue != null,
-                        savedValue:
-                            unitGroupDetailsState.draftGroup.minValue?.itemName,
+                        visible: pageState.draftGroup.minValue != null,
+                        savedValue: pageState.draftGroup.minValue?.itemName,
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
@@ -94,10 +88,8 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Maximum",
-                        visible:
-                            unitGroupDetailsState.draftGroup.maxValue != null,
-                        savedValue:
-                            unitGroupDetailsState.draftGroup.maxValue?.itemName,
+                        visible: pageState.draftGroup.maxValue != null,
+                        savedValue: pageState.draftGroup.maxValue?.itemName,
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
@@ -109,11 +101,11 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
               ),
               floatingActionButton: ConvertouchFloatingActionButton(
                 icon: Icons.check_outlined,
-                visible: unitGroupDetailsState.canChangesBeSaved,
+                visible: pageState.canChangesBeSaved,
                 onClick: () {
                   groupsController.save(
                     context,
-                    unitGroup: unitGroupDetailsState.draftGroup,
+                    unitGroup: pageState.draftGroup,
                     onSaved: (savedGroup) {
                       conversionController.editConversionGroup(
                         context,

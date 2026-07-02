@@ -10,16 +10,19 @@ abstract class NetworkRepository {
   const NetworkRepository();
 
   Future<Either<ConvertouchException, DynamicCoefficientsModel?>> fetchCoefficients({
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   });
 
   Future<Either<ConvertouchException, DynamicValueModel?>> fetchDynamicValue({
     required UnitModel unit,
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   });
 
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,

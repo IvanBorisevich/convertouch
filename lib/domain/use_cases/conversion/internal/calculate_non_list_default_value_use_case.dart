@@ -50,6 +50,7 @@ class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
 
       return Right(
         await _calculateDefaultValue(
+          groupName: input.conversionGroupName,
           listType: resultListType,
           unit: resultUnit,
         ),
@@ -68,6 +69,7 @@ class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
   }
 
   Future<ValueModel?> _calculateDefaultValue({
+    required String groupName,
     required ConvertouchListType? listType,
     required UnitModel? unit,
   }) async {
@@ -75,6 +77,7 @@ class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
       var dynamicValue = ObjectUtils.tryGet(
         await fetchDynamicValueUseCase.execute(
           InputDynamicValueFetchModel(
+            groupName: groupName,
             srcUnit: unit,
           ),
         ),

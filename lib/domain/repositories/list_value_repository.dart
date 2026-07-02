@@ -14,6 +14,7 @@ abstract interface class ListValueRepository {
     required int pageNum,
     required int pageSize,
     required UnitModel? unit,
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
   });
 

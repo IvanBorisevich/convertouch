@@ -9,6 +9,7 @@ abstract class DynamicValueRepository {
 
   Future<Either<ConvertouchException, DynamicValueModel?>> get({
     required UnitModel unit,
+    required String conversionGroupName,
     ConversionParamSetValueModel? params,
   });
 }

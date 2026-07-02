@@ -2,7 +2,7 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-const int _nonSearchableListItemsMinLimit = 5;
+const int nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxViewModel {
   final String itemId;
@@ -36,7 +36,7 @@ abstract class InputBoxViewModel {
         labelText: labelText ?? model.name,
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
-                _nonSearchableListItemsMinLimit,
+                nonSearchableListItemsMinLimit,
         valueExistsForEmptyList: model.value != null &&
             model.value!.hasRawValue &&
             (model.listValuesFetchResult == null ||

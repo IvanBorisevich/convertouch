@@ -29,6 +29,7 @@ class ReplaceConversionItemUnitUseCase
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: oldUnitValue,
+          unitGroupName: unitGroup.name,
           delta: delta,
           paramSetValue: params,
           alignCurrentValue: true,

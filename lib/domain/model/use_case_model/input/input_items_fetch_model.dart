@@ -97,7 +97,7 @@ class ParamSetsFetchParams extends ItemsFetchParams {
 class ListValuesFetchParams extends ItemsFetchParams {
   final String itemId;
   final ConvertouchListType listType;
-  final String? unitGroupName;
+  final String? conversionGroupName;
   final UnitModel? unit;
   final ConversionParamSetValueModel? params;
 
@@ -105,7 +105,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
     required this.itemId,
     required this.listType,
     this.unit,
-    this.unitGroupName,
+    this.conversionGroupName,
     this.params,
   });
 
@@ -114,7 +114,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
         itemId,
         listType,
         unit,
-        unitGroupName,
+        conversionGroupName,
         params,
       ];
 
@@ -124,7 +124,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
       'itemId': itemId,
       'listType': listType.id,
       'unit': unit?.toJson(),
-      'groupName': unitGroupName,
+      'conversionGroupName': conversionGroupName,
       'params': params?.toJson(),
     };
   }
@@ -138,7 +138,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
       itemId: json['itemId'] ?? -1,
       listType: ConvertouchListType.valueOf(json['listType'])!,
       unit: UnitModel.fromJson(json['unit']),
-      unitGroupName: json['groupName'],
+      conversionGroupName: json['groupName'],
       params: ConversionParamSetValueModel.fromJson(json['params']),
     );
   }

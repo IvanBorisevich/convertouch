@@ -67,10 +67,10 @@ class CalculateParamValueUseValue extends UseCase<
 
     if (delta == null && paramValue.calculated) {
       autoCalculatedValue =
-          input.srcUnitValue != null && input.unitGroupName != null
+          input.srcUnitValue != null
               ? rules.calculateParamValueBySrcValue(
                   srcUnitValue: input.srcUnitValue!,
-                  unitGroupName: input.unitGroupName!,
+                  unitGroupName: input.unitGroupName,
                   params: input.paramSetValue,
                   param: paramValue.param,
                 )
@@ -89,6 +89,7 @@ class CalculateParamValueUseValue extends UseCase<
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
                     item: paramValue.param,
+                    conversionGroupName: input.unitGroupName,
                     currentParamUnit: paramValue.unit,
                     replacingUnit: newUnit,
                   ),

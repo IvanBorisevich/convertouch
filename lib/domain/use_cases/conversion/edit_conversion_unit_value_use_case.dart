@@ -32,6 +32,7 @@ class EditConversionUnitValueUseCase
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
           itemValue: newConvertedUnitValues[delta.unitId]!,
+          unitGroupName: unitGroup.name,
           delta: delta,
           paramSetValue: activeParams,
           alignCurrentValue: true,

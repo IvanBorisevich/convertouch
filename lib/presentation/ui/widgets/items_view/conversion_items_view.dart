@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
@@ -52,6 +53,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
         }
 
         final unitGroup = conversionState.conversion.unitGroup;
+        final params = conversionState.conversion.params?.active;
         final srcUnitId = conversionState.conversion.srcUnitValue?.unit.id;
         final unitValues = conversionState.conversion.convertedUnitValues;
         final removable = unitValues.length > minimumNumberOfConversionItems;
@@ -110,6 +112,17 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                     isSource: isSource,
                     isLast: isLast,
                     removable: removable,
+                    listFetchParamsBuilder: resultUnitValue.listType != null
+                        ? () {
+                            return ListValuesFetchParams(
+                              listType: resultUnitValue.listType!,
+                              itemId: resultUnitValue.id,
+                              conversionGroupName: unitGroup.name,
+                              unit: resultUnitValue.unitItem,
+                              params: params,
+                            );
+                          }
+                        : null,
                     onUnitItemTap: () {
                       if (unitTapAction == UnitTapAction.selectReplacingUnit) {
                         unitsController.showUnitsForChangeInConversionItem(

@@ -63,12 +63,14 @@ class RefreshingJobsBloc
     switch (dynamicDataType) {
       case DynamicDataType.coefficients:
         inputDynamicDataFetchModel = InputDynamicCoefficientsFetchModel(
+          groupName: event.unitGroupName,
           params: event.params,
         );
         break;
       case DynamicDataType.singleValue:
         if (event.srcUnitOfRefreshingValue != null) {
           inputDynamicDataFetchModel = InputDynamicValueFetchModel(
+            groupName: event.unitGroupName,
             srcUnit: event.srcUnitOfRefreshingValue!,
             params: event.params,
           );

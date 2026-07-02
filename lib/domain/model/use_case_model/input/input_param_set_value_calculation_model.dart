@@ -6,7 +6,7 @@ class InputParamSetValueCalculationModel {
   final ConversionParamSetValueModel paramSetValue;
   final ConversionSingleParamModifyDelta? delta;
   final ConversionUnitValueModel? srcUnitValue;
-  final String? unitGroupName;
+  final String unitGroupName;
   final bool alignCurrentValues;
   final bool fetchListValues;
   final bool keepSelectedValuesIfNotInList;
@@ -15,9 +15,9 @@ class InputParamSetValueCalculationModel {
 
   const InputParamSetValueCalculationModel({
     required this.paramSetValue,
+    required this.unitGroupName,
     this.delta,
     this.srcUnitValue,
-    this.unitGroupName,
     required this.alignCurrentValues,
     this.fetchListValues = true,
     this.keepSelectedValuesIfNotInList = false,

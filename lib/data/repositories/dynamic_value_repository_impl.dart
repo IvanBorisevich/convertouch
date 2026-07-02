@@ -26,6 +26,7 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
   @override
   Future<Either<ConvertouchException, DynamicValueModel?>> get({
     required UnitModel unit,
+    required String conversionGroupName,
     ConversionParamSetValueModel? params,
   }) async {
     try {
@@ -38,6 +39,7 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
       if (params != null) {
         return await networkRepository.fetchDynamicValue(
           unit: unit,
+          conversionGroupName: conversionGroupName,
           params: params,
         );
       }

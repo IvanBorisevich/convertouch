@@ -25,6 +25,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required int pageNum,
     required int pageSize,
     UnitModel? unit,
+    String? conversionGroupName,
     ConversionParamSetValueModel? params,
   }) async {
     if (listType.fetchedViaApi) {
@@ -32,6 +33,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
         listType: listType,
         pageNum: pageNum,
         pageSize: pageSize,
+        conversionGroupName: conversionGroupName,
         params: params,
       );
     }
@@ -109,10 +111,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required ConvertouchListType listType,
     required int pageNum,
     required int pageSize,
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
   }) async {
     return await networkRepository.fetchListValues(
       listType: listType,
+      conversionGroupName: conversionGroupName,
       params: params,
       pageSize: pageSize,
       pageNum: pageNum,

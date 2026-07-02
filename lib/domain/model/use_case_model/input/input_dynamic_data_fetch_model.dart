@@ -10,13 +10,18 @@ const Map<String, DynamicDataType> dynamicDataGroups = {
 };
 
 abstract class InputDynamicDataFetchModel {
-  const InputDynamicDataFetchModel();
+  final String groupName;
+
+  const InputDynamicDataFetchModel({
+    required this.groupName,
+  });
 }
 
 class InputDynamicCoefficientsFetchModel extends InputDynamicDataFetchModel {
   final ConversionParamSetValueModel params;
 
   const InputDynamicCoefficientsFetchModel({
+    required super.groupName,
     required this.params,
   });
 }
@@ -26,6 +31,7 @@ class InputDynamicValueFetchModel extends InputDynamicDataFetchModel {
   final ConversionParamSetValueModel? params;
 
   const InputDynamicValueFetchModel({
+    required super.groupName,
     required this.srcUnit,
     this.params,
   });

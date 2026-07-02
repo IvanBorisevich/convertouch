@@ -19,6 +19,7 @@ class FetchDynamicValueUseCase
   ) async {
     return await dynamicValueRepository.get(
       unit: input.srcUnit,
+      conversionGroupName: input.groupName,
       params: input.params,
     );
   }

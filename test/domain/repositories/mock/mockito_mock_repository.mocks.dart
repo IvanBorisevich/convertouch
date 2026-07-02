@@ -42,34 +42,43 @@ class MockitoNetworkRepository extends _i1.Mock
 
   @override
   _i3.Future<
-          _i4.Either<_i5.ConvertouchException, _i6.DynamicCoefficientsModel?>>
-      fetchCoefficients({required _i7.ConversionParamSetValueModel? params}) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #fetchCoefficients,
-              [],
-              {#params: params},
-            ),
-            returnValue: _i3.Future<
-                _i4.Either<_i5.ConvertouchException,
-                    _i6.DynamicCoefficientsModel?>>.value(_i8.dummyValue<
-                _i4.Either<_i5.ConvertouchException,
-                    _i6.DynamicCoefficientsModel?>>(
-              this,
-              Invocation.method(
-                #fetchCoefficients,
-                [],
-                {#params: params},
-              ),
-            )),
-          ) as _i3.Future<
-              _i4.Either<_i5.ConvertouchException,
-                  _i6.DynamicCoefficientsModel?>>);
+      _i4.Either<_i5.ConvertouchException,
+          _i6.DynamicCoefficientsModel?>> fetchCoefficients({
+    required String? conversionGroupName,
+    required _i7.ConversionParamSetValueModel? params,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #fetchCoefficients,
+          [],
+          {
+            #conversionGroupName: conversionGroupName,
+            #params: params,
+          },
+        ),
+        returnValue: _i3.Future<
+            _i4.Either<_i5.ConvertouchException,
+                _i6.DynamicCoefficientsModel?>>.value(_i8.dummyValue<
+            _i4
+            .Either<_i5.ConvertouchException, _i6.DynamicCoefficientsModel?>>(
+          this,
+          Invocation.method(
+            #fetchCoefficients,
+            [],
+            {
+              #conversionGroupName: conversionGroupName,
+              #params: params,
+            },
+          ),
+        )),
+      ) as _i3.Future<
+          _i4.Either<_i5.ConvertouchException, _i6.DynamicCoefficientsModel?>>);
 
   @override
   _i3.Future<_i4.Either<_i5.ConvertouchException, _i6.DynamicValueModel?>>
       fetchDynamicValue({
     required _i9.UnitModel? unit,
+    required String? conversionGroupName,
     required _i7.ConversionParamSetValueModel? params,
   }) =>
           (super.noSuchMethod(
@@ -78,6 +87,7 @@ class MockitoNetworkRepository extends _i1.Mock
               [],
               {
                 #unit: unit,
+                #conversionGroupName: conversionGroupName,
                 #params: params,
               },
             ),
@@ -91,6 +101,7 @@ class MockitoNetworkRepository extends _i1.Mock
                 [],
                 {
                   #unit: unit,
+                  #conversionGroupName: conversionGroupName,
                   #params: params,
                 },
               ),
@@ -102,6 +113,7 @@ class MockitoNetworkRepository extends _i1.Mock
   _i3.Future<_i4.Either<_i5.ConvertouchException, List<_i10.ValueModel>>>
       fetchListValues({
     required _i11.ConvertouchListType? listType,
+    required String? conversionGroupName,
     required _i7.ConversionParamSetValueModel? params,
     required int? pageSize,
     required int? pageNum,
@@ -112,6 +124,7 @@ class MockitoNetworkRepository extends _i1.Mock
               [],
               {
                 #listType: listType,
+                #conversionGroupName: conversionGroupName,
                 #params: params,
                 #pageSize: pageSize,
                 #pageNum: pageNum,
@@ -127,6 +140,7 @@ class MockitoNetworkRepository extends _i1.Mock
                 [],
                 {
                   #listType: listType,
+                  #conversionGroupName: conversionGroupName,
                   #params: params,
                   #pageSize: pageSize,
                   #pageNum: pageNum,

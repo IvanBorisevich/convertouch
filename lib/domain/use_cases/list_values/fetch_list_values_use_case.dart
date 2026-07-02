@@ -29,6 +29,7 @@ class FetchListValuesUseCase
         pageNum: input.pageNum,
         pageSize: input.pageSize,
         unit: input.fetchParams!.unit,
+        conversionGroupName: input.fetchParams!.conversionGroupName,
         params: input.fetchParams!.params,
       ),
     );

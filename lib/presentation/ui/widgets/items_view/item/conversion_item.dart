@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
@@ -24,8 +25,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final void Function()? onUnitItemTap;
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
-  final void Function(ListValuesFetchResult)? onRefreshTap;
   final void Function()? onItemRemoved;
+  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
   final ConversionItemColorScheme colors;
@@ -43,8 +44,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.onUnitItemTap,
     this.onValueChanged,
     this.onValueFocused,
-    this.onRefreshTap,
     this.onItemRemoved,
+    this.listFetchParamsBuilder,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
     required this.colors,
@@ -67,6 +68,7 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
     return ConvertouchInputBox(
       key: Key(widget.model.id),
       model: widget.model,
+      readonly: widget.readonly,
       colors: widget.colors.inputBox,
       dialogColors: widget.dialogColors,
       theme: widget.theme,
@@ -77,6 +79,7 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
       floatingLabelBehavior: FloatingLabelBehavior.always,
       tooltipDirection:
           widget.isLast ? TooltipDirection.up : TooltipDirection.down,
+      listFetchParamsBuilder: widget.listFetchParamsBuilder,
       onValueChanged: widget.onValueChanged,
       onValueFocused: (value) {
         setState(() {
@@ -89,7 +92,6 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
           _isFocused = false;
         });
       },
-      onRefreshTap: widget.onRefreshTap,
       prefixWidgets: [
         widget.draggable && widget.index != null
             ? ReorderableDragStartListener(

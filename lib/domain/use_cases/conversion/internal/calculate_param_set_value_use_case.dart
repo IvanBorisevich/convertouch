@@ -93,7 +93,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     required ConversionParamSetValueModel paramSetValue,
     required int paramId,
     ConversionUnitValueModel? srcUnitValue,
-    String? unitGroupName,
+    required String unitGroupName,
     required bool alignCurrentValues,
     required bool fetchListValues,
     required bool keepSelectedValuesIfNotInList,

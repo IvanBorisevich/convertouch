@@ -99,6 +99,7 @@ Future<void> main() async {
       );
 
       final result = await networkRepository.fetchCoefficients(
+        conversionGroupName: GroupNames.currency,
         params: exchangeRateParams,
       );
 
@@ -129,6 +130,7 @@ Future<void> main() async {
 
       var fetchedSources = await networkRepository.fetchListValues(
         listType: ConvertouchListType.exchangeRateSource,
+        conversionGroupName: GroupNames.currency,
         params: exchangeRateParams,
         pageSize: 100,
         pageNum: 1,
@@ -180,6 +182,7 @@ Future<void> main() async {
       });
 
       var result = await networkRepository.fetchCoefficients(
+        conversionGroupName: GroupNames.currency,
         params: exchangeRateParams,
       );
 

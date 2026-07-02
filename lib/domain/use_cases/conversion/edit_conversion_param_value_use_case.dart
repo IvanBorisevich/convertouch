@@ -42,6 +42,7 @@ class EditConversionParamValueUseCase
     final newParamSetValue = ObjectUtils.tryGet(
       await calculateParamSetValueUseCase.execute(
         InputParamSetValueCalculationModel(
+          unitGroupName: unitGroup.name,
           paramSetValue: oldParamSetValue,
           delta: delta,
           alignCurrentValues: true,

@@ -67,7 +67,7 @@ void main() {
     required bool alignCurrentValues,
     required bool enableFirstCalculableParamIfNoCalculatedEnabled,
     ConversionUnitValueModel? srcUnitValue,
-    String? unitGroupName,
+    required String conversionGroupName,
   }) async {
     final modifiedParamSetValue = ObjectUtils.tryGet(
       await useCase.execute(
@@ -75,7 +75,7 @@ void main() {
           paramSetValue: currentParamSetValue,
           delta: delta,
           srcUnitValue: srcUnitValue,
-          unitGroupName: unitGroupName,
+          unitGroupName: conversionGroupName,
           alignCurrentValues: alignCurrentValues,
           enableFirstCalculableParamIfNoCalculatedEnabled:
               enableFirstCalculableParamIfNoCalculatedEnabled,
@@ -140,7 +140,7 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        unitGroupName: GroupNames.mass,
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -200,7 +200,7 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        unitGroupName: GroupNames.mass,
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -261,7 +261,7 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        unitGroupName: GroupNames.mass,
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -321,7 +321,7 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        unitGroupName: GroupNames.mass,
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -382,6 +382,7 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -440,6 +441,7 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -499,6 +501,7 @@ void main() {
           paramId: oneSideWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -559,7 +562,7 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        unitGroupName: GroupNames.mass,
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -619,6 +622,7 @@ void main() {
           paramId: oneSideWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
+        conversionGroupName: GroupNames.mass,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -697,6 +701,7 @@ void main() {
       );
 
       await testCase(
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -772,6 +777,7 @@ void main() {
       );
 
       await testCase(
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -850,7 +856,7 @@ void main() {
       await testCase(
         srcUnitValue:
             ConversionUnitValueModel.tuple(itClothesSize, 44, null),
-        unitGroupName: GroupNames.clothesSize,
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -930,7 +936,7 @@ void main() {
       await testCase(
         srcUnitValue:
             ConversionUnitValueModel.tuple(itClothesSize, 44, null),
-        unitGroupName: GroupNames.clothesSize,
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1010,6 +1016,7 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1088,6 +1095,7 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1165,6 +1173,7 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1242,6 +1251,7 @@ void main() {
           paramId: garmentParam.id,
           paramSetId: garmentParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1319,6 +1329,7 @@ void main() {
           paramId: garmentParam.id,
           paramSetId: garmentParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1396,6 +1407,7 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1474,6 +1486,7 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1553,6 +1566,7 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
+        conversionGroupName: GroupNames.clothesSize,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,
@@ -1592,6 +1606,7 @@ void main() {
       when(
         mockitoNetworkRepository.fetchListValues(
           listType: ConvertouchListType.exchangeRateSource,
+          conversionGroupName: GroupNames.currency,
           params: anyNamed('params'),
           pageSize: listValuesPageSize,
           pageNum: 0,
@@ -1603,6 +1618,7 @@ void main() {
       );
 
       await testCase(
+        conversionGroupName: GroupNames.currency,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
         alignCurrentValues: true,

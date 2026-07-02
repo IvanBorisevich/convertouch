@@ -76,12 +76,11 @@ class CalculateUnitValueUseValue extends UseCase<InputUnitValueCalculationModel,
 
     if (delta == null &&
         input.calculateByParams &&
-        paramsAreApplicable &&
-        input.unitGroupName != null) {
+        paramsAreApplicable) {
       calculatedValueByParams = rules.calculateSrcValueByParams(
         srcUnit: unitValue.unit,
         params: input.paramSetValue!,
-        unitGroupName: input.unitGroupName!,
+        unitGroupName: input.unitGroupName,
       );
     }
 
@@ -99,6 +98,7 @@ class CalculateUnitValueUseValue extends UseCase<InputUnitValueCalculationModel,
                 await calculateDefaultValueUseCase.execute(
                   InputDefaultValueCalculationModel(
                     item: unitValue.unit,
+                    conversionGroupName: input.unitGroupName,
                     replacingUnit: newUnit,
                   ),
                 ),

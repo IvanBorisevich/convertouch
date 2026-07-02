@@ -55,7 +55,7 @@ void main() {
     bool alignCurrentValue = true,
     bool keepSelectedValueIfNotInList = false,
     bool calculateByParams = false,
-    String? unitGroupName,
+    required String conversionGroupName,
   }) async {
     final modifiedUnitValue = ObjectUtils.tryGet(
       await useCase.execute(
@@ -66,7 +66,7 @@ void main() {
           alignCurrentValue: alignCurrentValue,
           keepSelectedValueIfNotInList: keepSelectedValueIfNotInList,
           calculateByParams: calculateByParams,
-          unitGroupName: unitGroupName,
+          unitGroupName: conversionGroupName,
         ),
       ),
     );
@@ -99,6 +99,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
               paramValues: [
@@ -148,6 +149,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
               paramValues: [
@@ -201,6 +203,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
               paramValues: [
@@ -254,6 +257,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
@@ -306,6 +310,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
               paramValues: [
@@ -357,6 +362,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
@@ -407,6 +413,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
@@ -457,6 +464,7 @@ void main() {
           );
 
           await testCase(
+            conversionGroupName: GroupNames.clothesSize,
             alignCurrentValue: false,
             paramSetValue: ConversionParamSetValueModel.compact(
               paramSet: clothesSizeParamSet,
@@ -514,6 +522,7 @@ void main() {
             newValue: 'M',
             unitId: jpClothesSize.id,
           ),
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -572,6 +581,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -629,6 +639,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -683,7 +694,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.clothesSize,
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -736,7 +747,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.clothesSize,
+          conversionGroupName: GroupNames.clothesSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -789,7 +800,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.ringSize,
+          conversionGroupName: GroupNames.ringSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
@@ -826,7 +837,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.ringSize,
+          conversionGroupName: GroupNames.ringSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
@@ -863,7 +874,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.ringSize,
+          conversionGroupName: GroupNames.ringSize,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: const [
@@ -900,7 +911,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          unitGroupName: GroupNames.ringSize,
+          conversionGroupName: GroupNames.ringSize,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -924,6 +935,7 @@ void main() {
         );
 
         await testCase(
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -946,6 +958,7 @@ void main() {
 
         await testCase(
           alignCurrentValue: false,
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -973,6 +986,7 @@ void main() {
             newValue: 45,
             unitId: kilogram.id,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -996,6 +1010,7 @@ void main() {
             newValue: null,
             unitId: kilogram.id,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1019,6 +1034,7 @@ void main() {
             newDefaultValue: 45,
             unitId: kilogram.id,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1044,6 +1060,7 @@ void main() {
             newDefaultValue: null,
             unitId: kilogram.id,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1070,6 +1087,7 @@ void main() {
             newDefaultValue: null,
             unitId: kilogram.id,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1098,6 +1116,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1124,6 +1143,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.currentValue,
             recalculateUnitValues: false,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1150,6 +1170,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.otherValues,
             recalculateUnitValues: true,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -1176,6 +1197,7 @@ void main() {
             recalculationMode: RecalculationOnUnitChange.otherValues,
             recalculateUnitValues: true,
           ),
+          conversionGroupName: GroupNames.mass,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );

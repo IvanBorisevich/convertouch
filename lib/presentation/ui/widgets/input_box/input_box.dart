@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -87,7 +85,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.onRefreshTap,
+    this.listFetchParamsBuilder,
     this.validators = const [],
     this.borderWidth = 1,
     required this.colors,
@@ -115,7 +113,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function(ValueModel)? onValueUnfocused;
-  final void Function(ListValuesFetchResult)? onRefreshTap;
+  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -395,6 +393,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         model: model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
+        listFetchParamsBuilder: widget.listFetchParamsBuilder,
         refreshProgressIconNotifier: _refreshProgressIconNotifier,
         listValuesNotifier: _listValuesNotifier,
         foregroundColor: _foregroundColor,
@@ -456,7 +455,11 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         if (listValuesFetchResult.status == FetchingStatus.success) {
           return GestureDetector(
             onTap: () {
-              widget.onRefreshTap?.call(listValuesFetchResult);
+              BlocProvider.of<ListValuesBloc>(context).add(
+                FetchItems(
+                  params: listValuesFetchResult.fetchParams,
+                ),
+              );
             },
             child: Container(
               height: double.infinity,
@@ -481,7 +484,11 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
                   return ConvertouchFailureDialog(
                     title: "Fetch failed",
                     handlerFunc: () {
-                      widget.onRefreshTap?.call(listValuesFetchResult);
+                      BlocProvider.of<ListValuesBloc>(context).add(
+                        FetchItems(
+                          params: listValuesFetchResult.fetchParams,
+                        ),
+                      );
                     },
                     handlerActionName: "Retry",
                     content: Text(
@@ -770,6 +777,7 @@ class _ListField extends StatefulWidget {
     required this.model,
     this.controller,
     this.onValueChanged,
+    this.listFetchParamsBuilder,
     required this.refreshProgressIconNotifier,
     required this.listValuesNotifier,
     required this.foregroundColor,
@@ -787,6 +795,7 @@ class _ListField extends StatefulWidget {
   final ListBoxViewModel model;
   final TextEditingController? controller;
   final void Function(ValueModel)? onValueChanged;
+  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final ValueNotifier<bool> refreshProgressIconNotifier;
   final ValueNotifier<ListValuesFetchResult?> listValuesNotifier;
   final Color foregroundColor;
@@ -806,7 +815,6 @@ class _ListField extends StatefulWidget {
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
-  late bool _isDropdownClosedProgrammatically;
 
   late final ValueNotifier<ValueModel?> _selectedValueNotifier;
   late final ValueNotifier<Object?> _openDropdownNotifier;
@@ -818,29 +826,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void initState() {
     super.initState();
 
-    if (widget.model.listValuesFetchResult == null ||
-        widget.model.listValuesFetchResult!.items.isEmpty) {
-      BlocProvider.of<ListValuesBloc>(context).add(
-        FetchItems(
-          params: ListValuesFetchParams(
-            itemId: widget.model.itemId,
-            listType: widget.model.listType,
-          ),
-        ),
-      );
-    }
-
     _isDropdownOpen = false;
-    _isDropdownClosedProgrammatically = false;
 
     _selectedValueNotifier = ValueNotifier(_getMainValue());
-    widget.listValuesNotifier.addListener(_onListValuesUpdated);
-
     _openDropdownNotifier = ValueNotifier<Object?>(null);
 
     if (widget.model.searchEnabled) {
-      _dropdownSearchController = TextEditingController();
-      _dropdownSearchFocusNode = initOrGetFocusNode();
+      _initDropdownSearch();
     }
   }
 
@@ -854,21 +846,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         : _noValueHint;
   }
 
-  void _onListValuesUpdated() {
-    if (_isDropdownOpen) {
-      log("Auto-closing dropdown on list values updated");
-      Navigator.of(context).pop();
-
-      setState(() {
-        _isDropdownClosedProgrammatically = true;
-      });
-    }
+  void _initDropdownSearch() {
+    _dropdownSearchController ??= TextEditingController();
+    _dropdownSearchFocusNode ??= initOrGetFocusNode();
   }
 
   @override
   void dispose() {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
-    widget.listValuesNotifier.removeListener(_onListValuesUpdated);
     _openDropdownNotifier.dispose();
     _dropdownSearchController?.dispose();
     _selectedValueNotifier.dispose();
@@ -882,8 +867,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _selectedValueNotifier.value = _getMainValue();
 
     if (widget.model.searchEnabled) {
-      _dropdownSearchController ??= TextEditingController();
-      _dropdownSearchFocusNode ??= initOrGetFocusNode();
+      _initDropdownSearch();
     }
   }
 
@@ -908,6 +892,22 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             }
 
             widget.listValuesNotifier.value = listValuesFetchState.itemsFetch;
+
+            if (listValuesFetchState.itemsFetch.items.length >
+                nonSearchableListItemsMinLimit) {
+              _initDropdownSearch();
+            }
+
+            /* WA to refresh dropdown list values (close + open the dropdown) */
+            if (_isDropdownOpen) {
+              Navigator.of(context).pop();
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  _openDropdownNotifier.value = Object();
+                }
+              });
+            }
           },
         ),
       ],
@@ -1093,20 +1093,16 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   return;
                 }
 
-                if (!isOpen) {
+                if (isOpen) {
+                  _fetchListListValues();
+                } else {
                   _dropdownSearchController?.clear();
-                }
-
-                if (!isOpen && _isDropdownClosedProgrammatically) {
-                  log("Auto-reopening dropdown on list values updated");
-                  _openDropdownNotifier.value = Object();
                 }
 
                 widget.refreshProgressIconNotifier.value = !isOpen;
 
                 setState(() {
                   _isDropdownOpen = isOpen;
-                  _isDropdownClosedProgrammatically = false;
                 });
               },
             ),
@@ -1114,6 +1110,21 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         },
       ),
     );
+  }
+
+  void _fetchListListValues() {
+    if (widget.model.listValuesFetchResult == null ||
+        widget.model.listValuesFetchResult!.items.isEmpty) {
+      BlocProvider.of<ListValuesBloc>(context).add(
+        FetchItems(
+          params: widget.listFetchParamsBuilder?.call() ??
+              ListValuesFetchParams(
+                itemId: widget.model.itemId,
+                listType: widget.model.listType,
+              ),
+        ),
+      );
+    }
   }
 
   List<DropdownItem<ValueModel>>? _buildDropdownItems(

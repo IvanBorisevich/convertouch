@@ -4,7 +4,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 
 abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
   final M itemValue;
-  final String? unitGroupName;
+  final String unitGroupName;
   final bool alignCurrentValue;
   final bool fetchListValues;
   final bool keepSelectedValueIfNotInList;
@@ -12,7 +12,7 @@ abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
 
   const _InputItemValueCalculationModel({
     required this.itemValue,
-    this.unitGroupName,
+    required this.unitGroupName,
     this.alignCurrentValue = true,
     this.fetchListValues = true,
     this.keepSelectedValueIfNotInList = false,
@@ -28,18 +28,15 @@ class InputUnitValueCalculationModel
 
   const InputUnitValueCalculationModel({
     required super.itemValue,
+    required super.unitGroupName,
     this.delta,
     this.paramSetValue,
     this.calculateByParams = false,
-    super.unitGroupName,
     super.alignCurrentValue,
     super.fetchListValues,
     super.keepSelectedValueIfNotInList,
     super.onItemValueUpdated,
-  }) : assert(
-          !calculateByParams || calculateByParams && unitGroupName != null,
-          'Unit group name should be provided for calculation by params',
-        );
+  });
 }
 
 class InputParamValueCalculationModel
@@ -50,10 +47,10 @@ class InputParamValueCalculationModel
 
   const InputParamValueCalculationModel({
     required super.itemValue,
+    required super.unitGroupName,
     required this.paramSetValue,
     this.delta,
     this.srcUnitValue,
-    super.unitGroupName,
     super.alignCurrentValue,
     super.fetchListValues,
     super.keepSelectedValueIfNotInList,

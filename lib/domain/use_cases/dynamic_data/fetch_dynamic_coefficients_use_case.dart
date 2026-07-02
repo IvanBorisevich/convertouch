@@ -17,6 +17,9 @@ class FetchDynamicCoefficientsUseCase extends UseCase<
   Future<Either<ConvertouchException, DynamicCoefficientsModel?>> execute(
     InputDynamicCoefficientsFetchModel input,
   ) async {
-    return await networkRepository.fetchCoefficients(params: input.params);
+    return await networkRepository.fetchCoefficients(
+      conversionGroupName: input.groupName,
+      params: input.params,
+    );
   }
 }

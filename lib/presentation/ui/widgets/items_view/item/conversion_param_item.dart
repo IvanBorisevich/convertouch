@@ -1,5 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
@@ -12,16 +13,16 @@ const double _calculationSuffixIconWidth = 40;
 
 class ConversionParamItem extends StatelessWidget {
   final ConversionParamValueModel paramValue;
-  final String unitGroupName;
   final bool calculationSwitchersVisible;
+  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final ConversionItemColorScheme colors;
   final WidgetColorScheme dialogColors;
   final ConvertouchUITheme theme;
 
   const ConversionParamItem({
     required this.paramValue,
-    required this.unitGroupName,
     this.calculationSwitchersVisible = false,
+    this.listFetchParamsBuilder,
     required this.colors,
     required this.dialogColors,
     required this.theme,
@@ -37,6 +38,7 @@ class ConversionParamItem extends StatelessWidget {
       colors: colors,
       dialogColors: dialogColors,
       theme: theme,
+      listFetchParamsBuilder: listFetchParamsBuilder,
       onUnitItemTap: () {
         unitsController.showUnitsForChangeInParam(
           context,
@@ -63,12 +65,6 @@ class ConversionParamItem extends StatelessWidget {
               paramSetName: conversion.params?.active?.paramSet.name,
             );
           },
-        );
-      },
-      onRefreshTap: (listValuesFetchResult) {
-        conversionController.refreshParamListValues(
-          context,
-          paramId: paramValue.param.id,
         );
       },
       prefixWidgets: [

@@ -13,6 +13,7 @@ class MockNetworkRepository extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, DynamicCoefficientsModel?>>
       fetchCoefficients({
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   }) async {
     return const Right(null);
@@ -21,6 +22,7 @@ class MockNetworkRepository extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, DynamicValueModel?>> fetchDynamicValue({
     required UnitModel unit,
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   }) async {
     return const Right(null);
@@ -29,6 +31,7 @@ class MockNetworkRepository extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,

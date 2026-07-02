@@ -14,12 +14,10 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/network_repository.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 import 'package:sqflite/sqflite.dart' as sqlite;
 
@@ -41,10 +39,12 @@ class NetworkRepositoryImpl extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, DynamicCoefficientsModel>>
       fetchCoefficients({
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   }) async {
     return await _fetch<DynamicCoefficientsResponseEntity,
         DynamicCoefficientsModel>(
+      conversionGroupName: conversionGroupName,
       params: params,
       ifNullResponse: () => DynamicCoefficientsModel.empty,
       responseHandler: (response) async {
@@ -62,9 +62,11 @@ class NetworkRepositoryImpl extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, DynamicValueModel>> fetchDynamicValue({
     required UnitModel unit,
+    required String conversionGroupName,
     required ConversionParamSetValueModel params,
   }) async {
     return await _fetch<DynamicValueResponseEntity, DynamicValueModel>(
+      conversionGroupName: conversionGroupName,
       params: params,
       ifNullResponse: () => DynamicValueModel(unitId: unit.id),
       responseHandler: (response) async {
@@ -93,11 +95,13 @@ class NetworkRepositoryImpl extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,
   }) async {
     return await _fetch<DynamicListValuesResponseEntity, List<ValueModel>>(
+      conversionGroupName: conversionGroupName,
       params: params,
       listType: listType,
       pageSize: pageSize,
@@ -108,6 +112,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
   }
 
   Future<Either<ConvertouchException, R>> _fetch<T extends ResponseEntity, R>({
+    required String? conversionGroupName,
     required ConversionParamSetValueModel? params,
     ConvertouchListType? listType,
     int? pageSize,
@@ -123,23 +128,17 @@ class NetworkRepositoryImpl extends NetworkRepository {
         requestBuilder = requestBuilders.getByListType(listType);
         responseParser = responseParsers.getByListType(listType);
       } else {
-        if (params == null) {
-          return Right(ifNullResponse.call());
-        }
-
-        String? groupName = await _getGroupName(params.paramSet.groupId);
-
-        if (groupName == null) {
+        if (conversionGroupName == null || params == null) {
           return Right(ifNullResponse.call());
         }
 
         requestBuilder = requestBuilders.getByGroupAndParamSet(
-          groupName,
+          conversionGroupName,
           params.paramSet.name,
         );
 
         responseParser = responseParsers.getByGroupAndParamSet(
-          groupName,
+          conversionGroupName,
           params.paramSet.name,
         );
       }
@@ -188,13 +187,5 @@ class NetworkRepositoryImpl extends NetworkRepository {
         ),
       );
     }
-  }
-
-  Future<String?> _getGroupName(int unitGroupId) async {
-    UnitGroupModel? unitGroup = ObjectUtils.tryGet(
-      await unitGroupRepository.get(unitGroupId),
-    );
-
-    return unitGroup?.name;
   }
 }
