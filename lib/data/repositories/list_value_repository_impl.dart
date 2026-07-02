@@ -27,7 +27,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     UnitModel? unit,
     ConversionParamSetValueModel? params,
   }) async {
-    if (listType.fetchedViaApi && params != null) {
+    if (listType.fetchedViaApi) {
       return await _fetchFromNetwork(
         listType: listType,
         pageNum: pageNum,
@@ -109,7 +109,7 @@ class ListValueRepositoryImpl implements ListValueRepository {
     required ConvertouchListType listType,
     required int pageNum,
     required int pageSize,
-    required ConversionParamSetValueModel params,
+    required ConversionParamSetValueModel? params,
   }) async {
     return await networkRepository.fetchListValues(
       listType: listType,

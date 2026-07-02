@@ -9,7 +9,7 @@ class ExchangeRateSourceRequestBuilder extends RequestBuilder {
 
   @override
   Map<String, String>? buildHeaders({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   }) {
@@ -18,7 +18,7 @@ class ExchangeRateSourceRequestBuilder extends RequestBuilder {
 
   @override
   Map<String, dynamic>? buildQueryParams({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   }) {
@@ -26,7 +26,7 @@ class ExchangeRateSourceRequestBuilder extends RequestBuilder {
   }
 
   @override
-  bool readyForFetch(ConversionParamSetValueModel params) {
+  bool readyForFetch(ConversionParamSetValueModel? params) {
     return true;
   }
 }

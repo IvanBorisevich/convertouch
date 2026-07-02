@@ -5,13 +5,13 @@ import 'package:convertouch/domain/model/value_model.dart';
 const int _nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxViewModel {
-  final String? itemId;
+  final String itemId;
   final ValueModel? value;
   final String? labelText;
   final bool readonly;
 
   const InputBoxViewModel({
-    this.itemId,
+    required this.itemId,
     this.value,
     this.labelText,
     this.readonly = false,
@@ -64,7 +64,7 @@ class TextBoxViewModel extends InputBoxViewModel {
   final bool textLengthCounterVisible;
 
   const TextBoxViewModel({
-    super.itemId,
+    required super.itemId,
     super.value,
     this.hint,
     super.readonly,
@@ -95,7 +95,7 @@ class ListBoxViewModel extends InputBoxViewModel {
   final bool valueExistsForEmptyList;
 
   const ListBoxViewModel({
-    super.itemId,
+    required super.itemId,
     super.value,
     required this.listType,
     super.readonly,

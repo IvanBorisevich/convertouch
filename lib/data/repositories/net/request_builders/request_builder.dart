@@ -22,16 +22,16 @@ abstract class RequestBuilder {
   });
 
   Map<String, dynamic>? buildQueryParams({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   });
 
   Map<String, String>? buildHeaders({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   });
 
-  bool readyForFetch(ConversionParamSetValueModel params);
+  bool readyForFetch(ConversionParamSetValueModel? params);
 }

@@ -20,7 +20,7 @@ abstract class NetworkRepository {
 
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
-    required ConversionParamSetValueModel params,
+    required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,
   });

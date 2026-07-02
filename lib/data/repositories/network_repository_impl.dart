@@ -6,6 +6,7 @@ import 'package:convertouch/data/entities/response_entity.dart';
 import 'package:convertouch/data/entities/unit_entity.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder.dart';
 import 'package:convertouch/data/repositories/net/request_builders/request_builder_factory.dart';
+import 'package:convertouch/data/repositories/net/response_parsers/response_parser.dart';
 import 'package:convertouch/data/repositories/net/response_parsers/response_parser_factory.dart';
 import 'package:convertouch/data/translators/dynamic_coefficients_translator.dart';
 import 'package:convertouch/data/translators/dynamic_value_translator.dart';
@@ -92,7 +93,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
-    required ConversionParamSetValueModel params,
+    required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,
   }) async {
@@ -107,7 +108,7 @@ class NetworkRepositoryImpl extends NetworkRepository {
   }
 
   Future<Either<ConvertouchException, R>> _fetch<T extends ResponseEntity, R>({
-    required ConversionParamSetValueModel params,
+    required ConversionParamSetValueModel? params,
     ConvertouchListType? listType,
     int? pageSize,
     int? pageNum,
@@ -115,25 +116,33 @@ class NetworkRepositoryImpl extends NetworkRepository {
     required R Function() ifNullResponse,
   }) async {
     try {
-      String? groupName = await _getGroupName(params.paramSet.groupId);
+      RequestBuilder requestBuilder;
+      ResponseParser responseParser;
 
-      if (groupName == null) {
-        return Right(ifNullResponse.call());
+      if (listType != null) {
+        requestBuilder = requestBuilders.getByListType(listType);
+        responseParser = responseParsers.getByListType(listType);
+      } else {
+        if (params == null) {
+          return Right(ifNullResponse.call());
+        }
+
+        String? groupName = await _getGroupName(params.paramSet.groupId);
+
+        if (groupName == null) {
+          return Right(ifNullResponse.call());
+        }
+
+        requestBuilder = requestBuilders.getByGroupAndParamSet(
+          groupName,
+          params.paramSet.name,
+        );
+
+        responseParser = responseParsers.getByGroupAndParamSet(
+          groupName,
+          params.paramSet.name,
+        );
       }
-
-      final requestBuilder = listType != null
-          ? requestBuilders.getByListType(listType)
-          : requestBuilders.getByGroupAndParamSet(
-              groupName,
-              params.paramSet.name,
-            );
-
-      final responseParser = listType != null
-          ? responseParsers.getByListType(listType)
-          : responseParsers.getByGroupAndParamSet(
-              groupName,
-              params.paramSet.name,
-            );
 
       if (!requestBuilder.readyForFetch(params)) {
         return Right(ifNullResponse.call());

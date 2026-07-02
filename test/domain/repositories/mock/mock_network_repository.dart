@@ -29,7 +29,7 @@ class MockNetworkRepository extends NetworkRepository {
   @override
   Future<Either<ConvertouchException, List<ValueModel>>> fetchListValues({
     required ConvertouchListType listType,
-    required ConversionParamSetValueModel params,
+    required ConversionParamSetValueModel? params,
     required int pageSize,
     required int pageNum,
   }) async {

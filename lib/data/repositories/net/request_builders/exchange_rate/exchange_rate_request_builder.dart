@@ -10,7 +10,7 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
 
   @override
   Map<String, String>? buildHeaders({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   }) {
@@ -19,18 +19,20 @@ class ExchangeRateRequestBuilder extends RequestBuilder {
 
   @override
   Map<String, dynamic>? buildQueryParams({
-    required ConversionParamSetValueModel params,
+    ConversionParamSetValueModel? params,
     int? pageSize,
     int? pageNum,
   }) {
-    return {
-      'source': params.getParamValue(ParamNames.sourceOrBank)!.raw,
-    };
+    return params != null
+        ? {
+            'source': params.getParamValue(ParamNames.sourceOrBank)!.raw,
+          }
+        : const {};
   }
 
   @override
-  bool readyForFetch(ConversionParamSetValueModel params) {
-    return params.hasParamValue(ParamNames.sourceOrBank);
+  bool readyForFetch(ConversionParamSetValueModel? params) {
+    return params != null && params.hasParamValue(ParamNames.sourceOrBank);
   }
 }
 

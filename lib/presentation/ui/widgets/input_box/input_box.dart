@@ -4,9 +4,13 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/input_validator.dart';
 import 'package:convertouch/domain/utils/list_values_utils.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
@@ -814,6 +818,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void initState() {
     super.initState();
 
+    if (widget.model.listValuesFetchResult == null ||
+        widget.model.listValuesFetchResult!.items.isEmpty) {
+      BlocProvider.of<ListValuesBloc>(context).add(
+        FetchItems(
+          params: ListValuesFetchParams(
+            itemId: widget.model.itemId,
+            listType: widget.model.listType,
+          ),
+        ),
+      );
+    }
+
     _isDropdownOpen = false;
     _isDropdownClosedProgrammatically = false;
 
@@ -880,6 +896,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             if (_isDropdownOpen) {
               Navigator.of(context).pop();
             }
+          },
+        ),
+        BlocListener<ListValuesBloc,
+            ItemsFetched<ValueModel, ListValuesFetchParams>>(
+          listener: (_, listValuesFetchState) {
+            if (listValuesFetchState.itemsFetch.fetchParams?.itemId == null ||
+                listValuesFetchState.itemsFetch.fetchParams?.itemId !=
+                    widget.model.itemId) {
+              return;
+            }
+
+            widget.listValuesNotifier.value = listValuesFetchState.itemsFetch;
           },
         ),
       ],
@@ -1091,7 +1119,28 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
     ListValuesFetchResult? listValuesFetchResult,
   ) {
-    if (listValuesFetchResult == null || listValuesFetchResult.isFinalEmpty) {
+    if (listValuesFetchResult == null ||
+        listValuesFetchResult.status == FetchingStatus.loading) {
+      return [
+        DropdownItem<ValueModel>(
+          enabled: false,
+          alignment: Alignment.center,
+          height: 40,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeCap: StrokeCap.round,
+              strokeWidth: 2,
+              color: widget.dropdownColors.foreground.regular,
+            ),
+          ),
+        ),
+      ];
+    }
+
+    if (listValuesFetchResult.isFinalEmpty) {
       return [
         DropdownItem(
           height: _defaultListItemHeight,
@@ -1112,68 +1161,44 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       ];
     }
 
-    List<DropdownItem<ValueModel>> items = listValuesFetchResult.items.map(
-      (value) {
-        String? iconUri = widget.model.listType.defaultIconUri != null
-            ? (value.iconUri ?? widget.model.listType.defaultIconUri)
-            : null;
+    return listValuesFetchResult.items.map((value) {
+      String? iconUri = widget.model.listType.defaultIconUri != null
+          ? (value.iconUri ?? widget.model.listType.defaultIconUri)
+          : null;
 
-        return DropdownItem(
-          value: value,
-          height: _defaultListItemHeight,
-          child: Row(
-            children: [
-              iconUri != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 14),
-                      child: IconUtils.getSvgIcon(
-                        iconUri,
-                        color: widget.dropdownColors.icon.regular,
-                        size: 15,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: iconUri != null ? 10 : 17,
-                  ),
-                  child: Text(
-                    value.itemName,
-                    style: _inputFieldTextStyle(
-                      fontSize: widget.fontSize,
-                      foregroundColor: widget.dropdownColors.foreground.regular,
+      return DropdownItem(
+        value: value,
+        height: _defaultListItemHeight,
+        child: Row(
+          children: [
+            iconUri != null
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 14),
+                    child: IconUtils.getSvgIcon(
+                      iconUri,
+                      color: widget.dropdownColors.icon.regular,
+                      size: 15,
                     ),
+                  )
+                : const SizedBox.shrink(),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: iconUri != null ? 10 : 17,
+                ),
+                child: Text(
+                  value.itemName,
+                  style: _inputFieldTextStyle(
+                    fontSize: widget.fontSize,
+                    foregroundColor: widget.dropdownColors.foreground.regular,
                   ),
                 ),
               ),
-            ],
-          ),
-        );
-      },
-    ).toList();
-
-    if (listValuesFetchResult.status == FetchingStatus.loading) {
-      items.add(
-        DropdownItem<ValueModel>(
-          enabled: false,
-          alignment: Alignment.center,
-          height: 40,
-          child: Container(
-            padding: const EdgeInsets.all(2),
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeCap: StrokeCap.round,
-              strokeWidth: 2,
-              color: widget.dropdownColors.foreground.regular,
             ),
-          ),
+          ],
         ),
       );
-    }
-
-    return items;
+    }).toList();
   }
 }
 

@@ -69,6 +69,7 @@ import 'package:convertouch/domain/use_cases/units/remove_units_use_case.dart';
 import 'package:convertouch/domain/use_cases/units/save_unit_use_case.dart';
 import 'package:convertouch/presentation/bloc/common/app/app_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
@@ -529,6 +530,12 @@ Future<void> _initBloc() async {
 
   locator.registerLazySingleton<SingleGroupBloc>(
     () => SingleGroupBloc(),
+  );
+
+  locator.registerLazySingleton<ListValuesBloc>(
+    () => ListValuesBloc(
+      fetchListValuesUseCase: locator(),
+    ),
   );
 
   locator.registerLazySingleton<UnitsBloc>(
