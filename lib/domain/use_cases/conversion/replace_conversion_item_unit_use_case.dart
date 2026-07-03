@@ -32,10 +32,9 @@ class ReplaceConversionItemUnitUseCase
           unitGroupName: unitGroup.name,
           delta: delta,
           paramSetValue: params,
-          alignCurrentValue: true,
         ),
       ),
-    ).result();
+    );
 
     return oldConvertedUnitValues.map(
       (key, value) => key == delta.unitId

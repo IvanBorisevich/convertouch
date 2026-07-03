@@ -816,7 +816,7 @@ class _ListField extends StatefulWidget {
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
 
-  late final ValueNotifier<ValueModel?> _selectedValueNotifier;
+  late final ValueNotifier<ValueModel?> _mainValueNotifier;
   late final ValueNotifier<Object?> _openDropdownNotifier;
 
   TextEditingController? _dropdownSearchController;
@@ -828,7 +828,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _isDropdownOpen = false;
 
-    _selectedValueNotifier = ValueNotifier(_getMainValue());
+    _mainValueNotifier = ValueNotifier(
+      _getMainValue(
+        selectedValue: widget.model.value,
+        valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+      ),
+    );
     _openDropdownNotifier = ValueNotifier<Object?>(null);
 
     if (widget.model.searchEnabled) {
@@ -836,13 +841,19 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     }
   }
 
-  ValueModel? _getMainValue() {
-    return widget.model.valueExistsForEmptyList ? null : widget.model.value;
+  ValueModel? _getMainValue({
+    required ValueModel? selectedValue,
+    required bool valueExistsForEmptyList,
+  }) {
+    return valueExistsForEmptyList ? null : selectedValue;
   }
 
-  String _getHint() {
-    return widget.model.valueExistsForEmptyList
-        ? (widget.model.value?.itemName ?? _noValueHint)
+  String _getHint({
+    required ValueModel? selectedValue,
+    required bool valueExistsForEmptyList,
+  }) {
+    return valueExistsForEmptyList
+        ? (selectedValue?.itemName ?? _noValueHint)
         : _noValueHint;
   }
 
@@ -856,7 +867,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
     _openDropdownNotifier.dispose();
     _dropdownSearchController?.dispose();
-    _selectedValueNotifier.dispose();
+    _mainValueNotifier.dispose();
     super.dispose();
   }
 
@@ -864,7 +875,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedValueNotifier.value = _getMainValue();
+    _mainValueNotifier.value = _getMainValue(
+      selectedValue: widget.model.value,
+      valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+    );
 
     if (widget.model.searchEnabled) {
       _initDropdownSearch();
@@ -893,6 +907,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
             widget.listValuesNotifier.value = listValuesFetchState.itemsFetch;
 
+            if (listValuesFetchState.itemsFetch.selectedItem != null) {
+              _mainValueNotifier.value =
+                  listValuesFetchState.itemsFetch.selectedItem;
+              widget.onValueChanged
+                  ?.call(listValuesFetchState.itemsFetch.selectedItem!);
+            }
+
             if (listValuesFetchState.itemsFetch.items.length >
                 nonSearchableListItemsMinLimit) {
               _initDropdownSearch();
@@ -916,196 +937,214 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         builder: (_, listValuesFetchResult, child) {
           final items = _buildDropdownItems(listValuesFetchResult);
 
-          return DropdownButtonHideUnderline(
-            child: DropdownButtonFormField2<ValueModel>(
-              valueListenable: _selectedValueNotifier,
-              items: items,
-              openDropdownListenable: _openDropdownNotifier,
-              isExpanded: true,
-              decoration: _inputFieldDecoration(
-                context,
-                margin: widget.margin,
-                fontSize: widget.fontSize,
-                labelText: widget.model.labelText,
-                hintText: _getHint(),
-                hintColor: widget.model.valueExistsForEmptyList
-                    ? widget.foregroundColor
-                    : widget.hintColor,
-                labelColor: widget.labelColor,
-                floatingLabelBehavior: widget.floatingLabelBehavior,
-                contentPadding: widget.contentPadding,
-              ),
-              style: _inputFieldTextStyle(
-                fontSize: widget.fontSize,
-                foregroundColor: widget.foregroundColor,
-              ),
-              onChanged: (listValue) {
-                if (listValue != null) {
-                  _selectedValueNotifier.value = listValue;
-                  widget.onValueChanged?.call(listValue);
-                }
-              },
-              /*
+          return ValueListenableBuilder(
+            valueListenable: _mainValueNotifier,
+            builder: (_, selectedValue, child) {
+              bool valueForEmptyList = valueExistsForEmptyList(
+                value: selectedValue,
+                listValuesFetchResult: listValuesFetchResult,
+              );
+
+              String hint = _getHint(
+                selectedValue: selectedValue,
+                valueExistsForEmptyList: valueForEmptyList,
+              );
+
+              return DropdownButtonHideUnderline(
+                child: DropdownButtonFormField2<ValueModel>(
+                  valueListenable: _mainValueNotifier,
+                  items: items,
+                  openDropdownListenable: _openDropdownNotifier,
+                  isExpanded: true,
+                  decoration: _inputFieldDecoration(
+                    context,
+                    margin: widget.margin,
+                    fontSize: widget.fontSize,
+                    labelText: widget.model.labelText,
+                    hintText: hint,
+                    hintColor: widget.model.valueExistsForEmptyList
+                        ? widget.foregroundColor
+                        : widget.hintColor,
+                    labelColor: widget.labelColor,
+                    floatingLabelBehavior: widget.floatingLabelBehavior,
+                    contentPadding: widget.contentPadding,
+                  ),
+                  style: _inputFieldTextStyle(
+                    fontSize: widget.fontSize,
+                    foregroundColor: widget.foregroundColor,
+                  ),
+                  onChanged: (listValue) {
+                    if (listValue != null) {
+                      _mainValueNotifier.value = listValue;
+                      widget.onValueChanged?.call(listValue);
+                    }
+                  },
+                  /*
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
          */
-              selectedItemBuilder: (context) {
-                return (listValuesFetchResult?.items ?? []).map(
-                  (value) {
-                    return ValueListenableBuilder(
-                      valueListenable: _selectedValueNotifier,
-                      builder: (_, selectedValue, child) {
-                        String? iconUri =
-                            widget.model.listType.defaultIconUri != null
-                                ? (value.iconUri ??
-                                    widget.model.listType.defaultIconUri)
-                                : null;
+                  selectedItemBuilder: (context) {
+                    return (listValuesFetchResult?.items ?? []).map(
+                      (value) {
+                        return ValueListenableBuilder(
+                          valueListenable: _mainValueNotifier,
+                          builder: (_, selectedValue, child) {
+                            String? iconUri =
+                                widget.model.listType.defaultIconUri != null
+                                    ? (value.iconUri ??
+                                        widget.model.listType.defaultIconUri)
+                                    : null;
 
-                        return Row(
-                          children: [
-                            iconUri != null
-                                ? Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: IconUtils.getSvgIcon(
-                                      iconUri,
-                                      color: widget.dropdownColors.icon.regular,
-                                      size: 15,
+                            return Row(
+                              children: [
+                                iconUri != null
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: IconUtils.getSvgIcon(
+                                          iconUri,
+                                          color: widget
+                                              .dropdownColors.icon.regular,
+                                          size: 15,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                                Expanded(
+                                  child: Text(
+                                    selectedValue?.itemName ?? _noValueHint,
+                                    style: _inputFieldTextStyle(
+                                      fontSize: widget.fontSize,
+                                      foregroundColor: widget.foregroundColor,
                                     ),
-                                  )
-                                : const SizedBox.shrink(),
-                            Expanded(
-                              child: Text(
-                                selectedValue?.itemName ?? _noValueHint,
-                                style: _inputFieldTextStyle(
-                                  fontSize: widget.fontSize,
-                                  foregroundColor: widget.foregroundColor,
+                                    maxLines: 1,
+                                  ),
                                 ),
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
+                              ],
+                            );
+                          },
                         );
                       },
-                    );
+                    ).toList();
                   },
-                ).toList();
-              },
-              iconStyleData: IconStyleData(
-                icon: Icon(
-                  Icons.expand_more_rounded,
-                  color: widget.foregroundColor,
-                ),
-                iconSize: 20,
-              ),
-              dropdownStyleData: DropdownStyleData(
-                scrollbarTheme: ScrollbarThemeData(
-                  thickness: WidgetStateProperty.all(4),
-                  thumbColor: WidgetStateProperty.all(
-                    widget.dropdownColors.foreground.regular,
-                  ),
-                  trackColor: WidgetStateProperty.all(Colors.transparent),
-                  trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-                  trackVisibility: WidgetStateProperty.all(true),
-                  radius: const Radius.circular(10),
-                ),
-                maxHeight: 250,
-                elevation: 0,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(17)),
-                  color: widget.dropdownColors.background.regular,
-                ),
-                padding: EdgeInsets.zero,
-                openInterval: const Interval(0, 0.5, curve: Curves.ease),
-                offset: const Offset(0, -7.5),
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                padding: EdgeInsets.zero,
-                selectedMenuItemBuilder: (_, child) {
-                  return Container(
-                    color:
-                        widget.dropdownColors.selectedItem.background.regular,
-                    child: Row(
-                      children: [
-                        Expanded(child: child),
-                        Icon(
-                          Icons.check_circle_rounded,
-                          size: 20,
-                          color: widget.dropdownColors.foreground.regular,
-                        ),
-                        const SizedBox(width: 12),
-                      ],
+                  iconStyleData: IconStyleData(
+                    icon: Icon(
+                      Icons.expand_more_rounded,
+                      color: widget.foregroundColor,
                     ),
-                  );
-                },
-              ),
-              buttonStyleData: const FormFieldButtonStyleData(
-                padding: EdgeInsets.zero,
-              ),
-              dropdownSearchData: _dropdownSearchController != null &&
-                      _dropdownSearchFocusNode != null
-                  ? DropdownSearchData(
-                      searchController: _dropdownSearchController,
-                      searchBarWidgetHeight: 80,
-                      searchBarWidget: Container(
-                        padding: const EdgeInsets.all(7),
-                        child: ConvertouchInputBox(
-                          model: ItemValueModel(
-                            defaultValue: ValueModel.rawStr(
-                              widget.model.searchHint ?? _defaultSearchHint,
-                            ),
-                          ),
-                          colors: InputBoxColorScheme(
-                            textBox: widget.dropdownColors.searchBox,
-                          ),
-                          dialogColors: widget.dialogColors,
-                          inputFieldMargin: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 5,
-                          ),
-                          prefixWidgets: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 7),
-                              child: Icon(
-                                Icons.search,
-                                color: widget.foregroundColor,
-                                size: 20,
-                              ),
-                            ),
-                          ],
-                          prefixRightmostDividerVisible: false,
-                          controller: _dropdownSearchController,
-                          focusNode: _dropdownSearchFocusNode,
-                          fontSize: 15,
-                          theme: widget.theme,
-                        ),
+                    iconSize: 20,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    scrollbarTheme: ScrollbarThemeData(
+                      thickness: WidgetStateProperty.all(4),
+                      thumbColor: WidgetStateProperty.all(
+                        widget.dropdownColors.foreground.regular,
                       ),
-                      searchMatchFn: (item, searchValue) {
-                        return listValuesFuncSets[widget.model.listType]
-                                ?.searchStringPredicate(
-                                    searchValue, item.value) ??
-                            false;
-                      },
-                      noResultsWidget: _noResultDropdownItem,
-                    )
-                  : null,
-              onMenuStateChange: (isOpen) {
-                if (!mounted) {
-                  return;
-                }
+                      trackColor: WidgetStateProperty.all(Colors.transparent),
+                      trackBorderColor:
+                          WidgetStateProperty.all(Colors.transparent),
+                      trackVisibility: WidgetStateProperty.all(true),
+                      radius: const Radius.circular(10),
+                    ),
+                    maxHeight: 250,
+                    elevation: 0,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(17)),
+                      color: widget.dropdownColors.background.regular,
+                    ),
+                    padding: EdgeInsets.zero,
+                    openInterval: const Interval(0, 0.5, curve: Curves.ease),
+                    offset: const Offset(0, -7.5),
+                  ),
+                  menuItemStyleData: MenuItemStyleData(
+                    padding: EdgeInsets.zero,
+                    selectedMenuItemBuilder: (_, child) {
+                      return Container(
+                        color: widget
+                            .dropdownColors.selectedItem.background.regular,
+                        child: Row(
+                          children: [
+                            Expanded(child: child),
+                            Icon(
+                              Icons.check_circle_rounded,
+                              size: 20,
+                              color: widget.dropdownColors.foreground.regular,
+                            ),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  buttonStyleData: const FormFieldButtonStyleData(
+                    padding: EdgeInsets.zero,
+                  ),
+                  dropdownSearchData: _dropdownSearchController != null &&
+                          _dropdownSearchFocusNode != null
+                      ? DropdownSearchData(
+                          searchController: _dropdownSearchController,
+                          searchBarWidgetHeight: 80,
+                          searchBarWidget: Container(
+                            padding: const EdgeInsets.all(7),
+                            child: ConvertouchInputBox(
+                              model: ItemValueModel(
+                                defaultValue: ValueModel.rawStr(
+                                  widget.model.searchHint ?? _defaultSearchHint,
+                                ),
+                              ),
+                              colors: InputBoxColorScheme(
+                                textBox: widget.dropdownColors.searchBox,
+                              ),
+                              dialogColors: widget.dialogColors,
+                              inputFieldMargin: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 5,
+                              ),
+                              prefixWidgets: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: Icon(
+                                    Icons.search,
+                                    color: widget.foregroundColor,
+                                    size: 20,
+                                  ),
+                                ),
+                              ],
+                              prefixRightmostDividerVisible: false,
+                              controller: _dropdownSearchController,
+                              focusNode: _dropdownSearchFocusNode,
+                              fontSize: 15,
+                              theme: widget.theme,
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            return listValuesFuncSets[widget.model.listType]
+                                    ?.searchStringPredicate(
+                                        searchValue, item.value) ??
+                                false;
+                          },
+                          noResultsWidget: _noResultDropdownItem,
+                        )
+                      : null,
+                  onMenuStateChange: (isOpen) {
+                    if (!mounted) {
+                      return;
+                    }
 
-                if (isOpen) {
-                  _fetchListListValues();
-                } else {
-                  _dropdownSearchController?.clear();
-                }
+                    if (isOpen) {
+                      _fetchListListValues();
+                    } else {
+                      _dropdownSearchController?.clear();
+                    }
 
-                widget.refreshProgressIconNotifier.value = !isOpen;
+                    widget.refreshProgressIconNotifier.value = !isOpen;
 
-                setState(() {
-                  _isDropdownOpen = isOpen;
-                });
-              },
-            ),
+                    setState(() {
+                      _isDropdownOpen = isOpen;
+                    });
+                  },
+                ),
+              );
+            },
           );
         },
       ),
@@ -1274,13 +1313,13 @@ InputDecoration _inputFieldDecoration(
       maxHeight: fontSize * _textHeightCoefficient + margin.vertical,
     ),
     counterText: "",
-    hintText: hintText,
-    hintStyle: hintColor != null
-        ? TextStyle(
-            foreground: Paint()..color = hintColor,
-            letterSpacing: 0,
-          )
-        : null,
+    // hintText: hintText,
+    // hintStyle: hintColor != null
+    //     ? TextStyle(
+    //         foreground: Paint()..color = hintColor,
+    //         letterSpacing: 0,
+    //       )
+    //     : null,
   );
 }
 

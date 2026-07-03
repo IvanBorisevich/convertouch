@@ -4,11 +4,9 @@ import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/update_conversion_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_param.dart';
@@ -38,19 +36,6 @@ void main() {
       ],
     );
 
-    const listValueRepository = ListValueRepositoryImpl(
-      networkRepository: MockNetworkRepository(),
-    );
-
-    const initUnitListValuesUseCase = InitUnitListValuesUseCase(
-      fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: listValueRepository,
-      ),
-      validateListValueUseCase: ValidateListValueUseCase(
-        listValueRepository: listValueRepository,
-      ),
-    );
-
     useCase = const UpdateConversionCoefficientsUseCase(
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
@@ -59,7 +44,11 @@ void main() {
           ),
         ),
         unitGroupRepository: MockUnitGroupRepository(),
-        initUnitListValuesUseCase: initUnitListValuesUseCase,
+        fetchListValuesUseCase: FetchListValuesUseCase(
+          listValueRepository: ListValueRepositoryImpl(
+            networkRepository: MockNetworkRepository(),
+          ),
+        ),
       ),
     );
   });

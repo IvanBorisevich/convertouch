@@ -8,11 +8,9 @@ import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_list_values_batch.dart';
@@ -28,10 +26,6 @@ void main() {
   late RemoveParamSetsFromConversionUseCase useCase;
 
   setUpAll(() {
-    const listValueRepository = ListValueRepositoryImpl(
-      networkRepository: MockNetworkRepository(),
-    );
-
     useCase = const RemoveParamSetsFromConversionUseCase(
         calculateUnitValueUseValue: CalculateUnitValueUseValue(
       calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
@@ -39,14 +33,11 @@ void main() {
           dynamicValueRepository: MockDynamicValueRepository(),
         ),
       ),
-      initUnitListValuesUseCase: InitUnitListValuesUseCase(
-        fetchListValuesUseCase: FetchListValuesUseCase(
-          listValueRepository: listValueRepository,
-        ),
-        validateListValueUseCase: ValidateListValueUseCase(
-          listValueRepository: listValueRepository,
-        ),
-      ),
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: ListValueRepositoryImpl(
+              networkRepository: MockNetworkRepository(),
+            ),
+          ),
       unitGroupRepository: MockUnitGroupRepository(),
     ));
   });

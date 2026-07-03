@@ -8,10 +8,8 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_l
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_list_values_batch.dart';
@@ -37,31 +35,19 @@ void main() {
       ),
     );
 
-    const initUnitListValuesUseCase = InitUnitListValuesUseCase(
-      fetchListValuesUseCase: FetchListValuesUseCase(
-        listValueRepository: listValueRepository,
-      ),
-      validateListValueUseCase: ValidateListValueUseCase(
-        listValueRepository: listValueRepository,
-      ),
-    );
-
     useCase = const EditConversionUnitValueUseCase(
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
         unitGroupRepository: MockUnitGroupRepository(),
-        initUnitListValuesUseCase: initUnitListValuesUseCase,
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: listValueRepository,
+          )
       ),
       calculateParamSetValueUseCase: CalculateParamSetValueUseCase(
         calculateParamValueUseValue: CalculateParamValueUseValue(
           calculateDefaultValueUseCase: calculateDefaultValueUseCase,
-          initParamListValuesUseCase: InitParamListValuesUseCase(
-            fetchListValuesUseCase: FetchListValuesUseCase(
-              listValueRepository: listValueRepository,
-            ),
-            validateListValueUseCase: ValidateListValueUseCase(
-              listValueRepository: listValueRepository,
-            ),
+          fetchListValuesUseCase: FetchListValuesUseCase(
+            listValueRepository: listValueRepository,
           ),
           unitGroupRepository: MockUnitGroupRepository(),
         ),

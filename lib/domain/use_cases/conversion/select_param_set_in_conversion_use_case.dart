@@ -48,11 +48,10 @@ class SelectParamSetInConversionUseCase
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
-          alignCurrentValue: true,
           calculateByParams: true,
           unitGroupName: unitGroup.name,
         ),
       ),
-    ).result();
+    );
   }
 }

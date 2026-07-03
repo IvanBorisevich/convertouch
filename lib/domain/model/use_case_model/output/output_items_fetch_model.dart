@@ -3,11 +3,13 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:equatable/equatable.dart';
 
 class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     P extends ItemsFetchParams> extends Equatable {
   final List<T> items;
+  final T? selectedItem;
   final String? searchString;
   final FetchingStatus status;
   final ConvertouchException? error;
@@ -17,6 +19,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   const OutputItemsFetchModel({
     required this.items,
+    this.selectedItem,
     this.searchString,
     this.status = FetchingStatus.success,
     this.error,
@@ -35,6 +38,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   const OutputItemsFetchModel.failure({
     required this.items,
+    this.selectedItem,
     this.searchString,
     this.error,
     this.hasReachedMax = false,
@@ -44,6 +48,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   const OutputItemsFetchModel.success({
     required this.items,
+    this.selectedItem,
     this.searchString,
     this.hasReachedMax = false,
     this.pageNum = 0,
@@ -53,6 +58,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   const OutputItemsFetchModel.successEmpty({
     this.items = const [],
+    this.selectedItem,
     this.searchString,
     this.pageNum = 0,
     this.fetchParams,
@@ -62,6 +68,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
 
   OutputItemsFetchModel<T, P> copyWith({
     List<T>? items,
+    Patchable<T>? selectedItem,
     String? searchString,
     FetchingStatus? status,
     ConvertouchException? error,
@@ -73,6 +80,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   }) {
     return OutputItemsFetchModel(
       items: items ?? this.items,
+      selectedItem: ObjectUtils.patch(this.selectedItem, selectedItem),
       searchString: searchString ?? this.searchString,
       status: status ?? this.status,
       error: error ?? this.error,
@@ -89,6 +97,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   @override
   List<Object?> get props => [
         items,
+        selectedItem,
         searchString,
         status,
         error,
@@ -135,9 +144,10 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   String toString() {
     return 'FetchResult{'
         'size: ${items.length}, '
-        '${searchString != null ? "$searchString, " : ''}'
+        'selected: ${selectedItem != null ? "${selectedItem!.name}, " : ""}'
+        '${searchString != null ? "$searchString, " : ""}'
         'status: $status, '
-        '${error != null ? "${error!.message}, " : ''}'
+        '${error != null ? "${error!.message}, " : ""}'
         'more items: ${!hasReachedMax}, '
         'pageNum: $pageNum, '
         'fetchParams: $fetchParams}';

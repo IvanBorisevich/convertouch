@@ -4,33 +4,32 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CalculateParamValueUseValue extends UseCase<
-    InputParamValueCalculationModel, OutputParamValueCalculationModel> {
+    InputParamValueCalculationModel, ConversionParamValueModel> {
   final CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase;
-  final InitParamListValuesUseCase initParamListValuesUseCase;
+  final FetchListValuesUseCase fetchListValuesUseCase;
   final UnitGroupRepository unitGroupRepository;
 
   const CalculateParamValueUseValue({
     required this.calculateDefaultValueUseCase,
-    required this.initParamListValuesUseCase,
+    required this.fetchListValuesUseCase,
     required this.unitGroupRepository,
   });
 
   @override
-  Future<Either<ConvertouchException, OutputParamValueCalculationModel>>
-      execute(InputParamValueCalculationModel input) async {
+  Future<Either<ConvertouchException, ConversionParamValueModel>> execute(
+      InputParamValueCalculationModel input) async {
     ConversionSingleParamModifyDelta? delta = input.delta;
     ConversionParamValueModel paramValue = input.itemValue;
 
@@ -63,39 +62,37 @@ class CalculateParamValueUseValue extends UseCase<
       }
     }
 
-    ValueModel? autoCalculatedValue;
+    ValueModel? calculatedBySrcValue;
 
     if (delta == null && paramValue.calculated) {
-      autoCalculatedValue =
-          input.srcUnitValue != null
-              ? rules.calculateParamValueBySrcValue(
-                  srcUnitValue: input.srcUnitValue!,
-                  unitGroupName: input.unitGroupName,
-                  params: input.paramSetValue,
-                  param: paramValue.param,
-                )
-              : null;
+      calculatedBySrcValue = input.srcUnitValue != null
+          ? rules.calculateParamValueBySrcValue(
+              srcUnitValue: input.srcUnitValue!,
+              unitGroupName: input.unitGroupName,
+              params: input.paramSetValue,
+              param: paramValue.param,
+            )
+          : null;
     }
 
     if (paramValue.listType == null) {
-      if (autoCalculatedValue != null) {
+      if (delta == null && paramValue.calculated) {
         newValue = null;
-        newDefaultValue = autoCalculatedValue;
+        newDefaultValue = calculatedBySrcValue;
       } else if (newDefaultValueForNewUnit != null) {
         newDefaultValue = newDefaultValueForNewUnit;
       } else {
-        newDefaultValue = newDefaultValue == null && input.alignCurrentValue
-            ? ObjectUtils.tryGet(
-                await calculateDefaultValueUseCase.execute(
-                  InputDefaultValueCalculationModel(
-                    item: paramValue.param,
-                    conversionGroupName: input.unitGroupName,
-                    currentParamUnit: paramValue.unit,
-                    replacingUnit: newUnit,
-                  ),
+        newDefaultValue = newDefaultValue ??
+            ObjectUtils.tryGet(
+              await calculateDefaultValueUseCase.execute(
+                InputDefaultValueCalculationModel(
+                  item: paramValue.param,
+                  conversionGroupName: input.unitGroupName,
+                  currentParamUnit: paramValue.unit,
+                  replacingUnit: newUnit,
                 ),
-              )
-            : newDefaultValue;
+              ),
+            );
       }
 
       final resultParamValue = paramValue.copyWith(
@@ -104,33 +101,34 @@ class CalculateParamValueUseValue extends UseCase<
         defaultValue: Patchable(newDefaultValue, patchNull: true),
       );
 
-      input.onItemValueUpdated?.call(resultParamValue);
-
-      return Right(
-        OutputParamValueCalculationModel(
-          itemValue: resultParamValue,
-        ),
-      );
+      return Right(resultParamValue);
     } else {
-      if (autoCalculatedValue != null) {
-        newValue = autoCalculatedValue;
+      if (delta == null && paramValue.calculated) {
+        newValue = calculatedBySrcValue;
       }
 
-      return Right(
-        ObjectUtils.tryGet(
-          await initParamListValuesUseCase.execute(
-            InputParamListValuesInitModel(
-              itemValue: paramValue.copyWith(
-                value: Patchable(newValue, patchNull: true),
-                unit: newUnit,
-              ),
-              paramSetValue: input.paramSetValue,
-              alignSelectedValue: input.alignCurrentValue,
-              fetchListValues: input.fetchListValues,
-              keepSelectedValueIfNotInList: input.keepSelectedValueIfNotInList,
-              onListValuesFetched: input.onItemValueUpdated,
+      ListValuesFetchResult listValuesFetchResult = ObjectUtils.tryGet(
+        await fetchListValuesUseCase.execute(
+          InputItemsFetchModel(
+            pageSize: listValuesPageSize,
+            pageNum: 0,
+            fetchParams: ListValuesFetchParams(
+              itemId: paramValue.id,
+              listType: paramValue.listType!,
+              selectedValue: newValue,
+              unit: newUnit,
+              conversionGroupName: input.unitGroupName,
+              params: input.paramSetValue,
             ),
           ),
+        ),
+      );
+
+      return Right(
+        paramValue.copyWith(
+          value: Patchable(listValuesFetchResult.selectedItem, patchNull: true),
+          unit: newUnit,
+          listValuesFetchResult: Patchable(listValuesFetchResult),
         ),
       );
     }

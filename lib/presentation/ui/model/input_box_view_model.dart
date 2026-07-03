@@ -37,10 +37,10 @@ abstract class InputBoxViewModel {
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
                 nonSearchableListItemsMinLimit,
-        valueExistsForEmptyList: model.value != null &&
-            model.value!.hasRawValue &&
-            (model.listValuesFetchResult == null ||
-                model.listValuesFetchResult!.items.isEmpty),
+        valueExistsForEmptyList: valueExistsForEmptyList(
+          value: model.value,
+          listValuesFetchResult: model.listValuesFetchResult,
+        ),
       ) as T;
     } else {
       return TextBoxViewModel(
@@ -118,4 +118,13 @@ class ListBoxViewModel extends InputBoxViewModel {
         'searchEnabled: $searchEnabled, '
         'valueExistsForEmptyList: $valueExistsForEmptyList}';
   }
+}
+
+bool valueExistsForEmptyList({
+  ValueModel? value,
+  ListValuesFetchResult? listValuesFetchResult,
+}) {
+  return value != null &&
+      value.hasRawValue &&
+      (listValuesFetchResult == null || listValuesFetchResult.items.isEmpty);
 }

@@ -72,9 +72,8 @@ class EditConversionParamValueUseCase
           paramSetValue: activeParams,
           calculateByParams: true,
           unitGroupName: unitGroup.name,
-          alignCurrentValue: true,
         ),
       ),
-    ).result();
+    );
   }
 }

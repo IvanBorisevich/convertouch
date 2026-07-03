@@ -59,6 +59,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     return Right(
       OutputItemsFetchModel.success(
         items: itemsWithMatch,
+        selectedItem: await alignSelectedValue(itemsWithMatch, input),
         searchString: searchString,
         pageNum: pageNum,
         hasReachedMax: hasReachedMax,
@@ -68,6 +69,12 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
   }
 
   Future<List<T>> fetchItemsPage(InputItemsFetchModel<P> input);
+
+  Future<T?> alignSelectedValue(
+    List<T> listValues,
+    InputItemsFetchModel<P> input,
+  ) async =>
+      null;
 
   T addSearchMatch(T item, String searchString);
 }

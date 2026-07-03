@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
@@ -45,12 +45,11 @@ class AddUnitsToConversionUseCase
             ),
             unitGroupName: unitGroup.name,
             paramSetValue: params,
-            alignCurrentValue: false,
           ),
         ),
       );
 
-      newUnitValues.add(await newUnitValue.result());
+      newUnitValues.add(newUnitValue);
     }
 
     final newConversionItemsMap = {
@@ -78,9 +77,8 @@ class AddUnitsToConversionUseCase
           paramSetValue: activeParams,
           calculateByParams: !unitGroup.refreshable,
           unitGroupName: unitGroup.name,
-          alignCurrentValue: true,
         ),
       ),
-    ).result();
+    );
   }
 }

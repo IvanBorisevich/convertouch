@@ -5,18 +5,10 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
   final M itemValue;
   final String unitGroupName;
-  final bool alignCurrentValue;
-  final bool fetchListValues;
-  final bool keepSelectedValueIfNotInList;
-  final void Function(M)? onItemValueUpdated;
 
   const _InputItemValueCalculationModel({
     required this.itemValue,
     required this.unitGroupName,
-    this.alignCurrentValue = true,
-    this.fetchListValues = true,
-    this.keepSelectedValueIfNotInList = false,
-    this.onItemValueUpdated,
   });
 }
 
@@ -32,10 +24,6 @@ class InputUnitValueCalculationModel
     this.delta,
     this.paramSetValue,
     this.calculateByParams = false,
-    super.alignCurrentValue,
-    super.fetchListValues,
-    super.keepSelectedValueIfNotInList,
-    super.onItemValueUpdated,
   });
 }
 
@@ -51,9 +39,5 @@ class InputParamValueCalculationModel
     required this.paramSetValue,
     this.delta,
     this.srcUnitValue,
-    super.alignCurrentValue,
-    super.fetchListValues,
-    super.keepSelectedValueIfNotInList,
-    super.onItemValueUpdated,
   });
 }

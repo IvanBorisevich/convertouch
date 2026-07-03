@@ -7,10 +7,8 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:test/test.dart';
 
@@ -35,13 +33,8 @@ void main() {
           dynamicValueRepository: MockDynamicValueRepository(),
         ),
       ),
-      initUnitListValuesUseCase: InitUnitListValuesUseCase(
-        fetchListValuesUseCase: FetchListValuesUseCase(
-          listValueRepository: listValueRepository,
-        ),
-        validateListValueUseCase: ValidateListValueUseCase(
-          listValueRepository: listValueRepository,
-        ),
+      fetchListValuesUseCase: FetchListValuesUseCase(
+        listValueRepository: listValueRepository,
       ),
       unitGroupRepository: MockUnitGroupRepository(),
     );
@@ -52,8 +45,6 @@ void main() {
     required ConversionUnitValueModel expectedUnitValue,
     ConversionSingleUnitModifyDelta? delta,
     ConversionParamSetValueModel? paramSetValue,
-    bool alignCurrentValue = true,
-    bool keepSelectedValueIfNotInList = false,
     bool calculateByParams = false,
     required String conversionGroupName,
   }) async {
@@ -63,8 +54,6 @@ void main() {
           itemValue: currentUnitValue,
           paramSetValue: paramSetValue,
           delta: delta,
-          alignCurrentValue: alignCurrentValue,
-          keepSelectedValueIfNotInList: keepSelectedValueIfNotInList,
           calculateByParams: calculateByParams,
           unitGroupName: conversionGroupName,
         ),
@@ -72,433 +61,169 @@ void main() {
     );
 
     expect(
-      (await modifiedUnitValue.result()).toJson(),
+      modifiedUnitValue.toJson(),
       expectedUnitValue.toJson(),
     );
   }
 
   group("List unit values - clothes size", () {
     group("Should init list values of item 'JP'", () {
-      group("Should align selected value", () {
-        test(
-            "Should / shouldn't preselect default list value 'S' "
-            "(depends on the param 'preselected' of the list type)", () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-          );
+      test(
+          "Should / shouldn't preselect default list value 'S' "
+          "(depends on the param 'preselected' of the list type)", () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          null,
+          null,
+        );
 
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            ConvertouchListType.clothesSizeJp.preselected
-                ? japanClothesSizes.items[0]
-                : null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          ConvertouchListType.clothesSizeJp.preselected
+              ? japanClothesSizes.items[0]
+              : null,
+          null,
+          listValuesFetchResult: japanClothesSizes,
+        );
 
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
-
-        test("Should leave value '3L' when it exists in the list", () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            '3L',
-            null,
-          );
-
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            japanClothesSizes.items[4],
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
-
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
-
-        test(
-            "Should / shouldn't replace unknown value 'W' with default value 'S' "
-            "(depends on the param 'preselected' of the list type)", () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            'W',
-            null,
-          );
-
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            ConvertouchListType.clothesSizeJp.preselected
-                ? japanClothesSizes.items[0]
-                : 'W',
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
-
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
+        await testCase(
+          conversionGroupName: GroupNames.clothesSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Man",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InCm.items[0],
+                null,
+                unit: centimeter,
+                calculated: false,
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
       });
 
-      group("Should NOT align selected value", () {
-        test(
-            "Should NOT preselect default list value 'S' (align = false, params full)",
-            () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-          );
+      test("Should leave value '3L' when it exists in the list", () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          '3L',
+          null,
+        );
 
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          japanClothesSizes.items[4],
+          null,
+          listValuesFetchResult: japanClothesSizes,
+        );
 
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            alignCurrentValue: false,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
+        await testCase(
+          conversionGroupName: GroupNames.clothesSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Man",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InCm.items[0],
+                null,
+                unit: centimeter,
+                calculated: false,
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
+      });
 
-        test(
-            "Should NOT preselect default list value 'S' (align = true, params NOT full)",
-            () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-          );
+      test(
+          "Should / shouldn't replace unknown value 'W' with default value 'S' "
+          "(depends on the param 'preselected' of the list type)", () async {
+        final currentUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          'W',
+          null,
+        );
 
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
+        final expectedUnitValue = ConversionUnitValueModel.tuple(
+          jpClothesSize,
+          ConvertouchListType.clothesSizeJp.preselected
+              ? japanClothesSizes.items[0]
+              : 'W',
+          null,
+          listValuesFetchResult: japanClothesSizes,
+        );
 
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  null,
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
-
-        test(
-            "Should NOT preselect default list value 'S' (align = false, params NOT full)",
-            () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-          );
-
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            null,
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
-
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            alignCurrentValue: false,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  null,
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
-
-        test("Should leave value '3L' when it exists in the list", () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            '3L',
-            null,
-          );
-
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            '3L',
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
-
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            alignCurrentValue: false,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
-
-        test("Should leave unknown value 'W'", () async {
-          final currentUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            'W',
-            null,
-          );
-
-          final expectedUnitValue = ConversionUnitValueModel.tuple(
-            jpClothesSize,
-            'W',
-            null,
-            listValuesFetchResult: japanClothesSizes,
-          );
-
-          await testCase(
-            conversionGroupName: GroupNames.clothesSize,
-            alignCurrentValue: false,
-            paramSetValue: ConversionParamSetValueModel.compact(
-              paramSet: clothesSizeParamSet,
-              paramValues: [
-                (
-                  personParam,
-                  "Man",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  garmentParam,
-                  "Shirt",
-                  null,
-                  unit: null,
-                  calculated: false,
-                  listValuesFetchResult: null
-                ),
-                (
-                  heightParam,
-                  manShirtHeightRangesFrom0_164To190InCm.items[0],
-                  null,
-                  unit: centimeter,
-                  calculated: false,
-                  listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
-                ),
-              ],
-            ),
-            currentUnitValue: currentUnitValue,
-            expectedUnitValue: expectedUnitValue,
-          );
-        });
+        await testCase(
+          conversionGroupName: GroupNames.clothesSize,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Man",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null
+              ),
+              (
+                heightParam,
+                manShirtHeightRangesFrom0_164To190InCm.items[0],
+                null,
+                unit: centimeter,
+                calculated: false,
+                listValuesFetchResult: manShirtHeightRangesFrom0_164To190InCm
+              ),
+            ],
+          ),
+          currentUnitValue: currentUnitValue,
+          expectedUnitValue: expectedUnitValue,
+        );
       });
     });
 
@@ -942,29 +667,6 @@ void main() {
       });
     });
 
-    group("Should NOT calculate unit value 'kg'", () {
-      test("Should NOT initially set default unit value '1'", () async {
-        final currentUnitValue = ConversionUnitValueModel.tuple(
-          kilogram,
-          null,
-          null,
-        );
-
-        final expectedUnitValue = ConversionUnitValueModel.tuple(
-          kilogram,
-          null,
-          null,
-        );
-
-        await testCase(
-          alignCurrentValue: false,
-          conversionGroupName: GroupNames.mass,
-          currentUnitValue: currentUnitValue,
-          expectedUnitValue: expectedUnitValue,
-        );
-      });
-    });
-
     group("Edit non-list conversion item value", () {
       test(
           "Should change non-list main value [kg: 30 -> 45], "
@@ -1066,32 +768,7 @@ void main() {
         );
       });
 
-      test(
-          "Should change non-list default value [kg: 30 -> null], "
-          "should NOT replace empty default value with 1", () async {
-        final currentUnitValue = ConversionUnitValueModel.tuple(
-          kilogram,
-          null,
-          30,
-        );
 
-        final expectedUnitValue = ConversionUnitValueModel.tuple(
-          kilogram,
-          null,
-          null,
-        );
-
-        await testCase(
-          alignCurrentValue: false,
-          delta: EditConversionUnitValueDelta.raw(
-            newDefaultValue: null,
-            unitId: kilogram.id,
-          ),
-          conversionGroupName: GroupNames.mass,
-          currentUnitValue: currentUnitValue,
-          expectedUnitValue: expectedUnitValue,
-        );
-      });
     });
 
     group('Replace non-list conversion item unit', () {

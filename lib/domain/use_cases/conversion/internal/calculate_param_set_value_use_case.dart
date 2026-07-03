@@ -4,7 +4,6 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -48,7 +47,7 @@ class CalculateParamSetValueUseCase extends UseCase<
       return Right(newParamSetValue);
     }
 
-    OutputParamValueCalculationModel changedStartParam = ObjectUtils.tryGet(
+    ConversionParamValueModel changedStartParamValue = ObjectUtils.tryGet(
       await calculateParamValueUseValue.execute(
         InputParamValueCalculationModel(
           itemValue: startParamValue,
@@ -56,17 +55,9 @@ class CalculateParamSetValueUseCase extends UseCase<
           delta: delta,
           srcUnitValue: input.srcUnitValue,
           unitGroupName: input.unitGroupName,
-          alignCurrentValue: input.alignCurrentValues,
-          fetchListValues:
-              input.fetchListValues && delta is! EditConversionParamValueDelta,
-          keepSelectedValueIfNotInList: input.keepSelectedValuesIfNotInList,
-          onItemValueUpdated: input.onParamValueUpdated,
         ),
       ),
     );
-
-    ConversionParamValueModel changedStartParamValue =
-        await changedStartParam.result();
 
     newParamSetValue = await newParamSetValue.copyWithChangedParamById(
       paramId: startParamValue.param.id,
@@ -114,23 +105,16 @@ class CalculateParamSetValueUseCase extends UseCase<
         continue;
       }
 
-      OutputParamValueCalculationModel modifiedParam = ObjectUtils.tryGet(
+      ConversionParamValueModel modifiedParamValue = ObjectUtils.tryGet(
         await calculateParamValueUseValue.execute(
           InputParamValueCalculationModel(
             itemValue: paramValue,
             paramSetValue: modifiedParamSetValue,
             srcUnitValue: srcUnitValue,
             unitGroupName: unitGroupName,
-            alignCurrentValue: alignCurrentValues,
-            fetchListValues: fetchListValues,
-            keepSelectedValueIfNotInList: keepSelectedValuesIfNotInList,
-            onItemValueUpdated: onParamValueUpdated,
           ),
         ),
       );
-
-      ConversionParamValueModel modifiedParamValue =
-          await modifiedParam.result();
 
       modifiedParamSetValue =
           await modifiedParamSetValue.copyWithChangedParamById(

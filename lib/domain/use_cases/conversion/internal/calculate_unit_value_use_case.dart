@@ -3,140 +3,146 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_item_list_values_init_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
-import 'package:convertouch/domain/model/use_case_model/output/output_item_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/unit_group_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
+import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/conversion_rule_utils.dart' as rules;
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-class CalculateUnitValueUseValue extends UseCase<InputUnitValueCalculationModel,
-    OutputUnitValueCalculationModel> {
+class CalculateUnitValueUseValue
+    extends UseCase<InputUnitValueCalculationModel, ConversionUnitValueModel> {
   final CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase;
-  final InitUnitListValuesUseCase initUnitListValuesUseCase;
+  final FetchListValuesUseCase fetchListValuesUseCase;
   final UnitGroupRepository unitGroupRepository;
 
   const CalculateUnitValueUseValue({
     required this.calculateDefaultValueUseCase,
-    required this.initUnitListValuesUseCase,
+    required this.fetchListValuesUseCase,
     required this.unitGroupRepository,
   });
 
   @override
-  Future<Either<ConvertouchException, OutputUnitValueCalculationModel>> execute(
+  Future<Either<ConvertouchException, ConversionUnitValueModel>> execute(
     InputUnitValueCalculationModel input,
   ) async {
     ConversionSingleUnitModifyDelta? delta = input.delta;
     ConversionUnitValueModel unitValue = input.itemValue;
 
-    ValueModel? newValue = unitValue.value;
-    ValueModel? newDefaultValue = unitValue.defaultValue;
-    UnitModel? newUnit = unitValue.unit;
-
-    ValueModel? newDefaultValueForNewUnit;
-
     if (delta is EditConversionUnitValueDelta) {
-      newValue = delta.newValue;
-      newDefaultValue = delta.newDefaultValue;
+      unitValue = unitValue.copyWith(
+        value: Patchable(delta.newValue, patchNull: true),
+        defaultValue: Patchable(delta.newDefaultValue, patchNull: true),
+      );
     } else if (delta is ReplaceConversionItemUnitDelta) {
-      newUnit = delta.newUnit;
-
       if (delta.recalculationMode == RecalculationOnUnitChange.currentValue) {
         UnitGroupModel? paramUnitGroup = ObjectUtils.tryGet(
-          await unitGroupRepository.get(newUnit.unitGroupId),
+          await unitGroupRepository.get(delta.newUnit.unitGroupId),
         );
 
         if (paramUnitGroup != null) {
           var unitValueForNewUnit = rules.calculateUnitValueForNewUnit(
             unitValue: unitValue,
             paramUnitGroup: paramUnitGroup,
-            tgtParamUnit: newUnit,
+            tgtParamUnit: delta.newUnit,
             params: input.paramSetValue,
           );
 
-          newValue = unitValueForNewUnit.value;
-          newDefaultValueForNewUnit = unitValueForNewUnit.defaultValue;
+          unitValue = ConversionUnitValueModel(
+            unit: delta.newUnit,
+            value: unitValueForNewUnit.value,
+            defaultValue: unitValueForNewUnit.defaultValue,
+          );
+        } else {
+          ValueModel? newDefaultValue = ObjectUtils.tryGet(
+            await calculateDefaultValueUseCase.execute(
+              InputDefaultValueCalculationModel(
+                item: unitValue.unit,
+                conversionGroupName: input.unitGroupName,
+                replacingUnit: delta.newUnit,
+              ),
+            ),
+          );
+
+          unitValue = ConversionUnitValueModel(
+            unit: delta.newUnit,
+            value: null,
+            defaultValue: newDefaultValue,
+          );
         }
+      } else {
+        unitValue = unitValue.copyWith(
+          unit: delta.newUnit,
+        );
       }
-    }
-
-    bool paramsAreApplicable = areParamsApplicable(input.paramSetValue);
-    bool paramsNotExistOrApplicable =
-        areParamsNullOrApplicable(input.paramSetValue);
-
-    ConversionUnitValueModel? calculatedValueByParams;
-
-    if (delta == null &&
+    } else if (delta == null &&
         input.calculateByParams &&
-        paramsAreApplicable) {
-      calculatedValueByParams = rules.calculateSrcValueByParams(
+        areParamsApplicable(input.paramSetValue)) {
+      ConversionUnitValueModel? calculatedValueByParams =
+          rules.calculateSrcValueByParams(
         srcUnit: unitValue.unit,
         params: input.paramSetValue!,
         unitGroupName: input.unitGroupName,
       );
+
+      unitValue = unitValue.copyWith(
+        value: Patchable(calculatedValueByParams.value, patchNull: true),
+        defaultValue:
+            Patchable(calculatedValueByParams.defaultValue, patchNull: true),
+      );
     }
 
+    bool paramsNotExistOrApplicable =
+        areParamsNullOrApplicable(input.paramSetValue);
+
     if (unitValue.listType == null) {
-      if (calculatedValueByParams != null && calculatedValueByParams.hasValue) {
-        newValue = calculatedValueByParams.value;
-        newDefaultValue = calculatedValueByParams.defaultValue;
-      } else if (newDefaultValueForNewUnit != null) {
-        newDefaultValue = newDefaultValueForNewUnit;
-      } else {
-        newDefaultValue = newDefaultValue == null &&
-                input.alignCurrentValue &&
-                paramsNotExistOrApplicable
-            ? ObjectUtils.tryGet(
-                await calculateDefaultValueUseCase.execute(
-                  InputDefaultValueCalculationModel(
-                    item: unitValue.unit,
-                    conversionGroupName: input.unitGroupName,
-                    replacingUnit: newUnit,
+      ValueModel? newDefaultValue =
+          unitValue.defaultValue == null && paramsNotExistOrApplicable
+              ? ObjectUtils.tryGet(
+                  await calculateDefaultValueUseCase.execute(
+                    InputDefaultValueCalculationModel(
+                      item: unitValue.unit,
+                      conversionGroupName: input.unitGroupName,
+                    ),
                   ),
-                ),
-              )
-            : newDefaultValue;
-      }
+                )
+              : unitValue.defaultValue;
 
       return Right(
-        OutputUnitValueCalculationModel(
-          itemValue: unitValue.copyWith(
-            unit: newUnit,
-            value: Patchable(newValue, patchNull: true),
-            defaultValue: Patchable(newDefaultValue, patchNull: true),
-          ),
+        unitValue.copyWith(
+          defaultValue: Patchable(newDefaultValue, patchNull: true),
         ),
       );
     } else {
-      if (calculatedValueByParams != null) {
-        newValue = calculatedValueByParams.value;
-      }
-
-      return Right(
-        ObjectUtils.tryGet(
-          await initUnitListValuesUseCase.execute(
-            InputUnitListValuesInitModel(
-              itemValue: unitValue.copyWith(
-                value: Patchable(newValue, patchNull: true),
-                unit: newUnit,
-              ),
-              paramSetValue: input.paramSetValue,
-              alignSelectedValue: input.alignCurrentValue,
-              fetchListValues: input.fetchListValues,
-              keepSelectedValueIfNotInList:
-                  input.keepSelectedValueIfNotInList ||
-                      !paramsNotExistOrApplicable,
-              onListValuesFetched: input.onItemValueUpdated,
+      ListValuesFetchResult listValuesFetchResult = ObjectUtils.tryGet(
+        await fetchListValuesUseCase.execute(
+          InputItemsFetchModel(
+            pageSize: listValuesPageSize,
+            pageNum: 0,
+            fetchParams: ListValuesFetchParams(
+              itemId: unitValue.id,
+              listType: unitValue.listType!,
+              selectedValue: unitValue.value,
+              unit: unitValue.unit,
+              conversionGroupName: input.unitGroupName,
+              params: input.paramSetValue,
+              keepSelectedValueIfNotInList: !paramsNotExistOrApplicable,
             ),
           ),
+        ),
+      );
+
+      return Right(
+        unitValue.copyWith(
+          value: Patchable(listValuesFetchResult.selectedItem, patchNull: true),
+          defaultValue: const Patchable(null, patchNull: true),
+          listValuesFetchResult: Patchable(listValuesFetchResult),
         ),
       );
     }

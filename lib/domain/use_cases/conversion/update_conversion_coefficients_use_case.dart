@@ -64,10 +64,8 @@ class UpdateConversionCoefficientsUseCase
           paramSetValue: activeParams,
           calculateByParams: true,
           unitGroupName: unitGroup.name,
-          alignCurrentValue: true,
-          fetchListValues: false,
         ),
       ),
-    ).result();
+    );
   }
 }

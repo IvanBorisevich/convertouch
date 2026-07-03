@@ -15,10 +15,8 @@ import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_l
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/init_item_list_values_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
-import 'package:convertouch/domain/use_cases/list_values/validate_list_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 import 'package:mockito/mockito.dart';
@@ -50,10 +48,6 @@ void main() {
       listValueRepository: listValueRepository,
     );
 
-    final validateListValueUseCase = ValidateListValueUseCase(
-      listValueRepository: listValueRepository,
-    );
-
     const CalculateNonListDefaultValueUseCase calculateDefaultValueUseCase =
         CalculateNonListDefaultValueUseCase(
       fetchDynamicValueUseCase: FetchDynamicValueUseCase(
@@ -61,28 +55,19 @@ void main() {
       ),
     );
 
-    final CalculateParamSetValueUseCase calculateParamSetValueUseCase =
-        CalculateParamSetValueUseCase(
-      calculateParamValueUseValue: CalculateParamValueUseValue(
-        calculateDefaultValueUseCase: calculateDefaultValueUseCase,
-        initParamListValuesUseCase: InitParamListValuesUseCase(
-          fetchListValuesUseCase: fetchListValuesUseCase,
-          validateListValueUseCase: validateListValueUseCase,
-        ),
-        unitGroupRepository: const MockUnitGroupRepository(),
-      ),
-    );
-
     useCase = AlignConversionUseCase(
       calculateUnitValueUseValue: CalculateUnitValueUseValue(
         calculateDefaultValueUseCase: calculateDefaultValueUseCase,
-        initUnitListValuesUseCase: InitUnitListValuesUseCase(
-          fetchListValuesUseCase: fetchListValuesUseCase,
-          validateListValueUseCase: validateListValueUseCase,
-        ),
+        fetchListValuesUseCase: fetchListValuesUseCase,
         unitGroupRepository: const MockUnitGroupRepository(),
       ),
-      calculateParamSetValueUseCase: calculateParamSetValueUseCase,
+      calculateParamSetValueUseCase: CalculateParamSetValueUseCase(
+        calculateParamValueUseValue: CalculateParamValueUseValue(
+          calculateDefaultValueUseCase: calculateDefaultValueUseCase,
+          fetchListValuesUseCase: fetchListValuesUseCase,
+          unitGroupRepository: const MockUnitGroupRepository(),
+        ),
+      ),
     );
   });
 
