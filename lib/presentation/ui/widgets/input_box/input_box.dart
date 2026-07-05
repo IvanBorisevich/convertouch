@@ -1313,13 +1313,13 @@ InputDecoration _inputFieldDecoration(
       maxHeight: fontSize * _textHeightCoefficient + margin.vertical,
     ),
     counterText: "",
-    // hintText: hintText,
-    // hintStyle: hintColor != null
-    //     ? TextStyle(
-    //         foreground: Paint()..color = hintColor,
-    //         letterSpacing: 0,
-    //       )
-    //     : null,
+    hintText: hintText,
+    hintStyle: hintColor != null
+        ? TextStyle(
+            foreground: Paint()..color = hintColor,
+            letterSpacing: 0,
+          )
+        : null,
   );
 }
 
