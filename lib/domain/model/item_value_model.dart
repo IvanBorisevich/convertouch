@@ -84,7 +84,7 @@ class ItemValueModel extends ItemModel {
   ConvertouchListType? get listType => null;
 
   bool get cacheListValuesFetchedViaApi =>
-      listType != null && listType!.fetchedViaApi && listType!.cached;
+      listType != null && listType!.fetchedViaApi;
 
   UnitModel? get unitItem => null;
 

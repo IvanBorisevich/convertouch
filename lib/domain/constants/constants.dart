@@ -206,7 +206,7 @@ enum ConvertouchValueType {
 }
 
 enum ConvertouchListType {
-  person(1, preselected: false, cached: true),
+  person(1, preselected: false),
   garment(2),
   clothesSizeInter(3),
   clothesSizeUs(4, listValuesType: ConvertouchValueType.integerNonNegative),
@@ -230,8 +230,6 @@ enum ConvertouchListType {
   exchangeRateSource(
     22,
     fetchedViaApi: true,
-    preselected: true,
-    cached: true,
     defaultIconUri: IconKeys.dataSource,
   ),
   clothesHeightRange(24),
@@ -249,9 +247,6 @@ enum ConvertouchListType {
   /// If true, list values of this type are fetched via API, not from db
   final bool fetchedViaApi;
 
-  /// If true, list values of this type are stored in a Hydrated Bloc Hive
-  final bool cached;
-
   /// The type of list value itself - the keyboard type depends on it
   final ConvertouchValueType listValuesType;
 
@@ -262,7 +257,6 @@ enum ConvertouchListType {
     this.id, {
     this.listValuesType = ConvertouchValueType.text,
     this.fetchedViaApi = false,
-    this.cached = false,
     this.preselected = true,
     this.defaultIconUri,
   });
