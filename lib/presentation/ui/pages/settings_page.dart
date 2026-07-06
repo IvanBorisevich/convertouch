@@ -79,18 +79,6 @@ class ConvertouchSettingsPage extends StatelessWidget {
                         );
                       },
                     ),
-                    SwitcherSettingItem(
-                      title: "Auto-fetch Data On Refreshable Conversion Open",
-                      value: appState.autoFetchOnRefreshableGroupOpen,
-                      theme: appState.theme,
-                      onSwitch: (newValue) {
-                        settingsController.changeSetting(
-                          context,
-                          key: SettingKey.autoFetchOnRefreshableGroupOpen,
-                          newValue: newValue,
-                        );
-                      },
-                    ),
                   ],
                   theme: appState.theme,
                 ),
