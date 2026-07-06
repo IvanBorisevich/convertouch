@@ -31,7 +31,7 @@ class FetchListValuesUseCase
         pageSize: input.pageSize,
         unit: input.fetchParams!.unit,
         conversionGroupName: input.fetchParams!.conversionGroupName,
-        params: input.fetchParams!.params,
+        params: input.fetchParams!.conversionParams,
       ),
     );
   }
@@ -59,7 +59,7 @@ class FetchListValuesUseCase
         value: selectedValue,
         listType: input.fetchParams!.listType,
         unit: input.fetchParams!.unit,
-        params: input.fetchParams!.params,
+        params: input.fetchParams!.conversionParams,
       ),
     );
 

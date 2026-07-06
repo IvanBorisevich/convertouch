@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
@@ -67,7 +65,6 @@ class ConversionBloc
     required this.replaceConversionParamUnitUseCase,
     required this.toggleCalculableParamUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
-    on<PatchConversion>(_onPatchConversion);
     on<GetOrBuildConversion>(_onGetOrBuildConversion);
     on<AlignConversion>(_onAlignConversion);
     on<SaveConversion>(_onSaveConversion);
@@ -88,26 +85,6 @@ class ConversionBloc
     on<EditConversionParamValue>(_onEditConversionParamValue);
     on<ReplaceConversionParamUnit>(_onReplaceConversionParamUnit);
     on<ToggleCalculableParam>(_onToggleCalculableParam);
-  }
-
-  _onPatchConversion(
-    PatchConversion event,
-    Emitter<ConversionState> emit,
-  ) async {
-    ConversionModel patchedConversion = state.conversion.patchWith(
-      event.conversionPatch,
-      isPatchAligned: event.isAligned,
-    );
-
-    ConversionBuilt patchedConversionState = ConversionBuilt(
-      conversion: patchedConversion,
-      rebuildUnitValues: event.rebuildUnitValues,
-      rebuildParams: event.rebuildParams,
-    );
-
-    emit(patchedConversionState);
-
-    event.onConversionUpdated?.call(patchedConversion);
   }
 
   _onGetOrBuildConversion(
@@ -151,9 +128,9 @@ class ConversionBloc
 
     log("${DateTime.now()} - Emit after getting conversion from storage or db");
 
-    add(
-      PatchConversion(
-        conversionPatch: conversion,
+    emit(
+      ConversionBuilt(
+        conversion: conversion,
         rebuildUnitValues: event.rebuildUnitValues,
         rebuildParams: event.rebuildParams,
       ),
@@ -174,9 +151,9 @@ class ConversionBloc
 
       log("${DateTime.now()} - Emit after mandatory param set adding");
 
-      add(
-        PatchConversion(
-          conversionPatch: conversion,
+      emit(
+        ConversionBuilt(
+          conversion: conversion,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: event.rebuildParams,
         ),
@@ -197,38 +174,6 @@ class ConversionBloc
           alignUnits: event.alignUnits,
           alignParams: event.alignParams,
           paramIdToRefreshListValues: event.paramIdToRefreshListValues,
-          onParamValueUpdated: event.onParamValueUpdated,
-          onUnitValueUpdated: event.onUnitValueUpdated,
-          onConversionParamsAligned: (updatedConversion) {
-            log("${DateTime.now()} - Emit conversion with aligned params");
-
-            var paramSetValue = updatedConversion.params?.active;
-
-            if (areParamsFilled(paramSetValue)) {
-              event.ifParamSetFilled?.call(updatedConversion);
-            }
-
-            add(
-              PatchConversion(
-                conversionPatch: updatedConversion,
-                isAligned: true,
-                rebuildParams: true,
-                rebuildUnitValues: false,
-              ),
-            );
-          },
-          onConversionUnitValuesAligned: (updatedConversion) {
-            log("${DateTime.now()} - Emit conversion with aligned unit values");
-
-            add(
-              PatchConversion(
-                conversionPatch: updatedConversion,
-                isAligned: true,
-                rebuildParams: false,
-                rebuildUnitValues: true,
-              ),
-            );
-          },
         ),
       ),
     );
@@ -256,9 +201,9 @@ class ConversionBloc
     );
 
     if (event.keepParams) {
-      add(
-        PatchConversion(
-          conversionPatch: emptyConversion,
+      emit(
+        ConversionBuilt(
+          conversion: emptyConversion,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: false,
         ),
@@ -271,7 +216,7 @@ class ConversionBloc
         ),
       );
 
-      await _handle(result, emit, event: event);
+      await _handleAndEmit(result, emit, event: event);
     }
   }
 
@@ -293,9 +238,9 @@ class ConversionBloc
     final item = unitValues.removeAt(oldIndex);
     unitValues.insert(newIndex, item);
 
-    add(
-      PatchConversion(
-        conversionPatch: state.conversion.copyWith(
+    emit(
+      ConversionBuilt(
+        conversion: state.conversion.copyWith(
           convertedUnitValues: unitValues,
         ),
         rebuildUnitValues: event.rebuildUnitValues,
@@ -317,7 +262,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onAddUnitsToConversion(
@@ -333,7 +278,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionItemUnit(
@@ -349,7 +294,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionItemValue(
@@ -367,7 +312,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onUpdateConversionCoefficients(
@@ -387,7 +332,7 @@ class ConversionBloc
 
     log("${DateTime.now()} - Update conversion coefficients result: ${result.right}");
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveConversionItems(
@@ -403,7 +348,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onReplaceConversionItemUnit(
@@ -417,13 +362,11 @@ class ConversionBloc
           newUnit: event.newUnit,
           unitId: event.oldUnitId,
           recalculationMode: event.recalculationMode,
-          recalculateUnitValues:
-              event.recalculationMode == RecalculationOnUnitChange.otherValues,
         ),
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onAddParamSetsToConversion(
@@ -443,7 +386,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveSelectedParamSetFromConversion(
@@ -457,7 +400,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onRemoveAllParamSetsFromConversion(
@@ -471,7 +414,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onSelectParamSetInConversion(
@@ -487,7 +430,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onEditConversionParamValue(
@@ -509,7 +452,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onReplaceConversionParamUnit(
@@ -527,7 +470,7 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
   _onToggleCalculableParam(
@@ -544,10 +487,10 @@ class ConversionBloc
       ),
     );
 
-    await _handle(result, emit, event: event);
+    await _handleAndEmit(result, emit, event: event);
   }
 
-  _handle(
+  _handleAndEmit(
     Either<ConvertouchException, ConversionModel> result,
     Emitter<ConversionState> emit, {
     required ConversionEvent event,
@@ -555,14 +498,15 @@ class ConversionBloc
     if (result.isLeft) {
       event.onError?.call(result.left);
     } else {
-      add(
-        PatchConversion(
-          conversionPatch: result.right,
+      emit(
+        ConversionBuilt(
+          conversion: result.right,
           rebuildUnitValues: event.rebuildUnitValues,
           rebuildParams: event.rebuildParams,
-          onConversionUpdated: event.onConversionUpdated,
         ),
       );
+
+      event.onConversionUpdated?.call(result.right);
     }
   }
 

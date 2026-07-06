@@ -101,7 +101,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
   final ValueModel? selectedValue;
   final String? conversionGroupName;
   final UnitModel? unit;
-  final ConversionParamSetValueModel? params;
+  final ConversionParamSetValueModel? conversionParams;
   final bool keepSelectedValueIfNotInList;
 
   const ListValuesFetchParams({
@@ -110,7 +110,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
     this.selectedValue,
     this.unit,
     this.conversionGroupName,
-    this.params,
+    this.conversionParams,
     this.keepSelectedValueIfNotInList = false,
   });
 
@@ -122,7 +122,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
         keepSelectedValueIfNotInList,
         unit,
         conversionGroupName,
-        params,
+        conversionParams,
       ];
 
   @override
@@ -132,7 +132,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
       'listType': listType.id,
       'unit': unit?.toJson(),
       'conversionGroupName': conversionGroupName,
-      'params': params?.toJson(),
+      'params': conversionParams?.toJson(),
     };
   }
 
@@ -146,7 +146,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
       listType: ConvertouchListType.valueOf(json['listType'])!,
       unit: UnitModel.fromJson(json['unit']),
       conversionGroupName: json['groupName'],
-      params: ConversionParamSetValueModel.fromJson(json['params']),
+      conversionParams: ConversionParamSetValueModel.fromJson(json['params']),
     );
   }
 

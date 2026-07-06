@@ -5,7 +5,7 @@ import 'package:convertouch/domain/model/conversion_param_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_non_list_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -14,7 +14,7 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
 class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
-    extends UseCase<InputDefaultValueCalculationModel<T>, ValueModel?> {
+    extends UseCase<InputNonListDefaultValueCalculationModel<T>, ValueModel?> {
   final FetchDynamicValueUseCase fetchDynamicValueUseCase;
 
   const CalculateNonListDefaultValueUseCase({
@@ -23,7 +23,7 @@ class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
 
   @override
   Future<Either<ConvertouchException, ValueModel?>> execute(
-    InputDefaultValueCalculationModel<T> input,
+    InputNonListDefaultValueCalculationModel<T> input,
   ) async {
     try {
       T item = input.item;

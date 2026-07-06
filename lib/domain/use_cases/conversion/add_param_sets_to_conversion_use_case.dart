@@ -89,7 +89,7 @@ class AddParamSetsToConversionUseCase
       var paramSetValue = await _initParamSetValue(
         paramSet: paramSet,
         srcUnitValue: srcUnitValue,
-        unitGroupName: unitGroup.name,
+        unitGroup: unitGroup,
         fetchListValues: delta.fetchListValues,
       );
 
@@ -113,7 +113,7 @@ class AddParamSetsToConversionUseCase
   Future<ConversionParamSetValueModel> _initParamSetValue({
     required ConversionParamSetModel paramSet,
     ConversionUnitValueModel? srcUnitValue,
-    required String unitGroupName,
+    required UnitGroupModel unitGroup,
     required bool fetchListValues,
   }) async {
     List<ConversionParamModel> params = ObjectUtils.tryGet(
@@ -137,9 +137,8 @@ class AddParamSetsToConversionUseCase
             paramValues: paramValues,
           ),
           srcUnitValue: srcUnitValue,
-          unitGroupName: unitGroupName,
-          fetchListValues: fetchListValues,
-          alignCurrentValues: true,
+          conversionGroup: unitGroup,
+          startParamId: null,
           enableFirstCalculableParamIfNoCalculatedEnabled: true,
         ),
       ),

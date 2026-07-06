@@ -1,10 +1,11 @@
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -26,7 +27,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     }
 
     ConversionParamSetValueModel newParamSetValue = input.paramSetValue;
-    ConversionSingleParamModifyDelta? delta = input.delta;
+    ConversionParamsModifyDelta? delta = input.delta;
 
     if (delta == null &&
         input.enableFirstCalculableParamIfNoCalculatedEnabled) {
@@ -40,7 +41,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     }
 
     int startParamId =
-        delta?.paramId ?? newParamSetValue.paramValues.first.param.id;
+        input.startParamId ?? newParamSetValue.paramValues.first.param.id;
     var startParamValue = newParamSetValue.getParamValueById(startParamId);
 
     if (startParamValue == null) {
@@ -54,7 +55,7 @@ class CalculateParamSetValueUseCase extends UseCase<
           paramSetValue: newParamSetValue,
           delta: delta,
           srcUnitValue: input.srcUnitValue,
-          unitGroupName: input.unitGroupName,
+          conversionGroup: input.conversionGroup,
         ),
       ),
     );
@@ -69,11 +70,9 @@ class CalculateParamSetValueUseCase extends UseCase<
         paramSetValue: newParamSetValue,
         paramId: changedStartParamValue.param.id,
         srcUnitValue: input.srcUnitValue,
-        unitGroupName: input.unitGroupName,
-        alignCurrentValues: input.alignCurrentValues,
+        conversionGroup: input.conversionGroup,
         keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
         onParamValueUpdated: input.onParamValueUpdated,
-        fetchListValues: input.fetchListValues,
       );
     }
 
@@ -84,9 +83,7 @@ class CalculateParamSetValueUseCase extends UseCase<
     required ConversionParamSetValueModel paramSetValue,
     required int paramId,
     ConversionUnitValueModel? srcUnitValue,
-    required String unitGroupName,
-    required bool alignCurrentValues,
-    required bool fetchListValues,
+    required UnitGroupModel conversionGroup,
     required bool keepSelectedValuesIfNotInList,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
@@ -111,7 +108,7 @@ class CalculateParamSetValueUseCase extends UseCase<
             itemValue: paramValue,
             paramSetValue: modifiedParamSetValue,
             srcUnitValue: srcUnitValue,
-            unitGroupName: unitGroupName,
+            conversionGroup: conversionGroup,
           ),
         ),
       );

@@ -1,43 +1,49 @@
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 
-abstract class _InputItemValueCalculationModel<M extends ItemValueModel> {
+abstract class InputItemValueCalculationModel<M extends ItemValueModel,
+    D extends ConversionModifyDelta> {
   final M itemValue;
-  final String unitGroupName;
+  final D? delta;
+  final UnitGroupModel conversionGroup;
+  final bool initDefaultValueIfEmpty;
 
-  const _InputItemValueCalculationModel({
+  const InputItemValueCalculationModel({
     required this.itemValue,
-    required this.unitGroupName,
+    this.delta,
+    required this.conversionGroup,
+    this.initDefaultValueIfEmpty = true,
   });
 }
 
-class InputUnitValueCalculationModel
-    extends _InputItemValueCalculationModel<ConversionUnitValueModel> {
-  final ConversionSingleUnitModifyDelta? delta;
+class InputUnitValueCalculationModel extends InputItemValueCalculationModel<
+    ConversionUnitValueModel, ConversionUnitValuesModifyDelta> {
   final ConversionParamSetValueModel? paramSetValue;
   final bool calculateByParams;
 
   const InputUnitValueCalculationModel({
     required super.itemValue,
-    required super.unitGroupName,
-    this.delta,
+    super.delta,
+    required super.conversionGroup,
     this.paramSetValue,
     this.calculateByParams = false,
+    super.initDefaultValueIfEmpty,
   });
 }
 
-class InputParamValueCalculationModel
-    extends _InputItemValueCalculationModel<ConversionParamValueModel> {
-  final ConversionSingleParamModifyDelta? delta;
+class InputParamValueCalculationModel extends InputItemValueCalculationModel<
+    ConversionParamValueModel, ConversionParamsModifyDelta> {
   final ConversionParamSetValueModel paramSetValue;
   final ConversionUnitValueModel? srcUnitValue;
 
   const InputParamValueCalculationModel({
     required super.itemValue,
-    required super.unitGroupName,
+    super.delta,
+    required super.conversionGroup,
     required this.paramSetValue,
-    this.delta,
     this.srcUnitValue,
+    super.initDefaultValueIfEmpty,
   });
 }

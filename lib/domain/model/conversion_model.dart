@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
@@ -56,36 +55,6 @@ class ConversionModel extends IdNameItemModel {
       srcUnitValue: srcUnitValue ?? this.srcUnitValue,
       convertedUnitValues: convertedUnitValues ?? this.convertedUnitValues,
       params: params ?? this.params,
-    );
-  }
-
-  ConversionModel patchWith(
-    ConversionModel patch, {
-    required bool isPatchAligned,
-  }) {
-    List<ConversionUnitValueModel> patchedUnitValues;
-    ConversionUnitValueModel? patchedSrc;
-    ConversionParamSetValueBulkModel? patchedParams;
-
-    if (isPatchAligned && unitGroup.id == patch.unitGroup.id) {
-      patchedUnitValues =
-          _patchUnitValues(convertedUnitValues, patch.convertedUnitValues);
-      patchedSrc = patch.convertedUnitValues.firstWhereOrNull(
-          (unitValue) => unitValue.unit.id == srcUnitValue?.unit.id);
-      patchedParams = patchParams(params, patch.params);
-    } else {
-      patchedUnitValues = patch.convertedUnitValues;
-      patchedSrc = patch.srcUnitValue;
-      patchedParams = patch.params;
-    }
-
-    return ConversionModel(
-      id: patch.id,
-      name: patch.name,
-      unitGroup: patch.unitGroup,
-      convertedUnitValues: patchedUnitValues,
-      params: patchedParams,
-      srcUnitValue: patchedSrc,
     );
   }
 
@@ -162,17 +131,4 @@ class ConversionModel extends IdNameItemModel {
         'src: $srcUnitValue,\n'
         'items: [\n\t${convertedUnitValues.join("\n\t")}\n]\n}';
   }
-}
-
-List<ConversionUnitValueModel> _patchUnitValues(
-  List<ConversionUnitValueModel> whatList,
-  List<ConversionUnitValueModel> patch,
-) {
-  Map<int, ConversionUnitValueModel> patchMap = {
-    for (var v in patch) v.unit.id: v
-  };
-
-  return whatList
-      .map((whatItem) => patchMap[whatItem.unit.id] ?? whatItem)
-      .toList();
 }

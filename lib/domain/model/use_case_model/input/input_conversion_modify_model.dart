@@ -1,7 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -11,8 +10,6 @@ typedef ParamSetValueChangedCallback = void Function(ConversionModel);
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
   final T delta;
-  final void Function(ConversionParamValueModel)? onParamValueUpdated;
-  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
   final ParamSetValueChangedCallback? ifParamSetFilled;
   final ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty;
 
@@ -21,166 +18,176 @@ class InputConversionModifyModel<T extends ConversionModifyDelta> {
     required this.delta,
     this.ifParamSetFilled,
     this.ifParamSetFilledPartiallyOrEmpty,
-    this.onParamValueUpdated,
-    this.onUnitValueUpdated,
   });
 }
 
-abstract class ConversionModifyDelta {
-  final bool recalculateUnitValues;
+abstract interface class ConversionModifyDelta {
+  const ConversionModifyDelta();
 
-  const ConversionModifyDelta({
-    required this.recalculateUnitValues,
+  bool get recalculateUnitValues;
+}
+
+abstract class EditItemValueDelta implements ConversionModifyDelta {
+  final ValueModel? newValue;
+  final ValueModel? newDefaultValue;
+
+  const EditItemValueDelta({
+    required this.newValue,
+    required this.newDefaultValue,
   });
 }
 
-abstract class ConversionUnitValuesModifyDelta extends ConversionModifyDelta {
-  const ConversionUnitValuesModifyDelta({
-    required super.recalculateUnitValues,
+abstract class ReplaceItemUnitDelta implements ConversionModifyDelta {
+  final UnitModel newUnit;
+  final RecalculationOnUnitChange recalculationMode;
+
+  const ReplaceItemUnitDelta({
+    required this.newUnit,
+    this.recalculationMode = RecalculationOnUnitChange.currentValue,
   });
 }
 
-abstract class ConversionParamsModifyDelta extends ConversionModifyDelta {
-  const ConversionParamsModifyDelta({
-    required super.recalculateUnitValues,
-  });
+abstract interface class ConversionUnitValuesModifyDelta
+    implements ConversionModifyDelta {
+  const ConversionUnitValuesModifyDelta();
 }
 
-abstract class ConversionSingleUnitModifyDelta
-    extends ConversionUnitValuesModifyDelta {
-  final int unitId;
-
-  const ConversionSingleUnitModifyDelta({
-    required this.unitId,
-    required super.recalculateUnitValues,
-  });
+abstract interface class ConversionParamsModifyDelta
+    implements ConversionModifyDelta {
+  const ConversionParamsModifyDelta();
 }
 
-abstract class ConversionSingleParamModifyDelta
-    extends ConversionParamsModifyDelta {
-  final int paramId;
-
-  const ConversionSingleParamModifyDelta({
-    required this.paramId,
-    required super.recalculateUnitValues,
-  });
-}
-
-class AddUnitsToConversionDelta extends ConversionUnitValuesModifyDelta {
+class AddUnitsToConversionDelta implements ConversionUnitValuesModifyDelta {
   final List<int> unitIds;
 
   const AddUnitsToConversionDelta({
     required this.unitIds,
-    super.recalculateUnitValues = true,
   });
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class EditConversionGroupDelta extends ConversionModifyDelta {
+class EditConversionGroupDelta implements ConversionModifyDelta {
   final UnitGroupModel editedGroup;
 
   const EditConversionGroupDelta({
     required this.editedGroup,
-    super.recalculateUnitValues = false,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class EditConversionUnitDelta extends ConversionUnitValuesModifyDelta {
+class EditConversionUnitDelta implements ConversionUnitValuesModifyDelta {
   final UnitModel editedUnit;
 
   const EditConversionUnitDelta({
     required this.editedUnit,
-    super.recalculateUnitValues = true,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class EditConversionUnitValueDelta extends ConversionSingleUnitModifyDelta {
-  final ValueModel? newValue;
-  final ValueModel? newDefaultValue;
+class EditConversionUnitValueDelta extends EditItemValueDelta
+    implements ConversionUnitValuesModifyDelta {
+  final int unitId;
 
   const EditConversionUnitValueDelta({
-    required this.newValue,
-    required this.newDefaultValue,
-    required super.unitId,
-    super.recalculateUnitValues = true,
+    required super.newValue,
+    required super.newDefaultValue,
+    required this.unitId,
   });
 
   factory EditConversionUnitValueDelta.raw({
     dynamic newValue,
     dynamic newDefaultValue,
     required int unitId,
-    bool recalculateUnitValues = true,
   }) {
     return EditConversionUnitValueDelta(
       newValue: ValueModel.any(newValue),
       newDefaultValue: ValueModel.any(newDefaultValue),
       unitId: unitId,
-      recalculateUnitValues: recalculateUnitValues,
     );
   }
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class ReplaceConversionItemUnitDelta extends ConversionSingleUnitModifyDelta {
-  final UnitModel newUnit;
-  final RecalculationOnUnitChange recalculationMode;
+class ReplaceConversionItemUnitDelta extends ReplaceItemUnitDelta
+    implements ConversionUnitValuesModifyDelta {
+  final int unitId;
 
   const ReplaceConversionItemUnitDelta({
-    required this.newUnit,
-    required super.unitId,
-    required this.recalculationMode,
-    required super.recalculateUnitValues,
+    required super.newUnit,
+    required super.recalculationMode,
+    required this.unitId,
   });
+
+  @override
+  bool get recalculateUnitValues =>
+      recalculationMode == RecalculationOnUnitChange.otherValues;
 }
 
 class UpdateConversionCoefficientsDelta
-    extends ConversionUnitValuesModifyDelta {
+    implements ConversionUnitValuesModifyDelta {
   final DynamicCoefficientsModel newCoefficients;
 
   const UpdateConversionCoefficientsDelta({
     required this.newCoefficients,
-    super.recalculateUnitValues = true,
   });
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class RemoveConversionItemsDelta extends ConversionUnitValuesModifyDelta {
+class RemoveConversionItemsDelta implements ConversionUnitValuesModifyDelta {
   final List<int> unitIds;
 
   const RemoveConversionItemsDelta({
     required this.unitIds,
-    super.recalculateUnitValues = false,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class AddParamSetsDelta extends ConversionParamsModifyDelta {
+class AddParamSetsDelta implements ConversionParamsModifyDelta {
   final List<int> paramSetIds;
   final bool fetchListValues;
 
   const AddParamSetsDelta({
     this.paramSetIds = const [],
     this.fetchListValues = true,
-    super.recalculateUnitValues = false,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class SelectParamSetDelta extends ConversionParamsModifyDelta {
+class SelectParamSetDelta implements ConversionParamsModifyDelta {
   final int newSelectedParamSetIndex;
 
   const SelectParamSetDelta({
     required this.newSelectedParamSetIndex,
-    super.recalculateUnitValues = true,
   });
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
-  final ValueModel? newValue;
-  final ValueModel? newDefaultValue;
+class EditConversionParamValueDelta extends EditItemValueDelta
+    implements ConversionParamsModifyDelta {
+  final int paramId;
   final int paramSetId;
 
   const EditConversionParamValueDelta({
-    required this.newValue,
-    required this.newDefaultValue,
-    required super.paramId,
+    required super.newValue,
+    required super.newDefaultValue,
+    required this.paramId,
     required this.paramSetId,
-    super.recalculateUnitValues = true,
   });
 
   factory EditConversionParamValueDelta.raw({
@@ -188,64 +195,75 @@ class EditConversionParamValueDelta extends ConversionSingleParamModifyDelta {
     dynamic newDefaultValue,
     required int paramId,
     required int paramSetId,
-    bool recalculateUnitValues = true,
   }) {
     return EditConversionParamValueDelta(
       newValue: ValueModel.any(newValue),
       newDefaultValue: ValueModel.any(newDefaultValue),
       paramId: paramId,
       paramSetId: paramSetId,
-      recalculateUnitValues: recalculateUnitValues,
     );
   }
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class ReplaceConversionParamUnitDelta extends ConversionSingleParamModifyDelta {
-  final UnitModel newUnit;
+class ReplaceConversionParamUnitDelta extends ReplaceItemUnitDelta
+    implements ConversionParamsModifyDelta {
+  final int paramId;
   final int paramSetId;
 
   const ReplaceConversionParamUnitDelta({
-    required this.newUnit,
-    required super.paramId,
+    required super.newUnit,
+    required this.paramId,
     required this.paramSetId,
-    super.recalculateUnitValues = true,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class RemoveParamSetsDelta extends ConversionParamsModifyDelta {
+class RemoveParamSetsDelta implements ConversionParamsModifyDelta {
   final bool allOptional;
 
   const RemoveParamSetsDelta._({
     required this.allOptional,
-    super.recalculateUnitValues = true,
   });
 
-  const RemoveParamSetsDelta.current({bool recalculateUnitValues = true})
+  const RemoveParamSetsDelta.current()
       : this._(
           allOptional: false,
-          recalculateUnitValues: recalculateUnitValues,
         );
 
-  const RemoveParamSetsDelta.all({bool recalculateUnitValues = true})
+  const RemoveParamSetsDelta.all()
       : this._(
           allOptional: true,
-          recalculateUnitValues: recalculateUnitValues,
         );
+
+  @override
+  bool get recalculateUnitValues => true;
 }
 
-class ToggleCalculableParamDelta extends ConversionSingleParamModifyDelta {
+class ToggleCalculableParamDelta extends ConversionParamsModifyDelta {
+  final int paramId;
   final int paramSetId;
 
   const ToggleCalculableParamDelta({
-    required super.paramId,
+    required this.paramId,
     required this.paramSetId,
-    super.recalculateUnitValues = false,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }
 
-class RefreshParamListValuesDelta extends ConversionSingleParamModifyDelta {
+class RefreshParamListValuesDelta extends ConversionParamsModifyDelta {
+  final int paramId;
+
   const RefreshParamListValuesDelta({
-    required super.paramId,
-    super.recalculateUnitValues = false,
+    required this.paramId,
   });
+
+  @override
+  bool get recalculateUnitValues => false;
 }

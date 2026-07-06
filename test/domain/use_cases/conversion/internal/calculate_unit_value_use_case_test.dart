@@ -3,10 +3,11 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -15,9 +16,9 @@ import 'package:test/test.dart';
 import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
+import '../../../model/mock/mock_unit_group.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../../repositories/mock/mock_network_repository.dart';
-import '../../../repositories/mock/mock_unit_group_repository.dart';
 
 void main() {
   late CalculateUnitValueUseValue useCase;
@@ -36,17 +37,16 @@ void main() {
       fetchListValuesUseCase: FetchListValuesUseCase(
         listValueRepository: listValueRepository,
       ),
-      unitGroupRepository: MockUnitGroupRepository(),
     );
   });
 
   Future<void> testCase({
     required ConversionUnitValueModel currentUnitValue,
     required ConversionUnitValueModel expectedUnitValue,
-    ConversionSingleUnitModifyDelta? delta,
+    ConversionUnitValuesModifyDelta? delta,
     ConversionParamSetValueModel? paramSetValue,
     bool calculateByParams = false,
-    required String conversionGroupName,
+    required UnitGroupModel conversionGroup,
   }) async {
     final modifiedUnitValue = ObjectUtils.tryGet(
       await useCase.execute(
@@ -55,7 +55,7 @@ void main() {
           paramSetValue: paramSetValue,
           delta: delta,
           calculateByParams: calculateByParams,
-          unitGroupName: conversionGroupName,
+          conversionGroup: conversionGroup,
         ),
       ),
     );
@@ -87,7 +87,7 @@ void main() {
         );
 
         await testCase(
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -137,7 +137,7 @@ void main() {
         );
 
         await testCase(
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -191,7 +191,7 @@ void main() {
         );
 
         await testCase(
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -247,7 +247,7 @@ void main() {
             newValue: 'M',
             unitId: jpClothesSize.id,
           ),
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -304,9 +304,8 @@ void main() {
             newUnit: euClothesSize,
             unitId: jpClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
-            recalculateUnitValues: false,
           ),
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -362,9 +361,8 @@ void main() {
             newUnit: euClothesSize,
             unitId: jpClothesSize.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
-            recalculateUnitValues: false,
           ),
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -419,7 +417,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -472,7 +470,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.clothesSize,
+          conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
             paramValues: [
@@ -525,7 +523,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.ringSize,
+          conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
@@ -562,7 +560,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.ringSize,
+          conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: [
@@ -599,7 +597,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.ringSize,
+          conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
             paramValues: const [
@@ -636,7 +634,7 @@ void main() {
 
         await testCase(
           calculateByParams: true,
-          conversionGroupName: GroupNames.ringSize,
+          conversionGroup: ringSizeGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -660,7 +658,7 @@ void main() {
         );
 
         await testCase(
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -688,7 +686,7 @@ void main() {
             newValue: 45,
             unitId: kilogram.id,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -712,7 +710,7 @@ void main() {
             newValue: null,
             unitId: kilogram.id,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -736,7 +734,7 @@ void main() {
             newDefaultValue: 45,
             unitId: kilogram.id,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -762,13 +760,11 @@ void main() {
             newDefaultValue: null,
             unitId: kilogram.id,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
       });
-
-
     });
 
     group('Replace non-list conversion item unit', () {
@@ -791,9 +787,8 @@ void main() {
             newUnit: pound,
             unitId: kilogram.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
-            recalculateUnitValues: false,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -818,9 +813,8 @@ void main() {
             newUnit: pound,
             unitId: kilogram.id,
             recalculationMode: RecalculationOnUnitChange.currentValue,
-            recalculateUnitValues: false,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -845,9 +839,8 @@ void main() {
             newUnit: pound,
             unitId: kilogram.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
-            recalculateUnitValues: true,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );
@@ -872,9 +865,8 @@ void main() {
             newUnit: pound,
             unitId: kilogram.id,
             recalculationMode: RecalculationOnUnitChange.otherValues,
-            recalculateUnitValues: true,
           ),
-          conversionGroupName: GroupNames.mass,
+          conversionGroup: massGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,
         );

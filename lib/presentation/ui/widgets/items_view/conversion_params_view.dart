@@ -392,7 +392,7 @@ class ConversionParamsView extends StatelessWidget {
                             itemId: resultParamValue.id,
                             conversionGroupName: unitGroupName,
                             unit: resultParamValue.unitItem,
-                            params: paramSetValue,
+                            conversionParams: paramSetValue,
                           );
                         }
                       : null,

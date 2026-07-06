@@ -3,11 +3,10 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -31,8 +30,6 @@ class AlignConversionUseCase
     if (input.alignParams) {
       alignedConversion = await _alignParams(
         input.conversion,
-        unitGroupName: input.conversion.unitGroup.name,
-        onParamValueUpdated: input.onParamValueUpdated,
         paramIdToRefreshListValues: input.paramIdToRefreshListValues,
       );
     }
@@ -40,7 +37,6 @@ class AlignConversionUseCase
     if (input.alignUnits) {
       alignedConversion = await _alignConversionUnitValues(
         alignedConversion,
-        unitGroupName: input.conversion.unitGroup.name,
       );
     }
 
@@ -49,8 +45,6 @@ class AlignConversionUseCase
 
   Future<ConversionModel> _alignParams(
     ConversionModel conversion, {
-    required String unitGroupName,
-    void Function(ConversionParamValueModel)? onParamValueUpdated,
     int? paramIdToRefreshListValues,
   }) async {
     if (conversion.params == null) {
@@ -63,16 +57,10 @@ class AlignConversionUseCase
           await calculateParamSetValueUseCase.execute(
             InputParamSetValueCalculationModel(
               paramSetValue: paramSetValue,
-              unitGroupName: unitGroupName,
-              delta: paramIdToRefreshListValues != null
-                  ? RefreshParamListValuesDelta(
-                      paramId: paramIdToRefreshListValues,
-                    )
-                  : null,
-              alignCurrentValues: false,
+              conversionGroup: conversion.unitGroup,
+              startParamId: paramIdToRefreshListValues,
               keepSelectedValuesIfNotInList: false,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
-              onParamValueUpdated: onParamValueUpdated,
             ),
           ),
         );
@@ -85,9 +73,7 @@ class AlignConversionUseCase
   }
 
   Future<ConversionModel> _alignConversionUnitValues(
-    ConversionModel conversion, {
-    required String unitGroupName,
-  }) async {
+      ConversionModel conversion) async {
     List<ConversionUnitValueModel> alignedUnitValues = [];
 
     for (var unitValue in conversion.convertedUnitValues) {
@@ -96,7 +82,8 @@ class AlignConversionUseCase
           InputUnitValueCalculationModel(
             itemValue: unitValue,
             paramSetValue: conversion.params?.active,
-            unitGroupName: unitGroupName,
+            conversionGroup: conversion.unitGroup,
+            initDefaultValueIfEmpty: false,
           ),
         ),
       );

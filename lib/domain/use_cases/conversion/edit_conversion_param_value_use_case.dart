@@ -7,7 +7,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_param_set_va
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class EditConversionParamValueUseCase
@@ -42,10 +42,10 @@ class EditConversionParamValueUseCase
     final newParamSetValue = ObjectUtils.tryGet(
       await calculateParamSetValueUseCase.execute(
         InputParamSetValueCalculationModel(
-          unitGroupName: unitGroup.name,
+          conversionGroup: unitGroup,
           paramSetValue: oldParamSetValue,
           delta: delta,
-          alignCurrentValues: true,
+          startParamId: delta.paramId,
           enableFirstCalculableParamIfNoCalculatedEnabled: false,
         ),
       ),
@@ -71,7 +71,7 @@ class EditConversionParamValueUseCase
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
           calculateByParams: true,
-          unitGroupName: unitGroup.name,
+          conversionGroup: unitGroup,
         ),
       ),
     );

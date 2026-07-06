@@ -44,36 +44,6 @@ abstract class ConversionParamsEvent extends ConversionEvent {
   });
 }
 
-class PatchConversion extends ConversionEvent {
-  final ConversionModel conversionPatch;
-  final bool isAligned;
-
-  const PatchConversion({
-    required this.conversionPatch,
-    this.isAligned = false,
-    required super.rebuildUnitValues,
-    required super.rebuildParams,
-    super.onConversionUpdated,
-  });
-
-  @override
-  List<Object?> get props => [
-        conversionPatch,
-        isAligned,
-        rebuildUnitValues,
-        rebuildParams,
-      ];
-
-  @override
-  String toString() {
-    return 'PatchConversion{'
-        'conversion: $conversionPatch, '
-        'rebuildUnitValues: $rebuildUnitValues, '
-        'rebuildParams: $rebuildParams, '
-        'isAligned: $isAligned}';
-  }
-}
-
 class GetOrBuildConversion extends ConversionEvent {
   final UnitGroupModel unitGroup;
   final void Function(ConversionModel)? processPrevConversion;

@@ -40,9 +40,9 @@ class ReplaceConversionParamUnitUseCase
         InputParamSetValueCalculationModel(
           paramSetValue: oldParamSetValue,
           delta: delta,
+          startParamId: delta.paramId,
           srcUnitValue: srcUnitValue,
-          alignCurrentValues: true,
-          unitGroupName: unitGroup.name,
+          conversionGroup: unitGroup,
           enableFirstCalculableParamIfNoCalculatedEnabled: false,
         ),
       ),

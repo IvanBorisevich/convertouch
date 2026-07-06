@@ -119,7 +119,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                               itemId: resultUnitValue.id,
                               conversionGroupName: unitGroup.name,
                               unit: resultUnitValue.unitItem,
-                              params: params,
+                              conversionParams: params,
                             );
                           }
                         : null,

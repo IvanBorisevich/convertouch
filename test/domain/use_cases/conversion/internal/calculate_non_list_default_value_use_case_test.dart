@@ -1,5 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_default_value_calculation_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_non_list_default_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -23,7 +23,7 @@ void main() {
   test('Calculate for non-list unit', () async {
     ValueModel? result = ObjectUtils.tryGet(
       await useCase.execute(
-        const InputDefaultValueCalculationModel(
+        const InputNonListDefaultValueCalculationModel(
           conversionGroupName: GroupNames.length,
           item: meter,
         ),
@@ -36,7 +36,7 @@ void main() {
   test('Calculate for replacing non-list unit', () async {
     ValueModel? result = ObjectUtils.tryGet(
       await useCase.execute(
-        const InputDefaultValueCalculationModel(
+        const InputNonListDefaultValueCalculationModel(
           item: meter,
           conversionGroupName: GroupNames.length,
           replacingUnit: centimeter,

@@ -6,7 +6,7 @@ import 'package:convertouch/domain/model/use_case_model/input/input_conversion_m
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/repositories/unit_repository.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 class AddUnitsToConversionUseCase
@@ -43,7 +43,7 @@ class AddUnitsToConversionUseCase
             itemValue: ConversionUnitValueModel(
               unit: unit,
             ),
-            unitGroupName: unitGroup.name,
+            conversionGroup: unitGroup,
             paramSetValue: params,
           ),
         ),
@@ -76,7 +76,7 @@ class AddUnitsToConversionUseCase
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
           calculateByParams: !unitGroup.refreshable,
-          unitGroupName: unitGroup.name,
+          conversionGroup: unitGroup,
         ),
       ),
     );

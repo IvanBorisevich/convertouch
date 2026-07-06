@@ -38,10 +38,9 @@ import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_va
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/get_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_conversion_items_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/replace_conversion_item_unit_use_case.dart';
@@ -314,7 +313,6 @@ Future<void> _initUseCases() async {
     () => CalculateUnitValueUseValue(
       calculateDefaultValueUseCase: locator(),
       fetchListValuesUseCase: locator(),
-      unitGroupRepository: locator(),
     ),
   );
 

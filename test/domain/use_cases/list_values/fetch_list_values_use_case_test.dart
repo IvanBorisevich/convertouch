@@ -44,7 +44,7 @@ void main() {
             listType: itemValue.listType!,
             unit: itemValue.unitItem,
             conversionGroupName: conversionGroupName,
-            params: paramSetValue,
+            conversionParams: paramSetValue,
             keepSelectedValueIfNotInList: keepSelectedValueIfNotInList,
           ),
         ),

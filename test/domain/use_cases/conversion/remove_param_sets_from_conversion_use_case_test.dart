@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_unit_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/remove_param_sets_from_conversion_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
@@ -19,7 +19,6 @@ import '../../model/mock/mock_unit.dart';
 import '../../model/mock/mock_unit_group.dart';
 import '../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../repositories/mock/mock_network_repository.dart';
-import '../../repositories/mock/mock_unit_group_repository.dart';
 import 'helpers/helpers.dart';
 
 void main() {
@@ -27,19 +26,19 @@ void main() {
 
   setUpAll(() {
     useCase = const RemoveParamSetsFromConversionUseCase(
-        calculateUnitValueUseValue: CalculateUnitValueUseValue(
-      calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
-        fetchDynamicValueUseCase: FetchDynamicValueUseCase(
-          dynamicValueRepository: MockDynamicValueRepository(),
+      calculateUnitValueUseValue: CalculateUnitValueUseValue(
+        calculateDefaultValueUseCase: CalculateNonListDefaultValueUseCase(
+          fetchDynamicValueUseCase: FetchDynamicValueUseCase(
+            dynamicValueRepository: MockDynamicValueRepository(),
+          ),
+        ),
+        fetchListValuesUseCase: FetchListValuesUseCase(
+          listValueRepository: ListValueRepositoryImpl(
+            networkRepository: MockNetworkRepository(),
+          ),
         ),
       ),
-          fetchListValuesUseCase: FetchListValuesUseCase(
-            listValueRepository: ListValueRepositoryImpl(
-              networkRepository: MockNetworkRepository(),
-            ),
-          ),
-      unitGroupRepository: MockUnitGroupRepository(),
-    ));
+    );
   });
 
   group("Remove selected param set", () {

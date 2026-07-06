@@ -1,15 +1,15 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/num_range.dart';
+import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -20,6 +20,7 @@ import 'package:test/test.dart';
 import '../../../model/mock/mock_list_values_batch.dart';
 import '../../../model/mock/mock_param.dart';
 import '../../../model/mock/mock_unit.dart';
+import '../../../model/mock/mock_unit_group.dart';
 import '../../../repositories/mock/mock_dynamic_value_repository.dart';
 import '../../../repositories/mock/mock_unit_group_repository.dart';
 import '../../../repositories/mock/mockito_mock_repository.mocks.dart';
@@ -56,20 +57,20 @@ void main() {
   Future<void> testCase({
     required ConversionParamSetValueModel currentParamSetValue,
     required ConversionParamSetValueModel expectedParamSetValue,
-    ConversionSingleParamModifyDelta? delta,
-    required bool alignCurrentValues,
+    ConversionParamsModifyDelta? delta,
+    required int? startParamId,
     required bool enableFirstCalculableParamIfNoCalculatedEnabled,
     ConversionUnitValueModel? srcUnitValue,
-    required String conversionGroupName,
+    required UnitGroupModel conversionGroup,
   }) async {
     final modifiedParamSetValue = ObjectUtils.tryGet(
       await useCase.execute(
         InputParamSetValueCalculationModel(
           paramSetValue: currentParamSetValue,
           delta: delta,
+          startParamId: startParamId,
           srcUnitValue: srcUnitValue,
-          unitGroupName: conversionGroupName,
-          alignCurrentValues: alignCurrentValues,
+          conversionGroup: conversionGroup,
           enableFirstCalculableParamIfNoCalculatedEnabled:
               enableFirstCalculableParamIfNoCalculatedEnabled,
         ),
@@ -81,7 +82,7 @@ void main() {
 
   group("Should initially calculate param set 'Barbell Weight'", () {
     test(
-        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "Should init 'Bar Weight' list values WITH preselect, "
         "should recalc 'One Size Weight' by src value ("
         " - 'Bar Weight' will not be empty,"
         " - 'One Size Weight' calculated = true,"
@@ -133,16 +134,16 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        conversionGroupName: GroupNames.mass,
+        startParamId: null,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
     test(
-        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "Should init 'Bar Weight' list values WITH preselect, "
         "should recalc 'One Size Weight' by src value ("
         " - 'Bar Weight' will not be empty,"
         " - 'One Size Weight' calculated = true,"
@@ -193,16 +194,16 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        conversionGroupName: GroupNames.mass,
+        startParamId: null,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
 
     test(
-        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "Should init 'Bar Weight' list values WITH preselect, "
         "should NOT recalc 'One Size Weight' by src value ("
         " - 'Bar Weight' will not be empty,"
         " - 'One Size Weight' calculated = false,"
@@ -254,16 +255,16 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        conversionGroupName: GroupNames.mass,
+        startParamId: null,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
     test(
-        "Should init 'Bar Weight' list values WITH preselect (alignCurrentValues = true), "
+        "Should init 'Bar Weight' list values WITH preselect, "
         "should recalc 'One Size Weight' by src value ("
         " - 'Bar Weight' will not be empty,"
         " - 'One Size Weight' will become calculated = true, because"
@@ -314,10 +315,10 @@ void main() {
 
       await testCase(
         srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 70, 1),
-        conversionGroupName: GroupNames.mass,
+        startParamId: null,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
@@ -375,10 +376,10 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        conversionGroupName: GroupNames.mass,
+        startParamId: barWeightParam.id,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -434,10 +435,10 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        conversionGroupName: GroupNames.mass,
+        startParamId: barWeightParam.id,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -494,10 +495,10 @@ void main() {
           paramId: oneSideWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        conversionGroupName: GroupNames.mass,
+        startParamId: oneSideWeightParam.id,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -555,10 +556,10 @@ void main() {
           paramId: barWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        conversionGroupName: GroupNames.mass,
+        startParamId: barWeightParam.id,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -615,10 +616,10 @@ void main() {
           paramId: oneSideWeightParam.id,
           paramSetId: barbellWeightParamSet.id,
         ),
-        conversionGroupName: GroupNames.mass,
+        startParamId: oneSideWeightParam.id,
+        conversionGroup: massGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -626,8 +627,8 @@ void main() {
 
   group("Should initially calculate param set 'Clothes Size'", () {
     test(
-        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
-        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "Should init 'Person' list values and LEAVE value 'Man', "
+        "should set default 'Garment' list value 'Shirt', "
         "should set default 'Height' list value [cm: ..-164] ("
         " - no src value,"
         " - 'Height' calculated = false,"
@@ -694,17 +695,17 @@ void main() {
       );
 
       await testCase(
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: null,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
 
     test(
-        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
-        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "Should init 'Person' list values and LEAVE value 'Man', "
+        "should set default 'Garment' list value 'Shirt', "
         "should set default 'Height' list value [cm: ..-164] ("
         " - no src value,"
         " - 'Height' will become calculated = true, because"
@@ -770,17 +771,17 @@ void main() {
       );
 
       await testCase(
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: null,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
 
     test(
-        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
-        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "Should init 'Person' list values and LEAVE value 'Man', "
+        "should set default 'Garment' list value 'Shirt', "
         "should recalc 'Height' list value by src value IT 44 ("
         " - 'Person' is not empty,"
         " - 'Garment' is not empty,"
@@ -847,19 +848,18 @@ void main() {
       );
 
       await testCase(
-        srcUnitValue:
-            ConversionUnitValueModel.tuple(itClothesSize, 44, null),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: null,
+        srcUnitValue: ConversionUnitValueModel.tuple(itClothesSize, 44, null),
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: true,
       );
     });
 
     test(
-        "Should init 'Person' list values and LEAVE value 'Man' (alignCurrentValues = true), "
-        "should set default 'Garment' list value 'Shirt' (alignCurrentValues = true), "
+        "Should init 'Person' list values and LEAVE value 'Man', "
+        "should set default 'Garment' list value 'Shirt', "
         "should recalc 'Height' list value by src value IT 44 ("
         " - 'Person' is not empty,"
         " - 'Garment' is not empty,"
@@ -927,12 +927,11 @@ void main() {
       );
 
       await testCase(
-        srcUnitValue:
-            ConversionUnitValueModel.tuple(itClothesSize, 44, null),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: null,
+        srcUnitValue: ConversionUnitValueModel.tuple(itClothesSize, 44, null),
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1009,10 +1008,10 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: personParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1088,10 +1087,10 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: personParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1166,10 +1165,10 @@ void main() {
           paramId: personParam.id,
           paramSetId: personParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: personParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1244,10 +1243,10 @@ void main() {
           paramId: garmentParam.id,
           paramSetId: garmentParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: garmentParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1322,10 +1321,10 @@ void main() {
           paramId: garmentParam.id,
           paramSetId: garmentParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: garmentParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1400,10 +1399,10 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: heightParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1479,10 +1478,10 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: heightParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
@@ -1559,17 +1558,17 @@ void main() {
           paramId: heightParam.id,
           paramSetId: heightParam.paramSetId,
         ),
-        conversionGroupName: GroupNames.clothesSize,
+        startParamId: heightParam.id,
+        conversionGroup: clothesSizeGroup,
         currentParamSetValue: currentParamSetValue,
         expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
   });
 
-  group("Should initially calculate param set 'Exchange Rate'", () {
-    test("[Currency] Should init 'Source' param list values with preselect",
+  group("[Currency] Param set 'Exchange Rate'", () {
+    test("Should NOT init 'Source / Bank' param list values (fetched via API)",
         () async {
       final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,
@@ -1582,39 +1581,34 @@ void main() {
         ],
       );
 
-      final expectedParamSetValue = ConversionParamSetValueModel(
+      await testCase(
+        startParamId: null,
+        conversionGroup: currencyGroup,
+        currentParamSetValue: currentParamSetValue,
+        expectedParamSetValue: currentParamSetValue,
+        enableFirstCalculableParamIfNoCalculatedEnabled: false,
+      );
+    });
+
+    test(
+        "Should keep 'Source / Bank' param current list value (fetched via API)",
+        () async {
+      final currentParamSetValue = ConversionParamSetValueModel(
         paramSet: exchangeRateParamSet,
         paramValues: [
           ConversionParamValueModel.tuple(
             exchangeRateSourceBankParam,
-            ConvertouchListType.exchangeRateSource.preselected
-                ? exchangeRateSources.items[0]
-                : null,
+            'Test Bank',
             null,
-            listValuesFetchResult: exchangeRateSources,
           ),
         ],
       );
 
-      when(
-        mockitoNetworkRepository.fetchListValues(
-          listType: ConvertouchListType.exchangeRateSource,
-          conversionGroupName: GroupNames.currency,
-          params: anyNamed('params'),
-          pageSize: listValuesPageSize,
-          pageNum: 0,
-        ),
-      ).thenAnswer(
-        (_) async => const Right([
-          ValueModel.rawStr('FloatRates'),
-        ]),
-      );
-
       await testCase(
-        conversionGroupName: GroupNames.currency,
+        startParamId: null,
+        conversionGroup: currencyGroup,
         currentParamSetValue: currentParamSetValue,
-        expectedParamSetValue: expectedParamSetValue,
-        alignCurrentValues: true,
+        expectedParamSetValue: currentParamSetValue,
         enableFirstCalculableParamIfNoCalculatedEnabled: false,
       );
     });
