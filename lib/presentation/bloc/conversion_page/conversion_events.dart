@@ -66,45 +66,6 @@ class GetOrBuildConversion extends ConversionEvent {
   }
 }
 
-class AlignConversion extends ConversionEvent {
-  final ConversionModel? conversion;
-  final bool alignParams;
-  final bool alignUnits;
-  final int? paramIdToRefreshListValues;
-  final void Function(ConversionModel)? onConversionParamsAligned;
-  final void Function(ConversionModel)? onConversionUnitValuesAligned;
-  final ParamSetValueChangedCallback? ifParamSetFilled;
-
-  const AlignConversion({
-    this.conversion,
-    this.alignParams = true,
-    this.alignUnits = true,
-    this.paramIdToRefreshListValues,
-    super.onParamValueUpdated,
-    super.onUnitValueUpdated,
-    this.onConversionParamsAligned,
-    this.onConversionUnitValuesAligned,
-    this.ifParamSetFilled,
-  }) : super(rebuildUnitValues: alignUnits, rebuildParams: alignParams);
-
-  @override
-  List<Object?> get props => [
-        conversion,
-        alignParams,
-        alignUnits,
-        paramIdToRefreshListValues,
-      ];
-
-  @override
-  String toString() {
-    return 'AlignConversion{'
-        'conversion: $conversion, '
-        'alignParams: $alignParams, '
-        'alignUnits: $alignUnits, '
-        'paramIdToRefreshListValues: $paramIdToRefreshListValues}';
-  }
-}
-
 class SaveConversion extends ConversionEvent {
   final ConversionModel conversion;
 

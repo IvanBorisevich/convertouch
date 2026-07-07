@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -1131,7 +1133,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     }
 
                     if (isOpen) {
-                      _fetchListListValues();
+                      _fetchListValues(
+                        currentListValuesFetchResult: listValuesFetchResult,
+                      );
                     } else {
                       _dropdownSearchController?.clear();
                     }
@@ -1151,9 +1155,11 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     );
   }
 
-  void _fetchListListValues() {
-    if (widget.model.listValuesFetchResult == null ||
-        widget.model.listValuesFetchResult!.items.isEmpty) {
+  void _fetchListValues({ListValuesFetchResult? currentListValuesFetchResult}) {
+    if (currentListValuesFetchResult == null ||
+        currentListValuesFetchResult.items.isEmpty) {
+      log("Fetch new list values, list type = ${widget.model.listType}");
+
       BlocProvider.of<ListValuesBloc>(context).add(
         FetchItems(
           params: widget.listFetchParamsBuilder?.call() ??

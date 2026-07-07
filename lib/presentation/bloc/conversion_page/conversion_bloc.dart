@@ -66,7 +66,6 @@ class ConversionBloc
     required this.toggleCalculableParamUseCase,
   }) : super(const ConversionBuilt(conversion: ConversionModel.none)) {
     on<GetOrBuildConversion>(_onGetOrBuildConversion);
-    on<AlignConversion>(_onAlignConversion);
     on<SaveConversion>(_onSaveConversion);
     on<CleanupConversion>(_onCleanupConversion);
     on<MoveConversionUnitValue>(_onMoveConversionUnitValue);
@@ -117,10 +116,9 @@ class ConversionBloc
       }
     } else {
       conversion = state.conversion;
-    }
 
-    log("${DateTime.now()} - Selected conversion from storage or db: "
-        "$conversion");
+      log("${DateTime.now()} - Selected conversion from storage: $conversion");
+    }
 
     if (prev != null && prev.conversion.exists) {
       event.processPrevConversion?.call(prev.conversion);
@@ -160,23 +158,25 @@ class ConversionBloc
       );
     }
 
-    event.processCurrentConversion?.call(conversion);
-  }
-
-  _onAlignConversion(
-    AlignConversion event,
-    Emitter<ConversionState> emit,
-  ) async {
-    ObjectUtils.tryGet(
+    conversion = ObjectUtils.tryGet(
       await alignConversionUseCase.execute(
         InputConversionAlignModel(
-          conversion: event.conversion ?? state.conversion,
-          alignUnits: event.alignUnits,
-          alignParams: event.alignParams,
-          paramIdToRefreshListValues: event.paramIdToRefreshListValues,
+          conversion: conversion,
         ),
       ),
     );
+
+    log("${DateTime.now()} - Emit after alignment");
+
+    emit(
+      ConversionBuilt(
+        conversion: conversion,
+        rebuildUnitValues: event.rebuildUnitValues,
+        rebuildParams: event.rebuildParams,
+      ),
+    );
+
+    event.processCurrentConversion?.call(conversion);
   }
 
   _onSaveConversion(

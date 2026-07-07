@@ -48,38 +48,6 @@ class ConversionController {
     );
   }
 
-  void alignConversion(
-    BuildContext context, {
-    required ConversionModel conversion,
-    bool alignParams = true,
-    bool alignUnits = true,
-    ParamSetValueChangedCallback? ifParamSetFilled,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      AlignConversion(
-        conversion: conversion,
-        alignParams: alignParams,
-        alignUnits: alignUnits,
-        ifParamSetFilled: ifParamSetFilled,
-        onParamValueUpdated: (newParamValue) {
-          conversionItemController.updateParamValue(
-            context,
-            id: newParamValue.id,
-            newParamValue: newParamValue,
-          );
-        },
-        onUnitValueUpdated: (newUnitValue, isSource) {
-          conversionItemController.updateUnitValue(
-            context,
-            id: newUnitValue.id,
-            newUnitValue: newUnitValue,
-            isSource: isSource,
-          );
-        },
-      ),
-    );
-  }
-
   void editConversionGroup(
     BuildContext context, {
     required UnitGroupModel modifiedGroup,
@@ -322,25 +290,6 @@ class ConversionController {
               newParamValue: updatedParamValue,
             );
           }
-        },
-      ),
-    );
-  }
-
-  void refreshParamListValues(
-    BuildContext context, {
-    required int paramId,
-  }) {
-    BlocProvider.of<ConversionBloc>(context).add(
-      AlignConversion(
-        alignUnits: false,
-        paramIdToRefreshListValues: paramId,
-        onParamValueUpdated: (newParamValue) {
-          conversionItemController.updateParamValue(
-            context,
-            id: newParamValue.id,
-            newParamValue: newParamValue,
-          );
         },
       ),
     );

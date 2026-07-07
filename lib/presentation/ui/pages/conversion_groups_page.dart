@@ -70,18 +70,6 @@ class ConversionGroupsPage extends StatelessWidget {
                         disabled: !conversion.readyToRefresh,
                       );
 
-                      // TODO: uncomment when the bloc handler is ready
-
-                      // conversionController.alignConversion(
-                      //   context,
-                      //   conversion: conversion,
-                      //   alignUnits: conversion.convertedUnitValues.isNotEmpty,
-                      //   ifParamSetFilled: startRefreshByParams(
-                      //     context,
-                      //     autoRefresh: appState.autoFetchOnRefreshableGroupOpen,
-                      //   ),
-                      // );
-
                       if (conversion.convertedUnitValues.isNotEmpty) {
                         navigationController.navigateTo(
                           context,
