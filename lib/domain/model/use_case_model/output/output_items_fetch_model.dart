@@ -28,13 +28,15 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     this.fetchParams,
   });
 
-  const OutputItemsFetchModel.loading()
-      : this(
-          items: const [],
-          status: FetchingStatus.loading,
-          hasReachedMax: false,
-          pageNum: 0,
-        );
+  const OutputItemsFetchModel.loading({
+    this.fetchParams,
+    this.searchString,
+    this.selectedItem,
+  })  : items = const [],
+        status = FetchingStatus.loading,
+        hasReachedMax = false,
+        pageNum = 0,
+        error = null;
 
   const OutputItemsFetchModel.failure({
     required this.items,

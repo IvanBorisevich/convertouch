@@ -43,6 +43,15 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     FetchItems<P> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
+    emit(
+      ItemsFetched<T, P>(
+        itemsFetch: OutputItemsFetchModel.loading(
+          searchString: event.searchString,
+          fetchParams: event.fetchParams
+        ),
+      ),
+    );
+
     int pageNum;
     P? params;
     String? searchString;
@@ -53,7 +62,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     if (event.firstFetch) {
       allItems = [];
       pageNum = 0;
-      params = event.params;
+      params = event.fetchParams;
       searchString = event.searchString;
       hasReachedMax = false;
       oobIds = [];

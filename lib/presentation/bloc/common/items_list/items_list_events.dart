@@ -15,14 +15,14 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   final int pageSize;
   final bool firstFetch;
   final void Function()? onFirstFetch;
-  final P? params;
+  final P? fetchParams;
 
   const FetchItems({
     this.searchString,
     this.pageNum,
     this.pageSize = 100,
     this.firstFetch = true,
-    this.params,
+    this.fetchParams,
     this.onFirstFetch,
     super.onSuccess,
   });
@@ -33,7 +33,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
         pageNum,
         pageSize,
         firstFetch,
-        params,
+        fetchParams,
       ];
 
   @override
@@ -44,7 +44,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
         'onFirstFetch: $onFirstFetch, '
-        'params: $params}';
+        'fetchParams: $fetchParams}';
   }
 }
 

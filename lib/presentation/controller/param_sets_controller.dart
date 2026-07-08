@@ -27,7 +27,7 @@ class ConversionParamSetsController {
   }) {
     BlocProvider.of<ConversionParamSetsBloc>(context).add(
       FetchItems(
-        params: ParamSetsFetchParams(
+        fetchParams: ParamSetsFetchParams(
           parentItemId: unitGroupId,
         ),
       ),

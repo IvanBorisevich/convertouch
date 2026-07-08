@@ -328,7 +328,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
               ),
             ),
             _suffixCloseIcon(context),
-            _suffixRefreshIcon(context),
+            _suffixRefreshProgressIcon(context),
             ...widget.suffixWidgets.mapIndexed(
               (index, suffixWidget) => suffixWidget != null
                   ? Row(
@@ -416,64 +416,12 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     );
   }
 
-  Widget _suffixRefreshIcon(BuildContext context) {
-    if (widget.model.listType == null ||
-        !widget.model.listType!.fetchedViaApi) {
-      return const SizedBox.shrink();
-    }
-
+  Widget _suffixRefreshProgressIcon(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: _listValuesNotifier,
       builder: (_, listValuesFetchResult, child) {
-        if (listValuesFetchResult == null ||
-            listValuesFetchResult.status == FetchingStatus.loading) {
-          return ValueListenableBuilder(
-            valueListenable: _refreshProgressIconNotifier,
-            builder: (_, refreshIconVisible, child) {
-              if (!refreshIconVisible) {
-                return const SizedBox.shrink();
-              }
-
-              return Container(
-                padding: const EdgeInsets.only(right: 14),
-                color: Colors.transparent,
-                child: Container(
-                  width: _refreshButtonWidth,
-                  height: _refreshButtonWidth,
-                  color: Colors.transparent,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(2),
-                  child: CircularProgressIndicator(
-                    strokeCap: StrokeCap.round,
-                    strokeWidth: 2,
-                    color: _foregroundColor,
-                  ),
-                ),
-              );
-            },
-          );
-        }
-
-        if (listValuesFetchResult.status == FetchingStatus.success) {
-          return GestureDetector(
-            onTap: () {
-              BlocProvider.of<ListValuesBloc>(context).add(
-                FetchItems(
-                  params: listValuesFetchResult.fetchParams,
-                ),
-              );
-            },
-            child: Container(
-              height: double.infinity,
-              padding: const EdgeInsets.only(right: 14),
-              color: Colors.transparent,
-              child: Icon(
-                Icons.refresh_rounded,
-                color: _foregroundColor,
-                size: 25,
-              ),
-            ),
-          );
+        if (listValuesFetchResult == null) {
+          return const SizedBox.shrink();
         }
 
         if (listValuesFetchResult.status == FetchingStatus.failure) {
@@ -488,7 +436,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
                     handlerFunc: () {
                       BlocProvider.of<ListValuesBloc>(context).add(
                         FetchItems(
-                          params: listValuesFetchResult.fetchParams,
+                          fetchParams: listValuesFetchResult.fetchParams,
                         ),
                       );
                     },
@@ -519,7 +467,32 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
           );
         }
 
-        return const SizedBox.shrink();
+        return ValueListenableBuilder(
+          valueListenable: _refreshProgressIconNotifier,
+          builder: (_, refreshIconVisible, child) {
+            if (!refreshIconVisible ||
+                listValuesFetchResult.status != FetchingStatus.loading) {
+              return const SizedBox.shrink();
+            }
+
+            return Container(
+              padding: const EdgeInsets.only(right: 14),
+              color: Colors.transparent,
+              child: Container(
+                width: _refreshButtonWidth,
+                height: _refreshButtonWidth,
+                color: Colors.transparent,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(2),
+                child: CircularProgressIndicator(
+                  strokeCap: StrokeCap.round,
+                  strokeWidth: 2,
+                  color: _foregroundColor,
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }
@@ -1140,7 +1113,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       _dropdownSearchController?.clear();
                     }
 
-                    widget.refreshProgressIconNotifier.value = !isOpen;
+                    widget.refreshProgressIconNotifier.value = !isOpen &&
+                        listValuesFetchResult?.status == FetchingStatus.loading;
 
                     setState(() {
                       _isDropdownOpen = isOpen;
@@ -1162,7 +1136,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
       BlocProvider.of<ListValuesBloc>(context).add(
         FetchItems(
-          params: widget.listFetchParamsBuilder?.call() ??
+          fetchParams: widget.listFetchParamsBuilder?.call() ??
               ListValuesFetchParams(
                 itemId: widget.model.itemId,
                 listType: widget.model.listType,
