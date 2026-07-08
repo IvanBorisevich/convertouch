@@ -5,8 +5,8 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_param_set_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
@@ -59,7 +59,6 @@ class AlignConversionUseCase
               paramSetValue: paramSetValue,
               conversionGroup: conversion.unitGroup,
               startParamId: paramIdToRefreshListValues,
-              keepSelectedValuesIfNotInList: false,
               enableFirstCalculableParamIfNoCalculatedEnabled: false,
             ),
           ),
@@ -83,7 +82,7 @@ class AlignConversionUseCase
             itemValue: unitValue,
             paramSetValue: conversion.params?.active,
             conversionGroup: conversion.unitGroup,
-            initDefaultValueIfEmpty: false,
+            initDefaultNonListValueIfEmpty: false,
           ),
         ),
       );

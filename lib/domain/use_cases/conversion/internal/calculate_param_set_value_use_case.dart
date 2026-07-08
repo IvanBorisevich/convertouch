@@ -71,7 +71,6 @@ class CalculateParamSetValueUseCase extends UseCase<
         paramId: changedStartParamValue.param.id,
         srcUnitValue: input.srcUnitValue,
         conversionGroup: input.conversionGroup,
-        keepSelectedValuesIfNotInList: input.keepSelectedValuesIfNotInList,
         onParamValueUpdated: input.onParamValueUpdated,
       );
     }
@@ -84,7 +83,6 @@ class CalculateParamSetValueUseCase extends UseCase<
     required int paramId,
     ConversionUnitValueModel? srcUnitValue,
     required UnitGroupModel conversionGroup,
-    required bool keepSelectedValuesIfNotInList,
     void Function(ConversionParamValueModel)? onParamValueUpdated,
   }) async {
     int indexByParamId =

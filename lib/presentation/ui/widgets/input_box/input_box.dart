@@ -1140,6 +1140,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               ListValuesFetchParams(
                 itemId: widget.model.itemId,
                 listType: widget.model.listType,
+                leaveUnknownSelectedValue: widget.model.listType.fetchedViaApi,
               ),
         ),
       );

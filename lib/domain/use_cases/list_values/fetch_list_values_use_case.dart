@@ -1,4 +1,3 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/repositories/list_value_repository.dart';
@@ -45,16 +44,15 @@ class FetchListValuesUseCase
       return null;
     }
 
-    bool keepSelectedValueIfNotInList =
-        input.fetchParams!.keepSelectedValueIfNotInList;
+    bool leaveUnknownSelectedValue =
+        input.fetchParams!.leaveUnknownSelectedValue;
+    bool leaveEmptySelectedValue = input.fetchParams!.leaveEmptySelectedValue;
+
     ValueModel? selectedValue = input.fetchParams!.selectedValue;
-    ConvertouchListType listType = input.fetchParams!.listType;
+    ValueModel? preselectedValue =
+        input.fetchParams!.listType.preselected ? listValues.firstOrNull : null;
 
-    if (listValues.isEmpty) {
-      return keepSelectedValueIfNotInList ? selectedValue : null;
-    }
-
-    ValueModel? alignedSelectedValue = ObjectUtils.tryGet(
+    ValueModel? validatedSelectedValue = ObjectUtils.tryGet(
       await listValueRepository.validateValue(
         value: selectedValue,
         listType: input.fetchParams!.listType,
@@ -63,15 +61,11 @@ class FetchListValuesUseCase
       ),
     );
 
-    if (alignedSelectedValue != null) {
-      return keepSelectedValueIfNotInList
-          ? selectedValue
-          : alignedSelectedValue;
-    } else if (keepSelectedValueIfNotInList) {
-      return null;
-    }
+    ValueModel? result =
+        leaveUnknownSelectedValue ? selectedValue : validatedSelectedValue;
+    result ??= (leaveEmptySelectedValue ? null : preselectedValue);
 
-    return listType.preselected ? listValues.firstOrNull : null;
+    return result;
   }
 
   @override

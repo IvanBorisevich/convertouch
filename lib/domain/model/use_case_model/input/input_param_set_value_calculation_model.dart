@@ -9,7 +9,6 @@ class InputParamSetValueCalculationModel {
   final int? startParamId;
   final ConversionUnitValueModel? srcUnitValue;
   final UnitGroupModel conversionGroup;
-  final bool keepSelectedValuesIfNotInList;
   final bool enableFirstCalculableParamIfNoCalculatedEnabled;
   final void Function(ConversionParamValueModel)? onParamValueUpdated;
 
@@ -19,7 +18,6 @@ class InputParamSetValueCalculationModel {
     this.delta,
     required this.startParamId,
     this.srcUnitValue,
-    this.keepSelectedValuesIfNotInList = false,
     required this.enableFirstCalculableParamIfNoCalculatedEnabled,
     this.onParamValueUpdated,
   });

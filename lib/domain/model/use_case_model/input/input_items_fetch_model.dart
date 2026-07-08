@@ -102,7 +102,8 @@ class ListValuesFetchParams extends ItemsFetchParams {
   final String? conversionGroupName;
   final UnitModel? unit;
   final ConversionParamSetValueModel? conversionParams;
-  final bool keepSelectedValueIfNotInList;
+  final bool leaveUnknownSelectedValue;
+  final bool leaveEmptySelectedValue;
 
   const ListValuesFetchParams({
     required this.itemId,
@@ -111,7 +112,8 @@ class ListValuesFetchParams extends ItemsFetchParams {
     this.unit,
     this.conversionGroupName,
     this.conversionParams,
-    this.keepSelectedValueIfNotInList = false,
+    this.leaveUnknownSelectedValue = false,
+    this.leaveEmptySelectedValue = false,
   });
 
   @override
@@ -119,7 +121,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
         itemId,
         listType,
         selectedValue,
-        keepSelectedValueIfNotInList,
+        leaveUnknownSelectedValue,
         unit,
         conversionGroupName,
         conversionParams,

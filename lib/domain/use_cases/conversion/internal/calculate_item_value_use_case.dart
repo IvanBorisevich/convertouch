@@ -45,7 +45,7 @@ abstract class CalculateItemValueUseCase<
 
     if (itemValue.listType == null) {
       ValueModel? newDefaultValue = itemValue.defaultValue ??
-          (input.initDefaultValueIfEmpty
+          (input.initDefaultNonListValueIfEmpty
               ? await calculateDefaultNonListValue(itemValue, input)
               : null);
 
@@ -67,7 +67,7 @@ abstract class CalculateItemValueUseCase<
                 ? (input as InputParamValueCalculationModel).paramSetValue
                 : (input as InputUnitValueCalculationModel).paramSetValue;
 
-        bool keepSelectedValueIfNotInList =
+        bool leaveEmptySelectedValue =
             input is InputUnitValueCalculationModel
                 ? !areParamsNullOrApplicable(paramSetValue)
                 : false;
@@ -84,7 +84,7 @@ abstract class CalculateItemValueUseCase<
                 unit: itemValue.unitItem,
                 conversionGroupName: input.conversionGroup.name,
                 conversionParams: paramSetValue,
-                keepSelectedValueIfNotInList: keepSelectedValueIfNotInList,
+                leaveEmptySelectedValue: leaveEmptySelectedValue,
               ),
             ),
           ),

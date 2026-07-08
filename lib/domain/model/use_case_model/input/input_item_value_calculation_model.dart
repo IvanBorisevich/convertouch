@@ -8,13 +8,13 @@ abstract class InputItemValueCalculationModel<M extends ItemValueModel,
   final M itemValue;
   final D? delta;
   final UnitGroupModel conversionGroup;
-  final bool initDefaultValueIfEmpty;
+  final bool initDefaultNonListValueIfEmpty;
 
   const InputItemValueCalculationModel({
     required this.itemValue,
     this.delta,
     required this.conversionGroup,
-    this.initDefaultValueIfEmpty = true,
+    this.initDefaultNonListValueIfEmpty = true,
   });
 }
 
@@ -29,7 +29,7 @@ class InputUnitValueCalculationModel extends InputItemValueCalculationModel<
     required super.conversionGroup,
     this.paramSetValue,
     this.calculateByParams = false,
-    super.initDefaultValueIfEmpty,
+    super.initDefaultNonListValueIfEmpty,
   });
 }
 
@@ -44,6 +44,6 @@ class InputParamValueCalculationModel extends InputItemValueCalculationModel<
     required super.conversionGroup,
     required this.paramSetValue,
     this.srcUnitValue,
-    super.initDefaultValueIfEmpty,
+    super.initDefaultNonListValueIfEmpty,
   });
 }

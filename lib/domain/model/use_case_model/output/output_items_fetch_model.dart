@@ -146,7 +146,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   String toString() {
     return 'FetchResult{'
         'size: ${items.length}, '
-        'selected: ${selectedItem != null ? "${selectedItem!.name}, " : ""}'
+        'selected: ${selectedItem != null ? selectedItem!.name : "-"}, '
         '${searchString != null ? "$searchString, " : ""}'
         'status: $status, '
         '${error != null ? "${error!.message}, " : ""}'
