@@ -39,8 +39,6 @@ class ConvertouchProgressButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("Progress button build(): progressStream: $progressStream");
-
     return Visibility(
       visible: visible,
       child: Container(

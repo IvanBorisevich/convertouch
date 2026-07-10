@@ -29,17 +29,19 @@ class ValueModel extends IdNameSearchableItemModel {
           oob: false,
         );
 
-  const ValueModel.rawStr(String value, {String? alt})
+  const ValueModel.rawStr(String value, {String? alt, String? iconUri})
       : this(
           raw: value,
           alt: alt ?? value,
           numVal: null,
           range: null,
+          iconUri: iconUri,
         );
 
   factory ValueModel.str(
     String value, {
     String? alt,
+    String? iconUri,
   }) {
     double? num = double.tryParse(value);
 
@@ -52,12 +54,14 @@ class ValueModel extends IdNameSearchableItemModel {
       alt: alt ?? value,
       numVal: num,
       range: null,
+      iconUri: iconUri,
     );
   }
 
   factory ValueModel.num(
     num value, {
     String? alt,
+    String? iconUri,
   }) {
     double? numVal = !value.isNaN ? value.toDouble() : null;
 
@@ -68,37 +72,45 @@ class ValueModel extends IdNameSearchableItemModel {
       alt: alt ?? DoubleValueUtils.format(numVal, scientific: true),
       numVal: double.tryParse(raw),
       range: null,
+      iconUri: iconUri,
     );
   }
 
-  factory ValueModel.range(NumRange range) {
+  factory ValueModel.range(
+    NumRange range, {
+    String? iconUri,
+  }) {
     return ValueModel(
       raw: range.rangeName,
       alt: range.rangeName,
       numVal: null,
       range: range,
+      iconUri: iconUri,
     );
   }
 
-  static ValueModel? any(dynamic value) {
+  static ValueModel? any(
+    dynamic value, {
+    String? iconUri,
+  }) {
     if (value == null) {
       return null;
     }
 
     if (value is ValueModel) {
-      return value;
+      return value.copyWith(iconUri: iconUri);
     }
 
     if (value is num) {
-      return ValueModel.num(value);
+      return ValueModel.num(value, iconUri: iconUri);
     }
 
     if (value is String) {
-      return value.isNotEmpty ? ValueModel.str(value) : null;
+      return value.isNotEmpty ? ValueModel.str(value, iconUri: iconUri) : null;
     }
 
     if (value is NumRange) {
-      return ValueModel.range(value);
+      return ValueModel.range(value, iconUri: iconUri);
     }
 
     throw ConvertouchException(
@@ -122,12 +134,14 @@ class ValueModel extends IdNameSearchableItemModel {
     String? alt,
     double? numVal,
     NumRange? range,
+    String? iconUri,
   }) {
     return ValueModel(
       raw: raw ?? this.raw,
       alt: alt ?? this.alt,
       numVal: numVal ?? this.numVal,
       range: range ?? this.range,
+      iconUri: iconUri ?? this.iconUri,
     );
   }
 
@@ -140,6 +154,7 @@ class ValueModel extends IdNameSearchableItemModel {
   List<Object?> get props => [
         raw,
         alt,
+        iconUri,
       ];
 
   @override
@@ -181,6 +196,7 @@ class ValueModel extends IdNameSearchableItemModel {
 
   @override
   String toString() {
-    return '{$raw , $alt}';
+    return '{$raw , $alt'
+        '${iconUri != null ? ", icon: $iconUri" : ""}}';
   }
 }

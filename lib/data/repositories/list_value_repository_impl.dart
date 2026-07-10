@@ -29,12 +29,12 @@ class ListValueRepositoryImpl implements ListValueRepository {
     ConversionParamSetValueModel? params,
   }) async {
     if (listType.fetchedViaApi) {
-      return await _fetchFromNetwork(
+      return await networkRepository.fetchListValues(
         listType: listType,
-        pageNum: pageNum,
-        pageSize: pageSize,
         conversionGroupName: conversionGroupName,
         params: params,
+        pageSize: pageSize,
+        pageNum: pageNum,
       );
     }
 
@@ -105,21 +105,5 @@ class ListValueRepositoryImpl implements ListValueRepository {
 
     int end = min((pageNum + 1) * pageSize, localListValues.length);
     return localListValues.sublist(pageNum * pageSize, end);
-  }
-
-  Future<Either<ConvertouchException, List<ValueModel>>> _fetchFromNetwork({
-    required ConvertouchListType listType,
-    required int pageNum,
-    required int pageSize,
-    required String? conversionGroupName,
-    required ConversionParamSetValueModel? params,
-  }) async {
-    return await networkRepository.fetchListValues(
-      listType: listType,
-      conversionGroupName: conversionGroupName,
-      params: params,
-      pageSize: pageSize,
-      pageNum: pageNum,
-    );
   }
 }

@@ -45,11 +45,12 @@ class ConversionParamItem extends StatelessWidget {
           paramValue: paramValue,
         );
       },
-      onValueChanged: (value) {
-        conversionController.changeParamValue(
+      onValueChanged: (value, {listValues}) {
+        conversionController.editConversionParamValue(
           context,
           paramValue: paramValue,
           newValue: value,
+          listValues: listValues,
           ifParamSetFilled: startRefreshByParams(context),
           ifParamSetFilledPartiallyOrEmpty: (conversion) {
             refreshButtonController.changeState(

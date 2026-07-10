@@ -307,6 +307,7 @@ class ConversionBloc
         delta: EditConversionUnitValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
+          listValues: event.listValues,
           unitId: event.unitId,
         ),
       ),
@@ -443,6 +444,7 @@ class ConversionBloc
         delta: EditConversionParamValueDelta(
           newValue: event.newValue,
           newDefaultValue: event.newDefaultValue,
+          listValues: event.listValues,
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),

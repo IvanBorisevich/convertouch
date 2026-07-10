@@ -1,24 +1,34 @@
 import 'package:convertouch/data/repositories/list_value_repository_impl.dart';
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
+import 'package:either_dart/either.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../model/mock/mock_list_values_batch.dart';
 import '../../model/mock/mock_param.dart';
 import '../../model/mock/mock_unit.dart';
-import '../../repositories/mock/mock_network_repository.dart';
+import '../../repositories/mock/mockito_mock_repository.mocks.dart';
 
 void main() {
-  late FetchListValuesUseCase useCase;
+  late final FetchListValuesUseCase useCase;
+  late final MockitoNetworkRepository mockitoNetworkRepository =
+      MockitoNetworkRepository();
 
   setUpAll(() {
-    useCase = const FetchListValuesUseCase(
+    provideDummy<Either<ConvertouchException, List<ValueModel>>>(
+      const Right([]),
+    );
+
+    useCase = FetchListValuesUseCase(
       listValueRepository: ListValueRepositoryImpl(
-        networkRepository: MockNetworkRepository(),
+        networkRepository: mockitoNetworkRepository,
       ),
     );
   });
@@ -526,6 +536,41 @@ void main() {
             currentParamValue,
             ConversionParamValueModel.tuple(heightParam, null, null,
                 unit: centimeter),
+          ],
+        ),
+      );
+    });
+  });
+
+  group("Should init list values of param 'Source / Bank'", () {
+    test("Should preselect if empty: empty -> 'FloatRates'", () async {
+      final currentParamValue = ConversionParamValueModel.tuple(
+          exchangeRateSourceBankParam, null, null);
+
+      when(
+        mockitoNetworkRepository.fetchListValues(
+          listType: ConvertouchListType.exchangeRateSource,
+          conversionGroupName: GroupNames.currency,
+          params: anyNamed('params'),
+          pageSize: listValuesPageSize,
+          pageNum: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Right([
+          ValueModel.rawStr('FloatRates', iconUri: IconKeys.dataSource),
+        ]),
+      );
+
+      await testCase(
+        leaveUnknownSelectedValue: true,
+        itemValue: currentParamValue,
+        conversionGroupName: GroupNames.currency,
+        expectedListFetchResult: exchangeRateSources,
+        expectedSelectedValue: exchangeRateSources.items[0],
+        paramSetValue: ConversionParamSetValueModel(
+          paramSet: exchangeRateParamSet,
+          paramValues: [
+            currentParamValue,
           ],
         ),
       );

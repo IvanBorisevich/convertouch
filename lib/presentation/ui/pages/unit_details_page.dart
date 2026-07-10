@@ -188,7 +188,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 ),
                                 readonly: !pageState
                                     .details.conversionRule.configEditable,
-                                onValueChanged: (value) {
+                                onValueChanged: (value, {listValues}) {
                                   unitDetailsController.updateUnitValue(
                                     context,
                                     newValue: value,
@@ -212,7 +212,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                 readonly: !pageState
                                     .details.conversionRule.configEditable,
                                 isLast: true,
-                                onValueChanged: (value) {
+                                onValueChanged: (value, {listValues}) {
                                   unitDetailsController.updateArgUnitValue(
                                     context,
                                     newValue: value,

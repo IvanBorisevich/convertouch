@@ -23,7 +23,7 @@ class _ResponseParserFactory {
   }
 
   ResponseParser getByListType(ConvertouchListType listType) {
-    return _listValuesParser;
+    return ListValuesResponseParser(listType);
   }
 }
 
@@ -32,7 +32,5 @@ const Map<String, Map<String, ResponseParser>> _commonParsers = {
     ParamSetNames.exchangeRate: ExchangeRateResponseParser(),
   },
 };
-
-const _listValuesParser = ListValuesResponseParser();
 
 const responseParsers = _ResponseParserFactory.instance;

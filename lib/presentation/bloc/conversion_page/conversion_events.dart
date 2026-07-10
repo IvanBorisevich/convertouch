@@ -185,11 +185,13 @@ class EditConversionUnit extends ConversionEvent {
 class EditConversionUnitValue extends ConversionEvent {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
+  final ListValuesFetchResult? listValues;
   final int unitId;
 
   const EditConversionUnitValue({
     required this.newValue,
     this.newDefaultValue,
+    this.listValues,
     required this.unitId,
     super.onError,
     super.onConversionUpdated,
@@ -199,6 +201,7 @@ class EditConversionUnitValue extends ConversionEvent {
   List<Object?> get props => [
         newValue,
         newDefaultValue,
+        listValues,
         unitId,
       ];
 
@@ -352,12 +355,14 @@ class SelectParamSetInConversion extends ConversionParamsEvent {
 class EditConversionParamValue extends ConversionParamsEvent {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
+  final ListValuesFetchResult? listValues;
   final int paramId;
   final int paramSetId;
 
   const EditConversionParamValue({
     required this.newValue,
     this.newDefaultValue,
+    this.listValues,
     required this.paramId,
     required this.paramSetId,
     super.ifParamSetFilled,
@@ -370,6 +375,7 @@ class EditConversionParamValue extends ConversionParamsEvent {
   List<Object?> get props => [
         newValue,
         newDefaultValue,
+        listValues,
         paramId,
         paramSetId,
       ];

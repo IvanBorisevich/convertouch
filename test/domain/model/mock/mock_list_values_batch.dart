@@ -320,7 +320,7 @@ final ListValuesFetchResult ringCircumferenceRangesInCm = OutputItemsFetchModel(
 
 const ListValuesFetchResult exchangeRateSources = ListValuesFetchResult(
   items: [
-    ValueModel.rawStr('FloatRates'),
+    ValueModel.rawStr('FloatRates', iconUri: IconKeys.dataSource),
   ],
   hasReachedMax: true,
   pageNum: 1,

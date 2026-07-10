@@ -32,12 +32,19 @@ class EditConversionParamValueUseCase
       return oldConversionParams;
     }
 
-    final oldParamSetValue =
+    var oldParamSetValue =
         oldConversionParams.getParamSetValueById(delta.paramSetId);
 
     if (oldParamSetValue == null) {
       return oldConversionParams;
     }
+
+    oldParamSetValue = await oldParamSetValue.copyWithChangedParamById(
+      paramId: delta.paramId,
+      map: (paramValue, paramSetValue) async => paramValue.copyWith(
+        listValuesFetchResult: Patchable(delta.listValues),
+      ),
+    );
 
     final newParamSetValue = ObjectUtils.tryGet(
       await calculateParamSetValueUseCase.execute(

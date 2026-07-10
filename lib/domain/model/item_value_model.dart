@@ -83,8 +83,7 @@ class ItemValueModel extends ItemModel {
 
   ConvertouchListType? get listType => null;
 
-  bool get cacheListValuesFetchedViaApi =>
-      listType != null && listType!.fetchedViaApi;
+  bool get fetchedViaApi => listType != null && listType!.fetchedViaApi;
 
   UnitModel? get unitItem => null;
 
@@ -122,7 +121,7 @@ class ItemValueModel extends ItemModel {
     var result = {
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
+      "listValuesFetchResult": saveListValues || fetchedViaApi
           ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
           : null,
     };
@@ -205,7 +204,7 @@ class ConversionUnitValueModel extends ItemValueModel {
       "unit": unit.toJson(removeNulls: removeNulls),
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
+      "listValuesFetchResult": saveListValues || fetchedViaApi
           ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
           : null,
     };
@@ -322,7 +321,7 @@ class ConversionParamValueModel extends ItemValueModel {
       "calculated": calculated,
       "value": value?.toJson(),
       "defaultValue": defaultValue?.toJson(),
-      "listValuesFetchResult": saveListValues || cacheListValuesFetchedViaApi
+      "listValuesFetchResult": saveListValues || fetchedViaApi
           ? listValuesFetchResult?.toJson(removeNulls: removeNulls)
           : null,
     };

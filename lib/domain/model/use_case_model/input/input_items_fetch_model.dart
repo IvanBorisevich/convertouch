@@ -154,6 +154,11 @@ class ListValuesFetchParams extends ItemsFetchParams {
 
   @override
   String toString() {
-    return 'ListValuesFetchParams{itemId: $itemId, listType: $listType}';
+    return 'ListValuesFetchParams{'
+        'itemId: $itemId, '
+        'listType: $listType, '
+        'selected: ${selectedValue != null ? selectedValue!.name : "-"}, '
+        'leaveUnknownSelectedValue: $leaveUnknownSelectedValue, '
+        'leaveEmptySelectedValue: $leaveEmptySelectedValue}';
   }
 }

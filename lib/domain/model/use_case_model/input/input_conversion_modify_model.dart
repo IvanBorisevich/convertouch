@@ -1,6 +1,7 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -30,10 +31,12 @@ abstract interface class ConversionModifyDelta {
 abstract class EditItemValueDelta implements ConversionModifyDelta {
   final ValueModel? newValue;
   final ValueModel? newDefaultValue;
+  final ListValuesFetchResult? listValues;
 
   const EditItemValueDelta({
     required this.newValue,
     required this.newDefaultValue,
+    this.listValues,
   });
 }
 
@@ -97,6 +100,7 @@ class EditConversionUnitValueDelta extends EditItemValueDelta
   const EditConversionUnitValueDelta({
     required super.newValue,
     required super.newDefaultValue,
+    super.listValues,
     required this.unitId,
   });
 
@@ -186,6 +190,7 @@ class EditConversionParamValueDelta extends EditItemValueDelta
   const EditConversionParamValueDelta({
     required super.newValue,
     required super.newDefaultValue,
+    super.listValues,
     required this.paramId,
     required this.paramSetId,
   });

@@ -154,10 +154,12 @@ class ConversionController {
     BuildContext context, {
     required int unitId,
     required ValueModel? newValue,
+    ListValuesFetchResult? listValues,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionUnitValue(
         newValue: newValue,
+        listValues: listValues,
         unitId: unitId,
         onConversionUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
@@ -228,16 +230,18 @@ class ConversionController {
     );
   }
 
-  void changeParamValue(
+  void editConversionParamValue(
     BuildContext context, {
     required ConversionParamValueModel paramValue,
     required ValueModel? newValue,
+    ListValuesFetchResult? listValues,
     ParamSetValueChangedCallback? ifParamSetFilled,
     ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionParamValue(
         newValue: newValue,
+        listValues: listValues,
         paramId: paramValue.param.id,
         paramSetId: paramValue.param.paramSetId,
         ifParamSetFilled: ifParamSetFilled,

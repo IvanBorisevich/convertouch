@@ -61,7 +61,9 @@ class ConvertouchDetailsItem extends StatelessWidget {
               labelText: headerTitle,
               maxTextLength: editableValueMaxLength,
               textLengthCounterVisible: editableValueLengthVisible,
-              onValueChanged: onValueChanged,
+              onValueChanged: (value, {listValues}) {
+                onValueChanged?.call(value);
+              },
               colors: colors.editable,
               dialogColors: dialogColors,
               theme: theme,

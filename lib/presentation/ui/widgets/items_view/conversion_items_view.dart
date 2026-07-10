@@ -120,6 +120,8 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                               conversionGroupName: unitGroup.name,
                               unit: resultUnitValue.unitItem,
                               conversionParams: params,
+                              leaveUnknownSelectedValue:
+                                  resultUnitValue.listType!.fetchedViaApi,
                             );
                           }
                         : null,
@@ -139,11 +141,12 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                         );
                       }
                     },
-                    onValueChanged: (value) {
+                    onValueChanged: (value, {listValues}) {
                       conversionController.editConversionItemValue(
                         context,
                         unitId: resultUnitValue.unit.id,
                         newValue: value,
+                        listValues: listValues,
                       );
                     },
                     onItemRemoved: () {

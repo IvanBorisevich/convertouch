@@ -65,7 +65,9 @@ class ConvertouchSearchBar extends StatelessWidget {
             model: ItemValueModel(
               defaultValue: ValueModel.rawStr(placeholder),
             ),
-            onValueChanged: onValueChanged,
+            onValueChanged: (value, {listValues}) {
+              onValueChanged?.call(value);
+            },
             colors: searchBarColorScheme.inputBox,
             dialogColors: dialogColors,
             theme: appState.theme,

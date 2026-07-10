@@ -28,10 +28,14 @@ class EditConversionUnitValueUseCase
     required Map<int, ConversionUnitValueModel> newConvertedUnitValues,
     required EditConversionUnitValueDelta delta,
   }) async {
+    final newSrcUnitValue = newConvertedUnitValues[delta.unitId]!.copyWith(
+      listValuesFetchResult: Patchable(delta.listValues),
+    );
+
     return await ObjectUtils.tryGet(
       await calculateUnitValueUseValue.execute(
         InputUnitValueCalculationModel(
-          itemValue: newConvertedUnitValues[delta.unitId]!,
+          itemValue: newSrcUnitValue,
           conversionGroup: unitGroup,
           delta: delta,
           paramSetValue: activeParams,

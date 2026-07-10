@@ -106,12 +106,12 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
 
       emit(
         ItemsFetched<T, P>(
-          itemsFetch: OutputItemsFetchModel(
+          itemsFetch: OutputItemsFetchModel.success(
             items: [
               ...allItems,
               ...newBatch.right.items,
             ],
-            status: FetchingStatus.success,
+            selectedItem: newBatch.right.selectedItem,
             hasReachedMax: newBatch.right.hasReachedMax,
             searchString: searchString,
             pageNum: newBatch.right.pageNum,
@@ -128,9 +128,8 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       log("Error when fetching items: $e\n$stacktrace");
       emit(
         ItemsFetched<T, P>(
-          itemsFetch: OutputItemsFetchModel(
+          itemsFetch: OutputItemsFetchModel.failure(
             items: state.itemsFetch.items,
-            status: FetchingStatus.failure,
             error: e is ConvertouchException
                 ? e
                 : ConvertouchException(

@@ -23,7 +23,10 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final bool isSource;
   final bool readonly;
   final void Function()? onUnitItemTap;
-  final void Function(ValueModel)? onValueChanged;
+  final void Function(
+    ValueModel, {
+    ListValuesFetchResult? listValues,
+  })? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function()? onItemRemoved;
   final ListValuesFetchParams Function()? listFetchParamsBuilder;

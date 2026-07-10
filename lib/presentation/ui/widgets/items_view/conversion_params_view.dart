@@ -393,6 +393,8 @@ class ConversionParamsView extends StatelessWidget {
                             conversionGroupName: unitGroupName,
                             unit: resultParamValue.unitItem,
                             conversionParams: paramSetValue,
+                            leaveUnknownSelectedValue:
+                                resultParamValue.listType!.fetchedViaApi,
                           );
                         }
                       : null,

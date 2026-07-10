@@ -242,7 +242,6 @@ enum ConvertouchListType {
 
   /// If true, the first element of list values is preselected by default,
   /// if the list is empty, no value is preselected
-  /// not applicable when [fetchedViaApi] is True
   final bool preselected;
 
   /// If true, list values of this type are fetched via API, not from db
