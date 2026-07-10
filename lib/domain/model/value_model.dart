@@ -160,7 +160,6 @@ class ValueModel extends IdNameSearchableItemModel {
   List<Object?> get props => [
         raw,
         alt,
-        iconUri,
       ];
 
   @override

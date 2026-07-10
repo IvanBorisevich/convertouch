@@ -816,14 +816,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _mainValueNotifier = ValueNotifier(
       _getMainValue(
         selectedValue: widget.model.value,
-        valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+        leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
       ),
     );
 
     _hintNotifier = ValueNotifier(
       _getHint(
         mainValue: widget.model.value,
-        valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+        leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
       ),
     );
 
@@ -838,16 +838,18 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   ValueModel? _getMainValue({
     required ValueModel? selectedValue,
-    required bool valueExistsForEmptyList,
+    required bool leaveUnknownSelectedValue,
   }) {
-    return valueExistsForEmptyList ? null : selectedValue;
+    return leaveUnknownSelectedValue ? null : selectedValue;
   }
 
   ValueModel _getHint({
     required ValueModel? mainValue,
-    required bool valueExistsForEmptyList,
+    required bool leaveUnknownSelectedValue,
   }) {
-    return valueExistsForEmptyList ? (mainValue ?? _noValueHint) : _noValueHint;
+    return leaveUnknownSelectedValue
+        ? (mainValue ?? _noValueHint)
+        : _noValueHint;
   }
 
   void _initDropdownSearch() {
@@ -871,12 +873,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
     _mainValueNotifier.value = _getMainValue(
       selectedValue: widget.model.value,
-      valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+      leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
     );
 
     _hintNotifier.value = _getHint(
       mainValue: widget.model.value,
-      valueExistsForEmptyList: widget.model.valueExistsForEmptyList,
+      leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
     );
 
     if (widget.model.searchEnabled) {
@@ -898,42 +900,41 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         BlocListener<ListValuesBloc,
             ItemsFetched<ValueModel, ListValuesFetchParams>>(
           listener: (_, listValuesFetchState) {
-            if (listValuesFetchState.itemsFetch.fetchParams?.itemId == null ||
-                listValuesFetchState.itemsFetch.fetchParams?.itemId !=
-                    widget.model.itemId) {
+            final listFetchResult = listValuesFetchState.itemsFetch;
+            final fetchParams = listFetchResult.fetchParams;
+            final selectedValue = listFetchResult.selectedItem;
+
+            if (fetchParams == null ||
+                fetchParams.itemId != widget.model.itemId) {
               return;
             }
 
-            widget.listValuesNotifier.value = listValuesFetchState.itemsFetch;
+            widget.listValuesNotifier.value = listFetchResult;
 
-            log("List values fetched: ${listValuesFetchState.itemsFetch}");
+            log("List values fetched: $listFetchResult");
 
-            if (listValuesFetchState.itemsFetch.selectedItem != null) {
-              log("Preselect list value: ${listValuesFetchState.itemsFetch.selectedItem}");
-
-              bool valueForEmptyList = valueExistsForEmptyList(
-                value: listValuesFetchState.itemsFetch.selectedItem,
-                listValuesFetchResult: listValuesFetchState.itemsFetch,
-              );
+            if (selectedValue != null) {
+              log("Preselect list value: $selectedValue");
 
               _mainValueNotifier.value = _getMainValue(
-                selectedValue: listValuesFetchState.itemsFetch.selectedItem,
-                valueExistsForEmptyList: valueForEmptyList,
+                selectedValue: selectedValue,
+                leaveUnknownSelectedValue:
+                    fetchParams.leaveUnknownSelectedValue,
               );
 
               _hintNotifier.value = _getHint(
-                mainValue: listValuesFetchState.itemsFetch.selectedItem,
-                valueExistsForEmptyList: valueForEmptyList,
+                mainValue: selectedValue,
+                leaveUnknownSelectedValue:
+                    fetchParams.leaveUnknownSelectedValue,
               );
 
               widget.onValueChanged?.call(
-                listValuesFetchState.itemsFetch.selectedItem!,
-                listValues: listValuesFetchState.itemsFetch,
+                selectedValue,
+                listValues: listFetchResult,
               );
             }
 
-            if (listValuesFetchState.itemsFetch.items.length >
-                nonSearchableListItemsMinLimit) {
+            if (listFetchResult.items.length > nonSearchableListItemsMinLimit) {
               _initDropdownSearch();
             }
 

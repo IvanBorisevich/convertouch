@@ -116,6 +116,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                         ? () {
                             return ListValuesFetchParams(
                               listType: resultUnitValue.listType!,
+                              selectedValue: resultUnitValue.value,
                               itemId: resultUnitValue.id,
                               conversionGroupName: unitGroup.name,
                               unit: resultUnitValue.unitItem,

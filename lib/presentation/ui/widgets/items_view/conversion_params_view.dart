@@ -389,6 +389,7 @@ class ConversionParamsView extends StatelessWidget {
                       ? () {
                           return ListValuesFetchParams(
                             listType: resultParamValue.listType!,
+                            selectedValue: resultParamValue.value,
                             itemId: resultParamValue.id,
                             conversionGroupName: unitGroupName,
                             unit: resultParamValue.unitItem,

@@ -157,7 +157,7 @@ class ListValuesFetchParams extends ItemsFetchParams {
     return 'ListValuesFetchParams{'
         'itemId: $itemId, '
         'listType: $listType, '
-        'selected: ${selectedValue != null ? selectedValue!.name : "-"}, '
+        'selected: ${selectedValue != null ? selectedValue!.itemName : "-"}, '
         'leaveUnknownSelectedValue: $leaveUnknownSelectedValue, '
         'leaveEmptySelectedValue: $leaveEmptySelectedValue}';
   }
