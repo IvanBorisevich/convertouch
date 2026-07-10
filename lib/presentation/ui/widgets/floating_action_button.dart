@@ -98,8 +98,15 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                         size: iconSize,
                       ),
                       onPressed: disabled ? null : onClick,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(30)),
+                        side: BorderSide(
+                          color: disabled
+                              ? colorScheme.border.disabled
+                              : colorScheme.border.regular,
+                          width: 1,
+                        ),
                       ),
                       backgroundColor: disabled
                           ? colorScheme.background.disabled
@@ -112,8 +119,15 @@ class ConvertouchFloatingActionButton extends StatelessWidget {
                     )
                   : FloatingActionButton(
                       onPressed: disabled ? null : onClick,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(30)),
+                        side: BorderSide(
+                          color: disabled
+                              ? colorScheme.border.disabled
+                              : colorScheme.border.regular,
+                          width: 1,
+                        ),
                       ),
                       backgroundColor: disabled
                           ? colorScheme.background.disabled
