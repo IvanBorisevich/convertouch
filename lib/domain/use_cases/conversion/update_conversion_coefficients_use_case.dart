@@ -62,7 +62,7 @@ class UpdateConversionCoefficientsUseCase
         InputUnitValueCalculationModel(
           itemValue: newSrcUnitValue,
           paramSetValue: activeParams,
-          calculateByParams: true,
+          calculateByParams: !unitGroup.refreshable,
           conversionGroup: unitGroup,
         ),
       ),

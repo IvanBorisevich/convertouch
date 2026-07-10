@@ -265,6 +265,7 @@ const UnitModel usd = UnitModel(
   code: 'USD',
   valueType: ConvertouchValueType.decimalNonNegative,
   unitGroupId: currencyGroupId,
+  coefficient: 1,
 );
 
 const UnitModel eur = UnitModel(
@@ -281,6 +282,7 @@ const UnitModel aud = UnitModel(
   code: 'AUD',
   valueType: ConvertouchValueType.decimalNonNegative,
   unitGroupId: currencyGroupId,
+  coefficient: 0.7,
 );
 
 const UnitModel cny = UnitModel(

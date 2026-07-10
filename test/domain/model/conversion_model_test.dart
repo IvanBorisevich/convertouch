@@ -117,6 +117,7 @@ void main() {
           'unitGroupId': 10,
           'valueType': 5,
           'invertible': true,
+          'coefficient': 0.7,
           'oob': false,
         },
         'defaultValue': {
@@ -133,6 +134,7 @@ void main() {
             'code': 'USD',
             'unitGroupId': 10,
             'valueType': 5,
+            'coefficient': 1,
             'invertible': true,
             'oob': false,
           },
@@ -150,6 +152,7 @@ void main() {
             'unitGroupId': 10,
             'valueType': 5,
             'invertible': true,
+            'coefficient': 0.7,
             'oob': false,
           },
           'defaultValue': {

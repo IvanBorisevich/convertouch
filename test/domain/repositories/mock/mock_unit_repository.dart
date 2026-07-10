@@ -20,6 +20,9 @@ const _mockUnitsList = [
   usaRingSize,
   kilogram,
   pound,
+  aud,
+  usd,
+  can,
 ];
 
 class MockUnitRepository extends UnitRepository {

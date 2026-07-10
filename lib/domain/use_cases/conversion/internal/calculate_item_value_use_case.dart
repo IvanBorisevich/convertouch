@@ -67,10 +67,9 @@ abstract class CalculateItemValueUseCase<
                 ? (input as InputParamValueCalculationModel).paramSetValue
                 : (input as InputUnitValueCalculationModel).paramSetValue;
 
-        bool leaveEmptySelectedValue =
-            input is InputUnitValueCalculationModel
-                ? !areParamsNullOrApplicable(paramSetValue)
-                : false;
+        bool leaveEmptySelectedValue = input is InputUnitValueCalculationModel
+            ? !areParamsNullOrApplicable(paramSetValue)
+            : false;
 
         listValuesFetchResult = ObjectUtils.tryGet(
           await fetchListValuesUseCase.execute(
@@ -131,17 +130,19 @@ class CalculateParamValueUseValue extends CalculateItemValueUseCase<
     ConversionParamValueModel itemValue,
     InputParamValueCalculationModel input,
   ) async {
-    return !itemValue.calculated
-        ? ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(
-              InputNonListDefaultValueCalculationModel(
-                item: itemValue.param,
-                conversionGroupName: input.conversionGroup.name,
-                currentParamUnit: itemValue.unit,
-              ),
-            ),
-          )
-        : itemValue.defaultValue;
+    if (itemValue.calculated) {
+      return itemValue.defaultValue;
+    }
+
+    return ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        InputNonListDefaultValueCalculationModel(
+          item: itemValue.param,
+          conversionGroupName: input.conversionGroup.name,
+          currentParamUnit: itemValue.unit,
+        ),
+      ),
+    );
   }
 
   @override
@@ -220,19 +221,18 @@ class CalculateUnitValueUseValue extends CalculateItemValueUseCase<
     ConversionUnitValueModel itemValue,
     InputUnitValueCalculationModel input,
   ) async {
-    bool paramsNotExistOrApplicable =
-        areParamsNullOrApplicable(input.paramSetValue);
+    if (input.calculateByParams && areParamsApplicable(input.paramSetValue)) {
+      return itemValue.defaultValue;
+    }
 
-    return paramsNotExistOrApplicable
-        ? ObjectUtils.tryGet(
-            await calculateDefaultValueUseCase.execute(
-              InputNonListDefaultValueCalculationModel(
-                item: itemValue.unit,
-                conversionGroupName: input.conversionGroup.name,
-              ),
-            ),
-          )
-        : itemValue.defaultValue;
+    return ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        InputNonListDefaultValueCalculationModel(
+          item: itemValue.unit,
+          conversionGroupName: input.conversionGroup.name,
+        ),
+      ),
+    );
   }
 
   @override

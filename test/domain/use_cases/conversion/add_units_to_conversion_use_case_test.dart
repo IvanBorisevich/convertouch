@@ -89,6 +89,59 @@ void main() {
         );
       });
     });
+
+    group('[Currency] With params', () {
+      test(
+          'Should calculate default values for units AUD, USD '
+          'using predefined coefficients, not params', () async {
+        await testCase(
+          useCase: useCase,
+          delta: AddUnitsToConversionDelta(
+            unitIds: [
+              aud.id,
+              usd.id,
+            ],
+          ),
+          unitGroup: currencyGroup,
+          currentParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: exchangeRateParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    exchangeRateSourceBankParam,
+                    null,
+                    null,
+                  ),
+                ],
+              )
+            ],
+            selectedIndex: 0,
+          ),
+          currentUnitValues: const [],
+          expectedParams: ConversionParamSetValueBulkModel(
+            paramSetValues: [
+              ConversionParamSetValueModel(
+                paramSet: exchangeRateParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    exchangeRateSourceBankParam,
+                    null,
+                    null,
+                  ),
+                ],
+              )
+            ],
+            selectedIndex: 0,
+          ),
+          expectedSrc: ConversionUnitValueModel.tuple(aud, null, 1),
+          expectedUnitValues: [
+            ConversionUnitValueModel.tuple(aud, null, 1),
+            ConversionUnitValueModel.tuple(usd, null, 0.7),
+          ],
+        );
+      });
+    });
   });
 
   group('By formula', () {
