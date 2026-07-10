@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
@@ -6,12 +7,16 @@ const int nonSearchableListItemsMinLimit = 5;
 
 abstract class InputBoxViewModel {
   final String itemId;
+  final String? conversionGroupName;
+  final ConversionParamSetValueModel? conversionParams;
   final ValueModel? value;
   final String? labelText;
   final bool readonly;
 
   const InputBoxViewModel({
     required this.itemId,
+    this.conversionGroupName,
+    this.conversionParams,
     this.value,
     this.labelText,
     this.readonly = false,
@@ -19,6 +24,8 @@ abstract class InputBoxViewModel {
 
   static T ofValue<T extends InputBoxViewModel, M extends ItemValueModel>(
     M model, {
+    String? conversionGroupName,
+    ConversionParamSetValueModel? conversionParams,
     String? labelText,
     bool readonly = false,
     int? maxTextLength,
@@ -30,6 +37,8 @@ abstract class InputBoxViewModel {
         value: model.value,
         listValuesFetchResult: model.listValuesFetchResult,
         listType: model.listType!,
+        conversionGroupName: conversionGroupName,
+        conversionParams: conversionParams,
         readonly: !model.listType!.fetchedViaApi &&
             (model.listValuesFetchResult?.items == null ||
                 model.listValuesFetchResult!.items.isEmpty),
@@ -47,6 +56,8 @@ abstract class InputBoxViewModel {
         itemId: model.id,
         value: model.value,
         hint: model.defaultValue,
+        conversionGroupName: conversionGroupName,
+        conversionParams: conversionParams,
         readonly: readonly,
         labelText: labelText ?? model.name,
         valueType: model.valueType,
@@ -66,6 +77,8 @@ class TextBoxViewModel extends InputBoxViewModel {
   const TextBoxViewModel({
     required super.itemId,
     super.value,
+    super.conversionGroupName,
+    super.conversionParams,
     this.hint,
     super.readonly,
     super.labelText,
@@ -98,6 +111,8 @@ class ListBoxViewModel extends InputBoxViewModel {
     required super.itemId,
     super.value,
     required this.listType,
+    super.conversionGroupName,
+    super.conversionParams,
     super.readonly,
     super.labelText,
     required this.listValuesFetchResult,

@@ -1,6 +1,5 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
@@ -106,26 +105,14 @@ class ConvertouchConversionItemsView extends StatelessWidget {
 
                   return ConvertouchConversionItem(
                     model: resultUnitValue,
+                    conversionGroupName: unitGroup.name,
+                    conversionParams: params,
                     draggable: true,
                     index: index,
                     readonly: !resultUnitValue.unit.invertible,
                     isSource: isSource,
                     isLast: isLast,
                     removable: removable,
-                    listFetchParamsBuilder: resultUnitValue.listType != null
-                        ? () {
-                            return ListValuesFetchParams(
-                              listType: resultUnitValue.listType!,
-                              selectedValue: resultUnitValue.value,
-                              itemId: resultUnitValue.id,
-                              conversionGroupName: unitGroup.name,
-                              unit: resultUnitValue.unitItem,
-                              conversionParams: params,
-                              leaveUnknownSelectedValue:
-                                  resultUnitValue.listType!.fetchedViaApi,
-                            );
-                          }
-                        : null,
                     onUnitItemTap: () {
                       if (unitTapAction == UnitTapAction.selectReplacingUnit) {
                         unitsController.showUnitsForChangeInConversionItem(

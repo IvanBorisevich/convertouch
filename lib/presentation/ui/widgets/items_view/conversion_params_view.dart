@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
@@ -381,24 +380,12 @@ class ConversionParamsView extends StatelessWidget {
 
                 return ConversionParamItem(
                   paramValue: resultParamValue,
+                  conversionGroupName: unitGroupName,
+                  conversionParams: paramSetValue,
                   calculationSwitchersVisible: true,
                   colors: colors.paramItem,
                   dialogColors: appColors[theme].dialog,
                   theme: theme,
-                  listFetchParamsBuilder: resultParamValue.listType != null
-                      ? () {
-                          return ListValuesFetchParams(
-                            listType: resultParamValue.listType!,
-                            selectedValue: resultParamValue.value,
-                            itemId: resultParamValue.id,
-                            conversionGroupName: unitGroupName,
-                            unit: resultParamValue.unitItem,
-                            conversionParams: paramSetValue,
-                            leaveUnknownSelectedValue:
-                                resultParamValue.listType!.fetchedViaApi,
-                          );
-                        }
-                      : null,
                 );
               },
             ),

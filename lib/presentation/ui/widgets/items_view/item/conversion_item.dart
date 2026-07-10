@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/input_validators/num_in_range_validator.dart';
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
@@ -16,6 +16,8 @@ const double _unitButtonWidth = 76;
 class ConvertouchConversionItem<M extends ItemValueModel>
     extends StatefulWidget {
   final M model;
+  final String? conversionGroupName;
+  final ConversionParamSetValueModel? conversionParams;
   final bool isLast;
   final bool draggable;
   final bool removable;
@@ -29,7 +31,6 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   })? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function()? onItemRemoved;
-  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
   final ConversionItemColorScheme colors;
@@ -38,6 +39,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
 
   const ConvertouchConversionItem({
     required this.model,
+    this.conversionGroupName,
+    this.conversionParams,
     this.isLast = false,
     this.draggable = false,
     this.removable = false,
@@ -48,7 +51,6 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.onValueChanged,
     this.onValueFocused,
     this.onItemRemoved,
-    this.listFetchParamsBuilder,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
     required this.colors,
@@ -71,6 +73,8 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
     return ConvertouchInputBox(
       key: Key(widget.model.id),
       model: widget.model,
+      conversionGroupName: widget.conversionGroupName,
+      conversionParams: widget.conversionParams,
       readonly: widget.readonly,
       colors: widget.colors.inputBox,
       dialogColors: widget.dialogColors,
@@ -82,7 +86,6 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
       floatingLabelBehavior: FloatingLabelBehavior.always,
       tooltipDirection:
           widget.isLast ? TooltipDirection.up : TooltipDirection.down,
-      listFetchParamsBuilder: widget.listFetchParamsBuilder,
       onValueChanged: widget.onValueChanged,
       onValueFocused: (value) {
         setState(() {

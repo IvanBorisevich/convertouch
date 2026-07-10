@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -79,6 +80,8 @@ const String _fetchErrorMsg = "Something went wrong during fetch";
 class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   const ConvertouchInputBox({
     required this.model,
+    this.conversionGroupName,
+    this.conversionParams,
     this.focusNode,
     this.autofocus = false,
     this.readonly = false,
@@ -87,7 +90,6 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.listFetchParamsBuilder,
     this.validators = const [],
     this.borderWidth = 1,
     required this.colors,
@@ -107,6 +109,8 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   });
 
   final M model;
+  final String? conversionGroupName;
+  final ConversionParamSetValueModel? conversionParams;
   final FocusNode? focusNode;
   final bool autofocus;
   final bool readonly;
@@ -118,7 +122,6 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   })? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function(ValueModel)? onValueUnfocused;
-  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -172,6 +175,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
 
     _inputBoxModel = InputBoxViewModel.ofValue(
       widget.model,
+      conversionGroupName: widget.conversionGroupName,
+      conversionParams: widget.conversionParams,
       readonly: widget.readonly,
       maxTextLength: widget.maxTextLength,
       textLengthCounterVisible: widget.textLengthCounterVisible,
@@ -250,6 +255,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     if (widget.model != oldWidget.model) {
       _inputBoxModel = InputBoxViewModel.ofValue(
         widget.model,
+        conversionGroupName: widget.conversionGroupName,
+        conversionParams: widget.conversionParams,
         readonly: widget.readonly,
         maxTextLength: widget.maxTextLength,
         textLengthCounterVisible: widget.textLengthCounterVisible,
@@ -401,7 +408,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         model: model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
-        listFetchParamsBuilder: widget.listFetchParamsBuilder,
         refreshProgressIconNotifier: _refreshProgressIconNotifier,
         listValuesNotifier: _listValuesNotifier,
         foregroundColor: _foregroundColor,
@@ -758,7 +764,6 @@ class _ListField extends StatefulWidget {
     required this.model,
     this.controller,
     this.onValueChanged,
-    this.listFetchParamsBuilder,
     required this.refreshProgressIconNotifier,
     required this.listValuesNotifier,
     required this.foregroundColor,
@@ -779,7 +784,6 @@ class _ListField extends StatefulWidget {
     ValueModel, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final ListValuesFetchParams Function()? listFetchParamsBuilder;
   final ValueNotifier<bool> refreshProgressIconNotifier;
   final ValueNotifier<ListValuesFetchResult?> listValuesNotifier;
   final Color foregroundColor;
@@ -1160,9 +1164,13 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         }
 
                         if (isOpen) {
-                          _fetchListValues(
-                            currentListValuesFetchResult: listValuesFetchResult,
-                          );
+                          if (listValuesFetchResult == null ||
+                              listValuesFetchResult.items.isEmpty) {
+                            log("Fetch new list values, "
+                                "list type = ${widget.model.listType}");
+
+                            _fetchListValues();
+                          }
                         } else {
                           _dropdownSearchController?.clear();
                         }
@@ -1186,22 +1194,19 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     );
   }
 
-  void _fetchListValues({ListValuesFetchResult? currentListValuesFetchResult}) {
-    if (currentListValuesFetchResult == null ||
-        currentListValuesFetchResult.items.isEmpty) {
-      log("Fetch new list values, list type = ${widget.model.listType}");
-
-      BlocProvider.of<ListValuesBloc>(context).add(
-        FetchItems(
-          fetchParams: widget.listFetchParamsBuilder?.call() ??
-              ListValuesFetchParams(
-                itemId: widget.model.itemId,
-                listType: widget.model.listType,
-                leaveUnknownSelectedValue: widget.model.listType.fetchedViaApi,
-              ),
+  void _fetchListValues() {
+    BlocProvider.of<ListValuesBloc>(context).add(
+      FetchItems(
+        fetchParams: ListValuesFetchParams(
+          itemId: widget.model.itemId,
+          listType: widget.model.listType,
+          selectedValue: widget.model.value,
+          conversionGroupName: widget.model.conversionGroupName,
+          conversionParams: widget.model.conversionParams,
+          leaveUnknownSelectedValue: widget.model.listType.fetchedViaApi,
         ),
-      );
-    }
+      ),
+    );
   }
 
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
