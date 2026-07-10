@@ -46,10 +46,9 @@ abstract class InputBoxViewModel {
         searchEnabled: model.listValuesFetchResult?.items != null &&
             model.listValuesFetchResult!.items.length >
                 nonSearchableListItemsMinLimit,
-        leaveUnknownSelectedValue: (model.listValuesFetchResult?.fetchParams
-                    ?.leaveUnknownSelectedValue ??
-                true) ||
-            model.listType!.fetchedViaApi,
+        showUnknownSelectedValue: model.value != null &&
+            (model.listValuesFetchResult == null ||
+                model.listValuesFetchResult!.selectedItem == null),
       ) as T;
     } else {
       return TextBoxViewModel(
@@ -105,7 +104,7 @@ class ListBoxViewModel extends InputBoxViewModel {
   final ConvertouchListType listType;
   final String? searchHint;
   final bool searchEnabled;
-  final bool leaveUnknownSelectedValue;
+  final bool showUnknownSelectedValue;
 
   const ListBoxViewModel({
     required super.itemId,
@@ -118,7 +117,7 @@ class ListBoxViewModel extends InputBoxViewModel {
     required this.listValuesFetchResult,
     this.searchHint,
     this.searchEnabled = true,
-    this.leaveUnknownSelectedValue = false,
+    this.showUnknownSelectedValue = false,
   });
 
   @override
@@ -131,6 +130,6 @@ class ListBoxViewModel extends InputBoxViewModel {
         'listType: $listType, '
         'searchHint: $searchHint, '
         'searchEnabled: $searchEnabled, '
-        'valueExistsForEmptyList: $leaveUnknownSelectedValue}';
+        'showUnknownSelectedValue: $showUnknownSelectedValue}';
   }
 }

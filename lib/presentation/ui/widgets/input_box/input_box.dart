@@ -820,14 +820,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _mainValueNotifier = ValueNotifier(
       _getMainValue(
         selectedValue: widget.model.value,
-        leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
+        showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
       ),
     );
 
     _hintNotifier = ValueNotifier(
       _getHint(
         mainValue: widget.model.value,
-        leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
+        showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
       ),
     );
 
@@ -842,18 +842,22 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
   ValueModel? _getMainValue({
     required ValueModel? selectedValue,
-    required bool leaveUnknownSelectedValue,
+    required bool showUnknownSelectedValue,
   }) {
-    return leaveUnknownSelectedValue ? null : selectedValue;
+    ValueModel? result = showUnknownSelectedValue ? null : selectedValue;
+    log("getMainValue() result: $result");
+    return result;
   }
 
   ValueModel _getHint({
     required ValueModel? mainValue,
-    required bool leaveUnknownSelectedValue,
+    required bool showUnknownSelectedValue,
   }) {
-    return leaveUnknownSelectedValue
+    ValueModel? result = showUnknownSelectedValue
         ? (mainValue ?? _noValueHint)
         : _noValueHint;
+    log("getHint() result: $result");
+    return result;
   }
 
   void _initDropdownSearch() {
@@ -875,14 +879,16 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    log("list field didUpdateWidget(): ${widget.model}");
+
     _mainValueNotifier.value = _getMainValue(
       selectedValue: widget.model.value,
-      leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
+      showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
     );
 
     _hintNotifier.value = _getHint(
       mainValue: widget.model.value,
-      leaveUnknownSelectedValue: widget.model.leaveUnknownSelectedValue,
+      showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
     );
 
     if (widget.model.searchEnabled) {
@@ -906,7 +912,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
           listener: (_, listValuesFetchState) {
             final listFetchResult = listValuesFetchState.itemsFetch;
             final fetchParams = listFetchResult.fetchParams;
-            final selectedValue = listFetchResult.selectedItem;
+            final validatedSelectedValue = listFetchResult.selectedItem;
 
             if (fetchParams == null ||
                 fetchParams.itemId != widget.model.itemId) {
@@ -917,23 +923,21 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
             log("List values fetched: $listFetchResult");
 
-            if (selectedValue != null) {
-              log("Preselect list value: $selectedValue");
+            if (validatedSelectedValue != null) {
+              log("Preselect list value: $validatedSelectedValue");
 
               _mainValueNotifier.value = _getMainValue(
-                selectedValue: selectedValue,
-                leaveUnknownSelectedValue:
-                    fetchParams.leaveUnknownSelectedValue,
+                selectedValue: validatedSelectedValue,
+                showUnknownSelectedValue: false,
               );
 
               _hintNotifier.value = _getHint(
-                mainValue: selectedValue,
-                leaveUnknownSelectedValue:
-                    fetchParams.leaveUnknownSelectedValue,
+                mainValue: validatedSelectedValue,
+                showUnknownSelectedValue: false,
               );
 
               widget.onValueChanged?.call(
-                selectedValue,
+                validatedSelectedValue,
                 listValues: listFetchResult,
               );
             }
@@ -980,10 +984,11 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         labelColor: widget.labelColor,
                         floatingLabelBehavior: widget.floatingLabelBehavior,
                         contentPadding: widget.contentPadding,
-                        labelPadding:
-                            selectedValue != null || hint != _noValueHint
-                                ? const EdgeInsets.only(left: 32)
-                                : null,
+                        labelPadding: widget.model.listType.defaultIconUri !=
+                                    null &&
+                                (selectedValue != null || hint != _noValueHint)
+                            ? const EdgeInsets.only(left: 32)
+                            : null,
                       ),
                       style: _inputFieldTextStyle(
                         fontSize: widget.fontSize,

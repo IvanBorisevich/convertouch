@@ -36,7 +36,7 @@ class FetchListValuesUseCase
   }
 
   @override
-  Future<ValueModel?> alignSelectedValue(
+  Future<ValueModel?> validateSelectedValue(
     List<ValueModel> listValues,
     InputItemsFetchModel<ListValuesFetchParams> input,
   ) async {
