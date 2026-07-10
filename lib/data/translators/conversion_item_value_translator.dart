@@ -2,8 +2,8 @@ import 'package:convertouch/data/entities/conversion_item_value_entity.dart';
 import 'package:convertouch/data/entities/entity.dart';
 import 'package:convertouch/data/translators/translator.dart';
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
@@ -39,7 +39,7 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
       unit: unit!,
       value: ValueModel.any(entity.value),
       defaultValue: ValueModel.any(entity.defaultValue),
-    );
+    ).copyWithDefaultIconUri();
   }
 }
 
@@ -78,6 +78,6 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
       calculated: int2bool(entity.calculated),
       value: ValueModel.any(entity.value),
       defaultValue: ValueModel.any(entity.defaultValue),
-    );
+    ).copyWithDefaultIconUri();
   }
 }

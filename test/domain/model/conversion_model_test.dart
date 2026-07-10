@@ -3,8 +3,6 @@ import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
-import 'package:convertouch/domain/model/unit_group_model.dart';
-import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:test/test.dart';
 
@@ -17,23 +15,7 @@ void main() {
   group('By coefficients', () {
     const ConversionModel conversionByCoefficients = ConversionModel(
       id: 1,
-      unitGroup: UnitGroupModel(
-        id: 10,
-        name: 'Money',
-        conversionType: ConversionType.dynamic,
-        refreshable: true,
-        valueType: ConvertouchValueType.decimalNonNegative,
-      ),
-      srcUnitValue: ConversionUnitValueModel(
-        unit: UnitModel(
-          id: 7,
-          name: 'Euro',
-          code: 'EUR',
-          valueType: ConvertouchValueType.decimalNonNegative,
-        ),
-        value: ValueModel.one,
-        defaultValue: ValueModel.one,
-      ),
+      unitGroup: currencyGroup,
       params: ConversionParamSetValueBulkModel(
         paramSetValues: [
           ConversionParamSetValueModel(
@@ -41,6 +23,11 @@ void main() {
             paramValues: [
               ConversionParamValueModel(
                 param: exchangeRateSourceBankParam,
+                value: ValueModel.rawStr(
+                  "FloatRates",
+                  iconUri: IconKeys.dataSource,
+                ),
+                listValuesFetchResult: exchangeRateSources,
               ),
             ],
           ),
@@ -49,25 +36,17 @@ void main() {
         totalCount: 1,
         mandatoryParamSetExists: true,
       ),
+      srcUnitValue: ConversionUnitValueModel(
+        unit: aud,
+        defaultValue: ValueModel.one,
+      ),
       convertedUnitValues: [
         ConversionUnitValueModel(
-          unit: UnitModel(
-            id: 8,
-            name: 'United States Dollar',
-            code: 'USD',
-            valueType: ConvertouchValueType.decimalNonNegative,
-          ),
-          value: ValueModel.one,
+          unit: usd,
           defaultValue: ValueModel.one,
         ),
         ConversionUnitValueModel(
-          unit: UnitModel(
-            id: 9,
-            name: 'Australian Dollar',
-            code: 'AUD',
-            valueType: ConvertouchValueType.decimalNonNegative,
-          ),
-          value: ValueModel.one,
+          unit: aud,
           defaultValue: ValueModel.one,
         ),
       ],
@@ -77,7 +56,7 @@ void main() {
       'id': 1,
       'unitGroup': {
         'id': 10,
-        'name': 'Money',
+        'name': 'Currency',
         'conversionType': 1,
         'refreshable': true,
         'valueType': 5,
@@ -102,6 +81,22 @@ void main() {
                   'listType': 22,
                   'calculable': false,
                 },
+                'value': {
+                  'raw': 'FloatRates',
+                  'alt': 'FloatRates',
+                  'iconUri': 'data_source',
+                },
+                'listValuesFetchResult': {
+                  'items': [
+                    {
+                      'raw': 'FloatRates',
+                      'alt': 'FloatRates',
+                      'iconUri': 'data_source',
+                    },
+                  ],
+                  'hasReachedMax': true,
+                  'pageNum': 1,
+                },
                 'calculated': false,
               }
             ],
@@ -116,17 +111,13 @@ void main() {
       },
       'sourceItem': {
         'unit': {
-          'id': 7,
-          'name': 'Euro',
-          'code': 'EUR',
+          'id': 25,
+          'name': 'Australian Dollar',
+          'code': 'AUD',
+          'unitGroupId': 10,
           'valueType': 5,
           'invertible': true,
           'oob': false,
-        },
-        'value': {
-          'raw': '1',
-          'num': 1,
-          'alt': '1',
         },
         'defaultValue': {
           'raw': '1',
@@ -137,17 +128,13 @@ void main() {
       'targetItems': [
         {
           'unit': {
-            'id': 8,
-            'name': 'United States Dollar',
+            'id': 23,
+            'name': 'Dollar US',
             'code': 'USD',
+            'unitGroupId': 10,
             'valueType': 5,
             'invertible': true,
             'oob': false,
-          },
-          'value': {
-            'raw': '1',
-            'num': 1,
-            'alt': '1',
           },
           'defaultValue': {
             'raw': '1',
@@ -157,17 +144,13 @@ void main() {
         },
         {
           'unit': {
-            'id': 9,
+            'id': 25,
             'name': 'Australian Dollar',
             'code': 'AUD',
+            'unitGroupId': 10,
             'valueType': 5,
             'invertible': true,
             'oob': false,
-          },
-          'value': {
-            'raw': '1',
-            'num': 1,
-            'alt': '1',
           },
           'defaultValue': {
             'raw': '1',

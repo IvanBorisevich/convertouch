@@ -138,8 +138,8 @@ Future<void> main() async {
 
       expect(fetchedSources.isRight, true);
       expect(fetchedSources.right, const [
-        ValueModel.rawStr('British Bank'),
-        ValueModel.rawStr('ExchangeAPI.com'),
+        ValueModel.rawStr('British Bank', iconUri: IconKeys.dataSource),
+        ValueModel.rawStr('ExchangeAPI.com', iconUri: IconKeys.dataSource),
       ]);
     });
   });

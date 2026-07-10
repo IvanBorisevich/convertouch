@@ -14,15 +14,13 @@ class ListValuesResponseParser extends ResponseParser {
   ResponseEntity parse(String rawJson) {
     List<dynamic> jsonListValues = json.decode(rawJson);
 
-    List<ValueModel> listValues =
-        jsonListValues.whereType<Map<String, dynamic>>().map((item) {
-      ValueModel? value = ValueModel.fromJson(item)!;
-      return value.copyWith(
-        iconUri: listType.defaultIconUri != null
-            ? (value.iconUri ?? listType.defaultIconUri)
-            : null,
-      );
-    }).toList();
+    List<ValueModel> listValues = jsonListValues
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (item) => ValueModel.fromJson(item)!
+              .copyWithDefaultIconUri(listType.defaultIconUri),
+        )
+        .toList();
 
     return DynamicListValuesResponseEntity(listValues);
   }

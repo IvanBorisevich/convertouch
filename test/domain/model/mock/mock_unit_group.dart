@@ -75,4 +75,6 @@ const UnitGroupModel currencyGroup = UnitGroupModel(
   id: currencyGroupId,
   name: GroupNames.currency,
   valueType: ConvertouchValueType.decimalNonNegative,
+  conversionType: ConversionType.dynamic,
+  refreshable: true,
 );

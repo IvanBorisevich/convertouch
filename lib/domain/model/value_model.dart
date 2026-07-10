@@ -145,6 +145,12 @@ class ValueModel extends IdNameSearchableItemModel {
     );
   }
 
+  ValueModel copyWithDefaultIconUri(String? defaultIconUri) {
+    return copyWith(
+      iconUri: defaultIconUri != null ? (iconUri ?? defaultIconUri) : null,
+    );
+  }
+
   bool get hasRawValue => raw.isNotEmpty;
 
   @override
