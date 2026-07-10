@@ -73,7 +73,6 @@ class RemoveParamSetsFromConversionUseCase
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
-          calculateByParams: true,
           conversionGroup: unitGroup,
         ),
       ),

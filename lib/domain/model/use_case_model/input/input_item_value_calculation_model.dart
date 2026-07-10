@@ -21,14 +21,12 @@ abstract class InputItemValueCalculationModel<M extends ItemValueModel,
 class InputUnitValueCalculationModel extends InputItemValueCalculationModel<
     ConversionUnitValueModel, ConversionUnitValuesModifyDelta> {
   final ConversionParamSetValueModel? paramSetValue;
-  final bool calculateByParams;
 
   const InputUnitValueCalculationModel({
     required super.itemValue,
     super.delta,
     required super.conversionGroup,
     this.paramSetValue,
-    this.calculateByParams = false,
     super.initDefaultNonListValueIfEmpty,
   });
 }

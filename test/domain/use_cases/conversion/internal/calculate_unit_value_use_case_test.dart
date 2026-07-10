@@ -45,7 +45,6 @@ void main() {
     required ConversionUnitValueModel expectedUnitValue,
     ConversionUnitValuesModifyDelta? delta,
     ConversionParamSetValueModel? paramSetValue,
-    bool calculateByParams = false,
     required UnitGroupModel conversionGroup,
   }) async {
     final modifiedUnitValue = ObjectUtils.tryGet(
@@ -54,7 +53,6 @@ void main() {
           itemValue: currentUnitValue,
           paramSetValue: paramSetValue,
           delta: delta,
-          calculateByParams: calculateByParams,
           conversionGroup: conversionGroup,
         ),
       ),
@@ -122,7 +120,7 @@ void main() {
         );
       });
 
-      test("Should leave value '3L' when it exists in the list", () async {
+      test("Should recalculate value: 3L -> S by params", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
           '3L',
@@ -131,7 +129,7 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[4],
+          japanClothesSizes.items[0],
           null,
           listValuesFetchResult: japanClothesSizes,
         );
@@ -416,7 +414,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
@@ -469,7 +466,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: clothesSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: clothesSizeParamSet,
@@ -522,7 +518,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
@@ -559,7 +554,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
@@ -596,7 +590,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: ringSizeGroup,
           paramSetValue: ConversionParamSetValueModel.compact(
             paramSet: ringSizeByDiameterParamSet,
@@ -633,7 +626,6 @@ void main() {
         );
 
         await testCase(
-          calculateByParams: true,
           conversionGroup: ringSizeGroup,
           currentUnitValue: currentUnitValue,
           expectedUnitValue: expectedUnitValue,

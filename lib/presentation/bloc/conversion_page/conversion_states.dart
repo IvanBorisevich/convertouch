@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_state.dart';
 
@@ -26,8 +24,6 @@ class ConversionBuilt extends ConversionState {
       ];
 
   Map<String, dynamic> toJson() {
-    log("Conversion before serialization: $conversion");
-
     return {
       "conversion": conversion.toJson(),
     };
@@ -37,8 +33,6 @@ class ConversionBuilt extends ConversionState {
     if (json == null) {
       return null;
     }
-
-    log("Conversion json before deserialization: $json");
 
     return ConversionBuilt(
       conversion:

@@ -77,7 +77,6 @@ class EditConversionParamValueUseCase
         InputUnitValueCalculationModel(
           itemValue: oldSourceUnitValue,
           paramSetValue: activeParams,
-          calculateByParams: true,
           conversionGroup: unitGroup,
         ),
       ),

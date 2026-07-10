@@ -566,7 +566,10 @@ void main() {
         itemValue: currentParamValue,
         conversionGroupName: GroupNames.currency,
         expectedListFetchResult: exchangeRateSources,
-        expectedSelectedValue: exchangeRateSources.items[0],
+        expectedSelectedValue: const ValueModel.rawStr(
+          'FloatRates',
+          iconUri: IconKeys.dataSource,
+        ),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: exchangeRateParamSet,
           paramValues: [

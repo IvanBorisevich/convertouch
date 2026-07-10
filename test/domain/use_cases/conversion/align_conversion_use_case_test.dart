@@ -180,7 +180,7 @@ void main() {
       "[Clothes size] Should init 'Person' list values without preselect (already selected), "
       "should init 'Garment' list values with preselect, "
       "should init 'Height' list values ('Garment' is selected), "
-      "should init list values with preselect", () async {
+      "should recalc list values by params", () async {
     final misalignedConversion = ConversionModel(
       unitGroup: clothesSizeGroup,
       srcUnitValue: ConversionUnitValueModel.tuple(jpClothesSize, null, null),
@@ -256,20 +256,20 @@ void main() {
         ),
         srcUnitValue: ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[0],
+          'LL',
           null,
           listValuesFetchResult: japanClothesSizes,
         ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             jpClothesSize,
-            japanClothesSizes.items[0],
+            'LL',
             null,
             listValuesFetchResult: japanClothesSizes,
           ),
           ConversionUnitValueModel.tuple(
             deClothesSize,
-            germanyClothesSizes.items[0],
+            46,
             null,
             listValuesFetchResult: germanyClothesSizes,
           ),
@@ -558,20 +558,20 @@ void main() {
           ),
           srcUnitValue: ConversionUnitValueModel.tuple(
             jpClothesSize,
-            japanClothesSizes.items[0],
+            'L',
             null,
             listValuesFetchResult: japanClothesSizes,
           ),
           convertedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
-              japanClothesSizes.items[0],
+              'L',
               null,
               listValuesFetchResult: japanClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               deClothesSize,
-              germanyClothesSizes.items[0],
+              44,
               null,
               listValuesFetchResult: germanyClothesSizes,
             ),
@@ -675,20 +675,20 @@ void main() {
           ),
           srcUnitValue: ConversionUnitValueModel.tuple(
             esRingSize,
-            esRingSizes.items[0],
+            8,
             null,
             listValuesFetchResult: esRingSizes,
           ),
           convertedUnitValues: [
             ConversionUnitValueModel.tuple(
               esRingSize,
-              esRingSizes.items[0],
+              8,
               null,
               listValuesFetchResult: esRingSizes,
             ),
             ConversionUnitValueModel.tuple(
               usaRingSize,
-              usaRingSizes.items[0],
+              4.5,
               null,
               listValuesFetchResult: usaRingSizes,
             ),

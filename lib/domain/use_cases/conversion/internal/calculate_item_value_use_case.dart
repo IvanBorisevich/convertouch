@@ -221,7 +221,9 @@ class CalculateUnitValueUseValue extends CalculateItemValueUseCase<
     ConversionUnitValueModel itemValue,
     InputUnitValueCalculationModel input,
   ) async {
-    if (input.calculateByParams && areParamsApplicable(input.paramSetValue)) {
+    bool calculateByParams = !input.conversionGroup.refreshable;
+
+    if (calculateByParams && areParamsApplicable(input.paramSetValue)) {
       return itemValue.defaultValue;
     }
 
@@ -240,7 +242,9 @@ class CalculateUnitValueUseValue extends CalculateItemValueUseCase<
     ConversionUnitValueModel itemValue,
     InputUnitValueCalculationModel input,
   ) {
-    if (!input.calculateByParams || !areParamsApplicable(input.paramSetValue)) {
+    bool calculateByParams = !input.conversionGroup.refreshable;
+
+    if (!calculateByParams || !areParamsApplicable(input.paramSetValue)) {
       return itemValue;
     }
 
