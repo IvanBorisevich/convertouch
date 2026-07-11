@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 const double defaultMenuListItemHeight = 50;
 const double _borderRadius = 17;
+const double _logoFontSize = 16;
+const double _logoIconSize = 60;
 
 class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
@@ -23,6 +25,7 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
     required Color matchForeground,
     required Color matchBackground,
     required double fontSize,
+    required double iconSize,
   }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
@@ -77,7 +80,8 @@ class ConvertouchMenuListItem<T extends IdNameSearchableItemModel>
                   foreground: foreground,
                   matchForeground: matchForeground,
                   matchBackground: matchBackground,
-                  fontSize: 16,
+                  fontSize: _logoFontSize,
+                  iconSize: _logoIconSize,
                 ),
               ),
             ),

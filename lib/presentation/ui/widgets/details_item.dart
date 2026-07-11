@@ -70,7 +70,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
             )
           : Container(
               width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
               decoration: BoxDecoration(
                 color: colors.readonly.textBox.background.regular,
                 borderRadius: const BorderRadius.all(Radius.circular(15)),

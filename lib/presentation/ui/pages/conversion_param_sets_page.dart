@@ -39,7 +39,7 @@ class ConversionParamSetsPage extends StatelessWidget {
                     viewModeSettingKey: SettingKey.paramSetsViewMode,
                     searchBarPlaceholder: "Search parameters...",
                     noItemsLabel: 'No parameters',
-                    colors: appColors[appState.theme].unitsMenu,
+                    colors: appColors[appState.theme].paramsMenu,
                     itemsViewMode: appState.paramSetsViewMode,
                     onItemTapForRemoval: null,
                     onItemLongPress: null,

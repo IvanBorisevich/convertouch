@@ -68,10 +68,12 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                   required Color matchForeground,
                                   required Color matchBackground,
                                   required double fontSize,
+                                  required double iconSize,
                                 }) {
                                   return IconUtils.getGroupIcon(
                                     iconName: item.iconName,
                                     color: foreground,
+                                    size: iconSize,
                                   );
                                 },
                                 onTap: () {

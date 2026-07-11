@@ -19,6 +19,9 @@ class AppColorScheme {
   final MenuViewColorScheme unitsMenu;
   final DetailsItemColorsScheme unitDetailsInputBox;
 
+  // params page
+  final MenuViewColorScheme paramsMenu;
+
   // conversion pages
   final WidgetColorScheme conversionPageFloatingButton;
   final ConversionItemColorScheme conversionItem;
@@ -43,6 +46,7 @@ class AppColorScheme {
     required this.unitsPageFloatingButton,
     required this.unitsMenu,
     required this.unitDetailsInputBox,
+    required this.paramsMenu,
     required this.conversionPageFloatingButton,
     required this.conversionItem,
     required this.refreshFloatingButton,

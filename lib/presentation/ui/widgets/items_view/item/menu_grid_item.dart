@@ -8,6 +8,7 @@ const int _titleMaxLines = 2;
 const double _titleHeightFactor = 0.4;
 const double _defaultBorderRadius = 17;
 const double _logoFontSize = 20;
+const double _logoIconSize = 25;
 
 class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     extends StatelessWidget {
@@ -25,6 +26,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
     required Color matchForeground,
     required Color matchBackground,
     required double fontSize,
+    required double iconSize,
   }) logoFunc;
   final void Function()? onTap;
   final void Function()? onLongPress;
@@ -99,6 +101,7 @@ class ConvertouchMenuGridItem<T extends IdNameSearchableItemModel>
                     matchForeground: matchForeground,
                     matchBackground: matchBackground,
                     fontSize: _logoFontSize,
+                    iconSize: _logoIconSize,
                   ),
                 ),
                 Container(

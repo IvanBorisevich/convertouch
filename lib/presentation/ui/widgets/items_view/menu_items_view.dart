@@ -329,6 +329,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     required Color matchForeground,
     required Color matchBackground,
     required double fontSize,
+    required double iconSize,
   }) {
     if (item is UnitGroupModel) {
       return FittedBox(
@@ -337,6 +338,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
           child: IconUtils.getGroupIcon(
             iconName: item.iconName,
             color: foreground,
+            size: iconSize,
           ),
         ),
       );
@@ -365,6 +367,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
           child: IconUtils.getParamSetIcon(
             iconName: item.iconName,
             color: foreground,
+            size: iconSize,
           ),
         ),
       );

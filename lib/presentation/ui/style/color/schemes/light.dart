@@ -16,6 +16,7 @@ const colorSchemeLight = AppColorScheme(
   unitsPageFloatingButton: _unitsPageFloatingButton,
   unitsMenu: _unitsMenu,
   unitDetailsInputBox: _unitDetailsInputBox,
+  paramsMenu: _paramsMenu,
   conversionPageFloatingButton: _conversionPageFloatingButton,
   conversionItem: _conversionItem,
   refreshFloatingButton: _refreshFloatingButton,
@@ -123,15 +124,15 @@ const _unitGroupsMenu = MenuViewColorScheme(
       selected: Color(0xFF535D91),
     ),
     background: MultiColor(
-      regular: Color(0xffc6d7fd),
+      regular: Color(0xffd5e3ff),
       selected: Color(0xff9db3ea),
     ),
     titleBackground: MultiColor(
-      regular: Color(0xffb8caf6),
+      regular: Color(0xffcadcff),
       selected: Color(0xffaabce8),
     ),
-    matchBackground: MultiColor.only(Color(0xff9aafe0)),
-    matchForeground: MultiColor.only(Color(0xFF1E1E3D)),
+    matchBackground: MultiColor.only(Color(0xff687698)),
+    matchForeground: MultiColor.only(Color(0xffcadcff)),
     foreground: MultiColor(
       regular: Color(0xFF303073),
     ),
@@ -211,15 +212,15 @@ const _unitsMenu = MenuViewColorScheme(
       disabled: Color(0xAEB1CFF5),
     ),
     background: MultiColor(
-      regular: Color(0xFFAAC9F1),
+      regular: Color(0xFFC3DAFB),
       disabled: Color(0x9EBFD8FA),
     ),
     titleBackground: MultiColor(
-      regular: Color(0xFF99C1EF),
+      regular: Color(0xFFB3CFF6),
       disabled: Color(0x9EB1CBEF),
     ),
-    matchBackground: MultiColor.only(Color(0xFF80ADE7)),
-    matchForeground: MultiColor.only(Color(0xFF264E72)),
+    matchBackground: MultiColor.only(Color(0xFF6186B6)),
+    matchForeground: MultiColor.only(Color(0xFFC3DAFB)),
     foreground: MultiColor(
       regular: Color(0xFF2C6396),
       disabled: Color(0xB25086BB),
@@ -284,6 +285,46 @@ const _unitDetailsInputBox = DetailsItemColorsScheme(
       background: MultiColor.only(Color(0xFFDAE6FF)),
       border: MultiColor.only(Color(0xFF4F7498)),
       foreground: MultiColor.only(Color(0xBE122C45)),
+    ),
+  ),
+);
+
+const _paramsMenu = MenuViewColorScheme(
+  menuItem: MenuItemColorScheme(
+    border: MultiColor(
+      regular: Color(0xFFA3D6E3),
+      disabled: Color(0xFFB1DBE6),
+    ),
+    background: MultiColor(
+      regular: Color(0xFF8CD1E6),
+      disabled: Color(0xFF94D7E8),
+    ),
+    titleBackground: MultiColor(
+      regular: Color(0xFF80C4D8),
+      disabled: Color(0xFF84C6D6),
+    ),
+    matchBackground: MultiColor.only(Color(0xFF53737A)),
+    matchForeground: MultiColor.only(Color(0xFFABDFEC)),
+    foreground: MultiColor(
+      regular: Color(0xFF3C636C),
+      disabled: Color(0xFF456870),
+    ),
+    divider: MultiColor(
+      regular: Color(0xFF365F68),
+      disabled: Color(0xFF3D626A),
+    ),
+    checkBox: WidgetColorScheme(
+      border: MultiColor(
+        regular: Color(0xFF365F68),
+      ),
+      background: MultiColor(
+        regular: _pageBackground,
+        selected: Color(0xFF365F68),
+      ),
+      foreground: MultiColor(
+        regular: Colors.transparent,
+        selected: Colors.white,
+      ),
     ),
   ),
 );
