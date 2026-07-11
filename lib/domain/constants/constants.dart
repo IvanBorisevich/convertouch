@@ -67,6 +67,7 @@ abstract class IconKeys {
   static const angle = "angle";
   static const appLogo = "app_logo";
   static const area = "area";
+  static const barbellWeightParams = "barbell_weight_params";
   static const circumference = "circumference";
   static const clothesSize = "clothes_size";
   static const clothesSizeParams = "clothes_size_params";
@@ -89,6 +90,7 @@ const Map<String, String> idToIconName = {
   IconKeys.angle: "angle-group.svg",
   IconKeys.appLogo: "app-logo.svg",
   IconKeys.area: "area-group.svg",
+  IconKeys.barbellWeightParams: "mass.svg",
   IconKeys.circumference: "circumference.svg",
   IconKeys.clothesSize: "clothes-size.svg",
   IconKeys.clothesSizeParams: "clothes-size.svg",
@@ -98,7 +100,7 @@ const Map<String, String> idToIconName = {
   IconKeys.diameter: "diameter.svg",
   IconKeys.exchangeRateParams: "chart.svg",
   IconKeys.length: "length-group.svg",
-  IconKeys.mass: "mass-group.svg",
+  IconKeys.mass: "mass.svg",
   IconKeys.parameters: "parameters.svg",
   IconKeys.pressure: "pressure-group.svg",
   IconKeys.ringSize: "ring-size-group.svg",

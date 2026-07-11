@@ -191,4 +191,11 @@ const conversionParamsV3 = [
       "iconName": IconKeys.diameter,
     }
   },
+  {
+    "name": ParamSetNames.barbellWeight,
+    "unitGroupName": GroupNames.mass,
+    forUpdate: {
+      "iconName": IconKeys.barbellWeightParams,
+    }
+  },
 ];
