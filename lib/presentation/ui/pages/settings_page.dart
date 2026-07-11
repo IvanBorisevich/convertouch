@@ -1,3 +1,4 @@
+import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/settings_controller.dart';
@@ -41,6 +42,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   items: [
                     SelectorSettingItem<UnitTapAction>(
                       title: "Unit Tap Action",
+                      leadingIconName: IconKeys.cursorClick,
                       selectedValue: appState.unitTapAction,
                       valueMap: (v) => v.value,
                       possibleValues: UnitTapAction.values,
@@ -55,6 +57,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ),
                     SelectorSettingItem<RecalculationOnUnitChange>(
                       title: "Recalculation On Unit Change",
+                      leadingIconData: Icons.calculate_outlined,
                       selectedValue: appState.recalculationOnUnitChange,
                       valueMap: (v) => v.value,
                       possibleValues: RecalculationOnUnitChange.values,
@@ -69,6 +72,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ),
                     SwitcherSettingItem(
                       title: "Keep Params On Conversion Cleanup",
+                      leadingIconData: Icons.save_outlined,
                       value: appState.keepParamsOnConversionCleanup,
                       theme: appState.theme,
                       onSwitch: (newValue) {
@@ -81,6 +85,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                     ),
                     SwitcherSettingItem(
                       title: "Refresh On Params Change",
+                      leadingIconData: Icons.refresh_outlined,
                       value: appState.refreshOnParamsChange,
                       theme: appState.theme,
                       onSwitch: (newValue) {
@@ -100,6 +105,7 @@ class ConvertouchSettingsPage extends StatelessWidget {
                   items: [
                     AboutSettingItem(
                       title: "App Version",
+                      leadingIconData: Icons.info_outline_rounded,
                       value: appState.appVersion,
                       theme: appState.theme,
                     ),

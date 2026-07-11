@@ -230,6 +230,7 @@ class SettingItemColorScheme extends WidgetColorScheme {
 
   final SwitcherColorScheme switcher;
   final MultiColor selectedValue;
+  final MultiColor leading;
 
   const SettingItemColorScheme({
     super.border,
@@ -237,5 +238,6 @@ class SettingItemColorScheme extends WidgetColorScheme {
     super.foreground,
     this.switcher = SwitcherColorScheme.none,
     this.selectedValue = MultiColor.none,
+    this.leading = MultiColor.none,
   });
 }

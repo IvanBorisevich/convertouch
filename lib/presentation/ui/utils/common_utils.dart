@@ -14,6 +14,8 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
   required ConvertouchUITheme theme,
   bool dialogOpened = false,
 }) {
+  PageColorScheme pageColors = appColors[theme].page;
+
   Color statusTopBarColor;
   Color systemBottomNavbarColor;
   Brightness iconBrightness;
@@ -30,14 +32,13 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
 
     systemBottomNavbarColor = Color.alphaBlend(
       _dimmingOverlayColor,
-      appColors[theme].page.bottomBar.background.regular,
+      pageColors.bottomBar.background.regular,
     );
 
     iconBrightness = Brightness.light;
   } else {
-    statusTopBarColor = appColors[theme].page.appBar.background.regular;
-    systemBottomNavbarColor =
-        appColors[theme].page.bottomBar.background.regular;
+    statusTopBarColor = pageColors.appBar.background.regular;
+    systemBottomNavbarColor = pageColors.bottomBar.background.regular;
     iconBrightness =
         theme == ConvertouchUITheme.dark ? Brightness.light : Brightness.dark;
   }

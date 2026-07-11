@@ -72,6 +72,7 @@ abstract class IconKeys {
   static const clothesSize = "clothes_size";
   static const clothesSizeParams = "clothes_size_params";
   static const currency = "currency";
+  static const cursorClick = "cursor_click";
   static const dataSource = "data_source";
   static const defaultGroup = "default_group";
   static const diameter = "diameter";
@@ -95,6 +96,7 @@ const Map<String, String> idToIconName = {
   IconKeys.clothesSize: "clothes-size.svg",
   IconKeys.clothesSizeParams: "clothes-size.svg",
   IconKeys.currency: "currency-group.svg",
+  IconKeys.cursorClick: "cursor-click.svg",
   IconKeys.dataSource: "data-source.svg",
   IconKeys.defaultGroup: "default-group.svg",
   IconKeys.diameter: "diameter.svg",

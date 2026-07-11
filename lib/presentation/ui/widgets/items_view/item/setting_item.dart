@@ -2,6 +2,7 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/about_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/radio_dialog.dart';
 import 'package:flutter/material.dart';
@@ -24,16 +25,11 @@ const EdgeInsets _defaultItemPadding = EdgeInsets.only(
   right: 10,
 );
 
-const EdgeInsets _radioItemPadding = EdgeInsets.only(
-  left: 2,
-  right: 10,
-  top: 4,
-  bottom: 4,
-);
-
-class ConvertouchSettingItem extends StatelessWidget {
+class _ConvertouchSettingItem extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final String? leadingIconName;
+  final IconData? leadingIconData;
   final Widget? leading;
   final Widget? trailing;
   final double? titleLineHeight;
@@ -41,11 +37,13 @@ class ConvertouchSettingItem extends StatelessWidget {
   final double height;
   final EdgeInsets padding;
   final void Function()? onTap;
-  final ConvertouchUITheme theme;
+  final SettingItemColorScheme colors;
 
-  const ConvertouchSettingItem({
+  const _ConvertouchSettingItem({
     required this.title,
     this.subtitle,
+    this.leadingIconName,
+    this.leadingIconData,
     this.leading,
     this.trailing,
     this.titleLineHeight,
@@ -53,14 +51,14 @@ class ConvertouchSettingItem extends StatelessWidget {
     this.height = _defaultItemHeight,
     this.padding = _defaultItemPadding,
     this.onTap,
-    required this.theme,
-    super.key,
-  });
+    required this.colors,
+  }) : assert(
+          leading == null || leadingIconName == null || leadingIconData == null,
+          "Either 'leading', 'leadingIconName' or 'leadingIconData' can be provided",
+        );
 
   @override
   Widget build(BuildContext context) {
-    SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -71,7 +69,10 @@ class ConvertouchSettingItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            leading ?? const SizedBox.shrink(),
+            leading ??
+                _leadingIconByName(leadingIconName) ??
+                _leadingIconByData(leadingIconData) ??
+                const SizedBox.shrink(),
             Expanded(
               child: Column(
                 children: [
@@ -90,6 +91,34 @@ class ConvertouchSettingItem extends StatelessWidget {
             trailing ?? const SizedBox.shrink(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget? _leadingIconByName(String? iconName) {
+    if (iconName == null) {
+      return null;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: IconUtils.getSvgIcon(
+        iconName,
+        color: colors.foreground.regular,
+      ),
+    );
+  }
+
+  Widget? _leadingIconByData(IconData? icon) {
+    if (icon == null) {
+      return null;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Icon(
+        icon,
+        color: colors.foreground.regular,
       ),
     );
   }
@@ -147,12 +176,16 @@ class ConvertouchSettingItem extends StatelessWidget {
 class SwitcherSettingItem extends StatelessWidget {
   final String title;
   final bool value;
+  final IconData? leadingIconData;
+  final String? leadingIconName;
   final void Function(bool)? onSwitch;
   final ConvertouchUITheme theme;
 
   const SwitcherSettingItem({
     required this.title,
     required this.value,
+    this.leadingIconData,
+    this.leadingIconName,
     this.onSwitch,
     required this.theme,
     super.key,
@@ -162,8 +195,10 @@ class SwitcherSettingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
-    return ConvertouchSettingItem(
+    return _ConvertouchSettingItem(
       title: title,
+      leadingIconData: leadingIconData,
+      leadingIconName: leadingIconName,
       titleLineHeight: 1.1,
       trailing: _switch(
         colors: colors,
@@ -172,7 +207,7 @@ class SwitcherSettingItem extends StatelessWidget {
       onTap: () {
         onSwitch?.call(!value);
       },
-      theme: theme,
+      colors: colors,
     );
   }
 
@@ -208,6 +243,8 @@ class SwitcherSettingItem extends StatelessWidget {
 class SelectorSettingItem<T> extends StatelessWidget {
   final String title;
   final T selectedValue;
+  final IconData? leadingIconData;
+  final String? leadingIconName;
   final String Function(T)? valueMap;
   final List<T> possibleValues;
   final void Function(T)? onPossibleValueSelect;
@@ -217,6 +254,8 @@ class SelectorSettingItem<T> extends StatelessWidget {
   const SelectorSettingItem({
     required this.title,
     required this.selectedValue,
+    this.leadingIconData,
+    this.leadingIconName,
     this.valueMap,
     required this.possibleValues,
     this.onPossibleValueSelect,
@@ -229,11 +268,13 @@ class SelectorSettingItem<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
-    return ConvertouchSettingItem(
+    return _ConvertouchSettingItem(
       title: title,
+      leadingIconData: leadingIconData,
+      leadingIconName: leadingIconName,
       subtitle: valueMap?.call(selectedValue) ?? selectedValue.toString(),
       subtitlePosition: selectedValuePosition,
-      theme: theme,
+      colors: colors,
       onTap: () {
         _showRadioDialog(context, colors: colors);
       },
@@ -274,12 +315,16 @@ class SelectorSettingItem<T> extends StatelessWidget {
 class AboutSettingItem extends StatelessWidget {
   final String title;
   final String value;
+  final IconData? leadingIconData;
+  final String? leadingIconName;
   final SubtitlePosition selectedValuePosition;
   final ConvertouchUITheme theme;
 
   const AboutSettingItem({
     required this.title,
     required this.value,
+    this.leadingIconData,
+    this.leadingIconName,
     this.selectedValuePosition = SubtitlePosition.bottom,
     required this.theme,
     super.key,
@@ -289,11 +334,13 @@ class AboutSettingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
-    return ConvertouchSettingItem(
+    return _ConvertouchSettingItem(
       title: title,
       subtitle: value,
       subtitlePosition: selectedValuePosition,
-      theme: theme,
+      leadingIconData: leadingIconData,
+      leadingIconName: leadingIconName,
+      colors: colors,
       onTap: () {
         _showAboutDialog(
           context,
@@ -346,12 +393,17 @@ class RadioSettingItem<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     SettingItemColorScheme colors = appColors[theme].settingGroup.settingItem;
 
-    return ConvertouchSettingItem(
+    return _ConvertouchSettingItem(
       title: title,
       leading: _radio(colors: colors),
       height: _radioItemHeight,
-      padding: _radioItemPadding,
-      theme: theme,
+      padding: const EdgeInsets.only(
+        left: 2,
+        right: 10,
+        top: 4,
+        bottom: 4,
+      ),
+      colors: colors,
       onTap: () {
         if (!disabled) {
           onSelect.call(value);
