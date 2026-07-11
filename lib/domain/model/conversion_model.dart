@@ -114,13 +114,16 @@ class ConversionModel extends IdNameItemModel {
         convertedUnitValues,
       ];
 
+  bool get hasUnitValues => convertedUnitValues.isNotEmpty;
+
   bool get hasAddedParams =>
       params != null && params!.paramSetValues.isNotEmpty;
 
+  bool get hasValuesOrAddedParams => hasUnitValues || hasAddedParams;
+
   bool get exists => this != none;
 
-  bool get readyToRefresh =>
-      areParamsFilled(params?.active) && convertedUnitValues.isNotEmpty;
+  bool get readyToRefresh => areParamsFilled(params?.active) && hasUnitValues;
 
   @override
   String toString() {

@@ -70,7 +70,7 @@ class ConversionGroupsPage extends StatelessWidget {
                         disabled: !conversion.readyToRefresh,
                       );
 
-                      if (conversion.convertedUnitValues.isNotEmpty) {
+                      if (conversion.hasValuesOrAddedParams) {
                         navigationController.navigateTo(
                           context,
                           pageName: PageName.conversionPage,

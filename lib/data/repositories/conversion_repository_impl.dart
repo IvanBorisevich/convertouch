@@ -183,7 +183,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
-      if (conversion.convertedUnitValues.isNotEmpty) {
+      if (conversion.hasUnitValues) {
         log("Inserting conversion items");
         log("Source unit id = ${conversion.srcUnitValue?.unit.id}");
 
@@ -201,7 +201,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
         );
       }
 
-      if (conversion.params != null) {
+      if (conversion.hasAddedParams) {
         log("Inserting conversion params");
 
         for (var paramSetValue in conversion.params!.paramSetValues) {
