@@ -1,6 +1,8 @@
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
@@ -33,74 +35,95 @@ class ConversionParamItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConvertouchConversionItem(
-      model: paramValue,
-      conversionGroupName: conversionGroupName,
-      conversionParams: conversionParams,
-      draggable: false,
-      removable: false,
-      colors: colors,
-      dialogColors: dialogColors,
-      theme: theme,
-      onUnitItemTap: () {
-        unitsController.showUnitsForChangeInParam(
-          context,
-          paramValue: paramValue,
-        );
-      },
-      onValueChanged: (value, {listValues}) {
-        conversionController.editConversionParamValue(
-          context,
-          paramValue: paramValue,
-          newValue: value,
-          listValues: listValues,
-          ifParamSetFilled: startRefreshByParams(context),
-          ifParamSetFilledPartiallyOrEmpty: (conversion) {
-            refreshButtonController.changeState(
+    return appBlocBuilder(
+      builderFunc: (appState) {
+        return ConvertouchConversionItem(
+          model: paramValue,
+          conversionGroupName: conversionGroupName,
+          conversionParams: conversionParams,
+          draggable: false,
+          removable: false,
+          colors: colors,
+          dialogColors: dialogColors,
+          theme: theme,
+          onUnitItemTap: () {
+            unitsController.showUnitsForChangeInParam(
               context,
-              unitGroupId: conversion.unitGroup.id,
-              visible: conversion.unitGroup.refreshable,
-              disabled: false,
-            );
-
-            refreshingJobController.stopRefreshingJob(
-              context,
-              unitGroupName: conversion.unitGroup.name,
-              paramSetName: conversion.params?.active?.paramSet.name,
+              paramValue: paramValue,
             );
           },
+          onValueChanged: (value, {listValues}) {
+            conversionController.editConversionParamValue(
+              context,
+              paramValue: paramValue,
+              newValue: value,
+              listValues: listValues,
+              ifParamSetFilled: (conversion) {
+                refreshButtonController.changeState(
+                  context,
+                  unitGroupId: conversion.unitGroup.id,
+                  visible: conversion.unitGroup.refreshable,
+                  disabled: false,
+                );
+
+                if (appState.refreshOnParamsChange) {
+                  refreshingJobController.startRefreshingJob(
+                    context,
+                    unitGroupName: conversion.unitGroup.name,
+                    params: conversion.params?.active,
+                    srcUnit: conversion.srcUnitValue?.unit,
+                    jobExecutionMode: JobExecutionMode.startNewJob,
+                  );
+                }
+              },
+              ifParamSetFilledPartiallyOrEmpty: (conversion) {
+                refreshButtonController.changeState(
+                  context,
+                  unitGroupId: conversion.unitGroup.id,
+                  visible: conversion.unitGroup.refreshable,
+                  disabled: false,
+                );
+
+                refreshingJobController.stopRefreshingJob(
+                  context,
+                  unitGroupName: conversion.unitGroup.name,
+                  paramSetName: conversion.params?.active?.paramSet.name,
+                );
+              },
+            );
+          },
+          prefixWidgets: [
+            calculationSwitchersVisible && paramValue.param.calculable
+                ? GestureDetector(
+                    onTap: () {
+                      conversionController.toggleParamCalculable(
+                        context,
+                        paramId: paramValue.param.id,
+                        paramSetId: paramValue.param.paramSetId,
+                      );
+                    },
+                    child: Container(
+                      width: _calculationSuffixIconWidth,
+                      padding: const EdgeInsets.only(left: 2),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                      ),
+                      child: Icon(
+                        paramValue.calculated
+                            ? Icons.calculate
+                            : Icons.calculate_outlined,
+                        color: paramValue.calculated
+                            ? colors.suffixWidget.selected
+                            : colors.suffixWidget.regular,
+                      ),
+                    ),
+                  )
+                : null,
+          ],
         );
       },
-      prefixWidgets: [
-        calculationSwitchersVisible && paramValue.param.calculable
-            ? GestureDetector(
-                onTap: () {
-                  conversionController.toggleParamCalculable(
-                    context,
-                    paramId: paramValue.param.id,
-                    paramSetId: paramValue.param.paramSetId,
-                  );
-                },
-                child: Container(
-                  width: _calculationSuffixIconWidth,
-                  padding: const EdgeInsets.only(left: 2),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12),
-                    ),
-                  ),
-                  child: Icon(
-                    paramValue.calculated
-                        ? Icons.calculate
-                        : Icons.calculate_outlined,
-                    color: paramValue.calculated
-                        ? colors.suffixWidget.selected
-                        : colors.suffixWidget.regular,
-                  ),
-                ),
-              )
-            : null,
-      ],
     );
   }
 }

@@ -3,11 +3,9 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_bloc.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_events.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,28 +68,4 @@ class RefreshingJobController {
       ),
     );
   }
-}
-
-ParamSetValueChangedCallback startRefreshByParams(
-  BuildContext context, {
-  bool autoRefresh = false,
-}) {
-  return (conversion) {
-    refreshButtonController.changeState(
-      context,
-      unitGroupId: conversion.unitGroup.id,
-      visible: conversion.unitGroup.refreshable,
-      disabled: false,
-    );
-
-    if (autoRefresh) {
-      refreshingJobController.startRefreshingJob(
-        context,
-        unitGroupName: conversion.unitGroup.name,
-        params: conversion.params?.active,
-        srcUnit: conversion.srcUnitValue?.unit,
-        jobExecutionMode: JobExecutionMode.startNewJob,
-      );
-    }
-  };
 }

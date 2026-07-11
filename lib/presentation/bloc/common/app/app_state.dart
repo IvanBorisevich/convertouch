@@ -14,6 +14,7 @@ class AppStateReady extends AppState {
   final UnitTapAction unitTapAction;
   final RecalculationOnUnitChange recalculationOnUnitChange;
   final bool keepParamsOnConversionCleanup;
+  final bool refreshOnParamsChange;
   final PageName? changedFromPage;
   final String appVersion;
 
@@ -25,6 +26,7 @@ class AppStateReady extends AppState {
     required this.unitTapAction,
     required this.recalculationOnUnitChange,
     required this.keepParamsOnConversionCleanup,
+    required this.refreshOnParamsChange,
     this.changedFromPage,
     required this.appVersion,
   });
@@ -39,6 +41,7 @@ class AppStateReady extends AppState {
         unitTapAction,
         recalculationOnUnitChange,
         keepParamsOnConversionCleanup,
+        refreshOnParamsChange,
         appVersion,
       ];
 
@@ -53,6 +56,7 @@ class AppStateReady extends AppState {
       SettingKey.recalculationOnUnitChange.name: recalculationOnUnitChange.id,
       SettingKey.keepParamsOnConversionCleanup.name:
           keepParamsOnConversionCleanup,
+      SettingKey.refreshOnParamsChange.name: refreshOnParamsChange,
     };
   }
 
@@ -71,6 +75,8 @@ class AppStateReady extends AppState {
           json?[SettingKey.recalculationOnUnitChange.name]),
       keepParamsOnConversionCleanup:
           json?[SettingKey.keepParamsOnConversionCleanup.name] ?? true,
+      refreshOnParamsChange:
+          json?[SettingKey.refreshOnParamsChange.name] ?? true,
       appVersion: json?[SettingKey.appVersion.name] ?? unknownAppVersion,
       changedFromPage: json?['changedFromPage'],
     );
@@ -86,6 +92,7 @@ class AppStateReady extends AppState {
         'unitTapAction: $unitTapAction, '
         'recalculationOnUnitChange: $recalculationOnUnitChange, '
         'keepParamsOnConversionCleanup: $keepParamsOnConversionCleanup, '
+        'refreshOnParamsChange: $refreshOnParamsChange, '
         'changedFromPage: $changedFromPage, '
         'appVersion: $appVersion}';
   }

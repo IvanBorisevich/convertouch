@@ -79,6 +79,18 @@ class ConvertouchSettingsPage extends StatelessWidget {
                         );
                       },
                     ),
+                    SwitcherSettingItem(
+                      title: "Refresh On Params Change",
+                      value: appState.refreshOnParamsChange,
+                      theme: appState.theme,
+                      onSwitch: (newValue) {
+                        settingsController.changeSetting(
+                          context,
+                          key: SettingKey.refreshOnParamsChange,
+                          newValue: newValue,
+                        );
+                      },
+                    ),
                   ],
                   theme: appState.theme,
                 ),
