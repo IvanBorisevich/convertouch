@@ -2,8 +2,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-final defaultGroupIconName = idToIconName[IconKeys.defaultGroup]!;
-
 class IconUtils {
   static const double defaultIconSize = 25;
 
@@ -52,6 +50,34 @@ class IconUtils {
       alignment: alignment,
       width: size ?? defaultIconSize,
       height: size ?? defaultIconSize,
+    );
+  }
+
+  static Widget getGroupIcon({
+    String? iconName,
+    AlignmentGeometry alignment = Alignment.center,
+    Color? color,
+    double? size,
+  }) {
+    return getSvgIcon(
+      iconName ?? IconKeys.defaultGroup,
+      alignment: alignment,
+      color: color,
+      size: size,
+    );
+  }
+
+  static Widget getParamSetIcon({
+    String? iconName,
+    AlignmentGeometry alignment = Alignment.center,
+    Color? color,
+    double? size,
+  }) {
+    return getSvgIcon(
+      iconName ?? IconKeys.parameters,
+      alignment: alignment,
+      color: color,
+      size: size,
     );
   }
 }

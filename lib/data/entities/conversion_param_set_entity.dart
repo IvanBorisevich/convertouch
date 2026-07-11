@@ -23,12 +23,15 @@ class ConversionParamSetEntity extends ConvertouchEntity {
   final int? mandatory;
   @ColumnInfo(name: 'group_id')
   final int groupId;
+  @ColumnInfo(name: 'icon_name')
+  final String? iconName;
 
   const ConversionParamSetEntity({
     super.id,
     required this.name,
     this.mandatory,
     required this.groupId,
+    this.iconName,
   });
 
   @override
@@ -38,6 +41,7 @@ class ConversionParamSetEntity extends ConvertouchEntity {
       'name': name,
       'mandatory': mandatory,
       'group_id': groupId,
+      'icon_name': iconName,
     };
   }
 
@@ -52,6 +56,7 @@ class ConversionParamSetEntity extends ConvertouchEntity {
       'name': item['name'],
       'mandatory': bool2int(item['mandatory']),
       'group_id': unitGroupId,
+      'icon_name': item['iconName'],
     }, excludedColumns: excludedColumns);
   }
 }

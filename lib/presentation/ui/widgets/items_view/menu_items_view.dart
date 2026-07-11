@@ -334,8 +334,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       return FittedBox(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: IconUtils.getSvgIcon(
-            item.iconName ?? defaultGroupIconName,
+          child: IconUtils.getGroupIcon(
+            iconName: item.iconName,
             color: foreground,
           ),
         ),
@@ -362,8 +362,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       return FittedBox(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: IconUtils.getSvgIcon(
-            IconKeys.parameters,
+          child: IconUtils.getParamSetIcon(
+            iconName: item.iconName,
             color: foreground,
           ),
         ),

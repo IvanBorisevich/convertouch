@@ -163,6 +163,10 @@ class SqlUtils {
           );
         },
         childItemsPostMergeFunc: (txn, parentJson, childItemIds) async {
+          if (parentJson['params'] == null) {
+            return;
+          }
+
           await _mergeParamPossibleUnits(
             txn: txn,
             mergedParamIds: childItemIds,

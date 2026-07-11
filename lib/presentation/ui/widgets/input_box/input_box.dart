@@ -12,8 +12,8 @@ import 'package:convertouch/domain/utils/list_values_utils.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_states.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/navigation/navigation_states.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
+import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -71,6 +71,10 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.only(
 );
 
 const double _refreshButtonWidth = 25;
+const double _prefixIconPadding = 8;
+const double _prefixIconContainerWidth = 28;
+const double _labelPaddingWhenPrefixIconExists =
+    _prefixIconPadding + _prefixIconContainerWidth + 2;
 
 const String _defaultSearchHint = "Search...";
 const ValueModel _noValueHint = ValueModel.rawStr('-');
@@ -853,9 +857,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     required ValueModel? mainValue,
     required bool showUnknownSelectedValue,
   }) {
-    ValueModel? result = showUnknownSelectedValue
-        ? (mainValue ?? _noValueHint)
-        : _noValueHint;
+    ValueModel? result =
+        showUnknownSelectedValue ? (mainValue ?? _noValueHint) : _noValueHint;
     log("getHint() result: $result");
     return result;
   }
@@ -900,8 +903,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<NavigationBloc, NavigationState>(
-          listener: (_, navigationState) {
+        BlocListener<RootScreenBloc, RootScreenState>(
+          listener: (_, rootScreenState) {
             if (_isDropdownOpen) {
               Navigator.of(context).pop();
             }
@@ -987,7 +990,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         labelPadding: widget.model.listType.defaultIconUri !=
                                     null &&
                                 (selectedValue != null || hint != _noValueHint)
-                            ? const EdgeInsets.only(left: 32)
+                            ? const EdgeInsets.only(
+                                left: _labelPaddingWhenPrefixIconExists,
+                              )
                             : null,
                       ),
                       style: _inputFieldTextStyle(
@@ -1003,22 +1008,26 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       hint: Row(
                         children: [
                           hint.iconUri != null
-                              ? Padding(
-                                  padding: const EdgeInsets.only(right: 7),
+                              ? Container(
+                                  width: _prefixIconContainerWidth,
+                                  padding: const EdgeInsets.only(
+                                    right: _prefixIconPadding,
+                                  ),
                                   child: IconUtils.getSvgIcon(
                                     hint.iconUri!,
                                     color: widget.dropdownColors.icon.regular,
-                                    size: 16,
                                   ),
                                 )
                               : const SizedBox.shrink(),
-                          Text(
-                            hint.raw,
-                            style: _inputFieldTextStyle(
-                              fontSize: widget.fontSize,
-                              foregroundColor: hint != _noValueHint
-                                  ? widget.foregroundColor
-                                  : widget.hintColor,
+                          Expanded(
+                            child: Text(
+                              hint.raw,
+                              style: _inputFieldTextStyle(
+                                fontSize: widget.fontSize,
+                                foregroundColor: hint != _noValueHint
+                                    ? widget.foregroundColor
+                                    : widget.hintColor,
+                              ),
                             ),
                           ),
                         ],
@@ -1033,14 +1042,15 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                             return Row(
                               children: [
                                 value.iconUri != null
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8),
+                                    ? Container(
+                                        width: _prefixIconContainerWidth,
+                                        padding: const EdgeInsets.only(
+                                          right: _prefixIconPadding,
+                                        ),
                                         child: IconUtils.getSvgIcon(
                                           value.iconUri!,
                                           color: widget
                                               .dropdownColors.icon.regular,
-                                          size: 15,
                                         ),
                                       )
                                     : const SizedBox.shrink(),
@@ -1271,7 +1281,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                     child: IconUtils.getSvgIcon(
                       value.iconUri!,
                       color: widget.dropdownColors.icon.regular,
-                      size: 15,
+                      size: 20,
                     ),
                   )
                 : const SizedBox.shrink(),

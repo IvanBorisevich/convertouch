@@ -11,6 +11,7 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
+import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_param_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
@@ -234,6 +235,7 @@ class ConversionParamsView extends StatelessWidget {
               index: index,
               title: _tabTitle(
                 name: paramSetValue.paramSet.name,
+                iconName: paramSetValue.paramSet.iconName,
                 isSelected: index == selectedParamSetIndex,
                 removable: removalIconVisible,
                 colors: tabColors,
@@ -285,6 +287,7 @@ class ConversionParamsView extends StatelessWidget {
 
   Tab _tabTitle({
     required String name,
+    String? iconName,
     void Function()? onTabRemove,
     required bool isSelected,
     required bool removable,
@@ -307,6 +310,15 @@ class ConversionParamsView extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            iconName != null
+                ? IconUtils.getSvgIcon(
+                    iconName,
+                    color: isSelected
+                        ? colors.foreground.selected
+                        : colors.foreground.regular,
+                    size: 20,
+                  )
+                : const SizedBox.shrink(),
             Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(

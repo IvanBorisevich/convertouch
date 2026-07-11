@@ -69,8 +69,8 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                   required Color matchBackground,
                                   required double fontSize,
                                 }) {
-                                  return IconUtils.getSvgIcon(
-                                    item.iconName ?? defaultGroupIconName,
+                                  return IconUtils.getGroupIcon(
+                                    iconName: item.iconName,
                                     color: foreground,
                                   );
                                 },

@@ -124,7 +124,7 @@ class _$ConvertouchDatabase extends ConvertouchDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_items` (`unit_id` INTEGER NOT NULL, `value` TEXT, `default_value` TEXT, `sequence_num` INTEGER NOT NULL, `conversion_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`name` TEXT NOT NULL, `mandatory` INTEGER, `group_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `conversion_param_sets` (`name` TEXT NOT NULL, `mandatory` INTEGER, `group_id` INTEGER NOT NULL, `icon_name` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`group_id`) REFERENCES `unit_groups` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `conversion_params` (`name` TEXT NOT NULL, `calculable` INTEGER, `unit_group_id` INTEGER, `value_type` INTEGER NOT NULL, `list_type` INTEGER, `default_unit_id` INTEGER, `param_set_id` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (`param_set_id`) REFERENCES `conversion_param_sets` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -760,7 +760,7 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
   }) async {
     return _queryAdapter.queryList(
         'SELECT * FROM conversion_param_sets WHERE group_id = ?2 and name like ?1 limit ?3 offset ?4',
-        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int, iconName: row['icon_name'] as String?),
         arguments: [searchString, groupId, pageSize, offset]);
   }
 
@@ -778,7 +778,8 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
             id: row['id'] as int?,
             name: row['name'] as String,
             mandatory: row['mandatory'] as int?,
-            groupId: row['group_id'] as int),
+            groupId: row['group_id'] as int,
+            iconName: row['icon_name'] as String?),
         arguments: [...ids]);
   }
 
@@ -786,7 +787,7 @@ class _$ConversionParamSetDaoDb extends ConversionParamSetDaoDb {
   Future<ConversionParamSetEntity?> getFirstMandatory(int groupId) async {
     return _queryAdapter.query(
         'SELECT * FROM conversion_param_sets WHERE group_id = ?1 AND mandatory = 1 limit 1',
-        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int),
+        mapper: (Map<String, Object?> row) => ConversionParamSetEntity(id: row['id'] as int?, name: row['name'] as String, mandatory: row['mandatory'] as int?, groupId: row['group_id'] as int, iconName: row['icon_name'] as String?),
         arguments: [groupId]);
   }
 

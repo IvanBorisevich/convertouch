@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/item_model.dart';
 class ConversionParamSetModel extends IdNameSearchableItemModel {
   final bool mandatory;
   final int groupId;
+  final String? iconName;
 
   const ConversionParamSetModel({
     super.id,
@@ -11,6 +12,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
     this.mandatory = false,
     required this.groupId,
     super.nameMatch,
+    this.iconName,
   }) : super(itemType: ItemType.conversionParamSet);
 
   @override
@@ -20,6 +22,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
         groupId,
         nameMatch,
         itemType,
+        iconName,
       ];
 
   @override
@@ -27,6 +30,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
     return {
       "id": id,
       "name": name,
+      "iconName": iconName,
       "mandatory": mandatory,
       "groupId": groupId,
     };
@@ -41,6 +45,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
       name: json["name"],
       mandatory: json["mandatory"],
       groupId: json["groupId"],
+      iconName: json["iconName"],
     );
   }
 
@@ -49,6 +54,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
     bool? mandatory,
     int? groupId,
     ItemSearchMatch? nameMatch,
+    String? iconName,
   }) {
     return ConversionParamSetModel(
       id: id,
@@ -56,6 +62,7 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
       mandatory: mandatory ?? this.mandatory,
       groupId: groupId ?? this.groupId,
       nameMatch: nameMatch ?? this.nameMatch,
+      iconName: iconName ?? this.iconName,
     );
   }
 

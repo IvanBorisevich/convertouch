@@ -161,3 +161,34 @@ const conversionParamsV2 = [
     ],
   },
 ];
+
+const conversionParamsV3 = [
+  {
+    "name": ParamSetNames.clothesSize,
+    "unitGroupName": GroupNames.clothesSize,
+    forUpdate: {
+      "iconName": IconKeys.clothesSizeParams,
+    }
+  },
+  {
+    "name": ParamSetNames.exchangeRate,
+    "unitGroupName": GroupNames.currency,
+    forUpdate: {
+      "iconName": IconKeys.exchangeRateParams,
+    }
+  },
+  {
+    "name": ParamSetNames.byCircumference,
+    "unitGroupName": GroupNames.ringSize,
+    forUpdate: {
+      "iconName": IconKeys.circumference,
+    }
+  },
+  {
+    "name": ParamSetNames.byDiameter,
+    "unitGroupName": GroupNames.ringSize,
+    forUpdate: {
+      "iconName": IconKeys.diameter,
+    }
+  },
+];

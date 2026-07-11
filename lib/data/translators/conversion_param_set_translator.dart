@@ -16,6 +16,7 @@ class ConversionParamSetTranslator
       name: model.name,
       mandatory: bool2int(model.mandatory),
       groupId: model.groupId,
+      iconName: model.iconName,
     );
   }
 
@@ -26,6 +27,7 @@ class ConversionParamSetTranslator
       name: entity.name,
       mandatory: int2bool(entity.mandatory),
       groupId: entity.groupId,
+      iconName: entity.iconName,
     );
   }
 }
