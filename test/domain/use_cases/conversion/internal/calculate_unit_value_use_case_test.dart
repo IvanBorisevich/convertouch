@@ -78,10 +78,10 @@ void main() {
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
           ConvertouchListType.clothesSizeJp.preselected
-              ? japanClothesSizes.items[0]
+              ? jpClothesSizes.items[0]
               : null,
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(
@@ -129,9 +129,9 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[0],
+          jpClothesSizes.items[0],
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(
@@ -182,10 +182,10 @@ void main() {
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
           ConvertouchListType.clothesSizeJp.preselected
-              ? japanClothesSizes.items[0]
+              ? jpClothesSizes.items[0]
               : 'W',
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(
@@ -235,9 +235,9 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[1],
+          jpClothesSizes.items[1],
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(
@@ -285,16 +285,16 @@ void main() {
       test("Should change list value ['M' JP -> 44 EU]", () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[1],
+          jpClothesSizes.items[1],
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           euClothesSize,
-          europeanClothesSizes.items[5],
+          euClothesSizes.items[5],
           null,
-          listValuesFetchResult: europeanClothesSizes,
+          listValuesFetchResult: euClothesSizes,
         );
 
         await testCase(
@@ -342,16 +342,16 @@ void main() {
           () async {
         final currentUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[1],
+          jpClothesSizes.items[1],
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           euClothesSize,
           null,
           null,
-          listValuesFetchResult: europeanClothesSizes,
+          listValuesFetchResult: euClothesSizes,
         );
 
         await testCase(
@@ -408,9 +408,9 @@ void main() {
 
         final expectedUnitValue = ConversionUnitValueModel.tuple(
           jpClothesSize,
-          japanClothesSizes.items[1],
+          jpClothesSizes.items[1],
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(
@@ -462,7 +462,7 @@ void main() {
           jpClothesSize,
           null,
           null,
-          listValuesFetchResult: japanClothesSizes,
+          listValuesFetchResult: jpClothesSizes,
         );
 
         await testCase(

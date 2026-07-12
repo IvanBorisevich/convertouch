@@ -240,20 +240,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -284,20 +284,20 @@ void main() {
               euClothesSize,
               42,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 42,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'S',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -341,20 +341,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -386,20 +386,20 @@ void main() {
               euClothesSize,
               42,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 42,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'S',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -444,20 +444,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -489,20 +489,20 @@ void main() {
               euClothesSize,
               36,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 36,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'M',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -547,20 +547,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -592,20 +592,20 @@ void main() {
               euClothesSize,
               36,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 36,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'M',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -651,20 +651,20 @@ void main() {
               euClothesSize,
               42,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 42,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'S',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -696,20 +696,20 @@ void main() {
               jpClothesSize,
               '3L',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 50,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 '3L',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -754,20 +754,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -800,20 +800,20 @@ void main() {
               euClothesSize,
               42,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 42,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'S',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -858,20 +858,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -903,20 +903,20 @@ void main() {
               euClothesSize,
               50,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 50,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 '3L',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -962,20 +962,20 @@ void main() {
               euClothesSize,
               42,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 42,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'S',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -1008,20 +1008,20 @@ void main() {
               euClothesSize,
               50,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 50,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 '3L',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -1067,20 +1067,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -1113,20 +1113,20 @@ void main() {
               euClothesSize,
               36,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 36,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'M',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );
@@ -1172,20 +1172,20 @@ void main() {
               euClothesSize,
               null,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 null,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 null,
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.single(
@@ -1218,20 +1218,20 @@ void main() {
               euClothesSize,
               36,
               null,
-              listValuesFetchResult: europeanClothesSizes,
+              listValuesFetchResult: euClothesSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
                 euClothesSize,
                 36,
                 null,
-                listValuesFetchResult: europeanClothesSizes,
+                listValuesFetchResult: euClothesSizes,
               ),
               ConversionUnitValueModel.tuple(
                 jpClothesSize,
                 'M',
                 null,
-                listValuesFetchResult: japanClothesSizes,
+                listValuesFetchResult: jpClothesSizes,
               ),
             ],
           );

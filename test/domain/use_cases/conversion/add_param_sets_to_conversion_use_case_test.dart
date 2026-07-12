@@ -63,14 +63,14 @@ void main() {
             ],
           ),
           currentParams: null,
-          currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          currentSrc: ConversionUnitValueModel.tuple(usRingSize, 3, null),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(usRingSize, 3, null),
             ConversionUnitValueModel.tuple(frRingSize, 44, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          expectedSrc: ConversionUnitValueModel.tuple(usRingSize, 3, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(usRingSize, 3, null),
             ConversionUnitValueModel.tuple(frRingSize, 44, null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
@@ -113,14 +113,14 @@ void main() {
             ],
           ),
           currentParams: null,
-          currentSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          currentSrc: ConversionUnitValueModel.tuple(usRingSize, 3, null),
           currentUnitValues: [
-            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(usRingSize, 3, null),
             ConversionUnitValueModel.tuple(frRingSize, 44, null),
           ],
-          expectedSrc: ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+          expectedSrc: ConversionUnitValueModel.tuple(usRingSize, 3, null),
           expectedUnitValues: [
-            ConversionUnitValueModel.tuple(usaRingSize, 3, null),
+            ConversionUnitValueModel.tuple(usRingSize, 3, null),
             ConversionUnitValueModel.tuple(frRingSize, 44, null),
           ],
           expectedParams: ConversionParamSetValueBulkModel(

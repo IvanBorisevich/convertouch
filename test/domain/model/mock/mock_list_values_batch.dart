@@ -7,42 +7,42 @@ import 'package:convertouch/domain/utils/list_values_utils.dart';
 
 import 'mock_unit.dart';
 
-final ListValuesFetchResult japanClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult jpClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeJp]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult usaClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult usClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeUs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult italianClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult itClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeIt]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult europeanClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult euClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeEu]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult spainClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult esClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeEs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult germanyClothesSizes = OutputItemsFetchModel(
+final ListValuesFetchResult deClothesSizes = OutputItemsFetchModel(
   items:
       listValuesFuncSets[ConvertouchListType.clothesSizeDe]!.buildListValues(),
   pageNum: 1,
@@ -293,7 +293,7 @@ final ListValuesFetchResult esRingSizes = OutputItemsFetchModel(
   hasReachedMax: true,
 );
 
-final ListValuesFetchResult usaRingSizes = OutputItemsFetchModel(
+final ListValuesFetchResult usRingSizes = OutputItemsFetchModel(
   items: listValuesFuncSets[ConvertouchListType.ringSizeUs]!.buildListValues(),
   pageNum: 1,
   hasReachedMax: true,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
@@ -87,9 +89,16 @@ class ConvertouchConversionItemsView extends StatelessWidget {
               child: BlocBuilder<ConversionUnitValueBloc,
                   ConversionUnitValueState>(
                 buildWhen: (prev, next) {
-                  return prev != next &&
+                  bool result = prev != next &&
                       (next is ConversionUnitValueInitialState ||
                           next.id == unitValue.id);
+
+                  log("ConversionUnitValueBloc buildWhen(), "
+                      "itemState: $next, "
+                      "parent bloc unit value: $unitValue, "
+                      "result: $result");
+
+                  return result;
                 },
                 builder: (_, itemState) {
                   final resultUnitValue =
@@ -98,6 +107,11 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                           : (itemState.id == unitValue.id
                               ? itemState.value!
                               : unitValue);
+
+                  log("ConversionUnitValueBloc builder(), "
+                      "itemState: $itemState, "
+                      "parent bloc unit value: $unitValue, "
+                      "result unit value: $resultUnitValue");
 
                   final isSource = itemState is ConversionUnitValueInitialState
                       ? unitValue.unit.id == srcUnitId
@@ -130,7 +144,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                       }
                     },
                     onValueChanged: (value, {listValues}) {
-                      conversionController.editConversionItemValue(
+                      conversionController.editConversionUnitValue(
                         context,
                         unitId: resultUnitValue.unit.id,
                         newValue: value,

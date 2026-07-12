@@ -132,7 +132,7 @@ const UnitModel itClothesSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel usaClothesSize = UnitModel(
+const UnitModel usClothesSize = UnitModel(
   id: 9,
   name: 'Clothes Size US',
   code: 'US',
@@ -141,7 +141,7 @@ const UnitModel usaClothesSize = UnitModel(
   unitGroupId: clothesSizeGroupId,
 );
 
-const UnitModel usaRingSize = UnitModel(
+const UnitModel usRingSize = UnitModel(
   id: 10,
   name: 'Ring Size US',
   code: 'US',
@@ -188,7 +188,7 @@ const UnitModel pound = UnitModel(
   unitGroupId: massGroupId,
 );
 
-const UnitModel spClothesSize = UnitModel(
+const UnitModel esClothesSize = UnitModel(
   id: 15,
   name: "Spain",
   code: "ES",

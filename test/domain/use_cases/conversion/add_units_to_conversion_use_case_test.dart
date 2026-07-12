@@ -193,20 +193,20 @@ void main() {
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
         );
@@ -258,20 +258,20 @@ void main() {
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
         );

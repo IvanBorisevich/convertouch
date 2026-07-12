@@ -124,6 +124,10 @@ class ConversionController {
     required UnitModel newUnit,
     required RecalculationOnUnitChange recalculationMode,
   }) {
+    if (recalculationMode == RecalculationOnUnitChange.otherValues) {
+      conversionItemController.resetUnitValues(context);
+    }
+
     BlocProvider.of<ConversionBloc>(context).add(
       ReplaceConversionItemUnit(
         newUnit: newUnit,
@@ -161,7 +165,7 @@ class ConversionController {
     );
   }
 
-  void editConversionItemValue(
+  void editConversionUnitValue(
     BuildContext context, {
     required int unitId,
     required ValueModel? newValue,

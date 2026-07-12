@@ -68,17 +68,17 @@ void main() {
               totalCount: 2,
             ),
             currentSrc: ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               3,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               ConversionUnitValueModel.tuple(
                 frRingSize,
@@ -88,17 +88,17 @@ void main() {
               ),
             ],
             expectedSrc: ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               3,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               ConversionUnitValueModel.tuple(
                 frRingSize,
@@ -179,17 +179,17 @@ void main() {
               totalCount: 2,
             ),
             currentSrc: ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               null,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             currentUnitValues: [
               ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 null,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               ConversionUnitValueModel.tuple(
                 frRingSize,
@@ -207,17 +207,17 @@ void main() {
               totalCount: 2,
             ),
             expectedSrc: ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               3,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             expectedUnitValues: [
               ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               ConversionUnitValueModel.tuple(
                 frRingSize,
@@ -273,17 +273,17 @@ void main() {
                 totalCount: 2,
               ),
               currentSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   3,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -314,17 +314,17 @@ void main() {
                 totalCount: 2,
               ),
               expectedSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 4,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   4,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -432,17 +432,17 @@ void main() {
                 totalCount: 2,
               ),
               currentSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   3,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -473,17 +473,17 @@ void main() {
                 totalCount: 2,
               ),
               expectedSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   3,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -588,17 +588,17 @@ void main() {
                 totalCount: 2,
               ),
               currentSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 4,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   4,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -629,17 +629,17 @@ void main() {
                 totalCount: 2,
               ),
               expectedSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   3,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -746,17 +746,17 @@ void main() {
                 totalCount: 2,
               ),
               currentSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 4,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               currentUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   4,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -787,17 +787,17 @@ void main() {
                 totalCount: 2,
               ),
               expectedSrc: ConversionUnitValueModel.tuple(
-                usaRingSize,
+                usRingSize,
                 3,
                 null,
-                listValuesFetchResult: usaRingSizes,
+                listValuesFetchResult: usRingSizes,
               ),
               expectedUnitValues: [
                 ConversionUnitValueModel.tuple(
-                  usaRingSize,
+                  usRingSize,
                   3,
                   null,
-                  listValuesFetchResult: usaRingSizes,
+                  listValuesFetchResult: usRingSizes,
                 ),
                 ConversionUnitValueModel.tuple(
                   frRingSize,
@@ -887,40 +887,40 @@ void main() {
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
           expectedSrc: ConversionUnitValueModel.tuple(
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
@@ -1011,20 +1011,20 @@ void main() {
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
           expectedParams: ConversionParamSetValueBulkModel(
@@ -1046,20 +1046,20 @@ void main() {
             jpClothesSize,
             'S',
             null,
-            listValuesFetchResult: japanClothesSizes,
+            listValuesFetchResult: jpClothesSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'S',
               null,
-              listValuesFetchResult: japanClothesSizes,
+              listValuesFetchResult: jpClothesSizes,
             ),
             ConversionUnitValueModel.tuple(
               itClothesSize,
               42,
               null,
-              listValuesFetchResult: italianClothesSizes,
+              listValuesFetchResult: itClothesSizes,
             ),
           ],
         );
@@ -1187,17 +1187,17 @@ void main() {
             totalCount: 2,
           ),
           currentSrc: ConversionUnitValueModel.tuple(
-            usaRingSize,
+            usRingSize,
             3,
             null,
-            listValuesFetchResult: usaRingSizes,
+            listValuesFetchResult: usRingSizes,
           ),
           currentUnitValues: [
             ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               3,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             ConversionUnitValueModel.tuple(
               frRingSize,
@@ -1207,17 +1207,17 @@ void main() {
             ),
           ],
           expectedSrc: ConversionUnitValueModel.tuple(
-            usaRingSize,
+            usRingSize,
             3,
             null,
-            listValuesFetchResult: usaRingSizes,
+            listValuesFetchResult: usRingSizes,
           ),
           expectedUnitValues: [
             ConversionUnitValueModel.tuple(
-              usaRingSize,
+              usRingSize,
               3,
               null,
-              listValuesFetchResult: usaRingSizes,
+              listValuesFetchResult: usRingSizes,
             ),
             ConversionUnitValueModel.tuple(
               frRingSize,

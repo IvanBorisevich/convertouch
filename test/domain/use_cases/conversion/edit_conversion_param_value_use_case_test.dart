@@ -402,29 +402,29 @@ void main() {
               ],
             ),
             currentSrc: (
-              spClothesSize,
+              esClothesSize,
               null,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
               (
                 itClothesSize,
                 null,
                 null,
-                listValuesFetchResult: italianClothesSizes,
+                listValuesFetchResult: itClothesSizes,
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 null,
                 null,
-                listValuesFetchResult: spainClothesSizes,
+                listValuesFetchResult: esClothesSizes,
               ),
               (
                 deClothesSize,
                 null,
                 null,
-                listValuesFetchResult: germanyClothesSizes,
+                listValuesFetchResult: deClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -458,29 +458,29 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spClothesSize,
+              esClothesSize,
               34,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             expectedUnitValues: [
               (
                 itClothesSize,
                 38,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 34,
                 null,
-                listValuesFetchResult: spainClothesSizes,
+                listValuesFetchResult: esClothesSizes,
               ),
               (
                 deClothesSize,
                 32,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
           );
@@ -526,29 +526,29 @@ void main() {
               ],
             ),
             currentSrc: (
-              spClothesSize,
+              esClothesSize,
               null,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
               (
                 itClothesSize,
                 null,
                 null,
-                listValuesFetchResult: italianClothesSizes,
+                listValuesFetchResult: itClothesSizes,
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 null,
                 null,
-                listValuesFetchResult: spainClothesSizes,
+                listValuesFetchResult: esClothesSizes,
               ),
               (
                 deClothesSize,
                 null,
                 null,
-                listValuesFetchResult: germanyClothesSizes,
+                listValuesFetchResult: deClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -582,29 +582,29 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spClothesSize,
+              esClothesSize,
               34,
               null,
-              listValuesFetchResult: spainClothesSizes
+              listValuesFetchResult: esClothesSizes
             ),
             expectedUnitValues: [
               (
                 itClothesSize,
                 38,
                 null,
-                listValuesFetchResult: italianClothesSizes,
+                listValuesFetchResult: itClothesSizes,
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 34,
                 null,
-                listValuesFetchResult: spainClothesSizes,
+                listValuesFetchResult: esClothesSizes,
               ),
               (
                 deClothesSize,
                 32,
                 null,
-                listValuesFetchResult: germanyClothesSizes,
+                listValuesFetchResult: deClothesSizes,
               ),
             ],
           );
@@ -651,29 +651,29 @@ void main() {
               ],
             ),
             currentSrc: (
-              spClothesSize,
+              esClothesSize,
               40,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
               (
                 itClothesSize,
                 48,
                 null,
-                listValuesFetchResult: italianClothesSizes,
+                listValuesFetchResult: itClothesSizes,
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 40,
                 null,
-                listValuesFetchResult: spainClothesSizes,
+                listValuesFetchResult: esClothesSizes,
               ),
               (
                 deClothesSize,
                 46,
                 null,
-                listValuesFetchResult: germanyClothesSizes,
+                listValuesFetchResult: deClothesSizes,
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -707,29 +707,29 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spClothesSize,
+              esClothesSize,
               42,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             expectedUnitValues: [
               (
                 itClothesSize,
                 46,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 42,
                 null,
-                listValuesFetchResult: spainClothesSizes
+                listValuesFetchResult: esClothesSizes
               ),
               (
                 deClothesSize,
                 40,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
           );
@@ -780,29 +780,29 @@ void main() {
               ],
             ),
             currentSrc: (
-              spClothesSize,
+              esClothesSize,
               40,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
               (
                 itClothesSize,
                 48,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 40,
                 null,
-                listValuesFetchResult: spainClothesSizes
+                listValuesFetchResult: esClothesSizes
               ),
               (
                 deClothesSize,
                 46,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -836,29 +836,29 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spClothesSize,
+              esClothesSize,
               36,
               null,
-              listValuesFetchResult: spainClothesSizes
+              listValuesFetchResult: esClothesSizes
             ),
             expectedUnitValues: [
               (
                 itClothesSize,
                 44,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 36,
                 null,
-                listValuesFetchResult: spainClothesSizes
+                listValuesFetchResult: esClothesSizes
               ),
               (
                 deClothesSize,
                 44,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
           );
@@ -905,29 +905,29 @@ void main() {
               ],
             ),
             currentSrc: (
-              spClothesSize,
+              esClothesSize,
               40,
               null,
-              listValuesFetchResult: spainClothesSizes,
+              listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
               (
                 itClothesSize,
                 48,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 40,
                 null,
-                listValuesFetchResult: spainClothesSizes
+                listValuesFetchResult: esClothesSizes
               ),
               (
                 deClothesSize,
                 46,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
@@ -961,29 +961,29 @@ void main() {
               ],
             ),
             expectedSrc: (
-              spClothesSize,
+              esClothesSize,
               36,
               null,
-              listValuesFetchResult: spainClothesSizes
+              listValuesFetchResult: esClothesSizes
             ),
             expectedUnitValues: [
               (
                 itClothesSize,
                 44,
                 null,
-                listValuesFetchResult: italianClothesSizes
+                listValuesFetchResult: itClothesSizes
               ),
               (
-                spClothesSize,
+                esClothesSize,
                 36,
                 null,
-                listValuesFetchResult: spainClothesSizes
+                listValuesFetchResult: esClothesSizes
               ),
               (
                 deClothesSize,
                 44,
                 null,
-                listValuesFetchResult: germanyClothesSizes
+                listValuesFetchResult: deClothesSizes
               ),
             ],
           );
@@ -1031,15 +1031,15 @@ void main() {
           ],
         ),
         currentSrc: (
-          spClothesSize,
+          esClothesSize,
           36,
           null,
-          listValuesFetchResult: spainClothesSizes,
+          listValuesFetchResult: esClothesSizes,
         ),
         currentUnitValues: [
-          (itClothesSize, 44, null, listValuesFetchResult: italianClothesSizes),
-          (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
-          (deClothesSize, 42, null, listValuesFetchResult: germanyClothesSizes),
+          (itClothesSize, 44, null, listValuesFetchResult: itClothesSizes),
+          (esClothesSize, 36, null, listValuesFetchResult: esClothesSizes),
+          (deClothesSize, 42, null, listValuesFetchResult: deClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -1071,15 +1071,15 @@ void main() {
           ],
         ),
         expectedSrc: (
-          spClothesSize,
+          esClothesSize,
           42,
           null,
-          listValuesFetchResult: spainClothesSizes
+          listValuesFetchResult: esClothesSizes
         ),
         expectedUnitValues: [
-          (itClothesSize, 50, null, listValuesFetchResult: italianClothesSizes),
-          (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
-          (deClothesSize, 48, null, listValuesFetchResult: germanyClothesSizes),
+          (itClothesSize, 50, null, listValuesFetchResult: itClothesSizes),
+          (esClothesSize, 42, null, listValuesFetchResult: esClothesSizes),
+          (deClothesSize, 48, null, listValuesFetchResult: deClothesSizes),
         ],
       );
     });
@@ -1124,15 +1124,15 @@ void main() {
           ],
         ),
         currentSrc: (
-          spClothesSize,
+          esClothesSize,
           36,
           null,
-          listValuesFetchResult: spainClothesSizes
+          listValuesFetchResult: esClothesSizes
         ),
         currentUnitValues: [
-          (itClothesSize, 44, null, listValuesFetchResult: italianClothesSizes),
-          (spClothesSize, 36, null, listValuesFetchResult: spainClothesSizes),
-          (deClothesSize, 42, null, listValuesFetchResult: germanyClothesSizes),
+          (itClothesSize, 44, null, listValuesFetchResult: itClothesSizes),
+          (esClothesSize, 36, null, listValuesFetchResult: esClothesSizes),
+          (deClothesSize, 42, null, listValuesFetchResult: deClothesSizes),
         ],
         expectedParams: ConversionParamSetValueBulkModel.singleCompact(
           paramSet: clothesSizeParamSet,
@@ -1164,15 +1164,15 @@ void main() {
           ],
         ),
         expectedSrc: (
-          spClothesSize,
+          esClothesSize,
           42,
           null,
-          listValuesFetchResult: spainClothesSizes
+          listValuesFetchResult: esClothesSizes
         ),
         expectedUnitValues: [
-          (itClothesSize, 50, null, listValuesFetchResult: italianClothesSizes),
-          (spClothesSize, 42, null, listValuesFetchResult: spainClothesSizes),
-          (deClothesSize, 48, null, listValuesFetchResult: germanyClothesSizes),
+          (itClothesSize, 50, null, listValuesFetchResult: itClothesSizes),
+          (esClothesSize, 42, null, listValuesFetchResult: esClothesSizes),
+          (deClothesSize, 48, null, listValuesFetchResult: deClothesSizes),
         ],
       );
     });

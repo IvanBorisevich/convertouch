@@ -83,17 +83,17 @@ void main() {
         totalCount: 2,
       ),
       currentSrc: ConversionUnitValueModel.tuple(
-        usaRingSize,
+        usRingSize,
         3,
         null,
-        listValuesFetchResult: usaRingSizes,
+        listValuesFetchResult: usRingSizes,
       ),
       currentUnitValues: [
         ConversionUnitValueModel.tuple(
-          usaRingSize,
+          usRingSize,
           3,
           null,
-          listValuesFetchResult: usaRingSizes,
+          listValuesFetchResult: usRingSizes,
         ),
         ConversionUnitValueModel.tuple(
           frRingSize,
@@ -136,17 +136,17 @@ void main() {
         totalCount: 2,
       ),
       expectedSrc: ConversionUnitValueModel.tuple(
-        usaRingSize,
+        usRingSize,
         3.5,
         null,
-        listValuesFetchResult: usaRingSizes,
+        listValuesFetchResult: usRingSizes,
       ),
       expectedUnitValues: [
         ConversionUnitValueModel.tuple(
-          usaRingSize,
+          usRingSize,
           3.5,
           null,
-          listValuesFetchResult: usaRingSizes,
+          listValuesFetchResult: usRingSizes,
         ),
         ConversionUnitValueModel.tuple(
           frRingSize,
@@ -202,17 +202,17 @@ void main() {
         totalCount: 2,
       ),
       currentSrc: ConversionUnitValueModel.tuple(
-        usaRingSize,
+        usRingSize,
         3,
         null,
-        listValuesFetchResult: usaRingSizes,
+        listValuesFetchResult: usRingSizes,
       ),
       currentUnitValues: [
         ConversionUnitValueModel.tuple(
-          usaRingSize,
+          usRingSize,
           3,
           null,
-          listValuesFetchResult: usaRingSizes,
+          listValuesFetchResult: usRingSizes,
         ),
         ConversionUnitValueModel.tuple(
           frRingSize,
@@ -255,17 +255,17 @@ void main() {
         totalCount: 2,
       ),
       expectedSrc: ConversionUnitValueModel.tuple(
-        usaRingSize,
+        usRingSize,
         3.5,
         null,
-        listValuesFetchResult: usaRingSizes,
+        listValuesFetchResult: usRingSizes,
       ),
       expectedUnitValues: [
         ConversionUnitValueModel.tuple(
-          usaRingSize,
+          usRingSize,
           3.5,
           null,
-          listValuesFetchResult: usaRingSizes,
+          listValuesFetchResult: usRingSizes,
         ),
         ConversionUnitValueModel.tuple(
           frRingSize,

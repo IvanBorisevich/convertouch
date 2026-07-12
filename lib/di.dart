@@ -364,6 +364,7 @@ Future<void> _initUseCases() async {
   locator.registerLazySingleton<ReplaceConversionItemUnitUseCase>(
     () => ReplaceConversionItemUnitUseCase(
       calculateUnitValueUseValue: locator(),
+      calculateParamSetValueUseCase: locator(),
     ),
   );
 
