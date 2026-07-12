@@ -265,11 +265,7 @@ class ReplaceConversionItemUnit extends ConversionEvent {
     required this.recalculationMode,
     super.onConversionUpdated,
     super.onError,
-  }) : super(
-          rebuildUnitValues:
-              recalculationMode == RecalculationOnUnitChange.otherValues,
-          rebuildParams: false,
-        );
+  }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
   List<Object?> get props => [

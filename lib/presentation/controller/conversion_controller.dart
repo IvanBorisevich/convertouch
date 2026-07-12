@@ -124,9 +124,7 @@ class ConversionController {
     required UnitModel newUnit,
     required RecalculationOnUnitChange recalculationMode,
   }) {
-    if (recalculationMode == RecalculationOnUnitChange.otherValues) {
-      conversionItemController.resetUnitValues(context);
-    }
+    conversionItemController.resetUnitValues(context);
 
     BlocProvider.of<ConversionBloc>(context).add(
       ReplaceConversionItemUnit(
@@ -136,7 +134,7 @@ class ConversionController {
         onConversionUpdated: (updatedConversion, {info}) {
           if (updatedConversion.params?.active?.paramValues != null) {
             for (final paramValue
-            in updatedConversion.params!.active!.paramValues) {
+                in updatedConversion.params!.active!.paramValues) {
               conversionItemController.updateParamValue(
                 context,
                 id: paramValue.id,
@@ -145,16 +143,16 @@ class ConversionController {
             }
           }
 
-          for (final unitValue in updatedConversion.convertedUnitValues) {
-            conversionItemController.updateUnitValue(
-              context,
-              id: unitValue.unit.id == newUnit.id
-                  ? unitValueKey(currentUnitId)
-                  : unitValue.id,
-              newUnitValue: unitValue,
-              isSource: unitValue.unit.id == newUnit.id,
-            );
-          }
+          // for (final unitValue in updatedConversion.convertedUnitValues) {
+          //   conversionItemController.updateUnitValue(
+          //     context,
+          //     id: unitValue.unit.id == newUnit.id
+          //         ? unitValueKey(currentUnitId)
+          //         : unitValue.id,
+          //     newUnitValue: unitValue,
+          //     isSource: unitValue.unit.id == newUnit.id,
+          //   );
+          // }
 
           navigationController.navigateBack(context);
         },
