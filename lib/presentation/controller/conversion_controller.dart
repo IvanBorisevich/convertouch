@@ -130,6 +130,17 @@ class ConversionController {
         oldUnitId: currentUnitId,
         recalculationMode: recalculationMode,
         onConversionUpdated: (updatedConversion, {info}) {
+          if (updatedConversion.params?.active?.paramValues != null) {
+            for (final paramValue
+            in updatedConversion.params!.active!.paramValues) {
+              conversionItemController.updateParamValue(
+                context,
+                id: paramValue.id,
+                newParamValue: paramValue,
+              );
+            }
+          }
+
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -162,6 +173,17 @@ class ConversionController {
         listValues: listValues,
         unitId: unitId,
         onConversionUpdated: (updatedConversion, {info}) {
+          if (updatedConversion.params?.active?.paramValues != null) {
+            for (final paramValue
+                in updatedConversion.params!.active!.paramValues) {
+              conversionItemController.updateParamValue(
+                context,
+                id: paramValue.id,
+                newParamValue: paramValue,
+              );
+            }
+          }
+
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,

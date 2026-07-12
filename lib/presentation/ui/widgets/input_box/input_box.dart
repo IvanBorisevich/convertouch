@@ -835,8 +835,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       ),
     );
 
-    log("list field initState(): ${widget.model}");
-
     _openDropdownNotifier = ValueNotifier<Object?>(null);
 
     if (widget.model.searchEnabled) {
@@ -849,7 +847,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     required bool showUnknownSelectedValue,
   }) {
     ValueModel? result = showUnknownSelectedValue ? null : selectedValue;
-    log("getMainValue() result: $result");
     return result;
   }
 
@@ -859,7 +856,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   }) {
     ValueModel? result =
         showUnknownSelectedValue ? (mainValue ?? _noValueHint) : _noValueHint;
-    log("getHint() result: $result");
     return result;
   }
 
@@ -881,8 +877,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   @override
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    log("list field didUpdateWidget(): ${widget.model}");
 
     _mainValueNotifier.value = _getMainValue(
       selectedValue: widget.model.value,
