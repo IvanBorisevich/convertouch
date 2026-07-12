@@ -12,8 +12,6 @@ import 'package:convertouch/presentation/bloc/abstract_event.dart';
 abstract class ConversionEvent extends ConvertouchEvent {
   final bool rebuildUnitValues;
   final bool rebuildParams;
-  final void Function(ConversionParamValueModel)? onParamValueUpdated;
-  final void Function(ConversionUnitValueModel, bool)? onUnitValueUpdated;
 
   final void Function(
     ConversionModel, {
@@ -25,8 +23,6 @@ abstract class ConversionEvent extends ConvertouchEvent {
     super.onError,
     required this.rebuildUnitValues,
     required this.rebuildParams,
-    this.onUnitValueUpdated,
-    this.onParamValueUpdated,
   });
 }
 

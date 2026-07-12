@@ -143,17 +143,6 @@ class ConversionController {
             }
           }
 
-          // for (final unitValue in updatedConversion.convertedUnitValues) {
-          //   conversionItemController.updateUnitValue(
-          //     context,
-          //     id: unitValue.unit.id == newUnit.id
-          //         ? unitValueKey(currentUnitId)
-          //         : unitValue.id,
-          //     newUnitValue: unitValue,
-          //     isSource: unitValue.unit.id == newUnit.id,
-          //   );
-          // }
-
           navigationController.navigateBack(context);
         },
         onError: (error) {
