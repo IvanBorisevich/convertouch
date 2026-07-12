@@ -120,6 +120,7 @@ class UnitRepositoryImpl extends UnitRepository {
     if (ids == null || ids.isEmpty) {
       return const Right([]);
     }
+
     try {
       final result = await unitDao.getUnitsByIds(ids);
       return Right(
@@ -142,6 +143,10 @@ class UnitRepositoryImpl extends UnitRepository {
     List<String> codes,
   ) async {
     try {
+      if (codes.isEmpty) {
+        return const Right({});
+      }
+
       final result = await unitDao.getUnitsByCodes(groupId, codes);
       return Right(
         {for (var v in result) v.id!: UnitTranslator.I.toModel(v)},
@@ -219,7 +224,10 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<Either<ConvertouchException, void>> remove(List<int> unitIds) async {
     try {
-      await unitDao.remove(unitIds);
+      if (unitIds.isNotEmpty) {
+        await unitDao.remove(unitIds);
+      }
+
       return const Right(null);
     } catch (e, stackTrace) {
       return Left(

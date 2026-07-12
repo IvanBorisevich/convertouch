@@ -6,14 +6,13 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
-import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_align_model.dart';
 import 'package:convertouch/domain/model/use_case_model/output/output_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/align_conversion_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -93,7 +92,7 @@ void main() {
               ),
               ConversionParamValueModel.tuple(
                 heightParam,
-                const NumRange.withRight(174, 180),
+                const ValueModel.rawStr('174 - 180'),
                 null,
                 unit: meter,
               ),
@@ -197,7 +196,7 @@ void main() {
               ConversionParamValueModel.tuple(garmentParam, null, null),
               ConversionParamValueModel.tuple(
                 heightParam,
-                manShirtHeightRangesFrom0_164To190InMeter.items[3],
+                const ValueModel(raw: '174 - 180', alt: '1.74 - 1.8'),
                 null,
                 unit: meter,
               ),
@@ -278,10 +277,91 @@ void main() {
     );
   });
 
+  test("[Clothes size] Should init list values only", () async {
+    final misalignedConversion = ConversionModel(
+      unitGroup: clothesSizeGroup,
+      params: ConversionParamSetValueBulkModel(
+        paramSetValues: [
+          ConversionParamSetValueModel(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                personParam,
+                'Woman',
+                null,
+              ),
+              ConversionParamValueModel.tuple(
+                garmentParam,
+                'Shirt',
+                null,
+              ),
+              ConversionParamValueModel.tuple(
+                heightParam,
+                const ValueModel.rawStr('162 - 168'),
+                null,
+                calculated: true,
+                unit: centimeter,
+              ),
+            ],
+          )
+        ],
+        selectedIndex: 0,
+      ),
+      convertedUnitValues: const [],
+    );
+
+    final alignedConversion = ObjectUtils.tryGet(
+      await useCase.execute(
+        InputConversionAlignModel(
+          conversion: misalignedConversion,
+        ),
+      ),
+    );
+
+    expect(
+      alignedConversion.toJson(saveListValues: true),
+      ConversionModel(
+        unitGroup: clothesSizeGroup,
+        params: ConversionParamSetValueBulkModel(
+          paramSetValues: [
+            ConversionParamSetValueModel(
+              paramSet: clothesSizeParamSet,
+              paramValues: [
+                ConversionParamValueModel.tuple(
+                  personParam,
+                  'Woman',
+                  null,
+                  listValuesFetchResult: personParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  garmentParam,
+                  'Shirt',
+                  null,
+                  listValuesFetchResult: garmentParamListValues,
+                ),
+                ConversionParamValueModel.tuple(
+                  heightParam,
+                  womanShirtHeightRangesFrom0_156To186InCm.items[2],
+                  null,
+                  unit: centimeter,
+                  calculated: true,
+                  listValuesFetchResult:
+                      womanShirtHeightRangesFrom0_156To186InCm,
+                ),
+              ],
+            )
+          ],
+          selectedIndex: 0,
+        ),
+        convertedUnitValues: const [],
+      ).toJson(saveListValues: true),
+    );
+  });
+
   test(
       "[Currency] Should NOT init 'Exchange Rate Source / Bank' list values "
-          "(fetched via API with possible delay), "
-          "should NOT preselect anything", () async {
+      "(fetched via API with possible delay), "
+      "should NOT preselect anything", () async {
     final misalignedConversion = ConversionModel(
       unitGroup: currencyGroup,
       params: ConversionParamSetValueBulkModel(
@@ -320,11 +400,10 @@ void main() {
     );
   });
 
-
   test(
       "[Currency] Should NOT init 'Exchange Rate Source / Bank' list values "
-          "(fetched via API with possible delay), "
-          "should keep current value", () async {
+      "(fetched via API with possible delay), "
+      "should keep current value", () async {
     final misalignedConversion = ConversionModel(
       unitGroup: currencyGroup,
       params: ConversionParamSetValueBulkModel(

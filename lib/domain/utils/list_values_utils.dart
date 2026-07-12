@@ -62,6 +62,10 @@ PublicValuePredicate _publicValuePredicateForRange({
     required v,
     unit,
   }) {
+    if (input.alt == v.alt) {
+      return true;
+    }
+
     if (input.range != null) {
       return input.range == v.range;
     }
@@ -70,7 +74,7 @@ PublicValuePredicate _publicValuePredicateForRange({
       return false;
     }
 
-    double? publicInputValue = double.tryParse(input.raw);
+    double? publicInputValue = double.tryParse(input.itemName);
 
     if (publicInputValue == null) {
       return false;

@@ -79,6 +79,21 @@ final ListValuesFetchResult barWeightParamPoundListValues =
   hasReachedMax: true,
 );
 
+final ListValuesFetchResult womanShirtHeightRangesFrom0_156To186InCm =
+    OutputItemsFetchModel(
+  items: [
+    ValueModel.range(const NumRange.withRight(0, 156)),
+    ValueModel.range(const NumRange.withRight(156, 162)),
+    ValueModel.range(const NumRange.withRight(162, 168)),
+    ValueModel.range(const NumRange.withRight(168, 174)),
+    ValueModel.range(const NumRange.withRight(174, 180)),
+    ValueModel.range(const NumRange.withRight(180, 186)),
+    ValueModel.range(const NumRange.withoutBoth(186, double.infinity)),
+  ],
+  pageNum: 1,
+  hasReachedMax: true,
+);
+
 final ListValuesFetchResult womanTrousersHeightRangesFrom0_156To186InCm =
     OutputItemsFetchModel(
   items: [

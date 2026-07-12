@@ -65,24 +65,22 @@ class ConversionRepositoryImpl extends ConversionRepository {
       log("Selected last conversion from DB by group id = $unitGroupId: "
           "$conversion");
 
-      if (conversion == null || conversion.sourceUnitId == null) {
+      if (conversion == null) {
         return const Right(null);
       }
 
-      UnitModel? sourceItemUnit = ObjectUtils.tryGet(
-        await unitRepository.get(conversion.sourceUnitId!),
-      );
+      UnitModel? sourceItemUnit = conversion.sourceUnitId != null
+          ? ObjectUtils.tryGet(
+              await unitRepository.get(conversion.sourceUnitId!),
+            )
+          : null;
 
-      if (sourceItemUnit == null) {
-        return const Right(null);
-      }
-
-      List<ConversionUnitValueEntity> conversionItemEntities =
+      List<ConversionUnitValueEntity> conversionUnitValueEntities =
           await conversionUnitValueDao.getByConversionId(conversion.id!);
 
       List<UnitModel> conversionItemUnits = ObjectUtils.tryGet(
         await unitRepository.getByIds(
-          conversionItemEntities.map((e) => e.unitId).toList(),
+          conversionUnitValueEntities.map((e) => e.unitId).toList(),
         ),
       );
 
@@ -91,7 +89,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
       };
 
       List<ConversionUnitValueModel> convertedUnitValues =
-          conversionItemEntities
+          conversionUnitValueEntities
               .map(
                 (entity) => ConversionUnitValueTranslator.I.toModel(
                   entity,
@@ -101,16 +99,17 @@ class ConversionRepositoryImpl extends ConversionRepository {
               .nonNulls
               .toList();
 
-      ConversionUnitValueModel srcUnitValue =
-          ConversionUnitValueTranslator.I.toModel(
-        ConversionUnitValueEntity(
-          conversionId: conversion.id!,
-          value: conversion.sourceValue,
-          sequenceNum: 0,
-          unitId: sourceItemUnit.id,
-        ),
-        unit: sourceItemUnit,
-      );
+      ConversionUnitValueModel? srcUnitValue = sourceItemUnit != null
+          ? ConversionUnitValueTranslator.I.toModel(
+              ConversionUnitValueEntity(
+                conversionId: conversion.id!,
+                value: conversion.sourceValue,
+                sequenceNum: 0,
+                unitId: sourceItemUnit.id,
+              ),
+              unit: sourceItemUnit,
+            )
+          : null;
 
       ConversionModel resultConversion =
           ConversionTranslator.I.toModel(conversion).copyWith(
@@ -160,8 +159,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
     try {
       ConversionEntity entity = ConversionTranslator.I.fromModel(conversion);
 
-      if (conversion.convertedUnitValues.isEmpty &&
-          !conversion.hasAddedParams) {
+      if (!conversion.hasUnitValues && !conversion.hasAddedParams) {
         log("Conversion of group ${conversion.unitGroup.name} does not have "
             "items and added params, nothing to save");
         return const Right(ConversionModel.none);
@@ -202,7 +200,7 @@ class ConversionRepositoryImpl extends ConversionRepository {
       }
 
       if (conversion.hasAddedParams) {
-        log("Inserting conversion params");
+        log("Inserting conversion params: ${conversion.params!}");
 
         for (var paramSetValue in conversion.params!.paramSetValues) {
           await conversionParamValueDao.insertBatch(

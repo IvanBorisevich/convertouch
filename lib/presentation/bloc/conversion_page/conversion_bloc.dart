@@ -98,12 +98,13 @@ class ConversionBloc
         event.unitGroup,
       );
 
+      log("${DateTime.now()} - Selected conversion from db: "
+          "${conversionFromDb.isRight ? conversionFromDb.right : conversionFromDb.left}");
+
       prev = state;
 
       if (conversionFromDb.isRight && conversionFromDb.right != null) {
         conversion = conversionFromDb.right!;
-
-        log("${DateTime.now()} - Selected conversion from db: $conversion");
       } else {
         conversion = ConversionModel.noItems(
           id: -1,
@@ -183,7 +184,7 @@ class ConversionBloc
     SaveConversion event,
     Emitter<ConversionState> emit,
   ) async {
-    var result = await saveConversionUseCase.execute(event.conversion);
+    final result = await saveConversionUseCase.execute(event.conversion);
 
     if (result.isLeft) {
       event.onError?.call(result.left);

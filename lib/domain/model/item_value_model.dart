@@ -364,6 +364,7 @@ class ConversionParamValueModel extends ItemValueModel {
     return 'ParamValue{id = $id, ${param.name} | '
         '$value , $defaultValue | '
         '${unit?.code} | '
+        'calculated: $calculated | '
         'list fetch: $listValuesFetchResult}';
   }
 }

@@ -126,57 +126,6 @@ class CalculateParamValueUseValue extends CalculateItemValueUseCase<
   });
 
   @override
-  Future<ValueModel?> calculateDefaultNonListValue(
-    ConversionParamValueModel itemValue,
-    InputParamValueCalculationModel input,
-  ) async {
-    if (itemValue.calculated) {
-      return itemValue.defaultValue;
-    }
-
-    return ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(
-        InputNonListDefaultValueCalculationModel(
-          item: itemValue.param,
-          conversionGroupName: input.conversionGroup.name,
-          currentParamUnit: itemValue.unit,
-        ),
-      ),
-    );
-  }
-
-  @override
-  ConversionParamValueModel calculateWithoutDelta(
-    ConversionParamValueModel itemValue,
-    InputParamValueCalculationModel input,
-  ) {
-    if (!itemValue.calculated) {
-      return itemValue;
-    }
-
-    ValueModel? calculatedBySrcValue = input.srcUnitValue != null
-        ? rules.calculateParamValueBySrcValue(
-            srcUnitValue: input.srcUnitValue!,
-            unitGroupName: input.conversionGroup.name,
-            params: input.paramSetValue,
-            param: itemValue.param,
-          )
-        : null;
-
-    if (itemValue.listType == null) {
-      return itemValue.copyWith(
-        value: const Patchable(null, patchNull: true),
-        defaultValue: Patchable(calculatedBySrcValue, patchNull: true),
-      );
-    } else {
-      return itemValue.copyWith(
-        value: Patchable(calculatedBySrcValue, patchNull: true),
-        defaultValue: const Patchable(null, patchNull: true),
-      );
-    }
-  }
-
-  @override
   Future<ConversionParamValueModel> replaceItemUnit(
     ConversionParamValueModel itemValue,
     ReplaceItemUnitDelta delta,
@@ -205,6 +154,56 @@ class CalculateParamValueUseValue extends CalculateItemValueUseCase<
 
     return itemValue;
   }
+
+  @override
+  ConversionParamValueModel calculateWithoutDelta(
+    ConversionParamValueModel itemValue,
+    InputParamValueCalculationModel input,
+  ) {
+    if (!itemValue.calculated || input.srcUnitValue == null) {
+      return itemValue;
+    }
+
+    ValueModel? calculatedBySrcValue = rules.calculateParamValueBySrcValue(
+      srcUnitValue: input.srcUnitValue!,
+      unitGroupName: input.conversionGroup.name,
+      params: input.paramSetValue,
+      param: itemValue.param,
+    );
+
+    if (itemValue.listType == null) {
+      return itemValue.copyWith(
+        value: const Patchable(null, patchNull: true),
+        defaultValue: Patchable(calculatedBySrcValue, patchNull: true),
+      );
+    } else {
+      return itemValue.copyWith(
+        value: Patchable(calculatedBySrcValue, patchNull: true),
+        defaultValue: const Patchable(null, patchNull: true),
+      );
+    }
+  }
+
+  @override
+  Future<ValueModel?> calculateDefaultNonListValue(
+    ConversionParamValueModel itemValue,
+    InputParamValueCalculationModel input,
+  ) async {
+    if (itemValue.calculated &&
+        (input.srcUnitValue != null || itemValue.value != null)) {
+      return itemValue.defaultValue;
+    }
+
+    return ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        InputNonListDefaultValueCalculationModel(
+          item: itemValue.param,
+          conversionGroupName: input.conversionGroup.name,
+          currentParamUnit: itemValue.unit,
+        ),
+      ),
+    );
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -217,24 +216,29 @@ class CalculateUnitValueUseValue extends CalculateItemValueUseCase<
   });
 
   @override
-  Future<ValueModel?> calculateDefaultNonListValue(
+  Future<ConversionUnitValueModel> replaceItemUnit(
     ConversionUnitValueModel itemValue,
+    ReplaceItemUnitDelta delta,
     InputUnitValueCalculationModel input,
   ) async {
-    bool calculateByParams = !input.conversionGroup.refreshable;
+    if (delta.recalculationMode == RecalculationOnUnitChange.currentValue) {
+      var unitValueForNewUnit = rules.calculateUnitValueForNewUnit(
+        unitValue: itemValue,
+        paramUnitGroup: input.conversionGroup,
+        tgtParamUnit: delta.newUnit,
+        params: input.paramSetValue,
+      );
 
-    if (calculateByParams && areParamsApplicable(input.paramSetValue)) {
-      return itemValue.defaultValue;
+      return ConversionUnitValueModel(
+        unit: delta.newUnit,
+        value: unitValueForNewUnit.value,
+        defaultValue: unitValueForNewUnit.defaultValue,
+      );
+    } else {
+      return itemValue.copyWith(
+        unit: delta.newUnit,
+      );
     }
-
-    return ObjectUtils.tryGet(
-      await calculateDefaultValueUseCase.execute(
-        InputNonListDefaultValueCalculationModel(
-          item: itemValue.unit,
-          conversionGroupName: input.conversionGroup.name,
-        ),
-      ),
-    );
   }
 
   @override
@@ -263,28 +267,23 @@ class CalculateUnitValueUseValue extends CalculateItemValueUseCase<
   }
 
   @override
-  Future<ConversionUnitValueModel> replaceItemUnit(
+  Future<ValueModel?> calculateDefaultNonListValue(
     ConversionUnitValueModel itemValue,
-    ReplaceItemUnitDelta delta,
     InputUnitValueCalculationModel input,
   ) async {
-    if (delta.recalculationMode == RecalculationOnUnitChange.currentValue) {
-      var unitValueForNewUnit = rules.calculateUnitValueForNewUnit(
-        unitValue: itemValue,
-        paramUnitGroup: input.conversionGroup,
-        tgtParamUnit: delta.newUnit,
-        params: input.paramSetValue,
-      );
+    bool calculateByParams = !input.conversionGroup.refreshable;
 
-      return ConversionUnitValueModel(
-        unit: delta.newUnit,
-        value: unitValueForNewUnit.value,
-        defaultValue: unitValueForNewUnit.defaultValue,
-      );
-    } else {
-      return itemValue.copyWith(
-        unit: delta.newUnit,
-      );
+    if (calculateByParams && areParamsApplicable(input.paramSetValue)) {
+      return itemValue.defaultValue;
     }
+
+    return ObjectUtils.tryGet(
+      await calculateDefaultValueUseCase.execute(
+        InputNonListDefaultValueCalculationModel(
+          item: itemValue.unit,
+          conversionGroupName: input.conversionGroup.name,
+        ),
+      ),
+    );
   }
 }

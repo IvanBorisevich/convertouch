@@ -27,19 +27,26 @@ class ConversionParamSetModel extends IdNameSearchableItemModel {
 
   @override
   Map<String, dynamic> toJson({bool removeNulls = true}) {
-    return {
+    var result = {
       "id": id,
       "name": name,
       "iconName": iconName,
       "mandatory": mandatory,
       "groupId": groupId,
     };
+
+    if (removeNulls) {
+      result.removeWhere((key, value) => value == null);
+    }
+
+    return result;
   }
 
   static ConversionParamSetModel? fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return null;
     }
+
     return ConversionParamSetModel(
       id: json["id"] ?? -1,
       name: json["name"],

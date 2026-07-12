@@ -4,8 +4,8 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
@@ -299,6 +299,58 @@ void main() {
       });
     });
 
+    group("Calculate param value by src value", () {
+      test(
+          "Should NOT calculate param 'Height' [cm: 162-168 -> 162-168] "
+          "in empty conversion (i. e. src value does not exist)", () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          heightParam,
+          womanShirtHeightRangesFrom0_156To186InCm.items[2],
+          null,
+          unit: centimeter,
+          calculated: true,
+          listValuesFetchResult: womanShirtHeightRangesFrom0_156To186InCm,
+        );
+
+        final expectedParamValue = currentParamValue;
+
+        await testCase(
+          conversionGroup: clothesSizeGroup,
+          paramSetValue: ConversionParamSetValueModel.compact(
+            paramSet: clothesSizeParamSet,
+            paramValues: [
+              (
+                personParam,
+                "Woman",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: personParamListValues,
+              ),
+              (
+                garmentParam,
+                "Shirt",
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: garmentParamListValues,
+              ),
+              (
+                heightParam,
+                womanShirtHeightRangesFrom0_156To186InCm.items[2],
+                null,
+                unit: meter,
+                calculated: false,
+                listValuesFetchResult: womanShirtHeightRangesFrom0_156To186InCm,
+              ),
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
+    });
+
     group('Replace list param unit', () {
       test("Should change param 'Bar Weight' unit [20 kg -> 44 lb]", () async {
         final currentParamValue = ConversionParamValueModel.tuple(
@@ -528,12 +580,13 @@ void main() {
       });
 
       test(
-          "Should recalculate default value of param 'One Side Weight' kg "
-          "by empty src value (calculated = true), ", () async {
+          "Should calculate default value of param 'One Side Weight' kg "
+          "in empty conversion (i. e. src value does not exist) (calculated = true)",
+          () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
-          20,
+          null,
           unit: kilogram,
           calculated: true,
         );
@@ -541,7 +594,7 @@ void main() {
         final expectedParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
-          null,
+          1,
           unit: kilogram,
           calculated: true,
         );
@@ -564,6 +617,45 @@ void main() {
           expectedParamValue: expectedParamValue,
         );
       });
+
+      test(
+          "Should keep current main value of param 'One Side Weight' kg "
+              "in empty conversion (i. e. src value does not exist) (calculated = true)",
+              () async {
+            final currentParamValue = ConversionParamValueModel.tuple(
+              oneSideWeightParam,
+              20,
+              null,
+              unit: kilogram,
+              calculated: true,
+            );
+
+            final expectedParamValue = ConversionParamValueModel.tuple(
+              oneSideWeightParam,
+              20,
+              null,
+              unit: kilogram,
+              calculated: true,
+            );
+
+            await testCase(
+              conversionGroup: massGroup,
+              paramSetValue: ConversionParamSetValueModel(
+                paramSet: barbellWeightParamSet,
+                paramValues: [
+                  ConversionParamValueModel.tuple(
+                    barWeightParam,
+                    null,
+                    null,
+                    unit: kilogram,
+                  ),
+                  currentParamValue,
+                ],
+              ),
+              currentParamValue: currentParamValue,
+              expectedParamValue: expectedParamValue,
+            );
+          });
     });
 
     group("Should NOT calculate value of param 'One Side Weight' kg", () {
