@@ -65,7 +65,7 @@ class ConversionController {
   void addUnitsToConversion(
     BuildContext context, {
     List<int> unitIds = const [],
-    required bool conversionHasItems,
+    required bool conversionHasUnitValuesOrParams,
   }) {
     conversionItemController.resetUnitValues(context);
 
@@ -78,7 +78,7 @@ class ConversionController {
       ),
     );
 
-    if (conversionHasItems) {
+    if (conversionHasUnitValuesOrParams) {
       navigationController.navigateBack(context);
     } else {
       navigationController.navigateTo(
