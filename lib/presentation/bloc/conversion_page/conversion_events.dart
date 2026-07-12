@@ -16,10 +16,22 @@ abstract class ConversionEvent extends ConvertouchEvent {
   final void Function(
     ConversionModel, {
     ConvertouchException? info,
-  })? onConversionUpdated;
+  })? onConversionParamValuesUpdated;
+
+  final void Function(
+    ConversionModel, {
+    ConvertouchException? info,
+  })? onConversionUnitValuesUpdated;
+
+  final void Function(
+      ConversionModel, {
+      ConvertouchException? info,
+      })? doAfter;
 
   const ConversionEvent({
-    this.onConversionUpdated,
+    this.onConversionParamValuesUpdated,
+    this.onConversionUnitValuesUpdated,
+    this.doAfter,
     super.onError,
     required this.rebuildUnitValues,
     required this.rebuildParams,
@@ -34,7 +46,9 @@ abstract class ConversionParamsEvent extends ConversionEvent {
     this.ifParamSetFilled,
     this.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
     required super.rebuildUnitValues,
     required super.rebuildParams,
   });
@@ -68,7 +82,6 @@ class SaveConversion extends ConversionEvent {
   const SaveConversion({
     required this.conversion,
     super.onError,
-    super.onConversionUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -83,7 +96,7 @@ class CleanupConversion extends ConversionEvent {
   const CleanupConversion({
     required this.keepParams,
     super.onError,
-    super.onConversionUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: !keepParams);
 
   @override
@@ -100,8 +113,7 @@ class MoveConversionUnitValue extends ConversionEvent {
   const MoveConversionUnitValue({
     required this.oldIndex,
     required this.newIndex,
-    super.onError,
-    super.onConversionUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
@@ -124,7 +136,6 @@ class EditConversionGroup extends ConversionEvent {
   const EditConversionGroup({
     required this.editedGroup,
     super.onError,
-    super.onConversionUpdated,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -144,7 +155,8 @@ class AddUnitsToConversion extends ConversionEvent {
   const AddUnitsToConversion({
     required this.unitIds,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
@@ -164,7 +176,8 @@ class EditConversionUnit extends ConversionEvent {
   const EditConversionUnit({
     required this.editedUnit,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -190,7 +203,9 @@ class EditConversionUnitValue extends ConversionEvent {
     this.listValues,
     required this.unitId,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -216,7 +231,8 @@ class UpdateConversionCoefficients extends ConversionEvent {
   const UpdateConversionCoefficients({
     required this.newCoefficients,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -236,6 +252,8 @@ class RemoveConversionItems extends ConversionEvent {
   const RemoveConversionItems({
     required this.unitIds,
     super.onError,
+    super.onConversionParamValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
   @override
@@ -259,7 +277,8 @@ class ReplaceConversionItemUnit extends ConversionEvent {
     required this.newUnit,
     required this.oldUnitId,
     required this.recalculationMode,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
@@ -287,7 +306,7 @@ class AddParamSetsToConversion extends ConversionParamsEvent {
     required this.paramSetIds,
     required this.fetchListValues,
     super.ifParamSetFilled,
-    super.onConversionUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -305,7 +324,8 @@ class AddParamSetsToConversion extends ConversionParamsEvent {
 
 class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
   const RemoveSelectedParamSetFromConversion({
-    super.onConversionUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -317,7 +337,8 @@ class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
 
 class RemoveAllParamSetsFromConversion extends ConversionParamsEvent {
   const RemoveAllParamSetsFromConversion({
-    super.onConversionUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -333,7 +354,8 @@ class SelectParamSetInConversion extends ConversionParamsEvent {
   const SelectParamSetInConversion({
     required this.newSelectedParamSetIndex,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
   @override
@@ -364,7 +386,9 @@ class EditConversionParamValue extends ConversionParamsEvent {
     super.ifParamSetFilled,
     super.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
   @override
@@ -395,7 +419,9 @@ class ReplaceConversionParamUnit extends ConversionParamsEvent {
     required this.newUnit,
     required this.paramId,
     required this.paramSetId,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.onConversionUnitValuesUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
@@ -422,7 +448,8 @@ class ToggleCalculableParam extends ConversionParamsEvent {
   const ToggleCalculableParam({
     required this.paramId,
     required this.paramSetId,
-    super.onConversionUpdated,
+    super.onConversionParamValuesUpdated,
+    super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 

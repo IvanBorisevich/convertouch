@@ -509,7 +509,15 @@ class ConversionBloc
         ),
       );
 
-      event.onConversionUpdated?.call(result.right);
+      if (!event.rebuildParams) {
+        event.onConversionParamValuesUpdated?.call(result.right);
+      }
+
+      if (!event.rebuildUnitValues) {
+        event.onConversionUnitValuesUpdated?.call(result.right);
+      }
+
+      event.doAfter?.call(result.right);
     }
   }
 

@@ -99,7 +99,7 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           final updatedUnitValue = updatedConversion.convertedUnitValues
               .firstWhereOrNull(
                   (unitValue) => unitValue.unit.id == modifiedUnit.id);
@@ -131,7 +131,7 @@ class ConversionController {
         newUnit: newUnit,
         oldUnitId: currentUnitId,
         recalculationMode: recalculationMode,
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionParamValuesUpdated: (updatedConversion, {info}) {
           if (updatedConversion.params?.active?.paramValues != null) {
             for (final paramValue
                 in updatedConversion.params!.active!.paramValues) {
@@ -142,7 +142,8 @@ class ConversionController {
               );
             }
           }
-
+        },
+        doAfter: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -163,7 +164,7 @@ class ConversionController {
         newValue: newValue,
         listValues: listValues,
         unitId: unitId,
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionParamValuesUpdated: (updatedConversion, {info}) {
           if (updatedConversion.params?.active?.paramValues != null) {
             for (final paramValue
                 in updatedConversion.params!.active!.paramValues) {
@@ -174,7 +175,8 @@ class ConversionController {
               );
             }
           }
-
+        },
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -221,7 +223,7 @@ class ConversionController {
         newUnit: newUnit,
         paramId: param.id,
         paramSetId: param.paramSetId,
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionParamValuesUpdated: (updatedConversion, {info}) {
           final updatedParamValue = updatedConversion.params
               ?.getParamSetValueById(param.paramSetId)
               ?.getParamValueById(param.id);
@@ -233,7 +235,8 @@ class ConversionController {
               newParamValue: updatedParamValue,
             );
           }
-
+        },
+        doAfter: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -262,7 +265,7 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionParamValuesUpdated: (updatedConversion, {info}) {
           for (final paramValue
               in updatedConversion.params!.active!.paramValues) {
             conversionItemController.updateParamValue(
@@ -271,7 +274,8 @@ class ConversionController {
               newParamValue: paramValue,
             );
           }
-
+        },
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -295,7 +299,7 @@ class ConversionController {
       ToggleCalculableParam(
         paramId: paramId,
         paramSetId: paramSetId,
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionParamValuesUpdated: (updatedConversion, {info}) {
           final updatedParamValue = updatedConversion.params
               ?.getParamSetValueById(paramSetId)
               ?.getParamValueById(paramId);
@@ -321,7 +325,7 @@ class ConversionController {
         onError: (error) {
           navigationController.showException(context, exception: error);
         },
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -341,7 +345,7 @@ class ConversionController {
 
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveSelectedParamSetFromConversion(
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -364,7 +368,7 @@ class ConversionController {
 
     BlocProvider.of<ConversionBloc>(context).add(
       RemoveAllParamSetsFromConversion(
-        onConversionUpdated: (updatedConversion, {info}) {
+        onConversionUnitValuesUpdated: (updatedConversion, {info}) {
           for (final unitValue in updatedConversion.convertedUnitValues) {
             conversionItemController.updateUnitValue(
               context,
@@ -393,7 +397,7 @@ class ConversionController {
       AddParamSetsToConversion(
         paramSetIds: paramSetIds,
         fetchListValues: fetchListValues,
-        onConversionUpdated: (updatedConversion, {info}) {
+        doAfter: (updatedConversion, {info}) {
           navigationController.navigateBack(context);
         },
         onError: (error) {
@@ -443,7 +447,7 @@ class ConversionController {
       BlocProvider.of<ConversionBloc>(context).add(
         UpdateConversionCoefficients(
           newCoefficients: data,
-          onConversionUpdated: (updatedConversion, {info}) {
+          onConversionUnitValuesUpdated: (updatedConversion, {info}) {
             for (final unitValue in updatedConversion.convertedUnitValues) {
               conversionItemController.updateUnitValue(
                 context,
