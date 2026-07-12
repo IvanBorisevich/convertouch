@@ -68,9 +68,7 @@ class ConvertouchUnitsPageForConversion extends StatelessWidget {
                             );
                           },
                         ),
-                        !unitGroup.refreshable &&
-                                unitGroup.conversionType !=
-                                    ConversionType.formula
+                        unitGroup.expandable
                             ? PopupMenuItemModel(
                                 text: 'Add Unit',
                                 icon: Icons.add,

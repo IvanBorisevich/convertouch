@@ -58,6 +58,9 @@ class UnitGroupModel extends IdNameSearchableItemModel {
 
   bool get exists => this != none;
 
+  bool get expandable =>
+      !refreshable && conversionType != ConversionType.formula;
+
   @override
   List<Object?> get props => [
         id,
