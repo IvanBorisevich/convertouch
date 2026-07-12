@@ -1,13 +1,11 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
-import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/unit_groups_page/unit_groups_bloc.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/unit_group_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
@@ -63,24 +61,10 @@ class ConversionGroupsPage extends StatelessWidget {
                     context,
                     unitGroup: unitGroup,
                     processCurrentConversion: (conversion) {
-                      refreshButtonController.changeState(
-                        context,
-                        unitGroupId: conversion.unitGroup.id,
-                        visible: conversion.unitGroup.refreshable,
-                        disabled: !conversion.readyToRefresh,
-                      );
-
                       if (conversion.hasValuesOrAddedParams) {
                         navigationController.navigateTo(
                           context,
                           pageName: PageName.conversionPage,
-                        );
-
-                        refreshButtonController.changeState(
-                          context,
-                          unitGroupId: conversion.unitGroup.id,
-                          visible: conversion.unitGroup.refreshable,
-                          disabled: !areParamsFilled(conversion.params?.active),
                         );
 
                         refreshingJobController.getJobs(

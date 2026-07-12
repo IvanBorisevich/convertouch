@@ -4,7 +4,6 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
@@ -59,13 +58,6 @@ class ConversionParamItem extends StatelessWidget {
               newValue: value,
               listValues: listValues,
               ifParamSetFilled: (conversion) {
-                refreshButtonController.changeState(
-                  context,
-                  unitGroupId: conversion.unitGroup.id,
-                  visible: conversion.unitGroup.refreshable,
-                  disabled: false,
-                );
-
                 if (appState.refreshOnParamsChange) {
                   refreshingJobController.startRefreshingJob(
                     context,
@@ -77,13 +69,6 @@ class ConversionParamItem extends StatelessWidget {
                 }
               },
               ifParamSetFilledPartiallyOrEmpty: (conversion) {
-                refreshButtonController.changeState(
-                  context,
-                  unitGroupId: conversion.unitGroup.id,
-                  visible: conversion.unitGroup.refreshable,
-                  disabled: false,
-                );
-
                 refreshingJobController.stopRefreshingJob(
                   context,
                   unitGroupName: conversion.unitGroup.name,

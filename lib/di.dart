@@ -69,7 +69,6 @@ import 'package:convertouch/presentation/bloc/common/input_validation/input_vali
 import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/navigation/navigation_bloc.dart';
-import 'package:convertouch/presentation/bloc/common/refresh_button/refresh_button_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/sliding_panel_bloc/sliding_panel_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/tooltip/tooltip_bloc.dart';
@@ -87,7 +86,6 @@ import 'package:convertouch/presentation/controller/conversion_item_controller.d
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
-import 'package:convertouch/presentation/controller/refresh_button_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/settings_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
@@ -450,10 +448,6 @@ Future<void> _initBloc() async {
     () => AppBloc(),
   );
 
-  locator.registerLazySingleton<RefreshButtonBloc>(
-    () => RefreshButtonBloc(),
-  );
-
   locator.registerLazySingleton<InputValidationBloc>(
     () => InputValidationBloc(
       validateInputUseCase: locator(),
@@ -593,10 +587,6 @@ Future<void> _initBloc() async {
 Future<void> _initControllers() async {
   locator.registerLazySingleton<NavigationController>(
     () => const NavigationController(),
-  );
-
-  locator.registerLazySingleton<RefreshButtonController>(
-    () => const RefreshButtonController(),
   );
 
   locator.registerLazySingleton<ConversionGroupsController>(

@@ -132,6 +132,7 @@ class ConversionModel extends IdNameItemModel {
         'group: ${unitGroup.name} (id = ${unitGroup.id}),\n'
         'params: ${params ?? '-'},\n'
         'src: $srcUnitValue,\n'
-        'items: [\n\t${convertedUnitValues.join("\n\t")}\n]\n}';
+        'items: [\n\t${convertedUnitValues.join("\n\t")}\n],\n'
+        'readyToRefresh: $readyToRefresh\n}';
   }
 }
