@@ -712,9 +712,9 @@ class _ListField extends StatefulWidget {
 }
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
-  late bool _isDropdownOpen;
   late bool _isDropdownStateChangedProgrammatically;
 
+  late final ValueNotifier<bool> _dropdownIsOpenNotifier;
   late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
   late final ValueNotifier<ValueModel?> _selectedMainValueNotifier;
   late final ValueNotifier<ValueModel> _hintNotifier;
@@ -727,9 +727,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void initState() {
     super.initState();
 
-    _isDropdownOpen = false;
     _isDropdownStateChangedProgrammatically = false;
 
+    _dropdownIsOpenNotifier = ValueNotifier(false);
     _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
     _selectedMainValueNotifier = ValueNotifier(null);
     _hintNotifier = ValueNotifier(_noValueHint);
@@ -811,7 +811,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
       listeners: [
         BlocListener<RootScreenBloc, RootScreenState>(
           listener: (_, rootScreenState) {
-            if (_isDropdownOpen) {
+            if (_dropdownIsOpenNotifier.value) {
               Navigator.of(context).pop();
             }
           },
@@ -855,7 +855,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             }
 
             /* WA to refresh dropdown list values instantly */
-            if (_isDropdownOpen && !listFetchResult.isLoading) {
+            if (_dropdownIsOpenNotifier.value && !listFetchResult.isLoading) {
               log("Auto-closing the dropdown when list fetch finished");
 
               _isDropdownStateChangedProgrammatically = true;
@@ -928,9 +928,15 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         ).toList();
                       },
                       iconStyleData: IconStyleData(
-                        icon: _suffixRefreshIcon(
-                          context,
-                          listValuesFetchResult: listValuesFetchResult,
+                        icon: ValueListenableBuilder(
+                          valueListenable: _dropdownIsOpenNotifier,
+                          builder: (_, isOpen, child) {
+                            return _suffixRefreshIcon(
+                              context,
+                              listValuesFetchResult: listValuesFetchResult,
+                              isDropdownOpen: isOpen,
+                            );
+                          },
                         ),
                       ),
                       dropdownStyleData: DropdownStyleData(
@@ -1067,9 +1073,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                           _dropdownSearchController?.clear();
                         }
 
-                        setState(() {
-                          _isDropdownOpen = isOpen;
-                        });
+                        _dropdownIsOpenNotifier.value = isOpen;
                       },
                     );
                   },
@@ -1116,8 +1120,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   Widget _suffixRefreshIcon(
     BuildContext context, {
     ListValuesFetchResult? listValuesFetchResult,
+    bool isDropdownOpen = false,
   }) {
-    if (listValuesFetchResult == null || _isDropdownOpen) {
+    if (listValuesFetchResult == null || isDropdownOpen) {
       return _defaultSuffixIcon();
     }
 
