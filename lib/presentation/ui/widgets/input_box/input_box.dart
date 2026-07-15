@@ -734,7 +734,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     _selectedMainValueNotifier = ValueNotifier(null);
     _hintNotifier = ValueNotifier(_noValueHint);
 
-    log("init state model: ${widget.model}");
+    log("list field initState(), widget model: ${widget.model}");
 
     _distributeSelectedValue(
       selectedValue: widget.model.value,
@@ -768,8 +768,6 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     ValueModel? hintValue =
         showUnknownSelectedValue ? selectedValue : _noValueHint;
 
-    log("Main value: $mainValue, hint: $hintValue");
-
     _selectedMainValueNotifier.value = mainValue;
     _hintNotifier.value = hintValue;
   }
@@ -792,6 +790,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   @override
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    log("list field didUpdateWidget(), widget model: ${widget.model}");
 
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
 
@@ -830,10 +830,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
             _listValuesNotifier.value = listFetchResult;
 
-            log("List values fetched: $listFetchResult");
+            log("ListValuesBloc listener, "
+                "list values fetched: $listFetchResult");
 
             if (validatedSelectedValue != null) {
-              log("Preselect list value: $validatedSelectedValue");
+              log("ListValuesBloc listener, "
+                  "preselected list value: $validatedSelectedValue");
 
               _distributeSelectedValue(
                 selectedValue: validatedSelectedValue,
@@ -918,9 +920,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       },
                       hint: _listItem(hint),
                       /*
-        selectedItemBuilder is used as a workaround in order to align paddings between
-        DropdownButtonFormField2, its label over the border and DropdownMenuItem
-         */
+                         WA to align paddings between
+                        DropdownButtonFormField2, its label over the border
+                        and DropdownMenuItem
+                      */
                       selectedItemBuilder: (context) {
                         return (listValuesFetchResult?.items ?? []).map(
                           (value) {
