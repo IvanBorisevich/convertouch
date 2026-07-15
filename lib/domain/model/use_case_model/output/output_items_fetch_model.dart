@@ -66,12 +66,12 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
         error = null;
 
   const OutputItemsFetchModel.successEmpty({
-    this.items = const [],
     this.selectedItem,
     this.searchString,
     this.pageNum = 0,
     this.fetchParams,
-  })  : status = FetchingStatus.success,
+  })  : items = const [],
+        status = FetchingStatus.success,
         error = null,
         hasReachedMax = true;
 

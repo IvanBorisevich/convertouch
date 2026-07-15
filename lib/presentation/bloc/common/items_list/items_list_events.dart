@@ -85,7 +85,15 @@ class RemoveItems extends ItemsListEvent {
 
   @override
   String toString() {
-    return 'RemoveItems{'
-        'ids: $ids}';
+    return 'RemoveItems{ids: $ids}';
+  }
+}
+
+class CancelFetch extends ItemsListEvent {
+  const CancelFetch();
+
+  @override
+  String toString() {
+    return 'CancelFetch{}';
   }
 }

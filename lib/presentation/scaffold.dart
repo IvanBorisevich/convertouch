@@ -174,6 +174,10 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                     return;
                   }
 
+                  BlocProvider.of<ListValuesBloc>(context).add(
+                    const CancelFetch(),
+                  );
+
                   if (state.closeUiElements) {
                     navKey.currentState?.pop();
                   }

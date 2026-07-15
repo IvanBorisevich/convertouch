@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -11,7 +12,7 @@ class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
 
   ListValuesBloc({
     required this.fetchListValuesUseCase,
-  });
+  }) : super(fetchItemsEventTransformer: restartable());
 
   @override
   Future<Either<ConvertouchException, ListValuesFetchResult>> fetchBatch(

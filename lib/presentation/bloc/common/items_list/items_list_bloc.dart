@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:async/async.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
@@ -24,24 +25,37 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         P extends ItemsFetchParams>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T, P>> {
-  ItemsListBloc()
-      : super(
+  final EventTransformer<FetchItems<P>>? fetchItemsEventTransformer;
+
+  CancelableOperation<
+          Either<ConvertouchException, OutputItemsFetchModel<T, P>>>?
+      _cancellableOperation;
+
+  ItemsListBloc({
+    this.fetchItemsEventTransformer,
+  }) : super(
           ItemsFetched<T, P>(
             itemsFetch: const OutputItemsFetchModel.successEmpty(),
           ),
         ) {
     on<FetchItems<P>>(
       _onFetchItems,
-      transformer: throttleDroppable(throttleDuration),
+      transformer: this.fetchItemsEventTransformer ??
+          throttleDroppable(throttleDuration),
     );
     on<SaveItem<T>>(_onSaveItem);
     on<RemoveItems>(_onRemoveItems);
+    on<CancelFetch>(_onCancelFetch);
   }
 
   _onFetchItems<E extends FetchItems>(
     FetchItems<P> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
+    log('onFetchItems() event handler');
+
+    await _cancellableOperation?.cancel();
+
     emit(
       ItemsFetched<T, P>(
         itemsFetch: OutputItemsFetchModel.loading(
@@ -79,14 +93,21 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     }
 
     try {
-      final newBatch = await fetchBatch(
-        InputItemsFetchModel(
-          searchString: searchString,
-          pageSize: event.pageSize,
-          pageNum: pageNum,
-          fetchParams: params,
+      _cancellableOperation = CancelableOperation.fromFuture(
+        fetchBatch(
+          InputItemsFetchModel(
+            searchString: searchString,
+            pageSize: event.pageSize,
+            pageNum: pageNum,
+            fetchParams: params,
+          ),
         ),
+        onCancel: () => log('Operation explicitly cancelled!'),
       );
+
+      final newBatch = await _cancellableOperation!.value;
+
+      log("newBatch: $newBatch");
 
       if (newBatch.isLeft) {
         throw newBatch.left;
@@ -167,6 +188,15 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     event.onSuccess?.call();
   }
 
+  _onCancelFetch(
+    CancelFetch event,
+    Emitter<ItemsFetched<T, P>> emit,
+  ) async {
+    if (_cancellableOperation?.isCanceled == false) {
+      await _cancellableOperation?.cancel();
+    }
+  }
+
   Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> fetchBatch(
     InputItemsFetchModel<P> input,
   );
@@ -174,4 +204,13 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
   Future<Either<ConvertouchException, T>> saveItem(T item);
 
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids);
+
+  @override
+  Future<void> close() async {
+    if (_cancellableOperation?.isCanceled == false) {
+      await _cancellableOperation?.cancel();
+    }
+
+    return super.close();
+  }
 }
