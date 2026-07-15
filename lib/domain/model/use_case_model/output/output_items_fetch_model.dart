@@ -1,10 +1,17 @@
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:equatable/equatable.dart';
+
+enum FetchingStatus {
+  success,
+  loading,
+  failure,
+}
+
+const int _nonSearchableListItemsMinLimit = 5;
 
 class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     P extends ItemsFetchParams> extends Equatable {
@@ -92,9 +99,17 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     );
   }
 
-  bool get isFinalEmpty =>
-      items.isEmpty &&
-      (status == FetchingStatus.success || status == FetchingStatus.failure);
+  bool get isLoading => status == FetchingStatus.loading;
+
+  bool get isFailed => status == FetchingStatus.failure;
+
+  bool get isSuccess => status == FetchingStatus.success;
+
+  bool get isEmpty => items.isEmpty;
+
+  bool get isFinalEmpty => isEmpty && hasReachedMax;
+
+  bool get searchable => items.length > _nonSearchableListItemsMinLimit;
 
   @override
   List<Object?> get props => [

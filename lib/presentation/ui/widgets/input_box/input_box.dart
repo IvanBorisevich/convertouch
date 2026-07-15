@@ -157,9 +157,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     ListValuesFetchResult? listValues,
   })? _onValueChanged;
   late final TextEditingController _controller;
-  late final ValueNotifier<bool> _closeIconNotifier;
-  late final ValueNotifier<bool> _refreshProgressIconNotifier;
-  late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
+  late final ValueNotifier<bool> _closeIconVisibilityNotifier;
   late InputBoxViewModel _inputBoxModel;
 
   late Color _backgroundColor;
@@ -190,12 +188,10 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
 
-    _closeIconNotifier = ValueNotifier(false);
-    _refreshProgressIconNotifier = ValueNotifier(widget.model.listType != null);
-    _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
+    _closeIconVisibilityNotifier = ValueNotifier(false);
 
     _onValueChanged = (value, {listValues}) {
-      _closeIconNotifier.value =
+      _closeIconVisibilityNotifier.value =
           _inputBoxModel is! ListBoxViewModel && value.hasRawValue;
       widget.onValueChanged?.call(value, listValues: listValues);
     };
@@ -207,7 +203,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
       onFocusSelected: () {
         if (!mounted) return;
 
-        _closeIconNotifier.value =
+        _closeIconVisibilityNotifier.value =
             _inputBoxModel is! ListBoxViewModel && _controller.text.isNotEmpty;
 
         setState(() {
@@ -217,7 +213,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
       onFocusLeft: () {
         if (!mounted) return;
 
-        _closeIconNotifier.value = false;
+        _closeIconVisibilityNotifier.value = false;
 
         setState(() {
           _setColors();
@@ -241,9 +237,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
       );
     }
 
-    _closeIconNotifier.dispose();
-    _refreshProgressIconNotifier.dispose();
-    _listValuesNotifier.dispose();
+    _closeIconVisibilityNotifier.dispose();
 
     super.dispose();
   }
@@ -267,9 +261,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelText: widget.labelText,
       );
     }
-
-    _listValuesNotifier.value = widget.model.listValuesFetchResult;
-    _refreshProgressIconNotifier.value = widget.model.listType != null;
   }
 
   void _setColors() {
@@ -345,7 +336,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
               ),
             ),
             _suffixCloseIcon(context),
-            _suffixRefreshProgressIcon(context),
             ...widget.suffixWidgets.mapIndexed(
               (index, suffixWidget) => suffixWidget != null
                   ? Row(
@@ -412,9 +402,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         model: model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
-        refreshProgressIconNotifier: _refreshProgressIconNotifier,
-        listValuesNotifier: _listValuesNotifier,
         foregroundColor: _foregroundColor,
+        warningColor: widget.colors.textBox.foreground.warning,
         hintColor: _hintColor,
         labelColor: _labelColor,
         fontSize: widget.fontSize,
@@ -432,92 +421,11 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     );
   }
 
-  Widget _suffixRefreshProgressIcon(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: _listValuesNotifier,
-      builder: (_, listValuesFetchResult, child) {
-        if (listValuesFetchResult == null) {
-          return const SizedBox.shrink();
-        }
-
-        if (listValuesFetchResult.status == FetchingStatus.failure) {
-          return GestureDetector(
-            onTap: () {
-              showConvertouchDialog(
-                currentTheme: ConvertouchUITheme.dark,
-                context: context,
-                builder: (context, setStateDialog) {
-                  return ConvertouchFailureDialog(
-                    title: "Fetch failed",
-                    handlerFunc: () {
-                      BlocProvider.of<ListValuesBloc>(context).add(
-                        FetchItems(
-                          fetchParams: listValuesFetchResult.fetchParams,
-                        ),
-                      );
-                    },
-                    handlerActionName: "Retry",
-                    content: Text(
-                      listValuesFetchResult.error?.message ?? _fetchErrorMsg,
-                      style: _inputFieldTextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        foregroundColor: widget.dialogColors.foreground.regular,
-                      ),
-                    ),
-                    colors: widget.dialogColors,
-                  );
-                },
-              ).then((returnedValue) {});
-            },
-            child: Container(
-              height: double.infinity,
-              padding: const EdgeInsets.only(right: 14),
-              color: Colors.transparent,
-              child: Icon(
-                Icons.sync_problem_rounded,
-                color: widget.colors.textBox.foreground.warning,
-                size: 25,
-              ),
-            ),
-          );
-        }
-
-        return ValueListenableBuilder(
-          valueListenable: _refreshProgressIconNotifier,
-          builder: (_, refreshIconVisible, child) {
-            if (!refreshIconVisible ||
-                listValuesFetchResult.status != FetchingStatus.loading) {
-              return const SizedBox.shrink();
-            }
-
-            return Container(
-              padding: const EdgeInsets.only(right: 14),
-              color: Colors.transparent,
-              child: Container(
-                width: _refreshButtonWidth,
-                height: _refreshButtonWidth,
-                color: Colors.transparent,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(2),
-                child: CircularProgressIndicator(
-                  strokeCap: StrokeCap.round,
-                  strokeWidth: 2,
-                  color: _foregroundColor,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   Widget _suffixCloseIcon(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: _closeIconNotifier,
-      builder: (_, value, child) {
-        if (!value) {
+      valueListenable: _closeIconVisibilityNotifier,
+      builder: (_, visible, child) {
+        if (!visible) {
           return const SizedBox.shrink();
         }
 
@@ -768,9 +676,8 @@ class _ListField extends StatefulWidget {
     required this.model,
     this.controller,
     this.onValueChanged,
-    required this.refreshProgressIconNotifier,
-    required this.listValuesNotifier,
     required this.foregroundColor,
+    required this.warningColor,
     required this.hintColor,
     required this.labelColor,
     required this.fontSize,
@@ -788,9 +695,8 @@ class _ListField extends StatefulWidget {
     ValueModel, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final ValueNotifier<bool> refreshProgressIconNotifier;
-  final ValueNotifier<ListValuesFetchResult?> listValuesNotifier;
   final Color foregroundColor;
+  final Color warningColor;
   final Color hintColor;
   final Color labelColor;
   final double fontSize;
@@ -807,8 +713,10 @@ class _ListField extends StatefulWidget {
 
 class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   late bool _isDropdownOpen;
+  late bool _isDropdownStateChangedProgrammatically;
 
-  late final ValueNotifier<ValueModel?> _mainValueNotifier;
+  late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
+  late final ValueNotifier<ValueModel?> _selectedMainValueNotifier;
   late final ValueNotifier<ValueModel> _hintNotifier;
   late final ValueNotifier<Object?> _openDropdownNotifier;
 
@@ -820,43 +728,50 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     super.initState();
 
     _isDropdownOpen = false;
+    _isDropdownStateChangedProgrammatically = false;
 
-    _mainValueNotifier = ValueNotifier(
-      _getMainValue(
-        selectedValue: widget.model.value,
-        showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
-      ),
-    );
+    _listValuesNotifier = ValueNotifier(widget.model.listValuesFetchResult);
+    _selectedMainValueNotifier = ValueNotifier(null);
+    _hintNotifier = ValueNotifier(_noValueHint);
 
-    _hintNotifier = ValueNotifier(
-      _getHint(
-        mainValue: widget.model.value,
-        showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
-      ),
+    log("init state model: ${widget.model}");
+
+    _distributeSelectedValue(
+      selectedValue: widget.model.value,
+      listValuesFetchResult: widget.model.listValuesFetchResult,
     );
 
     _openDropdownNotifier = ValueNotifier<Object?>(null);
 
-    if (widget.model.searchEnabled) {
+    if (widget.model.listValuesFetchResult?.searchable == true) {
       _initDropdownSearch();
     }
   }
 
-  ValueModel? _getMainValue({
-    required ValueModel? selectedValue,
-    required bool showUnknownSelectedValue,
-  }) {
-    ValueModel? result = showUnknownSelectedValue ? null : selectedValue;
-    return result;
+  bool _fetchNewListValues(ListValuesFetchResult? listValuesFetchResult) {
+    return listValuesFetchResult == null ||
+        listValuesFetchResult.isEmpty &&
+            !listValuesFetchResult.hasReachedMax &&
+            !listValuesFetchResult.isFailed;
   }
 
-  ValueModel _getHint({
-    required ValueModel? mainValue,
-    required bool showUnknownSelectedValue,
+  void _distributeSelectedValue({
+    required ValueModel? selectedValue,
+    required ListValuesFetchResult? listValuesFetchResult,
   }) {
-    ValueModel? result =
-        showUnknownSelectedValue ? (mainValue ?? _noValueHint) : _noValueHint;
-    return result;
+    bool showUnknownSelectedValue = selectedValue != null &&
+        (listValuesFetchResult == null ||
+            listValuesFetchResult.isEmpty ||
+            listValuesFetchResult.selectedItem == null);
+
+    ValueModel? mainValue = showUnknownSelectedValue ? null : selectedValue;
+    ValueModel? hintValue =
+        showUnknownSelectedValue ? selectedValue : _noValueHint;
+
+    log("Main value: $mainValue, hint: $hintValue");
+
+    _selectedMainValueNotifier.value = mainValue;
+    _hintNotifier.value = hintValue;
   }
 
   void _initDropdownSearch() {
@@ -869,7 +784,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     disposeFocusNode(focusNode: _dropdownSearchFocusNode);
     _openDropdownNotifier.dispose();
     _dropdownSearchController?.dispose();
-    _mainValueNotifier.dispose();
+    _selectedMainValueNotifier.dispose();
     _hintNotifier.dispose();
     super.dispose();
   }
@@ -878,17 +793,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void didUpdateWidget(_ListField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _mainValueNotifier.value = _getMainValue(
+    _listValuesNotifier.value = widget.model.listValuesFetchResult;
+
+    _distributeSelectedValue(
       selectedValue: widget.model.value,
-      showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
+      listValuesFetchResult: widget.model.listValuesFetchResult,
     );
 
-    _hintNotifier.value = _getHint(
-      mainValue: widget.model.value,
-      showUnknownSelectedValue: widget.model.showUnknownSelectedValue,
-    );
-
-    if (widget.model.searchEnabled) {
+    if (widget.model.listValuesFetchResult?.searchable == true) {
       _initDropdownSearch();
     }
   }
@@ -916,22 +828,21 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               return;
             }
 
-            widget.listValuesNotifier.value = listFetchResult;
+            _listValuesNotifier.value = listFetchResult;
 
             log("List values fetched: $listFetchResult");
 
             if (validatedSelectedValue != null) {
               log("Preselect list value: $validatedSelectedValue");
 
-              _mainValueNotifier.value = _getMainValue(
+              _distributeSelectedValue(
                 selectedValue: validatedSelectedValue,
-                showUnknownSelectedValue: false,
+                listValuesFetchResult: listFetchResult,
               );
 
-              _hintNotifier.value = _getHint(
-                mainValue: validatedSelectedValue,
-                showUnknownSelectedValue: false,
-              );
+              log("Separated values: "
+                  "main value: ${_selectedMainValueNotifier.value}, "
+                  "hint: ${_hintNotifier.value}");
 
               widget.onValueChanged?.call(
                 validatedSelectedValue,
@@ -939,16 +850,21 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
               );
             }
 
-            if (listFetchResult.items.length > nonSearchableListItemsMinLimit) {
+            if (listFetchResult.searchable) {
               _initDropdownSearch();
             }
 
-            /* WA to refresh dropdown list values (close + open the dropdown) */
-            if (_isDropdownOpen) {
+            /* WA to refresh dropdown list values instantly */
+            if (_isDropdownOpen && !listFetchResult.isLoading) {
+              log("Auto-closing the dropdown when list fetch finished");
+
+              _isDropdownStateChangedProgrammatically = true;
+
               Navigator.of(context).pop();
 
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
+                  log("Auto-opening the dropdown when list fetch finished");
                   _openDropdownNotifier.value = Object();
                 }
               });
@@ -957,12 +873,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
         ),
       ],
       child: ValueListenableBuilder(
-        valueListenable: widget.listValuesNotifier,
+        valueListenable: _listValuesNotifier,
         builder: (_, listValuesFetchResult, child) {
-          final items = _buildDropdownItems(listValuesFetchResult);
+          final items = _buildDropdownItems(context, listValuesFetchResult);
 
           return ValueListenableBuilder(
-            valueListenable: _mainValueNotifier,
+            valueListenable: _selectedMainValueNotifier,
             builder: (_, selectedValue, child) {
               return DropdownButtonHideUnderline(
                 child: ValueListenableBuilder(
@@ -970,7 +886,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                   builder: (_, hint, child) {
                     return DropdownButtonFormField2<ValueModel>(
                       items: items,
-                      valueListenable: _mainValueNotifier,
+                      valueListenable: _selectedMainValueNotifier,
                       openDropdownListenable: _openDropdownNotifier,
                       isExpanded: true,
                       decoration: _inputFieldDecoration(
@@ -995,37 +911,11 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       ),
                       onChanged: (listValue) {
                         if (listValue != null) {
-                          _mainValueNotifier.value = listValue;
+                          _selectedMainValueNotifier.value = listValue;
                           widget.onValueChanged?.call(listValue);
                         }
                       },
-                      hint: Row(
-                        children: [
-                          hint.iconUri != null
-                              ? Container(
-                                  width: _prefixIconContainerWidth,
-                                  padding: const EdgeInsets.only(
-                                    right: _prefixIconPadding,
-                                  ),
-                                  child: IconUtils.getSvgIcon(
-                                    hint.iconUri!,
-                                    color: widget.dropdownColors.icon.regular,
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                          Expanded(
-                            child: Text(
-                              hint.raw,
-                              style: _inputFieldTextStyle(
-                                fontSize: widget.fontSize,
-                                foregroundColor: hint != _noValueHint
-                                    ? widget.foregroundColor
-                                    : widget.hintColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      hint: _listItem(hint),
                       /*
         selectedItemBuilder is used as a workaround in order to align paddings between
         DropdownButtonFormField2, its label over the border and DropdownMenuItem
@@ -1033,42 +923,15 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       selectedItemBuilder: (context) {
                         return (listValuesFetchResult?.items ?? []).map(
                           (value) {
-                            return Row(
-                              children: [
-                                value.iconUri != null
-                                    ? Container(
-                                        width: _prefixIconContainerWidth,
-                                        padding: const EdgeInsets.only(
-                                          right: _prefixIconPadding,
-                                        ),
-                                        child: IconUtils.getSvgIcon(
-                                          value.iconUri!,
-                                          color: widget
-                                              .dropdownColors.icon.regular,
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                                Expanded(
-                                  child: Text(
-                                    selectedValue?.itemName ?? _noValueHint.raw,
-                                    style: _inputFieldTextStyle(
-                                      fontSize: widget.fontSize,
-                                      foregroundColor: widget.foregroundColor,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            );
+                            return _listItem(selectedValue ?? _noValueHint);
                           },
                         ).toList();
                       },
                       iconStyleData: IconStyleData(
-                        icon: Icon(
-                          Icons.expand_more_rounded,
-                          color: widget.foregroundColor,
+                        icon: _suffixRefreshIcon(
+                          context,
+                          listValuesFetchResult: listValuesFetchResult,
                         ),
-                        iconSize: 20,
                       ),
                       dropdownStyleData: DropdownStyleData(
                         scrollbarTheme: ScrollbarThemeData(
@@ -1164,7 +1027,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                                             searchValue, item.value) ??
                                     false;
                               },
-                              noResultsWidget: _noResultDropdownItem,
+                              noResultsWidget: _noResultsWidget(),
                             )
                           : null,
                       onMenuStateChange: (isOpen) {
@@ -1172,21 +1035,37 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                           return;
                         }
 
+                        if (_isDropdownStateChangedProgrammatically) {
+                          if (isOpen) {
+                            _isDropdownStateChangedProgrammatically = false;
+                          }
+
+                          return;
+                        }
+
                         if (isOpen) {
-                          if (listValuesFetchResult == null ||
-                              listValuesFetchResult.items.isEmpty) {
+                          if (_fetchNewListValues(listValuesFetchResult)) {
                             log("Fetch new list values, "
                                 "list type = ${widget.model.listType}");
 
-                            _fetchListValues();
+                            _fetchListValues(
+                              context,
+                              fetchParams: ListValuesFetchParams(
+                                itemId: widget.model.itemId,
+                                listType: widget.model.listType,
+                                selectedValue: selectedValue ??
+                                    (hint != _noValueHint ? hint : null),
+                                conversionGroupName:
+                                    widget.model.conversionGroupName,
+                                conversionParams: widget.model.conversionParams,
+                                leaveUnknownSelectedValue:
+                                    widget.model.listType.fetchedViaApi,
+                              ),
+                            );
                           }
                         } else {
                           _dropdownSearchController?.clear();
                         }
-
-                        widget.refreshProgressIconNotifier.value = !isOpen &&
-                            listValuesFetchResult?.status ==
-                                FetchingStatus.loading;
 
                         setState(() {
                           _isDropdownOpen = isOpen;
@@ -1203,39 +1082,113 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     );
   }
 
-  void _fetchListValues() {
-    BlocProvider.of<ListValuesBloc>(context).add(
-      FetchItems(
-        fetchParams: ListValuesFetchParams(
-          itemId: widget.model.itemId,
-          listType: widget.model.listType,
-          selectedValue: widget.model.value,
-          conversionGroupName: widget.model.conversionGroupName,
-          conversionParams: widget.model.conversionParams,
-          leaveUnknownSelectedValue: widget.model.listType.fetchedViaApi,
+  Widget _listItem(ValueModel value, {Widget? suffixIcon}) {
+    return Row(
+      children: [
+        value.iconUri != null && value != _noValueHint
+            ? Container(
+                width: _prefixIconContainerWidth,
+                padding: const EdgeInsets.only(
+                  right: _prefixIconPadding,
+                ),
+                child: IconUtils.getSvgIcon(
+                  value.iconUri!,
+                  color: widget.dropdownColors.icon.regular,
+                ),
+              )
+            : const SizedBox.shrink(),
+        Expanded(
+          child: Text(
+            value.itemName,
+            style: _inputFieldTextStyle(
+              fontSize: widget.fontSize,
+              foregroundColor: value != _noValueHint
+                  ? widget.foregroundColor
+                  : widget.hintColor,
+            ),
+          ),
         ),
-      ),
+        suffixIcon ?? const SizedBox.shrink(),
+      ],
     );
   }
 
+  Widget _suffixRefreshIcon(
+    BuildContext context, {
+    ListValuesFetchResult? listValuesFetchResult,
+  }) {
+    if (listValuesFetchResult == null || _isDropdownOpen) {
+      return _defaultSuffixIcon();
+    }
+
+    if (listValuesFetchResult.isFailed) {
+      return _refreshFailureItem(
+        context,
+        listValuesFetchResult: listValuesFetchResult,
+        child: _refreshFailureSuffixIcon(),
+      );
+    }
+
+    if (listValuesFetchResult.isLoading) {
+      return _refreshInProgressSuffixIcon();
+    }
+
+    return _defaultSuffixIcon();
+  }
+
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
+    BuildContext context,
     ListValuesFetchResult? listValuesFetchResult,
   ) {
-    if (listValuesFetchResult == null ||
-        listValuesFetchResult.status == FetchingStatus.loading) {
+    if (listValuesFetchResult == null || listValuesFetchResult.isLoading) {
+      log("Show refresh in progress icon");
+
       return [
         DropdownItem<ValueModel>(
           enabled: false,
           alignment: Alignment.center,
           height: 40,
-          child: Container(
-            padding: const EdgeInsets.all(2),
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeCap: StrokeCap.round,
-              strokeWidth: 2,
-              color: widget.dropdownColors.foreground.regular,
+          child: _refreshInProgressSuffixIcon(
+            size: 20,
+          ),
+        ),
+      ];
+    }
+
+    if (listValuesFetchResult.isFailed) {
+      log("Show refresh failure icon");
+
+      return [
+        DropdownItem(
+          height: _defaultListItemHeight,
+          enabled: false,
+          child: _refreshFailureItem(
+            context,
+            listValuesFetchResult: listValuesFetchResult,
+            onHandle: () {
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Refresh failed",
+                        style: _inputFieldTextStyle(
+                          fontSize: widget.fontSize,
+                          fontWeight: FontWeight.w600,
+                          foregroundColor: widget.warningColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  _refreshFailureSuffixIcon(size: 20),
+                ],
+              ),
             ),
           ),
         ),
@@ -1243,78 +1196,137 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     }
 
     if (listValuesFetchResult.isFinalEmpty) {
+      log("Show no result");
+
       return [
         DropdownItem(
           height: _defaultListItemHeight,
           enabled: false,
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 17),
-            child: Text(
-              'No Items',
-              style: _inputFieldTextStyle(
-                fontSize: widget.fontSize,
-                fontWeight: FontWeight.w600,
-                foregroundColor: widget.dropdownColors.foreground.regular,
-              ),
-            ),
-          ),
+          child: _noResultsWidget(),
         ),
       ];
     }
+
+    log("Show list items");
 
     return listValuesFetchResult.items.map((value) {
       return DropdownItem(
         value: value,
         height: _defaultListItemHeight,
-        child: Row(
-          children: [
-            value.iconUri != null
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 14),
-                    child: IconUtils.getSvgIcon(
-                      value.iconUri!,
-                      color: widget.dropdownColors.icon.regular,
-                      size: 20,
-                    ),
-                  )
-                : const SizedBox.shrink(),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: value.iconUri != null ? 10 : 17,
-                ),
-                child: Text(
-                  value.itemName,
-                  style: _inputFieldTextStyle(
-                    fontSize: widget.fontSize,
-                    foregroundColor: widget.dropdownColors.foreground.regular,
-                  ),
-                ),
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 14),
+          child: _listItem(value),
         ),
       );
     }).toList();
   }
+
+  Widget _refreshFailureItem(
+    BuildContext context, {
+    required ListValuesFetchResult listValuesFetchResult,
+    required Widget child,
+    void Function()? onHandle,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        showConvertouchDialog(
+          currentTheme: ConvertouchUITheme.dark,
+          context: context,
+          builder: (_, setStateDialog) {
+            return ConvertouchFailureDialog(
+              title: "Refresh failed",
+              handlerFunc: () {
+                _fetchListValues(
+                  context,
+                  fetchParams: listValuesFetchResult.fetchParams,
+                );
+
+                onHandle?.call();
+              },
+              handlerActionName: "Retry",
+              content: Text(
+                listValuesFetchResult.error?.message ?? _fetchErrorMsg,
+                style: _inputFieldTextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  foregroundColor: widget.dialogColors.foreground.regular,
+                ),
+              ),
+              colors: widget.dialogColors,
+            );
+          },
+        ).then((returnedValue) {});
+      },
+      child: child,
+    );
+  }
+
+  void _fetchListValues(
+    BuildContext context, {
+    required ListValuesFetchParams? fetchParams,
+  }) {
+    BlocProvider.of<ListValuesBloc>(context).add(
+      FetchItems(
+        fetchParams: fetchParams,
+      ),
+    );
+  }
+
+  Widget _defaultSuffixIcon() {
+    return Icon(
+      Icons.expand_more_rounded,
+      color: widget.foregroundColor,
+    );
+  }
+
+  Widget _refreshFailureSuffixIcon({
+    double size = _refreshButtonWidth,
+  }) {
+    return Container(
+      height: double.infinity,
+      color: Colors.transparent,
+      child: Icon(
+        Icons.sync_problem_rounded,
+        color: widget.warningColor,
+        size: size,
+      ),
+    );
+  }
+
+  Widget _refreshInProgressSuffixIcon({
+    double size = _refreshButtonWidth,
+  }) {
+    return Container(
+      width: size,
+      height: size,
+      color: Colors.transparent,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(2),
+      child: CircularProgressIndicator(
+        strokeCap: StrokeCap.round,
+        strokeWidth: 2,
+        color: widget.foregroundColor,
+      ),
+    );
+  }
+
+  Widget _noResultsWidget() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: Text(
+        'No Items',
+        style: _inputFieldTextStyle(
+          fontSize: widget.fontSize,
+          fontWeight: FontWeight.w600,
+          foregroundColor: widget.dropdownColors.foreground.regular,
+        ),
+      ),
+    );
+  }
 }
 
-// Shared methods and constants -----------------------------------------------
-
-const DropdownItem _noResultDropdownItem = DropdownItem(
-  enabled: false,
-  alignment: Alignment.center,
-  height: 30,
-  child: Text(
-    "No items found",
-    style: TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 0,
-    ),
-  ),
-);
+// Shared --------------------------------------------------------------------
 
 InputDecoration _inputFieldDecoration(
   BuildContext context, {

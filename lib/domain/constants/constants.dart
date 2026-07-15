@@ -278,12 +278,6 @@ enum ConvertouchListType {
   }
 }
 
-enum FetchingStatus {
-  success,
-  loading,
-  failure,
-}
-
 enum ConvertouchSysAction {
   connection("SETTINGS");
 

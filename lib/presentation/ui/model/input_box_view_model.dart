@@ -3,8 +3,6 @@ import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-const int nonSearchableListItemsMinLimit = 5;
-
 abstract class InputBoxViewModel {
   final String itemId;
   final String? conversionGroupName;
@@ -43,12 +41,6 @@ abstract class InputBoxViewModel {
             (model.listValuesFetchResult?.items == null ||
                 model.listValuesFetchResult!.items.isEmpty),
         labelText: labelText ?? model.name,
-        searchEnabled: model.listValuesFetchResult?.items != null &&
-            model.listValuesFetchResult!.items.length >
-                nonSearchableListItemsMinLimit,
-        showUnknownSelectedValue: model.value != null &&
-            (model.listValuesFetchResult == null ||
-                model.listValuesFetchResult!.selectedItem == null),
       ) as T;
     } else {
       return TextBoxViewModel(
@@ -103,8 +95,6 @@ class ListBoxViewModel extends InputBoxViewModel {
   final ListValuesFetchResult? listValuesFetchResult;
   final ConvertouchListType listType;
   final String? searchHint;
-  final bool searchEnabled;
-  final bool showUnknownSelectedValue;
 
   const ListBoxViewModel({
     required super.itemId,
@@ -116,8 +106,6 @@ class ListBoxViewModel extends InputBoxViewModel {
     super.labelText,
     required this.listValuesFetchResult,
     this.searchHint,
-    this.searchEnabled = true,
-    this.showUnknownSelectedValue = false,
   });
 
   @override
@@ -128,8 +116,6 @@ class ListBoxViewModel extends InputBoxViewModel {
         'listValue: $value, '
         'listValuesFetchResult: $listValuesFetchResult, '
         'listType: $listType, '
-        'searchHint: $searchHint, '
-        'searchEnabled: $searchEnabled, '
-        'showUnknownSelectedValue: $showUnknownSelectedValue}';
+        'searchHint: $searchHint}';
   }
 }

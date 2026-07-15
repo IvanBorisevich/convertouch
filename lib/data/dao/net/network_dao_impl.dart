@@ -23,7 +23,14 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-            '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
+        throw NetworkException(
+          message: "Data fetching failed",
+          stackTrace: null,
+          dateTime: DateTime.now(),
+          severity: ExceptionSeverity.warning,
+        ),
+        // '[]'
+        //     '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
       );
     }
 

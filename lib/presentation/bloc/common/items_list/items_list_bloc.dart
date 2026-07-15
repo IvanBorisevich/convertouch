@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
@@ -47,7 +46,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       ItemsFetched<T, P>(
         itemsFetch: OutputItemsFetchModel.loading(
           searchString: event.searchString,
-          fetchParams: event.fetchParams
+          fetchParams: event.fetchParams,
         ),
       ),
     );
@@ -93,7 +92,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         throw newBatch.left;
       }
 
-      if (newBatch.right.status == FetchingStatus.failure) {
+      if (newBatch.right.isFailed) {
         throw newBatch.right.error!;
       }
 
