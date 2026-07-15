@@ -54,13 +54,19 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
       }
 
       if (modifiedConvertedValues.isEmpty) {
-        return Right(
-          ConversionModel(
-            id: input.conversion.id,
-            unitGroup: modifiedGroup,
-            params: newParams,
-          ),
+        final resultConversion = ConversionModel(
+          id: input.conversion.id,
+          unitGroup: modifiedGroup,
+          params: newParams,
         );
+
+        if (areParamsFilled(newParams?.active)) {
+          input.ifParamSetFilled?.call(resultConversion);
+        } else if (areParamsPartiallyFilled(newParams?.active)) {
+          input.ifParamSetFilledPartiallyOrEmpty?.call(resultConversion);
+        }
+
+        return Right(resultConversion);
       }
 
       ConversionUnitValueModel? newSrcUnitValue = await newSourceUnitValue(
@@ -89,10 +95,12 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         params: newParams,
       );
 
-      if (areParamsFilled(newParams?.active)) {
-        input.ifParamSetFilled?.call(conversion);
-      } else if (areParamsPartiallyFilled(newParams?.active)) {
-        input.ifParamSetFilledPartiallyOrEmpty?.call(conversion);
+      if (input.delta is ConversionParamsModifyDelta) {
+        if (areParamsFilled(newParams?.active)) {
+          input.ifParamSetFilled?.call(conversion);
+        } else if (areParamsPartiallyFilled(newParams?.active)) {
+          input.ifParamSetFilledPartiallyOrEmpty?.call(conversion);
+        }
       }
 
       if (input.delta.recalculateUnitValues) {

@@ -909,10 +909,11 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         fontSize: widget.fontSize,
                         foregroundColor: widget.foregroundColor,
                       ),
-                      onChanged: (listValue) {
-                        if (listValue != null) {
-                          _selectedMainValueNotifier.value = listValue;
-                          widget.onValueChanged?.call(listValue);
+                      onChanged: (selectedValue) {
+                        if (selectedValue != null &&
+                            selectedValue != _selectedMainValueNotifier.value) {
+                          _selectedMainValueNotifier.value = selectedValue;
+                          widget.onValueChanged?.call(selectedValue);
                         }
                       },
                       hint: _listItem(hint),

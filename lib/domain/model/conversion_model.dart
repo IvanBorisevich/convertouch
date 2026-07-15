@@ -123,7 +123,7 @@ class ConversionModel extends IdNameItemModel {
 
   bool get exists => this != none;
 
-  bool get readyToRefresh => areParamsFilled(params?.active) && hasUnitValues;
+  bool get readyToRefresh => areParamsFilled(params?.active);
 
   @override
   String toString() {
