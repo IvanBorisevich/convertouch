@@ -12,10 +12,7 @@ class JobResultModel {
     this.notification,
   });
 
-  const JobResultModel.start()
-      : this(
-          progressPercent: 0.0,
-        );
+  const JobResultModel.start() : this(progressPercent: 0.0);
 
   const JobResultModel.finish(
     DynamicDataModel? result, {
@@ -26,10 +23,11 @@ class JobResultModel {
           notification: info,
         );
 
-  const JobResultModel.failure(ConvertouchException error) : this(
-    progressPercent: -1,
-    notification: error,
-  );
+  const JobResultModel.failure(ConvertouchException error)
+      : this(
+          progressPercent: -1,
+          notification: error,
+        );
 
   bool get finished => progressPercent == 1;
 

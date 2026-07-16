@@ -113,11 +113,7 @@ class ValueModel extends IdNameSearchableItemModel {
       return ValueModel.range(value, iconUri: iconUri);
     }
 
-    throw ConvertouchException(
-      message: "Value $value has unsupported type",
-      stackTrace: null,
-      dateTime: DateTime.now(),
-    );
+    throw ConvertouchException(message: "Value $value has unsupported type");
   }
 
   ValueModel? betweenOrNull(ValueModel? min, ValueModel? max) {

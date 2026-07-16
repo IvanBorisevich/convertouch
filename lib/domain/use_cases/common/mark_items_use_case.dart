@@ -43,10 +43,8 @@ class MarkItemsUseCase
       );
     } catch (e) {
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when marking the item with id = ${input.newMarkedId}",
-          stackTrace: null,
-          dateTime: DateTime.now(),
         ),
       );
     }

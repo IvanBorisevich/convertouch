@@ -58,11 +58,10 @@ class CalculateNonListDefaultValueUseCase<T extends IdNameItemModel>
     } catch (e, stackTrace) {
       log("Error when calculating a source default value: $e");
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when calculating a source default value "
               "for the item ${input.item}",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

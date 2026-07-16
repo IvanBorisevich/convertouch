@@ -26,10 +26,9 @@ class StopJobUseCase<R> extends UseCase<InputJobStopModel, JobModel> {
       return Right(stoppedJob);
     } catch (e, stackTrace) {
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when stopping the refreshing job '${input.job.name}'",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

@@ -90,10 +90,8 @@ Future<void> main() async {
           headers: anyNamed('headers'),
         ),
       ).thenThrow(
-        NetworkException(
+        ConvertouchException(
           message: "No internet connection",
-          stackTrace: null,
-          dateTime: DateTime.now(),
           severity: ExceptionSeverity.warning,
         ),
       );

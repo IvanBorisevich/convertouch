@@ -47,10 +47,9 @@ class DynamicValueRepositoryImpl extends DynamicValueRepository {
       return const Right(null);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching a dynamic value by unit with id",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

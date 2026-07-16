@@ -23,7 +23,7 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-        // throw NetworkException(
+        // throw ConvertouchException(
         //   message: "Data fetching failed",
         //   stackTrace: null,
         //   dateTime: DateTime.now(),
@@ -38,10 +38,8 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-        throw NetworkException(
+        throw ConvertouchException(
           message: "Data fetching failed",
-          stackTrace: null,
-          dateTime: DateTime.now(),
           severity: ExceptionSeverity.warning,
         )
         //'{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
@@ -54,10 +52,9 @@ class NetworkDaoImpl extends NetworkDao {
     final http.Response response =
         await http.get(uri, headers: headers).catchError(
       (err, stackTrace) {
-        throw NetworkException(
+        throw ConvertouchException(
           message: "Data fetching failed",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
           severity: ExceptionSeverity.warning,
         );
       },
@@ -66,10 +63,8 @@ class NetworkDaoImpl extends NetworkDao {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw NetworkException(
+      throw ConvertouchException(
         message: "HTTP ${response.statusCode} | ${response.reasonPhrase}",
-        stackTrace: null,
-        dateTime: DateTime.now(),
         severity: ExceptionSeverity.warning,
       );
     }
@@ -79,11 +74,9 @@ class NetworkDaoImpl extends NetworkDao {
     bool isConnected = await networkHelper.isConnected();
 
     if (!isConnected) {
-      throw NetworkException(
+      throw ConvertouchException(
         message: "No internet connection",
         severity: ExceptionSeverity.warning,
-        stackTrace: null,
-        dateTime: DateTime.now(),
         handlingAction: ConvertouchSysAction.connection,
       );
     }

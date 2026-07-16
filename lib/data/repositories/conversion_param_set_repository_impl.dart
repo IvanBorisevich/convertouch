@@ -40,10 +40,9 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when searching param sets",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -68,10 +67,9 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when getting param sets by ids",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -91,10 +89,9 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
       return Right(ConversionParamSetTranslator.I.toModel(entity));
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching the first conversion param set",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -107,10 +104,9 @@ class ConversionParamSetRepositoryImpl extends ConversionParamSetRepository {
       return Right(count);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when getting param sets count",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

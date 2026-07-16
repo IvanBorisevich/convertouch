@@ -39,10 +39,9 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when searching units of the group id = $unitGroupId",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -88,10 +87,9 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when searching units of the param id = $paramId",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -104,10 +102,9 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(unit != null ? UnitTranslator.I.toModel(unit) : null);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching unit by id",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -128,10 +125,9 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching units by ids",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -153,10 +149,9 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching units by codes: $codes",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -173,11 +168,10 @@ class UnitRepositoryImpl extends UnitRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when retrieving default base unit "
               "of the group with id = $unitGroupId",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -200,22 +194,19 @@ class UnitRepositoryImpl extends UnitRepository {
         String unitName = existingUnit.name;
 
         return Left(
-          DatabaseException(
+          ConvertouchException(
             message: "Unit with the code '$unitCode' ($unitName) "
                 "already exists",
-            stackTrace: null,
-            dateTime: DateTime.now(),
             severity: ExceptionSeverity.info,
           ),
         );
       }
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when adding a unit: code [${unit.code}], "
               "name [${unit.name}]",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -231,10 +222,9 @@ class UnitRepositoryImpl extends UnitRepository {
       return const Right(null);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when deleting units by ids = $unitIds",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -247,10 +237,9 @@ class UnitRepositoryImpl extends UnitRepository {
       return Right(unit);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when updating the unit with id = ${unit.id}",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

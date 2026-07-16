@@ -125,10 +125,9 @@ class ConversionRepositoryImpl extends ConversionRepository {
       return Right(resultConversion);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when getting a conversion",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -143,10 +142,9 @@ class ConversionRepositoryImpl extends ConversionRepository {
       return const Right(null);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when removing conversions",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -221,10 +219,9 @@ class ConversionRepositoryImpl extends ConversionRepository {
     } catch (e, stackTrace) {
       log("Error when merging a conversion: $e");
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when merging a conversion",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

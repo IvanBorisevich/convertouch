@@ -141,10 +141,9 @@ class ModifyUnitDetailsUseCase
       );
     } catch (e, stackTrace) {
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when modifying unit details",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

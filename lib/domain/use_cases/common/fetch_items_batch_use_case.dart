@@ -26,11 +26,7 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     } catch (e) {
       ConvertouchException? error = e is ConvertouchException
           ? e
-          : ConvertouchException(
-              message: e.toString(),
-              stackTrace: null,
-              dateTime: DateTime.now(),
-            );
+          : ConvertouchException(message: e.toString());
 
       return Right(
         OutputItemsFetchModel.failure(

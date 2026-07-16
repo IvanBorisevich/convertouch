@@ -112,8 +112,9 @@ class ConvertouchProgressButton extends StatelessWidget {
                     onFetchError?.call(
                       snapshot.error is ConvertouchException
                           ? snapshot.error as ConvertouchException
-                          : ConvertouchException.compact(
+                          : ConvertouchException(
                               message: snapshot.error!.toString(),
+                              severity: ExceptionSeverity.warning,
                             ),
                     );
 

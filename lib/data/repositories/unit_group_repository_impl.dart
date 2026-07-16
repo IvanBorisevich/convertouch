@@ -33,10 +33,9 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when searching unit groups",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -58,20 +57,17 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
         );
       } else {
         return Left(
-          DatabaseException(
+          ConvertouchException(
             message: "Unit group '${existingGroup.name}' already exists",
-            stackTrace: null,
-            dateTime: DateTime.now(),
             severity: ExceptionSeverity.info,
           ),
         );
       }
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when adding a unit group",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -85,20 +81,17 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       final result = await unitGroupDao.get(unitGroupId);
       if (result == null) {
         return Left(
-          DatabaseException(
+          ConvertouchException(
             message: "Unit group with id = $unitGroupId not found",
-            stackTrace: null,
-            dateTime: DateTime.now(),
           ),
         );
       }
       return Right(UnitGroupTranslator.I.toModel(result));
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when searching a unit group by id",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -113,10 +106,9 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       return const Right(null);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when deleting unit groups by ids",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -131,10 +123,9 @@ class UnitGroupRepositoryImpl extends UnitGroupRepository {
       return Right(unitGroup);
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when updating unit group by id",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

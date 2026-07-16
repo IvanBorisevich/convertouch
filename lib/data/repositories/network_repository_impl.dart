@@ -175,14 +175,13 @@ class NetworkRepositoryImpl extends NetworkRepository {
       }
 
       return Right(await responseHandler(response));
-    } on NetworkException catch (e) {
+    } on ConvertouchException catch (e) {
       return Left(e);
     } on Exception catch (e, stackTrace) {
       return Left(
-        NetworkException(
+        ConvertouchException(
           message: "Error when retrieving dynamic data",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
           severity: ExceptionSeverity.warning,
         ),
       );

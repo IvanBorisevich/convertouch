@@ -44,10 +44,9 @@ class ConversionParamRepositoryImpl extends ConversionParamRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
+        ConvertouchException(
           message: "Error when fetching conversion param by id = $paramId",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -83,11 +82,9 @@ class ConversionParamRepositoryImpl extends ConversionParamRepository {
       );
     } catch (e, stackTrace) {
       return Left(
-        DatabaseException(
-          message: "Error when fetching conversion params by set id = "
-              "$setId",
+        ConvertouchException(
+          message: "Error when fetching conversion params by set id = $setId",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

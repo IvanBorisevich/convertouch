@@ -100,10 +100,9 @@ class BuildUnitDetailsUseCase
       );
     } catch (e, stackTrace) {
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when building unit details",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

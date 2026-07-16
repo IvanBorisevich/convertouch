@@ -138,11 +138,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             items: state.itemsFetch.items,
             error: e is ConvertouchException
                 ? e
-                : ConvertouchException(
-                    message: e.toString(),
-                    stackTrace: null,
-                    dateTime: DateTime.now(),
-                  ),
+                : ConvertouchException(message: e.toString()),
             hasReachedMax: hasReachedMax,
             searchString: searchString,
             pageNum: pageNum,

@@ -126,11 +126,10 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     } catch (e, stackTrace) {
       log("Error when modifying the conversion: $e");
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when modifying the conversion of the group "
               "'${input.conversion.unitGroup.name}'",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }

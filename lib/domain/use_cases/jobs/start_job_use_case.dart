@@ -28,11 +28,9 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
         if (input.executionMode ==
             JobExecutionMode.continueAlreadyRunningJobIfAny) {
           return Left(
-            InternalException(
+            ConvertouchException(
               message: "Job '${input.name}' is running at the moment",
               severity: ExceptionSeverity.info,
-              stackTrace: null,
-              dateTime: DateTime.now(),
             ),
           );
         }
@@ -57,10 +55,9 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
       log("Error when starting the job: $e, $stackTrace");
 
       return Left(
-        InternalException(
+        ConvertouchException(
           message: "Error when starting the job: $e",
           stackTrace: stackTrace,
-          dateTime: DateTime.now(),
         ),
       );
     }
@@ -91,8 +88,6 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
         ConvertouchException info = ConvertouchException(
           message: "Refreshed successfully!",
           severity: ExceptionSeverity.info,
-          stackTrace: null,
-          dateTime: DateTime.now(),
         );
 
         _addToController(
@@ -110,7 +105,6 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
                 message: err.toString(),
                 severity: ExceptionSeverity.warning,
                 stackTrace: stackTrace,
-                dateTime: DateTime.now(),
               );
 
         _addToController(

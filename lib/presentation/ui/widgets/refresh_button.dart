@@ -116,7 +116,6 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                         message: "Refreshing stopped",
                         severity: ExceptionSeverity.info,
                         stackTrace: null,
-                        dateTime: DateTime.now(),
                       ),
                     );
                   },

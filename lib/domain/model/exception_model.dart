@@ -15,7 +15,7 @@ class ConvertouchException extends Equatable {
   final DateTime dateTime;
   final ConvertouchSysAction? handlingAction;
 
-  const ConvertouchException({
+  const ConvertouchException._({
     required this.message,
     this.severity = ExceptionSeverity.errorNewPage,
     required this.stackTrace,
@@ -23,14 +23,18 @@ class ConvertouchException extends Equatable {
     this.handlingAction,
   });
 
-  factory ConvertouchException.compact({
+  factory ConvertouchException({
     required String message,
-    ExceptionSeverity severity = ExceptionSeverity.warning,
+    StackTrace? stackTrace,
+    ExceptionSeverity severity = ExceptionSeverity.errorNewPage,
+    ConvertouchSysAction? handlingAction,
   }) {
-    return ConvertouchException(
+    return ConvertouchException._(
       message: message,
-      stackTrace: null,
+      stackTrace: stackTrace,
+      severity: severity,
       dateTime: DateTime.now(),
+      handlingAction: handlingAction,
     );
   }
 
@@ -59,34 +63,4 @@ class ConvertouchException extends Equatable {
         'stackTrace: $stackTrace, '
         'severity: $severity}';
   }
-}
-
-class DatabaseException extends ConvertouchException {
-  const DatabaseException({
-    required super.message,
-    super.severity,
-    required super.stackTrace,
-    required super.dateTime,
-    super.handlingAction,
-  });
-}
-
-class InternalException extends ConvertouchException {
-  const InternalException({
-    required super.message,
-    super.severity,
-    required super.stackTrace,
-    required super.dateTime,
-    super.handlingAction,
-  });
-}
-
-class NetworkException extends ConvertouchException {
-  const NetworkException({
-    required super.message,
-    super.severity,
-    required super.stackTrace,
-    required super.dateTime,
-    super.handlingAction,
-  });
 }
