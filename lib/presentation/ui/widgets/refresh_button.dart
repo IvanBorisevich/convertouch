@@ -69,16 +69,6 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                   );
                 },
               ),
-              onRetry: () {
-                refreshingJobController.startRefreshingJob(
-                  context,
-                  unitGroupName: unitGroupName,
-                  params: params,
-                  srcUnit: srcUnit,
-                  jobExecutionMode:
-                      JobExecutionMode.continueAlreadyRunningJobIfAny,
-                );
-              },
               onFetchSuccess: (jobResult) {
                 if (jobResult.data != null) {
                   conversionController.updateWithDynamicData(

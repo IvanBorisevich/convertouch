@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/utils/job_utils.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
 const _jobKey = "${GroupNames.currency}_${ParamSetNames.exchangeRate}";
@@ -27,7 +28,7 @@ void main() {
   });
 
   test('Should update existing job in the map', () async {
-    final jobsController = BehaviorSubject<JobResultModel>();
+    final jobsController = StreamController<JobResultModel>.broadcast();
     final completedAt = DateTime.now();
 
     expect(

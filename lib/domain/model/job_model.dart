@@ -8,7 +8,6 @@ import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
-import 'package:rxdart/rxdart.dart';
 
 enum JobExecutionMode {
   continueAlreadyRunningJobIfAny,
@@ -28,9 +27,9 @@ class JobModel extends IdNameItemModel {
   final InputDynamicDataFetchModel? params;
   final Cron cron;
   final DateTime? completedAt;
-  final BehaviorSubject<JobResultModel>? progressController;
+  final StreamController<JobResultModel>? progressController;
   final JobExecutionMode executionMode;
-  final void Function(BehaviorSubject<JobResultModel>)? beforeStart;
+  final void Function(StreamController<JobResultModel>)? beforeStart;
   final Future<DynamicDataModel?> Function(InputDynamicDataFetchModel? params)?
       onExecute;
 
@@ -52,7 +51,7 @@ class JobModel extends IdNameItemModel {
     Patchable<InputDynamicDataFetchModel>? params,
     Patchable<DateTime>? completedAt,
     Patchable<Cron>? cron,
-    Patchable<BehaviorSubject<JobResultModel>>? progressController,
+    Patchable<StreamController<JobResultModel>>? progressController,
   }) {
     return JobModel(
       onExecute: onExecute,

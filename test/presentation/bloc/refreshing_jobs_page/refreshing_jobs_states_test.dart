@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
 final _now = DateTime.now();
@@ -117,8 +118,8 @@ void main() {
     });
 
     test("States should NOT be identical", () async {
-      final BehaviorSubject<JobResultModel> jobStreamController =
-          BehaviorSubject<JobResultModel>();
+      final StreamController<JobResultModel> jobStreamController =
+          StreamController.broadcast();
 
       final firstState = RefreshingJobsFetched(
         jobs: {

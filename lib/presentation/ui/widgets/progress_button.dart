@@ -16,7 +16,6 @@ class ConvertouchProgressButton extends StatelessWidget {
   final void Function()? onProgressIndicatorClick;
   final void Function(JobResultModel)? onFetchSuccess;
   final void Function(ConvertouchException info)? onFetchError;
-  final void Function()? onRetry;
   final EdgeInsets? margin;
   final WidgetColorScheme colors;
   final ConvertouchUITheme theme;
@@ -30,7 +29,6 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.onProgressIndicatorClick,
     this.onFetchSuccess,
     this.onFetchError,
-    this.onRetry,
     this.margin,
     required this.colors,
     required this.theme,
@@ -39,6 +37,8 @@ class ConvertouchProgressButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("refresh button progressStream: $progressStream");
+
     return Visibility(
       visible: visible,
       child: Container(
@@ -54,17 +54,7 @@ class ConvertouchProgressButton extends StatelessWidget {
                   log("Connection: ${snapshot.connectionState}, "
                       "data: ${snapshot.data?.progressPercent}");
 
-                  if (snapshot.data == null) {
-                    return initialButtonWidget;
-                  } else if (snapshot.data!.finished) {
-                    log("Data receiving finished successfully");
-                    onFetchSuccess?.call(snapshot.data!);
-                    return initialButtonWidget;
-                  } else if (snapshot.data!.failed) {
-                    log("Data receiving failed");
-                    onFetchError?.call(snapshot.data!.notification!);
-                    return initialButtonWidget;
-                  } else {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return GestureDetector(
                       onTap: onProgressIndicatorClick,
                       child: determinate
@@ -117,46 +107,31 @@ class ConvertouchProgressButton extends StatelessWidget {
                               ),
                             ),
                     );
+                  } else if (snapshot.hasError) {
+                    log("Error received: ${snapshot.error}");
+                    onFetchError?.call(
+                      snapshot.error is ConvertouchException
+                          ? snapshot.error as ConvertouchException
+                          : ConvertouchException.compact(
+                              message: snapshot.error!.toString(),
+                            ),
+                    );
+
+                    return initialButtonWidget;
+                  } else {
+                    if (snapshot.data!.finished) {
+                      log("Data receiving finished successfully");
+                      onFetchSuccess?.call(snapshot.data!);
+                    } else if (snapshot.data!.failed) {
+                      log("Data receiving failed");
+                      onFetchError?.call(snapshot.data!.notification!);
+                    }
+
+                    return initialButtonWidget;
                   }
                 },
               ),
       ),
     );
   }
-
-// Widget _failureFloatingButton(
-//   BuildContext context, {
-//   required ConvertouchException error,
-//   void Function()? retry,
-// }) {
-//   WidgetColorScheme dialogColors = appColors[theme].dialog;
-//   WidgetColorScheme buttonColors = appColors[theme].failureFloatingButton;
-//
-//   return ConvertouchFloatingActionButton.failure(
-//     colorScheme: buttonColors,
-//     iconSize: 30,
-//     onClick: () {
-//       showConvertouchDialog(
-//         currentTheme: theme,
-//         context: context,
-//         builder: (context, setStateDialog) {
-//           return ConvertouchFailureDialog(
-//             title: "Fetch failed",
-//             handlerFunc: retry,
-//             handlerActionName: "Retry",
-//             content: Text(
-//               error.message,
-//               style: TextStyle(
-//                 fontSize: 15,
-//                 fontWeight: FontWeight.w400,
-//                 color: dialogColors.foreground.regular,
-//               ),
-//             ),
-//             colors: dialogColors,
-//           );
-//         },
-//       );
-//     },
-//   );
-// }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/job_model.dart';
@@ -11,7 +13,6 @@ import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jo
 import 'package:convertouch/presentation/bloc/refreshing_jobs_page/refreshing_jobs_states.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
 import '../../../domain/repositories/mock/mock_dynamic_value_repository.dart';
@@ -57,12 +58,12 @@ void main() {
 
   group(RefreshingJobsBloc, () {
     late RefreshingJobsBloc refreshingJobsBloc;
-    late BehaviorSubject<JobResultModel> jobStreamController;
+    late StreamController<JobResultModel> jobStreamController;
     late DateTime completedAt;
 
     setUp(() {
       refreshingJobsBloc = initBloc();
-      jobStreamController = BehaviorSubject();
+      jobStreamController = StreamController.broadcast();
       completedAt = DateTime.now();
     });
 

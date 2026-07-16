@@ -37,7 +37,14 @@ class NetworkDaoImpl extends NetworkDao {
     if (urlPath == exchangeRatePath) {
       return await Future.delayed(
         const Duration(seconds: 5),
-        () => '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
+        () =>
+        throw NetworkException(
+          message: "Data fetching failed",
+          stackTrace: null,
+          dateTime: DateTime.now(),
+          severity: ExceptionSeverity.warning,
+        )
+        //'{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
       );
     }
 

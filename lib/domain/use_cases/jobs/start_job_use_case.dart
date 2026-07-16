@@ -10,7 +10,6 @@ import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
-import 'package:rxdart/rxdart.dart';
 
 class StartJobUseCase extends UseCase<JobModel, JobModel> {
   final StopJobUseCase stopJobUseCase;
@@ -47,7 +46,7 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
         );
       }
 
-      BehaviorSubject<JobResultModel>? jobStreamController = _startJob(input);
+      StreamController<JobResultModel>? jobStreamController = _startJob(input);
 
       return Right(
         input.copyWith(
@@ -67,9 +66,9 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
     }
   }
 
-  BehaviorSubject<JobResultModel> _startJob(JobModel job) {
-    final BehaviorSubject<JobResultModel> jobStreamController =
-        BehaviorSubject<JobResultModel>();
+  StreamController<JobResultModel> _startJob(JobModel job) {
+    final StreamController<JobResultModel> jobStreamController =
+        StreamController.broadcast();
 
     job.beforeStart?.call(jobStreamController);
 
@@ -127,7 +126,7 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
   }
 
   void _addToController({
-    required BehaviorSubject<JobResultModel> controller,
+    required StreamController<JobResultModel> controller,
     required JobResultModel result,
   }) {
     if (controller.isClosed) {

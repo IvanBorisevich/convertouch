@@ -23,6 +23,17 @@ class ConvertouchException extends Equatable {
     this.handlingAction,
   });
 
+  factory ConvertouchException.compact({
+    required String message,
+    ExceptionSeverity severity = ExceptionSeverity.warning,
+  }) {
+    return ConvertouchException(
+      message: message,
+      stackTrace: null,
+      dateTime: DateTime.now(),
+    );
+  }
+
   @override
   List<Object?> get props => [
         message,
