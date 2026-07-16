@@ -5,52 +5,74 @@ import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_job_stop_model.dart';
-import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_job_start_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
-import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:either_dart/either.dart';
 
-class StartJobUseCase extends UseCase<JobModel, JobModel> {
-  final StopJobUseCase stopJobUseCase;
-
-  const StartJobUseCase({
-    required this.stopJobUseCase,
-  });
+class StartJobUseCase extends UseCase<InputJobStartModel, JobModel> {
+  const StartJobUseCase();
 
   @override
   Future<Either<ConvertouchException, JobModel>> execute(
-    JobModel input,
+    InputJobStartModel input,
   ) async {
+    final jobStreamController = input.job.progressController;
+
+    if (jobStreamController == null) {
+      return Right(input.job);
+    }
+
     try {
-      if (input.progressController != null &&
-          !input.progressController!.isClosed) {
-        if (input.executionMode ==
-            JobExecutionMode.continueAlreadyRunningJobIfAny) {
-          return Left(
-            ConvertouchException(
-              message: "Job '${input.name}' is running at the moment",
-              severity: ExceptionSeverity.info,
-            ),
-          );
-        }
-
-        await stopJobUseCase.execute(
-          InputJobStopModel(
-            job: input,
-            forceStop: true,
-            stopOnError: false,
-          ),
-        );
-      }
-
-      StreamController<JobResultModel>? jobStreamController = _startJob(input);
-
-      return Right(
-        input.copyWith(
-          progressController: Patchable(jobStreamController),
-        ),
+      _addToController(
+        controller: jobStreamController,
+        result: const JobResultModel.start(),
       );
+
+      () async {
+        try {
+          log("try block started");
+
+          _addToController(
+            controller: jobStreamController,
+            result: const JobResultModel.start(),
+          );
+
+          DynamicDataModel? result = await input.onExecute.call(
+            input.job.params,
+          );
+
+          ConvertouchException info = ConvertouchException(
+            message: "Refreshed successfully!",
+            severity: ExceptionSeverity.info,
+          );
+
+          _addToController(
+            controller: jobStreamController,
+            result: JobResultModel.finish(result, info: info),
+          );
+
+          log("try block finished");
+        } catch (err, stackTrace) {
+          log("catch block started: $err, $stackTrace");
+
+          ConvertouchException e = err is ConvertouchException
+              ? err
+              : ConvertouchException(
+                  message: err.toString(),
+                  severity: ExceptionSeverity.warning,
+                  stackTrace: stackTrace,
+                );
+
+          _addToController(
+            controller: jobStreamController,
+            result: JobResultModel.failure(e),
+          );
+
+          log("catch block finished");
+        }
+      }();
+
+      return Right(input.job);
     } catch (e, stackTrace) {
       log("Error when starting the job: $e, $stackTrace");
 
@@ -61,62 +83,6 @@ class StartJobUseCase extends UseCase<JobModel, JobModel> {
         ),
       );
     }
-  }
-
-  StreamController<JobResultModel> _startJob(JobModel job) {
-    final StreamController<JobResultModel> jobStreamController =
-        StreamController.broadcast();
-
-    job.beforeStart?.call(jobStreamController);
-
-    _addToController(
-      controller: jobStreamController,
-      result: const JobResultModel.start(),
-    );
-
-    () async {
-      try {
-        log("try block started");
-
-        _addToController(
-          controller: jobStreamController,
-          result: const JobResultModel.start(),
-        );
-
-        DynamicDataModel? result = await job.onExecute?.call(job.params);
-
-        ConvertouchException info = ConvertouchException(
-          message: "Refreshed successfully!",
-          severity: ExceptionSeverity.info,
-        );
-
-        _addToController(
-          controller: jobStreamController,
-          result: JobResultModel.finish(result, info: info),
-        );
-
-        log("try block finished");
-      } catch (err, stackTrace) {
-        log("catch block started: $err, $stackTrace");
-
-        ConvertouchException e = err is ConvertouchException
-            ? err
-            : ConvertouchException(
-                message: err.toString(),
-                severity: ExceptionSeverity.warning,
-                stackTrace: stackTrace,
-              );
-
-        _addToController(
-          controller: jobStreamController,
-          result: JobResultModel.failure(e),
-        );
-
-        log("catch block finished");
-      }
-    }();
-
-    return jobStreamController;
   }
 
   void _addToController({

@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
+import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
+import 'package:convertouch/domain/model/use_case_model/input/input_job_start_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_job_stop_model.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_coefficients_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/jobs/start_job_use_case.dart';
 import 'package:convertouch/domain/use_cases/jobs/stop_job_use_case.dart';
-import 'package:convertouch/domain/utils/job_utils.dart' as job_utils;
+import 'package:convertouch/domain/utils/job_utils.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
@@ -57,6 +61,42 @@ class RefreshingJobsBloc
     StartRefreshingJob event,
     Emitter<RefreshingJobsState> emit,
   ) async {
+    var activeJobs = ObjectUtils.copyMap(state.jobs);
+
+    JobModel? existingJob = findJob(
+      activeJobs,
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.params.paramSet.name,
+    );
+
+    if (existingJob != null &&
+        existingJob.progressController != null &&
+        !existingJob.progressController!.isClosed) {
+      if (event.jobExecutionMode ==
+          JobExecutionMode.continueAlreadyRunningJobIfAny) {
+        event.onError?.call(
+          ConvertouchException(
+            message: "Job '${existingJob.name}' is running at the moment",
+            severity: ExceptionSeverity.info,
+          ),
+        );
+
+        return;
+      } else {
+        final result = await stopJobUseCase.execute(
+          InputJobStopModel(
+            job: existingJob,
+            forceStop: true,
+            stopOnError: false,
+          ),
+        );
+
+        if (result.isLeft) {
+          event.onError?.call(result.left);
+        }
+      }
+    }
+
     DynamicDataType? dynamicDataType = dynamicDataGroups[event.unitGroupName];
     InputDynamicDataFetchModel? inputDynamicDataFetchModel;
 
@@ -84,42 +124,45 @@ class RefreshingJobsBloc
       return;
     }
 
+    final jobStreamController = StreamController<JobResultModel>.broadcast();
+
     JobModel job = JobModel(
       params: inputDynamicDataFetchModel,
       executionMode: event.jobExecutionMode,
-      beforeStart: (controller) {
-        add(
-          ChangeJobInfo(
-            jobPatch: JobModel(
-              progressController: controller,
-            ),
-            unitGroupName: event.unitGroupName,
-            paramSetName: event.params.paramSet.name,
-          ),
-        );
-      },
-      onExecute: (jobParams) async {
-        if (jobParams == null) {
-          return null;
-        }
-
-        if (jobParams is InputDynamicCoefficientsFetchModel) {
-          return ObjectUtils.tryGet(
-            await fetchDynamicCoefficientsUseCase.execute(jobParams),
-          );
-        }
-
-        if (jobParams is InputDynamicValueFetchModel) {
-          return ObjectUtils.tryGet(
-            await fetchDynamicValueUseCase.execute(jobParams),
-          );
-        }
-
-        return null;
-      },
+      progressController: jobStreamController,
     );
 
-    final startedJobResult = await startJobUseCase.execute(job);
+    await _patchJobsMapAndEmit(
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.params.paramSet.name,
+      jobPatch: job,
+      emit: emit,
+    );
+
+    final startedJobResult = await startJobUseCase.execute(
+      InputJobStartModel(
+        job: job,
+        onExecute: (jobParams) async {
+          if (jobParams == null) {
+            return null;
+          }
+
+          if (jobParams is InputDynamicCoefficientsFetchModel) {
+            return ObjectUtils.tryGet(
+              await fetchDynamicCoefficientsUseCase.execute(jobParams),
+            );
+          }
+
+          if (jobParams is InputDynamicValueFetchModel) {
+            return ObjectUtils.tryGet(
+              await fetchDynamicValueUseCase.execute(jobParams),
+            );
+          }
+
+          return null;
+        },
+      ),
+    );
 
     if (startedJobResult.isLeft) {
       event.onError?.call(startedJobResult.left);
@@ -132,8 +175,11 @@ class RefreshingJobsBloc
   ) async {
     var activeJobs = ObjectUtils.copyMap(state.jobs);
 
-    JobModel? jobToStop =
-        activeJobs[job_utils.jobKey(event.unitGroupName, event.paramSetName)];
+    JobModel? jobToStop = findJob(
+      activeJobs,
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.paramSetName,
+    );
 
     if (jobToStop == null) {
       return;
@@ -168,7 +214,7 @@ class RefreshingJobsBloc
     required JobModel jobPatch,
     required Emitter<RefreshingJobsState> emit,
   }) async {
-    var patchedJobsMap = job_utils.patchJobsMap(
+    var patchedJobsMap = patchJobsMap(
       state.jobs,
       unitGroupName: unitGroupName,
       paramSetName: paramSetName,

@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
-import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
@@ -29,9 +28,6 @@ class JobModel extends IdNameItemModel {
   final DateTime? completedAt;
   final StreamController<JobResultModel>? progressController;
   final JobExecutionMode executionMode;
-  final void Function(StreamController<JobResultModel>)? beforeStart;
-  final Future<DynamicDataModel?> Function(InputDynamicDataFetchModel? params)?
-      onExecute;
 
   const JobModel({
     this.params,
@@ -39,8 +35,6 @@ class JobModel extends IdNameItemModel {
     this.completedAt,
     this.progressController,
     this.executionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
-    this.beforeStart,
-    this.onExecute,
   }) : super(
           name: "",
           itemType: ItemType.job,
@@ -54,7 +48,6 @@ class JobModel extends IdNameItemModel {
     Patchable<StreamController<JobResultModel>>? progressController,
   }) {
     return JobModel(
-      onExecute: onExecute,
       executionMode: executionMode,
       params: ObjectUtils.patch(this.params, params),
       completedAt: ObjectUtils.patch(this.completedAt, completedAt),

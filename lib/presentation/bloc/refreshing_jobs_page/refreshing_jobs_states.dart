@@ -21,9 +21,11 @@ class RefreshingJobsFetched extends RefreshingJobsState {
       ];
 
   JobModel? getJob(String unitGroupName, String? paramSetName) {
-    return paramSetName != null
-        ? jobs[jobKey(unitGroupName, paramSetName)]
-        : null;
+    return findJob(
+      jobs,
+      unitGroupName: unitGroupName,
+      paramSetName: paramSetName,
+    );
   }
 
   Map<String, dynamic> toJson() {

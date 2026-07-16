@@ -26,9 +26,7 @@ void main() {
   late Storage storage;
 
   const stopJobUseCase = StopJobUseCase();
-  const startJobUseCase = StartJobUseCase(
-    stopJobUseCase: stopJobUseCase,
-  );
+  const startJobUseCase = StartJobUseCase();
 
   const fetchDynamicCoefficientsUseCase = FetchDynamicCoefficientsUseCase(
     networkRepository: MockNetworkRepository(),

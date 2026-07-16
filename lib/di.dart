@@ -416,9 +416,7 @@ Future<void> _initUseCases() async {
   );
 
   locator.registerLazySingleton<StartJobUseCase>(
-    () => StartJobUseCase(
-      stopJobUseCase: locator(),
-    ),
+    () => const StartJobUseCase(),
   );
 
   locator.registerLazySingleton<MarkItemsUseCase>(

@@ -3,6 +3,16 @@ import 'package:convertouch/domain/utils/object_utils.dart';
 
 typedef JobsMap = Map<String, JobModel>;
 
+JobModel? findJob(
+  JobsMap activeJobs, {
+  required String unitGroupName,
+  required String? paramSetName,
+}) {
+  return paramSetName != null
+      ? activeJobs[_jobKey(unitGroupName, paramSetName)]
+      : null;
+}
+
 JobsMap patchJobsMap(
   JobsMap activeJobs, {
   required String unitGroupName,
@@ -12,7 +22,7 @@ JobsMap patchJobsMap(
   var resultMap = ObjectUtils.copyMap(activeJobs);
 
   resultMap.update(
-    jobKey(unitGroupName, paramSetName),
+    _jobKey(unitGroupName, paramSetName),
     (job) => job.copyWith(
       params: Patchable(jobPatch.params),
       completedAt: Patchable(jobPatch.completedAt),
@@ -28,5 +38,5 @@ JobsMap patchJobsMap(
   return resultMap;
 }
 
-String jobKey(String unitGroupName, String paramSetName) =>
+String _jobKey(String unitGroupName, String paramSetName) =>
     "${unitGroupName}_$paramSetName";
