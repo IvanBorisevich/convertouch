@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:async/async.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -8,6 +11,9 @@ import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.
 import 'package:either_dart/either.dart';
 
 class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
+  CancelableOperation<Either<ConvertouchException, ListValuesFetchResult>>?
+      _cancellableOperation;
+
   final FetchListValuesUseCase fetchListValuesUseCase;
 
   ListValuesBloc({
@@ -18,7 +24,12 @@ class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
   Future<Either<ConvertouchException, ListValuesFetchResult>> fetchBatch(
     InputItemsFetchModel<ListValuesFetchParams> input,
   ) async {
-    return await fetchListValuesUseCase.execute(input);
+    _cancellableOperation = CancelableOperation.fromFuture(
+      fetchListValuesUseCase.execute(input),
+      onCancel: () => log('Fetch has been cancelled!'),
+    );
+
+    return await _cancellableOperation!.value;
   }
 
   @override
@@ -31,5 +42,14 @@ class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
     ValueModel item,
   ) async {
     return Right(item);
+  }
+
+  @override
+  Future<Either<ConvertouchException, void>> cancelFetch() async {
+    if (_cancellableOperation?.isCanceled == false) {
+      await _cancellableOperation?.cancel();
+    }
+
+    return const Right(null);
   }
 }

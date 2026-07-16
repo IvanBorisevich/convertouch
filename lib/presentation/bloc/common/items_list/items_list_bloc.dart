@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:async/async.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_model.dart';
@@ -27,10 +26,6 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T, P>> {
   final EventTransformer<FetchItems<P>>? fetchItemsEventTransformer;
 
-  CancelableOperation<
-          Either<ConvertouchException, OutputItemsFetchModel<T, P>>>?
-      _cancellableOperation;
-
   ItemsListBloc({
     this.fetchItemsEventTransformer,
   }) : super(
@@ -52,9 +47,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     FetchItems<P> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
-    log('onFetchItems() event handler');
-
-    await _cancellableOperation?.cancel();
+    await cancelFetch();
 
     emit(
       ItemsFetched<T, P>(
@@ -93,21 +86,14 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     }
 
     try {
-      _cancellableOperation = CancelableOperation.fromFuture(
-        fetchBatch(
-          InputItemsFetchModel(
-            searchString: searchString,
-            pageSize: event.pageSize,
-            pageNum: pageNum,
-            fetchParams: params,
-          ),
+      final newBatch = await fetchBatch(
+        InputItemsFetchModel(
+          searchString: searchString,
+          pageSize: event.pageSize,
+          pageNum: pageNum,
+          fetchParams: params,
         ),
-        onCancel: () => log('Operation explicitly cancelled!'),
       );
-
-      final newBatch = await _cancellableOperation!.value;
-
-      log("newBatch: $newBatch");
 
       if (newBatch.isLeft) {
         throw newBatch.left;
@@ -192,9 +178,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     CancelFetch event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
-    if (_cancellableOperation?.isCanceled == false) {
-      await _cancellableOperation?.cancel();
-    }
+    await cancelFetch();
   }
 
   Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> fetchBatch(
@@ -205,11 +189,13 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
 
   Future<Either<ConvertouchException, void>> removeItems(List<int> ids);
 
+  Future<Either<ConvertouchException, void>> cancelFetch() async {
+    return const Right(null);
+  }
+
   @override
   Future<void> close() async {
-    if (_cancellableOperation?.isCanceled == false) {
-      await _cancellableOperation?.cancel();
-    }
+    await cancelFetch();
 
     return super.close();
   }
