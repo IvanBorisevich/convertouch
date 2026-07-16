@@ -7,7 +7,6 @@ import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/navigation_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
-import 'package:convertouch/presentation/ui/model/refresh_button_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
@@ -34,23 +33,18 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
     WidgetColorScheme refreshButtonColor =
         appColors[theme].refreshFloatingButton;
 
-    return BlocSelector<ConversionBloc, ConversionState,
-        RefreshButtonViewModel?>(
-      selector: (state) {
-        if (state is ConversionBuilt) {
-          return RefreshButtonViewModel(
-            params: state.conversion.params?.active,
-            srcUnit: state.conversion.srcUnitValue?.unit,
-            unitGroupName: state.conversion.unitGroup.name,
-          );
-        }
-
-        return null;
+    return BlocBuilder<ConversionBloc, ConversionState>(
+      buildWhen: (prev, next) {
+        return prev != next && next is ConversionBuilt;
       },
-      builder: (_, viewModel) {
-        if (viewModel == null) {
+      builder: (_, conversionState) {
+        if (conversionState is! ConversionBuilt) {
           return const SizedBox.shrink();
         }
+
+        final params = conversionState.conversion.params?.active;
+        final srcUnit = conversionState.conversion.srcUnitValue?.unit;
+        final unitGroupName = conversionState.conversion.unitGroup.name;
 
         return refreshingJobsBlocBuilder(
           builderFunc: (jobsState) {
@@ -67,9 +61,9 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 onClick: () {
                   refreshingJobController.startRefreshingJob(
                     context,
-                    unitGroupName: viewModel.unitGroupName,
-                    params: viewModel.params,
-                    srcUnit: viewModel.srcUnit,
+                    unitGroupName: unitGroupName,
+                    params: params,
+                    srcUnit: srcUnit,
                     jobExecutionMode:
                         JobExecutionMode.continueAlreadyRunningJobIfAny,
                   );
@@ -78,11 +72,11 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               onRetry: () {
                 refreshingJobController.startRefreshingJob(
                   context,
-                  unitGroupName: viewModel.unitGroupName,
-                  params: viewModel.params,
-                  srcUnit: viewModel.srcUnit,
+                  unitGroupName: unitGroupName,
+                  params: params,
+                  srcUnit: srcUnit,
                   jobExecutionMode:
-                  JobExecutionMode.continueAlreadyRunningJobIfAny,
+                      JobExecutionMode.continueAlreadyRunningJobIfAny,
                 );
               },
               onFetchSuccess: (jobResult) {
@@ -95,8 +89,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
 
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  unitGroupName: viewModel.unitGroupName,
-                  paramSetName: viewModel.params?.paramSet.name,
+                  unitGroupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
                   onComplete: () {
                     navigationController.showException(
                       context,
@@ -108,8 +102,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               onFetchError: (exception) {
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  unitGroupName: viewModel.unitGroupName,
-                  paramSetName: viewModel.params?.paramSet.name,
+                  unitGroupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
                   stopOnError: true,
                   onComplete: () {
                     navigationController.showException(
@@ -122,8 +116,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               onProgressIndicatorClick: () {
                 refreshingJobController.stopRefreshingJob(
                   context,
-                  unitGroupName: viewModel.unitGroupName,
-                  paramSetName: viewModel.params?.paramSet.name,
+                  unitGroupName: unitGroupName,
+                  paramSetName: params?.paramSet.name,
                   forceStop: true,
                   onComplete: () {
                     navigationController.showException(
@@ -140,8 +134,8 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
               },
               progressStream: jobsState
                   .getJob(
-                    viewModel.unitGroupName,
-                    viewModel.params?.paramSet.name,
+                    unitGroupName,
+                    params?.paramSet.name,
                   )
                   ?.progressController
                   ?.stream,
