@@ -1277,6 +1277,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
     BlocProvider.of<ListValuesBloc>(context).add(
       FetchItems(
         fetchParams: fetchParams,
+        emitLoadingState: true,
       ),
     );
   }

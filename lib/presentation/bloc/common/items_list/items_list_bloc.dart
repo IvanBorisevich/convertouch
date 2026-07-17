@@ -77,17 +77,19 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       return;
     }
 
-    // emit(
-    //   ItemsFetched<T, P>(
-    //     itemsFetch: OutputItemsFetchModel.loading(
-    //       items: allItems,
-    //       selectedItem: selectedItem,
-    //       searchString: searchString,
-    //       pageNum: pageNum,
-    //       fetchParams: fetchParams,
-    //     ),
-    //   ),
-    // );
+    if (event.emitLoadingState) {
+      emit(
+        ItemsFetched<T, P>(
+          itemsFetch: OutputItemsFetchModel.loading(
+            items: allItems,
+            selectedItem: selectedItem,
+            searchString: searchString,
+            pageNum: pageNum,
+            fetchParams: fetchParams,
+          ),
+        ),
+      );
+    }
 
     try {
       final newBatch = await fetchBatch(

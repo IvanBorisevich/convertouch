@@ -16,6 +16,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   final bool firstFetch;
   final void Function()? onFirstFetch;
   final P? fetchParams;
+  final bool emitLoadingState;
 
   const FetchItems({
     this.searchString,
@@ -24,6 +25,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
     this.firstFetch = true,
     this.fetchParams,
     this.onFirstFetch,
+    this.emitLoadingState = false,
     super.onSuccess,
   });
 
@@ -34,6 +36,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
         pageSize,
         firstFetch,
         fetchParams,
+        emitLoadingState,
       ];
 
   @override
