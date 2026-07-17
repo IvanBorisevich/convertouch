@@ -11,10 +11,10 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_param_item.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -311,9 +311,9 @@ class ConversionParamsView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             iconName != null
-                ? IconUtils.getSvgIcon(
-                    iconName,
-                    color: isSelected
+                ? ConvertouchSvgIcon(
+                    uri: iconName,
+                    defaultColor: isSelected
                         ? colors.foreground.selected
                         : colors.foreground.regular,
                     size: 20,

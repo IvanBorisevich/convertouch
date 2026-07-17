@@ -9,13 +9,13 @@ import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_grid_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/mixin/items_lazy_loading_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
 import 'package:convertouch/presentation/ui/widgets/search_bar.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/text_search_match.dart';
 import 'package:flutter/material.dart';
 
@@ -335,9 +335,9 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       return FittedBox(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: IconUtils.getGroupIcon(
-            iconName: item.iconName,
-            color: foreground,
+          child: ConvertouchSvgIcon.group(
+            iconUri: item.iconName,
+            defaultColor: foreground,
             size: iconSize,
           ),
         ),
@@ -364,9 +364,9 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
       return FittedBox(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: IconUtils.getParamSetIcon(
-            iconName: item.iconName,
-            color: foreground,
+          child: ConvertouchSvgIcon.paramSet(
+            iconUri: item.iconName,
+            defaultColor: foreground,
             size: iconSize,
           ),
         ),

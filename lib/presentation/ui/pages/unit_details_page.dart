@@ -9,11 +9,11 @@ import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/details_item.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_item.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 
 const double _verticalSpacing = 12;
@@ -70,9 +70,9 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                                   required double fontSize,
                                   required double iconSize,
                                 }) {
-                                  return IconUtils.getGroupIcon(
-                                    iconName: item.iconName,
-                                    color: foreground,
+                                  return ConvertouchSvgIcon.group(
+                                    iconUri: item.iconName,
+                                    defaultColor: foreground,
                                     size: iconSize,
                                   );
                                 },

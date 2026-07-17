@@ -30,7 +30,11 @@ class NetworkDaoImpl extends NetworkDao {
         //   severity: ExceptionSeverity.warning,
         // ),
         // '[]'
-            '[{"value":"British Central Bank"},{"value":"Exchange-api.com"},{"value":"test-rates.com"}]',
+            '['
+                '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
+                '{"value":"Exchange-api.com"},'
+                '{"value":"test-rates.com"}'
+            ']',
       );
     }
 

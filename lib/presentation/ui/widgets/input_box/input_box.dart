@@ -18,11 +18,11 @@ import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/model/input_box_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,8 +71,8 @@ const EdgeInsets _defaultInputFieldMargin = EdgeInsets.only(
 );
 
 const double _refreshButtonWidth = 25;
-const double _prefixIconPadding = 8;
-const double _prefixIconContainerWidth = 28;
+const double _prefixIconPadding = 10;
+const double _prefixIconContainerWidth = 30;
 const double _labelPaddingWhenPrefixIconExists =
     _prefixIconPadding + _prefixIconContainerWidth + 2;
 
@@ -1099,9 +1099,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 padding: const EdgeInsets.only(
                   right: _prefixIconPadding,
                 ),
-                child: IconUtils.getSvgIcon(
-                  value.iconUri!,
-                  color: widget.dropdownColors.icon.regular,
+                child: ConvertouchSvgIcon(
+                  uri: value.iconUri!,
+                  defaultUri: widget.model.listType.defaultIconUri,
+                  defaultColor: widget.dropdownColors.icon.regular,
                 ),
               )
             : const SizedBox.shrink(),

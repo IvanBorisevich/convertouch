@@ -12,13 +12,13 @@ import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/pages/basic_page.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_items_view.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/conversion_params_view.dart';
 import 'package:convertouch/presentation/ui/widgets/popup_menu_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/refresh_button.dart';
 import 'package:convertouch/presentation/ui/widgets/scroll/no_glow_scroll_behavior.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,8 +57,8 @@ class ConvertouchConversionPage extends StatelessWidget {
                 }
 
                 return IconButton(
-                  icon: IconUtils.getParamSetIcon(
-                    color: pageColors.appBar.foreground.regular,
+                  icon: ConvertouchSvgIcon.paramSet(
+                    defaultColor: pageColors.appBar.foreground.regular,
                     size: 22,
                   ),
                   onPressed: () {

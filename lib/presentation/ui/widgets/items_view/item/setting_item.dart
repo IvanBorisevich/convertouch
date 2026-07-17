@@ -2,9 +2,9 @@ import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/about_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/radio_dialog.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 
 enum SubtitlePosition {
@@ -102,9 +102,9 @@ class _ConvertouchSettingItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: IconUtils.getSvgIcon(
-        iconName,
-        color: colors.foreground.regular,
+      child: ConvertouchSvgIcon(
+        uri: iconName,
+        defaultColor: colors.foreground.regular,
       ),
     );
   }

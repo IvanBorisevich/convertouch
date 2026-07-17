@@ -1,6 +1,6 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/utils/icon_utils.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 
 final _appLegalese = "© ${DateTime.now().year} johnbor7";
@@ -25,14 +25,14 @@ class ConvertouchAboutDialog extends StatelessWidget {
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
+          const Padding(
+            padding: EdgeInsets.only(
               left: 20,
               right: 20,
               top: 2,
             ),
-            child: IconUtils.getSvgIcon(
-              IconKeys.appLogo,
+            child: ConvertouchSvgIcon(
+              uri: IconKeys.appLogo,
               size: 45,
             ),
           ),
