@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:convertouch/data/dao/db/dbhelper/dbconfig/dbconfig.dart';
-import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/init_migration.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration1to2.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration2to3.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration3to4.dart';
@@ -11,8 +11,8 @@ import 'package:convertouch/data/dao/db/dbhelper/migrations/migration4to5.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration5to6.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration6to7.dart';
 import 'package:convertouch/data/dao/db/dbhelper/migrations/migration7to8.dart';
+import 'package:convertouch/data/dao/db/dbhelper/migrations/migration8to9.dart';
 import 'package:convertouch/di.dart' as di;
-import 'package:convertouch/main.dart';
 import 'package:floor/floor.dart';
 
 /// How to upgrade DB structure and content:
@@ -26,13 +26,13 @@ import 'package:floor/floor.dart';
 
 class ConvertouchDatabaseHelper {
   static const dbName = "convertouch_database.db";
-  static const dbVersion = 8;
+  static const dbVersion = 9;
 
   static final ConvertouchDatabaseHelper I =
       di.locator.get<ConvertouchDatabaseHelper>();
 
   Future<ConvertouchDatabase> initDatabase() async {
-    logger.d("Initializing database $dbName of version $dbVersion");
+    log("Initializing database $dbName of version $dbVersion");
     final migrations = await _initMigrations();
     return await $FloorConvertouchDatabase
         .databaseBuilder(dbName)
@@ -71,4 +71,5 @@ const List<ConvertouchDbMigration> _rawMigrations = [
   Migration5to6(),
   Migration6to7(),
   Migration7to8(),
+  Migration8to9(),
 ];

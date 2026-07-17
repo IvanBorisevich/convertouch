@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -12,24 +14,16 @@ import 'package:convertouch/presentation/ui/widgets/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
-final logger = Logger(
-  printer: PrettyPrinter(
-    methodCount: 0,
-    dateTimeFormat: DateTimeFormat.dateAndTime,
-  ),
-);
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = ConvertouchBlocObserver();
-  logger.d("Before dependencies initialization");
+  log("Before dependencies initialization");
   await di.init();
-  logger.d("Dependencies initialization finished");
+  log("Dependencies initialization finished");
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ConvertouchApp());
 }

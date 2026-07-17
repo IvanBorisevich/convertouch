@@ -1300,3 +1300,470 @@ const unitsV7 = [
     },
   }
 ];
+
+const unitsV8 = [
+  {
+    "groupName": GroupNames.angle,
+    "units": [
+      {
+        "code": "deg",
+        forUpdate: {"name": "Degree"},
+      },
+      {
+        "code": "rad",
+        forUpdate: {"name": "Radian"},
+      },
+      {
+        "code": "grad",
+        forUpdate: {"name": "Gradian, Gon"},
+      },
+      {
+        "code": "arcmin",
+        forUpdate: {"name": "Arcminute"},
+      },
+      {
+        "code": "arcsec",
+        forUpdate: {"name": "Arcsecond"},
+      },
+      {
+        "code": "tr",
+        forUpdate: {"name": "Turn"},
+      },
+      {
+        "code": "oct",
+        forUpdate: {"name": "Octant"},
+      },
+      {
+        "code": "sxt",
+        forUpdate: {"name": "Sextant"},
+      },
+      {
+        "code": "qnt",
+        forUpdate: {"name": "Quintant"},
+      },
+    ]
+  },
+  {
+    "groupName": GroupNames.currency,
+    "units": [
+      {
+        "code": "BDT",
+        forUpdate: {"name": "Bangladeshi Taka"},
+      },
+      {
+        "code": "GEL",
+        forUpdate: {"name": "Georgian Lari"},
+      },
+      {
+        "code": "IQD",
+        forUpdate: {"name": "Iraqi Dinar"},
+      },
+      {
+        "code": "IRR",
+        forUpdate: {"name": "Iranian Rial"},
+      },
+      {
+        "code": "HTG",
+        forUpdate: {"name": "Haitian Gourde"},
+      },
+      {
+        "code": "AFN",
+        forUpdate: {"name": "Afghan Afghani"},
+      },
+      {
+        "code": "MGA",
+        forUpdate: {"name": "Malagasy Ariary"},
+      },
+      {
+        "code": "ETB",
+        forUpdate: {"name": "Ethiopian Birr"},
+      },
+      {
+        "code": "SVC",
+        forUpdate: {"name": "Salvadoran Colon"},
+      },
+      {
+        "code": "GMD",
+        forUpdate: {"name": "Gambian Dalasi"},
+      },
+      {
+        "code": "MKD",
+        forUpdate: {"name": "Macedonian Denar"},
+      },
+      {
+        "code": "BZD",
+        forUpdate: {"name": "Belize Dollar"},
+      },
+      {
+        "code": "GYD",
+        forUpdate: {"name": "Guyanese Dollar"},
+      },
+      {
+        "code": "LRD",
+        forUpdate: {"name": "Liberian Dollar"},
+      },
+      {
+        "code": "NAD",
+        forUpdate: {"name": "Namibian Dollar"},
+      },
+      {
+        "code": "SRD",
+        forUpdate: {"name": "Surinamese Dollar"},
+      },
+      {
+        "code": "SBD",
+        forUpdate: {"name": "Solomon Islands Dollar"},
+      },
+      {
+        "code": "CVE",
+        forUpdate: {"name": "Cape Verde Escudo"},
+      },
+      {
+        "code": "AWG",
+        forUpdate: {"name": "Aruban Florin"},
+      },
+      {
+        "code": "BIF",
+        forUpdate: {"name": "Burundian Franc"},
+      },
+      {
+        "code": "DJF",
+        forUpdate: {"name": "Djiboutian Franc"},
+      },
+      {
+        "code": "GNF",
+        forUpdate: {"name": "Guinean Franc"},
+      },
+      {
+        "code": "KMF",
+        forUpdate: {"name": "Comoro Franc"},
+      },
+      {
+        "code": "CDF",
+        forUpdate: {"name": "Congolese Franc"},
+      },
+      {
+        "code": "RWF",
+        forUpdate: {"name": "Rwandan Franc"},
+      },
+      {
+        "code": "GIP",
+        forUpdate: {"name": "Gibraltar Pound"},
+      },
+      {
+        "code": "SSP",
+        forUpdate: {"name": "South Sudanese Pound"},
+      },
+      {
+        "code": "SDG",
+        forUpdate: {"name": "Sudanese Pound"},
+      },
+      {
+        "code": "SYP",
+        forUpdate: {"name": "Syrian Pound"},
+      },
+      {
+        "code": "PGK",
+        forUpdate: {"name": "Papua New Guinean Kina"},
+      },
+      {
+        "code": "LAK",
+        forUpdate: {"name": "Lao Kip"},
+      },
+      {
+        "code": "MWK",
+        forUpdate: {"name": "Malawian Kwacha"},
+      },
+      {
+        "code": "ZMW",
+        forUpdate: {"name": "Zambian Kwacha"},
+      },
+      {
+        "code": "AOA",
+        forUpdate: {"name": "Angolan Kwanza"},
+      },
+      {
+        "code": "ALL",
+        forUpdate: {"name": "Albanian Lek"},
+      },
+      {
+        "code": "SZL",
+        forUpdate: {"name": "Swazi Lilangeni"},
+      },
+      {
+        "code": "LSL",
+        forUpdate: {"name": "Lesotho Loti"},
+      },
+      {
+        "code": "MZN",
+        forUpdate: {"name": "Mozambican Metical"},
+      },
+      {
+        "code": "ERN",
+        forUpdate: {"name": "Eritrean Nakfa"},
+      },
+      {
+        "code": "MRU",
+        forUpdate: {"name": "Mauritanian Ouguiya"},
+      },
+      {
+        "code": "TOP",
+        forUpdate: {"name": "Tongan Paʻanga"},
+      },
+      {
+        "code": "MOP",
+        forUpdate: {"name": "Macanese Pataca"},
+      },
+      {
+        "code": "CUP",
+        forUpdate: {"name": "Cuban Peso"},
+      },
+      {
+        "code": "YER",
+        forUpdate: {"name": "Yemeni Rial"},
+      },
+      {
+        "code": "KHR",
+        forUpdate: {"name": "Cambodian Riel"},
+      },
+      {
+        "code": "MVR",
+        forUpdate: {"name": "Maldivian Rufiyaa"},
+      },
+      {
+        "code": "SCR",
+        forUpdate: {"name": "Seychelles Rupee"},
+      },
+      {
+        "code": "KES",
+        forUpdate: {"name": "Kenyan Shilling"},
+      },
+      {
+        "code": "SOS",
+        forUpdate: {"name": "Somali Shilling"},
+      },
+      {
+        "code": "TZS",
+        forUpdate: {"name": "Tanzanian Shilling"},
+      },
+      {
+        "code": "UGX",
+        forUpdate: {"name": "Ugandan Shilling"},
+      },
+      {
+        "code": "WST",
+        forUpdate: {"name": "Samoan Tala"},
+      },
+      {
+        "code": "MNT",
+        forUpdate: {"name": "Mongolian Togrog"},
+      },
+      {
+        "code": "VUV",
+        forUpdate: {"name": "Vanuatu Vatu"},
+      },
+      {
+        "code": "BAM",
+        forUpdate: {"name": "Bosnia and Herzegovina Convertible Mark"},
+      },
+      {
+        "code": "BTN",
+        "name": "Bhutanese Ngultrum",
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.mass,
+    "units": [
+      {
+        "code": "oz t",
+        forUpdate: {"name": "Troy Ounce"},
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.pressure,
+    "units": [
+      {
+        "code": "Pa",
+        forUpdate: {"name": "Pascal"},
+      },
+      {
+        "code": "bar",
+        forUpdate: {"name": "Bar"},
+      },
+      {
+        "code": "at",
+        forUpdate: {"name": "Technical Atmosphere"},
+      },
+      {
+        "code": "atm",
+        forUpdate: {"name": "Physical Atmosphere"},
+      },
+      {
+        "code": "mmHg",
+        forUpdate: {"name": "Millimetre of Mercury"},
+      },
+      {
+        "code": "mmH2O",
+        forUpdate: {"name": "Millimetre of Water"},
+      },
+      {
+        "code": "psi",
+        forUpdate: {"name": "Pound per Square Inch"},
+      },
+      {
+        "code": "Ba",
+        forUpdate: {"name": "Barye"},
+      },
+      {
+        "code": "pz",
+        forUpdate: {"name": "Pièze"},
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.speed,
+    "units": [
+      {
+        "code": "m/s",
+        forUpdate: {"name": "Meter per Second"},
+      },
+      {
+        "code": "m/h",
+        forUpdate: {"name": "Meter per Hour"},
+      },
+      {
+        "code": "km/s",
+        forUpdate: {"name": "Kilometer per Second"},
+      },
+      {
+        "code": "km/h",
+        forUpdate: {"name": "Kilometer per Hour"},
+      },
+      {
+        "code": "ft/s",
+        forUpdate: {"name": "Foot per Second"},
+      },
+      {
+        "code": "ft/h",
+        forUpdate: {"name": "Foot per Hour"},
+      },
+      {
+        "code": "mi/s",
+        forUpdate: {"name": "Mile per Second"},
+      },
+      {
+        "code": "mi/h",
+        forUpdate: {"name": "Mile per Hour"},
+      },
+      {
+        "code": "kn",
+        forUpdate: {"name": "Knot"},
+      },
+      {
+        "code": "kt",
+        forUpdate: {"name": "Knot (UK)"},
+      },
+      {
+        "code": "V₁E",
+        forUpdate: {"name": "1st Cosmic Velocity (Earth)"},
+      },
+      {
+        "code": "V₂E",
+        forUpdate: {"name": "2nd Cosmic Velocity (Earth)"},
+      },
+      {
+        "code": "V₃E",
+        forUpdate: {"name": "3rd Cosmic Velocity (Earth)"},
+      },
+      {
+        "code": "c",
+        forUpdate: {"name": "Speed of Light (Vacuum)"},
+      },
+      {
+        "code": "M",
+        forUpdate: {"name": "Speed of Sound (Mach)"},
+      },
+    ],
+  },
+  {
+    "groupName": GroupNames.volume,
+    "units": [
+      {
+        "code": "imp pt",
+        forUpdate: {"name": "Imperial Pint"},
+      },
+      {
+        "code": "US pt",
+        forUpdate: {"name": "US Pint"},
+      },
+      {
+        "code": "US dpt",
+        forUpdate: {"name": "US Dry Pint"},
+      },
+      {
+        "code": "imp gal",
+        forUpdate: {"name": "Imperial Gallon"},
+      },
+      {
+        "code": "US gal",
+        forUpdate: {
+          "name": "US Gallon",
+        },
+      },
+      {
+        "code": "US dgal",
+        forUpdate: {"name": "US Dry Gallon"},
+      },
+      {
+        "code": "imp bu",
+        forUpdate: {"name": "Imperial Bushel"},
+      },
+      {
+        "code": "US bu",
+        forUpdate: {"name": "US Bushel"},
+      },
+      {
+        "code": "imp pk",
+        forUpdate: {"name": "Imperial Peck"},
+      },
+      {
+        "code": "US pk",
+        forUpdate: {"name": "US Peck"},
+      },
+      {
+        "code": "imp qt",
+        forUpdate: {"name": "Imperial Quart"},
+      },
+      {
+        "code": "US qt",
+        forUpdate: {"name": "US Quart"},
+      },
+      {
+        "code": "US dqt",
+        forUpdate: {"name": "US Dry Quart"},
+      },
+      {
+        "code": "imp gi",
+        forUpdate: {"name": "Imperial Gill"},
+      },
+      {
+        "code": "US gi",
+        forUpdate: {"name": "US Gill"},
+      },
+      {
+        "code": "imp fl oz",
+        forUpdate: {"name": "Imperial Fluid Ounce"},
+      },
+      {
+        "code": "US fl oz",
+        forUpdate: {"name": "US Customary Fluid Ounce"},
+      },
+      {
+        "code": "US ffl oz",
+        forUpdate: {"name": "US Food Labeling Fluid Ounce"},
+      },
+    ],
+  },
+];

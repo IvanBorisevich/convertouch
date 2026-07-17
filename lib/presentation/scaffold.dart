@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
-import 'package:convertouch/main.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/common/input_validation/input_validation_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
@@ -80,7 +81,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   }
 
   void initialization() async {
-    logger.d("Scaffold initialized");
+    log("Scaffold initialized");
   }
 
   @override
