@@ -1,4 +1,5 @@
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,36 +21,40 @@ class IconUtils {
     );
   }
 
-  static Widget getSvgImage(
-    String imageName, {
-    double? size,
-  }) {
-    String resultImageName = idToIconName[imageName] ?? imageName;
-
-    return SvgPicture.asset(
-      "$iconAssetsPathPrefix/$resultImageName",
-      width: size ?? defaultIconSize,
-      height: size ?? defaultIconSize,
-    );
-  }
-
   static Widget getSvgIcon(
-    String iconName, {
+    String iconUri, {
     AlignmentGeometry alignment = Alignment.center,
     Color? color,
     double? size,
   }) {
-    String resultIconName = idToIconName[iconName] ?? iconName;
+    String resultIconUri = idToIconName[iconUri] ?? iconUri;
+
+    if (StringUtils.isUrl(resultIconUri)) {
+      return SvgPicture.network(
+        resultIconUri,
+        width: size ?? defaultIconSize,
+        height: size ?? defaultIconSize,
+        alignment: alignment,
+        colorFilter: color != null
+            ? ColorFilter.mode(
+                color,
+                BlendMode.srcIn,
+              )
+            : null,
+      );
+    }
 
     return SvgPicture.asset(
-      "$iconAssetsPathPrefix/$resultIconName",
-      colorFilter: ColorFilter.mode(
-        color ?? Colors.black,
-        BlendMode.srcIn,
-      ),
-      alignment: alignment,
+      "$iconAssetsPathPrefix/$resultIconUri",
       width: size ?? defaultIconSize,
       height: size ?? defaultIconSize,
+      alignment: alignment,
+      colorFilter: color != null
+          ? ColorFilter.mode(
+              color,
+              BlendMode.srcIn,
+            )
+          : null,
     );
   }
 
