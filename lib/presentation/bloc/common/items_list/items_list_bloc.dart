@@ -49,41 +49,45 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
   ) async {
     await cancelFetch();
 
-    emit(
-      ItemsFetched<T, P>(
-        itemsFetch: OutputItemsFetchModel.loading(
-          searchString: event.searchString,
-          fetchParams: event.fetchParams,
-        ),
-      ),
-    );
-
     int pageNum;
-    P? params;
+    P? fetchParams;
     String? searchString;
     bool hasReachedMax;
     List<int> oobIds;
     List<T> allItems;
+    T? selectedItem = state.itemsFetch.selectedItem;
 
     if (event.firstFetch) {
       allItems = [];
       pageNum = 0;
-      params = event.fetchParams;
+      fetchParams = event.fetchParams;
       searchString = event.searchString;
       hasReachedMax = false;
       oobIds = [];
     } else {
       allItems = state.itemsFetch.items;
       pageNum = event.pageNum ?? state.itemsFetch.pageNum;
-      params = state.itemsFetch.fetchParams;
+      fetchParams = state.itemsFetch.fetchParams;
       searchString = state.itemsFetch.searchString;
       hasReachedMax = state.itemsFetch.hasReachedMax;
-      oobIds = state.oobIds;
+      oobIds = List.of(state.oobIds);
     }
 
     if (hasReachedMax) {
       return;
     }
+
+    // emit(
+    //   ItemsFetched<T, P>(
+    //     itemsFetch: OutputItemsFetchModel.loading(
+    //       items: allItems,
+    //       selectedItem: selectedItem,
+    //       searchString: searchString,
+    //       pageNum: pageNum,
+    //       fetchParams: fetchParams,
+    //     ),
+    //   ),
+    // );
 
     try {
       final newBatch = await fetchBatch(
@@ -91,7 +95,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           searchString: searchString,
           pageSize: event.pageSize,
           pageNum: pageNum,
-          fetchParams: params,
+          fetchParams: fetchParams,
         ),
       );
 
@@ -117,11 +121,11 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
               ...allItems,
               ...newBatch.right.items,
             ],
-            selectedItem: newBatch.right.selectedItem,
+            selectedItem: selectedItem,
             hasReachedMax: newBatch.right.hasReachedMax,
             searchString: searchString,
             pageNum: newBatch.right.pageNum,
-            fetchParams: params,
+            fetchParams: fetchParams,
           ),
           oobIds: oobIds,
         ),
@@ -136,13 +140,14 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel.failure(
             items: state.itemsFetch.items,
+            selectedItem: selectedItem,
             error: e is ConvertouchException
                 ? e
                 : ConvertouchException(message: e.toString()),
             hasReachedMax: hasReachedMax,
             searchString: searchString,
             pageNum: pageNum,
-            fetchParams: params,
+            fetchParams: fetchParams,
           ),
           oobIds: oobIds,
         ),

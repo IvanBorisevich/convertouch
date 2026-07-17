@@ -36,13 +36,13 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   });
 
   const OutputItemsFetchModel.loading({
+    required this.items,
+    this.hasReachedMax = false,
+    this.pageNum = 0,
     this.fetchParams,
     this.searchString,
     this.selectedItem,
-  })  : items = const [],
-        status = FetchingStatus.loading,
-        hasReachedMax = false,
-        pageNum = 0,
+  })  : status = FetchingStatus.loading,
         error = null;
 
   const OutputItemsFetchModel.failure({
@@ -160,13 +160,13 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   @override
   String toString() {
     return 'FetchResult{'
-        'size: ${items.length}, '
-        'selected: ${selectedItem != null ? selectedItem!.name : "-"}, '
-        '${searchString != null ? "$searchString, " : ""}'
-        'status: $status, '
-        '${error != null ? "${error!.message}, " : ""}'
-        'more items: ${!hasReachedMax}, '
+        'num of items: ${items.length}, '
         'pageNum: $pageNum, '
+        'selected: ${selectedItem != null ? selectedItem!.name : "-"}, '
+        'search by: ${searchString != null ? "$searchString" : "-"}, '
+        'status: $status, '
+        'more items: ${!hasReachedMax}, '
+        '${error != null ? "error: ${error!.message}, " : ""}'
         'fetchParams: $fetchParams}';
   }
 }
